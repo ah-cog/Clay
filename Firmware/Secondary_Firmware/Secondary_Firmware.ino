@@ -59,6 +59,8 @@ void setup () {
   Setup_Udp_Server ();
 }
 
+Adafruit_CC3000_Client udp;
+
 boolean hasTouch = false;
 
 /**
@@ -82,8 +84,11 @@ void loop () {
   //         // ... Do whatever you want with 'c' here ...
   //      }
   
+        // PIXEL: 192.168.0.1:4445
+  
         // TODO: Make sure the packet starts with "Pixel" (or whatever the packet signature is, so only parse packets with valid addresses)
         if (buffer[0] != 'P') {
+          Serial.println (buffer);
           return;
         }
   
@@ -113,65 +118,108 @@ void loop () {
         --ipPart4; ipPart4[0] = '.';
         --portStr; portStr[0] = ':';
         
-  //      Serial.println (ip1);
-  //      Serial.println (ip2);
-  //      Serial.println (ip3);
-  //      Serial.println (ip4);
-  //      Serial.println (port);
-        
-        
-        
-        // Send HTTP GET request to Pixel VPE
+        Serial.println (ip1);
+        Serial.println (ip2);
+        Serial.println (ip3);
+        Serial.println (ip4);
+        Serial.println (port);
         
         unsigned long startTime, t;
         unsigned long ip = cc3000.IP2U32 (ip1, ip2, ip3, ip4);
         
-        client = cc3000.connectTCP (ip, port);
+        unsigned long timeout = millis() + 15000;
         
-        // Connect to numeric IP
-        Serial.print (F("OK\r\nConnecting to server..."));
-        t = millis();
-        do {
-          client = cc3000.connectTCP(ip, port);
-        } while ((!client.connected ()) && ((millis () - t) < connectTimeout));
+
+        //
+        // Send a response UDP packet
+        //
         
-        if (client.connected()) { // Success!
+        for (udp = cc3000.connectUDP (ip, port); !udp.connected(); ) {
+          if (millis () >= timeout) {
+            Serial.println (F("failed to get a UDP socket from the CC3000"));
+            break; // for (;;);
+          }
+        }
         
-          Serial.print(F("OK\r\nIssuing HTTP request..."));
-          
-          // Set up endpoint
-          char endpoint[48];
-          String endpointStr = String("/modules?ip=") + moduleIp;
-          endpointStr.toCharArray (endpoint, 48);
-          
-          Serial.println (endpoint);
-          
-          char agent[] = "Pixel/1.0";
-      
-          // Unlike the hash prep, parameters in the HTTP request don't require sorting.
-          client.fastrprint(F("GET ")); client.fastrprint(endpoint); client.fastrprint(F(" HTTP/1.1\r\n"));
-          client.fastrprint(F("Host: ")); client.fastrprint(hostIpAddress);
-          client.fastrprint(F("\r\nUser-Agent: ")); client.fastrprint(F(agent));
-  //        client.fastrprint(F("\r\nConnection: keep-alive\r\n"));
-          client.fastrprint(F("\r\nConnection: close\r\n"));
-      
-          Serial.print(F("OK\r\nAwaiting response..."));
-  //        int c = 0;
-          // Dirty trick: instead of parsing results, just look for opening
-          // curly brace indicating the start of a successful JSON response.
-  //        while(((c = timedRead()) > 0) && (c != '{'));
-  //        if(c == '{')   Serial.println(F("success!"));
-  //        else if(c < 0) Serial.println(F("timeout"));
-  //        else           Serial.println(F("error (invalid Twitter credentials?)"));
-          client.close();
-  //        return (c == '{');
-  
-          hasTouch = true; // Has successfully connected to Looper mobile interface
-          
-        } else { // Couldn't contact server
-          Serial.println(F("failed"));
-  //        return false;
-      }
+        char udpPacketBuffer[48];
+        String ipString = Get_IP_Address (ipAddress);
+        String packetMessageString = "announce address " + String (ipString);
+        packetMessageString.toCharArray (udpPacketBuffer, 48);
+        int n2 = strlen (udpPacketBuffer);
+        int cc = udp.write (udpPacketBuffer, n2);
+        if (cc < 0) {
+          Serial.print ("error writing packet: ");
+          Serial.println (n2);
+        } else if (cc != n2) {
+          Serial.print ("wrote ");
+          Serial.print (cc);
+          Serial.print (" octets, but expected to write ");
+          Serial.println (n2);
+        }
+        
+        
+        // Relay information to the primary board (with blocking command)
+        String ipMessageString = String ("(create behavior memory ip ") + String (ipString) + ")";
+        const int triggerBufferSize = 64;
+        char messageChar[triggerBufferSize];
+        ipMessageString.toCharArray (messageChar, triggerBufferSize);
+        Serial.print ("Buffer: "); Serial.println (messageChar);
+        DEVICE_SERIAL.write (messageChar);
+        // TODO: Block until either receive 0 or UUID (or timeout)
+        String response = Get_Direct_Serial_Response (1000);
+        Serial.println ("Response:");
+        Serial.println (response);
+
+        
+        
+//        // Send HTTP GET request to Pixel VPE
+//        
+//        client = cc3000.connectTCP (ip, port);
+//        
+//        // Connect to numeric IP
+//        Serial.print (F("OK\r\n..."));
+//        t = millis ();
+//        do {
+//          client = cc3000.connectTCP(ip, port);
+//        } while ((!client.connected ()) && ((millis () - t) < connectTimeout));
+//        
+//        if (client.connected ()) { // Success!
+//        
+//          Serial.print (F("OK\r\nIssuing HTTP request..."));
+//          
+//          // Set up endpoint
+//          char endpoint[48];
+//          String endpointStr = String("/modules?ip=") + moduleIp;
+//          endpointStr.toCharArray (endpoint, 48);
+//          
+//          Serial.println (endpoint);
+//          
+//          char agent[] = "Pixel/1.0";
+//      
+//          // Unlike the hash prep, parameters in the HTTP request don't require sorting.
+//          client.fastrprint(F("GET ")); client.fastrprint(endpoint); client.fastrprint(F(" HTTP/1.1\r\n"));
+//          client.fastrprint(F("Host: ")); client.fastrprint(hostIpAddress);
+//          client.fastrprint(F("\r\nUser-Agent: ")); client.fastrprint(F(agent));
+//  //        client.fastrprint(F("\r\nConnection: keep-alive\r\n"));
+//          client.fastrprint(F("\r\nConnection: close\r\n"));
+//      
+//          Serial.print(F("OK\r\nAwaiting response..."));
+//  //        int c = 0;
+//          // Dirty trick: instead of parsing results, just look for opening
+//          // curly brace indicating the start of a successful JSON response.
+//  //        while(((c = timedRead()) > 0) && (c != '{'));
+//  //        if(c == '{')   Serial.println(F("success!"));
+//  //        else if(c < 0) Serial.println(F("timeout"));
+//  //        else           Serial.println(F("error (invalid Twitter credentials?)"));
+//          client.close();
+//  //        return (c == '{');
+//  
+//          hasTouch = true; // Has successfully connected to Looper mobile interface
+//          
+//        } else { // Couldn't contact server
+//          Serial.println(F("failed"));
+//  //        return false;
+//      }
         
         
     }
