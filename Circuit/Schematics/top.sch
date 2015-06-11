@@ -5498,7 +5498,6 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <part name="GND-ISO15" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
 <part name="FERRITE3" library="inductors" deviceset="BLM15H" device="" technology="B121SN1"/>
 <part name="Y1" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="16 MHz"/>
-<part name="Y2" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="32.768 kHz"/>
 <part name="D6" library="SparkFun-DiscreteSemi" deviceset="DIODE" device="BAS16" value="1A"/>
 <part name="D8" library="SparkFun-DiscreteSemi" deviceset="DIODE" device="BAS16" value="1A"/>
 <part name="D9" library="SparkFun-DiscreteSemi" deviceset="DIODE" device="BAS16" value="1A"/>
@@ -5552,7 +5551,6 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <instance part="GND-ISO15" gate="G$1" x="20.32" y="137.16" rot="R270"/>
 <instance part="FERRITE3" gate="G$1" x="30.48" y="137.16"/>
 <instance part="Y1" gate="G$1" x="111.76" y="78.74" rot="R90"/>
-<instance part="Y2" gate="G$1" x="101.6" y="106.68" rot="R90"/>
 <instance part="D6" gate="G$1" x="55.88" y="127" rot="R270"/>
 <instance part="D8" gate="G$1" x="91.44" y="175.26" rot="R270"/>
 <instance part="D9" gate="G$1" x="86.36" y="175.26" rot="R270"/>
@@ -5938,7 +5936,7 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <pinref part="R3" gate="G$1" pin="2"/>
 </segment>
 </net>
-<net name="N$10" class="0">
+<net name="D+" class="0">
 <segment>
 <pinref part="R2" gate="G$1" pin="1"/>
 <wire x1="81.28" y1="35.56" x2="20.32" y2="35.56" width="0.1524" layer="91"/>
@@ -5947,27 +5945,13 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <wire x1="20.32" y1="127" x2="17.78" y2="127" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$18" class="0">
+<net name="D-" class="0">
 <segment>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="81.28" y1="25.4" x2="30.48" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="30.48" y1="25.4" x2="30.48" y2="129.54" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="G$1" pin="D-"/>
 <wire x1="30.48" y1="129.54" x2="17.78" y2="129.54" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$23" class="0">
-<segment>
-<pinref part="U$2" gate="G$1" pin="XTAL32"/>
-<pinref part="Y2" gate="G$1" pin="2"/>
-<wire x1="111.76" y1="109.22" x2="101.6" y2="109.22" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$24" class="0">
-<segment>
-<pinref part="Y2" gate="G$1" pin="1"/>
-<pinref part="U$2" gate="G$1" pin="EXTAL32"/>
-<wire x1="101.6" y1="104.14" x2="111.76" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$25" class="0">

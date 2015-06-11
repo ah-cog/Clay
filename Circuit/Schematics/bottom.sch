@@ -1404,11 +1404,6 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 <smd name="7" x="2.2" y="0.6" dx="0.6" dy="0.4" layer="1"/>
 <smd name="5" x="2.2" y="-1.8" dx="0.6" dy="0.4" layer="1"/>
 <smd name="8" x="2.2" y="1.8" dx="0.6" dy="0.4" layer="1"/>
-<wire x1="-2.5" y1="2.5" x2="2.5" y2="2.5" width="0.01" layer="20"/>
-<wire x1="2.5" y1="2.5" x2="2.5" y2="-2.5" width="0.01" layer="20"/>
-<wire x1="2.5" y1="-2.5" x2="-2.5" y2="-2.5" width="0.01" layer="20"/>
-<wire x1="-2.5" y1="-2.5" x2="-2.5" y2="2.5" width="0.01" layer="20"/>
-<text x="-1" y="0.4" size="0.6096" layer="20">SOP8</text>
 </package>
 </packages>
 <symbols>
@@ -4848,7 +4843,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <parts>
 <part name="IC1" library="national-semiconductor" deviceset="LM2936MP?*" device="" technology="-3.3"/>
 <part name="WIFI" library="wifi" deviceset="ESP8266EX" device=""/>
-<part name="WIFI_STORAGE" library="wifi" deviceset="25Q40" device=""/>
 <part name="MESH" library="RF" deviceset="NRF24L01" device=""/>
 <part name="U$9" library="SparkFun-RF" deviceset="ANTENNA2" device="SMD"/>
 <part name="U$10" library="SparkFun-RF" deviceset="ANTENNA2" device="SMD"/>
@@ -4869,7 +4863,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="R12" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="10k"/>
 <part name="R13" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="10k"/>
 <part name="C4" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="5.6 pF"/>
-<part name="C5" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="1 uF"/>
 <part name="C6" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="15 pF"/>
 <part name="C7" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="15 pF"/>
 <part name="C8" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="1 uF"/>
@@ -4893,12 +4886,14 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="Y2" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="16 Mhz"/>
 <part name="U$1" library="chips" deviceset="LPS25H" device=""/>
 <part name="LSM303D" library="st" deviceset="LSM303D" device=""/>
-<part name="L3GD20H" library="st" deviceset="L3GD20H" device=""/>
 <part name="C1" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".22 uF"/>
 <part name="C2" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="4.7 uF"/>
-<part name="C3" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="10 nF"/>
 <part name="JP1" library="SparkFun-Connectors" deviceset="M12" device="PTH"/>
 <part name="S1" library="SparkFun-Electromechanical" deviceset="SWITCH-SPDT" device="-SMD-A"/>
+<part name="U$2" library="st" deviceset="L3GD20H" device=""/>
+<part name="C3" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="10 nF"/>
+<part name="U$3" library="wifi" deviceset="25Q40" device=""/>
+<part name="C5" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="1 uF"/>
 </parts>
 <sheets>
 <sheet>
@@ -4907,7 +4902,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <instances>
 <instance part="IC1" gate="G$1" x="114.3" y="114.3"/>
 <instance part="WIFI" gate="G$1" x="48.26" y="53.34"/>
-<instance part="WIFI_STORAGE" gate="G$1" x="45.72" y="124.46"/>
 <instance part="MESH" gate="G$1" x="129.54" y="53.34"/>
 <instance part="U$9" gate="G$1" x="-25.4" y="71.12"/>
 <instance part="U$10" gate="G$1" x="195.58" y="71.12"/>
@@ -4928,7 +4922,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <instance part="R12" gate="G$1" x="205.74" y="15.24"/>
 <instance part="R13" gate="G$1" x="205.74" y="7.62"/>
 <instance part="C4" gate="G$1" x="0" y="66.04" rot="R90"/>
-<instance part="C5" gate="G$1" x="66.04" y="139.7"/>
 <instance part="C6" gate="G$1" x="76.2" y="109.22" rot="R90"/>
 <instance part="C7" gate="G$1" x="76.2" y="99.06" rot="R90"/>
 <instance part="C8" gate="G$1" x="93.98" y="111.76"/>
@@ -4952,12 +4945,14 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <instance part="Y2" gate="G$1" x="137.16" y="12.7"/>
 <instance part="U$1" gate="G$1" x="254" y="48.26"/>
 <instance part="LSM303D" gate="G$1" x="256.54" y="12.7"/>
-<instance part="L3GD20H" gate="G$1" x="256.54" y="-17.78"/>
 <instance part="C1" gate="G$1" x="292.1" y="10.16"/>
 <instance part="C2" gate="G$1" x="284.48" y="0"/>
-<instance part="C3" gate="G$1" x="287.02" y="-22.86"/>
 <instance part="JP1" gate="G$1" x="271.78" y="96.52" rot="R180"/>
 <instance part="S1" gate="1" x="182.88" y="106.68"/>
+<instance part="U$2" gate="G$1" x="256.54" y="-20.32"/>
+<instance part="C3" gate="G$1" x="287.02" y="-22.86"/>
+<instance part="U$3" gate="G$1" x="43.18" y="134.62"/>
+<instance part="C5" gate="G$1" x="60.96" y="149.86"/>
 </instances>
 <busses>
 </busses>
@@ -5035,14 +5030,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <junction x="86.36" y="27.94"/>
 </segment>
 <segment>
-<pinref part="WIFI_STORAGE" gate="G$1" pin="VCC"/>
-<wire x1="60.96" y1="132.08" x2="66.04" y2="132.08" width="0.1524" layer="91"/>
-<junction x="66.04" y="132.08"/>
-<wire x1="66.04" y1="132.08" x2="71.12" y2="132.08" width="0.1524" layer="91"/>
-<wire x1="66.04" y1="132.08" x2="66.04" y2="137.16" width="0.1524" layer="91"/>
-<pinref part="C5" gate="G$1" pin="2"/>
-</segment>
-<segment>
 <pinref part="WIFI" gate="G$1" pin="VDDD/29"/>
 <wire x1="45.72" y1="88.9" x2="45.72" y2="91.44" width="0.1524" layer="91"/>
 </segment>
@@ -5103,18 +5090,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="274.32" y1="17.78" x2="276.86" y2="17.78" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="L3GD20H" gate="G$1" pin="CS"/>
-<wire x1="238.76" y1="-15.24" x2="236.22" y2="-15.24" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="VDD"/>
-<wire x1="274.32" y1="-7.62" x2="276.86" y2="-7.62" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="VDD_IO"/>
-<wire x1="274.32" y1="-10.16" x2="276.86" y2="-10.16" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="JP1" gate="G$1" pin="7"/>
 <wire x1="261.62" y1="96.52" x2="259.08" y2="96.52" width="0.1524" layer="91"/>
 </segment>
@@ -5139,68 +5114,88 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="261.62" y1="91.44" x2="259.08" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="L3GD20H" gate="G$1" pin="RES4"/>
-<wire x1="274.32" y1="-22.86" x2="276.86" y2="-22.86" width="0.1524" layer="91"/>
+<pinref part="U$2" gate="G$1" pin="CS"/>
+<wire x1="238.76" y1="-17.78" x2="236.22" y2="-17.78" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="VDD"/>
+<wire x1="274.32" y1="-10.16" x2="276.86" y2="-10.16" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="VDD_IO"/>
+<wire x1="274.32" y1="-12.7" x2="276.86" y2="-12.7" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="RES4"/>
+<wire x1="274.32" y1="-25.4" x2="276.86" y2="-25.4" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="VCC"/>
+<wire x1="58.42" y1="142.24" x2="60.96" y2="142.24" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="142.24" x2="60.96" y2="147.32" width="0.1524" layer="91"/>
+<junction x="60.96" y="142.24"/>
+<wire x1="60.96" y1="142.24" x2="63.5" y2="142.24" width="0.1524" layer="91"/>
+<pinref part="C5" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="SD-CMD" class="0">
 <segment>
-<pinref part="WIFI_STORAGE" gate="G$1" pin="CS#"/>
-<wire x1="30.48" y1="132.08" x2="27.94" y2="132.08" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="WIFI" gate="G$1" pin="SD_CMD/20"/>
 <wire x1="83.82" y1="50.8" x2="86.36" y2="50.8" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="CS#"/>
+<wire x1="27.94" y1="142.24" x2="25.4" y2="142.24" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SD-D0" class="0">
 <segment>
-<pinref part="WIFI_STORAGE" gate="G$1" pin="DO"/>
-<wire x1="30.48" y1="127" x2="27.94" y2="127" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="WIFI" gate="G$1" pin="SD_DATA_0/22"/>
 <wire x1="83.82" y1="60.96" x2="86.36" y2="60.96" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="DO"/>
+<wire x1="27.94" y1="137.16" x2="25.4" y2="137.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SD-D3" class="0">
 <segment>
-<pinref part="WIFI_STORAGE" gate="G$1" pin="WP#"/>
-<wire x1="30.48" y1="121.92" x2="27.94" y2="121.92" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="WIFI" gate="G$1" pin="SD_DATA_3/19"/>
 <wire x1="83.82" y1="45.72" x2="86.36" y2="45.72" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="WP#"/>
+<wire x1="27.94" y1="132.08" x2="25.4" y2="132.08" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SD-D2" class="0">
 <segment>
-<pinref part="WIFI_STORAGE" gate="G$1" pin="HOLD#"/>
-<wire x1="60.96" y1="127" x2="63.5" y2="127" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="WIFI" gate="G$1" pin="SD_DATA_2/18"/>
 <wire x1="83.82" y1="40.64" x2="86.36" y2="40.64" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="HOLD#"/>
+<wire x1="58.42" y1="137.16" x2="60.96" y2="137.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SD-CLK" class="0">
 <segment>
-<pinref part="WIFI_STORAGE" gate="G$1" pin="CLK"/>
-<wire x1="60.96" y1="121.92" x2="63.5" y2="121.92" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="WIFI" gate="G$1" pin="SD_CLK/21"/>
 <wire x1="83.82" y1="55.88" x2="86.36" y2="55.88" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="CLK"/>
+<wire x1="58.42" y1="132.08" x2="60.96" y2="132.08" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SD-D1" class="0">
 <segment>
-<pinref part="WIFI_STORAGE" gate="G$1" pin="DIO"/>
-<wire x1="60.96" y1="116.84" x2="63.5" y2="116.84" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="WIFI" gate="G$1" pin="SD_DATA_1/23"/>
 <wire x1="83.82" y1="66.04" x2="86.36" y2="66.04" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="DIO"/>
+<wire x1="58.42" y1="127" x2="60.96" y2="127" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$13" class="0">
@@ -5475,8 +5470,8 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="238.76" y1="17.78" x2="236.22" y2="17.78" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="L3GD20H" gate="G$1" pin="SDA/SDI"/>
-<wire x1="238.76" y1="-10.16" x2="236.22" y2="-10.16" width="0.1524" layer="91"/>
+<pinref part="U$2" gate="G$1" pin="SDA/SDI"/>
+<wire x1="238.76" y1="-12.7" x2="236.22" y2="-12.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SCL" class="0">
@@ -5497,8 +5492,8 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="238.76" y1="20.32" x2="236.22" y2="20.32" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="L3GD20H" gate="G$1" pin="SCL/SPC"/>
-<wire x1="238.76" y1="-7.62" x2="236.22" y2="-7.62" width="0.1524" layer="91"/>
+<pinref part="U$2" gate="G$1" pin="SCL/SPC"/>
+<wire x1="238.76" y1="-10.16" x2="236.22" y2="-10.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -5522,8 +5517,8 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="238.76" y1="15.24" x2="236.22" y2="15.24" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="L3GD20H" gate="G$1" pin="SDO"/>
-<wire x1="238.76" y1="-12.7" x2="236.22" y2="-12.7" width="0.1524" layer="91"/>
+<pinref part="U$2" gate="G$1" pin="SDO"/>
+<wire x1="238.76" y1="-15.24" x2="236.22" y2="-15.24" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$14" class="0">
@@ -5567,26 +5562,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="281.94" y1="7.62" x2="281.94" y2="5.08" width="0.1524" layer="91"/>
 <pinref part="C2" gate="G$1" pin="1"/>
 <wire x1="281.94" y1="5.08" x2="284.48" y2="5.08" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$49" class="0">
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="INT1"/>
-<wire x1="238.76" y1="-17.78" x2="236.22" y2="-17.78" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$50" class="0">
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="DRDY/INT2"/>
-<wire x1="238.76" y1="-20.32" x2="236.22" y2="-20.32" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$54" class="0">
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="CAP"/>
-<pinref part="C3" gate="G$1" pin="1"/>
-<wire x1="274.32" y1="-12.7" x2="287.02" y2="-12.7" width="0.1524" layer="91"/>
-<wire x1="287.02" y1="-12.7" x2="287.02" y2="-17.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -5643,14 +5618,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <pinref part="C17" gate="G$1" pin="2"/>
 </segment>
 <segment>
-<wire x1="66.04" y1="144.78" x2="66.04" y2="147.32" width="0.1524" layer="91"/>
-<pinref part="C5" gate="G$1" pin="1"/>
-</segment>
-<segment>
-<pinref part="WIFI_STORAGE" gate="G$1" pin="GND"/>
-<wire x1="30.48" y1="116.84" x2="27.94" y2="116.84" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <wire x1="78.74" y1="109.22" x2="78.74" y2="104.14" width="0.1524" layer="91"/>
 <junction x="78.74" y="104.14"/>
 <wire x1="78.74" y1="104.14" x2="78.74" y2="99.06" width="0.1524" layer="91"/>
@@ -5661,10 +5628,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <segment>
 <pinref part="WIFI" gate="G$1" pin="GND/33"/>
 <wire x1="25.4" y1="88.9" x2="25.4" y2="91.44" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<wire x1="30.48" y1="101.6" x2="30.48" y2="104.14" width="0.1524" layer="91"/>
-<pinref part="R1" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <wire x1="190.5" y1="55.88" x2="190.5" y2="50.8" width="0.1524" layer="91"/>
@@ -5747,30 +5710,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="284.48" y1="-2.54" x2="284.48" y2="-5.08" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="L3GD20H" gate="G$1" pin="DEN"/>
-<wire x1="238.76" y1="-22.86" x2="236.22" y2="-22.86" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="C3" gate="G$1" pin="2"/>
-<wire x1="287.02" y1="-25.4" x2="287.02" y2="-30.48" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="RES1"/>
-<wire x1="274.32" y1="-15.24" x2="276.86" y2="-15.24" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="RES2"/>
-<wire x1="274.32" y1="-17.78" x2="276.86" y2="-17.78" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="RES3"/>
-<wire x1="274.32" y1="-20.32" x2="276.86" y2="-20.32" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="L3GD20H" gate="G$1" pin="GND"/>
-<wire x1="274.32" y1="-25.4" x2="276.86" y2="-25.4" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="JP1" gate="G$1" pin="3"/>
 <wire x1="261.62" y1="106.68" x2="259.08" y2="106.68" width="0.1524" layer="91"/>
 </segment>
@@ -5786,12 +5725,66 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <pinref part="JP1" gate="G$1" pin="6"/>
 <wire x1="261.62" y1="99.06" x2="259.08" y2="99.06" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="DEN"/>
+<wire x1="238.76" y1="-25.4" x2="236.22" y2="-25.4" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="RES1"/>
+<wire x1="274.32" y1="-17.78" x2="276.86" y2="-17.78" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="RES2"/>
+<wire x1="274.32" y1="-20.32" x2="276.86" y2="-20.32" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="RES3"/>
+<wire x1="274.32" y1="-22.86" x2="276.86" y2="-22.86" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="GND"/>
+<wire x1="274.32" y1="-27.94" x2="276.86" y2="-27.94" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="GND"/>
+<wire x1="27.94" y1="127" x2="25.4" y2="127" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="C5" gate="G$1" pin="1"/>
+<wire x1="60.96" y1="154.94" x2="60.96" y2="157.48" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="VIN" class="0">
 <segment>
 <pinref part="JP6" gate="G$1" pin="1"/>
 <pinref part="S1" gate="1" pin="O"/>
 <wire x1="187.96" y1="109.22" x2="195.58" y2="109.22" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$11" class="0">
+<segment>
+<pinref part="U$2" gate="G$1" pin="INT1"/>
+<wire x1="238.76" y1="-20.32" x2="236.22" y2="-20.32" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$12" class="0">
+<segment>
+<pinref part="U$2" gate="G$1" pin="DRDY/INT2"/>
+<wire x1="238.76" y1="-22.86" x2="236.22" y2="-22.86" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$22" class="0">
+<segment>
+<pinref part="U$2" gate="G$1" pin="CAP"/>
+<wire x1="274.32" y1="-15.24" x2="287.02" y2="-15.24" width="0.1524" layer="91"/>
+<pinref part="C3" gate="G$1" pin="1"/>
+<wire x1="287.02" y1="-15.24" x2="287.02" y2="-17.78" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$31" class="0">
+<segment>
+<pinref part="C3" gate="G$1" pin="2"/>
+<wire x1="287.02" y1="-25.4" x2="287.02" y2="-27.94" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
