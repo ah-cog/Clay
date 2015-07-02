@@ -2193,7 +2193,6 @@ Standard 7-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <clearance class="1" value="0.15875"/>
 </class>
 <class number="2" name="Top GND Pour" width="0" drill="0">
-<clearance class="1" value="0.762"/>
 </class>
 </classes>
 <parts>

@@ -2448,6 +2448,48 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="SUPPLY1" gate="G$1" pin="VCC"/>
 </segment>
 </net>
+<net name="N$1" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="1"/>
+<wire x1="127" y1="38.1" x2="121.92" y2="38.1" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$2" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="2"/>
+<wire x1="127" y1="35.56" x2="121.92" y2="35.56" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="3"/>
+<wire x1="127" y1="33.02" x2="121.92" y2="33.02" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$4" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="4"/>
+<wire x1="127" y1="30.48" x2="121.92" y2="30.48" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="5"/>
+<wire x1="127" y1="27.94" x2="121.92" y2="27.94" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$6" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="6"/>
+<wire x1="127" y1="25.4" x2="121.92" y2="25.4" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="7"/>
+<wire x1="127" y1="22.86" x2="121.92" y2="22.86" width="0.1524" layer="91"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>
