@@ -66,7 +66,7 @@ bool patchmesh::send(char c){
 
 }
 
-int patchmesh::read(int i){ // returns -1 if invalid
+int patchmesh::read(void){ // returns -1 if invalid
 
 	int x;
 	if(radio.available()){
@@ -79,7 +79,7 @@ int patchmesh::read(int i){ // returns -1 if invalid
 }
 
 
-char patchmesh::read(char c){ // returns null character if invalid
+char patchmesh::read(void){ // returns null character if invalid
 
 	char x;
 	if(radio.available()){

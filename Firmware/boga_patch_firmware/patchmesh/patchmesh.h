@@ -16,8 +16,8 @@ public:
 
 	bool send(int i); // broadcasts an int
 	bool send(char c); // broadcasts a char
-	int read(int i); // reads an int
-	char read(char c); // reads in char
+	int read(void); // reads an int
+	char read(void); // reads in char
 
 	bool connection(void); // checks if any other radios around
 	int getID(void); // returns ID
