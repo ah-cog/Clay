@@ -2193,7 +2193,6 @@ Standard 7-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <clearance class="1" value="0.15875"/>
 </class>
 <class number="2" name="Top GND Pour" width="0" drill="0">
-<clearance class="1" value="0.762"/>
 </class>
 </classes>
 <parts>
@@ -2343,6 +2342,10 @@ These schematics have been successfully working in a real world project and are 
 <junction x="73.66" y="17.78"/>
 <label x="81.28" y="17.78" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="JP1" gate="G$1" pin="4"/>
+<wire x1="127" y1="30.48" x2="121.92" y2="30.48" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="SWD_CLK" class="0">
 <segment>
@@ -2350,11 +2353,19 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="68.58" y1="15.24" x2="104.14" y2="15.24" width="0.1524" layer="91"/>
 <label x="81.28" y="15.24" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="JP1" gate="G$1" pin="5"/>
+<wire x1="127" y1="27.94" x2="121.92" y2="27.94" width="0.1524" layer="91"/>
+</segment>
 </net>
-<net name="N$10" class="0">
+<net name="P0.1" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="P0.1"/>
 <wire x1="68.58" y1="12.7" x2="104.14" y2="12.7" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="JP1" gate="G$1" pin="6"/>
+<wire x1="127" y1="25.4" x2="121.92" y2="25.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$17" class="0">
@@ -2375,6 +2386,10 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="25.4" y1="7.62" x2="33.02" y2="7.62" width="0.1524" layer="91"/>
 <label x="43.18" y="-22.86" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="JP1" gate="G$1" pin="7"/>
+<wire x1="127" y1="22.86" x2="121.92" y2="22.86" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="N$18" class="0">
 <segment>
@@ -2390,12 +2405,20 @@ These schematics have been successfully working in a real world project and are 
 <label x="68.58" y="66.04" size="1.778" layer="95"/>
 <pinref part="RN1" gate="B" pin="2"/>
 </segment>
+<segment>
+<pinref part="JP1" gate="G$1" pin="2"/>
+<wire x1="127" y1="35.56" x2="121.92" y2="35.56" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="USB_D_N" class="1">
 <segment>
 <wire x1="40.64" y1="68.58" x2="68.58" y2="68.58" width="0.1524" layer="91"/>
 <label x="68.58" y="68.58" size="1.778" layer="95"/>
 <pinref part="RN1" gate="A" pin="2"/>
+</segment>
+<segment>
+<pinref part="JP1" gate="G$1" pin="1"/>
+<wire x1="127" y1="38.1" x2="121.92" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="ID" class="0">
@@ -2412,6 +2435,10 @@ These schematics have been successfully working in a real world project and are 
 <junction x="88.9" y="22.86"/>
 <wire x1="88.9" y1="27.94" x2="83.82" y2="27.94" width="0.1524" layer="91"/>
 <label x="83.82" y="27.94" size="1.778" layer="95" rot="MR0"/>
+</segment>
+<segment>
+<pinref part="JP1" gate="G$1" pin="3"/>
+<wire x1="127" y1="33.02" x2="121.92" y2="33.02" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="USB_SHIELD" class="0">
@@ -2446,48 +2473,6 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="25.4" y1="71.12" x2="68.58" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="68.58" y1="71.12" x2="68.58" y2="76.2" width="0.1524" layer="91"/>
 <pinref part="SUPPLY1" gate="G$1" pin="VCC"/>
-</segment>
-</net>
-<net name="N$1" class="0">
-<segment>
-<pinref part="JP1" gate="G$1" pin="1"/>
-<wire x1="127" y1="38.1" x2="121.92" y2="38.1" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$2" class="0">
-<segment>
-<pinref part="JP1" gate="G$1" pin="2"/>
-<wire x1="127" y1="35.56" x2="121.92" y2="35.56" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$3" class="0">
-<segment>
-<pinref part="JP1" gate="G$1" pin="3"/>
-<wire x1="127" y1="33.02" x2="121.92" y2="33.02" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$4" class="0">
-<segment>
-<pinref part="JP1" gate="G$1" pin="4"/>
-<wire x1="127" y1="30.48" x2="121.92" y2="30.48" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$5" class="0">
-<segment>
-<pinref part="JP1" gate="G$1" pin="5"/>
-<wire x1="127" y1="27.94" x2="121.92" y2="27.94" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$6" class="0">
-<segment>
-<pinref part="JP1" gate="G$1" pin="6"/>
-<wire x1="127" y1="25.4" x2="121.92" y2="25.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$7" class="0">
-<segment>
-<pinref part="JP1" gate="G$1" pin="7"/>
-<wire x1="127" y1="22.86" x2="121.92" y2="22.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

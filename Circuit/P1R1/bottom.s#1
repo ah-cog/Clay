@@ -4866,7 +4866,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="C23" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="15 pF"/>
 <part name="C1" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="15 pF"/>
 <part name="C19" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="1 uF"/>
-<part name="C15" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".1 uF"/>
+<part name="C14" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".1 uF"/>
 <part name="C6" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="10 uF"/>
 <part name="C18" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="33 nF"/>
 <part name="C11" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="4.7 uF"/>
@@ -4880,7 +4880,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="C17" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="2.2 nF"/>
 <part name="C16" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="4.7 pF"/>
 <part name="C9" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="22 pF"/>
-<part name="C14" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="22 pF"/>
+<part name="C15" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="22 pF"/>
 <part name="JP3" library="SparkFun-Connectors" deviceset="M09" device=""/>
 <part name="Y1" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="16 Mhz"/>
 <part name="Y2" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="16 Mhz"/>
@@ -4925,7 +4925,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <instance part="C23" gate="G$1" x="76.2" y="109.22" rot="R90"/>
 <instance part="C1" gate="G$1" x="76.2" y="99.06" rot="R90"/>
 <instance part="C19" gate="G$1" x="93.98" y="111.76"/>
-<instance part="C15" gate="G$1" x="101.6" y="111.76"/>
+<instance part="C14" gate="G$1" x="101.6" y="111.76"/>
 <instance part="C6" gate="G$1" x="129.54" y="111.76"/>
 <instance part="C18" gate="G$1" x="124.46" y="86.36"/>
 <instance part="C11" gate="G$1" x="137.16" y="111.76"/>
@@ -4939,7 +4939,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <instance part="C17" gate="G$1" x="160.02" y="38.1"/>
 <instance part="C16" gate="G$1" x="170.18" y="38.1"/>
 <instance part="C9" gate="G$1" x="132.08" y="2.54"/>
-<instance part="C14" gate="G$1" x="142.24" y="2.54"/>
+<instance part="C15" gate="G$1" x="142.24" y="2.54"/>
 <instance part="JP3" gate="G$1" x="236.22" y="99.06" rot="R180"/>
 <instance part="Y1" gate="G$1" x="63.5" y="104.14" rot="R90"/>
 <instance part="Y2" gate="G$1" x="137.16" y="12.7"/>
@@ -4965,7 +4965,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="101.6" y1="116.84" x2="93.98" y2="116.84" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="116.84" x2="86.36" y2="116.84" width="0.1524" layer="91"/>
 <junction x="93.98" y="116.84"/>
-<pinref part="C15" gate="G$1" pin="1"/>
+<pinref part="C14" gate="G$1" pin="1"/>
 <junction x="101.6" y="116.84"/>
 </segment>
 <segment>
@@ -5362,7 +5362,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="142.24" y1="20.32" x2="142.24" y2="12.7" width="0.1524" layer="91"/>
 <pinref part="R7" gate="G$1" pin="2"/>
 <junction x="142.24" y="20.32"/>
-<pinref part="C14" gate="G$1" pin="1"/>
+<pinref part="C15" gate="G$1" pin="1"/>
 <pinref part="Y2" gate="G$1" pin="2"/>
 <wire x1="142.24" y1="12.7" x2="142.24" y2="7.62" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="12.7" x2="142.24" y2="12.7" width="0.1524" layer="91"/>
@@ -5583,7 +5583,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 </segment>
 <segment>
 <wire x1="101.6" y1="109.22" x2="101.6" y2="106.68" width="0.1524" layer="91"/>
-<pinref part="C15" gate="G$1" pin="2"/>
+<pinref part="C14" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="IC1" gate="G$1" pin="GND@1"/>
@@ -5647,7 +5647,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <wire x1="137.16" y1="0" x2="142.24" y2="0" width="0.1524" layer="91"/>
 <wire x1="137.16" y1="0" x2="137.16" y2="-2.54" width="0.1524" layer="91"/>
 <pinref part="C9" gate="G$1" pin="2"/>
-<pinref part="C14" gate="G$1" pin="2"/>
+<pinref part="C15" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="MESH" gate="G$1" pin="VSS/8"/>
