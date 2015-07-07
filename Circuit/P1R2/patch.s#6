@@ -7470,25 +7470,25 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="38.1" y1="-12.7" x2="40.64" y2="-12.7" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="23" class="0">
+<net name="PTC2" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTC2"/>
 <wire x1="203.2" y1="-50.8" x2="210.82" y2="-50.8" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="22" class="0">
+<net name="PTC1" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTC1"/>
 <wire x1="203.2" y1="-53.34" x2="210.82" y2="-53.34" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="21" class="0">
+<net name="PTD6" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTD6"/>
 <wire x1="203.2" y1="-55.88" x2="210.82" y2="-55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$7" class="0">
+<net name="PTD5" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTD5"/>
 <wire x1="203.2" y1="-58.42" x2="210.82" y2="-58.42" width="0.1524" layer="91"/>
@@ -8148,6 +8148,10 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="U3" gate="G$1" pin="GND"/>
 <wire x1="254" y1="48.26" x2="254" y2="45.72" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="R1" gate="G$1" pin="2"/>
+<wire x1="30.48" y1="101.6" x2="30.48" y2="104.14" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="N$33" class="0">
 <segment>
@@ -8207,10 +8211,6 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="C22" gate="G$1" pin="2"/>
 </segment>
 <segment>
-<pinref part="WIFI" gate="G$1" pin="CHIP_EN/7"/>
-<wire x1="12.7" y1="40.64" x2="10.16" y2="40.64" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <wire x1="83.82" y1="12.7" x2="83.82" y2="27.94" width="0.1524" layer="91"/>
 <pinref part="WIFI" gate="G$1" pin="VDDPST/17"/>
 <wire x1="83.82" y1="35.56" x2="86.36" y2="35.56" width="0.1524" layer="91"/>
@@ -8253,6 +8253,12 @@ These schematics have been successfully working in a real world project and are 
 <junction x="256.54" y="83.82"/>
 <wire x1="256.54" y1="83.82" x2="256.54" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="C25" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="PTC1" class="0">
+<segment>
+<pinref part="WIFI" gate="G$1" pin="CHIP_EN/7"/>
+<wire x1="12.7" y1="40.64" x2="10.16" y2="40.64" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

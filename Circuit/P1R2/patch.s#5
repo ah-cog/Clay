@@ -6773,12 +6773,10 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="L6" library="SparkFun-Passives" deviceset="INDUCTOR" device="0402" value="3.9 nH"/>
 <part name="R1" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="12k"/>
 <part name="R5" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="12k"/>
-<part name="R8" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="12k"/>
 <part name="R11" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="1M"/>
 <part name="R12" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="22k"/>
 <part name="R13" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="10k"/>
 <part name="R14" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="10k"/>
-<part name="R15" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="10k"/>
 <part name="C6" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="5.6 pF"/>
 <part name="C23" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="15 pF"/>
 <part name="C7" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="15 pF"/>
@@ -6789,7 +6787,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="C10" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="4.7 pF"/>
 <part name="C14" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="22 pF"/>
 <part name="C15" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="22 pF"/>
-<part name="Y3" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="16 Mhz"/>
+<part name="Y3" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="26 Mhz"/>
 <part name="Y4" library="SparkFun-FreqCtrl" deviceset="CRYSTAL" device="5X3" value="16 Mhz"/>
 <part name="U$3" library="wifi" deviceset="25Q40" device=""/>
 <part name="C22" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value="1 uF"/>
@@ -6797,6 +6795,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="C24" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".1 uF"/>
 <part name="C25" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".1 uF"/>
 <part name="S1" library="SparkFun-Electromechanical" deviceset="SWITCH-SPDT" device="-SMD-A"/>
+<part name="C27" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".1 uF"/>
 </parts>
 <sheets>
 <sheet>
@@ -7709,14 +7708,12 @@ These schematics have been successfully working in a real world project and are 
 <instance part="L2" gate="G$1" x="170.18" y="48.26" rot="R90"/>
 <instance part="L5" gate="G$1" x="160.02" y="58.42"/>
 <instance part="L6" gate="G$1" x="170.18" y="66.04" rot="R90"/>
-<instance part="R1" gate="G$1" x="30.48" y="96.52" rot="R90"/>
+<instance part="R1" gate="G$1" x="35.56" y="96.52" rot="R90"/>
 <instance part="R5" gate="G$1" x="45.72" y="5.08" rot="R90"/>
-<instance part="R8" gate="G$1" x="86.36" y="22.86" rot="R90"/>
 <instance part="R11" gate="G$1" x="137.16" y="20.32"/>
 <instance part="R12" gate="G$1" x="144.78" y="81.28"/>
 <instance part="R13" gate="G$1" x="205.74" y="22.86"/>
 <instance part="R14" gate="G$1" x="205.74" y="15.24"/>
-<instance part="R15" gate="G$1" x="205.74" y="7.62"/>
 <instance part="C6" gate="G$1" x="0" y="66.04" rot="R90"/>
 <instance part="C23" gate="G$1" x="76.2" y="109.22" rot="R90"/>
 <instance part="C7" gate="G$1" x="76.2" y="99.06" rot="R90"/>
@@ -7734,6 +7731,7 @@ These schematics have been successfully working in a real world project and are 
 <instance part="U3" gate="G$1" x="254" y="63.5"/>
 <instance part="C24" gate="G$1" x="248.92" y="83.82" rot="R90"/>
 <instance part="C25" gate="G$1" x="261.62" y="83.82" rot="R90"/>
+<instance part="C27" gate="G$1" x="228.6" y="66.04" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -7750,10 +7748,6 @@ These schematics have been successfully working in a real world project and are 
 <segment>
 <pinref part="R14" gate="G$1" pin="1"/>
 <wire x1="200.66" y1="15.24" x2="195.58" y2="15.24" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="R15" gate="G$1" pin="1"/>
-<wire x1="200.66" y1="7.62" x2="195.58" y2="7.62" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SD-CMD" class="0">
@@ -7835,16 +7829,10 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="12.7" y1="45.72" x2="10.16" y2="45.72" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="TX_W" class="0">
+<net name="PTB16" class="0">
 <segment>
 <pinref part="WIFI" gate="G$1" pin="U0RXD/25"/>
 <wire x1="66.04" y1="88.9" x2="66.04" y2="91.44" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="RX_W" class="0">
-<segment>
-<pinref part="WIFI" gate="G$1" pin="U0TXD/26"/>
-<wire x1="60.96" y1="88.9" x2="60.96" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="XTAL_OUT" class="0">
@@ -7875,12 +7863,6 @@ These schematics have been successfully working in a real world project and are 
 <segment>
 <pinref part="WIFI" gate="G$1" pin="RES12K/31"/>
 <wire x1="35.56" y1="88.9" x2="35.56" y2="91.44" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="RST" class="0">
-<segment>
-<pinref part="WIFI" gate="G$1" pin="EXT_RSTB/32"/>
-<wire x1="30.48" y1="88.9" x2="30.48" y2="91.44" width="0.1524" layer="91"/>
 <pinref part="R1" gate="G$1" pin="1"/>
 </segment>
 </net>
@@ -7891,37 +7873,37 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="C6" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="CE" class="0">
+<net name="PTC9" class="0">
 <segment>
 <pinref part="MESH" gate="G$1" pin="CE/1"/>
 <wire x1="104.14" y1="63.5" x2="101.6" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="CSN" class="0">
+<net name="PTC4" class="0">
 <segment>
 <pinref part="MESH" gate="G$1" pin="CSN/2"/>
 <wire x1="104.14" y1="58.42" x2="101.6" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="SCK" class="0">
+<net name="PTC5" class="0">
 <segment>
 <pinref part="MESH" gate="G$1" pin="SCK/3"/>
 <wire x1="104.14" y1="53.34" x2="101.6" y2="53.34" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="MOSI" class="0">
+<net name="PTC6" class="0">
 <segment>
 <pinref part="MESH" gate="G$1" pin="MOSI/4"/>
 <wire x1="104.14" y1="48.26" x2="101.6" y2="48.26" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="MISO" class="0">
+<net name="PTC7" class="0">
 <segment>
 <pinref part="MESH" gate="G$1" pin="MISO/5"/>
 <wire x1="104.14" y1="43.18" x2="101.6" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="IQR" class="0">
+<net name="PTC8" class="0">
 <segment>
 <pinref part="MESH" gate="G$1" pin="IRQ/6"/>
 <wire x1="119.38" y1="27.94" x2="119.38" y2="25.4" width="0.1524" layer="91"/>
@@ -8033,13 +8015,10 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="C12" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="N$31" class="0">
+<net name="PTB19" class="0">
 <segment>
 <pinref part="WIFI" gate="G$1" pin="GPIO2/14"/>
 <wire x1="55.88" y1="17.78" x2="55.88" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="55.88" y1="15.24" x2="86.36" y2="15.24" width="0.1524" layer="91"/>
-<wire x1="86.36" y1="15.24" x2="86.36" y2="17.78" width="0.1524" layer="91"/>
-<pinref part="R8" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="SDA" class="0">
@@ -8047,11 +8026,19 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="R13" gate="G$1" pin="2"/>
 <wire x1="210.82" y1="22.86" x2="213.36" y2="22.86" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="U3" gate="G$1" pin="SDA/MOSI"/>
+<wire x1="271.78" y1="66.04" x2="274.32" y2="66.04" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="SCL" class="0">
 <segment>
 <pinref part="R14" gate="G$1" pin="2"/>
 <wire x1="210.82" y1="15.24" x2="213.36" y2="15.24" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U3" gate="G$1" pin="SCLK"/>
+<wire x1="271.78" y1="68.58" x2="274.32" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$32" class="0">
@@ -8059,12 +8046,6 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="WIFI" gate="G$1" pin="MTCK/12"/>
 <wire x1="45.72" y1="17.78" x2="45.72" y2="10.16" width="0.1524" layer="91"/>
 <pinref part="R5" gate="G$1" pin="2"/>
-</segment>
-</net>
-<net name="SDO" class="0">
-<segment>
-<pinref part="R15" gate="G$1" pin="2"/>
-<wire x1="210.82" y1="7.62" x2="213.36" y2="7.62" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND" class="2">
@@ -8150,10 +8131,14 @@ These schematics have been successfully working in a real world project and are 
 </segment>
 <segment>
 <pinref part="R1" gate="G$1" pin="2"/>
-<wire x1="30.48" y1="101.6" x2="30.48" y2="104.14" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="101.6" x2="30.48" y2="104.14" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="C27" gate="G$1" pin="1"/>
+<wire x1="223.52" y1="66.04" x2="220.98" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$33" class="0">
+<net name="PTB1" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="FSYNC"/>
 <wire x1="236.22" y1="68.58" x2="233.68" y2="68.58" width="0.1524" layer="91"/>
@@ -8162,31 +8147,14 @@ These schematics have been successfully working in a real world project and are 
 <net name="N$34" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="REGOUT"/>
-<wire x1="236.22" y1="66.04" x2="233.68" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="236.22" y1="66.04" x2="231.14" y2="66.04" width="0.1524" layer="91"/>
+<pinref part="C27" gate="G$1" pin="2"/>
 </segment>
 </net>
-<net name="N$35" class="0">
-<segment>
-<pinref part="U3" gate="G$1" pin="AUX_DA"/>
-<wire x1="236.22" y1="60.96" x2="233.68" y2="60.96" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$36" class="0">
-<segment>
-<pinref part="U3" gate="G$1" pin="AUX_CL"/>
-<wire x1="236.22" y1="58.42" x2="233.68" y2="58.42" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$39" class="0">
+<net name="PTB0" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="INT"/>
 <wire x1="271.78" y1="55.88" x2="274.32" y2="55.88" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$40" class="0">
-<segment>
-<pinref part="U3" gate="G$1" pin="!CS"/>
-<wire x1="271.78" y1="58.42" x2="274.32" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="3.3V" class="0">
@@ -8221,8 +8189,6 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="WIFI" gate="G$1" pin="VDDPST/11"/>
 <wire x1="40.64" y1="17.78" x2="40.64" y2="12.7" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="12.7" x2="83.82" y2="12.7" width="0.1524" layer="91"/>
-<pinref part="R8" gate="G$1" pin="2"/>
-<junction x="86.36" y="27.94"/>
 </segment>
 <segment>
 <pinref part="WIFI" gate="G$1" pin="VDDD/29"/>
@@ -8254,11 +8220,33 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="256.54" y1="83.82" x2="256.54" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="C25" gate="G$1" pin="1"/>
 </segment>
+<segment>
+<pinref part="U3" gate="G$1" pin="!CS"/>
+<wire x1="271.78" y1="58.42" x2="274.32" y2="58.42" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="PTC1" class="0">
 <segment>
 <pinref part="WIFI" gate="G$1" pin="CHIP_EN/7"/>
 <wire x1="12.7" y1="40.64" x2="10.16" y2="40.64" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="PTC0" class="0">
+<segment>
+<pinref part="WIFI" gate="G$1" pin="EXT_RSTB/32"/>
+<wire x1="30.48" y1="88.9" x2="30.48" y2="91.44" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="PTB18" class="0">
+<segment>
+<pinref part="WIFI" gate="G$1" pin="GPIO0/15"/>
+<wire x1="60.96" y1="17.78" x2="60.96" y2="15.24" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="PTB17" class="0">
+<segment>
+<pinref part="WIFI" gate="G$1" pin="U0TXD/26"/>
+<wire x1="60.96" y1="88.9" x2="60.96" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

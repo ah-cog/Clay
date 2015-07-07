@@ -5254,106 +5254,6 @@ Basic schematic elements and footprints for 0603, 1206, and PTH resistors.</desc
 </deviceset>
 </devicesets>
 </library>
-<library name="RF">
-<packages>
-<package name="QFN20(4X4)">
-<wire x1="2" y1="2" x2="-2" y2="2" width="0.05" layer="20"/>
-<wire x1="-2" y1="2" x2="-2" y2="-2" width="0.05" layer="20"/>
-<wire x1="-2" y1="-2" x2="2" y2="-2" width="0.05" layer="20"/>
-<wire x1="2" y1="-2" x2="2" y2="2" width="0.05" layer="20"/>
-<smd name="18" x="0" y="1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="19" x="-0.5" y="1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="20" x="-1" y="1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="17" x="0.5" y="1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="16" x="1" y="1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="8" x="0" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="7" x="-0.5" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="6" x="-1" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="9" x="0.5" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="10" x="1" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
-<smd name="3" x="-1.8" y="0" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="4" x="-1.8" y="-0.5" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="5" x="-1.8" y="-1" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="2" x="-1.8" y="0.5" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="1" x="-1.8" y="1" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="13" x="1.8" y="0" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="12" x="1.8" y="-0.5" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="11" x="1.8" y="-1" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="14" x="1.8" y="0.5" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="15" x="1.8" y="1" dx="0.25" dy="0.4" layer="1" rot="R90"/>
-<smd name="GND" x="0" y="0" dx="2.6" dy="2.6" layer="1"/>
-<circle x="-1.6" y="1.55" radius="0.111803125" width="0.05" layer="21"/>
-</package>
-</packages>
-<symbols>
-<symbol name="NRF24L01">
-<wire x1="-20.32" y1="20.32" x2="20.32" y2="20.32" width="0.254" layer="94"/>
-<wire x1="20.32" y1="20.32" x2="20.32" y2="-20.32" width="0.254" layer="94"/>
-<wire x1="20.32" y1="-20.32" x2="-20.32" y2="-20.32" width="0.254" layer="94"/>
-<wire x1="-20.32" y1="-20.32" x2="-20.32" y2="20.32" width="0.254" layer="94"/>
-<pin name="VSS/20" x="-10.16" y="25.4" length="middle" rot="R270"/>
-<pin name="DVDD/19" x="-5.08" y="25.4" length="middle" rot="R270"/>
-<pin name="VDD/18" x="0" y="25.4" length="middle" rot="R270"/>
-<pin name="VSS/17" x="5.08" y="25.4" length="middle" rot="R270"/>
-<pin name="IREF/16" x="10.16" y="25.4" length="middle" rot="R270"/>
-<pin name="VDD/15" x="25.4" y="10.16" length="middle" rot="R180"/>
-<pin name="VSS/14" x="25.4" y="5.08" length="middle" rot="R180"/>
-<pin name="ANT2/13" x="25.4" y="0" length="middle" rot="R180"/>
-<pin name="ANT1/12" x="25.4" y="-5.08" length="middle" rot="R180"/>
-<pin name="VDD_PA/11" x="25.4" y="-10.16" length="middle" rot="R180"/>
-<pin name="CE/1" x="-25.4" y="10.16" length="middle"/>
-<pin name="CSN/2" x="-25.4" y="5.08" length="middle"/>
-<pin name="SCK/3" x="-25.4" y="0" length="middle"/>
-<pin name="MOSI/4" x="-25.4" y="-5.08" length="middle"/>
-<pin name="MISO/5" x="-25.4" y="-10.16" length="middle"/>
-<pin name="IRQ/6" x="-10.16" y="-25.4" length="middle" rot="R90"/>
-<pin name="VDD/7" x="-5.08" y="-25.4" length="middle" rot="R90"/>
-<pin name="VSS/8" x="0" y="-25.4" length="middle" rot="R90"/>
-<pin name="XC2/9" x="5.08" y="-25.4" length="middle" rot="R90"/>
-<pin name="XC1/10" x="10.16" y="-25.4" length="middle" rot="R90"/>
-<text x="-5.08" y="0" size="1.6764" layer="94"> nRF24L01
-QFN20 4x4</text>
-<pin name="GND" x="-17.78" y="25.4" length="middle" rot="R270"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="NRF24L01">
-<gates>
-<gate name="G$1" symbol="NRF24L01" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="QFN20(4X4)">
-<connects>
-<connect gate="G$1" pin="ANT1/12" pad="12"/>
-<connect gate="G$1" pin="ANT2/13" pad="13"/>
-<connect gate="G$1" pin="CE/1" pad="1"/>
-<connect gate="G$1" pin="CSN/2" pad="2"/>
-<connect gate="G$1" pin="DVDD/19" pad="19"/>
-<connect gate="G$1" pin="GND" pad="GND"/>
-<connect gate="G$1" pin="IREF/16" pad="16"/>
-<connect gate="G$1" pin="IRQ/6" pad="6"/>
-<connect gate="G$1" pin="MISO/5" pad="5"/>
-<connect gate="G$1" pin="MOSI/4" pad="4"/>
-<connect gate="G$1" pin="SCK/3" pad="3"/>
-<connect gate="G$1" pin="VDD/15" pad="15"/>
-<connect gate="G$1" pin="VDD/18" pad="18"/>
-<connect gate="G$1" pin="VDD/7" pad="7"/>
-<connect gate="G$1" pin="VDD_PA/11" pad="11"/>
-<connect gate="G$1" pin="VSS/14" pad="14"/>
-<connect gate="G$1" pin="VSS/17" pad="17"/>
-<connect gate="G$1" pin="VSS/20" pad="20"/>
-<connect gate="G$1" pin="VSS/8" pad="8"/>
-<connect gate="G$1" pin="XC1/10" pad="10"/>
-<connect gate="G$1" pin="XC2/9" pad="9"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="SparkFun-RF">
 <description>&lt;h3&gt;SparkFun Electronics' preferred foot prints&lt;/h3&gt;
 In this library you'll find things that send or receive RF- GPS, cellular modules, Bluetooth, WiFi, etc.&lt;br&gt;&lt;br&gt;
@@ -6690,6 +6590,103 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="RF">
+<packages>
+<package name="QFN20(4X4)">
+<wire x1="2" y1="2" x2="-2" y2="2" width="0.05" layer="20"/>
+<wire x1="-2" y1="2" x2="-2" y2="-2" width="0.05" layer="20"/>
+<wire x1="-2" y1="-2" x2="2" y2="-2" width="0.05" layer="20"/>
+<wire x1="2" y1="-2" x2="2" y2="2" width="0.05" layer="20"/>
+<smd name="18" x="0" y="1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="19" x="-0.5" y="1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="20" x="-1" y="1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="17" x="0.5" y="1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="16" x="1" y="1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="8" x="0" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="7" x="-0.5" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="6" x="-1" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="9" x="0.5" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="10" x="1" y="-1.8" dx="0.25" dy="0.4" layer="1"/>
+<smd name="3" x="-1.8" y="0" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="4" x="-1.8" y="-0.5" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="5" x="-1.8" y="-1" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="2" x="-1.8" y="0.5" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="1" x="-1.8" y="1" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="13" x="1.8" y="0" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="12" x="1.8" y="-0.5" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="11" x="1.8" y="-1" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="14" x="1.8" y="0.5" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<smd name="15" x="1.8" y="1" dx="0.25" dy="0.4" layer="1" rot="R90"/>
+<circle x="-1.6" y="1.55" radius="0.111803125" width="0.05" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="NRF24L01">
+<wire x1="-20.32" y1="20.32" x2="20.32" y2="20.32" width="0.254" layer="94"/>
+<wire x1="20.32" y1="20.32" x2="20.32" y2="-20.32" width="0.254" layer="94"/>
+<wire x1="20.32" y1="-20.32" x2="-20.32" y2="-20.32" width="0.254" layer="94"/>
+<wire x1="-20.32" y1="-20.32" x2="-20.32" y2="20.32" width="0.254" layer="94"/>
+<pin name="VSS/20" x="-10.16" y="25.4" length="middle" rot="R270"/>
+<pin name="DVDD/19" x="-5.08" y="25.4" length="middle" rot="R270"/>
+<pin name="VDD/18" x="0" y="25.4" length="middle" rot="R270"/>
+<pin name="VSS/17" x="5.08" y="25.4" length="middle" rot="R270"/>
+<pin name="IREF/16" x="10.16" y="25.4" length="middle" rot="R270"/>
+<pin name="VDD/15" x="25.4" y="10.16" length="middle" rot="R180"/>
+<pin name="VSS/14" x="25.4" y="5.08" length="middle" rot="R180"/>
+<pin name="ANT2/13" x="25.4" y="0" length="middle" rot="R180"/>
+<pin name="ANT1/12" x="25.4" y="-5.08" length="middle" rot="R180"/>
+<pin name="VDD_PA/11" x="25.4" y="-10.16" length="middle" rot="R180"/>
+<pin name="CE/1" x="-25.4" y="10.16" length="middle"/>
+<pin name="CSN/2" x="-25.4" y="5.08" length="middle"/>
+<pin name="SCK/3" x="-25.4" y="0" length="middle"/>
+<pin name="MOSI/4" x="-25.4" y="-5.08" length="middle"/>
+<pin name="MISO/5" x="-25.4" y="-10.16" length="middle"/>
+<pin name="IRQ/6" x="-10.16" y="-25.4" length="middle" rot="R90"/>
+<pin name="VDD/7" x="-5.08" y="-25.4" length="middle" rot="R90"/>
+<pin name="VSS/8" x="0" y="-25.4" length="middle" rot="R90"/>
+<pin name="XC2/9" x="5.08" y="-25.4" length="middle" rot="R90"/>
+<pin name="XC1/10" x="10.16" y="-25.4" length="middle" rot="R90"/>
+<text x="-5.08" y="0" size="1.6764" layer="94"> nRF24L01
+QFN20 4x4</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="NRF24L01">
+<gates>
+<gate name="G$1" symbol="NRF24L01" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="QFN20(4X4)">
+<connects>
+<connect gate="G$1" pin="ANT1/12" pad="12"/>
+<connect gate="G$1" pin="ANT2/13" pad="13"/>
+<connect gate="G$1" pin="CE/1" pad="1"/>
+<connect gate="G$1" pin="CSN/2" pad="2"/>
+<connect gate="G$1" pin="DVDD/19" pad="19"/>
+<connect gate="G$1" pin="IREF/16" pad="16"/>
+<connect gate="G$1" pin="IRQ/6" pad="6"/>
+<connect gate="G$1" pin="MISO/5" pad="5"/>
+<connect gate="G$1" pin="MOSI/4" pad="4"/>
+<connect gate="G$1" pin="SCK/3" pad="3"/>
+<connect gate="G$1" pin="VDD/15" pad="15"/>
+<connect gate="G$1" pin="VDD/18" pad="18"/>
+<connect gate="G$1" pin="VDD/7" pad="7"/>
+<connect gate="G$1" pin="VDD_PA/11" pad="11"/>
+<connect gate="G$1" pin="VSS/14" pad="14"/>
+<connect gate="G$1" pin="VSS/17" pad="17"/>
+<connect gate="G$1" pin="VSS/20" pad="20"/>
+<connect gate="G$1" pin="VSS/8" pad="8"/>
+<connect gate="G$1" pin="XC1/10" pad="10"/>
+<connect gate="G$1" pin="XC2/9" pad="9"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -6765,7 +6762,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="JP5" library="SparkFun-Connectors" deviceset="M02" device="PTH"/>
 <part name="JP6" library="umich" deviceset="M10" device="0.1"/>
 <part name="WIFI" library="wifi" deviceset="ESP8266EX" device=""/>
-<part name="MESH" library="RF" deviceset="NRF24L01" device=""/>
 <part name="U$1" library="SparkFun-RF" deviceset="ANTENNA2" device="SMD"/>
 <part name="U$2" library="SparkFun-RF" deviceset="ANTENNA2" device="SMD"/>
 <part name="L2" library="SparkFun-Passives" deviceset="INDUCTOR" device="0402" value="2.7 nH"/>
@@ -6796,6 +6792,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <part name="C25" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".1 uF"/>
 <part name="S1" library="SparkFun-Electromechanical" deviceset="SWITCH-SPDT" device="-SMD-A"/>
 <part name="C27" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".1 uF"/>
+<part name="U$4" library="RF" deviceset="NRF24L01" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7702,7 +7699,6 @@ These schematics have been successfully working in a real world project and are 
 </plain>
 <instances>
 <instance part="WIFI" gate="G$1" x="48.26" y="53.34"/>
-<instance part="MESH" gate="G$1" x="129.54" y="53.34"/>
 <instance part="U$1" gate="G$1" x="-25.4" y="71.12"/>
 <instance part="U$2" gate="G$1" x="195.58" y="71.12"/>
 <instance part="L2" gate="G$1" x="170.18" y="48.26" rot="R90"/>
@@ -7732,6 +7728,7 @@ These schematics have been successfully working in a real world project and are 
 <instance part="C24" gate="G$1" x="248.92" y="83.82" rot="R90"/>
 <instance part="C25" gate="G$1" x="261.62" y="83.82" rot="R90"/>
 <instance part="C27" gate="G$1" x="228.6" y="66.04" rot="R90"/>
+<instance part="U$4" gate="G$1" x="129.54" y="53.34"/>
 </instances>
 <busses>
 </busses>
@@ -7875,43 +7872,42 @@ These schematics have been successfully working in a real world project and are 
 </net>
 <net name="PTC9" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="CE/1"/>
 <wire x1="104.14" y1="63.5" x2="101.6" y2="63.5" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="CE/1"/>
 </segment>
 </net>
 <net name="PTC4" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="CSN/2"/>
 <wire x1="104.14" y1="58.42" x2="101.6" y2="58.42" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="CSN/2"/>
 </segment>
 </net>
 <net name="PTC5" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="SCK/3"/>
 <wire x1="104.14" y1="53.34" x2="101.6" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="SCK/3"/>
 </segment>
 </net>
 <net name="PTC6" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="MOSI/4"/>
 <wire x1="104.14" y1="48.26" x2="101.6" y2="48.26" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="MOSI/4"/>
 </segment>
 </net>
 <net name="PTC7" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="MISO/5"/>
 <wire x1="104.14" y1="43.18" x2="101.6" y2="43.18" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="MISO/5"/>
 </segment>
 </net>
 <net name="PTC8" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="IRQ/6"/>
 <wire x1="119.38" y1="27.94" x2="119.38" y2="25.4" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="IRQ/6"/>
 </segment>
 </net>
 <net name="N$17" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="XC2/9"/>
 <wire x1="134.62" y1="27.94" x2="134.62" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="134.62" y1="25.4" x2="132.08" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="132.08" y1="25.4" x2="132.08" y2="20.32" width="0.1524" layer="91"/>
@@ -7923,11 +7919,11 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="132.08" y1="12.7" x2="132.08" y2="7.62" width="0.1524" layer="91"/>
 <wire x1="134.62" y1="12.7" x2="132.08" y2="12.7" width="0.1524" layer="91"/>
 <junction x="132.08" y="12.7"/>
+<pinref part="U$4" gate="G$1" pin="XC2/9"/>
 </segment>
 </net>
 <net name="N$18" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="XC1/10"/>
 <wire x1="139.7" y1="27.94" x2="139.7" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="25.4" x2="142.24" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="142.24" y1="25.4" x2="142.24" y2="20.32" width="0.1524" layer="91"/>
@@ -7939,11 +7935,11 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="142.24" y1="12.7" x2="142.24" y2="7.62" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="12.7" x2="142.24" y2="12.7" width="0.1524" layer="91"/>
 <junction x="142.24" y="12.7"/>
+<pinref part="U$4" gate="G$1" pin="XC1/10"/>
 </segment>
 </net>
 <net name="N$19" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="VDD_PA/11"/>
 <pinref part="L2" gate="G$1" pin="2"/>
 <wire x1="154.94" y1="43.18" x2="160.02" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="160.02" y1="43.18" x2="170.18" y2="43.18" width="0.1524" layer="91"/>
@@ -7953,48 +7949,52 @@ These schematics have been successfully working in a real world project and are 
 <junction x="160.02" y="43.18"/>
 <pinref part="C10" gate="G$1" pin="1"/>
 <junction x="170.18" y="43.18"/>
+<pinref part="U$4" gate="G$1" pin="VDD_PA/11"/>
 </segment>
 </net>
 <net name="N$20" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="ANT2/13"/>
-<wire x1="154.94" y1="53.34" x2="154.94" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="154.94" y1="53.34" x2="154.94" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="154.94" y1="58.42" x2="154.94" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="154.94" y1="63.5" x2="154.94" y2="66.04" width="0.1524" layer="91"/>
 <wire x1="154.94" y1="66.04" x2="160.02" y2="66.04" width="0.1524" layer="91"/>
 <pinref part="L5" gate="G$1" pin="1"/>
 <junction x="160.02" y="66.04"/>
 <pinref part="L6" gate="G$1" pin="1"/>
 <wire x1="160.02" y1="66.04" x2="162.56" y2="66.04" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="VDD/15"/>
+<pinref part="U$4" gate="G$1" pin="VSS/14"/>
+<pinref part="U$4" gate="G$1" pin="ANT2/13"/>
 </segment>
 </net>
 <net name="N$24" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="IREF/16"/>
 <wire x1="139.7" y1="78.74" x2="139.7" y2="81.28" width="0.1524" layer="91"/>
 <pinref part="R12" gate="G$1" pin="1"/>
+<pinref part="U$4" gate="G$1" pin="IREF/16"/>
 </segment>
 </net>
 <net name="N$21" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="DVDD/19"/>
 <wire x1="124.46" y1="78.74" x2="124.46" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="C8" gate="G$1" pin="2"/>
+<pinref part="U$4" gate="G$1" pin="DVDD/19"/>
 </segment>
 </net>
 <net name="N$22" class="0">
 <segment>
-<pinref part="MESH" gate="G$1" pin="GND"/>
 <wire x1="111.76" y1="78.74" x2="111.76" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$23" class="0">
 <segment>
 <pinref part="L2" gate="G$1" pin="1"/>
-<pinref part="MESH" gate="G$1" pin="ANT1/12"/>
 <wire x1="154.94" y1="48.26" x2="160.02" y2="48.26" width="0.1524" layer="91"/>
 <pinref part="L5" gate="G$1" pin="2"/>
 <wire x1="160.02" y1="48.26" x2="162.56" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="160.02" y1="50.8" x2="160.02" y2="48.26" width="0.1524" layer="91"/>
 <junction x="160.02" y="48.26"/>
+<pinref part="U$4" gate="G$1" pin="ANT1/12"/>
 </segment>
 </net>
 <net name="N$25" class="0">
@@ -8082,11 +8082,10 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="C15" gate="G$1" pin="2"/>
 </segment>
 <segment>
-<pinref part="MESH" gate="G$1" pin="VSS/8"/>
 <wire x1="129.54" y1="27.94" x2="129.54" y2="25.4" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="VSS/8"/>
 </segment>
 <segment>
-<pinref part="MESH" gate="G$1" pin="VSS/14"/>
 <wire x1="154.94" y1="58.42" x2="157.48" y2="58.42" width="0.1524" layer="91"/>
 </segment>
 <segment>
@@ -8098,12 +8097,12 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="R12" gate="G$1" pin="2"/>
 </segment>
 <segment>
-<pinref part="MESH" gate="G$1" pin="VSS/20"/>
 <wire x1="119.38" y1="78.74" x2="119.38" y2="81.28" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="VSS/20"/>
 </segment>
 <segment>
-<pinref part="MESH" gate="G$1" pin="VSS/17"/>
 <wire x1="134.62" y1="78.74" x2="134.62" y2="81.28" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="VSS/17"/>
 </segment>
 <segment>
 <wire x1="45.72" y1="0" x2="45.72" y2="-2.54" width="0.1524" layer="91"/>
@@ -8195,16 +8194,15 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="45.72" y1="88.9" x2="45.72" y2="91.44" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="MESH" gate="G$1" pin="VDD/7"/>
 <wire x1="124.46" y1="27.94" x2="124.46" y2="25.4" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="VDD/7"/>
 </segment>
 <segment>
-<pinref part="MESH" gate="G$1" pin="VDD/15"/>
 <wire x1="154.94" y1="63.5" x2="157.48" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="MESH" gate="G$1" pin="VDD/18"/>
 <wire x1="129.54" y1="78.74" x2="129.54" y2="81.28" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="VDD/18"/>
 </segment>
 <segment>
 <pinref part="U3" gate="G$1" pin="VDD"/>

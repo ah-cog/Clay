@@ -7738,14 +7738,6 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="40.64" y1="88.9" x2="40.64" y2="91.44" width="0.1524" layer="91"/>
 <pinref part="U$6" gate="G$1" pin="VDDA/30"/>
 </segment>
-<segment>
-<pinref part="R13" gate="G$1" pin="1"/>
-<wire x1="200.66" y1="22.86" x2="195.58" y2="22.86" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="R14" gate="G$1" pin="1"/>
-<wire x1="200.66" y1="15.24" x2="195.58" y2="15.24" width="0.1524" layer="91"/>
-</segment>
 </net>
 <net name="SD-CMD" class="0">
 <segment>
@@ -7979,11 +7971,6 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="124.46" y1="78.74" x2="124.46" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="C8" gate="G$1" pin="2"/>
 <pinref part="U$4" gate="G$1" pin="DVDD/19"/>
-</segment>
-</net>
-<net name="N$22" class="0">
-<segment>
-<wire x1="111.76" y1="78.74" x2="111.76" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$23" class="0">
@@ -8221,6 +8208,14 @@ These schematics have been successfully working in a real world project and are 
 <segment>
 <pinref part="U3" gate="G$1" pin="!CS"/>
 <wire x1="271.78" y1="58.42" x2="274.32" y2="58.42" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R13" gate="G$1" pin="1"/>
+<wire x1="200.66" y1="22.86" x2="195.58" y2="22.86" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R14" gate="G$1" pin="1"/>
+<wire x1="200.66" y1="15.24" x2="195.58" y2="15.24" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTC1" class="0">
