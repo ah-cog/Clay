@@ -6793,6 +6793,15 @@ QFN20 4x4</text>
 <part name="C27" library="SparkFun-Capacitors" deviceset="CAP" device="0603-CAP" value=".1 uF"/>
 <part name="U$4" library="RF" deviceset="NRF24L01" device=""/>
 <part name="U$6" library="wifi" deviceset="ESP8266EX" device=""/>
+<part name="R8" library="appfruits" deviceset="RESISTOR" device="-470" value="330"/>
+<part name="LED2" library="appfruits" deviceset="LED" device="-GREEN"/>
+<part name="GND2" library="supply1" deviceset="GND" device=""/>
+<part name="R15" library="appfruits" deviceset="RESISTOR" device="-470" value="330"/>
+<part name="LED3" library="appfruits" deviceset="LED" device="-GREEN"/>
+<part name="GND3" library="supply1" deviceset="GND" device=""/>
+<part name="R17" library="appfruits" deviceset="RESISTOR" device="-470" value="330"/>
+<part name="LED4" library="appfruits" deviceset="LED" device="-GREEN"/>
+<part name="GND6" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -6888,6 +6897,15 @@ These schematics have been successfully working in a real world project and are 
 <instance part="JP5" gate="G$1" x="17.78" y="-17.78"/>
 <instance part="JP6" gate="G$1" x="55.88" y="-142.24"/>
 <instance part="S1" gate="1" x="33.02" y="-15.24"/>
+<instance part="R8" gate="G$1" x="276.86" y="-101.6" rot="R270"/>
+<instance part="LED2" gate="G$1" x="276.86" y="-86.36"/>
+<instance part="GND2" gate="1" x="276.86" y="-111.76"/>
+<instance part="R15" gate="G$1" x="289.56" y="-101.6" rot="R270"/>
+<instance part="LED3" gate="G$1" x="289.56" y="-86.36"/>
+<instance part="GND3" gate="1" x="289.56" y="-111.76"/>
+<instance part="R17" gate="G$1" x="302.26" y="-101.6" rot="R270"/>
+<instance part="LED4" gate="G$1" x="302.26" y="-86.36"/>
+<instance part="GND6" gate="1" x="302.26" y="-111.76"/>
 </instances>
 <busses>
 </busses>
@@ -7081,6 +7099,27 @@ These schematics have been successfully working in a real world project and are 
 <segment>
 <pinref part="JP5" gate="G$1" pin="1"/>
 <wire x1="25.4" y1="-17.78" x2="27.94" y2="-17.78" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R8" gate="G$1" pin="2"/>
+<pinref part="GND2" gate="1" pin="GND"/>
+<wire x1="276.86" y1="-106.68" x2="276.86" y2="-109.22" width="0.1524" layer="91"/>
+<junction x="276.86" y="-109.22"/>
+<wire x1="276.86" y1="-109.22" x2="281.94" y2="-109.22" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R15" gate="G$1" pin="2"/>
+<pinref part="GND3" gate="1" pin="GND"/>
+<wire x1="289.56" y1="-106.68" x2="289.56" y2="-109.22" width="0.1524" layer="91"/>
+<junction x="289.56" y="-109.22"/>
+<wire x1="289.56" y1="-109.22" x2="294.64" y2="-109.22" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R17" gate="G$1" pin="2"/>
+<pinref part="GND6" gate="1" pin="GND"/>
+<wire x1="302.26" y1="-106.68" x2="302.26" y2="-109.22" width="0.1524" layer="91"/>
+<junction x="302.26" y="-109.22"/>
+<wire x1="302.26" y1="-109.22" x2="307.34" y2="-109.22" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$2" class="0">
@@ -7289,6 +7328,10 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="U1" gate="G$1" pin="PTB2"/>
 <wire x1="203.2" y1="-60.96" x2="210.82" y2="-60.96" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="LED2" gate="G$1" pin="A"/>
+<wire x1="276.86" y1="-83.82" x2="276.86" y2="-81.28" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="USB_D_P" class="1">
 <segment>
@@ -7471,6 +7514,10 @@ These schematics have been successfully working in a real world project and are 
 <pinref part="U1" gate="G$1" pin="PTC2"/>
 <wire x1="203.2" y1="-50.8" x2="210.82" y2="-50.8" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="LED3" gate="G$1" pin="A"/>
+<wire x1="289.56" y1="-83.82" x2="289.56" y2="-81.28" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="PTC1" class="0">
 <segment>
@@ -7532,6 +7579,10 @@ These schematics have been successfully working in a real world project and are 
 <segment>
 <pinref part="U1" gate="G$1" pin="PTC3"/>
 <wire x1="203.2" y1="-91.44" x2="210.82" y2="-91.44" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="LED4" gate="G$1" pin="A"/>
+<wire x1="302.26" y1="-83.82" x2="302.26" y2="-81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTD3" class="0">
@@ -7724,10 +7775,42 @@ These schematics have been successfully working in a real world project and are 
 <wire x1="203.2" y1="-139.7" x2="210.82" y2="-139.7" width="0.1524" layer="91"/>
 </segment>
 </net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="R8" gate="G$1" pin="1"/>
+<pinref part="LED2" gate="G$1" pin="C"/>
+<wire x1="276.86" y1="-91.44" x2="276.86" y2="-96.52" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="R15" gate="G$1" pin="1"/>
+<pinref part="LED3" gate="G$1" pin="C"/>
+<wire x1="289.56" y1="-91.44" x2="289.56" y2="-96.52" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$9" class="0">
+<segment>
+<pinref part="R17" gate="G$1" pin="1"/>
+<pinref part="LED4" gate="G$1" pin="C"/>
+<wire x1="302.26" y1="-91.44" x2="302.26" y2="-96.52" width="0.1524" layer="91"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
 <plain>
+<text x="190.5" y="17.78" size="1.778" layer="91">I2C power</text>
+<text x="215.9" y="22.86" size="1.778" layer="91">SCL</text>
+<text x="215.9" y="15.24" size="1.778" layer="91">SDA</text>
+<text x="276.86" y="66.04" size="1.778" layer="91">SDA</text>
+<text x="276.86" y="68.58" size="1.778" layer="91">SCL</text>
+<text x="33.02" y="104.14" size="1.778" layer="91">GND</text>
+<text x="20.32" y="91.44" size="1.778" layer="91">GND</text>
+<text x="43.18" y="-5.08" size="1.778" layer="91">GND</text>
+<text x="119.38" y="96.52" size="1.778" layer="91">GND</text>
+<text x="134.62" y="83.82" size="1.778" layer="91">GND</text>
+<text x="251.46" y="43.18" size="1.778" layer="91">GND</text>
 </plain>
 <instances>
 <instance part="U$1" gate="G$1" x="-25.4" y="71.12"/>
