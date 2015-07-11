@@ -11,10 +11,27 @@
 // https://github.com/espressif/esp8266_at/wiki/AT_Description
 
 #define WIFI_SERIAL Serial1
-#define WIFI_BAUD_RATE 115200
+#define WIFI_BAUD_RATE 9600
+
+boolean Connect_To_Access_Point (String ssid, String password);
 
 // Sets up the Wi-Fi electronic circuit components (ESP8266)
-void Setup_WiFi () {
+void WiFi_Setup () {
+
+  delay (1000);
+
+  pinMode (3, OUTPUT); // Wi-Fi: ESP8266 breakout CH_PD (chip enable on ESP8266 IC)
+  pinMode (4, OUTPUT); // Wi-Fi: ESP8266 breakout RST (reset on ESP8266 IC)
+  pinMode (5, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO0 (reset on ESP8266 IC)
+  pinMode (8, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO0 (reset on ESP8266 IC)
+
+  digitalWrite (5, HIGH); // Set up GPIO0. "At boot: low causes bootloader to enter flash upload mode; high causes normal boot" (from http://www.esp8266.com/wiki/doku.php?id=esp8266-module-family)
+  digitalWrite (8, HIGH); // Set up GPIO2 in Working Mode
+  digitalWrite (3, HIGH); // Set up CH_PD to enable the chip
+  digitalWrite (4, HIGH); // Set up RST
+
+  delay (1000);
+  
   WIFI_SERIAL.begin (WIFI_BAUD_RATE);
   
   // TODO:
@@ -25,7 +42,7 @@ void Setup_WiFi () {
 
 // Resets the Wi-Fi module and checks if it responds as "ready".
 // Uses: AT+RST
-void Verify_WiFi () {
+void WiFi_Verify () {
   // Test if the module is ready
   WIFI_SERIAL.println ("AT+RST");
   delay (1000);
@@ -44,12 +61,12 @@ void WiFi_Check_Firmware () {
   WIFI_SERIAL.println ("AT+GMR");
 }
 
-// Repeatedly try to connect to the WiFi
+// Repeatedly try to connect to the WiFi until the number of retries has been exceeded.
 // Uses: AT+CIPMUX=0
-void Strong_Connect_To_Access_Point (int retryCount) {
+void Try_Connect_To_Access_Point (String ssid, String password, int retryCount) {
   boolean connected = false;
   for (int i = 0; i < retryCount; i++) {
-    if (Connect_To_Access_Point ()) {
+    if (Connect_To_Access_Point (ssid, password)) {
       connected = true;
       break;
     }
@@ -77,7 +94,7 @@ boolean Connect_To_Access_Point (String ssid, String password) {
   String cmd = "AT+CWJAP=\"";
   cmd += ssid;
   cmd += "\",\"";
-  cmd += ;
+  cmd += password;
   cmd += "\"";
   Serial.println (cmd);
   WIFI_SERIAL.println (cmd);
@@ -113,6 +130,13 @@ void WiFi_Get_Access_Points () {
 // Uses: AT+CIFSR
 void WiFi_Get_IP_Address () {  
   WIFI_SERIAL.println ("AT+CIFSR");
+  if (WIFI_SERIAL.find ("+CIFSR:STAIP")) { // Note: "+CIFSR:STAIP" is the key in the key-value pair with the device's IP address
+    Serial.println ("Device has IP. [TODO: In this function, just return the IP address string or bytes.]");
+  } else {
+    Serial.println ("Device has not been assigned an IP address.");
+    while (1);
+  }
+  delay (1000);
 }
 
 // Disconnects from the access point.
@@ -140,7 +164,8 @@ void WiFi_HTTP_GET_Request () {
   
   // Establish a TCP connection as a client.
   // Format: AT+CIPSTART=id,type,addr,port
-  WIFI_SERIAL.println ("AT+CIPSTART=4,\"TCP\",\"looper.cc\",80"); // =channel_id,connection_protocol,address,port
+  WIFI_SERIAL.println ("AT+CIPSTART=4,\"TCP\",\"iffy.com\",80"); // =channel_id,connection_protocol,address,port
+  // WIFI_SERIAL.println ("AT+CIPSTART=4,\"TCP\",\"looper.cc\",80"); // =channel_id,connection_protocol,address,port
   
   // delay (300); // Wait a little while for the 'Linked' response.
   
@@ -191,6 +216,15 @@ void WiFi_HTTP_GET_Request () {
   Serial.println("AT+CIPCLOSE");
 }
 
+  
+//AT+CIPSTART=?
+//+CIPSTART:("type"),("ip address"),(port)
+//+CIPSTART:("type"),("domain name"),(port)
+//
+//OK
+void WiFi_Send_Data (String data) {
+}
+
 // Request methods: GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, CONNECT, PATCH (from https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)
 // TODO: void WiFi_HTTP_OPTIONS_Request ()
 // TODO: void WiFi_HTTP_POST_Request ()
@@ -212,6 +246,7 @@ void Start_UDP_Server (int port) {
 void Send_UDP_Message () {
 }
 
-void 
+void Send_UDP_Broadcast () {
+}
 
 #endif
