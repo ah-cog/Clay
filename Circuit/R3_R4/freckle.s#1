@@ -7452,6 +7452,11 @@ JTAG/USB+Bootloader</text>
 <pinref part="JP2" gate="G$1" pin="8"/>
 <wire x1="218.44" y1="-116.84" x2="251.46" y2="-116.84" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="PTC10"/>
+<wire x1="203.2" y1="-137.16" x2="218.44" y2="-137.16" width="0.1524" layer="91"/>
+<wire x1="218.44" y1="-137.16" x2="218.44" y2="-116.84" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="PTC9" class="0">
 <segment>
@@ -7577,13 +7582,6 @@ JTAG/USB+Bootloader</text>
 <pinref part="R17" gate="G$1" pin="2"/>
 <pinref part="LED4" gate="G$1" pin="A"/>
 <wire x1="243.84" y1="-91.44" x2="247.65" y2="-91.44" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$30" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTC10"/>
-<wire x1="203.2" y1="-137.16" x2="218.44" y2="-137.16" width="0.1524" layer="91"/>
-<wire x1="218.44" y1="-137.16" x2="218.44" y2="-116.84" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SCL" class="0">

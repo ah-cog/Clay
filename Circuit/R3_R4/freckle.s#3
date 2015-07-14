@@ -6674,6 +6674,7 @@ QFN20 4x4</text>
 <part name="GND34" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND35" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND36" library="SparkFun" deviceset="GND" device=""/>
+<part name="GND37" library="SparkFun" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -7633,8 +7634,6 @@ JTAG/USB+Bootloader</text>
 <text x="190.5" y="17.78" size="1.778" layer="91">I2C power</text>
 <text x="276.86" y="66.04" size="1.778" layer="91">SDA</text>
 <text x="276.86" y="68.58" size="1.778" layer="91">SCL</text>
-<text x="119.38" y="96.52" size="1.778" layer="91">GND</text>
-<text x="134.62" y="83.82" size="1.778" layer="91">GND</text>
 </plain>
 <instances>
 <instance part="U$1" gate="G$1" x="-137.16" y="66.04"/>
@@ -7679,7 +7678,7 @@ JTAG/USB+Bootloader</text>
 <instance part="R18" gate="G$1" x="33.02" y="30.48" rot="R180"/>
 <instance part="GND26" gate="1" x="137.16" y="-6.35"/>
 <instance part="GND27" gate="1" x="124.46" y="97.79" rot="R180"/>
-<instance part="GND28" gate="1" x="134.62" y="85.09" rot="R180"/>
+<instance part="GND28" gate="1" x="134.62" y="88.9" rot="R180"/>
 <instance part="GND29" gate="1" x="160.02" y="29.21"/>
 <instance part="GND30" gate="1" x="170.18" y="29.21"/>
 <instance part="GND31" gate="1" x="254" y="41.91"/>
@@ -7688,6 +7687,7 @@ JTAG/USB+Bootloader</text>
 <instance part="GND34" gate="1" x="219.71" y="63.5"/>
 <instance part="GND35" gate="1" x="-40.64" y="-12.7"/>
 <instance part="GND36" gate="1" x="196.85" y="49.53"/>
+<instance part="GND37" gate="1" x="152.4" y="86.36" rot="R180"/>
 </instances>
 <busses>
 </busses>
@@ -8048,14 +8048,17 @@ JTAG/USB+Bootloader</text>
 <segment>
 <wire x1="149.86" y1="81.28" x2="152.4" y2="81.28" width="0.1524" layer="91"/>
 <pinref part="R12" gate="G$1" pin="2"/>
+<pinref part="GND37" gate="1" pin="GND"/>
+<wire x1="152.4" y1="83.82" x2="152.4" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <wire x1="119.38" y1="78.74" x2="119.38" y2="81.28" width="0.1524" layer="91"/>
 <pinref part="U$4" gate="G$1" pin="VSS/20"/>
 </segment>
 <segment>
-<wire x1="134.62" y1="78.74" x2="134.62" y2="81.28" width="0.1524" layer="91"/>
+<wire x1="134.62" y1="78.74" x2="134.62" y2="86.36" width="0.1524" layer="91"/>
 <pinref part="U$4" gate="G$1" pin="VSS/17"/>
+<pinref part="GND28" gate="1" pin="GND"/>
 </segment>
 <segment>
 <pinref part="R5" gate="G$1" pin="1"/>

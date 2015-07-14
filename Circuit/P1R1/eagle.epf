@@ -1197,6 +1197,7 @@ ArcDirection=0
 AddLevel=2
 PadsSameType=0
 Layer=91
+Views=" 1: 4.14069 -187.187 286.326 30.1727"
 Sheet="1"
 
 [Win_2]

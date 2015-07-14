@@ -6660,9 +6660,6 @@ QFN20 4x4</text>
 <part name="GND23" library="SparkFun" deviceset="GND" device=""/>
 <part name="L7" library="SparkFun-Passives" deviceset="INDUCTOR" device="30OHM,1.8A"/>
 <part name="L8" library="SparkFun-Passives" deviceset="INDUCTOR" device="30OHM,1.8A"/>
-<part name="L9" library="SparkFun-Passives" deviceset="INDUCTOR" device="30OHM,1.8A"/>
-<part name="L10" library="SparkFun-Passives" deviceset="INDUCTOR" device="30OHM,1.8A"/>
-<part name="L11" library="SparkFun-Passives" deviceset="INDUCTOR" device="30OHM,1.8A"/>
 <part name="GND24" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND25" library="SparkFun" deviceset="GND" device=""/>
 <part name="R18" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="200"/>
@@ -7168,7 +7165,7 @@ JTAG/USB+Bootloader</text>
 <label x="116.84" y="-144.78" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="PTB3" class="0">
+<net name="SDA" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTB3"/>
 <wire x1="203.2" y1="-63.5" x2="210.82" y2="-63.5" width="0.1524" layer="91"/>
@@ -7451,12 +7448,6 @@ JTAG/USB+Bootloader</text>
 <wire x1="203.2" y1="-111.76" x2="210.82" y2="-111.76" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="PTB16" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTB16"/>
-<wire x1="203.2" y1="-114.3" x2="210.82" y2="-114.3" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="PTA4" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTA4"/>
@@ -7623,10 +7614,16 @@ JTAG/USB+Bootloader</text>
 <wire x1="218.44" y1="-137.16" x2="218.44" y2="-116.84" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="PTB2" class="0">
+<net name="SCL" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTB2"/>
 <wire x1="203.2" y1="-60.96" x2="214.63" y2="-60.96" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="AD0" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTB16"/>
+<wire x1="203.2" y1="-114.3" x2="210.82" y2="-114.3" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
@@ -7634,8 +7631,6 @@ JTAG/USB+Bootloader</text>
 <sheet>
 <plain>
 <text x="190.5" y="17.78" size="1.778" layer="91">I2C power</text>
-<text x="215.9" y="22.86" size="1.778" layer="91">SCL</text>
-<text x="215.9" y="15.24" size="1.778" layer="91">SDA</text>
 <text x="276.86" y="66.04" size="1.778" layer="91">SDA</text>
 <text x="276.86" y="68.58" size="1.778" layer="91">SCL</text>
 <text x="119.38" y="96.52" size="1.778" layer="91">GND</text>
@@ -7679,9 +7674,6 @@ JTAG/USB+Bootloader</text>
 <instance part="GND23" gate="1" x="-1.27" y="96.52"/>
 <instance part="L7" gate="G$1" x="-110.49" y="49.53"/>
 <instance part="L8" gate="G$1" x="-91.44" y="49.53"/>
-<instance part="L9" gate="G$1" x="-172.72" y="190.5"/>
-<instance part="L10" gate="G$1" x="-132.08" y="181.61"/>
-<instance part="L11" gate="G$1" x="-78.74" y="190.5"/>
 <instance part="GND24" gate="1" x="-110.49" y="36.83"/>
 <instance part="GND25" gate="1" x="-91.44" y="36.83"/>
 <instance part="R18" gate="G$1" x="33.02" y="30.48" rot="R180"/>
@@ -7979,12 +7971,12 @@ JTAG/USB+Bootloader</text>
 </net>
 <net name="SDA" class="0">
 <segment>
-<pinref part="R13" gate="G$1" pin="2"/>
-<wire x1="210.82" y1="22.86" x2="213.36" y2="22.86" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="U3" gate="G$1" pin="SDA/MOSI"/>
 <wire x1="271.78" y1="66.04" x2="274.32" y2="66.04" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R13" gate="G$1" pin="2"/>
+<wire x1="210.82" y1="22.86" x2="213.36" y2="22.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SCL" class="0">
@@ -8243,7 +8235,7 @@ JTAG/USB+Bootloader</text>
 <wire x1="38.1" y1="30.48" x2="58.42" y2="30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$36" class="0">
+<net name="AD0" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="AD0/MISO"/>
 <wire x1="271.78" y1="63.5" x2="274.32" y2="63.5" width="0.1524" layer="91"/>
