@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="1" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="10" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -1654,12 +1654,13 @@ design rules under a new name.</description>
 <contactref element="R10" pad="1"/>
 <wire x1="10.209" y1="42.148" x2="9.8204" y2="42.148" width="0.254" layer="1"/>
 <wire x1="9.8204" y1="42.148" x2="9.5758" y2="42.3926" width="0.254" layer="1"/>
-<wire x1="9.5758" y1="42.3926" x2="9.5758" y2="42.8498" width="0.254" layer="1"/>
+<wire x1="9.5758" y1="42.3926" x2="9.5758" y2="42.7736" width="0.254" layer="1"/>
+<wire x1="9.5758" y1="42.7736" x2="9.5758" y2="42.8498" width="0.6096" layer="1"/>
+<wire x1="9.5758" y1="42.8498" x2="10.668" y2="43.942" width="0.6096" layer="1"/>
 <wire x1="10.668" y1="43.942" x2="10.668" y2="45.466" width="0.6096" layer="1"/>
 <wire x1="10.668" y1="45.466" x2="11.176" y2="45.974" width="0.6096" layer="1"/>
 <wire x1="11.176" y1="45.974" x2="11.6214" y2="45.974" width="0.6096" layer="1"/>
 <wire x1="11.6214" y1="45.974" x2="11.7992" y2="46.1518" width="0.6096" layer="1"/>
-<wire x1="9.5758" y1="42.8498" x2="10.668" y2="43.942" width="0.254" layer="1"/>
 </signal>
 <signal name="VREFL">
 <contactref element="L4" pad="2"/>
@@ -2604,42 +2605,6 @@ design rules under a new name.</description>
 </signal>
 <signal name="N$37">
 <wire x1="12.3952" y1="39.9288" x2="12.4206" y2="39.9288" width="0.1778" layer="1"/>
-</signal>
-<signal name="N$39">
-<via x="29.21" y="32.1818" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$40">
-<via x="31.9786" y="33.6296" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$41">
-<via x="2.8194" y="24.892" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$42">
-<via x="2.8702" y="18.8722" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$43">
-<via x="2.9718" y="12.065" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$44">
-<via x="5.4102" y="6.2484" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$45">
-<via x="40.386" y="45.6184" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$46">
-<via x="43.9928" y="42.3672" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$47">
-<via x="39.0652" y="12.1412" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$48">
-<via x="43.1292" y="11.8618" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$49">
-<via x="41.6814" y="8.2042" extent="1-16" drill="0.6"/>
-</signal>
-<signal name="N$50">
-<via x="49.6824" y="6.096" extent="1-16" drill="0.6"/>
 </signal>
 </signals>
 </board>
