@@ -7371,6 +7371,12 @@ JTAG/USB+Bootloader</text>
 <wire x1="53.34" y1="-93.98" x2="139.7" y2="-93.98" width="0.1524" layer="91"/>
 </segment>
 </net>
+<net name="PTA1" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTA1"/>
+<wire x1="101.6" y1="-137.16" x2="139.7" y2="-137.16" width="0.1524" layer="91"/>
+</segment>
+</net>
 <net name="VDDA" class="0">
 <segment>
 <pinref part="L3" gate="G$1" pin="1"/>
@@ -7833,6 +7839,17 @@ JTAG/USB+Bootloader</text>
 <wire x1="203.2" y1="-91.44" x2="210.82" y2="-91.44" width="0.1524" layer="91"/>
 </segment>
 </net>
+<net name="ID" class="0">
+<segment>
+<pinref part="U$22" gate="G$1" pin="P0.0"/>
+<wire x1="60.96" y1="-137.16" x2="83.82" y2="-137.16" width="0.1524" layer="91"/>
+<junction x="83.82" y="-137.16"/>
+<wire x1="83.82" y1="-137.16" x2="101.6" y2="-137.16" width="0.1524" layer="91"/>
+<wire x1="83.82" y1="-137.16" x2="83.82" y2="-111.76" width="0.1524" layer="91"/>
+<pinref part="J1" gate="G$1" pin="ID"/>
+<wire x1="83.82" y1="-111.76" x2="38.1" y2="-111.76" width="0.1524" layer="91"/>
+</segment>
+</net>
 <net name="N$49" class="0">
 <segment>
 <pinref part="U$22" gate="G$1" pin="LDOCAP"/>
@@ -7880,18 +7897,6 @@ JTAG/USB+Bootloader</text>
 <pinref part="U1" gate="G$1" pin="USB0_DP"/>
 <wire x1="139.7" y1="-99.06" x2="55.88" y2="-99.06" width="0.1524" layer="91"/>
 <wire x1="55.88" y1="-99.06" x2="55.88" y2="-116.84" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="ID" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTA1"/>
-<wire x1="83.82" y1="-137.16" x2="139.7" y2="-137.16" width="0.1524" layer="91"/>
-<pinref part="U$22" gate="G$1" pin="P0.0"/>
-<wire x1="60.96" y1="-137.16" x2="83.82" y2="-137.16" width="0.1524" layer="91"/>
-<wire x1="83.82" y1="-137.16" x2="83.82" y2="-111.76" width="0.1524" layer="91"/>
-<pinref part="J1" gate="G$1" pin="ID"/>
-<wire x1="83.82" y1="-111.76" x2="38.1" y2="-111.76" width="0.1524" layer="91"/>
-<junction x="83.82" y="-137.16"/>
 </segment>
 </net>
 </nets>
