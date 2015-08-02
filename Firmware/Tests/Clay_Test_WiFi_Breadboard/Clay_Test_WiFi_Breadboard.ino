@@ -1,6 +1,6 @@
 //#include <SoftwareSerial1.h>
-#define SSID        "Arbor Guest" // "AWS" // "joopal" // "HOME-5EE4" // "shell-2.4GHz"
-#define PASS        "Nouakchott" // "Codehappy123" // "Cassandra2048" // "316793944D3C0868" // "technologydrive"
+#define SSID        "Jackson 5" // "Arbor Guest" // "AWS" // "joopal" // "HOME-5EE4" // "shell-2.4GHz"
+#define PASS        "tigertiger" // "Nouakchott" // "Codehappy123" // "Cassandra2048" // "316793944D3C0868" // "technologydrive"
 #define DST_IP      "220.181.111.85"    //baidu.com
 //SoftwareSerial dbgSerial(10, 11); // RX, TX
 void setup()
@@ -20,30 +20,26 @@ void setup()
   delay (1000);
   
   // Open serial communications and wait for port to open:
-  delay(5000);
+//  delay(5000);
 //  Serial1.setTimeout(5000);
-  Serial.begin(115200);  //can't be faster than 19200 for softserial
-  Serial1.begin(9600); // Serial1.begin(115200);
-  Serial.println("ESP8266 Demo");
+  Serial.begin (9600);  //can't be faster than 19200 for softserial
+  Serial1.begin (9600); // Serial1.begin(115200);
+  Serial.println ("Clay");
+  Serial.println ("ESP8266 Test");
   //test if the module is ready
-  Serial1.println("AT+RST");
-  delay(1000);
-  if (Serial1.find("OK")) // if (Serial1.find("ready"))
-  {
+  Serial1.println ("AT+RST");
+  delay (1000);
+  if (Serial1.find("OK")) {  // if (Serial1.find("ready")) {
     Serial.println("Module is ready");
-  }
-  else
-  {
+  } else {
     Serial.println("Module have no response.");
     while (1);
   }
   delay(1000);
   //connect to the wifi
   boolean connected = false;
-  for (int i = 0; i < 5; i++)
-  {
-    if (connectWiFi())
-    {
+  for (int i = 0; i < 5; i++) {
+    if (connectWiFi ()) {
       connected = true;
       break;
     }

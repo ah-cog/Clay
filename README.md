@@ -1,7 +1,7 @@
-Pixel
-=====
+Clay
+====
 
-Pixel is a modular, tangible interface for physical computing.
+Clay is an intelligent material for creating interactive systems.
 
 ## Physical Design ##
 

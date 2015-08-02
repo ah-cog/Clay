@@ -17,9 +17,9 @@
 
 //#define SSID  "shell-2.4GHz"      // change this to match your WiFi SSID
 //#define PASS  "technologydrive"  // change this to match your WiFi password
-#define SSID        "Jackson 5" // "HOME-5EE4" // "joopal" // "AWS" // "shell-2.4GHz"
-#define PASS        "tigertiger" "316793944D3C0868" // "Cassandra2048" // "Codehappy123" // "technologydrive"
-#define PORT  "15164"           // using port 8080 by default
+#define SSID        "Clay" // "Jackson 5" // "HOME-5EE4" // "joopal" // "AWS" // "shell-2.4GHz"
+#define PASS        "g0ldenbr0wn" // "tigertiger" // "316793944D3C0868" // "Cassandra2048" // "Codehappy123" // "technologydrive"
+#define PORT  "8080" // "15164"           // using port 8080 by default
 
 char buffer[BUFFER_SIZE];
 
@@ -50,19 +50,33 @@ byte wait_for_esp_response(int timeout, char* term=OKrn) {
 
 void setup() {
 
+  delay (1000);
+
+  pinMode (3, OUTPUT); // Wi-Fi: ESP8266 breakout CH_PD (chip enable on ESP8266 IC)
+  pinMode (4, OUTPUT); // Wi-Fi: ESP8266 breakout RST (reset on ESP8266 IC)
+  pinMode (5, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO0 (reset on ESP8266 IC)
+  pinMode (8, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO0 (reset on ESP8266 IC)
+
+  digitalWrite (5, HIGH); // Set up GPIO0. "At boot: low causes bootloader to enter flash upload mode; high causes normal boot" (from http://www.esp8266.com/wiki/doku.php?id=esp8266-module-family)
+  digitalWrite (8, HIGH); // Set up GPIO2 in Working Mode
+  digitalWrite (3, HIGH); // Set up CH_PD to enable the chip
+  digitalWrite (4, HIGH); // Set up RST
+
+  delay (1000);
+
   // assume esp8266 operates at 115200 baud rate
   // change if necessary to match your modules' baud rate
-  Serial1.begin(115200);  // Teensy Hardware Serial port 1   (pins 0 and 1)
-  Serial.begin(115200);   // Teensy USB Serial Port
+  Serial1.begin(9600);  // Teensy Hardware Serial port 1   (pins 0 and 1)
+  Serial.begin(9600);   // Teensy USB Serial Port
   
-  delay(5000);
+//  delay(5000);
   Serial.println("begin.");  
   setupWiFi();
 
   // print device IP address
   Serial.print("device ip addr: ");
   Serial1.println("AT+CIFSR");
-  wait_for_esp_response(1000);
+  wait_for_esp_response(3000);
 }
 
 bool read_till_eol() {
@@ -145,10 +159,10 @@ String header = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close
   Serial1.print(ch_id);
   Serial1.print(",");
   Serial1.println(header.length()+content.length());
-  if(wait_for_esp_response(2000)) {
+  if(wait_for_esp_response (2000)) {
    //delay(100);
-   Serial1.print(header);
-   Serial1.print(content);
+   Serial1.print (header);
+   Serial1.print (content);
   } 
   else {
   Serial1.print("AT+CIPCLOSE=");
@@ -172,8 +186,8 @@ void setupWiFi() {
   wait_for_esp_response(1000); 
  
   // reset WiFi module
-  Serial1.print("AT+RST\r\n");
-  wait_for_esp_response(1500);
+//  Serial1.print("AT+RST\r\n");
+//  wait_for_esp_response(1500);
 
    //join AP
   Serial1.print("AT+CWJAP=\"");
@@ -181,7 +195,7 @@ void setupWiFi() {
   Serial1.print("\",\"");
   Serial1.print(PASS);
   Serial1.println("\"");
-  wait_for_esp_response(5000);
+  wait_for_esp_response(10000);
 
   // start server
   Serial1.println("AT+CIPMUX=1");
@@ -210,8 +224,8 @@ void setupWiFi() {
   Serial1.println("AT+CIFSR");
   wait_for_esp_response(5000);
   
-  Serial1.println("AT+CWLAP");
-  wait_for_esp_response(5000);
+//  Serial1.println("AT+CWLAP");
+//  wait_for_esp_response(5000);
   
   Serial.println("---------------*****##### READY TO SERVE #####*****---------------");
   
