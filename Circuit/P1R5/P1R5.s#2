@@ -1184,7 +1184,7 @@ It has a reduced top mask to make it harder to install upside-down.</description
 <pin name="ADC0_DP0" x="30.48" y="-63.5" length="middle" rot="R180"/>
 <pin name="ADC0_DP3" x="30.48" y="-43.18" length="middle" rot="R180"/>
 <pin name="DAC0" x="30.48" y="-50.8" length="middle" rot="R180"/>
-<pin name="EXTAL32" x="-33.02" y="-25.4" length="middle"/>
+<pin name="EXTAL32" x="-33.02" y="-20.32" length="middle"/>
 <pin name="PTA0" x="-33.02" y="-58.42" length="middle"/>
 <pin name="PTA1" x="-33.02" y="-53.34" length="middle"/>
 <pin name="PTA2" x="-33.02" y="-55.88" length="middle"/>
@@ -1238,7 +1238,7 @@ It has a reduced top mask to make it harder to install upside-down.</description
 <pin name="VREGIN" x="-33.02" y="60.96" length="middle"/>
 <pin name="VSS" x="-33.02" y="-68.58" length="middle"/>
 <pin name="VSSA" x="-33.02" y="22.86" length="middle"/>
-<pin name="XTAL32" x="-33.02" y="-20.32" length="middle"/>
+<pin name="XTAL32" x="-33.02" y="-15.24" length="middle"/>
 <text x="-10.16" y="60.96" size="1.778" layer="95">&gt;NAME</text>
 <text x="-15.24" y="-68.58" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
@@ -9008,13 +9008,13 @@ JTAG/USB+Bootloader</text>
 <instance part="U$10" gate="G$1" x="-2.54" y="-73.66"/>
 <instance part="R16" gate="G$1" x="50.8" y="-55.88"/>
 <instance part="U$19" gate="G$1" x="82.55" y="-165.1"/>
-<instance part="Y2" gate="G$1" x="77.47" y="-91.44" rot="R90">
-<attribute name="MF" x="77.47" y="-91.44" size="1.778" layer="96" rot="R90" display="off"/>
-<attribute name="MPN" x="77.47" y="-91.44" size="1.778" layer="96" rot="R90" display="off"/>
+<instance part="Y2" gate="G$1" x="48.26" y="-88.9" rot="R180">
+<attribute name="MF" x="48.26" y="-88.9" size="1.778" layer="96" rot="R180" display="off"/>
+<attribute name="MPN" x="48.26" y="-88.9" size="1.778" layer="96" rot="R180" display="off"/>
 </instance>
-<instance part="Y1" gate="G$1" x="77.47" y="-111.76" rot="R90">
-<attribute name="MF" x="77.47" y="-111.76" size="1.778" layer="96" rot="R90" display="off"/>
-<attribute name="MPN" x="77.47" y="-111.76" size="1.778" layer="96" rot="R90" display="off"/>
+<instance part="Y1" gate="G$1" x="73.66" y="-88.9" rot="R180">
+<attribute name="MF" x="73.66" y="-88.9" size="1.778" layer="96" rot="R180" display="off"/>
+<attribute name="MPN" x="73.66" y="-88.9" size="1.778" layer="96" rot="R180" display="off"/>
 </instance>
 <instance part="U$24" gate="G$1" x="83.82" y="-20.32"/>
 <instance part="C5" gate="G$1" x="35.56" y="-33.02"/>
@@ -9038,21 +9038,21 @@ JTAG/USB+Bootloader</text>
 <instance part="R17" gate="G$1" x="189.23" y="-53.34"/>
 <instance part="LED4" gate="G$1" x="200.66" y="-53.34" rot="R90"/>
 <instance part="GND6" gate="1" x="214.63" y="-55.88"/>
-<instance part="C29" gate="G$1" x="72.39" y="-87.63" smashed="yes" rot="R90">
-<attribute name="NAME" x="70.358" y="-84.836" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="77.216" y="-85.344" size="1.778" layer="96" rot="R180"/>
+<instance part="C29" gate="G$1" x="43.18" y="-93.98" smashed="yes" rot="R180">
+<attribute name="NAME" x="40.386" y="-97.282" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="40.894" y="-87.884" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="C30" gate="G$1" x="72.39" y="-96.52" smashed="yes" rot="R90">
-<attribute name="NAME" x="69.596" y="-97.282" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="72.644" y="-98.806" size="1.778" layer="96"/>
+<instance part="C30" gate="G$1" x="54.61" y="-93.98" smashed="yes" rot="R180">
+<attribute name="NAME" x="52.832" y="-96.774" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="54.356" y="-93.726" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="C31" gate="G$1" x="72.39" y="-107.95" smashed="yes" rot="R90">
-<attribute name="NAME" x="70.358" y="-106.426" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="72.644" y="-107.696" size="1.778" layer="96"/>
+<instance part="C31" gate="G$1" x="68.58" y="-93.98" smashed="yes" rot="R180">
+<attribute name="NAME" x="67.056" y="-96.012" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="68.326" y="-93.726" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="C32" gate="G$1" x="72.39" y="-115.57" smashed="yes" rot="R90">
-<attribute name="NAME" x="70.358" y="-116.586" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="72.644" y="-117.856" size="1.778" layer="96"/>
+<instance part="C32" gate="G$1" x="77.47" y="-93.98" smashed="yes" rot="R180">
+<attribute name="NAME" x="78.486" y="-96.012" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="79.756" y="-93.726" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="JP1" gate="G$1" x="217.17" y="-83.82" rot="R180"/>
 <instance part="U$7" gate="G$1" x="49.53" y="-142.24" rot="R180"/>
@@ -9062,12 +9062,12 @@ JTAG/USB+Bootloader</text>
 <instance part="R53" gate="G$1" x="81.28" y="-133.35" rot="R270"/>
 <instance part="U$22" gate="G$1" x="-2.54" y="-45.72"/>
 <instance part="U$23" gate="G$1" x="45.72" y="-20.32"/>
-<instance part="U$1" gate="G$1" x="62.23" y="-87.63" rot="R270"/>
-<instance part="U$2" gate="G$1" x="62.23" y="-96.52" rot="R270"/>
+<instance part="U$1" gate="G$1" x="43.18" y="-104.14"/>
+<instance part="U$2" gate="G$1" x="54.61" y="-104.14"/>
 <instance part="U$3" gate="G$1" x="8.89" y="2.54"/>
 <instance part="U$4" gate="G$1" x="-16.51" y="-29.21"/>
-<instance part="U$5" gate="G$1" x="62.23" y="-107.95" rot="R270"/>
-<instance part="U$6" gate="G$1" x="62.23" y="-115.57" rot="R270"/>
+<instance part="U$5" gate="G$1" x="68.58" y="-104.14"/>
+<instance part="U$6" gate="G$1" x="77.47" y="-104.14"/>
 <instance part="U$8" gate="G$1" x="64.77" y="-124.46"/>
 <instance part="U$12" gate="G$1" x="76.2" y="-124.46"/>
 <instance part="U$13" gate="G$1" x="81.28" y="-124.46"/>
@@ -9160,26 +9160,6 @@ JTAG/USB+Bootloader</text>
 <wire x1="82.55" y1="-162.56" x2="82.55" y2="-157.48" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="VSS"/>
 <wire x1="82.55" y1="-157.48" x2="88.9" y2="-157.48" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="U$6" gate="G$1" pin="GND"/>
-<pinref part="C32" gate="G$1" pin="1"/>
-<wire x1="64.77" y1="-115.57" x2="67.31" y2="-115.57" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="U$5" gate="G$1" pin="GND"/>
-<pinref part="C31" gate="G$1" pin="1"/>
-<wire x1="64.77" y1="-107.95" x2="67.31" y2="-107.95" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="U$2" gate="G$1" pin="GND"/>
-<pinref part="C30" gate="G$1" pin="1"/>
-<wire x1="64.77" y1="-96.52" x2="67.31" y2="-96.52" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="U$1" gate="G$1" pin="GND"/>
-<pinref part="C29" gate="G$1" pin="1"/>
-<wire x1="64.77" y1="-87.63" x2="67.31" y2="-87.63" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="3.3V" class="0">
@@ -9692,46 +9672,6 @@ JTAG/USB+Bootloader</text>
 <pinref part="C21" gate="G$1" pin="1"/>
 <wire x1="26.67" y1="-27.94" x2="26.67" y2="-25.4" width="0.1524" layer="91"/>
 <wire x1="26.67" y1="-25.4" x2="35.56" y2="-25.4" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$1" class="0">
-<segment>
-<pinref part="C31" gate="G$1" pin="2"/>
-<pinref part="Y1" gate="G$1" pin="2"/>
-<wire x1="74.93" y1="-107.95" x2="77.47" y2="-107.95" width="0.1524" layer="91"/>
-<wire x1="77.47" y1="-107.95" x2="77.47" y2="-109.22" width="0.1524" layer="91"/>
-<pinref part="U1" gate="G$1" pin="XTAL32"/>
-<wire x1="77.47" y1="-109.22" x2="88.9" y2="-109.22" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$2" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="EXTAL32"/>
-<pinref part="Y1" gate="G$1" pin="1"/>
-<wire x1="88.9" y1="-114.3" x2="77.47" y2="-114.3" width="0.1524" layer="91"/>
-<wire x1="77.47" y1="-114.3" x2="77.47" y2="-115.57" width="0.1524" layer="91"/>
-<pinref part="C32" gate="G$1" pin="2"/>
-<wire x1="77.47" y1="-115.57" x2="74.93" y2="-115.57" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$8" class="0">
-<segment>
-<pinref part="C29" gate="G$1" pin="2"/>
-<pinref part="Y2" gate="G$1" pin="2"/>
-<wire x1="74.93" y1="-87.63" x2="77.47" y2="-87.63" width="0.1524" layer="91"/>
-<wire x1="77.47" y1="-87.63" x2="77.47" y2="-88.9" width="0.1524" layer="91"/>
-<pinref part="U1" gate="G$1" pin="PTA18"/>
-<wire x1="77.47" y1="-88.9" x2="88.9" y2="-88.9" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$9" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTA19"/>
-<pinref part="Y2" gate="G$1" pin="1"/>
-<wire x1="88.9" y1="-93.98" x2="77.47" y2="-93.98" width="0.1524" layer="91"/>
-<wire x1="77.47" y1="-93.98" x2="77.47" y2="-96.52" width="0.1524" layer="91"/>
-<pinref part="C30" gate="G$1" pin="2"/>
-<wire x1="77.47" y1="-96.52" x2="74.93" y2="-96.52" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
