@@ -1175,34 +1175,34 @@ It has a reduced top mask to make it harder to install upside-down.</description
 <text x="-12.7" y="-15.24" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
 <symbol name="MK20DX256VLH7">
-<wire x1="-27.94" y1="63.5" x2="-27.94" y2="-71.12" width="0.254" layer="94"/>
-<wire x1="-27.94" y1="-71.12" x2="25.4" y2="-71.12" width="0.254" layer="94"/>
-<wire x1="25.4" y1="-71.12" x2="25.4" y2="63.5" width="0.254" layer="94"/>
+<wire x1="-27.94" y1="63.5" x2="-27.94" y2="-109.22" width="0.254" layer="94"/>
+<wire x1="-27.94" y1="-109.22" x2="25.4" y2="-109.22" width="0.254" layer="94"/>
+<wire x1="25.4" y1="-109.22" x2="25.4" y2="63.5" width="0.254" layer="94"/>
 <wire x1="25.4" y1="63.5" x2="-27.94" y2="63.5" width="0.254" layer="94"/>
-<pin name="ADC0_DM0" x="30.48" y="-58.42" length="middle" rot="R180"/>
-<pin name="ADC0_DM3" x="30.48" y="-10.16" length="middle" rot="R180"/>
-<pin name="ADC0_DP0" x="30.48" y="-63.5" length="middle" rot="R180"/>
-<pin name="ADC0_DP3" x="30.48" y="-43.18" length="middle" rot="R180"/>
-<pin name="DAC0" x="30.48" y="-50.8" length="middle" rot="R180"/>
+<pin name="ADC0_DM0" x="30.48" y="-91.44" length="middle" rot="R180"/>
+<pin name="ADC0_DM3" x="30.48" y="-43.18" length="middle" rot="R180"/>
+<pin name="ADC0_DP0" x="30.48" y="-96.52" length="middle" rot="R180"/>
+<pin name="ADC0_DP3" x="30.48" y="-76.2" length="middle" rot="R180"/>
+<pin name="DAC0" x="30.48" y="-83.82" length="middle" rot="R180"/>
 <pin name="EXTAL32" x="-33.02" y="-25.4" length="middle"/>
-<pin name="PTA0" x="-33.02" y="-58.42" length="middle"/>
-<pin name="PTA1" x="-33.02" y="-53.34" length="middle"/>
-<pin name="PTA2" x="-33.02" y="-55.88" length="middle"/>
-<pin name="PTA3" x="-33.02" y="-60.96" length="middle"/>
-<pin name="PTA4" x="30.48" y="-15.24" length="middle" rot="R180"/>
-<pin name="PTA5" x="30.48" y="-38.1" length="middle" rot="R180"/>
-<pin name="PTA12" x="30.48" y="5.08" length="middle" rot="R180"/>
-<pin name="PTA13" x="30.48" y="7.62" length="middle" rot="R180"/>
-<pin name="PTA18" x="-33.02" y="0" length="middle"/>
-<pin name="PTA19" x="-33.02" y="-5.08" length="middle"/>
+<pin name="PTA0/TCLK" x="-33.02" y="-58.42" length="middle"/>
+<pin name="PTA1/TDI" x="-33.02" y="-53.34" length="middle"/>
+<pin name="PTA2/TDO" x="-33.02" y="-55.88" length="middle"/>
+<pin name="PTA3/TMS" x="-33.02" y="-60.96" length="middle"/>
+<pin name="PTA4" x="30.48" y="-48.26" length="middle" rot="R180"/>
+<pin name="PTA5" x="30.48" y="-71.12" length="middle" rot="R180"/>
+<pin name="PTA12" x="30.48" y="-27.94" length="middle" rot="R180"/>
+<pin name="PTA13" x="30.48" y="-25.4" length="middle" rot="R180"/>
+<pin name="PTA18/EXTAL0" x="-33.02" y="0" length="middle"/>
+<pin name="PTA19/XTAL0" x="-33.02" y="-5.08" length="middle"/>
 <pin name="PTB0" x="30.48" y="43.18" length="middle" rot="R180"/>
 <pin name="PTB1" x="30.48" y="45.72" length="middle" rot="R180"/>
 <pin name="PTB2" x="30.48" y="50.8" length="middle" rot="R180"/>
 <pin name="PTB3" x="30.48" y="48.26" length="middle" rot="R180"/>
-<pin name="PTB16" x="30.48" y="-2.54" length="middle" rot="R180"/>
-<pin name="PTB17" x="30.48" y="0" length="middle" rot="R180"/>
-<pin name="PTB18" x="30.48" y="-17.78" length="middle" rot="R180"/>
-<pin name="PTB19" x="30.48" y="-35.56" length="middle" rot="R180"/>
+<pin name="PTB16" x="30.48" y="-35.56" length="middle" rot="R180"/>
+<pin name="PTB17" x="30.48" y="-33.02" length="middle" rot="R180"/>
+<pin name="PTB18" x="30.48" y="-50.8" length="middle" rot="R180"/>
+<pin name="PTB19" x="30.48" y="-68.58" length="middle" rot="R180"/>
 <pin name="PTC0" x="30.48" y="40.64" length="middle" rot="R180"/>
 <pin name="PTC1" x="30.48" y="58.42" length="middle" rot="R180"/>
 <pin name="PTC2" x="30.48" y="60.96" length="middle" rot="R180"/>
@@ -1211,20 +1211,20 @@ It has a reduced top mask to make it harder to install upside-down.</description
 <pin name="PTC5" x="30.48" y="35.56" length="middle" rot="R180"/>
 <pin name="PTC6" x="30.48" y="25.4" length="middle" rot="R180"/>
 <pin name="PTC7" x="30.48" y="27.94" length="middle" rot="R180"/>
-<pin name="PTC8" x="30.48" y="-27.94" length="middle" rot="R180"/>
-<pin name="PTC9" x="30.48" y="-30.48" length="middle" rot="R180"/>
-<pin name="PTC10" x="30.48" y="-25.4" length="middle" rot="R180"/>
-<pin name="PTC11" x="30.48" y="-22.86" length="middle" rot="R180"/>
-<pin name="PTD0" x="30.48" y="2.54" length="middle" rot="R180"/>
-<pin name="PTD1" x="30.48" y="38.1" length="middle" rot="R180"/>
-<pin name="PTD2" x="30.48" y="15.24" length="middle" rot="R180"/>
-<pin name="PTD3" x="30.48" y="17.78" length="middle" rot="R180"/>
-<pin name="PTD4" x="30.48" y="12.7" length="middle" rot="R180"/>
-<pin name="PTD5" x="30.48" y="53.34" length="middle" rot="R180"/>
+<pin name="PTC8" x="30.48" y="-60.96" length="middle" rot="R180"/>
+<pin name="PTC9" x="30.48" y="-63.5" length="middle" rot="R180"/>
+<pin name="PTC10/I2C1_SCL" x="30.48" y="12.7" length="middle" rot="R180"/>
+<pin name="PTC11/I2C1_SDA" x="30.48" y="10.16" length="middle" rot="R180"/>
+<pin name="PTD0/SPI0_PCS0" x="30.48" y="7.62" length="middle" rot="R180"/>
+<pin name="PTD1/SPI0_SCK" x="30.48" y="5.08" length="middle" rot="R180"/>
+<pin name="PTD2/SPI0_SOUT" x="30.48" y="2.54" length="middle" rot="R180"/>
+<pin name="PTD3/SPI0_SIN" x="30.48" y="0" length="middle" rot="R180"/>
+<pin name="PTD4/SPI0_PCS1" x="30.48" y="-2.54" length="middle" rot="R180"/>
+<pin name="PTD5/SPI0_PCS2" x="30.48" y="-5.08" length="middle" rot="R180"/>
 <pin name="PTD6" x="30.48" y="55.88" length="middle" rot="R180"/>
-<pin name="PTD7" x="30.48" y="10.16" length="middle" rot="R180"/>
-<pin name="PTE0" x="30.48" y="-20.32" length="middle" rot="R180"/>
-<pin name="PTE1" x="30.48" y="-33.02" length="middle" rot="R180"/>
+<pin name="PTD7" x="30.48" y="53.34" length="middle" rot="R180"/>
+<pin name="PTE0" x="30.48" y="-53.34" length="middle" rot="R180"/>
+<pin name="PTE1" x="30.48" y="-66.04" length="middle" rot="R180"/>
 <pin name="RESET_B" x="-33.02" y="-50.8" length="middle"/>
 <pin name="USB0_DM" x="-33.02" y="15.24" length="middle"/>
 <pin name="USB0_DP" x="-33.02" y="10.16" length="middle"/>
@@ -1858,14 +1858,14 @@ IC-10035</description>
 <connect gate="G$1" pin="ADC0_DP3" pad="11"/>
 <connect gate="G$1" pin="DAC0" pad="18"/>
 <connect gate="G$1" pin="EXTAL32" pad="20"/>
-<connect gate="G$1" pin="PTA0" pad="22"/>
-<connect gate="G$1" pin="PTA1" pad="23"/>
+<connect gate="G$1" pin="PTA0/TCLK" pad="22"/>
+<connect gate="G$1" pin="PTA1/TDI" pad="23"/>
 <connect gate="G$1" pin="PTA12" pad="28"/>
 <connect gate="G$1" pin="PTA13" pad="29"/>
-<connect gate="G$1" pin="PTA18" pad="32"/>
-<connect gate="G$1" pin="PTA19" pad="33"/>
-<connect gate="G$1" pin="PTA2" pad="24"/>
-<connect gate="G$1" pin="PTA3" pad="25"/>
+<connect gate="G$1" pin="PTA18/EXTAL0" pad="32"/>
+<connect gate="G$1" pin="PTA19/XTAL0" pad="33"/>
+<connect gate="G$1" pin="PTA2/TDO" pad="24"/>
+<connect gate="G$1" pin="PTA3/TMS" pad="25"/>
 <connect gate="G$1" pin="PTA4" pad="26"/>
 <connect gate="G$1" pin="PTA5" pad="27"/>
 <connect gate="G$1" pin="PTB0" pad="35"/>
@@ -1878,8 +1878,8 @@ IC-10035</description>
 <connect gate="G$1" pin="PTB3" pad="38"/>
 <connect gate="G$1" pin="PTC0" pad="43"/>
 <connect gate="G$1" pin="PTC1" pad="44"/>
-<connect gate="G$1" pin="PTC10" pad="55"/>
-<connect gate="G$1" pin="PTC11" pad="56"/>
+<connect gate="G$1" pin="PTC10/I2C1_SCL" pad="55"/>
+<connect gate="G$1" pin="PTC11/I2C1_SDA" pad="56"/>
 <connect gate="G$1" pin="PTC2" pad="45"/>
 <connect gate="G$1" pin="PTC3" pad="46"/>
 <connect gate="G$1" pin="PTC4" pad="49"/>
@@ -1888,12 +1888,12 @@ IC-10035</description>
 <connect gate="G$1" pin="PTC7" pad="52"/>
 <connect gate="G$1" pin="PTC8" pad="53"/>
 <connect gate="G$1" pin="PTC9" pad="54"/>
-<connect gate="G$1" pin="PTD0" pad="57"/>
-<connect gate="G$1" pin="PTD1" pad="58"/>
-<connect gate="G$1" pin="PTD2" pad="59"/>
-<connect gate="G$1" pin="PTD3" pad="60"/>
-<connect gate="G$1" pin="PTD4" pad="61"/>
-<connect gate="G$1" pin="PTD5" pad="62"/>
+<connect gate="G$1" pin="PTD0/SPI0_PCS0" pad="57"/>
+<connect gate="G$1" pin="PTD1/SPI0_SCK" pad="58"/>
+<connect gate="G$1" pin="PTD2/SPI0_SOUT" pad="59"/>
+<connect gate="G$1" pin="PTD3/SPI0_SIN" pad="60"/>
+<connect gate="G$1" pin="PTD4/SPI0_PCS1" pad="61"/>
+<connect gate="G$1" pin="PTD5/SPI0_PCS2" pad="62"/>
 <connect gate="G$1" pin="PTD6" pad="63"/>
 <connect gate="G$1" pin="PTD7" pad="64"/>
 <connect gate="G$1" pin="PTE0" pad="1"/>
@@ -8952,10 +8952,8 @@ therefore pulled up</text>
 <part name="S1" library="SparkFun-Electromechanical" deviceset="SWITCH-SPDT" device="-SMD-A"/>
 <part name="R8" library="appfruits" deviceset="RESISTOR" device="-470" value="470"/>
 <part name="LED2" library="appfruits" deviceset="LED" device="-GREEN"/>
-<part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="R17" library="appfruits" deviceset="RESISTOR" device="-470" value="470"/>
 <part name="LED4" library="appfruits" deviceset="LED" device="-GREEN"/>
-<part name="GND6" library="supply1" deviceset="GND" device=""/>
 <part name="C29" library="appfruits" deviceset="CAPACITOR" device="-10UF" value="10uF"/>
 <part name="C30" library="appfruits" deviceset="CAPACITOR" device="-10UF" value="10uF"/>
 <part name="C31" library="appfruits" deviceset="CAPACITOR" device="-10UF" value="10uF"/>
@@ -8980,6 +8978,10 @@ therefore pulled up</text>
 <part name="U$14" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$15" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$16" library="microbuilder" deviceset="GND" device=""/>
+<part name="U$11" library="microbuilder" deviceset="3.3V" device=""/>
+<part name="U$17" library="microbuilder" deviceset="3.3V" device=""/>
+<part name="U$18" library="microbuilder" deviceset="GND" device=""/>
+<part name="U$20" library="microbuilder" deviceset="3.3V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -8988,7 +8990,6 @@ therefore pulled up</text>
 to VCC into regulator</text>
 <text x="3.81" y="-146.05" size="1.778" layer="91">Connections for 
 JTAG/USB+Bootloader</text>
-<text x="213.36" y="-149.86" size="1.778" layer="91">3.3V Breakout</text>
 <text x="25.4" y="-45.72" size="1.778" layer="91">Place decoupling caps near power pins.</text>
 </plain>
 <moduleinsts>
@@ -9032,12 +9033,10 @@ JTAG/USB+Bootloader</text>
 <instance part="C16" gate="G$1" x="68.58" y="-63.5"/>
 <instance part="JP5" gate="G$1" x="-71.12" y="1.27" rot="MR180"/>
 <instance part="S1" gate="1" x="-45.72" y="-1.27" rot="R180"/>
-<instance part="R8" gate="G$1" x="203.2" y="-38.1"/>
-<instance part="LED2" gate="G$1" x="213.36" y="-38.1" rot="R90"/>
-<instance part="GND2" gate="1" x="222.25" y="-40.64"/>
-<instance part="R17" gate="G$1" x="189.23" y="-53.34"/>
-<instance part="LED4" gate="G$1" x="200.66" y="-53.34" rot="R90"/>
-<instance part="GND6" gate="1" x="214.63" y="-55.88"/>
+<instance part="R8" gate="G$1" x="186.69" y="-13.97" rot="R270"/>
+<instance part="LED2" gate="G$1" x="186.69" y="-25.4"/>
+<instance part="R17" gate="G$1" x="196.85" y="-13.97" rot="R270"/>
+<instance part="LED4" gate="G$1" x="196.85" y="-25.4"/>
 <instance part="C29" gate="G$1" x="72.39" y="-87.63" smashed="yes" rot="R90">
 <attribute name="NAME" x="70.358" y="-84.836" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="77.216" y="-85.344" size="1.778" layer="96" rot="R180"/>
@@ -9054,7 +9053,7 @@ JTAG/USB+Bootloader</text>
 <attribute name="NAME" x="70.358" y="-116.586" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="72.644" y="-117.856" size="1.778" layer="96"/>
 </instance>
-<instance part="JP1" gate="G$1" x="217.17" y="-83.82" rot="R180"/>
+<instance part="JP1" gate="G$1" x="193.04" y="-86.36" rot="MR0"/>
 <instance part="U$7" gate="G$1" x="49.53" y="-142.24" rot="R180"/>
 <instance part="R49" gate="G$1" x="64.77" y="-133.35" rot="R270"/>
 <instance part="R50" gate="G$1" x="68.58" y="-156.21" rot="R90"/>
@@ -9074,6 +9073,10 @@ JTAG/USB+Bootloader</text>
 <instance part="U$14" gate="G$1" x="58.42" y="-152.4" rot="R270"/>
 <instance part="U$15" gate="G$1" x="58.42" y="-135.89" rot="R90"/>
 <instance part="U$16" gate="G$1" x="68.58" y="-165.1"/>
+<instance part="U$11" gate="G$1" x="186.69" y="-3.81"/>
+<instance part="U$17" gate="G$1" x="196.85" y="-3.81"/>
+<instance part="U$18" gate="G$1" x="179.07" y="-110.49"/>
+<instance part="U$20" gate="G$1" x="179.07" y="-60.96"/>
 </instances>
 <busses>
 </busses>
@@ -9111,30 +9114,22 @@ JTAG/USB+Bootloader</text>
 <wire x1="-2.54" y1="-66.04" x2="2.54" y2="-66.04" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="GND2" gate="1" pin="GND"/>
-<pinref part="LED2" gate="G$1" pin="C"/>
-<wire x1="218.44" y1="-38.1" x2="222.25" y2="-38.1" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="LED4" gate="G$1" pin="C"/>
-<pinref part="GND6" gate="1" pin="GND"/>
-<wire x1="205.74" y1="-53.34" x2="214.63" y2="-53.34" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="JP1" gate="G$1" pin="1"/>
-<wire x1="207.01" y1="-66.04" x2="200.66" y2="-66.04" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="-104.14" x2="179.07" y2="-104.14" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="JP1" gate="G$1" pin="2"/>
-<wire x1="207.01" y1="-68.58" x2="200.66" y2="-68.58" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="-101.6" x2="179.07" y2="-101.6" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="JP1" gate="G$1" pin="3"/>
-<wire x1="207.01" y1="-71.12" x2="200.66" y2="-71.12" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="-99.06" x2="179.07" y2="-99.06" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="JP1" gate="G$1" pin="4"/>
-<wire x1="207.01" y1="-73.66" x2="200.66" y2="-73.66" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="-96.52" x2="179.07" y2="-96.52" width="0.1524" layer="91"/>
+<pinref part="U$18" gate="G$1" pin="GND"/>
+<wire x1="179.07" y1="-96.52" x2="179.07" y2="-107.95" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="R50" gate="G$1" pin="1"/>
@@ -9185,15 +9180,17 @@ JTAG/USB+Bootloader</text>
 <net name="3.3V" class="0">
 <segment>
 <pinref part="JP1" gate="G$1" pin="13"/>
-<wire x1="207.01" y1="-96.52" x2="200.66" y2="-96.52" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="-73.66" x2="179.07" y2="-73.66" width="0.1524" layer="91"/>
+<pinref part="U$20" gate="G$1" pin="3.3V"/>
+<wire x1="179.07" y1="-73.66" x2="179.07" y2="-63.5" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="JP1" gate="G$1" pin="14"/>
-<wire x1="207.01" y1="-99.06" x2="200.66" y2="-99.06" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="-71.12" x2="179.07" y2="-71.12" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="JP1" gate="G$1" pin="15"/>
-<wire x1="207.01" y1="-101.6" x2="200.66" y2="-101.6" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="-68.58" x2="179.07" y2="-68.58" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$7" gate="G$1" pin="VCC"/>
@@ -9252,6 +9249,16 @@ JTAG/USB+Bootloader</text>
 <pinref part="L3" gate="G$1" pin="2"/>
 <wire x1="-2.54" y1="-50.8" x2="1.27" y2="-50.8" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="U$11" gate="G$1" pin="3.3V"/>
+<pinref part="R8" gate="G$1" pin="1"/>
+<wire x1="186.69" y1="-6.35" x2="186.69" y2="-8.89" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U$17" gate="G$1" pin="3.3V"/>
+<pinref part="R17" gate="G$1" pin="1"/>
+<wire x1="196.85" y1="-6.35" x2="196.85" y2="-8.89" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="PTC6" class="0">
 <segment>
@@ -9267,7 +9274,7 @@ JTAG/USB+Bootloader</text>
 </net>
 <net name="PTA3" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="PTA3"/>
+<pinref part="U1" gate="G$1" pin="PTA3/TMS"/>
 <wire x1="64.77" y1="-149.86" x2="88.9" y2="-149.86" width="0.1524" layer="91"/>
 <label x="85.09" y="-134.62" size="1.778" layer="95"/>
 <pinref part="U$7" gate="G$1" pin="SWDIO/TMS"/>
@@ -9279,7 +9286,7 @@ JTAG/USB+Bootloader</text>
 </net>
 <net name="PTA0" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="PTA0"/>
+<pinref part="U1" gate="G$1" pin="PTA0/TCLK"/>
 <wire x1="68.58" y1="-147.32" x2="88.9" y2="-147.32" width="0.1524" layer="91"/>
 <label x="85.09" y="-137.16" size="1.778" layer="95"/>
 <pinref part="U$7" gate="G$1" pin="SWDCLK/TCK"/>
@@ -9311,7 +9318,7 @@ JTAG/USB+Bootloader</text>
 </net>
 <net name="PTA1" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="PTA1"/>
+<pinref part="U1" gate="G$1" pin="PTA1/TDI"/>
 <pinref part="U$7" gate="G$1" pin="NC/TDI"/>
 <pinref part="R52" gate="G$1" pin="2"/>
 <wire x1="76.2" y1="-138.43" x2="76.2" y2="-142.24" width="0.1524" layer="91"/>
@@ -9382,27 +9389,6 @@ JTAG/USB+Bootloader</text>
 <junction x="68.58" y="-66.04"/>
 </segment>
 </net>
-<net name="PTD6" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD6"/>
-<wire x1="152.4" y1="-33.02" x2="187.96" y2="-33.02" width="0.1524" layer="91"/>
-<wire x1="187.96" y1="-33.02" x2="187.96" y2="-38.1" width="0.1524" layer="91"/>
-<pinref part="R8" gate="G$1" pin="1"/>
-<wire x1="187.96" y1="-38.1" x2="198.12" y2="-38.1" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="PTD5" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD5"/>
-<wire x1="152.4" y1="-35.56" x2="177.8" y2="-35.56" width="0.1524" layer="91"/>
-<wire x1="177.8" y1="-35.56" x2="177.8" y2="-76.2" width="0.1524" layer="91"/>
-<wire x1="177.8" y1="-76.2" x2="200.66" y2="-76.2" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="5"/>
-<wire x1="207.01" y1="-76.2" x2="200.66" y2="-76.2" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="PTB1" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTB1"/>
@@ -9421,182 +9407,87 @@ JTAG/USB+Bootloader</text>
 <wire x1="152.4" y1="-48.26" x2="160.02" y2="-48.26" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="PTD1" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD1"/>
-<wire x1="152.4" y1="-50.8" x2="175.26" y2="-50.8" width="0.1524" layer="91"/>
-<wire x1="175.26" y1="-50.8" x2="175.26" y2="-86.36" width="0.1524" layer="91"/>
-<wire x1="175.26" y1="-86.36" x2="200.66" y2="-86.36" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="9"/>
-<wire x1="207.01" y1="-86.36" x2="200.66" y2="-86.36" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="PTC4" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTC4"/>
 <wire x1="152.4" y1="-66.04" x2="160.02" y2="-66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="PTD3" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD3"/>
-<wire x1="152.4" y1="-71.12" x2="171.45" y2="-71.12" width="0.1524" layer="91"/>
-<wire x1="171.45" y1="-71.12" x2="171.45" y2="-81.28" width="0.1524" layer="91"/>
-<wire x1="171.45" y1="-81.28" x2="200.66" y2="-81.28" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="7"/>
-<wire x1="207.01" y1="-81.28" x2="200.66" y2="-81.28" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="PTD2" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD2"/>
-<wire x1="152.4" y1="-73.66" x2="165.1" y2="-73.66" width="0.1524" layer="91"/>
-<wire x1="165.1" y1="-73.66" x2="165.1" y2="-83.82" width="0.1524" layer="91"/>
-<wire x1="165.1" y1="-83.82" x2="200.66" y2="-83.82" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="8"/>
-<wire x1="207.01" y1="-83.82" x2="200.66" y2="-83.82" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="PTD4" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD4"/>
-<wire x1="152.4" y1="-76.2" x2="162.56" y2="-76.2" width="0.1524" layer="91"/>
-<wire x1="162.56" y1="-76.2" x2="162.56" y2="-78.74" width="0.1524" layer="91"/>
-<wire x1="162.56" y1="-78.74" x2="200.66" y2="-78.74" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="6"/>
-<wire x1="207.01" y1="-78.74" x2="200.66" y2="-78.74" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="PTD7" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD7"/>
-<wire x1="152.4" y1="-78.74" x2="161.29" y2="-78.74" width="0.1524" layer="91"/>
-<wire x1="161.29" y1="-78.74" x2="161.29" y2="-53.34" width="0.1524" layer="91"/>
-<pinref part="R17" gate="G$1" pin="1"/>
-<wire x1="161.29" y1="-53.34" x2="184.15" y2="-53.34" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="PTA13" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTA13"/>
-<wire x1="152.4" y1="-81.28" x2="160.02" y2="-81.28" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-114.3" x2="165.1" y2="-114.3" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTA12" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTA12"/>
-<wire x1="152.4" y1="-83.82" x2="160.02" y2="-83.82" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="PTD0" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD0"/>
-<wire x1="152.4" y1="-86.36" x2="163.83" y2="-86.36" width="0.1524" layer="91"/>
-<wire x1="200.66" y1="-88.9" x2="163.83" y2="-88.9" width="0.1524" layer="91"/>
-<wire x1="163.83" y1="-88.9" x2="163.83" y2="-86.36" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="10"/>
-<wire x1="207.01" y1="-88.9" x2="200.66" y2="-88.9" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-116.84" x2="165.1" y2="-116.84" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTB17" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTB17"/>
-<wire x1="152.4" y1="-88.9" x2="160.02" y2="-88.9" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-121.92" x2="165.1" y2="-121.92" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTA4" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTA4"/>
-<wire x1="152.4" y1="-104.14" x2="160.02" y2="-104.14" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-137.16" x2="165.1" y2="-137.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTB18" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTB18"/>
-<wire x1="152.4" y1="-106.68" x2="160.02" y2="-106.68" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-139.7" x2="165.1" y2="-139.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTE0" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTE0"/>
-<wire x1="152.4" y1="-109.22" x2="160.02" y2="-109.22" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="PTC11" class="0">
-<segment>
-<wire x1="165.1" y1="-91.44" x2="200.66" y2="-91.44" width="0.1524" layer="91"/>
-<pinref part="U1" gate="G$1" pin="PTC11"/>
-<wire x1="152.4" y1="-111.76" x2="165.1" y2="-111.76" width="0.1524" layer="91"/>
-<wire x1="165.1" y1="-111.76" x2="165.1" y2="-91.44" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="11"/>
-<wire x1="207.01" y1="-91.44" x2="200.66" y2="-91.44" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="PTC10" class="0">
-<segment>
-<wire x1="167.64" y1="-93.98" x2="200.66" y2="-93.98" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="U1" gate="G$1" pin="PTC10"/>
-<wire x1="152.4" y1="-114.3" x2="167.64" y2="-114.3" width="0.1524" layer="91"/>
-<wire x1="167.64" y1="-114.3" x2="167.64" y2="-93.98" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="JP1" gate="G$1" pin="12"/>
-<wire x1="207.01" y1="-93.98" x2="200.66" y2="-93.98" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-142.24" x2="165.1" y2="-142.24" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTC9" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTC9"/>
-<wire x1="152.4" y1="-119.38" x2="160.02" y2="-119.38" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-152.4" x2="165.1" y2="-152.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTE1" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTE1"/>
-<wire x1="152.4" y1="-121.92" x2="160.02" y2="-121.92" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-154.94" x2="165.1" y2="-154.94" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTB19" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTB19"/>
-<wire x1="152.4" y1="-124.46" x2="160.02" y2="-124.46" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-157.48" x2="165.1" y2="-157.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTA5" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTA5"/>
-<wire x1="152.4" y1="-127" x2="160.02" y2="-127" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-160.02" x2="165.1" y2="-160.02" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="A12" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="ADC0_DP3"/>
-<wire x1="152.4" y1="-132.08" x2="160.02" y2="-132.08" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-165.1" x2="165.1" y2="-165.1" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="DAC/A14" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="DAC0"/>
-<wire x1="152.4" y1="-139.7" x2="160.02" y2="-139.7" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-172.72" x2="165.1" y2="-172.72" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTA2" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="PTA2"/>
+<pinref part="U1" gate="G$1" pin="PTA2/TDO"/>
 <pinref part="U$7" gate="G$1" pin="SWO/TDO"/>
 <wire x1="52.07" y1="-144.78" x2="88.9" y2="-144.78" width="0.1524" layer="91"/>
 </segment>
@@ -9615,27 +9506,27 @@ JTAG/USB+Bootloader</text>
 <net name="A13" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="ADC0_DM3"/>
-<wire x1="152.4" y1="-99.06" x2="160.02" y2="-99.06" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-132.08" x2="165.1" y2="-132.08" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PTC8" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTC8"/>
-<wire x1="152.4" y1="-116.84" x2="160.02" y2="-116.84" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-149.86" x2="165.1" y2="-149.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$7" class="0">
 <segment>
 <pinref part="R8" gate="G$1" pin="2"/>
 <pinref part="LED2" gate="G$1" pin="A"/>
-<wire x1="208.28" y1="-38.1" x2="210.82" y2="-38.1" width="0.1524" layer="91"/>
+<wire x1="186.69" y1="-19.05" x2="186.69" y2="-22.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$29" class="0">
 <segment>
 <pinref part="R17" gate="G$1" pin="2"/>
 <pinref part="LED4" gate="G$1" pin="A"/>
-<wire x1="194.31" y1="-53.34" x2="198.12" y2="-53.34" width="0.1524" layer="91"/>
+<wire x1="196.85" y1="-19.05" x2="196.85" y2="-22.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SCL" class="0">
@@ -9653,7 +9544,7 @@ JTAG/USB+Bootloader</text>
 <net name="PTB16" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTB16"/>
-<wire x1="152.4" y1="-91.44" x2="160.02" y2="-91.44" width="0.1524" layer="91"/>
+<wire x1="152.4" y1="-124.46" x2="165.1" y2="-124.46" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="AD0" class="0">
@@ -9720,18 +9611,90 @@ JTAG/USB+Bootloader</text>
 <pinref part="Y2" gate="G$1" pin="2"/>
 <wire x1="74.93" y1="-87.63" x2="77.47" y2="-87.63" width="0.1524" layer="91"/>
 <wire x1="77.47" y1="-87.63" x2="77.47" y2="-88.9" width="0.1524" layer="91"/>
-<pinref part="U1" gate="G$1" pin="PTA18"/>
+<pinref part="U1" gate="G$1" pin="PTA18/EXTAL0"/>
 <wire x1="77.47" y1="-88.9" x2="88.9" y2="-88.9" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$9" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="PTA19"/>
+<pinref part="U1" gate="G$1" pin="PTA19/XTAL0"/>
 <pinref part="Y2" gate="G$1" pin="1"/>
 <wire x1="88.9" y1="-93.98" x2="77.47" y2="-93.98" width="0.1524" layer="91"/>
 <wire x1="77.47" y1="-93.98" x2="77.47" y2="-96.52" width="0.1524" layer="91"/>
 <pinref part="C30" gate="G$1" pin="2"/>
 <wire x1="77.47" y1="-96.52" x2="74.93" y2="-96.52" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$10" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTD6"/>
+<pinref part="LED2" gate="G$1" pin="C"/>
+<wire x1="152.4" y1="-33.02" x2="186.69" y2="-33.02" width="0.1524" layer="91"/>
+<wire x1="186.69" y1="-33.02" x2="186.69" y2="-30.48" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$13" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTD7"/>
+<pinref part="LED4" gate="G$1" pin="C"/>
+<wire x1="152.4" y1="-35.56" x2="196.85" y2="-35.56" width="0.1524" layer="91"/>
+<wire x1="196.85" y1="-35.56" x2="196.85" y2="-30.48" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$16" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTC11/I2C1_SDA"/>
+<pinref part="JP1" gate="G$1" pin="11"/>
+<wire x1="152.4" y1="-78.74" x2="182.88" y2="-78.74" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$17" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="10"/>
+<pinref part="U1" gate="G$1" pin="PTD0/SPI0_PCS0"/>
+<wire x1="182.88" y1="-81.28" x2="152.4" y2="-81.28" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$18" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTD1/SPI0_SCK"/>
+<pinref part="JP1" gate="G$1" pin="9"/>
+<wire x1="152.4" y1="-83.82" x2="182.88" y2="-83.82" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$19" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="8"/>
+<pinref part="U1" gate="G$1" pin="PTD2/SPI0_SOUT"/>
+<wire x1="182.88" y1="-86.36" x2="152.4" y2="-86.36" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$20" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="7"/>
+<pinref part="U1" gate="G$1" pin="PTD3/SPI0_SIN"/>
+<wire x1="182.88" y1="-88.9" x2="152.4" y2="-88.9" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$21" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTD4/SPI0_PCS1"/>
+<pinref part="JP1" gate="G$1" pin="6"/>
+<wire x1="152.4" y1="-91.44" x2="182.88" y2="-91.44" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$23" class="0">
+<segment>
+<pinref part="JP1" gate="G$1" pin="5"/>
+<pinref part="U1" gate="G$1" pin="PTD5/SPI0_PCS2"/>
+<wire x1="182.88" y1="-93.98" x2="152.4" y2="-93.98" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$24" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTC10/I2C1_SCL"/>
+<pinref part="JP1" gate="G$1" pin="12"/>
+<wire x1="152.4" y1="-76.2" x2="182.88" y2="-76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

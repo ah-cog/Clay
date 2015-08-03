@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="7.3.0">
+<eagle version="7.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="1" unitdist="mic" unit="mic" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -1089,22 +1089,22 @@ chip</description>
 <wire x1="-27.94" y1="-71.12" x2="25.4" y2="-71.12" width="0.254" layer="94"/>
 <wire x1="25.4" y1="-71.12" x2="25.4" y2="63.5" width="0.254" layer="94"/>
 <wire x1="25.4" y1="63.5" x2="-27.94" y2="63.5" width="0.254" layer="94"/>
-<pin name="ADC0_DM0" x="-33.02" y="43.18" length="middle"/>
+<pin name="ADC0_DM0" x="30.48" y="-58.42" length="middle" rot="R180"/>
 <pin name="ADC0_DM3" x="30.48" y="-10.16" length="middle" rot="R180"/>
-<pin name="ADC0_DP0" x="-33.02" y="40.64" length="middle"/>
+<pin name="ADC0_DP0" x="30.48" y="-63.5" length="middle" rot="R180"/>
 <pin name="ADC0_DP3" x="30.48" y="-43.18" length="middle" rot="R180"/>
 <pin name="DAC0" x="30.48" y="-50.8" length="middle" rot="R180"/>
-<pin name="EXTAL32" x="-33.02" y="-10.16" length="middle"/>
-<pin name="PTA0" x="-33.02" y="-33.02" length="middle"/>
-<pin name="PTA1" x="-33.02" y="-25.4" length="middle"/>
-<pin name="PTA2" x="-33.02" y="-35.56" length="middle"/>
-<pin name="PTA3" x="-33.02" y="-30.48" length="middle"/>
+<pin name="EXTAL32" x="-33.02" y="-20.32" length="middle"/>
+<pin name="PTA0" x="-33.02" y="-58.42" length="middle"/>
+<pin name="PTA1" x="-33.02" y="-53.34" length="middle"/>
+<pin name="PTA2" x="-33.02" y="-55.88" length="middle"/>
+<pin name="PTA3" x="-33.02" y="-60.96" length="middle"/>
 <pin name="PTA4" x="30.48" y="-15.24" length="middle" rot="R180"/>
 <pin name="PTA5" x="30.48" y="-38.1" length="middle" rot="R180"/>
 <pin name="PTA12" x="30.48" y="5.08" length="middle" rot="R180"/>
 <pin name="PTA13" x="30.48" y="7.62" length="middle" rot="R180"/>
-<pin name="PTA18" x="-33.02" y="7.62" length="middle"/>
-<pin name="PTA19" x="-33.02" y="0" length="middle"/>
+<pin name="PTA18" x="-33.02" y="0" length="middle"/>
+<pin name="PTA19" x="-33.02" y="-5.08" length="middle"/>
 <pin name="PTB0" x="30.48" y="43.18" length="middle" rot="R180"/>
 <pin name="PTB1" x="30.48" y="45.72" length="middle" rot="R180"/>
 <pin name="PTB2" x="30.48" y="50.8" length="middle" rot="R180"/>
@@ -1135,20 +1135,20 @@ chip</description>
 <pin name="PTD7" x="30.48" y="10.16" length="middle" rot="R180"/>
 <pin name="PTE0" x="30.48" y="-20.32" length="middle" rot="R180"/>
 <pin name="PTE1" x="30.48" y="-33.02" length="middle" rot="R180"/>
-<pin name="RESET_B" x="-33.02" y="-43.18" length="middle"/>
-<pin name="USB0_DM" x="-33.02" y="17.78" length="middle"/>
-<pin name="USB0_DP" x="-33.02" y="12.7" length="middle"/>
-<pin name="VBAT" x="-33.02" y="-12.7" length="middle"/>
-<pin name="VDD" x="-33.02" y="55.88" length="middle"/>
+<pin name="RESET_B" x="-33.02" y="-50.8" length="middle"/>
+<pin name="USB0_DM" x="-33.02" y="15.24" length="middle"/>
+<pin name="USB0_DP" x="-33.02" y="10.16" length="middle"/>
+<pin name="VBAT" x="-33.02" y="55.88" length="middle"/>
+<pin name="VDD" x="-33.02" y="58.42" length="middle"/>
 <pin name="VDDA" x="-33.02" y="38.1" length="middle"/>
-<pin name="VOUT33" x="-33.02" y="58.42" length="middle"/>
+<pin name="VOUT33" x="-33.02" y="53.34" length="middle"/>
 <pin name="VREFH" x="-33.02" y="33.02" length="middle"/>
 <pin name="VREFL" x="-33.02" y="25.4" length="middle"/>
 <pin name="VREF_OUT" x="-33.02" y="30.48" length="middle"/>
 <pin name="VREGIN" x="-33.02" y="60.96" length="middle"/>
-<pin name="VSS" x="-33.02" y="-50.8" length="middle"/>
+<pin name="VSS" x="-33.02" y="-68.58" length="middle"/>
 <pin name="VSSA" x="-33.02" y="22.86" length="middle"/>
-<pin name="XTAL32" x="-33.02" y="-2.54" length="middle"/>
+<pin name="XTAL32" x="-33.02" y="-15.24" length="middle"/>
 <text x="-10.16" y="60.96" size="1.778" layer="95">&gt;NAME</text>
 <text x="-15.24" y="-68.58" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
