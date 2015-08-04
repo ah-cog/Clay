@@ -2693,6 +2693,48 @@ design rules under a new name.</description>
 <contactref element="R13" pad="2"/>
 <wire x1="-22.8482" y1="-265.7856" x2="24.018" y2="36.7846" width="0" layer="19" extent="1-1"/>
 </signal>
+<signal name="N$27">
+<contactref element="U1" pad="35"/>
+</signal>
+<signal name="N$28">
+<contactref element="U1" pad="36"/>
+</signal>
+<signal name="N$34">
+<contactref element="U1" pad="39"/>
+</signal>
+<signal name="N$35">
+<contactref element="U1" pad="40"/>
+</signal>
+<signal name="N$38">
+<contactref element="U1" pad="41"/>
+</signal>
+<signal name="N$39">
+<contactref element="U1" pad="42"/>
+</signal>
+<signal name="N$40">
+<contactref element="U1" pad="46"/>
+</signal>
+<signal name="N$41">
+<contactref element="U1" pad="44"/>
+</signal>
+<signal name="N$42">
+<contactref element="U1" pad="53"/>
+</signal>
+<signal name="N$45">
+<contactref element="U1" pad="54"/>
+</signal>
+<signal name="N$46">
+<contactref element="U1" pad="49"/>
+</signal>
+<signal name="N$47">
+<contactref element="U1" pad="50"/>
+</signal>
+<signal name="N$48">
+<contactref element="U1" pad="51"/>
+</signal>
+<signal name="N$49">
+<contactref element="U1" pad="52"/>
+</signal>
 </signals>
 <errors>
 <approved hash="5,1,eb23b6f10f0c7fbb"/>

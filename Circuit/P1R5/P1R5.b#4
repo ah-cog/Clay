@@ -1697,12 +1697,6 @@ design rules under a new name.</description>
 <wire x1="40.2844" y1="47.879" x2="31.6484" y2="39.243" width="0.254" layer="16"/>
 <wire x1="31.6484" y1="39.243" x2="31.1404" y2="39.243" width="0.254" layer="16"/>
 </signal>
-<signal name="USB_D_P" class="1">
-<contactref element="U1" pad="5"/>
-</signal>
-<signal name="USB_D_N" class="1">
-<contactref element="U1" pad="6"/>
-</signal>
 <signal name="PTA1">
 <contactref element="U1" pad="23"/>
 <contactref element="U$7" pad="8"/>
@@ -2698,6 +2692,30 @@ design rules under a new name.</description>
 <contactref element="U1" pad="38"/>
 <contactref element="R13" pad="2"/>
 <wire x1="-22.8482" y1="-265.7856" x2="24.018" y2="36.7846" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$27">
+<contactref element="U1" pad="35"/>
+</signal>
+<signal name="N$28">
+<contactref element="U1" pad="36"/>
+</signal>
+<signal name="N$34">
+<contactref element="U1" pad="39"/>
+</signal>
+<signal name="N$35">
+<contactref element="U1" pad="40"/>
+</signal>
+<signal name="N$38">
+<contactref element="U1" pad="41"/>
+</signal>
+<signal name="N$39">
+<contactref element="U1" pad="42"/>
+</signal>
+<signal name="N$40">
+<contactref element="U1" pad="46"/>
+</signal>
+<signal name="N$41">
+<contactref element="U1" pad="44"/>
 </signal>
 </signals>
 <errors>
