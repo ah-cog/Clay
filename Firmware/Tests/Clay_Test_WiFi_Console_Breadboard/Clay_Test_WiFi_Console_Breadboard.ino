@@ -1,10 +1,4 @@
 void setup() {
-  
-  delay(2000);
-  Serial.begin(9600);
-  Serial1.begin(9600);
-
-  delay (1000);
 
   pinMode (3, OUTPUT); // Wi-Fi: ESP8266 breakout CH_PD (chip enable on ESP8266 IC)
   pinMode (4, OUTPUT); // Wi-Fi: ESP8266 breakout RST (reset on ESP8266 IC)
@@ -15,6 +9,11 @@ void setup() {
   digitalWrite (4, HIGH); // Set up RST
   digitalWrite (5, HIGH); // Set up GPIO0. "At boot: low causes bootloader to enter flash upload mode; high causes normal boot" (from http://www.esp8266.com/wiki/doku.php?id=esp8266-module-family)
   digitalWrite (8, HIGH); // Set up GPIO2 in Working Mode
+
+  delay(1000);
+  
+  Serial.begin(115200);
+  Serial1.begin(115200);
 }
 
 void loop()

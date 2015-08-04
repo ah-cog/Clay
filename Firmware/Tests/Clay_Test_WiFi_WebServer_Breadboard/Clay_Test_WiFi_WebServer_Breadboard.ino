@@ -17,9 +17,9 @@
 
 //#define SSID  "shell-2.4GHz"      // change this to match your WiFi SSID
 //#define PASS  "technologydrive"  // change this to match your WiFi password
-#define SSID        "Clay" // "Jackson 5" // "HOME-5EE4" // "joopal" // "AWS" // "shell-2.4GHz"
-#define PASS        "g0ldenbr0wn" // "tigertiger" // "316793944D3C0868" // "Cassandra2048" // "Codehappy123" // "technologydrive"
-#define PORT  "8080" // "15164"           // using port 8080 by default
+#define SSID        "clay-2.4ghz" // "Jackson 5" // "HOME-5EE4" // "joopal" // "AWS" // "shell-2.4GHz"
+#define PASS        "goldenbrown" // "tigertiger" // "316793944D3C0868" // "Cassandra2048" // "Codehappy123" // "technologydrive"
+#define PORT  "80"           // using port 8080 by default
 
 char buffer[BUFFER_SIZE];
 
@@ -66,8 +66,8 @@ void setup() {
 
   // assume esp8266 operates at 115200 baud rate
   // change if necessary to match your modules' baud rate
-  Serial1.begin(9600);  // Teensy Hardware Serial port 1   (pins 0 and 1)
-  Serial.begin(9600);   // Teensy USB Serial Port
+  Serial1.begin(115200);  // Teensy Hardware Serial port 1   (pins 0 and 1)
+  Serial.begin(115200);   // Teensy USB Serial Port
   
 //  delay(5000);
   Serial.println("begin.");  
