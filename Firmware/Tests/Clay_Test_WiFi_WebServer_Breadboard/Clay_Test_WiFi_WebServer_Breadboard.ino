@@ -1,232 +1,212 @@
-/* Based on:
- * ====== ESP8266 Demo ======
- * (Updated Dec 14, 2014)
- * Ray Wang @ Rayshobby LLC
- * http://rayshobby.net/?p=9734
- * ==========================
- *
- * Modified by R. Wozniak
- * Compiled with Arduino 1.60 and Teensyduino 1.21b6
- * ESP8266 Firmware: AT21SDK95-2015-01-24.bin
- *
- * Change SSID and PASS to match your WiFi settings.
- * The IP address is displayed serial upon successful connection.
- */
+#define DEBUG true
+
+#define WIFI_SERIAL      Serial1
+#define WIFI_SERIAL_BAUD 115200
+#define WIFI_SSID        "clay-2.4ghz" // "Jackson 5" // "HOME-5EE4" // "joopal" // "AWS" // "shell-2.4GHz"
+#define WIFI_PASS        "goldenbrown" // "tigertiger" // "316793944D3C0868" // "Cassandra2048" // "Codehappy123" // "technologydrive"
+#define HTTP_SERVER_PORT "80"          // using port 8080 by default
 
 #define BUFFER_SIZE 1024
-
-//#define SSID  "shell-2.4GHz"      // change this to match your WiFi SSID
-//#define PASS  "technologydrive"  // change this to match your WiFi password
-#define SSID        "clay-2.4ghz" // "Jackson 5" // "HOME-5EE4" // "joopal" // "AWS" // "shell-2.4GHz"
-#define PASS        "goldenbrown" // "tigertiger" // "316793944D3C0868" // "Cassandra2048" // "Codehappy123" // "technologydrive"
-#define PORT  "80"           // using port 8080 by default
-
 char buffer[BUFFER_SIZE];
 
 // By default we are looking for OK\r\n
 char OKrn[] = "OK\r\n";
-byte wait_for_esp_response(int timeout, char* term=OKrn) {
-  unsigned long t=millis();
-  bool found=false;
-  int i=0;
-  int len=strlen(term);
+byte Wait_For_Response (int timeout, char* term=OKrn) {
+  
+  unsigned long t = millis();
+  bool found = false;
+  int i = 0;
+  int len = strlen (term);
+  
   // wait for at most timeout milliseconds
   // or if OK\r\n is found
-  while(millis()<t+timeout) {
-    if(Serial1.available()) {
-      buffer[i++]=Serial1.read();
-      if(i>=len) {
-        if(strncmp(buffer+i-len, term, len)==0) {
-          found=true;
+  while (millis () < (t + timeout)) {
+    if (WIFI_SERIAL.available ()) {
+      buffer[i++] = WIFI_SERIAL.read ();
+      if(i >= len) {
+        if (strncmp ((buffer + i - len), term, len) == 0) {
+          found = true;
           break;
         }
       }
     }
   }
-  buffer[i]=0;
-  Serial.print(buffer);
+  
+  buffer[i] = 0;
+  Serial.print (buffer);
   return found;
 }
 
-void setup() {
-
-  delay (1000);
-
+void Setup_ESP8266EX () {
+  
   pinMode (3, OUTPUT); // Wi-Fi: ESP8266 breakout CH_PD (chip enable on ESP8266 IC)
   pinMode (4, OUTPUT); // Wi-Fi: ESP8266 breakout RST (reset on ESP8266 IC)
   pinMode (5, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO0 (reset on ESP8266 IC)
-  pinMode (8, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO0 (reset on ESP8266 IC)
+  pinMode (8, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO2 (reset on ESP8266 IC)
 
-  digitalWrite (5, HIGH); // Set up GPIO0. "At boot: low causes bootloader to enter flash upload mode; high causes normal boot" (from http://www.esp8266.com/wiki/doku.php?id=esp8266-module-family)
-  digitalWrite (8, HIGH); // Set up GPIO2 in Working Mode
   digitalWrite (3, HIGH); // Set up CH_PD to enable the chip
   digitalWrite (4, HIGH); // Set up RST
+  digitalWrite (5, HIGH); // Set up GPIO0. "At boot: low causes bootloader to enter flash upload mode; high causes normal boot" (from http://www.esp8266.com/wiki/doku.php?id=esp8266-module-family)
+  digitalWrite (8, HIGH); // Set up GPIO2 in Working Mode
 
-  delay (1000);
+  delay (1000); // Let the device configuration stabilize
 
-  // assume esp8266 operates at 115200 baud rate
-  // change if necessary to match your modules' baud rate
-  Serial1.begin(115200);  // Teensy Hardware Serial port 1   (pins 0 and 1)
-  Serial.begin(115200);   // Teensy USB Serial Port
-  
-//  delay(5000);
-  Serial.println("begin.");  
-  setupWiFi();
-
-  // print device IP address
-  Serial.print("device ip addr: ");
-  Serial1.println("AT+CIFSR");
-  wait_for_esp_response(3000);
+  WIFI_SERIAL.begin (WIFI_SERIAL_BAUD); // your esp's baud rate might be different
 }
 
-bool read_till_eol() {
-  static int i=0;
-  if(Serial1.available()) {
-    buffer[i++]=Serial1.read();
-    if(i==BUFFER_SIZE)  i=0;
-    if(i>1 && buffer[i-2]==13 && buffer[i-1]==10) {
-      buffer[i]=0;
-      i=0;
-      Serial.print(buffer);
-      return true;
-    }
+void Setup_WiFi () {
+  
+  Setup_ESP8266EX ();
+}
+
+void setup () {
+  
+  Setup_WiFi ();
+  
+  Serial.begin (115200);
+  
+//  Send_Data ("AT+RST\r\n",2000,DEBUG); // reset module
+//  Send_Data ("AT+CWMODE=2\r\n",1000,DEBUG); // configure as access point
+//  Send_Data ("AT+CIFSR\r\n",1000,DEBUG); // get ip address
+//  Send_Data ("AT+CIPMUX=1\r\n",1000,DEBUG); // configure for multiple connections
+//  Send_Data ("AT+CIPSERVER=1,80\r\n",1000,DEBUG); // turn on server on port 80
+
+  Send_Data ("AT+CWSAP=\"Clay AP\",\"1234567890\",5,3\r\n", 5000, DEBUG); // Configure access point (AP) name, password, channel, and security mode (Reference: https://github.com/espressif/esp8266_at/wiki/CWSAP)
+  Send_Data ("AT+RST\r\n", 2000, DEBUG); // reset module
+  Send_Data ("AT+CWMODE=3\r\n", 1000, DEBUG); // configure as access point
+
+  WIFI_SERIAL.print ("AT+CWJAP=\"");
+  WIFI_SERIAL.print (WIFI_SSID);
+  WIFI_SERIAL.print ("\",\"");
+  WIFI_SERIAL.print (WIFI_PASS);
+  WIFI_SERIAL.println ("\"");
+  Wait_For_Response (10000);
+  
+  Send_Data ("AT+CIFSR\r\n", 1000, DEBUG); // get ip address
+  Send_Data ("AT+CIPMUX=1\r\n", 1000, DEBUG); // configure for multiple connections
+  
+  // Send_Data ("AT+CIPSERVER=1,80\r\n", 1000, DEBUG); // turn on server on port 80
+  WIFI_SERIAL.print ("AT+CIPSERVER=1,");
+  WIFI_SERIAL.print (HTTP_SERVER_PORT);
+  WIFI_SERIAL.print ("\r\n");
+  Wait_For_Response (1000);
+}
+
+void Handle_Request (int connectionId, String requestType, String requestResource) {
+
+  if (requestResource == "/led/on") {
+
+    pinMode (13, OUTPUT);
+    digitalWrite (13, HIGH);
+    
+//    String cipSend = "AT+CIPSEND=";
+//    cipSend += connectionId;
+//    cipSend += ",";
+//    cipSend += 2;
+//    cipSend += "\r\n";
+//    
+//    Send_Data (cipSend, 1000, DEBUG);
+//    Send_Data ("\r\n", 1000, DEBUG);
+    
+  } else if (requestResource == "/led/off") {
+
+    pinMode (13, OUTPUT);
+    digitalWrite (13, LOW);
+
+//    String cipSend = "AT+CIPSEND=";
+//    cipSend += connectionId;
+//    cipSend += ",";
+//    cipSend += 2;
+//    cipSend += "\r\n";
+//    
+//    Send_Data (cipSend, 1000, DEBUG);
+//    Send_Data ("\r\n", 1000, DEBUG);
+    
+  } else {
+    
+    String webpage = "<html><h1>Clay</h1><button>LED1</button></html>";
+    
+    String cipSend = "AT+CIPSEND=";
+    cipSend += connectionId;
+    cipSend += ",";
+    cipSend += webpage.length();
+    cipSend += "\r\n";
+    
+    Send_Data (cipSend, 1000, DEBUG);
+    Send_Data (webpage, 1000, DEBUG);
+    
+//    webpage = "<button>LED2</button>";
+//    
+//    cipSend = "AT+CIPSEND=";
+//    cipSend += connectionId;
+//    cipSend += ",";
+//    cipSend += webpage.length ();
+//    cipSend += "\r\n";
+//    
+//    Send_Data (cipSend, 1000, DEBUG);
+//    Send_Data (webpage, 1000, DEBUG);
   }
-  return false;
 }
-
-void loop() {
-  int ch_id, packet_len;
-  char *pb;  
-  if(read_till_eol()) {
-    if(strncmp(buffer, "+IPD,", 5)==0) {
-      // request: +IPD,ch,len:data
-      sscanf(buffer+5, "%d,%d", &ch_id, &packet_len);
-      if (packet_len > 0) {
-        // read serial until packet_len character received
-        // start from :
-        pb = buffer+5;
-        while(*pb!=':') pb++;
-        pb++;
-        if (strncmp(pb, "GET /", 5) == 0) {
-          wait_for_esp_response(1000);
-          Serial.println("-> serve homepage");
-          serve_homepage(ch_id);
-        }
-      }
-    }
-  }
-}
-
-void serve_homepage(int ch_id) {
-  
-String header = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\nRefresh: 300\r\n";
-
-  String content="";
-    content += "<!DOCTYPE html>";
-    content += "<html>";
-    content += "<body>";
-    
-    content += " <h1> Abraham Lincoln's Gettysburg Address </h1> <br/>  ";
-       
-    content += "<p> <strong> Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal. <br/>";
-    content += " <br/>";
-    content += "Now we are engaged in a great civil war, testing whether that nation, or any nation so conceived and so dedicated, can long endure. We are met on a great battle-field of that war. We have come to dedicate a portion of that field, as a final resting place for those who here gave their lives that that nation might live. It is altogether fitting and proper that we should do this. <br/>";
-    content += " <br/>";
-    content += "But, in a larger sense, we can not dedicate -- we can not consecrate -- we can not hallow -- this ground. The brave men, living and dead, who struggled here, have consecrated it, far above our poor power to add or detract. The world will little note, nor long remember what we say here, but it can never forget what they did here. It is for us the living, rather, to be dedicated here to the unfinished work which they who fought here have thus far so nobly advanced. It is rather for us to be here dedicated to the great task remaining before us -- that from these honored dead we take increased devotion to that cause for which they gave the last full measure of devotion -- that we here highly resolve that these dead shall not have died in vain -- that this nation, under God, shall have a new birth of freedom -- and that government of the people, by the people, for the people, shall not perish from the earth. <br/>";
-    content += " <br/>";
-    content += "Abraham Lincoln <br/>";
-    content += "November 19, 1863 </strong> </p> <br/>";
-    
-    content += " <br/>";
-    content += " <p> <font color=#880088> This message brought to you by - TEENSY 3.1 & ESP8266 </font> </p>";
-    content += " <p> Teensy server uptime ";
-    Serial.print("***************************************** UPTIME = ");
-    Serial.println(millis());
-    content += "<font color=#0000FF> ";
-    content += String(millis());
-    content += " milliseconds </font> </p>";
-    
-      
-    content += "</body>";
-    content += "</html>";
-    content += "<br />\n";       
-    content += "\r\n";       
-
-  header += "Content-Length:";
-  header += (int)(content.length());
-  header += "\r\n\r\n";
-  Serial1.print("AT+CIPSEND=");
-  Serial1.print(ch_id);
-  Serial1.print(",");
-  Serial1.println(header.length()+content.length());
-  if(wait_for_esp_response (2000)) {
-   //delay(100);
-   Serial1.print (header);
-   Serial1.print (content);
-  } 
-  else {
-  Serial1.print("AT+CIPCLOSE=");
-  Serial1.println(ch_id);
- }
-}
-
-void setupWiFi() {
-
-  // turn on echo
-  Serial1.println("ATE1");
-  wait_for_esp_response(1000);
-  
-  // try empty AT command
-  Serial1.println("AT");
-  wait_for_esp_response(1000);
-
-  // set mode 1 (client)
-//  Serial1.println("AT+CWMODE=1");
-  Serial1.println("AT+CWMODE=3");
-  wait_for_esp_response(1000); 
  
-  // reset WiFi module
-//  Serial1.print("AT+RST\r\n");
-//  wait_for_esp_response(1500);
+void loop () {
+  
+  if (WIFI_SERIAL.available ()) { // check if the esp is sending a message
 
-   //join AP
-  Serial1.print("AT+CWJAP=\"");
-  Serial1.print(SSID);
-  Serial1.print("\",\"");
-  Serial1.print(PASS);
-  Serial1.println("\"");
-  wait_for_esp_response(10000);
+    // For multiple connection mode (CIPMUX=1): +IPD,<id>,<length>:<data>
+    // For single connection mode (CIPMUX=0): +IPD,<length>:<data>
+    if (WIFI_SERIAL.find ("+IPD,")) { // Look for the beginning of a request
 
-  // start server
-  Serial1.println("AT+CIPMUX=1");
-   wait_for_esp_response(1000);
-  
-  //Create TCP Server in 
-  Serial1.print("AT+CIPSERVER=1,"); // turn on TCP service
-  Serial1.println(PORT);
-   wait_for_esp_response(1000);
-  
-  Serial1.println("AT+CIPSTO=30");  
-  wait_for_esp_response(1000);
+      // Read the request line
+      String line = WIFI_SERIAL.readStringUntil ('\n');
 
-  Serial1.println("AT+GMR");
-  wait_for_esp_response(1000);
+      Serial.print ("LINE: "); Serial.println (line);
+      Serial.println ();
+      Serial.println ();
+      
+      // Extract connection ID
+      //int connectionId = WIFI_SERIAL.read () - 48; // subtract 48 because the read() function returns the ASCII decimal value and 0 (the first decimal number) starts at 48
+      String connectionIdString = line.substring (0, line.indexOf (','));
+      int connectionId = connectionIdString.toInt ();
+      String requestType = line.substring (line.indexOf (':') + 1, line.indexOf (' '));
+      String requestResource = line.substring (line.indexOf (' ') + 1, line.lastIndexOf (' '));
+
+      Serial.println ("Connection ID: " + String (connectionId));
+      Serial.println ("Request type: " + requestType);
+      Serial.println ("Request resource: " + requestResource);
+
+      // Handle request
+      Handle_Request (connectionId, requestType, requestResource);
+      
+      String closeCommand = "AT+CIPCLOSE="; 
+      closeCommand += connectionId; // append connection id
+      closeCommand += "\r\n";
+      
+      Send_Data (closeCommand, 3000, DEBUG);
+    }
+  }
+}
+
+String Send_Data (String command, const int timeout, boolean debug) {
   
-  Serial1.println("AT+CWJAP?");
-  wait_for_esp_response(1000);
+  String response = "";
   
-  Serial1.println("AT+CIPSTA?");
-  wait_for_esp_response(1000);
+  WIFI_SERIAL.print (command); // Send the read character to the ESP8266EX
   
-  Serial1.println("AT+CWMODE?");
-  wait_for_esp_response(1000);
+  long int time = millis ();
   
-  Serial1.println("AT+CIFSR");
-  wait_for_esp_response(5000);
+  while ((time + timeout) > millis ()) {
   
-//  Serial1.println("AT+CWLAP");
-//  wait_for_esp_response(5000);
+    while (WIFI_SERIAL.available ()) {
+    
+      // The ESP8266EX has data so display its output to the serial window 
+      char c = WIFI_SERIAL.read (); // Read the next character.
+      response += c;
+    }  
+  }
   
-  Serial.println("---------------*****##### READY TO SERVE #####*****---------------");
+  if (debug) {
+    Serial.print(response);
+  }
   
+  return response;
 }
