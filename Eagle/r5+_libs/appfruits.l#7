@@ -1089,55 +1089,55 @@ chip</description>
 <wire x1="-27.94" y1="-109.22" x2="25.4" y2="-109.22" width="0.254" layer="94"/>
 <wire x1="25.4" y1="-109.22" x2="25.4" y2="63.5" width="0.254" layer="94"/>
 <wire x1="25.4" y1="63.5" x2="-27.94" y2="63.5" width="0.254" layer="94"/>
-<pin name="ADC0_DM0" x="-33.02" y="-88.9" length="middle"/>
-<pin name="ADC0_DM3" x="-33.02" y="-86.36" length="middle"/>
+<pin name="ADC0_DM0" x="-33.02" y="-96.52" length="middle"/>
+<pin name="ADC0_DM3" x="-33.02" y="-104.14" length="middle"/>
 <pin name="ADC0_DP0" x="-33.02" y="-93.98" length="middle"/>
-<pin name="ADC0_DP3" x="-33.02" y="-96.52" length="middle"/>
-<pin name="DAC0" x="-33.02" y="-81.28" length="middle"/>
+<pin name="ADC0_DP3" x="-33.02" y="-101.6" length="middle"/>
+<pin name="DAC0" x="-33.02" y="-88.9" length="middle"/>
 <pin name="EXTAL32" x="-33.02" y="-25.4" length="middle"/>
 <pin name="PTA0/TCLK" x="-33.02" y="-58.42" length="middle"/>
 <pin name="PTA1/TDI" x="-33.02" y="-53.34" length="middle"/>
 <pin name="PTA2/TDO" x="-33.02" y="-55.88" length="middle"/>
 <pin name="PTA3/TMS" x="-33.02" y="-60.96" length="middle"/>
-<pin name="PTA4" x="30.48" y="-48.26" length="middle" rot="R180"/>
-<pin name="PTA5" x="30.48" y="-71.12" length="middle" rot="R180"/>
-<pin name="PTA12" x="30.48" y="0" length="middle" rot="R180"/>
-<pin name="PTA13" x="30.48" y="5.08" length="middle" rot="R180"/>
+<pin name="PTA4" x="2.54" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTA5" x="17.78" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTA12" x="30.48" y="-78.74" length="middle" rot="R180"/>
+<pin name="PTA13" x="30.48" y="-81.28" length="middle" rot="R180"/>
 <pin name="PTA18/EXTAL0" x="-33.02" y="0" length="middle"/>
 <pin name="PTA19/XTAL0" x="-33.02" y="-5.08" length="middle"/>
 <pin name="PTB0" x="30.48" y="-12.7" length="middle" rot="R180"/>
 <pin name="PTB1" x="30.48" y="-10.16" length="middle" rot="R180"/>
-<pin name="PTB2" x="30.48" y="-30.48" length="middle" rot="R180"/>
-<pin name="PTB3" x="30.48" y="-33.02" length="middle" rot="R180"/>
-<pin name="PTB16" x="30.48" y="-40.64" length="middle" rot="R180"/>
-<pin name="PTB17" x="30.48" y="-38.1" length="middle" rot="R180"/>
-<pin name="PTB18" x="30.48" y="-50.8" length="middle" rot="R180"/>
-<pin name="PTB19" x="30.48" y="-68.58" length="middle" rot="R180"/>
-<pin name="PTC0" x="30.48" y="40.64" length="middle" rot="R180"/>
-<pin name="PTC1" x="30.48" y="58.42" length="middle" rot="R180"/>
-<pin name="PTC2" x="30.48" y="60.96" length="middle" rot="R180"/>
-<pin name="PTC3" x="30.48" y="20.32" length="middle" rot="R180"/>
-<pin name="PTC4" x="30.48" y="22.86" length="middle" rot="R180"/>
-<pin name="PTC5" x="30.48" y="35.56" length="middle" rot="R180"/>
-<pin name="PTC6" x="30.48" y="25.4" length="middle" rot="R180"/>
-<pin name="PTC7" x="30.48" y="27.94" length="middle" rot="R180"/>
-<pin name="PTC8" x="30.48" y="-60.96" length="middle" rot="R180"/>
-<pin name="PTC9" x="30.48" y="-63.5" length="middle" rot="R180"/>
-<pin name="PTC10/I2C1_SCL" x="30.48" y="-86.36" length="middle" rot="R180"/>
-<pin name="PTC11/I2C1_SDA" x="30.48" y="-88.9" length="middle" rot="R180"/>
-<pin name="PTD0/SPI0_PCS0" x="30.48" y="-91.44" length="middle" rot="R180"/>
-<pin name="PTD1/SPI0_SCK" x="30.48" y="-93.98" length="middle" rot="R180"/>
-<pin name="PTD2/SPI0_SOUT" x="30.48" y="-96.52" length="middle" rot="R180"/>
-<pin name="PTD3/SPI0_SIN" x="30.48" y="-99.06" length="middle" rot="R180"/>
-<pin name="PTD4/SPI0_PCS1" x="30.48" y="-101.6" length="middle" rot="R180"/>
-<pin name="PTD5/SPI0_PCS2" x="30.48" y="-104.14" length="middle" rot="R180"/>
+<pin name="PTB2" x="30.48" y="-27.94" length="middle" rot="R180"/>
+<pin name="PTB3" x="30.48" y="-30.48" length="middle" rot="R180"/>
+<pin name="PTB16" x="30.48" y="27.94" length="middle" rot="R180"/>
+<pin name="PTB17" x="30.48" y="30.48" length="middle" rot="R180"/>
+<pin name="PTB18" x="30.48" y="35.56" length="middle" rot="R180"/>
+<pin name="PTB19" x="30.48" y="38.1" length="middle" rot="R180"/>
+<pin name="PTC0" x="30.48" y="45.72" length="middle" rot="R180"/>
+<pin name="PTC1" x="30.48" y="43.18" length="middle" rot="R180"/>
+<pin name="PTC2" x="30.48" y="-7.62" length="middle" rot="R180"/>
+<pin name="PTC3" x="30.48" y="40.64" length="middle" rot="R180"/>
+<pin name="PTC4" x="30.48" y="12.7" length="middle" rot="R180"/>
+<pin name="PTC5" x="30.48" y="7.62" length="middle" rot="R180"/>
+<pin name="PTC6" x="30.48" y="5.08" length="middle" rot="R180"/>
+<pin name="PTC7" x="30.48" y="2.54" length="middle" rot="R180"/>
+<pin name="PTC8" x="30.48" y="17.78" length="middle" rot="R180"/>
+<pin name="PTC9" x="30.48" y="15.24" length="middle" rot="R180"/>
+<pin name="PTC10/I2C1_SCL" x="30.48" y="-83.82" length="middle" rot="R180"/>
+<pin name="PTC11/I2C1_SDA" x="30.48" y="-86.36" length="middle" rot="R180"/>
+<pin name="PTD0/SPI0_PCS0" x="15.24" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD1/SPI0_SCK" x="0" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD2/SPI0_SOUT" x="-2.54" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD3/SPI0_SIN" x="-5.08" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD4/SPI0_PCS1" x="10.16" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD5/SPI0_PCS2" x="12.7" y="-114.3" length="middle" rot="R90"/>
 <pin name="PTD6" x="30.48" y="55.88" length="middle" rot="R180"/>
 <pin name="PTD7" x="30.48" y="53.34" length="middle" rot="R180"/>
-<pin name="PTE0" x="30.48" y="-53.34" length="middle" rot="R180"/>
-<pin name="PTE1" x="30.48" y="-66.04" length="middle" rot="R180"/>
+<pin name="PTE0" x="30.48" y="-66.04" length="middle" rot="R180"/>
+<pin name="PTE1" x="30.48" y="-68.58" length="middle" rot="R180"/>
 <pin name="RESET_B" x="-33.02" y="-50.8" length="middle"/>
 <pin name="USB0_DM" x="-33.02" y="15.24" length="middle"/>
-<pin name="USB0_DP" x="-33.02" y="10.16" length="middle"/>
+<pin name="USB0_DP" x="-33.02" y="12.7" length="middle"/>
 <pin name="VBAT" x="-33.02" y="55.88" length="middle"/>
 <pin name="VDD" x="-33.02" y="58.42" length="middle"/>
 <pin name="VDDA" x="-33.02" y="38.1" length="middle"/>
