@@ -2272,40 +2272,6 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 </deviceset>
 </devicesets>
 </library>
-<library name="SparkFun-Aesthetics">
-<description>&lt;h3&gt;SparkFun Electronics' preferred foot prints&lt;/h3&gt;
-In this library you'll find non-functional items- supply symbols, logos, notations, frame blocks, etc.&lt;br&gt;&lt;br&gt;
-We've spent an enormous amount of time creating and checking these footprints and parts, but it is the end user's responsibility to ensure correctness and suitablity for a given componet or application. If you enjoy using this library, please buy one of our products at www.sparkfun.com.
-&lt;br&gt;&lt;br&gt;
-&lt;b&gt;Licensing:&lt;/b&gt; Creative Commons ShareAlike 4.0 International - https://creativecommons.org/licenses/by-sa/4.0/ 
-&lt;br&gt;&lt;br&gt;
-You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
-<packages>
-</packages>
-<symbols>
-<symbol name="VCC">
-<wire x1="0.762" y1="1.27" x2="0" y2="2.54" width="0.254" layer="94"/>
-<wire x1="0" y1="2.54" x2="-0.762" y2="1.27" width="0.254" layer="94"/>
-<pin name="VCC" x="0" y="0" visible="off" length="short" direction="sup" rot="R90"/>
-<text x="-1.016" y="3.556" size="1.778" layer="96">&gt;VALUE</text>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="VCC" prefix="SUPPLY">
-<description>&lt;b&gt;SUPPLY SYMBOL&lt;/b&gt;</description>
-<gates>
-<gate name="G$1" symbol="VCC" x="0" y="0"/>
-</gates>
-<devices>
-<device name="">
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="SparkFun-Connectors">
 <description>&lt;h3&gt;SparkFun Electronics' preferred foot prints&lt;/h3&gt;
 In this library you'll find connectors and sockets- basically anything that can be plugged into or onto.&lt;br&gt;&lt;br&gt;
@@ -7221,8 +7187,6 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="GND32" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND33" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND34" library="SparkFun" deviceset="GND" device=""/>
-<part name="SUPPLY1" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
-<part name="SUPPLY2" library="SparkFun-Aesthetics" deviceset="VCC" device=""/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
 <part name="U$5" library="SparkFun-RF" deviceset="ANTENNA2" device="SMD"/>
 <part name="R53" library="SparkFun-Resistors" deviceset="RESISTOR" device="0603-RES" value="12k"/>
@@ -7299,6 +7263,8 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <part name="_48" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="_49" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="_50" library="microbuilder" deviceset="3.3V" device=""/>
+<part name="_51" library="microbuilder" deviceset="3.3V" device=""/>
+<part name="_52" library="microbuilder" deviceset="3.3V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -9388,13 +9354,9 @@ X = AD0</text>
 <instance part="GND32" gate="1" x="113.03" y="-63.5"/>
 <instance part="GND33" gate="1" x="133.35" y="-63.5"/>
 <instance part="GND34" gate="1" x="91.44" y="-104.14"/>
-<instance part="SUPPLY1" gate="G$1" x="120.65" y="-49.53" smashed="yes">
-<attribute name="VALUE" x="119.126" y="-48.006" size="1.778" layer="96" rot="R180"/>
-</instance>
-<instance part="SUPPLY2" gate="G$1" x="125.73" y="-49.53" smashed="yes">
-<attribute name="VALUE" x="125.984" y="-49.784" size="1.778" layer="96"/>
-</instance>
 <instance part="GND3" gate="1" x="185.42" y="-104.14"/>
+<instance part="_51" gate="G$1" x="120.65" y="-46.99"/>
+<instance part="_52" gate="G$1" x="125.73" y="-46.99"/>
 </instances>
 <busses>
 </busses>
@@ -9468,26 +9430,6 @@ X = AD0</text>
 <wire x1="158.75" y1="-74.93" x2="162.56" y2="-74.93" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="VCC" class="0">
-<segment>
-<pinref part="U3" gate="G$1" pin="VDDIO"/>
-<pinref part="C25" gate="G$1" pin="1"/>
-<pinref part="SUPPLY2" gate="G$1" pin="VCC"/>
-<wire x1="125.73" y1="-49.53" x2="125.73" y2="-52.07" width="0.1524" layer="91"/>
-<wire x1="125.73" y1="-52.07" x2="133.35" y2="-52.07" width="0.1524" layer="91"/>
-<wire x1="125.73" y1="-64.77" x2="125.73" y2="-52.07" width="0.1524" layer="91"/>
-<junction x="125.73" y="-52.07"/>
-</segment>
-<segment>
-<pinref part="C24" gate="G$1" pin="2"/>
-<pinref part="U3" gate="G$1" pin="VDD"/>
-<wire x1="120.65" y1="-64.77" x2="120.65" y2="-52.07" width="0.1524" layer="91"/>
-<wire x1="120.65" y1="-52.07" x2="113.03" y2="-52.07" width="0.1524" layer="91"/>
-<pinref part="SUPPLY1" gate="G$1" pin="VCC"/>
-<wire x1="120.65" y1="-49.53" x2="120.65" y2="-52.07" width="0.1524" layer="91"/>
-<junction x="120.65" y="-52.07"/>
-</segment>
-</net>
 <net name="!CS" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="!CS"/>
@@ -9495,6 +9437,26 @@ X = AD0</text>
 <wire x1="156.21" y1="-87.63" x2="156.21" y2="-86.36" width="0.1524" layer="91"/>
 <wire x1="156.21" y1="-86.36" x2="162.56" y2="-86.36" width="0.1524" layer="91"/>
 <label x="162.56" y="-86.36" size="1.778" layer="95" xref="yes"/>
+</segment>
+</net>
+<net name="3.3V" class="0">
+<segment>
+<pinref part="C24" gate="G$1" pin="2"/>
+<pinref part="U3" gate="G$1" pin="VDD"/>
+<wire x1="120.65" y1="-64.77" x2="120.65" y2="-52.07" width="0.1524" layer="91"/>
+<wire x1="120.65" y1="-52.07" x2="113.03" y2="-52.07" width="0.1524" layer="91"/>
+<wire x1="120.65" y1="-49.53" x2="120.65" y2="-52.07" width="0.1524" layer="91"/>
+<junction x="120.65" y="-52.07"/>
+<pinref part="_51" gate="G$1" pin="3.3V"/>
+</segment>
+<segment>
+<pinref part="U3" gate="G$1" pin="VDDIO"/>
+<pinref part="C25" gate="G$1" pin="1"/>
+<wire x1="125.73" y1="-49.53" x2="125.73" y2="-52.07" width="0.1524" layer="91"/>
+<wire x1="125.73" y1="-52.07" x2="133.35" y2="-52.07" width="0.1524" layer="91"/>
+<wire x1="125.73" y1="-64.77" x2="125.73" y2="-52.07" width="0.1524" layer="91"/>
+<junction x="125.73" y="-52.07"/>
+<pinref part="_52" gate="G$1" pin="3.3V"/>
 </segment>
 </net>
 </nets>
@@ -9792,7 +9754,7 @@ X = AD0</text>
 <wire x1="78.74" y1="-132.08" x2="93.98" y2="-132.08" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="RESET" class="0">
+<net name="WIFI_RESET" class="0">
 <segment>
 <wire x1="111.76" y1="-83.82" x2="111.76" y2="-73.66" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="-73.66" x2="86.36" y2="-73.66" width="0.1524" layer="91"/>
@@ -9960,7 +9922,7 @@ X = AD0</text>
 </sheet>
 <sheet>
 <plain>
-<text x="27.94" y="-33.02" size="1.778" layer="97">Place decoupling caps near VDD pins.</text>
+<text x="11.43" y="-38.1" size="1.778" layer="97">Place decoupling caps near VDD pins.</text>
 </plain>
 <instances>
 <instance part="U$9" gate="G$1" x="184.15" y="-62.23"/>

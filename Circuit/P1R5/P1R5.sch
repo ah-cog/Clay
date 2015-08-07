@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="dots" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -7284,8 +7284,8 @@ Place at board edge as noted by group name.
 Place the I/O towards the inside.
 Place ground at the board edge.
 Place power in between.
-See LED_DRIVER block for LEDS to be placed 
-near these ports.</text>
+See LED drivers on page 3 for LED groups to be 
+placed near these ports.</text>
 <wire x1="259.08" y1="-191.77" x2="205.74" y2="-191.77" width="0.1524" layer="97"/>
 <wire x1="205.74" y1="-191.77" x2="205.74" y2="-248.92" width="0.1524" layer="97"/>
 <wire x1="205.74" y1="-248.92" x2="125.73" y2="-248.92" width="0.1524" layer="97"/>
@@ -8228,8 +8228,10 @@ near these ports.</text>
 <net name="!RESET1" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTA5"/>
-<wire x1="201.93" y1="-179.07" x2="262.89" y2="-179.07" width="0.1524" layer="91"/>
-<label x="262.89" y="-179.07" size="1.778" layer="95" xref="yes"/>
+<wire x1="201.93" y1="-179.07" x2="246.38" y2="-179.07" width="0.1524" layer="91"/>
+<wire x1="246.38" y1="-179.07" x2="246.38" y2="-180.34" width="0.1524" layer="91"/>
+<wire x1="246.38" y1="-180.34" x2="262.89" y2="-180.34" width="0.1524" layer="91"/>
+<label x="262.89" y="-180.34" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="V_IN" class="0">
@@ -8244,10 +8246,11 @@ near these ports.</text>
 <pinref part="U1" gate="G$1" pin="PTB3/I2C0_SDA"/>
 <wire x1="201.93" y1="-163.83" x2="246.38" y2="-163.83" width="0.1524" layer="91"/>
 <pinref part="R5" gate="G$1" pin="2"/>
-<wire x1="246.38" y1="-163.83" x2="262.89" y2="-163.83" width="0.1524" layer="91"/>
+<wire x1="246.38" y1="-163.83" x2="246.38" y2="-165.1" width="0.1524" layer="91"/>
+<wire x1="246.38" y1="-165.1" x2="262.89" y2="-165.1" width="0.1524" layer="91"/>
 <wire x1="246.38" y1="-160.02" x2="246.38" y2="-163.83" width="0.1524" layer="91"/>
 <junction x="246.38" y="-163.83"/>
-<label x="262.89" y="-163.83" size="1.778" layer="95" xref="yes"/>
+<label x="262.89" y="-165.1" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="SCL" class="0">
