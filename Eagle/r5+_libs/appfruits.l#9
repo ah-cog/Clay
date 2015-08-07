@@ -1090,19 +1090,19 @@ chip</description>
 <wire x1="25.4" y1="-109.22" x2="25.4" y2="63.5" width="0.254" layer="94"/>
 <wire x1="25.4" y1="63.5" x2="-27.94" y2="63.5" width="0.254" layer="94"/>
 <pin name="ADC0_DM0" x="-33.02" y="-96.52" length="middle"/>
-<pin name="ADC0_DM3" x="-33.02" y="-93.98" length="middle"/>
-<pin name="ADC0_DP0" x="-33.02" y="-101.6" length="middle"/>
-<pin name="ADC0_DP3" x="-33.02" y="-104.14" length="middle"/>
+<pin name="ADC0_DM3" x="-33.02" y="-104.14" length="middle"/>
+<pin name="ADC0_DP0" x="-33.02" y="-93.98" length="middle"/>
+<pin name="ADC0_DP3" x="-33.02" y="-101.6" length="middle"/>
 <pin name="DAC0" x="-33.02" y="-88.9" length="middle"/>
 <pin name="EXTAL32" x="-33.02" y="-25.4" length="middle"/>
 <pin name="PTA0/TCLK" x="-33.02" y="-58.42" length="middle"/>
 <pin name="PTA1/TDI" x="-33.02" y="-53.34" length="middle"/>
 <pin name="PTA2/TDO" x="-33.02" y="-55.88" length="middle"/>
 <pin name="PTA3/TMS" x="-33.02" y="-60.96" length="middle"/>
-<pin name="PTA4" x="30.48" y="-48.26" length="middle" rot="R180"/>
-<pin name="PTA5" x="30.48" y="-50.8" length="middle" rot="R180"/>
-<pin name="PTA12" x="30.48" y="-53.34" length="middle" rot="R180"/>
-<pin name="PTA13" x="30.48" y="-55.88" length="middle" rot="R180"/>
+<pin name="PTA4" x="15.24" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTA5" x="17.78" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTA12/CAN0_TX" x="30.48" y="-78.74" length="middle" rot="R180"/>
+<pin name="PTA13/CAN0_RX" x="30.48" y="-81.28" length="middle" rot="R180"/>
 <pin name="PTA18/EXTAL0" x="-33.02" y="0" length="middle"/>
 <pin name="PTA19/XTAL0" x="-33.02" y="-5.08" length="middle"/>
 <pin name="PTB0" x="30.48" y="-12.7" length="middle" rot="R180"/>
@@ -1123,18 +1123,18 @@ chip</description>
 <pin name="PTC7" x="30.48" y="2.54" length="middle" rot="R180"/>
 <pin name="PTC8" x="30.48" y="17.78" length="middle" rot="R180"/>
 <pin name="PTC9" x="30.48" y="15.24" length="middle" rot="R180"/>
-<pin name="PTC10/I2C1_SCL" x="30.48" y="-86.36" length="middle" rot="R180"/>
-<pin name="PTC11/I2C1_SDA" x="30.48" y="-88.9" length="middle" rot="R180"/>
-<pin name="PTD0/SPI0_PCS0" x="30.48" y="-91.44" length="middle" rot="R180"/>
-<pin name="PTD1/SPI0_SCK" x="30.48" y="-93.98" length="middle" rot="R180"/>
-<pin name="PTD2/SPI0_SOUT" x="30.48" y="-96.52" length="middle" rot="R180"/>
-<pin name="PTD3/SPI0_SIN" x="30.48" y="-99.06" length="middle" rot="R180"/>
-<pin name="PTD4/SPI0_PCS1" x="30.48" y="-101.6" length="middle" rot="R180"/>
-<pin name="PTD5/SPI0_PCS2" x="30.48" y="-104.14" length="middle" rot="R180"/>
+<pin name="PTC10/I2C1_SCL" x="30.48" y="-83.82" length="middle" rot="R180"/>
+<pin name="PTC11/I2C1_SDA" x="30.48" y="-86.36" length="middle" rot="R180"/>
+<pin name="PTD0/SPI0_PCS0" x="5.08" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD1/SPI0_SCK" x="2.54" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD2/SPI0_SOUT" x="0" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD3/SPI0_SIN" x="-2.54" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD4/SPI0_PCS1" x="10.16" y="-114.3" length="middle" rot="R90"/>
+<pin name="PTD5/SPI0_PCS2" x="12.7" y="-114.3" length="middle" rot="R90"/>
 <pin name="PTD6" x="30.48" y="55.88" length="middle" rot="R180"/>
 <pin name="PTD7" x="30.48" y="53.34" length="middle" rot="R180"/>
-<pin name="PTE0" x="30.48" y="-66.04" length="middle" rot="R180"/>
-<pin name="PTE1" x="30.48" y="-68.58" length="middle" rot="R180"/>
+<pin name="PTE0/I2C1_SDA/UART1_TX" x="30.48" y="-71.12" length="middle" rot="R180"/>
+<pin name="PTE1/I2C1_SCL/UART1_RX" x="30.48" y="-73.66" length="middle" rot="R180"/>
 <pin name="RESET_B" x="-33.02" y="-50.8" length="middle"/>
 <pin name="USB0_DM" x="-33.02" y="15.24" length="middle"/>
 <pin name="USB0_DP" x="-33.02" y="12.7" length="middle"/>
@@ -1150,7 +1150,7 @@ chip</description>
 <pin name="VSSA" x="-33.02" y="22.86" length="middle"/>
 <pin name="XTAL32" x="-33.02" y="-20.32" length="middle"/>
 <text x="-10.16" y="60.96" size="1.778" layer="95">&gt;NAME</text>
-<text x="-15.24" y="-68.58" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-5.08" y="2.54" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
 <symbol name="Q">
 <wire x1="1.016" y1="0" x2="2.54" y2="0" width="0.1524" layer="94"/>
@@ -1741,8 +1741,8 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <connect gate="G$1" pin="EXTAL32" pad="20"/>
 <connect gate="G$1" pin="PTA0/TCLK" pad="22"/>
 <connect gate="G$1" pin="PTA1/TDI" pad="23"/>
-<connect gate="G$1" pin="PTA12" pad="28"/>
-<connect gate="G$1" pin="PTA13" pad="29"/>
+<connect gate="G$1" pin="PTA12/CAN0_TX" pad="28"/>
+<connect gate="G$1" pin="PTA13/CAN0_RX" pad="29"/>
 <connect gate="G$1" pin="PTA18/EXTAL0" pad="32"/>
 <connect gate="G$1" pin="PTA19/XTAL0" pad="33"/>
 <connect gate="G$1" pin="PTA2/TDO" pad="24"/>
@@ -1777,8 +1777,8 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <connect gate="G$1" pin="PTD5/SPI0_PCS2" pad="62"/>
 <connect gate="G$1" pin="PTD6" pad="63"/>
 <connect gate="G$1" pin="PTD7" pad="64"/>
-<connect gate="G$1" pin="PTE0" pad="1"/>
-<connect gate="G$1" pin="PTE1" pad="2"/>
+<connect gate="G$1" pin="PTE0/I2C1_SDA/UART1_TX" pad="1"/>
+<connect gate="G$1" pin="PTE1/I2C1_SCL/UART1_RX" pad="2"/>
 <connect gate="G$1" pin="RESET_B" pad="34"/>
 <connect gate="G$1" pin="USB0_DM" pad="6"/>
 <connect gate="G$1" pin="USB0_DP" pad="5"/>
