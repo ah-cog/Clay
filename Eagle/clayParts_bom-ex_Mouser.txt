@@ -1,2 +1,0 @@
-Mfg Part Num	Mfg Name	VID	Vendor Part Num	Description	Pkg Code
-_mpn	_mn	_vid	MOU	_desc	_pkg
