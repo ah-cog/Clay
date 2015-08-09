@@ -148,7 +148,7 @@ void setup () {
   Wait_For_Response (1000);
 }
 
-void Handle_Request (int connectionId, const char *requestType, const char *requestResource) {
+void Handle_Request (int connectionId, const char *requestType, const char *requestResource, const char *requestBody) {
 
   if (strncmp (requestResource, "/pins", 5) == 0) {
 
@@ -180,6 +180,10 @@ void Handle_Request (int connectionId, const char *requestType, const char *requ
       // TODO: cut out resource "/pins" (before ?)
       // TODO: make function to extract parameters in list "?id=1&value=high"
 
+      Serial.println ("POST DATA:");
+      Serial.println (requestBody);
+      Serial.println ();
+
       char* parameters = strchr (requestResource, '?');
       if (parameters != NULL) { // i.e., if found the character '?'
 
@@ -207,7 +211,7 @@ void Handle_Request (int connectionId, const char *requestType, const char *requ
           parameterCount++; // Increase the parameter count by one to account for this one.
 
           // Locate the next parameter.
-          // Note: Here, if there's no parameter, nextParameter will be assigned NULL, causing the loop to terminate.
+          // NOTE: Here, if there's no parameter, nextParameter will be assigned NULL, causing the loop to terminate.
           nextParameter = strchr (parameterValue, '&'); // Search for the next parameter to determine the length of the parameter value substring.
           
           if (nextParameter != NULL) {
@@ -216,6 +220,8 @@ void Handle_Request (int connectionId, const char *requestType, const char *requ
 
           Serial.print ("parameterKey: "); Serial.println (parameterKey);
           Serial.print ("parameterValue: "); Serial.println (parameterValue);
+
+          // TODO: Process request based on parameter values. Possibly cache the values.
         }
         
       }
@@ -272,27 +278,74 @@ void loop () {
     if (WIFI_SERIAL.find ("+IPD,")) { // Look for the beginning of a request
 
       // Read the request line
-      String line = WIFI_SERIAL.readStringUntil ('\n');
+      String lineString = WIFI_SERIAL.readStringUntil ('\n');
 
-      Serial.print ("LINE: "); Serial.println (line);
+      Serial.print ("LINE: "); Serial.println (lineString);
       Serial.println ();
       Serial.println ();
       
       // Extract connection ID
       //int connectionId = WIFI_SERIAL.read () - 48; // subtract 48 because the read() function returns the ASCII decimal value and 0 (the first decimal number) starts at 48
-      String connectionIdString = line.substring (0, line.indexOf (','));
-      int connectionId = connectionIdString.toInt ();
-      String requestType = line.substring (line.indexOf (':') + 1, line.indexOf (' '));
-      String requestResource = line.substring (line.indexOf (' ') + 1, line.lastIndexOf (' '));
+      String connectionIdString    = lineString.substring (0, lineString.indexOf (','));
+      int    connectionId          = connectionIdString.toInt ();
+      String requestTypeString     = lineString.substring (lineString.indexOf (':') + 1, lineString.indexOf (' '));
+      String requestResourceString = lineString.substring (lineString.indexOf (' ') + 1, lineString.lastIndexOf (' '));
 
       Serial.println ("Connection ID: " + String (connectionId));
-      Serial.println ("Request type: " + requestType);
-      Serial.println ("Request resource: " + requestResource);
+      Serial.println ("Request type: " + requestTypeString);
+      Serial.println ("Request resource: " + requestResourceString);
+      Serial.println ();
+
+      const char* requestType = requestTypeString.c_str ();
+      const char* requestResource = requestResourceString.c_str ();
+      char  content[128]; // Pointer to the request body's content.
+
+      // Check if there's any body content in the POST request.
+      if (strncmp (requestType, "POST", 5) == 0) {
+
+        // Read the request line
+        lineString = WIFI_SERIAL.readStringUntil ('\n');
+        const char* line = lineString.c_str ();
+
+        while (strncmp (line, "Content-Length:", 15) != 0) {
+          // Serial.println ("\tSearching for \"Content-Length\"");
+
+          lineString = WIFI_SERIAL.readStringUntil ('\n');
+          const char* line = lineString.c_str ();
+        }
+        // Serial.println ("\tFound it.");
+
+        // Extract "Content-Length" value
+        char* headerValue   = strchr (line, ':') + 1;
+        int   contentLength = atoi (headerValue); // Convert the "Content-Length" parameter to an integer.
+        int   contentIndex = 0;
+
+        // Extract the body content
+        if (contentLength > 0) {
+          if (WIFI_SERIAL.find ("\r\n\r\n")) { // Look for the beginning of the request's body.
+            // Serial.println ("\tFound the body.");
+
+            while (contentIndex < contentLength) {
+  
+              if (WIFI_SERIAL.available ()) {
+                content[contentIndex] = WIFI_SERIAL.read ();
+                contentIndex++;
+  
+                if (contentIndex >= contentLength) {
+                  break;
+                }
+              }
+            }
+            content[contentIndex] = '\0';
+          }
+        }
+
+        // Parse the request body's content
+        // TODO: Parse the body based on the request.
+      }
 
       // Handle request
-      const char* requestTypeChar = requestType.c_str ();
-      const char* requestResourceChar = requestResource.c_str ();
-      Handle_Request (connectionId, requestTypeChar, requestResourceChar);
+      Handle_Request (connectionId, requestType, requestResource, content);
       
       String closeCommand = "AT+CIPCLOSE="; 
       closeCommand += connectionId; // append connection id
