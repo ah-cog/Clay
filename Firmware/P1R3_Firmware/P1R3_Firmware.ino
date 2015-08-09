@@ -37,6 +37,60 @@ byte Wait_For_Response (int timeout, char* term=OKrn) {
   return found;
 }
 
+#include <stdarg.h>
+
+#define PIN_COUNT 8
+int pinAddresses[PIN_COUNT];
+int pinModes[PIN_COUNT]; // 0=NONE, 1=INPUT, 2=OUTPUT
+int pinValues[PIN_COUNT];
+
+void Setup_Pins (int n_args, ...) {
+
+  // Assign physical MCU pins to Clay's I/O
+  va_list ap;
+  va_start (ap, n_args);
+  for (int i = 0; i < n_args; i++) {
+    pinAddresses[i] = va_arg (ap, int);
+  }
+  va_end (ap);
+  
+}
+
+void Set_Pin (int number, int mode, int value) {
+  Serial.println ("Set_Pin");
+  pinModes[(pinAddresses[number])] = mode;
+  pinMode (pinAddresses[number], mode);
+  
+  Serial.println ("number = " + String (number));
+  Serial.println ("pinAddresses[number] = " + String (pinAddresses[number]));
+  Serial.println ("pinModes[(pinAddresses[number])] = " + String (pinModes[(pinAddresses[number])]));
+
+  if (pinModes[(pinAddresses[number])] == OUTPUT) {
+    pinValues[(pinAddresses[number])] = value;
+    digitalWrite (pinAddresses[number], pinValues[(pinAddresses[number])]);
+  }
+}
+
+int Get_Pin_Address (int number) {
+  return pinAddresses[number];
+}
+
+int Get_Pin_Mode (int number) {
+  return pinModes[number];
+}
+
+int Get_Pin_Value (int number) {
+
+  if (pinModes[(pinAddresses[number])] == INPUT) {
+    pinValues[(pinAddresses[number])] = digitalRead (pinAddresses[number]);
+    return pinValues[(pinAddresses[number])];
+  } else if (pinModes[(pinAddresses[number])] == OUTPUT) {
+    return pinValues[(pinAddresses[number])];
+  }
+
+  return -1;
+}
+
 void Setup_ESP8266EX () {
   
   pinMode (3, OUTPUT); // Wi-Fi: ESP8266 breakout CH_PD (chip enable on ESP8266 IC)
@@ -60,6 +114,8 @@ void Setup_WiFi () {
 }
 
 void setup () {
+
+  Setup_Pins (PIN_COUNT, 13, 17, 20, 21, 22, 23, 24, 25);
   
   Setup_WiFi ();
   
@@ -92,39 +148,56 @@ void setup () {
   Wait_For_Response (1000);
 }
 
-void Handle_Request (int connectionId, String requestType, String requestResource) {
+void Handle_Request (int connectionId, const char *requestType, const char *requestResource) {
 
-  if (requestResource == "/led/on") {
+  if (strncmp (requestResource, "/pins", 5) == 0) {
 
-    pinMode (13, OUTPUT);
-    digitalWrite (13, HIGH);
+    if (strncmp (requestType, "POST", 4) == 0) {
+      // TODO: cut out resource "/pins" (before ?)
+      // TODO: make function to extract parameters in list "?id=1&value=high"
+    } else if (strncmp (requestType, "GET", 3) == 0) {
+
+      // Encode pin profile for sending
+      String response = "";
+      for (int i = 0; i < PIN_COUNT; i++) {
+        response += String (Get_Pin_Mode (i)) + "," + String (Get_Pin_Value (i)) + "\n";
+      }
+      
+      String cipSend = "AT+CIPSEND=";
+      cipSend += connectionId;
+      cipSend += ",";
+      cipSend += response.length();
+      cipSend += "\r\n";
+      
+      Send_Data (cipSend, 1000, DEBUG);
+      Send_Data (response, 1000, DEBUG);
+      
+    }
     
-//    String cipSend = "AT+CIPSEND=";
-//    cipSend += connectionId;
-//    cipSend += ",";
-//    cipSend += 2;
-//    cipSend += "\r\n";
-//    
-//    Send_Data (cipSend, 1000, DEBUG);
-//    Send_Data ("\r\n", 1000, DEBUG);
-    
-  } else if (requestResource == "/led/off") {
+  } else if (strncmp (requestResource, "/pin", 4) == 0) {
 
-    pinMode (13, OUTPUT);
-    digitalWrite (13, LOW);
+    if (strncmp (requestType, "POST", 4) == 0) {
+      // TODO: cut out resource "/pins" (before ?)
+      // TODO: make function to extract parameters in list "?id=1&value=high"
+    } else if (strncmp (requestType, "GET", 3) == 0) {
+      if (strncmp (requestResource, "/pin/on", 7) == 0) {
+        Set_Pin (0, OUTPUT, HIGH);
+      } else if (strncmp (requestResource, "/pin/off", 8) == 0) {
+        Set_Pin (0, OUTPUT, LOW); 
+      }
+    }
 
-//    String cipSend = "AT+CIPSEND=";
-//    cipSend += connectionId;
-//    cipSend += ",";
-//    cipSend += 2;
-//    cipSend += "\r\n";
-//    
-//    Send_Data (cipSend, 1000, DEBUG);
-//    Send_Data ("\r\n", 1000, DEBUG);
+  } else if (strncmp (requestResource, "/pin/on", 7) == 0) {
+
+    Set_Pin (0, OUTPUT, HIGH);
+
+  } else if (strncmp (requestResource, "/pin/off", 8) == 0) {
+
+    Set_Pin (0, OUTPUT, LOW);
     
   } else {
     
-    String webpage = "<html><h1>Clay</h1><button>LED1</button></html>";
+    String webpage = "<html><h1>Clay</h1></html>";
     
     String cipSend = "AT+CIPSEND=";
     cipSend += connectionId;
@@ -175,7 +248,9 @@ void loop () {
       Serial.println ("Request resource: " + requestResource);
 
       // Handle request
-      Handle_Request (connectionId, requestType, requestResource);
+      const char* requestTypeChar = requestType.c_str ();
+      const char* requestResourceChar = requestResource.c_str ();
+      Handle_Request (connectionId, requestTypeChar, requestResourceChar);
       
       String closeCommand = "AT+CIPCLOSE="; 
       closeCommand += connectionId; // append connection id
