@@ -179,6 +179,48 @@ void Handle_Request (int connectionId, const char *requestType, const char *requ
     if (strncmp (requestType, "POST", 4) == 0) {
       // TODO: cut out resource "/pins" (before ?)
       // TODO: make function to extract parameters in list "?id=1&value=high"
+
+      char* parameters = strchr (requestResource, '?');
+      if (parameters != NULL) { // i.e., if found the character '?'
+
+        int parameterCount = 0;
+        char* parameterKeys[10];
+        char* parameterValues[10];
+
+        // NOTE: Assuming proper formatting. This code needs to be make robust to erroneous and improperly-formatted parameter lists and parameter (key, value) pairs.
+        // TODO: Make this code safe (see above note).
+
+        char* nextParameter  = parameters; // Pointer to the next parameter to parse (including the preceding delimieter '?')
+        char* parameterKey   = NULL;
+        char* parameterValue = NULL;
+        while (nextParameter != NULL) {
+
+          // Locate the parameter's key and value the format "?key1=value1"
+          parameterKey   = nextParameter + 1;
+          parameterValue = strchr (parameterKey, '=') + 1;
+
+          (parameterKey   - 1)[0] = '\0'; // Replace the '?' or '&' character with '\0' to terminate the key string.
+          (parameterValue - 1)[0] = '\0'; // Replace the '=' character with '\0' to terminate the key string.
+
+          parameterKeys[parameterCount]   = parameterKey;   // Store pointer to the parameter's key.
+          parameterValues[parameterCount] = parameterValue; // Store pointer to the parameter's value.
+          parameterCount++; // Increase the parameter count by one to account for this one.
+
+          // Locate the next parameter.
+          // Note: Here, if there's no parameter, nextParameter will be assigned NULL, causing the loop to terminate.
+          nextParameter = strchr (parameterValue, '&'); // Search for the next parameter to determine the length of the parameter value substring.
+          
+          if (nextParameter != NULL) {
+            nextParameter[0] = '\0'; // Replace the '&' character with '\0' to terminate the key string.
+          }
+
+          Serial.print ("parameterKey: "); Serial.println (parameterKey);
+          Serial.print ("parameterValue: "); Serial.println (parameterValue);
+        }
+        
+      }
+
+      
     } else if (strncmp (requestType, "GET", 3) == 0) {
       if (strncmp (requestResource, "/pin/on", 7) == 0) {
         Set_Pin (0, OUTPUT, HIGH);
