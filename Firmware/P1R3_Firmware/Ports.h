@@ -1,10 +1,12 @@
 #ifndef PORTS_H
 #define PORTS_H
 
-#include <Arduino.h>
-
-#define INPUT 0
-#define OUTPUT 1
+#ifndef INPUT
+  #define INPUT 0
+#endif
+#ifndef OUTPUT
+  #define OUTPUT 1
+#endif
 
 #include <stdarg.h>
 

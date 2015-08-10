@@ -1,8 +1,6 @@
 #ifndef WIFI_ESP8266_H
 #define WIFI_ESP8266_H
 
-#include <Arduino.h>
-
 #define DEBUG true
 
 #define WIFI_SERIAL      Serial1
@@ -14,26 +12,32 @@
 #define BUFFER_SIZE 1024
 char buffer[BUFFER_SIZE];
 
-void Setup_ESP8266EX () {
+// By default we are looking for OK\r\n
+char OKrn[] = "OK\r\n";
+byte Wait_For_Response (int timeout, char* term=OKrn) {
   
-  pinMode (3, OUTPUT); // Wi-Fi: ESP8266 breakout CH_PD (chip enable on ESP8266 IC)
-  pinMode (4, OUTPUT); // Wi-Fi: ESP8266 breakout RST (reset on ESP8266 IC)
-  pinMode (5, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO0 (reset on ESP8266 IC)
-  pinMode (8, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO2 (reset on ESP8266 IC)
-
-  digitalWrite (3, HIGH); // Set up CH_PD to enable the chip
-  digitalWrite (4, HIGH); // Set up RST
-  digitalWrite (5, HIGH); // Set up GPIO0. "At boot: low causes bootloader to enter flash upload mode; high causes normal boot" (from http://www.esp8266.com/wiki/doku.php?id=esp8266-module-family)
-  digitalWrite (8, HIGH); // Set up GPIO2 in Working Mode
-
-  delay (1000); // Let the device configuration stabilize
-
-  WIFI_SERIAL.begin (WIFI_SERIAL_BAUD); // your esp's baud rate might be different
-}
-
-void Setup_WiFi () {
+  unsigned long t = millis();
+  bool found = false;
+  int i = 0;
+  int len = strlen (term);
   
-  Setup_ESP8266EX ();
+  // wait for at most timeout milliseconds
+  // or if OK\r\n is found
+  while (millis () < (t + timeout)) {
+    if (WIFI_SERIAL.available ()) {
+      buffer[i++] = WIFI_SERIAL.read ();
+      if(i >= len) {
+        if (strncmp ((buffer + i - len), term, len) == 0) {
+          found = true;
+          break;
+        }
+      }
+    }
+  }
+  
+  buffer[i] = 0;
+  Serial.print (buffer);
+  return found;
 }
 
 String Send_Data (String command, const int timeout, boolean debug) {
@@ -59,6 +63,50 @@ String Send_Data (String command, const int timeout, boolean debug) {
   }
   
   return response;
+}
+
+void Setup_ESP8266EX () {
+  
+  pinMode (3, OUTPUT); // Wi-Fi: ESP8266 breakout CH_PD (chip enable on ESP8266 IC)
+  pinMode (4, OUTPUT); // Wi-Fi: ESP8266 breakout RST (reset on ESP8266 IC)
+  pinMode (5, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO0 (reset on ESP8266 IC)
+  pinMode (8, OUTPUT); // Wi-Fi: ESP8266 breakout GPIO2 (reset on ESP8266 IC)
+
+  digitalWrite (3, HIGH); // Set up CH_PD to enable the chip
+  digitalWrite (4, HIGH); // Set up RST
+  digitalWrite (5, HIGH); // Set up GPIO0. "At boot: low causes bootloader to enter flash upload mode; high causes normal boot" (from http://www.esp8266.com/wiki/doku.php?id=esp8266-module-family)
+  digitalWrite (8, HIGH); // Set up GPIO2 in Working Mode
+
+  delay (800); // Let the device configuration stabilize
+
+  WIFI_SERIAL.begin (WIFI_SERIAL_BAUD); // your esp's baud rate might be different
+
+  delay (200); // Let the device configuration stabilize
+
+  Send_Data ("AT+CWSAP=\"Clay AP\",\"1234567890\",5,3\r\n", 5000, DEBUG); // Configure access point (AP) name, password, channel, and security mode (Reference: https://github.com/espressif/esp8266_at/wiki/CWSAP)
+  Send_Data ("AT+RST\r\n", 2000, DEBUG); // reset module
+  Send_Data ("AT+CWMODE=3\r\n", 1000, DEBUG); // configure as access point
+
+  WIFI_SERIAL.print ("AT+CWJAP=\"");
+  WIFI_SERIAL.print (WIFI_SSID);
+  WIFI_SERIAL.print ("\",\"");
+  WIFI_SERIAL.print (WIFI_PASS);
+  WIFI_SERIAL.println ("\"");
+  Wait_For_Response (10000);
+  
+  Send_Data ("AT+CIFSR\r\n", 1000, DEBUG); // get ip address
+  Send_Data ("AT+CIPMUX=1\r\n", 1000, DEBUG); // configure for multiple connections
+  
+  // Send_Data ("AT+CIPSERVER=1,80\r\n", 1000, DEBUG); // turn on server on port 80
+  WIFI_SERIAL.print ("AT+CIPSERVER=1,");
+  WIFI_SERIAL.print (HTTP_SERVER_PORT);
+  WIFI_SERIAL.print ("\r\n");
+  Wait_For_Response (1000);
+}
+
+void Setup_WiFi () {
+  
+  Setup_ESP8266EX ();
 }
 
 void Handle_Request (int connectionId, const char *requestType, const char *requestResource, const char *requestBody) {
@@ -179,6 +227,93 @@ void Handle_Request (int connectionId, const char *requestType, const char *requ
 //    
 //    Send_Data (cipSend, 1000, DEBUG);
 //    Send_Data (webpage, 1000, DEBUG);
+  }
+}
+
+void Process_WiFi () {
+
+  if (WIFI_SERIAL.available ()) { // check if the esp is sending a message
+
+    // For multiple connection mode (CIPMUX=1): +IPD,<id>,<length>:<data>
+    // For single connection mode (CIPMUX=0): +IPD,<length>:<data>
+    if (WIFI_SERIAL.find ("+IPD,")) { // Look for the beginning of a request
+
+      // Read the request line
+      String lineString = WIFI_SERIAL.readStringUntil ('\n');
+
+      Serial.print ("LINE: "); Serial.println (lineString);
+      Serial.println ();
+      Serial.println ();
+      
+      // Extract connection ID
+      //int connectionId = WIFI_SERIAL.read () - 48; // subtract 48 because the read() function returns the ASCII decimal value and 0 (the first decimal number) starts at 48
+      String connectionIdString    = lineString.substring (0, lineString.indexOf (','));
+      int    connectionId          = connectionIdString.toInt ();
+      String requestTypeString     = lineString.substring (lineString.indexOf (':') + 1, lineString.indexOf (' '));
+      String requestResourceString = lineString.substring (lineString.indexOf (' ') + 1, lineString.lastIndexOf (' '));
+
+      Serial.println ("Connection ID: " + String (connectionId));
+      Serial.println ("Request type: " + requestTypeString);
+      Serial.println ("Request resource: " + requestResourceString);
+      Serial.println ();
+
+      const char* requestType = requestTypeString.c_str ();
+      const char* requestResource = requestResourceString.c_str ();
+      char  content[128]; // Pointer to the request body's content.
+
+      // Check if there's any body content in the POST request.
+      if (strncmp (requestType, "POST", 5) == 0) {
+
+        // Read the request line
+        lineString = WIFI_SERIAL.readStringUntil ('\n');
+        const char* line = lineString.c_str ();
+
+        while (strncmp (line, "Content-Length:", 15) != 0) {
+          // Serial.println ("\tSearching for \"Content-Length\"");
+
+          lineString = WIFI_SERIAL.readStringUntil ('\n');
+          const char* line = lineString.c_str ();
+        }
+        // Serial.println ("\tFound it.");
+
+        // Extract "Content-Length" value
+        char* headerValue   = strchr (line, ':') + 1;
+        int   contentLength = atoi (headerValue); // Convert the "Content-Length" parameter to an integer.
+        int   contentIndex = 0;
+
+        // Extract the body content
+        if (contentLength > 0) {
+          if (WIFI_SERIAL.find ("\r\n\r\n")) { // Look for the beginning of the request's body.
+            // Serial.println ("\tFound the body.");
+
+            while (contentIndex < contentLength) {
+  
+              if (WIFI_SERIAL.available ()) {
+                content[contentIndex] = WIFI_SERIAL.read ();
+                contentIndex++;
+  
+                if (contentIndex >= contentLength) {
+                  break;
+                }
+              }
+            }
+            content[contentIndex] = '\0';
+          }
+        }
+
+        // Parse the request body's content
+        // TODO: Parse the body based on the request.
+      }
+
+      // Handle request
+      Handle_Request (connectionId, requestType, requestResource, content);
+      
+      String closeCommand = "AT+CIPCLOSE="; 
+      closeCommand += connectionId; // append connection id
+      closeCommand += "\r\n";
+      
+      Send_Data (closeCommand, 3000, DEBUG);
+    }
   }
 }
 
