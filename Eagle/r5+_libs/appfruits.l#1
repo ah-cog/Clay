@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.001" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -935,10 +935,10 @@ chip</description>
 <description>&lt;b&gt; 0402&lt;/b&gt;</description>
 <wire x1="-0.245" y1="0.174" x2="0.245" y2="0.174" width="0.1016" layer="51"/>
 <wire x1="0.245" y1="-0.174" x2="-0.245" y2="-0.174" width="0.1016" layer="51"/>
-<wire x1="-1.0573" y1="0.5557" x2="1.0573" y2="0.5557" width="0.2032" layer="21"/>
-<wire x1="1.0573" y1="0.5557" x2="1.0573" y2="-0.5556" width="0.2032" layer="21"/>
-<wire x1="1.0573" y1="-0.5556" x2="-1.0573" y2="-0.5557" width="0.2032" layer="21"/>
-<wire x1="-1.0573" y1="-0.5557" x2="-1.0573" y2="0.5557" width="0.2032" layer="21"/>
+<wire x1="-0.9811" y1="0.4795" x2="0.9811" y2="0.4795" width="0.127" layer="21"/>
+<wire x1="0.9811" y1="0.4795" x2="0.9811" y2="-0.4794" width="0.127" layer="21"/>
+<wire x1="0.9811" y1="-0.4794" x2="-0.9811" y2="-0.4795" width="0.127" layer="21"/>
+<wire x1="-0.9811" y1="-0.4795" x2="-0.9811" y2="0.4795" width="0.127" layer="21"/>
 <rectangle x1="-0.0794" y1="-0.2381" x2="0.0794" y2="0.2381" layer="35"/>
 <rectangle x1="0.25" y1="-0.25" x2="0.5" y2="0.25" layer="51"/>
 <rectangle x1="-0.5" y1="-0.25" x2="-0.25" y2="0.25" layer="51"/>
@@ -1123,8 +1123,8 @@ chip</description>
 <pin name="PTC7/SPI0_SIN" x="30.48" y="2.54" length="middle" rot="R180"/>
 <pin name="PTC8/ADC1_SE4B" x="30.48" y="17.78" length="middle" rot="R180"/>
 <pin name="PTC9/ADC1_SE5B" x="30.48" y="15.24" length="middle" rot="R180"/>
-<pin name="PTC10/I2C1_SCL" x="30.48" y="-71.12" length="middle" rot="R180"/>
-<pin name="PTC11/I2C1_SDA" x="30.48" y="-81.28" length="middle" rot="R180"/>
+<pin name="PTC10/ADC1_SE6B" x="30.48" y="-71.12" length="middle" rot="R180"/>
+<pin name="PTC11/ADC1_SE7B" x="30.48" y="-81.28" length="middle" rot="R180"/>
 <pin name="PTD0/SPI0_PCS0" x="7.62" y="-114.3" length="middle" rot="R90"/>
 <pin name="PTD1/SPI0_SCK" x="2.54" y="-114.3" length="middle" rot="R90"/>
 <pin name="PTD2/SPI0_SOUT" x="0" y="-114.3" length="middle" rot="R90"/>
@@ -1759,8 +1759,8 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 <connect gate="G$1" pin="PTB3/I2C0_SDA" pad="38"/>
 <connect gate="G$1" pin="PTC0/ADC0_SE14" pad="43"/>
 <connect gate="G$1" pin="PTC1/ADC0_SE15" pad="44"/>
-<connect gate="G$1" pin="PTC10/I2C1_SCL" pad="55"/>
-<connect gate="G$1" pin="PTC11/I2C1_SDA" pad="56"/>
+<connect gate="G$1" pin="PTC10/ADC1_SE6B" pad="55"/>
+<connect gate="G$1" pin="PTC11/ADC1_SE7B" pad="56"/>
 <connect gate="G$1" pin="PTC2/ADC0_SE12" pad="45"/>
 <connect gate="G$1" pin="PTC3/CMP1_IN1" pad="46"/>
 <connect gate="G$1" pin="PTC4/SPI0_PCS0" pad="49"/>
