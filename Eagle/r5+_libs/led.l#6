@@ -139,15 +139,15 @@
 <library>
 <packages>
 <package name="LTST-C19FD1WT">
-<wire x1="-1.1008" y1="0.8508" x2="1.1008" y2="0.8508" width="0.05" layer="21"/>
-<wire x1="1.1008" y1="0.8508" x2="1.1008" y2="-0.8508" width="0.05" layer="21"/>
-<wire x1="1.1008" y1="-0.8508" x2="-1.1008" y2="-0.8508" width="0.05" layer="21"/>
-<wire x1="-1.1008" y1="-0.8508" x2="-1.1008" y2="0.8508" width="0.05" layer="21"/>
-<smd name="1" x="0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
-<smd name="3" x="-0.68" y="-0.58" dx="0.75" dy="0.45" layer="1"/>
-<smd name="2" x="-0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
-<smd name="4" x="0.68" y="-0.57" dx="0.75" dy="0.45" layer="1"/>
-<text x="-1.143" y="0.889" size="0.6096" layer="21">&gt;NAME</text>
+<wire x1="-1.05" y1="0.8" x2="1.05" y2="0.8" width="0.05" layer="21"/>
+<wire x1="1.05" y1="0.8" x2="1.05" y2="-0.8" width="0.05" layer="21"/>
+<wire x1="1.05" y1="-0.8" x2="-1.05" y2="-0.8" width="0.05" layer="21"/>
+<wire x1="-1.05" y1="-0.8" x2="-1.05" y2="0.8" width="0.05" layer="21"/>
+<smd name="B" x="0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
+<smd name="G" x="-0.68" y="-0.58" dx="0.75" dy="0.45" layer="1"/>
+<smd name="P$5" x="0.68" y="-0.58" dx="0.75" dy="0.45" layer="1"/>
+<smd name="R" x="-0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
+<smd name="V" x="0.68" y="-0.57" dx="0.75" dy="0.45" layer="1"/>
 </package>
 </packages>
 <symbols>
@@ -160,8 +160,6 @@
 <pin name="G" x="5.08" y="-12.7" length="middle" rot="R90"/>
 <pin name="R" x="0" y="-12.7" length="middle" rot="R90"/>
 <pin name="V" x="0" y="12.7" length="middle" rot="R270"/>
-<text x="10.16" y="-7.62" size="1.778" layer="95" rot="R90">&gt;NAME</text>
-<text x="12.7" y="-7.62" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -172,10 +170,10 @@
 <devices>
 <device name="" package="LTST-C19FD1WT">
 <connects>
-<connect gate="G$1" pin="B" pad="1"/>
-<connect gate="G$1" pin="G" pad="3"/>
-<connect gate="G$1" pin="R" pad="2"/>
-<connect gate="G$1" pin="V" pad="4"/>
+<connect gate="G$1" pin="B" pad="B"/>
+<connect gate="G$1" pin="G" pad="G"/>
+<connect gate="G$1" pin="R" pad="R"/>
+<connect gate="G$1" pin="V" pad="V"/>
 </connects>
 <technologies>
 <technology name=""/>

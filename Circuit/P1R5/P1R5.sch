@@ -1126,8 +1126,8 @@ It has a reduced top mask to make it harder to install upside-down.</description
 <pin name="PTA3/TMS" x="-33.02" y="-60.96" length="middle"/>
 <pin name="PTA4" x="30.48" y="-71.12" length="middle" rot="R180"/>
 <pin name="PTA5" x="30.48" y="-45.72" length="middle" rot="R180"/>
-<pin name="PTA12/CAN0_TX" x="30.48" y="-66.04" length="middle" rot="R180"/>
-<pin name="PTA13/CAN0_RX" x="30.48" y="-68.58" length="middle" rot="R180"/>
+<pin name="PTA12/CAN0_TX" x="30.48" y="-68.58" length="middle" rot="R180"/>
+<pin name="PTA13/CAN0_RX" x="30.48" y="-66.04" length="middle" rot="R180"/>
 <pin name="PTA18/EXTAL0" x="-33.02" y="0" length="middle"/>
 <pin name="PTA19/XTAL0" x="-33.02" y="-5.08" length="middle"/>
 <pin name="PTB0/ADC0_SE8" x="7.62" y="-114.3" length="middle" rot="R90"/>
@@ -1148,14 +1148,14 @@ It has a reduced top mask to make it harder to install upside-down.</description
 <pin name="PTC7/SPI0_SIN" x="-2.54" y="-114.3" length="middle" rot="R90"/>
 <pin name="PTC8/ADC1_SE4B" x="30.48" y="17.78" length="middle" rot="R180"/>
 <pin name="PTC9/ADC1_SE5B" x="30.48" y="-12.7" length="middle" rot="R180"/>
-<pin name="PTC10/ADC1_SE6B" x="30.48" y="-43.18" length="middle" rot="R180"/>
-<pin name="PTC11/ADC1_SE7B" x="30.48" y="-10.16" length="middle" rot="R180"/>
-<pin name="PTD0/SPI0_PCS0" x="30.48" y="55.88" length="middle" rot="R180"/>
+<pin name="PTC10/ADC1_SE6B" x="30.48" y="-10.16" length="middle" rot="R180"/>
+<pin name="PTC11/ADC1_SE7B" x="30.48" y="-43.18" length="middle" rot="R180"/>
+<pin name="PTD0/SPI0_PCS0" x="30.48" y="-81.28" length="middle" rot="R180"/>
 <pin name="PTD1/SPI0_SCK" x="30.48" y="7.62" length="middle" rot="R180"/>
 <pin name="PTD2/SPI0_SOUT" x="30.48" y="5.08" length="middle" rot="R180"/>
 <pin name="PTD3/SPI0_SIN" x="30.48" y="2.54" length="middle" rot="R180"/>
 <pin name="PTD4/SPI0_PCS1" x="30.48" y="53.34" length="middle" rot="R180"/>
-<pin name="PTD5/SPI0_PCS2" x="30.48" y="-81.28" length="middle" rot="R180"/>
+<pin name="PTD5/SPI0_PCS2" x="30.48" y="55.88" length="middle" rot="R180"/>
 <pin name="PTD6/UART0_RX" x="30.48" y="12.7" length="middle" rot="R180"/>
 <pin name="PTD7/UART0_TX" x="30.48" y="15.24" length="middle" rot="R180"/>
 <pin name="PTE0/I2C1_SDA/UART1_TX" x="30.48" y="-78.74" length="middle" rot="R180"/>
@@ -5294,11 +5294,10 @@ http://www.digikey.com/product-detail/en/20021111-00010T4LF/609-3712-ND/2209072<
 <wire x1="1.1008" y1="0.8508" x2="1.1008" y2="-0.8508" width="0.05" layer="21"/>
 <wire x1="1.1008" y1="-0.8508" x2="-1.1008" y2="-0.8508" width="0.05" layer="21"/>
 <wire x1="-1.1008" y1="-0.8508" x2="-1.1008" y2="0.8508" width="0.05" layer="21"/>
-<smd name="B" x="0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
-<smd name="G" x="-0.68" y="-0.58" dx="0.75" dy="0.45" layer="1"/>
-<smd name="P$5" x="0.68" y="-0.58" dx="0.75" dy="0.45" layer="1"/>
-<smd name="R" x="-0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
-<smd name="V" x="0.68" y="-0.57" dx="0.75" dy="0.45" layer="1"/>
+<smd name="1" x="0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
+<smd name="3" x="-0.68" y="-0.58" dx="0.75" dy="0.45" layer="1"/>
+<smd name="2" x="-0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
+<smd name="4" x="0.68" y="-0.57" dx="0.75" dy="0.45" layer="1"/>
 <text x="-1.143" y="0.889" size="0.6096" layer="21">&gt;NAME</text>
 </package>
 </packages>
@@ -5324,10 +5323,10 @@ http://www.digikey.com/product-detail/en/20021111-00010T4LF/609-3712-ND/2209072<
 <devices>
 <device name="" package="LTST-C19FD1WT">
 <connects>
-<connect gate="G$1" pin="B" pad="B"/>
-<connect gate="G$1" pin="G" pad="G"/>
-<connect gate="G$1" pin="R" pad="R"/>
-<connect gate="G$1" pin="V" pad="V"/>
+<connect gate="G$1" pin="B" pad="1"/>
+<connect gate="G$1" pin="G" pad="3"/>
+<connect gate="G$1" pin="R" pad="2"/>
+<connect gate="G$1" pin="V" pad="4"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -7630,7 +7629,7 @@ placed near these ports.</text>
 <segment>
 <pinref part="DS1" gate="G$1" pin="C"/>
 <wire x1="236.22" y1="-77.47" x2="236.22" y2="-74.93" width="0.1524" layer="91"/>
-<pinref part="U1" gate="G$1" pin="PTD0/SPI0_PCS0"/>
+<pinref part="U1" gate="G$1" pin="PTD5/SPI0_PCS2"/>
 <wire x1="201.93" y1="-77.47" x2="236.22" y2="-77.47" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -7660,7 +7659,7 @@ placed near these ports.</text>
 <wire x1="283.21" y1="-139.7" x2="217.17" y2="-139.7" width="0.1524" layer="91"/>
 <wire x1="217.17" y1="-139.7" x2="217.17" y2="-143.51" width="0.1524" layer="91"/>
 <label x="295.91" y="-156.21" size="1.778" layer="95" xref="yes"/>
-<pinref part="U1" gate="G$1" pin="PTC11/ADC1_SE7B"/>
+<pinref part="U1" gate="G$1" pin="PTC10/ADC1_SE6B"/>
 <wire x1="201.93" y1="-143.51" x2="217.17" y2="-143.51" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -7831,34 +7830,20 @@ placed near these ports.</text>
 <wire x1="179.07" y1="-247.65" x2="179.07" y2="-266.7" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$20" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTA13/CAN0_RX"/>
-<pinref part="TP20" gate="G$1" pin="TP"/>
-<wire x1="201.93" y1="-201.93" x2="222.25" y2="-201.93" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$21" class="0">
-<segment>
-<pinref part="TP19" gate="G$1" pin="TP"/>
-<pinref part="U1" gate="G$1" pin="PTA12/CAN0_TX"/>
-<wire x1="222.25" y1="-199.39" x2="201.93" y2="-199.39" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="!RESET0" class="0">
 <segment>
 <wire x1="201.93" y1="-176.53" x2="295.91" y2="-176.53" width="0.1524" layer="91"/>
 <label x="295.91" y="-176.53" size="1.778" layer="95" xref="yes"/>
-<pinref part="U1" gate="G$1" pin="PTC10/ADC1_SE6B"/>
+<pinref part="U1" gate="G$1" pin="PTC11/ADC1_SE7B"/>
 </segment>
 </net>
 <net name="!RESET1" class="0">
 <segment>
-<pinref part="U1" gate="G$1" pin="PTA5"/>
-<wire x1="201.93" y1="-179.07" x2="246.38" y2="-179.07" width="0.1524" layer="91"/>
 <wire x1="246.38" y1="-179.07" x2="246.38" y2="-180.34" width="0.1524" layer="91"/>
 <wire x1="246.38" y1="-180.34" x2="295.91" y2="-180.34" width="0.1524" layer="91"/>
 <label x="295.91" y="-180.34" size="1.778" layer="95" xref="yes"/>
+<pinref part="U1" gate="G$1" pin="PTA5"/>
+<wire x1="201.93" y1="-179.07" x2="246.38" y2="-179.07" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="V_IN" class="2">
@@ -7964,18 +7949,32 @@ placed near these ports.</text>
 <wire x1="222.25" y1="-212.09" x2="201.93" y2="-212.09" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$16" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="PTD5/SPI0_PCS2"/>
-<pinref part="TP24" gate="G$1" pin="TP"/>
-<wire x1="201.93" y1="-214.63" x2="222.25" y2="-214.63" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$17" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="PTA4"/>
 <pinref part="TP21" gate="G$1" pin="TP"/>
 <wire x1="201.93" y1="-204.47" x2="222.25" y2="-204.47" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$16" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTD0/SPI0_PCS0"/>
+<pinref part="TP24" gate="G$1" pin="TP"/>
+<wire x1="201.93" y1="-214.63" x2="222.25" y2="-214.63" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$20" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTA13/CAN0_RX"/>
+<pinref part="TP19" gate="G$1" pin="TP"/>
+<wire x1="201.93" y1="-199.39" x2="222.25" y2="-199.39" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$21" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="PTA12/CAN0_TX"/>
+<pinref part="TP20" gate="G$1" pin="TP"/>
+<wire x1="201.93" y1="-201.93" x2="222.25" y2="-201.93" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

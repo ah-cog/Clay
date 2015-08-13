@@ -1099,7 +1099,7 @@ chip</description>
 <pin name="PTA1/TDI" x="-33.02" y="-53.34" length="middle"/>
 <pin name="PTA2/TDO" x="-33.02" y="-55.88" length="middle"/>
 <pin name="PTA3/TMS" x="-33.02" y="-60.96" length="middle"/>
-<pin name="PTA4" x="30.48" y="-43.18" length="middle" rot="R180"/>
+<pin name="PTA4" x="30.48" y="-71.12" length="middle" rot="R180"/>
 <pin name="PTA5" x="30.48" y="-45.72" length="middle" rot="R180"/>
 <pin name="PTA12/CAN0_TX" x="30.48" y="-66.04" length="middle" rot="R180"/>
 <pin name="PTA13/CAN0_RX" x="30.48" y="-68.58" length="middle" rot="R180"/>
@@ -1122,14 +1122,14 @@ chip</description>
 <pin name="PTC6/SPI0_SOUT" x="0" y="-114.3" length="middle" rot="R90"/>
 <pin name="PTC7/SPI0_SIN" x="-2.54" y="-114.3" length="middle" rot="R90"/>
 <pin name="PTC8/ADC1_SE4B" x="30.48" y="17.78" length="middle" rot="R180"/>
-<pin name="PTC9/ADC1_SE5B" x="30.48" y="55.88" length="middle" rot="R180"/>
-<pin name="PTC10/ADC1_SE6B" x="30.48" y="-71.12" length="middle" rot="R180"/>
-<pin name="PTC11/ADC1_SE7B" x="30.48" y="53.34" length="middle" rot="R180"/>
-<pin name="PTD0/SPI0_PCS0" x="30.48" y="-12.7" length="middle" rot="R180"/>
+<pin name="PTC9/ADC1_SE5B" x="30.48" y="-12.7" length="middle" rot="R180"/>
+<pin name="PTC10/ADC1_SE6B" x="30.48" y="-43.18" length="middle" rot="R180"/>
+<pin name="PTC11/ADC1_SE7B" x="30.48" y="-10.16" length="middle" rot="R180"/>
+<pin name="PTD0/SPI0_PCS0" x="30.48" y="55.88" length="middle" rot="R180"/>
 <pin name="PTD1/SPI0_SCK" x="30.48" y="7.62" length="middle" rot="R180"/>
 <pin name="PTD2/SPI0_SOUT" x="30.48" y="5.08" length="middle" rot="R180"/>
 <pin name="PTD3/SPI0_SIN" x="30.48" y="2.54" length="middle" rot="R180"/>
-<pin name="PTD4/SPI0_PCS1" x="30.48" y="-10.16" length="middle" rot="R180"/>
+<pin name="PTD4/SPI0_PCS1" x="30.48" y="53.34" length="middle" rot="R180"/>
 <pin name="PTD5/SPI0_PCS2" x="30.48" y="-81.28" length="middle" rot="R180"/>
 <pin name="PTD6/UART0_RX" x="30.48" y="12.7" length="middle" rot="R180"/>
 <pin name="PTD7/UART0_TX" x="30.48" y="15.24" length="middle" rot="R180"/>
