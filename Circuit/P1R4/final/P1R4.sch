@@ -8325,6 +8325,10 @@ JTAG/USB+Bootloader</text>
 <text x="-86.36" y="93.98" size="1.778" layer="91">RESET to PTC0
 active low
 therefore pulled up</text>
+<text x="-12.7" y="81.28" size="1.778" layer="91">U6</text>
+<text x="33.02" y="68.58" size="1.778" layer="91">U3</text>
+<text x="86.36" y="66.04" size="1.778" layer="91">U4</text>
+<text x="208.28" y="66.04" size="1.778" layer="91">U5</text>
 </plain>
 <instances>
 <instance part="U$1" gate="G$1" x="-137.16" y="66.04"/>
@@ -9018,6 +9022,8 @@ therefore pulled up</text>
 <text x="66.04" y="-45.72" size="1.778" layer="91">SDA</text>
 <text x="-50.8" y="-39.37" size="1.778" layer="91">SCL</text>
 <text x="72.39" y="-45.72" size="1.778" layer="91">SCL</text>
+<text x="-45.72" y="-48.26" size="1.778" layer="91">U20</text>
+<text x="83.82" y="-53.34" size="1.778" layer="91">U21</text>
 </plain>
 <instances>
 <instance part="U$8" gate="G$1" x="-99.06" y="45.72"/>
