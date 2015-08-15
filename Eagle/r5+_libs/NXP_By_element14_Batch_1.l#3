@@ -205,10 +205,11 @@
 <pin name="VSS" x="-2.54" y="-25.4" length="middle" rot="R90"/>
 <text x="-2.54" y="0" size="1.27" layer="94">PCA9552BS
 HVQFN24</text>
+<text x="-20.32" y="20.32" size="1.778" layer="94">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="PCA9552BS">
+<deviceset name="PCA9552BS" prefix="U">
 <gates>
 <gate name="G$1" symbol="PCA9552BS" x="0" y="0"/>
 </gates>

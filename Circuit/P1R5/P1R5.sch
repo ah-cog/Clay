@@ -5104,6 +5104,7 @@ http://www.digikey.com/product-detail/en/20021111-00010T4LF/609-3712-ND/2209072<
 <pad name="8" x="1.27" y="0.635" drill="0.6" diameter="0.95"/>
 <pad name="9" x="2.54" y="-0.635" drill="0.6" diameter="0.95"/>
 <pad name="10" x="2.54" y="0.635" drill="0.6" diameter="0.95"/>
+<text x="-3.81" y="-1.27" size="0.4064" layer="25" rot="R90">&gt;NAME</text>
 </package>
 <package name="2X5_0.05&quot;_SMD_SH">
 <description>2x5 0.05" pitch, surface mount, shrouded header from FCI, part number: 20021221-00010C4LF
@@ -5298,7 +5299,7 @@ http://www.digikey.com/product-detail/en/20021111-00010T4LF/609-3712-ND/2209072<
 <smd name="3" x="-0.68" y="-0.58" dx="0.75" dy="0.45" layer="1"/>
 <smd name="2" x="-0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
 <smd name="4" x="0.68" y="-0.57" dx="0.75" dy="0.45" layer="1"/>
-<text x="-1.143" y="0.889" size="0.6096" layer="21">&gt;NAME</text>
+<text x="-1.143" y="0.889" size="0.6096" layer="25">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
@@ -5374,6 +5375,7 @@ at 30/07/2012 14:27:46</description>
 <smd name="23" x="-0.75" y="1.8" dx="0.25" dy="0.4" layer="1"/>
 <smd name="24" x="-1.25" y="1.8" dx="0.25" dy="0.4" layer="1"/>
 <smd name="P$1" x="0" y="0" dx="2" dy="2" layer="1"/>
+<text x="-2.54" y="2.54" size="0.4064" layer="25">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
@@ -6160,12 +6162,12 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <smd name="VCC" x="-0.6" y="-0.3" dx="0.6096" dy="0.3048" layer="1" rot="R180"/>
 <smd name="GND" x="0.5" y="0.3" dx="0.6096" dy="0.3048" layer="1" rot="R180"/>
 <smd name="OUT" x="0.5" y="-0.3" dx="0.6096" dy="0.3048" layer="1" rot="R180"/>
-<wire x1="-0.9906" y1="-0.5334" x2="-0.9906" y2="0.5334" width="0.127" layer="21"/>
-<wire x1="-0.9906" y1="0.5334" x2="0.889" y2="0.5334" width="0.127" layer="21"/>
+<wire x1="-0.9779" y1="-0.5334" x2="-0.9779" y2="0.4953" width="0.127" layer="21"/>
+<wire x1="-0.9779" y1="0.4953" x2="-0.9398" y2="0.5334" width="0.127" layer="21"/>
+<wire x1="-0.9398" y1="0.5334" x2="0.889" y2="0.5334" width="0.127" layer="21"/>
 <wire x1="0.889" y1="0.5334" x2="0.889" y2="-0.5334" width="0.127" layer="21"/>
-<wire x1="0.889" y1="-0.5334" x2="-0.9906" y2="-0.5334" width="0.127" layer="21"/>
-<circle x="-1.1176" y="0.4826" radius="0.002540625" width="0.127" layer="21"/>
-<text x="-1.0668" y="0.6096" size="0.6096" layer="25">&gt;NAME</text>
+<wire x1="0.889" y1="-0.5334" x2="-0.9779" y2="-0.5334" width="0.127" layer="21"/>
+<text x="-1.016" y="0.6096" size="0.4064" layer="25">&gt;NAME</text>
 </package>
 </packages>
 <symbols>

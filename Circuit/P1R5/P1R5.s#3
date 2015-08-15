@@ -6908,7 +6908,7 @@ new: Attribute TP_SIGNAL_NAME&lt;br&gt;
 <text x="-40.64" y="-144.78" size="1.778" layer="97" rot="R180" align="top-right">Power inlet: Single cell Li-Po battery, or 
 any power source where 2.5 &lt; Vout &lt; 7v
 See sheet 2 for regulator circuit.</text>
-<text x="110.49" y="-90.17" size="1.778" layer="97">Place decoupling caps near power pins.</text>
+<text x="52.07" y="-82.55" size="1.778" layer="97">Place decoupling caps near power pins.</text>
 <text x="140.97" y="-254" size="1.778" layer="97">0: X- Group</text>
 <text x="200.66" y="-254" size="1.778" layer="97">2: Y+ Group</text>
 <text x="231.14" y="-195.58" size="1.778" layer="97">1: X+ Group</text>
