@@ -120,7 +120,7 @@ void Handle_Request (int connectionId, const char *requestType, const char *requ
 
       // Encode pin profile for sending
       String response = "";
-      for (int i = 0; i < PIN_COUNT; i++) {
+      for (int i = 0; i < PORT_COUNT; i++) {
         response += String (Get_Pin_Mode (i)) + "," + String (Get_Pin_Value (i)) + "\n";
       }
       
@@ -230,7 +230,7 @@ void Handle_Request (int connectionId, const char *requestType, const char *requ
   }
 }
 
-void Process_WiFi () {
+void Monitor_WiFi () {
 
   if (WIFI_SERIAL.available ()) { // check if the esp is sending a message
 

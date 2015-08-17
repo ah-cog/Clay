@@ -5,7 +5,7 @@
 
 void setup () {
 
-  Setup_Pins (PIN_COUNT, 13, 17, 20, 21, 22, 23, 24, 25);
+  Setup_Pins (PORT_COUNT, 13, 17, 20, 21, 22, 23, 24, 25);
   
   Serial.begin (115200);
   
@@ -14,6 +14,6 @@ void setup () {
  
 void loop () {
 
-  Process_WiFi ();
+  Monitor_WiFi ();
   
 }
