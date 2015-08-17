@@ -1,0 +1,21 @@
+-mcpu=cortex-m4
+-mthumb
+-mfloat-abi=soft
+-g3
+-gdwarf-2
+-gstrict-dwarf
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/Project_Headers"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/Project_Settings/Startup_Code"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/Generated_Code"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/Sources"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/Static_Code/PDD"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/Static_Code/IO_Map"
+-O0
+-ffunction-sections
+-fdata-sections
+-Wall
+-c
+-fmessage-length=0
+-specs=ewl_c.specs
