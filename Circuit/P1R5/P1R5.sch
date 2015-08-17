@@ -419,6 +419,7 @@ Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.&lt;br&g
 <smd name="13" x="1.5" y="0.25" dx="0.7" dy="0.28" layer="1" rot="R180"/>
 <smd name="14" x="1.5" y="-0.25" dx="0.7" dy="0.28" layer="1" rot="R180"/>
 <smd name="15" x="0" y="0" dx="1.65" dy="2.4" layer="1" rot="R90" stop="no" thermals="no" cream="no"/>
+<text x="-1.905" y="-2.667" size="0.6096" layer="21">&gt;NAME</text>
 </package>
 <package name="MK20DX256VLH7">
 <circle x="-3.818" y="3.818" radius="0.254" width="0.127" layer="21"/>
@@ -2717,9 +2718,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <text x="-1.27" y="-2.54" size="0.4064" layer="27">&gt;Value</text>
 </package>
 <package name="0603">
-<circle x="0" y="0" radius="0.127" width="0.127" layer="21"/>
-<circle x="0" y="0" radius="0.0254" width="0.127" layer="21"/>
-<circle x="0" y="0" radius="0.218496875" width="0.127" layer="21"/>
 <wire x1="-1.473" y1="0.602" x2="1.473" y2="0.602" width="0.0508" layer="39"/>
 <wire x1="1.473" y1="0.602" x2="1.473" y2="-0.602" width="0.0508" layer="39"/>
 <wire x1="1.473" y1="-0.602" x2="-1.473" y2="-0.602" width="0.0508" layer="39"/>
@@ -2733,6 +2731,10 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <smd name="2" x="0.85" y="0" dx="1.1" dy="1" layer="1"/>
 <text x="-0.889" y="0.762" size="0.4064" layer="25" font="vector">&gt;NAME</text>
 <text x="-1.016" y="-1.143" size="0.4064" layer="27" font="vector">&gt;VALUE</text>
+<wire x1="-1.4732" y1="0.5969" x2="1.4859" y2="0.5969" width="0.127" layer="21"/>
+<wire x1="1.4859" y1="0.5969" x2="1.4859" y2="-0.5969" width="0.127" layer="21"/>
+<wire x1="1.4859" y1="-0.5969" x2="-1.4732" y2="-0.5969" width="0.127" layer="21"/>
+<wire x1="-1.4732" y1="-0.5969" x2="-1.4732" y2="0.5969" width="0.127" layer="21"/>
 </package>
 <package name="CDRH125">
 <wire x1="-3.5" y1="6" x2="-6" y2="6" width="0.2032" layer="21"/>
@@ -3394,20 +3396,20 @@ INDUCTOR POWER 3.3UH 4.0A SMD&lt;br&gt;
 <library name="wifi">
 <packages>
 <package name="SOP8">
-<smd name="1" x="-2.2" y="1.8" dx="0.6" dy="0.4" layer="1"/>
-<smd name="2" x="-2.2" y="0.6" dx="0.6" dy="0.4" layer="1"/>
-<smd name="3" x="-2.2" y="-0.6" dx="0.6" dy="0.4" layer="1"/>
-<smd name="4" x="-2.2" y="-1.8" dx="0.6" dy="0.4" layer="1"/>
-<smd name="5" x="2.2" y="-1.8" dx="0.6" dy="0.4" layer="1"/>
-<smd name="6" x="2.2" y="-0.6" dx="0.6" dy="0.4" layer="1"/>
-<smd name="7" x="2.2" y="0.6" dx="0.6" dy="0.4" layer="1"/>
-<smd name="8" x="2.2" y="1.8" dx="0.6" dy="0.4" layer="1"/>
-<wire x1="-2.667" y1="2.159" x2="2.667" y2="2.159" width="0.127" layer="21"/>
-<wire x1="2.667" y1="2.159" x2="2.667" y2="-2.159" width="0.127" layer="21"/>
-<wire x1="2.667" y1="-2.159" x2="-2.667" y2="-2.159" width="0.127" layer="21"/>
-<wire x1="-2.667" y1="-2.159" x2="-2.667" y2="2.159" width="0.127" layer="21"/>
-<text x="-2.667" y="2.286" size="0.6096" layer="25">&gt;NAME</text>
-<circle x="-3.048" y="1.778" radius="0.0762" width="0.127" layer="21"/>
+<smd name="1" x="-2.454" y="1.8" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="2" x="-2.454" y="0.6" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="3" x="-2.454" y="-0.6" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="4" x="-2.454" y="-1.8" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="5" x="2.454" y="-1.8" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="6" x="2.454" y="-0.6" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="7" x="2.454" y="0.6" dx="1.4224" dy="0.7112" layer="1"/>
+<smd name="8" x="2.454" y="1.8" dx="1.4224" dy="0.7112" layer="1"/>
+<wire x1="-3.2512" y1="2.3622" x2="-2.9464" y2="2.667" width="0.127" layer="21"/>
+<wire x1="-2.9464" y1="2.667" x2="3.2512" y2="2.667" width="0.127" layer="21"/>
+<wire x1="3.2512" y1="2.667" x2="3.2512" y2="-2.667" width="0.127" layer="21"/>
+<wire x1="3.2512" y1="-2.667" x2="-3.2512" y2="-2.667" width="0.127" layer="21"/>
+<wire x1="-3.2512" y1="-2.667" x2="-3.2512" y2="2.3622" width="0.127" layer="21"/>
+<text x="-3.2766" y="2.7432" size="0.6096" layer="25">&gt;NAME</text>
 </package>
 <package name="QFN32">
 <wire x1="-2.627" y1="2.627" x2="-2.1" y2="2.627" width="0.127" layer="21"/>
@@ -3794,7 +3796,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="-1.473" y1="-0.602" x2="-1.473" y2="0.602" width="0.0508" layer="39"/>
 <wire x1="-0.356" y1="0.432" x2="0.356" y2="0.432" width="0.1016" layer="51"/>
 <wire x1="-0.356" y1="-0.419" x2="0.356" y2="-0.419" width="0.1016" layer="51"/>
-<wire x1="0" y1="0.0305" x2="0" y2="-0.0305" width="0.5588" layer="21"/>
 <rectangle x1="-0.8382" y1="-0.4699" x2="-0.3381" y2="0.4801" layer="51"/>
 <rectangle x1="0.3302" y1="-0.4699" x2="0.8303" y2="0.4801" layer="51"/>
 <rectangle x1="-0.1999" y1="-0.3" x2="0.1999" y2="0.3" layer="35"/>
@@ -3908,7 +3909,6 @@ chip</description>
 <wire x1="1.219" y1="0.483" x2="1.219" y2="-0.483" width="0.0508" layer="39"/>
 <wire x1="1.219" y1="-0.483" x2="-1.219" y2="-0.483" width="0.0508" layer="39"/>
 <wire x1="-1.219" y1="-0.483" x2="-1.219" y2="0.483" width="0.0508" layer="39"/>
-<wire x1="0" y1="0.0305" x2="0" y2="-0.0305" width="0.4064" layer="21"/>
 <rectangle x1="-0.554" y1="-0.3048" x2="-0.254" y2="0.2951" layer="51"/>
 <rectangle x1="0.2588" y1="-0.3048" x2="0.5588" y2="0.2951" layer="51"/>
 <rectangle x1="-0.1999" y1="-0.3" x2="0.1999" y2="0.3" layer="35"/>
@@ -4984,6 +4984,7 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <smd name="19" x="-0.5" y="1.8" dx="0.25" dy="0.4" layer="1"/>
 <smd name="20" x="-1" y="1.8" dx="0.25" dy="0.4" layer="1"/>
 <text x="-2.2098" y="2.2352" size="0.6096" layer="25">&gt;NAME</text>
+<smd name="PAD" x="0" y="0" dx="2.6924" dy="2.6924" layer="1" rot="R180"/>
 </package>
 </packages>
 <symbols>
@@ -5041,7 +5042,7 @@ QFN20 4x4</text>
 <connect gate="G$1" pin="VSS/14" pad="14"/>
 <connect gate="G$1" pin="VSS/17" pad="17"/>
 <connect gate="G$1" pin="VSS/20" pad="20"/>
-<connect gate="G$1" pin="VSS/8" pad="8"/>
+<connect gate="G$1" pin="VSS/8" pad="8 PAD"/>
 <connect gate="G$1" pin="XC1/10" pad="10"/>
 <connect gate="G$1" pin="XC2/9" pad="9"/>
 </connects>

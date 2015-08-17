@@ -1099,7 +1099,7 @@ chip</description>
 <pin name="PTA1/TDI" x="-33.02" y="-53.34" length="middle"/>
 <pin name="PTA2/TDO" x="-33.02" y="-55.88" length="middle"/>
 <pin name="PTA3/TMS" x="-33.02" y="-60.96" length="middle"/>
-<pin name="PTA4" x="30.48" y="-63.5" length="middle" rot="R180"/>
+<pin name="PTA4" x="30.48" y="-71.12" length="middle" rot="R180"/>
 <pin name="PTA5" x="30.48" y="-45.72" length="middle" rot="R180"/>
 <pin name="PTA12/CAN0_TX" x="30.48" y="-66.04" length="middle" rot="R180"/>
 <pin name="PTA13/CAN0_RX" x="30.48" y="-68.58" length="middle" rot="R180"/>

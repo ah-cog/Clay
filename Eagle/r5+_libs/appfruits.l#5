@@ -1125,12 +1125,12 @@ chip</description>
 <pin name="PTC9/ADC1_SE5B" x="30.48" y="-12.7" length="middle" rot="R180"/>
 <pin name="PTC10/ADC1_SE6B" x="30.48" y="-43.18" length="middle" rot="R180"/>
 <pin name="PTC11/ADC1_SE7B" x="30.48" y="-10.16" length="middle" rot="R180"/>
-<pin name="PTD0/SPI0_PCS0" x="30.48" y="55.88" length="middle" rot="R180"/>
+<pin name="PTD0/SPI0_PCS0" x="30.48" y="53.34" length="middle" rot="R180"/>
 <pin name="PTD1/SPI0_SCK" x="30.48" y="7.62" length="middle" rot="R180"/>
 <pin name="PTD2/SPI0_SOUT" x="30.48" y="5.08" length="middle" rot="R180"/>
 <pin name="PTD3/SPI0_SIN" x="30.48" y="2.54" length="middle" rot="R180"/>
-<pin name="PTD4/SPI0_PCS1" x="30.48" y="53.34" length="middle" rot="R180"/>
-<pin name="PTD5/SPI0_PCS2" x="30.48" y="-81.28" length="middle" rot="R180"/>
+<pin name="PTD4/SPI0_PCS1" x="30.48" y="-81.28" length="middle" rot="R180"/>
+<pin name="PTD5/SPI0_PCS2" x="30.48" y="55.88" length="middle" rot="R180"/>
 <pin name="PTD6/UART0_RX" x="30.48" y="12.7" length="middle" rot="R180"/>
 <pin name="PTD7/UART0_TX" x="30.48" y="15.24" length="middle" rot="R180"/>
 <pin name="PTE0/I2C1_SDA/UART1_TX" x="30.48" y="-78.74" length="middle" rot="R180"/>

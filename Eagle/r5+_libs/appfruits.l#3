@@ -1101,8 +1101,8 @@ chip</description>
 <pin name="PTA3/TMS" x="-33.02" y="-60.96" length="middle"/>
 <pin name="PTA4" x="30.48" y="-71.12" length="middle" rot="R180"/>
 <pin name="PTA5" x="30.48" y="-45.72" length="middle" rot="R180"/>
-<pin name="PTA12/CAN0_TX" x="30.48" y="-66.04" length="middle" rot="R180"/>
-<pin name="PTA13/CAN0_RX" x="30.48" y="-68.58" length="middle" rot="R180"/>
+<pin name="PTA12/CAN0_TX" x="30.48" y="-68.58" length="middle" rot="R180"/>
+<pin name="PTA13/CAN0_RX" x="30.48" y="-66.04" length="middle" rot="R180"/>
 <pin name="PTA18/EXTAL0" x="-33.02" y="0" length="middle"/>
 <pin name="PTA19/XTAL0" x="-33.02" y="-5.08" length="middle"/>
 <pin name="PTB0/ADC0_SE8" x="7.62" y="-114.3" length="middle" rot="R90"/>
