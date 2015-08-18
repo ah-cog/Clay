@@ -117,6 +117,8 @@ int main(void)
 		  } while (flag == 0);
 		  buffer[i] = '\0'; // Terminate the string
 		  printf ("%s", buffer);
+		  
+		  // TODO: Process the buffer.
 	  }
 	  
   }
