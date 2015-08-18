@@ -40,6 +40,9 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
+int value;
+char buffer[64];
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -54,8 +57,26 @@ int main(void)
   /* For example: for(;;) { } */
   
   for (;;) {
-	  printf ("Clay\r\n");
+	  printf ("What's your name?\r\n");
+	  printf ("> ");
+	  scanf  ("%s", buffer);
+	  printf ("Hey %s.\r\n", buffer);
+	  
+	  printf ("How many Clay do you want?\r\n");
+	  printf ("> ");
+	  scanf  ("%i", &value);
+	  printf ("I'm on it. You'll soon have %i bits of Clay.\r\n", value);
   }
+  
+//    char ch;
+//                  
+//    printf("\nHello World!!\n");
+//
+//  	while(1)
+//  	{
+//  		ch = in_char();
+//  		out_char(ch);
+//  	} 
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
