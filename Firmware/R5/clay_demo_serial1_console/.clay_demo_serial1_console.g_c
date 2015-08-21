@@ -1,7 +1,7 @@
 <GenerationInfo_G_C>
   <Options>
     <ProjectName>clay_demo_serial1_console</ProjectName>
-    <ProjectDirectory>Z:\Workspace\Checkouts\clay\Firmware\R5\</ProjectDirectory>
+    <ProjectDirectory>Z:\Workspace\Checkouts\clay\Firmware\R5\clay_demo_serial1_console\</ProjectDirectory>
     <ProjectMainModuleName>main</ProjectMainModuleName>
     <DestEventsDirectory>Sources\</DestEventsDirectory>
     <DestDriversSubDirectory>..\Generated_Code\</DestDriversSubDirectory>
@@ -18,16 +18,16 @@
         <Line>PE_Const</Line>
         <Line>IO_Map</Line>
       </GenSharedModules>
-      <ShrdHeaderAge0>1192269025</ShrdHeaderAge0>
+      <ShrdHeaderAge0>1192561690</ShrdHeaderAge0>
       <ShrdCodeAge0>-1</ShrdCodeAge0>
       <ShrdAsemblAge0>-1</ShrdAsemblAge0>
-      <ShrdHeaderAge1>1192268922</ShrdHeaderAge1>
+      <ShrdHeaderAge1>1192561689</ShrdHeaderAge1>
       <ShrdCodeAge1>-1</ShrdCodeAge1>
       <ShrdAsemblAge1>-1</ShrdAsemblAge1>
-      <ShrdHeaderAge2>1192268922</ShrdHeaderAge2>
+      <ShrdHeaderAge2>1192561689</ShrdHeaderAge2>
       <ShrdCodeAge2>-1</ShrdCodeAge2>
       <ShrdAsemblAge2>-1</ShrdAsemblAge2>
-      <ShrdHeaderAge3>1192268922</ShrdHeaderAge3>
+      <ShrdHeaderAge3>1192561689</ShrdHeaderAge3>
       <ShrdCodeAge3>-1</ShrdCodeAge3>
       <ShrdAsemblAge3>-1</ShrdAsemblAge3>
       <GenExtraFiles lines_count="10">
@@ -43,9 +43,9 @@
         <Line>Generated_Code\Vectors.c</Line>
       </GenExtraFiles>
       <GenExtraFileSrcDir4>lib\doxygen\</GenExtraFileSrcDir4>
-      <XtraAge6>1192269025</XtraAge6>
-      <XtraAge7>1192269025</XtraAge7>
-      <XtraAge9>1192269025</XtraAge9>
+      <XtraAge6>1192561689</XtraAge6>
+      <XtraAge7>1192561689</XtraAge7>
+      <XtraAge9>1192561690</XtraAge9>
       <GenExtraFileType9>4</GenExtraFileType9>
       <GenExtraFileType8>4</GenExtraFileType8>
       <GenExtraFileType7>4</GenExtraFileType7>
@@ -360,7 +360,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_demo_serial1_console_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>9</ProjectModificationStamp>
+    <ProjectModificationStamp>15</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -368,8 +368,8 @@
     <GenComponentVersion>01.000</GenComponentVersion>
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1192331289</HeaderAge>
-    <CodeAge>1192331289</CodeAge>
+    <HeaderAge>1192561778</HeaderAge>
+    <CodeAge>1192561778</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -417,6 +417,8 @@
     <OnLLSWakeUpINT_Selected>0</OnLLSWakeUpINT_Selected>
     <OnLLSWakeUpINT_Name>Cpu_OnLLSWakeUpINT</OnLLSWakeUpINT_Name>
     <OnLLSWakeUpINT_Priority>interrupts disabled</OnLLSWakeUpINT_Priority>
+    <ISR_ISRDefaultName>isr_default</ISR_ISRDefaultName>
+    <ISR_ISRnameINITPC>_startup</ISR_ISRnameINITPC>
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
     <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
@@ -439,8 +441,8 @@
     <GenComponentVersion>01.000</GenComponentVersion>
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1192331289</HeaderAge>
-    <CodeAge>1192331289</CodeAge>
+    <HeaderAge>1192561778</HeaderAge>
+    <CodeAge>1192561778</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -506,14 +508,128 @@
     <ExtraFile9>Static_Code\IO_Map\MK20D7.h</ExtraFile9>
     <ExtraFile10>Generated_Code\Vectors.c</ExtraFile10>
   </CpuID_4>
+  <CpuID_17>
+    <Generated>false</Generated>
+    <GenCompName />
+    <GenComponentVersion>??.???</GenComponentVersion>
+    <GenDriverVersion>??.??</GenDriverVersion>
+    <GenEventModule />
+    <HeaderAge>-1</HeaderAge>
+    <CodeAge>-1</CodeAge>
+    <AsemblAge>-1</AsemblAge>
+    <GenNumMethods>11</GenNumMethods>
+    <SetClockConfiguration>false</SetClockConfiguration>
+    <GetClockConfiguration>false</GetClockConfiguration>
+    <SetOperationMode>false</SetOperationMode>
+    <EnableInt>false</EnableInt>
+    <DisableInt>false</DisableInt>
+    <GetLLSWakeUpFlags>false</GetLLSWakeUpFlags>
+    <OpenBackDoor>false</OpenBackDoor>
+    <MCGAutoTrim>false</MCGAutoTrim>
+    <VLPModeEnable>false</VLPModeEnable>
+    <VLPModeDisable>false</VLPModeDisable>
+    <SystemReset>false</SystemReset>
+    <GenNumEvents>10</GenNumEvents>
+    <OnReset_Selected>1</OnReset_Selected>
+    <OnReset_Name>Cpu_OnReset</OnReset_Name>
+    <OnReset_Priority>interrupts disabled</OnReset_Priority>
+    <OnNMIINT_Selected>1</OnNMIINT_Selected>
+    <OnNMIINT_Name>Cpu_OnNMIINT</OnNMIINT_Name>
+    <OnNMIINT_Priority>interrupts disabled</OnNMIINT_Priority>
+    <OnHardFault_Selected>1</OnHardFault_Selected>
+    <OnHardFault_Name>Cpu_OnHardFault</OnHardFault_Name>
+    <OnHardFault_Priority>interrupts disabled</OnHardFault_Priority>
+    <OnBusFault_Selected>1</OnBusFault_Selected>
+    <OnBusFault_Name>Cpu_OnBusFault</OnBusFault_Name>
+    <OnBusFault_Priority>interrupts disabled</OnBusFault_Priority>
+    <OnUsageFault_Selected>1</OnUsageFault_Selected>
+    <OnUsageFault_Name>Cpu_OnUsageFault</OnUsageFault_Name>
+    <OnUsageFault_Priority>interrupts disabled</OnUsageFault_Priority>
+    <OnSupervisorCall_Selected>1</OnSupervisorCall_Selected>
+    <OnSupervisorCall_Name>Cpu_OnSupervisorCall</OnSupervisorCall_Name>
+    <OnSupervisorCall_Priority>interrupts disabled</OnSupervisorCall_Priority>
+    <OnPendableService_Selected>1</OnPendableService_Selected>
+    <OnPendableService_Name>Cpu_OnPendableService</OnPendableService_Name>
+    <OnPendableService_Priority>interrupts disabled</OnPendableService_Priority>
+    <OnLossOfLockINT_Selected>1</OnLossOfLockINT_Selected>
+    <OnLossOfLockINT_Name>Cpu_OnLossOfLockINT</OnLossOfLockINT_Name>
+    <OnLossOfLockINT_Priority>interrupts disabled</OnLossOfLockINT_Priority>
+    <OnLowVoltageINT_Selected>1</OnLowVoltageINT_Selected>
+    <OnLowVoltageINT_Name>Cpu_OnLowVoltageINT</OnLowVoltageINT_Name>
+    <OnLowVoltageINT_Priority>interrupts disabled</OnLowVoltageINT_Priority>
+    <OnLLSWakeUpINT_Selected>1</OnLLSWakeUpINT_Selected>
+    <OnLLSWakeUpINT_Name>Cpu_OnLLSWakeUpINT</OnLLSWakeUpINT_Name>
+    <OnLLSWakeUpINT_Priority>interrupts disabled</OnLLSWakeUpINT_Priority>
+    <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
+    <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
+    <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
+    <GenExtraFilesCount>0</GenExtraFilesCount>
+  </CpuID_17>
+  <CpuID_19>
+    <Generated>false</Generated>
+    <GenCompName />
+    <GenComponentVersion>??.???</GenComponentVersion>
+    <GenDriverVersion>??.??</GenDriverVersion>
+    <GenEventModule />
+    <HeaderAge>-1</HeaderAge>
+    <CodeAge>-1</CodeAge>
+    <AsemblAge>-1</AsemblAge>
+    <GenNumMethods>11</GenNumMethods>
+    <SetClockConfiguration>false</SetClockConfiguration>
+    <GetClockConfiguration>false</GetClockConfiguration>
+    <SetOperationMode>false</SetOperationMode>
+    <EnableInt>false</EnableInt>
+    <DisableInt>false</DisableInt>
+    <GetLLSWakeUpFlags>false</GetLLSWakeUpFlags>
+    <OpenBackDoor>false</OpenBackDoor>
+    <MCGAutoTrim>false</MCGAutoTrim>
+    <VLPModeEnable>false</VLPModeEnable>
+    <VLPModeDisable>false</VLPModeDisable>
+    <SystemReset>false</SystemReset>
+    <GenNumEvents>10</GenNumEvents>
+    <OnReset_Selected>1</OnReset_Selected>
+    <OnReset_Name>Cpu_OnReset</OnReset_Name>
+    <OnReset_Priority>interrupts disabled</OnReset_Priority>
+    <OnNMIINT_Selected>1</OnNMIINT_Selected>
+    <OnNMIINT_Name>Cpu_OnNMIINT</OnNMIINT_Name>
+    <OnNMIINT_Priority>interrupts disabled</OnNMIINT_Priority>
+    <OnHardFault_Selected>1</OnHardFault_Selected>
+    <OnHardFault_Name>Cpu_OnHardFault</OnHardFault_Name>
+    <OnHardFault_Priority>interrupts disabled</OnHardFault_Priority>
+    <OnBusFault_Selected>1</OnBusFault_Selected>
+    <OnBusFault_Name>Cpu_OnBusFault</OnBusFault_Name>
+    <OnBusFault_Priority>interrupts disabled</OnBusFault_Priority>
+    <OnUsageFault_Selected>1</OnUsageFault_Selected>
+    <OnUsageFault_Name>Cpu_OnUsageFault</OnUsageFault_Name>
+    <OnUsageFault_Priority>interrupts disabled</OnUsageFault_Priority>
+    <OnSupervisorCall_Selected>1</OnSupervisorCall_Selected>
+    <OnSupervisorCall_Name>Cpu_OnSupervisorCall</OnSupervisorCall_Name>
+    <OnSupervisorCall_Priority>interrupts disabled</OnSupervisorCall_Priority>
+    <OnPendableService_Selected>1</OnPendableService_Selected>
+    <OnPendableService_Name>Cpu_OnPendableService</OnPendableService_Name>
+    <OnPendableService_Priority>interrupts disabled</OnPendableService_Priority>
+    <OnLossOfLockINT_Selected>1</OnLossOfLockINT_Selected>
+    <OnLossOfLockINT_Name>Cpu_OnLossOfLockINT</OnLossOfLockINT_Name>
+    <OnLossOfLockINT_Priority>interrupts disabled</OnLossOfLockINT_Priority>
+    <OnLowVoltageINT_Selected>1</OnLowVoltageINT_Selected>
+    <OnLowVoltageINT_Name>Cpu_OnLowVoltageINT</OnLowVoltageINT_Name>
+    <OnLowVoltageINT_Priority>interrupts disabled</OnLowVoltageINT_Priority>
+    <OnLLSWakeUpINT_Selected>1</OnLLSWakeUpINT_Selected>
+    <OnLLSWakeUpINT_Name>Cpu_OnLLSWakeUpINT</OnLLSWakeUpINT_Name>
+    <OnLLSWakeUpINT_Priority>interrupts disabled</OnLLSWakeUpINT_Priority>
+    <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
+    <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
+    <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
+    <GenExtraFilesCount>0</GenExtraFilesCount>
+  </CpuID_19>
   <ComponentID_8>
     <Generated>true</Generated>
     <GenCompName>CsIO1</GenCompName>
     <GenComponentVersion>01.016</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1192269025</HeaderAge>
-    <CodeAge>1192331831</CodeAge>
+    <HeaderAge>1192561689</HeaderAge>
+    <CodeAge>1192561689</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>0</GenNumMethods>
     <GenNumEvents>0</GenNumEvents>
@@ -563,8 +679,8 @@
       <GenComponentVersion>01.187</GenComponentVersion>
       <GenDriverVersion>01.12</GenDriverVersion>
       <GenEventModule>Events</GenEventModule>
-      <HeaderAge>1192269273</HeaderAge>
-      <CodeAge>1192269273</CodeAge>
+      <HeaderAge>1192561689</HeaderAge>
+      <CodeAge>1192561689</CodeAge>
       <AsemblAge>-1</AsemblAge>
       <GenNumMethods>36</GenNumMethods>
       <Init>true</Init>
