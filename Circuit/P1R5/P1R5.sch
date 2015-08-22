@@ -4984,7 +4984,6 @@ DPDT SMT slide switch, AYZ0202, SWCH-08179</description>
 <smd name="19" x="-0.5" y="1.8" dx="0.25" dy="0.4" layer="1"/>
 <smd name="20" x="-1" y="1.8" dx="0.25" dy="0.4" layer="1"/>
 <text x="-2.2098" y="2.2352" size="0.6096" layer="25">&gt;NAME</text>
-<smd name="PAD" x="0" y="0" dx="2.6924" dy="2.6924" layer="1" rot="R180"/>
 </package>
 </packages>
 <symbols>
@@ -5042,7 +5041,7 @@ QFN20 4x4</text>
 <connect gate="G$1" pin="VSS/14" pad="14"/>
 <connect gate="G$1" pin="VSS/17" pad="17"/>
 <connect gate="G$1" pin="VSS/20" pad="20"/>
-<connect gate="G$1" pin="VSS/8" pad="8 PAD"/>
+<connect gate="G$1" pin="VSS/8" pad="8"/>
 <connect gate="G$1" pin="XC1/10" pad="10"/>
 <connect gate="G$1" pin="XC2/9" pad="9"/>
 </connects>
