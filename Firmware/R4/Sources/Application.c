@@ -2,13 +2,14 @@
 #include "I2C2.h"
 #include "MPU9250.h"
 
-static int8_t xyz[3];
-unsigned short ax, ay, az; // unsigned short = unit16_t
+int16_t ax, ay, az; // Accelerometer // unsigned short = unit16_t
+int16_t gx, gy, gz; // Gyroscope     // unsigned short = unit16_t
+int16_t mx, my, mz; // Magnetometer  // unsigned short = unit16_t
 
 void APP_Run () {
   uint8_t res;
   
-  deviceData.handle = I2C2_Init (&deviceData);
+  deviceData.handle = I2C2_Init (&deviceData); // Initialize with the I2C device (e.g., MPU9250) with the address specified in Processor Expert.
   
   mpu9250_initialize ();
   
@@ -27,9 +28,11 @@ void APP_Run () {
     	//res = MPU9250_ReadReg(MPU6050_RA_WHO_AM_I, (uint8_t*) (&xyz), 1); // res = MPU9250_ReadReg(MPU9250_OUT_X_MSB, (uint8_t*)&xyz, 3);
 //    	xyz[1] = '\0';
 //    	printf ("MPU6050_RA_WHO_AM_I = 0x%1x\r\n", (uint8_t) (&xyz)[0]);
-    	get_acceleration (&ax, &ay, &az);
     	
-    	printf ("A: x = %d, y = %d, z = %d\r\n", ax, ay, az);
+    	//get_acceleration (&ax, &ay, &az);
+    	mpu9250_get_motion_6 (&ax, &ay, &az, &gx, &gy, &gz);
+    	
+    	printf ("A: ax = %d, ay = %d, az = %d, gx = %d, gy = %d, gz = %d\r\n", ax, ay, az, gx, gy, gz);
 
 //    	res = MPU9250_ReadReg (MPU6050_RA_GYRO_CONFIG, (uint8_t*)&xyz, 1); // res = MPU9250_ReadReg(MPU9250_OUT_X_MSB, (uint8_t*)&xyz, 3);
 //    	xyz[1] = '\0';

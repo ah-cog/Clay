@@ -8,7 +8,9 @@
 #include "MPU9250.h"
 #include "I2C2.h"
 
-uint8_t MPU9250_ReadReg(uint8_t addr, uint8_t *data, short dataSize) {
+uint8_t buffer[14];
+
+uint8_t MPU9250_ReadReg (uint8_t addr, uint8_t *data, short dataSize) {
   uint8_t res;
   
   /* Send I2C address plus register address to the I2C bus *without* a stop condition */
@@ -41,6 +43,26 @@ uint8_t MPU9250_WriteReg (uint8_t addr, uint8_t val) {
   while (!deviceData.dataTransmittedFlg) {}  /* Wait until date is sent */
 	deviceData.dataTransmittedFlg = FALSE;
 	return ERR_OK;
+}
+
+uint8_t mpu9250_read_bits (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data, uint16_t timeout) {
+    // 01101001 read byte
+    // 76543210 bit numbers
+    //    xxx   args: bitStart=4, length=3
+    //    010   masked
+    //   -> 010 shifted
+    uint8_t count, b;
+    if ((count = MPU9250_ReadReg (regAddr, &b, 1)) == ERR_OK) { // if ((count = readByte (devAddr, regAddr, &b, timeout)) != 0) {
+        uint8_t mask = ((1 << length) - 1) << (bitStart - length + 1);
+        b &= mask;
+        b >>= (bitStart - length + 1);
+        *data = b;
+    }
+    return count;
+}
+
+uint8_t write_byte (uint8_t devAddr, uint8_t regAddr, uint8_t data) {
+    MPU9250_WriteReg (MPU6050_DEFAULT_ADDRESS, data);
 }
 
 uint8_t mpu9250_write_bits (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data) {
@@ -119,7 +141,6 @@ void set_sleep_enabled (uint8_t enabled) { // thanks to Jack Elston for pointing
 	mpu9250_write_bit (MPU6050_DEFAULT_ADDRESS, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, enabled);
 }
 
-uint8_t buffer[14];
 void get_acceleration (int16_t* x, int16_t* y, int16_t* z) {
 	
 	uint8_t res = MPU9250_ReadReg (MPU6050_RA_ACCEL_XOUT_H, (uint8_t*) (&buffer), 6); // res = MPU9250_ReadReg(MPU9250_OUT_X_MSB, (uint8_t*)&xyz, 3);
@@ -128,4 +149,26 @@ void get_acceleration (int16_t* x, int16_t* y, int16_t* z) {
     *x = (((int16_t)buffer[0]) << 8) | buffer[1];
     *y = (((int16_t)buffer[2]) << 8) | buffer[3];
     *z = (((int16_t)buffer[4]) << 8) | buffer[5];
+}
+
+/** Get raw 6-axis motion sensor readings (accel/gyro).
+ * Retrieves all currently available motion sensor values.
+ * @param ax 16-bit signed integer container for accelerometer X-axis value
+ * @param ay 16-bit signed integer container for accelerometer Y-axis value
+ * @param az 16-bit signed integer container for accelerometer Z-axis value
+ * @param gx 16-bit signed integer container for gyroscope X-axis value
+ * @param gy 16-bit signed integer container for gyroscope Y-axis value
+ * @param gz 16-bit signed integer container for gyroscope Z-axis value
+ * @see getAcceleration()
+ * @see getRotation()
+ * @see MPU6050_RA_ACCEL_XOUT_H
+ */
+void mpu9250_get_motion_6 (int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz) {
+	uint8_t res = MPU9250_ReadReg (MPU6050_RA_ACCEL_XOUT_H, (uint8_t*) (&buffer), 14); // I2Cdev::readBytes(devAddr, MPU6050_RA_ACCEL_XOUT_H, 14, buffer);
+    *ax = (((int16_t)buffer[0]) << 8) | buffer[1];
+    *ay = (((int16_t)buffer[2]) << 8) | buffer[3];
+    *az = (((int16_t)buffer[4]) << 8) | buffer[5];
+    *gx = (((int16_t)buffer[8]) << 8) | buffer[9];
+    *gy = (((int16_t)buffer[10]) << 8) | buffer[11];
+    *gz = (((int16_t)buffer[12]) << 8) | buffer[13];
 }

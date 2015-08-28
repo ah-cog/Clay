@@ -1,7 +1,7 @@
 <GenerationInfo_G_C>
   <Options>
     <ProjectName>clay_demo_i2c</ProjectName>
-    <ProjectDirectory>C:\Users\mokogobo\Workspace\clay_demo_i2c\</ProjectDirectory>
+    <ProjectDirectory>Z:\Workspace\Checkouts\clay\Firmware\R4\</ProjectDirectory>
     <ProjectMainModuleName>main</ProjectMainModuleName>
     <DestEventsDirectory>Sources\</DestEventsDirectory>
     <DestDriversSubDirectory>..\Generated_Code\</DestDriversSubDirectory>
@@ -18,16 +18,16 @@
         <Line>PE_Const</Line>
         <Line>IO_Map</Line>
       </GenSharedModules>
-      <ShrdHeaderAge0>1192666226</ShrdHeaderAge0>
+      <ShrdHeaderAge0>1193048308</ShrdHeaderAge0>
       <ShrdCodeAge0>-1</ShrdCodeAge0>
       <ShrdAsemblAge0>-1</ShrdAsemblAge0>
-      <ShrdHeaderAge1>1192663357</ShrdHeaderAge1>
+      <ShrdHeaderAge1>1193048308</ShrdHeaderAge1>
       <ShrdCodeAge1>-1</ShrdCodeAge1>
       <ShrdAsemblAge1>-1</ShrdAsemblAge1>
-      <ShrdHeaderAge2>1192663357</ShrdHeaderAge2>
+      <ShrdHeaderAge2>1193048308</ShrdHeaderAge2>
       <ShrdCodeAge2>-1</ShrdCodeAge2>
       <ShrdAsemblAge2>-1</ShrdAsemblAge2>
-      <ShrdHeaderAge3>1192663357</ShrdHeaderAge3>
+      <ShrdHeaderAge3>1193048308</ShrdHeaderAge3>
       <ShrdCodeAge3>-1</ShrdCodeAge3>
       <ShrdAsemblAge3>-1</ShrdAsemblAge3>
       <GenExtraFiles lines_count="10">
@@ -43,9 +43,9 @@
         <Line>Generated_Code\Vectors.c</Line>
       </GenExtraFiles>
       <GenExtraFileSrcDir4>lib\doxygen\</GenExtraFileSrcDir4>
-      <XtraAge6>1192664165</XtraAge6>
-      <XtraAge7>1192666226</XtraAge7>
-      <XtraAge9>1192666226</XtraAge9>
+      <XtraAge6>1193048308</XtraAge6>
+      <XtraAge7>1193048308</XtraAge7>
+      <XtraAge9>1193048308</XtraAge9>
       <GenExtraFileType9>4</GenExtraFileType9>
       <GenExtraFileType8>4</GenExtraFileType8>
       <GenExtraFileType7>4</GenExtraFileType7>
@@ -368,8 +368,8 @@
     <GenComponentVersion>01.000</GenComponentVersion>
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1192663357</HeaderAge>
-    <CodeAge>1192666226</CodeAge>
+    <HeaderAge>1193048308</HeaderAge>
+    <CodeAge>1193048308</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -498,8 +498,8 @@
     <GenComponentVersion>01.016</GenComponentVersion>
     <GenDriverVersion>01.07</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1192668758</HeaderAge>
-    <CodeAge>1192668758</CodeAge>
+    <HeaderAge>1193048308</HeaderAge>
+    <CodeAge>1193048308</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>33</GenNumMethods>
     <Init>true</Init>

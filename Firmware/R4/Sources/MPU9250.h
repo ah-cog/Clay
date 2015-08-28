@@ -10,7 +10,7 @@
 
 #include "PE_Types.h"
 
-//Magnetometer Registers
+// Magnetometer Registers
 #define MPU9150_RA_MAG_ADDRESS		0x0C
 #define MPU9150_RA_MAG_XOUT_L		0x03
 #define MPU9150_RA_MAG_XOUT_H		0x04
@@ -382,19 +382,19 @@ typedef struct {
 MPU9250_TDataState deviceData;
 
 /* \brief Run the demo application */
-void MPU9250 (void);
+void MPU9250 ();
 
+uint8_t mpu9250_read_bits (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t *data, uint16_t timeout);
 uint8_t mpu9250_write_bit (uint8_t devAddr, uint8_t regAddr, uint8_t bitNum, uint8_t data);
 uint8_t mpu9250_write_bits (uint8_t devAddr, uint8_t regAddr, uint8_t bitStart, uint8_t length, uint8_t data);
 
 void mpu9250_initialize ();
+
 void set_clock_source (uint8_t source);
 void set_full_scale_gyro_range (uint8_t range);
 void set_full_scale_accel_range (uint8_t range);
 void set_sleep_enabled (uint8_t enabled); // thanks to Jack Elston for pointing this one out!
 
 void get_acceleration (int16_t* x, int16_t* y, int16_t* z);
-
-
 
 #endif /* MPU9250_H_ */

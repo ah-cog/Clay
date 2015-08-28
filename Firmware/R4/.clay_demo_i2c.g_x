@@ -12,63 +12,63 @@
   </ToolchainSettings>
   <GeneratedFilesList>
     <GeneratedByPE>
-      <File Name="Static_Code/PDD/UART_PDD.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798017" FileType="1048576" />
-      <File Name="ProjectInfo.xml" FileDate="2015-08-22, 20:35:47" FileAge="1440300947659" FileType="45637" />
-      <File Name="Static_Code/PDD/PDD_Types.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797132" FileType="1048576" CompNumb="2" />
-      <File Name="Static_Code/PDD/FTFL_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797480" FileType="1048576" />
-      <File Name="Static_Code/PDD/CMT_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797268" FileType="1048576" />
-      <File Name="Static_Code/PDD/CMP_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797224" FileType="1048576" />
-      <File Name="Generated_Code/PE_LDD.h" FileDate="2015-08-22, 20:35:37" FileAge="1440300937111" FileType="45637" CompNumb="2" />
-      <File Name="Static_Code/PDD/SPI_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797946" FileType="1048576" />
-      <File Name="Static_Code/PDD/CAN_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797192" FileType="1048576" />
-      <File Name="Static_Code/PDD/DMAMUX_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797332" FileType="1048576" />
-      <File Name="Generated_Code/PE_LDD.c" FileDate="2015-08-22, 19:35:10" FileAge="1440297310043" FileType="45637" CompNumb="2" />
-      <File Name="Static_Code/PDD/USB_PDD.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798086" FileType="1048576" />
-      <File Name="Documentation/doxygen/pex.css" FileDate="2015-08-22, 19:09:53" FileAge="1440295793951" FileType="16384" CompNumb="2" />
-      <File Name="Static_Code/PDD/PIT_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797654" FileType="1048576" />
-      <File Name="Static_Code/PDD/FMC_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797463" FileType="1048576" />
-      <File Name="Static_Code/PDD/VREF_PDD.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798184" FileType="1048576" />
-      <File Name="Static_Code/PDD/CRC_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797284" FileType="1048576" />
-      <File Name="Static_Code/IO_Map/MK20D7.h" FileDate="2015-08-22, 19:09:54" FileAge="1440295794614" FileType="1048576" CompNumb="2" />
-      <File Name="Static_Code/PDD/WDOG_PDD.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798193" FileType="1048576" />
-      <File Name="Static_Code/PDD/SysTick_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797993" FileType="1048576" />
-      <File Name="Generated_Code/Vectors.c" FileDate="2015-08-22, 20:35:37" FileAge="1440300937127" FileType="45637" CompNumb="2" />
-      <File Name="Static_Code/PDD/DMA_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797348" FileType="1048576" />
-      <File Name="Documentation/doxygen/clay_demo_i2c.txt" FileDate="2015-08-22, 20:35:36" FileAge="1440300936982" FileType="45637" CompNumb="2" />
-      <File Name="Static_Code/PDD/ADC_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797141" FileType="1048576" />
-      <File Name="Documentation/doxygen/pex.doxyfile" FileDate="2015-08-22, 19:09:58" FileAge="1440295798366" FileType="45637" CompNumb="2" />
-      <File Name="Static_Code/PDD/DAC_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797305" FileType="1048576" />
-      <File Name="Documentation/doxygen/RoutingReport.txt" FileDate="2015-08-22, 19:09:58" FileAge="1440295798375" FileType="45637" CompNumb="2" />
-      <File Name="Static_Code/PDD/MCM_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797603" FileType="1048576" />
-      <File Name="Static_Code/PDD/LPTMR_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797590" FileType="1048576" />
-      <File Name="Documentation/clay_demo_i2c_Settings.xml" FileDate="2015-08-28, 13:16:12" FileAge="1440792972584" FileType="3072" />
-      <File Name="Generated_Code/Cpu.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798504" FileType="45637" CompNumb="2" />
-      <File Name="Static_Code/PDD/SIM_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797857" FileType="1048576" />
-      <File Name="Generated_Code/Cpu.c" FileDate="2015-08-22, 20:35:36" FileAge="1440300936967" FileType="45637" CompNumb="2" />
-      <File Name="Project_Settings/Debugger/MK20DX256.mem" FileDate="2015-08-22, 19:09:58" FileAge="1440295798355" FileType="45637" CompNumb="2" />
-      <File Name="Sources/main.c" FileDate="2015-08-22, 21:49:07" FileAge="1440305347395" FileType="128" />
-      <File Name="Static_Code/PDD/EWM_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797450" FileType="1048576" />
-      <File Name="Generated_Code/IO_Map.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798631" FileType="45637" />
-      <File Name="Sources/Events.h" FileDate="2015-08-22, 20:35:41" FileAge="1440300941369" FileType="131328" />
-      <File Name="Generated_Code/I2C2.h" FileDate="2015-08-22, 21:50:44" FileAge="1440305444183" FileType="45637" CompNumb="8" />
-      <File Name="Static_Code/PDD/GPIO_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797553" FileType="1048576" />
-      <File Name="Sources/Events.c" FileDate="2015-08-22, 20:41:53" FileAge="1440301313863" FileType="131328" />
-      <File Name="Documentation/doxygen/I2C2.txt" FileDate="2015-08-22, 21:45:45" FileAge="1440305145231" FileType="45637" CompNumb="8" />
-      <File Name="Generated_Code/I2C2.c" FileDate="2015-08-22, 21:50:44" FileAge="1440305444217" FileType="45637" CompNumb="8" />
-      <File Name="Static_Code/PDD/USBDCD_PDD.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798072" FileType="1048576" />
-      <File Name="Generated_Code/PE_Const.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798641" FileType="45637" />
-      <File Name="Documentation/clay_demo_i2c_SIGNALS.txt" FileDate="2015-08-28, 13:16:12" FileAge="1440792972542" FileType="3072" />
-      <File Name="Generated_Code/PE_Types.h" FileDate="2015-08-22, 20:35:36" FileAge="1440300936928" FileType="45637" />
-      <File Name="Generated_Code/PE_Error.h" FileDate="2015-08-22, 19:09:58" FileAge="1440295798649" FileType="45637" />
-      <File Name="Static_Code/PDD/PDB_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797618" FileType="1048576" />
-      <File Name="Static_Code/PDD/FTM_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797509" FileType="1048576" />
-      <File Name="Documentation/clay_demo_i2c.txt" FileDate="2015-08-22, 21:50:45" FileAge="1440305445655" FileType="3072" />
-      <File Name="Static_Code/PDD/PORT_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797668" FileType="1048576" />
-      <File Name="Static_Code/PDD/SAI_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797740" FileType="1048576" />
-      <File Name="Project_Settings/Linker_Files/ProcessorExpert.ld" FileDate="2015-08-22, 19:09:58" FileAge="1440295798323" FileType="8" CompNumb="2" />
-      <File Name="Static_Code/PDD/RTC_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797695" FileType="1048576" />
-      <File Name="Static_Code/PDD/I2C_PDD.h" FileDate="2015-08-22, 19:09:57" FileAge="1440295797566" FileType="1048576" />
+      <File Name="Generated_Code/PE_LDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Static_Code/PDD/FMC_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/PIT_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/VREF_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Generated_Code/PE_LDD.c" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Static_Code/PDD/USBDCD_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/WDOG_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Generated_Code/Cpu.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Static_Code/PDD/CRC_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Generated_Code/Cpu.c" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Static_Code/PDD/DMA_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Documentation/clay_demo_i2c_Settings.xml" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="3072" />
+      <File Name="Static_Code/PDD/ADC_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Documentation/clay_demo_i2c.txt" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="3072" />
+      <File Name="Static_Code/PDD/DAC_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/MCM_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Documentation/doxygen/pex.css" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="16384" CompNumb="2" />
+      <File Name="Generated_Code/I2C2.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="8" />
+      <File Name="Static_Code/PDD/SIM_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Project_Settings/Linker_Files/ProcessorExpert.ld" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="8" CompNumb="2" />
+      <File Name="Sources/main.c" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="128" />
+      <File Name="Generated_Code/I2C2.c" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="8" />
+      <File Name="Static_Code/IO_Map/MK20D7.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" CompNumb="2" />
+      <File Name="Documentation/doxygen/clay_demo_i2c.txt" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Static_Code/PDD/DMAMUX_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/EWM_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Generated_Code/Vectors.c" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Static_Code/PDD/GPIO_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="ProjectInfo.xml" FileDate="2015-08-28, 15:09:19" FileAge="1440799759000" FileType="45637" />
+      <File Name="Documentation/doxygen/RoutingReport.txt" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Documentation/doxygen/pex.doxyfile" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Static_Code/PDD/SysTick_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/LPTMR_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Sources/Events.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="131328" />
+      <File Name="Generated_Code/PE_Const.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" />
+      <File Name="Project_Settings/Debugger/MK20DX256.mem" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="2" />
+      <File Name="Static_Code/PDD/PDB_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Generated_Code/PE_Types.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" />
+      <File Name="Static_Code/PDD/PORT_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Documentation/doxygen/I2C2.txt" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" CompNumb="8" />
+      <File Name="Sources/Events.c" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="131328" />
+      <File Name="Generated_Code/IO_Map.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" />
+      <File Name="Static_Code/PDD/FTM_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Generated_Code/PE_Error.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="45637" />
+      <File Name="Static_Code/PDD/SAI_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/UART_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/FTFL_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/I2C_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/RTC_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Documentation/clay_demo_i2c_SIGNALS.txt" FileDate="2015-08-28, 15:09:19" FileAge="1440799759000" FileType="3072" />
+      <File Name="Static_Code/PDD/CMP_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/CMT_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/SPI_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/CAN_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/USB_PDD.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" />
+      <File Name="Static_Code/PDD/PDD_Types.h" FileDate="2015-08-28, 15:07:40" FileAge="1440799660000" FileType="1048576" CompNumb="2" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>9</CodeGenReference>
+  <CodeGenReference>10</CodeGenReference>
 </CodeGenerationInfo>
