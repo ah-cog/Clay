@@ -368,7 +368,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_demo_serial_bridge_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>51</ProjectModificationStamp>
+    <ProjectModificationStamp>66</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -376,8 +376,8 @@
     <GenComponentVersion>01.000</GenComponentVersion>
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1192525283</HeaderAge>
-    <CodeAge>1192525283</CodeAge>
+    <HeaderAge>1193189124</HeaderAge>
+    <CodeAge>1193189124</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -449,8 +449,8 @@
     <GenComponentVersion>01.000</GenComponentVersion>
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1192525283</HeaderAge>
-    <CodeAge>1192525283</CodeAge>
+    <HeaderAge>1193189124</HeaderAge>
+    <CodeAge>1193189124</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -685,8 +685,8 @@
     <GenComponentVersion>01.187</GenComponentVersion>
     <GenDriverVersion>01.12</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1192458999</HeaderAge>
-    <CodeAge>1192458999</CodeAge>
+    <HeaderAge>1193188582</HeaderAge>
+    <CodeAge>1193188582</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>36</GenNumMethods>
     <Init>true</Init>
@@ -824,7 +824,7 @@
     <GenComponentVersion>01.003</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1192463052</HeaderAge>
+    <HeaderAge>1193187963</HeaderAge>
     <CodeAge>1192463052</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>5</GenNumMethods>

@@ -4,8 +4,8 @@
 **     Project     : clay_firmware
 **     Processor   : MK20DX256VLL7
 **     Version     : Component 01.000, Driver 01.04, CPU db: 3.00.000
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-21, 02:47, # CodeGen: 2
+**     Compiler    : CodeWarrior ARM C Compiler
+**     Date/Time   : 2015-08-30, 19:57, # CodeGen: 6
 **     Abstract    :
 **
 **     Settings    :

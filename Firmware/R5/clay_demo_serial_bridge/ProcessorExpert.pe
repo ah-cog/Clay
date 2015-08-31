@@ -3,8 +3,8 @@
   <Header>
     <Name>clay_demo_serial_bridge</Name>
     <SavedBy>mokogobo</SavedBy>
-    <ModificationStamp>51</ModificationStamp>
-    <Date>2015-08-20</Date>
+    <ModificationStamp>66</ModificationStamp>
+    <Date>2015-08-30</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>22</ProjectCompNumb>
+    <ProjectCompNumb>28</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>

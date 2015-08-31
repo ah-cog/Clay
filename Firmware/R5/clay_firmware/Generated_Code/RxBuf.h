@@ -5,8 +5,8 @@
 **     Processor   : MK20DX256VLL7
 **     Component   : RingBufferUInt8
 **     Version     : Component 01.003, Driver 01.00, CPU db: 3.00.000
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-21, 02:14, # CodeGen: 1
+**     Compiler    : CodeWarrior ARM C Compiler
+**     Date/Time   : 2015-08-30, 19:57, # CodeGen: 6
 **     Abstract    :
 **
 **     Settings    :

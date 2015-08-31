@@ -5,8 +5,8 @@
 **     Processor   : MK20DX256VLL7
 **     Component   : PE_Types
 **     Version     : Driver 01.01
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-21, 02:47, # CodeGen: 2
+**     Compiler    : CodeWarrior ARM C Compiler
+**     Date/Time   : 2015-08-30, 19:57, # CodeGen: 6
 **     Abstract    :
 **         PE_Types.h - contains definitions of basic types,
 **         register access macros and hardware specific macros
@@ -112,7 +112,7 @@ typedef unsigned long int       uint32;
 #define __EI()\
  do {\
   /*lint -save  -e950 Disable MISRA rule (1.1) checking. */\
-     __asm("CPSIE f");\
+     asm(CPSIE f);\
   /*lint -restore Enable MISRA rule (1.1) checking. */\
  } while(0)
 
@@ -120,7 +120,7 @@ typedef unsigned long int       uint32;
 #define __DI() \
  do {\
   /*lint -save  -e950 Disable MISRA rule (1.1) checking. */\
-     __asm ("CPSID f");\
+     asm (CPSID f);\
   /*lint -restore Enable MISRA rule (1.1) checking. */\
  } while(0)
 
@@ -129,13 +129,9 @@ typedef unsigned long int       uint32;
 #define EnterCritical() \
  do {\
   uint8_t SR_reg_local;\
+   SR_reg_local = 0;\
   /*lint -save  -e586 -e950 Disable MISRA rule (2.1,1.1) checking. */\
-   __asm ( \
-   "MRS R0, FAULTMASK\n\t" \
-   "CPSID f\n\t"            \
-   "STRB R0, %[output]"  \
-   : [output] "=m" (SR_reg_local)\
-   :: "r0");\
+   asm(MRS SR_reg_local, FAULTMASK);asm(CPSID f);\
   /*lint -restore Enable MISRA rule (2.1,1.1) checking. */\
    if (++SR_lock == 1u) {\
      SR_reg = SR_reg_local;\
@@ -147,11 +143,7 @@ typedef unsigned long int       uint32;
  do {\
    if (--SR_lock == 0u) { \
   /*lint -save  -e586 -e950 Disable MISRA rule (2.1,1.1) checking. */\
-     __asm (                 \
-       "ldrb r0, %[input]\n\t"\
-       "msr FAULTMASK,r0;\n\t" \
-       ::[input] "m" (SR_reg)  \
-       : "r0");                \
+     asm (PUSH {R0,R1});asm(LDA R1, SR_reg);asm(LDRB R0, [R1]);asm(MSR FAULTMASK,R0;);asm(POP {R0,R1});\
   /*lint -restore Enable MISRA rule (2.1,1.1) checking. */\
    }\
  } while(0)
@@ -159,23 +151,23 @@ typedef unsigned long int       uint32;
 
 #define PE_DEBUGHALT() \
   /*lint -save  -e586 -e950 Disable MISRA rule (2.1,1.1) checking. */\
-  __asm( "BKPT 255") \
+  asm (BKPT 255) \
   /*lint -restore Enable MISRA rule (2.1,1.1) checking. */
 
 #define PE_NOP() \
   /*lint -save  -e586 -e950 Disable MISRA rule (2.1,1.1) checking. */\
-  __asm( "NOP") \
+  asm (NOP) \
   /*lint -restore Enable MISRA rule (2.1,1.1) checking. */
 
 #define PE_WFI() \
   /*lint -save  -e586 -e950 Disable MISRA rule (2.1,1.1) checking. */\
-  __asm("WFI") \
+  asm (WFI) \
   /*lint -restore Enable MISRA rule (2.1,1.1) checking. */
 
 
 /* Interrupt definition template */
 #if !defined(PE_ISR)
-  #define PE_ISR(ISR_name) void __attribute__ ((interrupt)) ISR_name(void)
+  #define PE_ISR(ISR_name) void ISR_name(void)
 #endif
 
 /* Logical Device Drivers (LDD) types */

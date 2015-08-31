@@ -4,8 +4,8 @@
 **     Project     : clay_firmware
 **     Processor   : MK20DX256VLL7
 **     Version     : Component 01.000, Driver 01.04, CPU db: 3.00.000
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-21, 02:47, # CodeGen: 2
+**     Compiler    : CodeWarrior ARM C Compiler
+**     Date/Time   : 2015-08-30, 19:57, # CodeGen: 6
 **     Abstract    :
 **
 **     Settings    :
@@ -62,21 +62,21 @@
 
 
   /* ISR prototype */
-  extern uint32_t __SP_INIT;
+  extern uint32_t __SP_INIT[];
   extern
   #ifdef __cplusplus
   "C"
   #endif
   void __thumb_startup( void );
   
+  /* Pragma to place the interrupt vector table on correct location defined in linker file. */
+  #pragma define_section vectortable ".vectortable" ".vectortable" ".vectortable" far_abs R
   
-  /*lint -esym(765,__vect_table) Disable MISRA rule (8.10) checking for symbols (__vect_table). Definition of the interrupt vector table placed by linker on a predefined location. */
   /*lint -save  -e926 -e927 -e928 -e929 Disable MISRA rule (11.4) checking. Need to explicitly cast pointers to the general ISR for Interrupt vector table */
   
-  __attribute__ ((section (".vectortable"))) const tVectorTable __vect_table = { /* Interrupt vector table */
-  
+  __declspec(vectortable) const tVectorTable __vect_table = { /* Interrupt vector table */
     /* ISR name                             No. Address      Pri Name                           Description */
-    &__SP_INIT,                        /* 0x00  0x00000000   -   ivINT_Initial_Stack_Pointer    used by PE */
+    __SP_INIT,                         /* 0x00  0x00000000   -   ivINT_Initial_Stack_Pointer    used by PE */
     {
     (tIsrFunc)&__thumb_startup,        /* 0x01  0x00000004   -   ivINT_Initial_Program_Counter  used by PE */
     (tIsrFunc)&Cpu_INT_NMIInterrupt,   /* 0x02  0x00000008   -2   ivINT_NMI                      used by PE */

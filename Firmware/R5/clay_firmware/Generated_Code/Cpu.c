@@ -6,8 +6,8 @@
 **     Component   : MK20DX256LL7
 **     Version     : Component 01.000, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-21, 02:47, # CodeGen: 2
+**     Compiler    : CodeWarrior ARM C Compiler
+**     Date/Time   : 2015-08-30, 19:57, # CodeGen: 6
 **     Abstract    :
 **
 **     Settings    :
@@ -88,7 +88,7 @@ volatile uint8_t SR_lock = 0x00U;      /* Lock */
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
 */
-void Cpu_SetBASEPRI(uint32_t Level);
+void Cpu_SetBASEPRI(register uint32_t Level);
 
 /*
 ** ===================================================================
@@ -151,8 +151,10 @@ void __init_hardware(void)
                 SIM_CLKDIV1_OUTDIV2(0x01) |
                 SIM_CLKDIV1_OUTDIV3(0x03) |
                 SIM_CLKDIV1_OUTDIV4(0x03); /* Set the system prescalers to safe value */
-  /* SIM_SCGC5: PORTE=1,PORTA=1 */
-  SIM_SCGC5 |= (SIM_SCGC5_PORTE_MASK | SIM_SCGC5_PORTA_MASK); /* Enable clock gate for ports to enable pin routing */
+  /* SIM_SCGC5: PORTE=1,PORTD=1,PORTA=1 */
+  SIM_SCGC5 |= SIM_SCGC5_PORTE_MASK |
+               SIM_SCGC5_PORTD_MASK |
+               SIM_SCGC5_PORTA_MASK;   /* Enable clock gate for ports to enable pin routing */
   if ((PMC_REGSC & PMC_REGSC_ACKISO_MASK) != 0x0U) {
     /* PMC_REGSC: ACKISO=1 */
     PMC_REGSC |= PMC_REGSC_ACKISO_MASK; /* Release IO pads after wakeup from VLLS mode. */
@@ -207,8 +209,9 @@ void __init_hardware(void)
 #ifdef _lint
   #define Cpu_SetBASEPRI(Level)  /* empty */
 #else
-void Cpu_SetBASEPRI(uint32_t Level) {
-  __asm ("msr basepri, %[input]"::[input] "r" (Level):);
+asm void Cpu_SetBASEPRI(register uint32_t Level) {
+  MSR BASEPRI,R0;
+  MOV PC,LR
 }
 #endif
 /*lint -restore Enable MISRA rule (2.1,1.1) checking. */
@@ -237,14 +240,6 @@ void PE_low_level_init(void)
                )) | (uint32_t)(
                 PORT_PCR_MUX(0x07)
                ));
-        /* Initialization of the RCM module */
-  /* RCM_RPFW: RSTFLTSEL=0 */
-  RCM_RPFW &= (uint8_t)~(uint8_t)(RCM_RPFW_RSTFLTSEL(0x1F));
-  /* RCM_RPFC: RSTFLTSS=0,RSTFLTSRW=0 */
-  RCM_RPFC &= (uint8_t)~(uint8_t)(
-               RCM_RPFC_RSTFLTSS_MASK |
-               RCM_RPFC_RSTFLTSRW(0x03)
-              );
       /* Initialization of the PMC module */
   /* PMC_LVDSC1: LVDACK=1,LVDIE=0,LVDRE=1,LVDV=0 */
   PMC_LVDSC1 = (uint8_t)((PMC_LVDSC1 & (uint8_t)~(uint8_t)(

@@ -6,8 +6,8 @@
 **     Component   : MK20DX256LL7
 **     Version     : Component 01.000, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-21, 02:03, # CodeGen: 0
+**     Compiler    : CodeWarrior ARM C Compiler
+**     Date/Time   : 2015-08-30, 19:57, # CodeGen: 6
 **     Abstract    :
 **
 **     Settings    :

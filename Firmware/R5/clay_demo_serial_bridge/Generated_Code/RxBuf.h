@@ -6,7 +6,7 @@
 **     Component   : RingBufferUInt8
 **     Version     : Component 01.003, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-19, 17:22, # CodeGen: 16
+**     Date/Time   : 2015-08-30, 19:19, # CodeGen: 49
 **     Abstract    :
 **
 **     Settings    :
@@ -52,7 +52,7 @@
 #include "Cpu.h"
 
 
-#define RxBuf_BUF_SIZE   64  /* number of elements in the buffer */
+#define RxBuf_BUF_SIZE   1  /* number of elements in the buffer */
 
 
 byte RxBuf_Put(byte elem);

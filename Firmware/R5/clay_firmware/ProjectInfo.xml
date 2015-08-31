@@ -35,7 +35,7 @@
     <FLASHsize>256k</FLASHsize>
   </PROCESSOR>
   <PATHS>
-    <LinkerCommandFile>Z:\Workspace\Checkouts\clay\Firmware\R5\clay_firmware\Project_Settings\Linker_Files\ProcessorExpert.ld</LinkerCommandFile>
+    <LinkerCommandFile>Z:\Workspace\Checkouts\clay\Firmware\R5\clay_firmware\Project_Settings\Linker_Files\ProcessorExpert.lcf</LinkerCommandFile>
     <IncludePaths>
       <Path>Z:\Workspace\Checkouts\clay\Firmware\R5\clay_firmware\Static_Code\PDD\</Path>
       <Path>Z:\Workspace\Checkouts\clay\Firmware\R5\clay_firmware\Static_Code\IO_Map\</Path>

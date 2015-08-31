@@ -5,8 +5,8 @@
 **     Processor   : MK20DX256VLL7
 **     Component   : Serial_LDD
 **     Version     : Component 01.187, Driver 01.12, CPU db: 3.00.000
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-21, 02:14, # CodeGen: 1
+**     Compiler    : CodeWarrior ARM C Compiler
+**     Date/Time   : 2015-08-30, 19:57, # CodeGen: 6
 **     Abstract    :
 **         This component "Serial_LDD" implements an asynchronous serial
 **         communication. The component supports different settings of
@@ -37,10 +37,10 @@
 **            Receiver input                               : Not inverted
 **            Break generation length                      : 10/11 bits
 **            Receiver                                     : Enabled
-**              RxD                                        : PTA15/SPI0_SCK/UART0_RX/I2S0_RXD0
+**              RxD                                        : ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0
 **              RxD pin signal                             : 
 **            Transmitter                                  : Enabled
-**              TxD                                        : PTA14/SPI0_PCS0/UART0_TX/I2S0_RX_BCLK/I2S0_TXD1
+**              TxD                                        : PTD7/CMT_IRO/UART0_TX/FTM0_CH7/FTM0_FLT1
 **              TxD pin signal                             : 
 **            Flow control                                 : Hardware (RTS/CTS)
 **              CTS                                        : Disabled

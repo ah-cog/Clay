@@ -7,8 +7,8 @@
 **     Processor   : MK20DX256VLL7
 **     Component   : ConsoleIO
 **     Version     : Component 01.016, Driver 01.00, CPU db: 3.00.000
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-21, 02:47, # CodeGen: 2
+**     Compiler    : CodeWarrior ARM C Compiler
+**     Date/Time   : 2015-08-30, 19:57, # CodeGen: 6
 **     Abstract    :
 **         This component generates low-level methods for redirecting console I/O to the selected UART.
 **         These methods are typically used by printf()/scanf() methods.

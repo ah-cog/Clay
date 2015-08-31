@@ -79,12 +79,7 @@
           </boolgroup>
         </list>
         <list name="Shared Reset settings" v="1">
-          <boolgroup name="Reset control" v="Enabled">
-            <Reset_pin v="RESET_b" />
-            <Filter_in_STOP v="Disabled" />
-            <Filter_in_RUN_WAIT v="Disabled" />
-            <Filter_width v="1" />
-          </boolgroup>
+          <boolgroup name="Reset control" v="Disabled" />
         </list>
         <list name="Shared JTAG settings" v="1">
           <group name="Debug interface (JTAG)">
@@ -279,9 +274,9 @@
         <event name="OnLLSWakeUpINT" v="don&amp;apos;t generate code" />
       </list>
     </Events>
-    <Compiler v="GNU C Compiler" />
+    <Compiler v="CodeWarrior ARM C Compiler" />
     <CompilerProperties>
-      <Compiler v="GNU C Compiler" />
+      <Compiler v="CodeWarrior ARM C Compiler" />
       <enumgroup name="Unhandled vectors" v="One handler for all">
         <Unhandled_int_code>
           <StrgList><![CDATA[/* This code can be changed using the CPU component property "Build Options / Unhandled int code" */
@@ -303,12 +298,9 @@ PE_DEBUGHALT();
       <boolgroup name="Generate debugger files" v="yes">
         <Generate_mem_file v="yes" />
       </boolgroup>
-      <group name="Startup">
-        <Add_startup_file v="no" />
-      </group>
       <boolgroup name="Generate linker file" v="yes">
         <Stack_size v="1024" />
-        <Heap_size v="0" />
+        <Heap_size v="1024" />
         <Set_memory_segments_to_default v="Click to set default &amp;gt;" />
         <Default_memory_for_interrupts v="INTERNAL RAM" />
         <Default_memory_for_code v="INTERNAL RAM" />
@@ -368,14 +360,14 @@ PE_DEBUGHALT();
                 <enumgroup name="MCGIRCLK source" v="Slow">
                   <EmptySection_DummyValue />
                 </enumgroup>
-                <MCGIRCLK_clock__MHz_ v="0.032768000000" />
+                <MCGIRCLK_clock__MHz_ v="0" />
               </group>
               <group name="External reference clock">
                 <OSC0ERCLK_clock v="Enabled" />
                 <OSC0ERCLK_in_stop v="Disabled" />
-                <OSC0ERCLK_clock__MHz_ v="0" />
+                <OSC0ERCLK_clock__MHz_ v="0.032768000000" />
                 <ERCLK32K_clock_source v="Auto select" />
-                <ERCLK32K__clock__kHz_ v="0.001000000000" />
+                <ERCLK32K__clock__kHz_ v="0.032768000000" />
               </group>
               <group name="MCG settings">
                 <enumgroup name="MCG mode" v="FEI">
@@ -384,7 +376,7 @@ PE_DEBUGHALT();
                 <MCG_output_clock v="FLL clock" />
                 <MCG_output__MHz_ v="20.971520000000" />
                 <MCG_external_ref__clock_source v="System oscillator 0" />
-                <MCG_external_ref__clock__MHz_ v="0" />
+                <MCG_external_ref__clock__MHz_ v="0.032768000000" />
                 <Clock_monitor v="Disabled" />
                 <group name="FLL settings">
                   <FLL_module v="Enabled" />
@@ -399,7 +391,7 @@ PE_DEBUGHALT();
                 <group name="PLL 0 settings">
                   <PLL_module v="Disabled" />
                   <PLL_module_in_Stop v="Disabled" />
-                  <PLL_output__MHz_ v="0" />
+                  <PLL_output__MHz_ v="100" />
                   <Reference_clock_divider v="Auto select" />
                   <PLL_reference_clock__MHz_ v="1" />
                   <Multiplication_factor v="Auto select" />
@@ -591,9 +583,7 @@ PE_DEBUGHALT();
             <Bandgap_buffer v="Disabled" />
             <Bandgap_buffer_in_VLPx v="Disabled" />
             <group name="LVD interrupt">
-              <Interrupt v="INT_LVD_LVW" />
-              <Interrupt_request v="Disabled" />
-              <Interrupt_priority v="0 (Highest)" />
+              <Interrupt v="" />
               <LVD_interrupt v="Disabled" />
               <LVW_interrupt v="Disabled" />
             </group>
@@ -609,7 +599,7 @@ PE_DEBUGHALT();
       <list name="Shared CPU interrupts/resets" v="1">
         <group name="CPU interrupts/resets">
           <boolgroup name="NMI interrupt" v="Enabled">
-            <Interrupt v="INT_NMI" />
+            <Interrupt v="" />
           </boolgroup>
           <boolgroup name="Hard Fault" v="Disabled" />
           <boolgroup name="Bus Fault" v="Disabled" />
@@ -650,10 +640,10 @@ PE_DEBUGHALT();
           <boolgroup name="Very low power mode" v="Disabled" />
           <enumgroup name="Clock source setting" v="configuration 0">
             <MCG_mode v="FEI" />
-            <MCG_output__MHz_ v="20.971520000000" />
-            <MCGIRCLK_clock__MHz_ v="0.032768" />
-            <OSCERCLK_clock__MHz_ v="0" />
-            <ERCLK32K__clock__kHz_ v="0.001" />
+            <MCG_output__MHz_ v="23.986176000000" />
+            <MCGIRCLK_clock__MHz_ v="0.0" />
+            <OSCERCLK_clock__MHz_ v="0.032768" />
+            <ERCLK32K__clock__kHz_ v="0.032768" />
             <MCGFFCLK__kHz_ v="32.768" />
           </enumgroup>
           <group name="System clocks">
@@ -666,7 +656,7 @@ PE_DEBUGHALT();
             <Flash_clock_prescaler v="Auto select" />
             <Flash_clock v="10.485760000000" />
             <enumgroup name="PLL/FLL clock selection" v="FLL clock">
-              <Clock_frequency__MHz_ v="20.971520000000" />
+              <Clock_frequency__MHz_ v="23.986176000000" />
             </enumgroup>
           </group>
         </group>
@@ -732,7 +722,7 @@ PE_DEBUGHALT();
         <Generate_mem_file v="yes" />
       </boolgroup>
       <group name="Startup">
-        <Add_startup_file v="no" />
+        <Add_startup_file v="yes" />
       </group>
       <boolgroup name="Generate linker file" v="yes">
         <Stack_size v="1024" />
@@ -810,10 +800,10 @@ PE_DEBUGHALT();
         <Receiver_input v="Not inverted" />
         <Break_generation_length v="10/11 bits" />
         <boolgroup name="Receiver" v="Enabled">
-          <RxD v="PTA15/SPI0_SCK/UART0_RX/I2S0_RXD0" />
+          <RxD v="ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0" />
         </boolgroup>
         <boolgroup name="Transmitter" v="Enabled">
-          <TxD v="PTA14/SPI0_PCS0/UART0_TX/I2S0_RX_BCLK/I2S0_TXD1" />
+          <TxD v="PTD7/CMT_IRO/UART0_TX/FTM0_CH7/FTM0_FLT1" />
         </boolgroup>
         <enumgroup name="Flow control" v="Hardware (RTS/CTS)">
           <boolgroup name="CTS" v="Disabled" />
