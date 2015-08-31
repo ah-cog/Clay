@@ -37,7 +37,7 @@
 #include "CsIO1.h"
 #include "IO1.h"
 #include "AS1.h"
-#include "RxBuf.h"
+#include "ESP8266_RxBuf.h"
 
 #ifdef __cplusplus
 extern "C" {

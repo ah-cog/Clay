@@ -988,7 +988,7 @@ PE_DEBUGHALT();
     <Enabled v="Y" />
     <Properties>
       <Component_name v="RxBuf" />
-      <Buffer_Size v="64" />
+      <Buffer_Size v="32" />
     </Properties>
     <Methods>
       <Put v="generate code" />

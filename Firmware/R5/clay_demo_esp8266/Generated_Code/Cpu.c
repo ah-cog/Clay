@@ -7,7 +7,7 @@
 **     Version     : Component 01.000, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-30, 22:00, # CodeGen: 0
+**     Date/Time   : 2015-08-31, 16:09, # CodeGen: 6
 **     Abstract    :
 **
 **     Settings    :
@@ -63,7 +63,7 @@
 #include "CsIO1.h"
 #include "IO1.h"
 #include "AS1.h"
-#include "RxBuf.h"
+#include "ESP8266_RxBuf.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -275,8 +275,8 @@ void PE_low_level_init(void)
   NVICIP20 = NVIC_IP_PRI20(0x00);
   /* ### Serial_LDD "IO1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)IO1_Init(NULL);
-  /* ### RingBufferUInt8 "RxBuf" init code ... */
-  RxBuf_Init();
+  /* ### RingBufferUInt8 "ESP8266_RxBuf" init code ... */
+  ESP8266_RxBuf_Init();
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }

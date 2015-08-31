@@ -3,8 +3,8 @@
   <Header>
     <Name>clay_demo_esp8266</Name>
     <SavedBy>mokogobo</SavedBy>
-    <ModificationStamp>69</ModificationStamp>
-    <Date>2015-08-30</Date>
+    <ModificationStamp>74</ModificationStamp>
+    <Date>2015-08-31</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>31</ProjectCompNumb>
+    <ProjectCompNumb>37</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -22486,7 +22486,7 @@
   </Bean>
   <Bean>
     <BeanType>RingBufferUInt8</BeanType>
-    <Name>RxBuf</Name>
+    <Name>ESP8266_RxBuf</Name>
     <CompNumb>18</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
@@ -22501,7 +22501,7 @@
         <ItemSymbol>DeviceName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>RxBuf</Value>
+        <Value>ESP8266_RxBuf</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
@@ -22599,7 +22599,7 @@
         <ItemSymbol>OnBufferFullName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>RxBuf_OnBufferFull</Value>
+        <Value>ESP8266_RxBuf_OnBufferFull</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
       <ItemState>
@@ -22617,7 +22617,7 @@
         <ItemSymbol>OnBufferEmptyName</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>RxBuf_OnBufferEmpty</Value>
+        <Value>ESP8266_RxBuf_OnBufferEmpty</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
       </ItemState>
     </Events>

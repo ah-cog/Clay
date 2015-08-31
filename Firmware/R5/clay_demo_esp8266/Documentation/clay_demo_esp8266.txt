@@ -23,12 +23,12 @@ Module "AS1"       (component Serial_LDD)
                 finishes immediately after calling it - it doesn't wait the end of data reception. Use event <OnBlockReceived> 
                 to check the end of data reception.
 
-Module "RxBuf"     (component RingBufferUInt8)
-   - RxBuf_Put -Puts a new element into the buffer
-   - RxBuf_Get -Removes an element from the buffer
-   - RxBuf_NofElements -Returns the actual number of elements in the buffer.
-   - RxBuf_NofFreeElements -Returns the actual number of free elements/space in the buffer.
-   - RxBuf_Init -Initializes the data structure
+Module "ESP8266_RxBuf" (component RingBufferUInt8)
+   - ESP8266_RxBuf_Put -Puts a new element into the buffer
+   - ESP8266_RxBuf_Get -Removes an element from the buffer
+   - ESP8266_RxBuf_NofElements -Returns the actual number of elements in the buffer.
+   - ESP8266_RxBuf_NofFreeElements -Returns the actual number of free elements/space in the buffer.
+   - ESP8266_RxBuf_Init -Initializes the data structure
 
 Module "Cpu"       (component MK20DX256LL7)
 

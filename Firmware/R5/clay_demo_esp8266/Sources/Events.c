@@ -37,6 +37,7 @@ extern "C" {
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
+#include "ESP8266.h"
 
 /*
 ** ===================================================================
@@ -74,7 +75,7 @@ void Cpu_OnNMIINT(void)
 /* ===================================================================*/
 void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
-	UART_Desc *ptr = (UART_Desc*) UserDataPtr;
+	ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 
 	(void) ptr->rxPutFct (ptr->rxChar);
 	(void) AS1_ReceiveBlock (ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof (ptr->rxChar));
@@ -98,7 +99,7 @@ void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 /* ===================================================================*/
 void AS1_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
-	UART_Desc *ptr = (UART_Desc*) UserDataPtr;
+	ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 	ptr->isSent = TRUE;
 	
 //	printf ("sent byte: %s\r\n", UserDataPtr);

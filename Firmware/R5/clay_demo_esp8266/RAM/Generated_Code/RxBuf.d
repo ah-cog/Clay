@@ -13,7 +13,7 @@ Generated_Code/RxBuf.o: ../Generated_Code/RxBuf.c \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_lib_ext1.h \
  ../Generated_Code/PE_Error.h ../Generated_Code/PE_Const.h \
  ../Generated_Code/IO_Map.h \
- Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_bridge/Static_Code/IO_Map/MK20D7.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_esp8266/Static_Code/IO_Map/MK20D7.h \
  ../Generated_Code/Cpu.h
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix:
@@ -48,6 +48,6 @@ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_lib_ext1
 
 ../Generated_Code/IO_Map.h:
 
-Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_bridge/Static_Code/IO_Map/MK20D7.h:
+Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_esp8266/Static_Code/IO_Map/MK20D7.h:
 
 ../Generated_Code/Cpu.h:

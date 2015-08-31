@@ -4,14 +4,14 @@
 -g3
 -gdwarf-2
 -gstrict-dwarf
--I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_bridge/Project_Headers"
--I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_bridge/Project_Settings/Startup_Code"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_esp8266/Project_Headers"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_esp8266/Project_Settings/Startup_Code"
 -I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include"
 -I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
--I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_bridge/Generated_Code"
--I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_bridge/Sources"
--I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_bridge/Static_Code/PDD"
--I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_bridge/Static_Code/IO_Map"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_esp8266/Generated_Code"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_esp8266/Sources"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_esp8266/Static_Code/PDD"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_esp8266/Static_Code/IO_Map"
 -O0
 -ffunction-sections
 -fdata-sections
