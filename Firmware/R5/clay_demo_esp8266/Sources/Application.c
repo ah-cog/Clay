@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "ESP8266_RxBuf.h"
 #include "AS1.h"
 #include "ESP8266.h"
 #include <stdlib.h>
@@ -34,42 +33,21 @@ void APP_Run (void) {
 		// printf ("%s", (unsigned char*) buffer); // Echo the entered text
 		// fflush (stdout);
 		
-		// TODO: Process the buffer.
-		
 		// Relay buffer to the bridged serial peripheral (UART0)
 		
 		ESP8266_SendString ((unsigned char*) buffer, &deviceData); // Send the data to the bridged serial peripheral (UART0)
 		
 		// int rxBufferSize = (int) RxBuf_NofElements (); // Check if any data has been received
 		// printf ("Received %d bytes:\r\n", rxBufferSize);
-		if (ESP8266_RxBuf_NofElements () > 0) { // Check if any data has been received
+		if (ESP8266_Incoming_Buffer_Size () > 0) { // Check if any data has been received
 			// SendString ((unsigned char*)"echo: ", &deviceData); // Print "echo: " to the device. This will be followed by what was received from the device, echoing it.
-			while (ESP8266_RxBuf_NofElements() > 0) { // Read each of the received characters from the buffer and send them to the device.
+			while (ESP8266_Incoming_Buffer_Size () > 0) { // Read each of the received characters from the buffer and send them to the device.
 				unsigned char ch;
-				(void) ESP8266_RxBuf_Get (&ch); // Get the next character from the buffer.
+				(void) ESP8266_Get_Incoming_Character (&ch); // Get the next character from the buffer.
 				printf ("%c", (unsigned char) ch);
 			}
 			// printf ("\r\n");
 		}
 		// fflush (stdout);
 	}
-	
-	/*
-	// Receive incoming data from the buffer and echo it back
-//	SendString((unsigned char*)"Hello World\r\n", &deviceData); // Send to the device
-	while (1) {
-		int rxBufferSize = (int) RxBuf_NofElements (); // Check if any data has been received
-		if (RxBuf_NofElements() != 0) {
-//		if (rxBufferSize != 0) {
-			printf ("Received %d bytes: ", rxBufferSize);
-			// SendString ((unsigned char*)"echo: ", &deviceData); // Print "echo: " to the device. This will be followed by what was received from the device, echoing it.
-			while (RxBuf_NofElements() != 0) { // Read each of the received characters from the buffer and send them to the device.
-				unsigned char ch;
-				(void) RxBuf_Get (&ch);
-				SendChar (ch, &deviceData);
-				printf ("%c\r\n", (unsigned char) ch);
-			}
-		}
-	}
-	*/
 }
