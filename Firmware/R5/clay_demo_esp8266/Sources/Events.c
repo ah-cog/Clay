@@ -74,8 +74,6 @@ void Cpu_OnNMIINT(void)
 /* ===================================================================*/
 void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
-  /* Write your code here ... */
-
 	UART_Desc *ptr = (UART_Desc*) UserDataPtr;
 
 	(void) ptr->rxPutFct (ptr->rxChar);
@@ -100,7 +98,6 @@ void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 /* ===================================================================*/
 void AS1_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
-  /* Write your code here ... */
 	UART_Desc *ptr = (UART_Desc*) UserDataPtr;
 	ptr->isSent = TRUE;
 	

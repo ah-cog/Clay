@@ -54,32 +54,7 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  /* For example: for(;;) { } */
-  
   APP_Run ();
-  
-//  for (;;) {
-//	  printf ("Clay");
-//	  
-//	  // "REPL" framework
-//	  for (;;) {
-//		  i = 0;
-//		  flag = 0;
-//		  ch = (int) 0;
-//		  printf (">");
-//		  do {
-//			  ch = getchar (); // ch = getc (stdin);
-//			  buffer[i++] = ch; // Append the character to the buffer.
-//			  putchar (ch); // Echo the character.
-//			  if (ch == '\n') { /* printf ("<newline>"); */ flag = 1; } // Show when a newline character is entered.
-//		  } while (flag == 0);
-//		  buffer[i] = '\0'; // Terminate the string
-//		  printf ("%s", buffer);
-//		  
-//		  // TODO: Process the buffer.
-//  
-//	  }
-//  }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

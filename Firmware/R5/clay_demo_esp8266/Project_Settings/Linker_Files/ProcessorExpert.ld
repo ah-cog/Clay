@@ -4,13 +4,13 @@
 /*##                                   */
 /*##     Filename  : ProcessorExpert.ld */
 /*##                                   */
-/*##     Project   : clay_demo_serial_bridge */
+/*##     Project   : clay_demo_esp8266 */
 /*##                                   */
 /*##     Processor : MK20DX256VLL7     */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2015-08-30, 19:56, # CodeGen: 62 */
+/*##     Date/Time : 2015-08-30, 22:00, # CodeGen: 0 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */

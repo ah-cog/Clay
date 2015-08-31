@@ -7,7 +7,7 @@ static UART_Desc deviceData;
 
 static void SendChar(unsigned char ch, UART_Desc *desc) {
 	desc -> isSent = FALSE;
-	while (AS1_SendBlock(desc -> handle, (LDD_TData*)&ch, 1) != ERR_OK) {
+	while (AS1_SendBlock(desc -> handle, (LDD_TData*) &ch, 1) != ERR_OK) {
 
 	}
 	while (!desc -> isSent) {
@@ -15,13 +15,13 @@ static void SendChar(unsigned char ch, UART_Desc *desc) {
 	}
 }
 
-static void SendString(const unsigned char *str, UART_Desc *desc) {
+static void SendString (const unsigned char *str, UART_Desc *desc) {
 	while (*str != '\0') {
 		SendChar(*str++, desc);
 	}
 }
 
-static void Init(void) {
+static void Init (void) {
 	deviceData.handle = AS1_Init(&deviceData);
 	deviceData.isSent = FALSE;
 	deviceData.rxChar = '\0';
@@ -61,7 +61,7 @@ void APP_Run (void) {
 		buffer[i - 1] = '\r';
 		buffer[i]     = '\n';
 		buffer[i + 1] = '\0'; // Terminate the string
-		// printf ("%s", (unsigned char*)buffer); // Echo the entered text
+		// printf ("%s", (unsigned char*) buffer); // Echo the entered text
 		// fflush (stdout);
 		
 		// TODO: Process the buffer.
