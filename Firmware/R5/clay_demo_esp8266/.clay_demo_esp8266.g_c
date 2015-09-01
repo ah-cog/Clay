@@ -368,7 +368,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_demo_esp8266_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>74</ProjectModificationStamp>
+    <ProjectModificationStamp>75</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>

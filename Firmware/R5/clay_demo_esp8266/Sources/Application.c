@@ -35,19 +35,21 @@ void APP_Run (void) {
 		
 		// Relay buffer to the bridged serial peripheral (UART0)
 		
-		ESP8266_SendString ((unsigned char*) buffer, &deviceData); // Send the data to the bridged serial peripheral (UART0)
+		ESP8266_Send_String_for_Response ((unsigned char*) buffer, &deviceData);
 		
-		// int rxBufferSize = (int) RxBuf_NofElements (); // Check if any data has been received
-		// printf ("Received %d bytes:\r\n", rxBufferSize);
-		if (ESP8266_Incoming_Buffer_Size () > 0) { // Check if any data has been received
-			// SendString ((unsigned char*)"echo: ", &deviceData); // Print "echo: " to the device. This will be followed by what was received from the device, echoing it.
-			while (ESP8266_Incoming_Buffer_Size () > 0) { // Read each of the received characters from the buffer and send them to the device.
-				unsigned char ch;
-				(void) ESP8266_Get_Incoming_Character (&ch); // Get the next character from the buffer.
-				printf ("%c", (unsigned char) ch);
-			}
-			// printf ("\r\n");
-		}
-		// fflush (stdout);
+//		ESP8266_Send_String ((unsigned char*) buffer, &deviceData); // Send the data to the bridged serial peripheral (UART0)
+//		
+//		// int rxBufferSize = (int) RxBuf_NofElements (); // Check if any data has been received
+//		// printf ("Received %d bytes:\r\n", rxBufferSize);
+//		if (ESP8266_Incoming_Buffer_Size () > 0) { // Check if any data has been received
+//			// SendString ((unsigned char*)"echo: ", &deviceData); // Print "echo: " to the device. This will be followed by what was received from the device, echoing it.
+//			while (ESP8266_Incoming_Buffer_Size () > 0) { // Read each of the received characters from the buffer and send them to the device.
+//				unsigned char ch;
+//				(void) ESP8266_Get_Incoming_Character (&ch); // Get the next character from the buffer.
+//				printf ("%c", (unsigned char) ch);
+//			}
+//			// printf ("\r\n");
+//		}
+//		// fflush (stdout);
 	}
 }

@@ -11,6 +11,9 @@
 #include "PE_Types.h"
 #include "PE_LDD.h"
 
+#define SSID_DEFAULT "joopal"
+#define PASSWORD_DEFAULT "Cassandra2048"
+
 typedef struct {
 	LDD_TDeviceData *handle;
 	volatile uint8_t isSent;
@@ -21,7 +24,12 @@ typedef struct {
 ESP8266_UART_Device deviceData;
 
 void ESP8266_Init ();
-void ESP8266_SendChar (unsigned char ch, ESP8266_UART_Device *desc);
-void ESP8266_SendString (const unsigned char *str, ESP8266_UART_Device *desc);
+void ESP8266_Send_Char (unsigned char ch, ESP8266_UART_Device *desc);
+void ESP8266_Send_String (const unsigned char *str, ESP8266_UART_Device *desc);
+
+byte ESP8266_Incoming_Buffer_Size ();
+byte ESP8266_Get_Incoming_Character (byte *elemP);
+
+void ESP8266_Send_String_for_Response (const unsigned char *str, ESP8266_UART_Device *desc);
 
 #endif /* ESP8266_H_ */
