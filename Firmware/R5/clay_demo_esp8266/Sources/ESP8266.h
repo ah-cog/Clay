@@ -27,9 +27,11 @@ void ESP8266_Init ();
 void ESP8266_Send_Char (unsigned char ch, ESP8266_UART_Device *desc);
 void ESP8266_Send_String (const unsigned char *str, ESP8266_UART_Device *desc);
 
-byte ESP8266_Incoming_Buffer_Size ();
+byte ESP8266_Get_Incoming_Buffer_Size ();
 byte ESP8266_Get_Incoming_Character (byte *elemP);
 
 void ESP8266_Send_String_for_Response (const unsigned char *str, ESP8266_UART_Device *desc);
+
+void ESP8266_Start_Web_Server ();
 
 #endif /* ESP8266_H_ */

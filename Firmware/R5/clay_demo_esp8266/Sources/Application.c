@@ -35,7 +35,9 @@ void APP_Run (void) {
 		
 		// Relay buffer to the bridged serial peripheral (UART0)
 		
-		ESP8266_Send_String_for_Response ((unsigned char*) buffer, &deviceData);
+//		ESP8266_Send_String_for_Response ((unsigned char*) buffer, &deviceData);
+		
+		ESP8266_Start_Web_Server ();
 		
 //		ESP8266_Send_String ((unsigned char*) buffer, &deviceData); // Send the data to the bridged serial peripheral (UART0)
 //		
