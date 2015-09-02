@@ -117,34 +117,32 @@ void ESP8266_Send_String_for_Response (const unsigned char *command, ESP8266_UAR
 	
 }
 
+#define RESPONSE_ERROR    0 // Defined this as 0 (FALSE) so it can be used in conditional statements when returned.
+#define RESPONSE_OK       1 // Defined this as 1 (TRUE) so it can be used in conditional statements when returned.
+#define RESPONSE_UNKNOWN -1
+#define RESPONSE_TIMEOUT -2
 
-// responseBuffer : pointer to the buffer to search for one of the expected responses
-// bufferSize : the current size of the responseBuffer
+// buffer : Pointer to the "response buffer" to search for one of the expected responses. The "response buffer" is where the characters received from the ESP8266 in response to a command are stored temporarily for processing.
+// bufferSize : The current size of the response buffer <code>buffer</code>.
 //
 // returns a code corresponding to an expected response (e.g., COMMAND_RESPONSE_OK, COMMAND_RESPONSE_ERROR, etc.)
 //
-int8_t ESP8266_Search_For_Response (const char *responseBuffer, int bufferSize) {
-
-	uint8_t receivedResponse = FALSE;
+int8_t ESP8266_Search_For_Response (const char *buffer, int bufferSize) {
 	
 	// Check if the response from the ESP8266 matches one of the expected responses for the command according to the specification (e.g., as defined by Espressif for the AT command set for this firmware version).
-	if (strlen (responseBuffer) >= strlen ("\r\r\n\r\nOK\r\n")) { // Wait until enough characters have been buffered to search the string for the terminal character sequence.
-		if (strncmp ((char *) (responseBuffer + (strlen (responseBuffer) - strlen ("\r\r\n\r\nOK\r\n"))), "\r\r\n\r\nOK\r\n", (strlen (responseBuffer) - strlen ("\r\r\n\r\nOK\r\n"))) == 0) { // if (strncmp ((char *) (response + commandLength), "\r\r\n\r\nOK\r\n", strlen ("\r\r\n\r\nOK\r\n")) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n". // if (strncmp (response, "AT\r\n\r\nOK\r\n", 10) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n".
-			printf ("Got OK response!\r\n");
-			receivedResponse = TRUE;
-		} else if (strncmp ((char *) (responseBuffer + (strlen (responseBuffer) - strlen ("\r\r\n\r\nERROR\r\n"))), "\r\r\n\r\nERROR\r\n", (strlen (responseBuffer) - strlen ("\r\r\n\r\nERROR\r\n"))) == 0) { // Error response is "<command>\r\nERROR\r\n". (NOTE: Subtract 2 from str length to remove the \r\n from the entered string, such as "ART\r\n" when the intent was "AT\r\n".)
-			printf ("Got ERROR response!\r\n");
-			receivedResponse = TRUE;
+	if (strlen (buffer) >= strlen ("\r\r\n\r\nOK\r\n")) { // Wait until enough characters have been buffered to search the string for the terminal character sequence.
+		if (strncmp ((char *) (buffer + (strlen (buffer) - strlen ("\r\r\n\r\nOK\r\n"))), "\r\r\n\r\nOK\r\n", (strlen (buffer) - strlen ("\r\r\n\r\nOK\r\n"))) == 0) { // if (strncmp ((char *) (response + commandLength), "\r\r\n\r\nOK\r\n", strlen ("\r\r\n\r\nOK\r\n")) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n". // if (strncmp (response, "AT\r\n\r\nOK\r\n", 10) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n".
+			// DEBUG: printf ("Got OK response!\r\n");
+			return RESPONSE_OK;
+		} else if (strncmp ((char *) (buffer + (strlen (buffer) - strlen ("\r\r\n\r\nERROR\r\n"))), "\r\r\n\r\nERROR\r\n", (strlen (buffer) - strlen ("\r\r\n\r\nERROR\r\n"))) == 0) { // Error response is "<command>\r\nERROR\r\n". (NOTE: Subtract 2 from str length to remove the \r\n from the entered string, such as "ART\r\n" when the intent was "AT\r\n".)
+			// DEBUG: printf ("Got ERROR response!\r\n");
+			return RESPONSE_ERROR;
+		} else {
+			// printf ("Received unknown response! Clay will report this message.\r\n");
+			// TODO: If this was executed, then an unhandled response was encountered, so send a message to the Clay team's email address so they can fix it. This probably means the AT command set was changed or wasn't completely implemented.
+			return RESPONSE_UNKNOWN;
 		}
-		
-//		else {
-//			printf ("Received unknown response! Clay will report this message.\r\n");
-//			// TODO: If this was executed, then an unhandled response was encountered, so send a message to the Clay team's email address so they can fix it. This probably means the AT command set was changed or wasn't completely implemented.
-//			receivedResponse = TRUE;
-//		}
 	}
-	
-	return receivedResponse;
 	
 }
 
@@ -153,8 +151,8 @@ int8_t ESP8266_Wait_For_Response () {
 	// Block until receive "OK" or "ERROR" is received, an unknown response was received, or a timeout period has expired.
 	char atCommandResponseBuffer[128] = { 0 }; // TODO: Make this big enough only to store expected responses and only buffer the most recent set of received characters (i.e., shift characters into and out of the "sliding window" buffer).
 	int bufferSize = 0;
-	uint8_t receivedResponse = FALSE;
-	while (receivedResponse == FALSE) {
+	uint8_t commandResponse = RESPONSE_UNKNOWN;
+	while (commandResponse < 0) {
 		
 		// Buffer all incoming characters
 		if (ESP8266_Get_Incoming_Buffer_Size () > 0) { // Check if any data has been received
@@ -163,39 +161,17 @@ int8_t ESP8266_Wait_For_Response () {
 				(void) ESP8266_Get_Incoming_Character (&ch); // Get the next character from the buffer.
 				atCommandResponseBuffer[bufferSize++] = ch; // Store the received character in the buffer.
 				
-				// TODO: Check the buffer after every character to see if an expected response was received. Check this after every character prevents reading characters in the buffer that may be sent in response to a different command.
-				
-				// DEBUG: printf ("%c", (unsigned char) ch);
-				
+				// Check the buffer after every character to see if an expected response was received. Check this after every character prevents reading characters in the buffer that may be sent in response to a different command.
 				// Option 1: Search for an expected response after every character to avoid removing characters from the buffer that aren't associated with this command.
-				receivedResponse = ESP8266_Search_For_Response (atCommandResponseBuffer, bufferSize);
-				if (receivedResponse == TRUE) { break; }
+				commandResponse = ESP8266_Search_For_Response (atCommandResponseBuffer, bufferSize);
+				if (commandResponse >= 0) { break; }
 			}
 		}
 		
 		/*
-		// Option 2:
+		// Option 2: Search for a response after every received character has been buffered.
 		receivedResponse = ESP8266_Search_For_Response (atCommandResponseBuffer, bufferSize);
-		/*
-		
-		/*
-		// Option 3:
-		// Check if the response from the ESP8266 matches one of the expected responses for the command according to the specification (e.g., as defined by Espressif for the AT command set for this firmware version).
-		if (strlen (atCommandResponseBuffer) >= strlen ("\r\r\n\r\nOK\r\n")) { // Wait until enough characters have been buffered to search the string for the terminal character sequence.
-			if (strncmp ((char *) (atCommandResponseBuffer + (strlen (atCommandResponseBuffer) - strlen ("\r\r\n\r\nOK\r\n"))), "\r\r\n\r\nOK\r\n", (strlen (atCommandResponseBuffer) - strlen ("\r\r\n\r\nOK\r\n"))) == 0) { // if (strncmp ((char *) (response + commandLength), "\r\r\n\r\nOK\r\n", strlen ("\r\r\n\r\nOK\r\n")) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n". // if (strncmp (response, "AT\r\n\r\nOK\r\n", 10) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n".
-				printf ("Got OK response!\r\n");
-				receivedResponse = TRUE;
-			} else if (strncmp ((char *) (atCommandResponseBuffer + (strlen (atCommandResponseBuffer) - strlen ("\r\r\n\r\nERROR\r\n"))), "\r\r\n\r\nERROR\r\n", (strlen (atCommandResponseBuffer) - strlen ("\r\r\n\r\nERROR\r\n"))) == 0) { // Error response is "<command>\r\nERROR\r\n". (NOTE: Subtract 2 from str length to remove the \r\n from the entered string, such as "ART\r\n" when the intent was "AT\r\n".)
-				printf ("Got ERROR response!\r\n");
-				receivedResponse = TRUE;
-			} else {
-				printf ("Received unknown response! Clay will report this message.\r\n");
-				// TODO: If this was executed, then an unhandled response was encountered, so send a message to the Clay team's email address so they can fix it. This probably means the AT command set was changed or wasn't completely implemented.
-				receivedResponse = TRUE;
-			}
-		}
 		*/
-		
 	}
 	atCommandResponseBuffer[bufferSize] = '\0'; // Terminate the buffered response string.
 	
