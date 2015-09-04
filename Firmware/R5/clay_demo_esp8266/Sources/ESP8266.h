@@ -35,13 +35,15 @@ byte ESP8266_Get_Incoming_Character (byte *elemP);
 
 #define RESPONSE_ERROR      0 // Defined this as 0 (FALSE) so it can be used in conditional statements when returned.
 #define RESPONSE_OK         1 // Defined this as 1 (TRUE) so it can be used in conditional statements when returned.
+#define RESPONSE_FOUND      1
 #define RESPONSE_NOT_FOUND -1
 #define RESPONSE_TIMEOUT   -2
 
 #define DEFAULT_RESPONSE_TIMEOUT 10000
 
-int8_t ESP8266_Search_For_Response (const char *buffer, int bufferSize);
-int8_t ESP8266_Wait_For_Response (uint32_t milliseconds);
+int8_t ESP8266_Search_For_Response (const char *response, const char *buffer, int bufferSize);
+int8_t ESP8266_Wait_For_Response (const char *response, uint32_t milliseconds);
+// TODO: ESP8266_Wait_For_Responses (...) and return the index for the parameter from the argument list that was returned
 
 int8_t ESP8266_Send_Command_AT ();
 int8_t ESP8266_Send_Command_AT_RST ();

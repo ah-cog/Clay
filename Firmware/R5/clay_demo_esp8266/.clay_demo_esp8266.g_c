@@ -368,7 +368,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_demo_esp8266_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>77</ProjectModificationStamp>
+    <ProjectModificationStamp>103</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -376,10 +376,10 @@
     <GenComponentVersion>01.000</GenComponentVersion>
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1193246258</HeaderAge>
-    <CodeAge>1193247019</CodeAge>
+    <HeaderAge>1193571697</HeaderAge>
+    <CodeAge>1193571697</CodeAge>
     <AsemblAge>-1</AsemblAge>
-    <GenNumMethods>11</GenNumMethods>
+    <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
     <GetClockConfiguration>false</GetClockConfiguration>
     <SetOperationMode>false</SetOperationMode>
@@ -387,6 +387,9 @@
     <DisableInt>false</DisableInt>
     <GetLLSWakeUpFlags>false</GetLLSWakeUpFlags>
     <OpenBackDoor>false</OpenBackDoor>
+    <GetFlexNVMPartitionCode>false</GetFlexNVMPartitionCode>
+    <SetFlexNVMPartition>false</SetFlexNVMPartition>
+    <SetFlexRAMFunction>false</SetFlexRAMFunction>
     <MCGAutoTrim>false</MCGAutoTrim>
     <VLPModeEnable>false</VLPModeEnable>
     <VLPModeDisable>false</VLPModeDisable>
@@ -422,6 +425,8 @@
     <OnLLSWakeUpINT_Selected>0</OnLLSWakeUpINT_Selected>
     <OnLLSWakeUpINT_Name>Cpu_OnLLSWakeUpINT</OnLLSWakeUpINT_Name>
     <OnLLSWakeUpINT_Priority>interrupts disabled</OnLLSWakeUpINT_Priority>
+    <ISR_ISRDefaultName>isr_default</ISR_ISRDefaultName>
+    <ISR_ISRnameINITPC>_startup</ISR_ISRnameINITPC>
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
     <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
@@ -444,8 +449,8 @@
     <GenComponentVersion>01.000</GenComponentVersion>
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1193246258</HeaderAge>
-    <CodeAge>1193247019</CodeAge>
+    <HeaderAge>1193571697</HeaderAge>
+    <CodeAge>1193571697</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -819,7 +824,7 @@
     <GenComponentVersion>01.003</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1193446089</HeaderAge>
+    <HeaderAge>1193566998</HeaderAge>
     <CodeAge>1193247019</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>5</GenNumMethods>
