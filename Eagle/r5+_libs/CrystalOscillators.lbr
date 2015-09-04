@@ -82,6 +82,7 @@
 <wire x1="0.889" y1="0.5334" x2="0.889" y2="-0.5334" width="0.127" layer="21"/>
 <wire x1="0.889" y1="-0.5334" x2="-0.9779" y2="-0.5334" width="0.127" layer="21"/>
 <text x="-1.016" y="0.6096" size="0.4064" layer="25">&gt;NAME</text>
+<circle x="-1.2573" y="-0.3429" radius="0.0635" width="0.127" layer="21"/>
 </package>
 <package name="ABS06">
 <smd name="P$1" x="-0.7112" y="0" dx="1.397" dy="0.762" layer="1" rot="R90"/>

@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.0005" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
@@ -76,11 +76,11 @@
 <smd name="VCC" x="-0.6" y="-0.3" dx="0.6096" dy="0.3048" layer="1" rot="R180"/>
 <smd name="GND" x="0.5" y="0.3" dx="0.6096" dy="0.3048" layer="1" rot="R180"/>
 <smd name="OUT" x="0.5" y="-0.3" dx="0.6096" dy="0.3048" layer="1" rot="R180"/>
-<wire x1="-0.9906" y1="-0.5334" x2="-0.9906" y2="0.5334" width="0.127" layer="21"/>
+<wire x1="-1.0287" y1="-0.5334" x2="-1.0287" y2="0.4953" width="0.127" layer="21"/>
+<wire x1="-1.0287" y1="0.4953" x2="-0.9906" y2="0.5334" width="0.127" layer="21"/>
 <wire x1="-0.9906" y1="0.5334" x2="0.889" y2="0.5334" width="0.127" layer="21"/>
 <wire x1="0.889" y1="0.5334" x2="0.889" y2="-0.5334" width="0.127" layer="21"/>
-<wire x1="0.889" y1="-0.5334" x2="-0.9906" y2="-0.5334" width="0.127" layer="21"/>
-<circle x="-1.1176" y="0.4826" radius="0.002540625" width="0.127" layer="21"/>
+<wire x1="0.889" y1="-0.5334" x2="-1.0287" y2="-0.5334" width="0.127" layer="21"/>
 <text x="-1.0668" y="0.6096" size="0.6096" layer="25">&gt;NAME</text>
 </package>
 <package name="ABS06">
