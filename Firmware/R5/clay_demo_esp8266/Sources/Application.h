@@ -1,6 +1,6 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-void APP_Run (void);
+void Application ();
 
 #endif /* APPLICATION_H */

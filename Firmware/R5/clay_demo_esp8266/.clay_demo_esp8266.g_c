@@ -368,7 +368,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_demo_esp8266_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>75</ProjectModificationStamp>
+    <ProjectModificationStamp>77</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -819,7 +819,7 @@
     <GenComponentVersion>01.003</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1193247018</HeaderAge>
+    <HeaderAge>1193446089</HeaderAge>
     <CodeAge>1193247019</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>5</GenNumMethods>

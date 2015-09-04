@@ -9,6 +9,7 @@
 #include "ESP8266_RxBuf.h"
 
 #include <stdio.h>
+#include <string.h>
 
 // ESP8266.h
 // |- ESP8266_RxBuf.h (ring buffer driver used for buffering incoming data)
@@ -51,108 +52,54 @@ byte ESP8266_Get_Incoming_Character (byte *elemP) {
 	return ESP8266_RxBuf_Get (elemP);
 }
 
-// TODO: Add a timeout so this function will wait for a known response for only a finite amount of time. Return an error if it times out or doesn't receive an expected response.
-void ESP8266_Send_String_for_Response (const unsigned char *command, ESP8266_UART_Device *desc) {
-	int i;
-	char response[64] = { 0 };
-	
-//	int j;
-	int commandLength = strlen (command) - 2; // Subtract 2 to exclude the "\r\n" characters from count.
-//	char OK_response[32] = { 0 };
-//	char ERROR_response[32] = { 0 };
-//	const char *OK_response_body = "\r\n\r\nOK\r\n"; // "\r\n\r\nOK\r\n"
-//	const char *ERROR_response_body = "ERROR\r\n"; // "\r\nERROR\r\n"
-	
-	// TODO: Set up expected response for the command (e.g., "\r\r\n\r\nOK\r\n" is the terminal string for the AT+CWLAP command, so read response until it is received or the timer times out).
-	
-	// TODO: Set up web server
-	// AT // Test device
-	// AT+RST // Reset device
-	// AT+CWJAP="AWS","Codehappy123" // Join access point
-	// AT+CIFSR // Get local IP address
-	
-	ESP8266_Send_String (command, desc);
-	
-	
-	
-	// Wait a few milliseconds for a response
-	for (i = 0; i < 1000000; i++) {} // TODO: Set a timer that times out after some time if no expected response is received.
-	for (i = 0; i < 1000000; i++) {} // TODO: Set a timer that times out after some time if no expected response is received.
-	for (i = 0; i < 1000000; i++) {} // TODO: Set a timer that times out after some time if no expected response is received.
-	
-	
-	
-	// TODO: Read incoming buffer
-	i = 0;
-	if (ESP8266_Get_Incoming_Buffer_Size () > 0) { // Check if any data has been received
-		while (ESP8266_Get_Incoming_Buffer_Size () > 0) { // Read each of the received characters from the buffer and send them to the device.
-			unsigned char ch;
-			(void) ESP8266_Get_Incoming_Character (&ch); // Get the next character from the buffer.
-			response[i++] = ch;
-			printf ("%c", (unsigned char) ch);
-		}
-	}
-	
-//	// Buffer the expected "OK" response strings for comparison.
-//	for (i = 0; i < strlen (str); i++) { OK_response[i] = str[i]; } // Copy entered text to the beginning of the expected response.
-//	for (j = 0; j < strlen (OK_response_body); i++, j++) { OK_response[i] = OK_response_body[j]; } // Copy the constant body of the response into the buffer.
-//	OK_response[i] = '\0'; // Terminate the string.
-//	
-//	// Buffer the expected "ERROR" response strings for comparison.
-//	for (i = 0; i < strlen (str); i++) { ERROR_response[i] = str[i]; } // Copy entered text to the beginning of the expected response.
-//	for (j = 0; j < strlen (ERROR_response_body); i++, j++) { ERROR_response[i] = ERROR_response_body[j]; } // Copy the constant body of the response into the buffer.
-//	ERROR_response[i] = '\0'; // Terminate the string.
-	
-	// TODO: Add alternative check that just skips strlen(str) characters at the beginning of the string and checks for the rest.
-	//       This would eliminate the need for buffering expected responses.
-	
-	if (strncmp ((char *) (response + (strlen (response) - strlen ("\r\r\n\r\nOK\r\n"))), "\r\r\n\r\nOK\r\n", (strlen (response) - strlen ("\r\r\n\r\nOK\r\n"))) == 0) { // if (strncmp ((char *) (response + commandLength), "\r\r\n\r\nOK\r\n", strlen ("\r\r\n\r\nOK\r\n")) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n". // if (strncmp (response, "AT\r\n\r\nOK\r\n", 10) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n".
-		printf ("Got OK response!\r\n");
-	} else if (strncmp ((char *) (response + commandLength), "\r\r\n\r\nERROR\r\n", strlen ("\r\r\n\r\nERROR\r\n")) == 0) { // Error response is "<command>\r\nERROR\r\n". (NOTE: Subtract 2 from str length to remove the \r\n from the entered string, such as "ART\r\n" when the intent was "AT\r\n".)
-		printf ("Got ERROR response!\r\n");
-	} else {
-		printf ("Received unknown response! Clay will report this message.\r\n");
-		// TODO: If this was executed, then an unhandled response was encountered, so send a message to the Clay team's email address so they can fix it. This probably means the AT command set was changed or wasn't completely implemented.
-	}
-	
-}
-
-#define RESPONSE_ERROR    0 // Defined this as 0 (FALSE) so it can be used in conditional statements when returned.
-#define RESPONSE_OK       1 // Defined this as 1 (TRUE) so it can be used in conditional statements when returned.
-#define RESPONSE_UNKNOWN -1
-#define RESPONSE_TIMEOUT -2
-
 // buffer : Pointer to the "response buffer" to search for one of the expected responses. The "response buffer" is where the characters received from the ESP8266 in response to a command are stored temporarily for processing.
 // bufferSize : The current size of the response buffer <code>buffer</code>.
 //
 // returns a code corresponding to an expected response (e.g., COMMAND_RESPONSE_OK, COMMAND_RESPONSE_ERROR, etc.)
 //
 int8_t ESP8266_Search_For_Response (const char *buffer, int bufferSize) {
+	printf ("\t\tESP8266_Search_For_Response %s\r\n", buffer);
 	
 	// Check if the response from the ESP8266 matches one of the expected responses for the command according to the specification (e.g., as defined by Espressif for the AT command set for this firmware version).
-	if (strlen (buffer) >= strlen ("\r\r\n\r\nOK\r\n")) { // Wait until enough characters have been buffered to search the string for the terminal character sequence.
-		if (strncmp ((char *) (buffer + (strlen (buffer) - strlen ("\r\r\n\r\nOK\r\n"))), "\r\r\n\r\nOK\r\n", (strlen (buffer) - strlen ("\r\r\n\r\nOK\r\n"))) == 0) { // if (strncmp ((char *) (response + commandLength), "\r\r\n\r\nOK\r\n", strlen ("\r\r\n\r\nOK\r\n")) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n". // if (strncmp (response, "AT\r\n\r\nOK\r\n", 10) == 0) { // Success response is "AT\r\r\n\r\nOK\r\n".
-			// DEBUG: printf ("Got OK response!\r\n");
+	if (strlen (buffer) >= strlen (RESPONSE_SIGNATURE_OK)) { // Wait until enough characters have been buffered to search the string for the terminal character sequence.
+		if (strncmp ((char *) (buffer + (strlen (buffer) - strlen (RESPONSE_SIGNATURE_OK))), RESPONSE_SIGNATURE_OK, strlen (RESPONSE_SIGNATURE_OK)) == 0) {
+			printf ("\tGot OK response!\r\n");
 			return RESPONSE_OK;
-		} else if (strncmp ((char *) (buffer + (strlen (buffer) - strlen ("\r\r\n\r\nERROR\r\n"))), "\r\r\n\r\nERROR\r\n", (strlen (buffer) - strlen ("\r\r\n\r\nERROR\r\n"))) == 0) { // Error response is "<command>\r\nERROR\r\n". (NOTE: Subtract 2 from str length to remove the \r\n from the entered string, such as "ART\r\n" when the intent was "AT\r\n".)
-			// DEBUG: printf ("Got ERROR response!\r\n");
-			return RESPONSE_ERROR;
-		} else {
-			// printf ("Received unknown response! Clay will report this message.\r\n");
-			// TODO: If this was executed, then an unhandled response was encountered, so send a message to the Clay team's email address so they can fix it. This probably means the AT command set was changed or wasn't completely implemented.
-			return RESPONSE_UNKNOWN;
 		}
 	}
 	
+	if (strlen (buffer) >= strlen (RESPONSE_SIGNATURE_ERROR)) {
+		if (strncmp ((char *) (buffer + (strlen (buffer) - strlen (RESPONSE_SIGNATURE_ERROR))), RESPONSE_SIGNATURE_ERROR, strlen (RESPONSE_SIGNATURE_ERROR)) == 0) {
+			printf ("\tGot ERROR response!\r\n");
+			return RESPONSE_ERROR;
+		}
+	}
+	
+//	else {
+//				// DEBUG: printf ("Received unknown response! Clay will report this message.\r\n");
+//				// TODO: If this was executed, then an unhandled response was encountered, so send a message to the Clay team's email address so they can fix it. This probably means the AT command set was changed or wasn't completely implemented.
+//				return RESPONSE_NOT_FOUND;
+//			}
+	
+	return RESPONSE_NOT_FOUND;
+	
 }
 
-int8_t ESP8266_Wait_For_Response () {
+int8_t ESP8266_Wait_For_Response (uint32_t milliseconds) {
+	printf ("\tESP8266_Wait_For_Response\r\n");
 	
 	// Block until receive "OK" or "ERROR" is received, an unknown response was received, or a timeout period has expired.
-	char atCommandResponseBuffer[128] = { 0 }; // TODO: Make this big enough only to store expected responses and only buffer the most recent set of received characters (i.e., shift characters into and out of the "sliding window" buffer).
-	int bufferSize = 0;
-	uint8_t commandResponse = RESPONSE_UNKNOWN;
+	char atCommandResponseBuffer[128]; // TODO: Make this big enough only to store expected responses and only buffer the most recent set of received characters (i.e., shift characters into and out of the "sliding window" buffer).
+	int bufferSize;
+	int8_t commandResponse;
+	for (bufferSize = 0; bufferSize < 128; bufferSize++) { atCommandResponseBuffer[bufferSize] = (char) 0; } // Initialize the buffer. This might not be necessary.
+	bufferSize = 0;
+	commandResponse = RESPONSE_NOT_FOUND;
+	
+	// TODO: Start a timer.
+	
 	while (commandResponse < 0) {
+		// TODO: Check timer in while condition and break if timeout period expires.
 		
 		// Buffer all incoming characters
 		if (ESP8266_Get_Incoming_Buffer_Size () > 0) { // Check if any data has been received
@@ -173,46 +120,127 @@ int8_t ESP8266_Wait_For_Response () {
 		receivedResponse = ESP8266_Search_For_Response (atCommandResponseBuffer, bufferSize);
 		*/
 	}
+	bufferSize++;
 	atCommandResponseBuffer[bufferSize] = '\0'; // Terminate the buffered response string.
+	
+//	printf ("%s", atCommandResponseBuffer);
+//	fflush (stdout);
+	
+	// TODO: Return RESPONSE_TIMEOUT if timeout period expires.
+	return commandResponse; // Hack. Replace with suggestion in the TODO on the previous line.
 	
 }
 
 
-void ESP8266_Send_Command_AT () {
-	
+int8_t ESP8266_Send_Command_AT () {
 	printf ("ESP8266_Send_Command_AT\r\n");
 	
-	// Send "AT\r\n" to the ESP8266
-	ESP8266_Send_String ("AT\r\n", &deviceData);
+	int8_t response = RESPONSE_NOT_FOUND;
+	//ESP8266_Send_String ("AT\r\n", &deviceData);
+	if (AS1_SendBlock (deviceData.handle, "AT\r\n", (uint16_t) strlen ((char*) "AT\r\n")) != ERR_OK) {
+		return ERR_FAILED;
+	}
 	
 	// TODO: (Optional) Insert a wait here, if the function isn't consistently reliable.
-	
 	// TODO: Set up a timer that expires after specified amount of time to terminate this operation if the ESP8266 does not respond as expected in a typically timely manner.
 	
-	ESP8266_Wait_For_Response ();
+	response = ESP8266_Wait_For_Response (DEFAULT_RESPONSE_TIMEOUT); // TODO: (New) Handle OK and ERROR here or elsewhere!
+	return response;
+}
+
+int8_t ESP8266_Send_Command_AT_RST () {
+	printf ("ESP8266_Send_Command_AT_RST\r\n");
 	
-	// printf ("Received response:\r\n");
-	// printf ("%s", response);
+	int8_t response = RESPONSE_NOT_FOUND;
+	//ESP8266_Send_String ("AT\r\n", &deviceData);
+	if (AS1_SendBlock (deviceData.handle, "AT+RST\r\n", (uint16_t) strlen ((char*) "AT+RST\r\n")) != ERR_OK) {
+		return ERR_FAILED;
+	}
 	
+	// TODO: (Optional) Insert a wait here, if the function isn't consistently reliable.
+	// TODO: Set up a timer that expires after specified amount of time to terminate this operation if the ESP8266 does not respond as expected in a typically timely manner.
+	
+	response = ESP8266_Wait_For_Response (DEFAULT_RESPONSE_TIMEOUT); // TODO: (New) Handle OK and ERROR here or elsewhere!
+	return response;
+	
+//	ESP8266_Send_String ("AT+RST\r\n", &deviceData);
+	return ESP8266_Wait_For_Response (DEFAULT_RESPONSE_TIMEOUT);
+}
+
+
+int8_t ESP8266_Send_Command_AT_CWMODE (uint8_t mode) {
+	printf ("ESP8266_Send_Command_AT_CWMODE\r\n");
+	
+	if (mode == 1) {
+		ESP8266_Send_String ("AT+CWMODE_CUR=1\r\n", &deviceData);
+	} else if (mode == 2) {
+		ESP8266_Send_String ("AT+CWMODE_CUR=2\r\n", &deviceData);
+	} else if (mode == 3) {
+		ESP8266_Send_String ("AT+CWMODE_CUR=3\r\n", &deviceData);
+	} else {
+		return -3; // TODO: Create a #define directive for this.
+	}
+	
+	return ESP8266_Wait_For_Response (DEFAULT_RESPONSE_TIMEOUT);
+}
+
+
+int8_t ESP8266_Send_Command_AT_CWJAP (const char *ssid, const char *password) {
+	printf ("ESP8266_Send_Command_AT_CWJAP\r\n");
+	
+	ESP8266_Send_String ("AT+CWJAP=\"AWS\",\"Codehappy123\"\r\n", &deviceData);
+	
+	return ESP8266_Wait_For_Response (DEFAULT_RESPONSE_TIMEOUT);
 }
 
 
 void ESP8266_Start_Web_Server () {
-	int i;
-	char response[64] = { 0 };
+	// DEBUG: printf ("ESP8266_Start_Web_Server\r\n");
+	
+//	int i;
+//	char ch;
+//	char response[64] = { 0 };
+	int8_t status = 0;
 	
 	// TODO: Set up expected response for the command (e.g., "\r\r\n\r\nOK\r\n" is the terminal string for the AT+CWLAP command, so read response until it is received or the timer times out).
 	
 	// TODO: Set up web server
 	// AT // Test device
 	// AT+RST // Reset device
+	// AT+CWMODE=3 // Set AP mode
 	// AT+CWJAP="AWS","Codehappy123" // Join access point
 	// AT+CIFSR // Get local IP address
 	// AT+CIPMUX=1 // Configure for multiple connections
 	// AT+CIPSERVER=1,80 // Turn server on port 80
 	// NOTE: At this point start looking for +IPD
 	
-	ESP8266_Send_Command_AT (); // ESP8266_Send_String ("AT\r\n", desc);
+//	if (ESP8266_Send_Command_AT_RST () > 0) { // ESP8266_Send_String ("AT\r\n", desc);
+//		printf ("ESP8266 reset successful.\r\n");
+//	} else {
+//		printf ("ESP8266 reset error.\r\n");
+//	}
+	
+	status = ESP8266_Send_Command_AT ();
+	if (status > 0) { // ESP8266_Send_String ("AT\r\n", desc);
+		printf ("ESP8266 online.\r\n");
+	} else {
+		printf ("ESP8266 not responding.\r\n");
+	}
+	
+//	if ((status = ESP8266_Send_Command_AT_CWMODE (3)) > 0) {
+//		printf ("ESP8266 mode set.\r\n");
+//	} else {
+//		printf ("ESP8266 mode NOT set.\r\n");
+//	}
+//	
+//	if ((status = ESP8266_Send_Command_AT_CWJAP (SSID_DEFAULT, PASSWORD_DEFAULT)) > 0) {
+//		printf ("ESP8266 joined access point.\r\n");
+//	} else {
+//		printf ("ESP8266 could NOT join access point.\r\n");
+//	}
+	
+	
+	
 
 	
 }

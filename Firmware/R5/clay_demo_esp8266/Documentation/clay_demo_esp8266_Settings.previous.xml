@@ -984,10 +984,10 @@ PE_DEBUGHALT();
       <event name="OnTxComplete" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
-  <Bean name="RxBuf" type="RingBufferUInt8">
+  <Bean name="ESP8266_RxBuf" type="RingBufferUInt8">
     <Enabled v="Y" />
     <Properties>
-      <Component_name v="RxBuf" />
+      <Component_name v="ESP8266_RxBuf" />
       <Buffer_Size v="32" />
     </Properties>
     <Methods>

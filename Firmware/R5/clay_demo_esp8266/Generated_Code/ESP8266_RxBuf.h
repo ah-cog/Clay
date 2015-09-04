@@ -6,7 +6,7 @@
 **     Component   : RingBufferUInt8
 **     Version     : Component 01.003, Driver 01.00, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-31, 16:09, # CodeGen: 6
+**     Date/Time   : 2015-09-02, 17:22, # CodeGen: 9
 **     Abstract    :
 **
 **     Settings    :
@@ -52,7 +52,7 @@
 #include "Cpu.h"
 
 
-#define ESP8266_RxBuf_BUF_SIZE   32  /* number of elements in the buffer */
+#define ESP8266_RxBuf_BUF_SIZE   64  /* number of elements in the buffer */
 
 
 byte ESP8266_RxBuf_Put(byte elem);

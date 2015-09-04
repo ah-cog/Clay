@@ -3,8 +3,8 @@
   <Header>
     <Name>clay_demo_esp8266</Name>
     <SavedBy>mokogobo</SavedBy>
-    <ModificationStamp>74</ModificationStamp>
-    <Date>2015-08-31</Date>
+    <ModificationStamp>76</ModificationStamp>
+    <Date>2015-09-03</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>37</ProjectCompNumb>
+    <ProjectCompNumb>40</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -22509,7 +22509,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>32</Value>
+        <Value>64</Value>
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         <Base>DEC</Base>
       </ItemState>
