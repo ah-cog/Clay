@@ -64,11 +64,38 @@ byte ESP8266_Get_Incoming_Character (byte *elemP) {
 int8_t ESP8266_Search_For_Response (const char *response, const char *buffer, int bufferSize) {
 	printf ("\t\tESP8266_Search_For_Response \"%s\" in \"%s\" (bufferSize: %d)\r\n", response, buffer, bufferSize);
 	
+	uint8_t found = FALSE;
+	int i, j;
+	
 	if (bufferSize >= strlen (response)) { // Wait until enough characters have been buffered to search the string for the terminal character sequence.
-		if (strncmp ((char *) (buffer + (bufferSize - strlen (response))), response, strlen (response)) == 0) {
-			printf ("\tFound \"%s\" response.\r\n", response);
-			return RESPONSE_FOUND;
+		
+		
+		// Search for the specified response in the specified buffer (by searching for the substring, character-wise)...
+		if ((bufferSize - strlen (response)) >= 0) {
+			for (i = 0; i < bufferSize - strlen (response); i++) {
+				if (buffer[i] == response[0]) { // Check if the current character is the same as the starting character of the buffer
+					found = TRUE;
+					for (j = 0; j < strlen (response); j++) {
+						if (buffer[i + j] != response[j]) {
+							found = FALSE;
+							printf ("Found a mismatch!\r\n");
+							break;
+						}
+					}
+					if (found == TRUE) {
+						printf ("Found a match!");
+						return RESPONSE_FOUND;
+					}
+				}
+			}
 		}
+		
+		return RESPONSE_NOT_FOUND;
+		
+//		if (strncmp ((char *) (buffer + (bufferSize - strlen (response))), response, strlen (response)) == 0) {
+//			printf ("\tFound \"%s\" response.\r\n", response);
+//			return RESPONSE_FOUND;
+//		}
 	}
 	
 	// TODO: return STRING_TO_SEARCH_TOO_SMALL or something like it
@@ -98,7 +125,28 @@ int8_t ESP8266_Search_For_Response (const char *response, const char *buffer, in
 	
 }
 
-#define RESPONSE_BUFFER_SIZE 32 // Store this many of the most recent chars in AT command response buffer
+// buffer : Pointer to the "response buffer" to search for one of the expected responses. The "response buffer" is where the characters received from the ESP8266 in response to a command are stored temporarily for processing.
+// bufferSize : The current size of the response buffer <code>buffer</code>.
+//
+// returns a code corresponding to an expected response (e.g., COMMAND_RESPONSE_OK, COMMAND_RESPONSE_ERROR, etc.)
+//
+int8_t ESP8266_Search_Tail_For_Response (const char *response, const char *buffer, int bufferSize) {
+	printf ("\t\tESP8266_Search_For_Response \"%s\" in \"%s\" (bufferSize: %d)\r\n", response, buffer, bufferSize);
+	
+	if (bufferSize >= strlen (response)) { // Wait until enough characters have been buffered to search the string for the terminal character sequence.
+		if (strncmp ((char *) (buffer + (bufferSize - strlen (response))), response, strlen (response)) == 0) {
+			printf ("\tFound \"%s\" response.\r\n", response);
+			return RESPONSE_FOUND;
+		}
+	}
+	
+	// TODO: Return STRING_TO_SEARCH_TOO_SMALL or something like it.
+	
+	return RESPONSE_NOT_FOUND;
+	
+}
+
+#define RESPONSE_BUFFER_SIZE 128 // Store this many of the most recent chars in AT command response buffer
 int8_t ESP8266_Wait_For_Response (const char* response, uint32_t milliseconds) {
 	printf ("\tESP8266_Wait_For_Response \"%s\"\r\n", response);
 	
@@ -139,11 +187,15 @@ int8_t ESP8266_Wait_For_Response (const char* response, uint32_t milliseconds) {
 					responseBuffer[RESPONSE_BUFFER_SIZE - 1] = ch;
 				}
 				
-				// Check the buffer after every character to see if an expected response was received. Check this after every character prevents reading characters in the buffer that may be sent in response to a different command.
-				// Option 1: Search for an expected response after every character to avoid removing characters from the buffer that aren't associated with this command.
-				commandResponse = ESP8266_Search_For_Response (response, responseBuffer, bufferSize);
-				if (commandResponse > 0) { break; }
+//				// Check the buffer after every character to see if an expected response was received. Check this after every character prevents reading characters in the buffer that may be sent in response to a different command.
+//				// Option 1: Search for an expected response after every character to avoid removing characters from the buffer that aren't associated with this command.
+//				commandResponse = ESP8266_Search_For_Response2 (response, responseBuffer, bufferSize);
+//				if (commandResponse > 0) { break; }
 			}
+			
+			// Check the buffer after every character to see if an expected response was received. Check this after every character prevents reading characters in the buffer that may be sent in response to a different command.
+			// Option 1: Search for an expected response after every character to avoid removing characters from the buffer that aren't associated with this command.
+			commandResponse = ESP8266_Search_For_Response (response, responseBuffer, bufferSize);
 		}
 		
 //		// Empty the remaining characters on the buffer
@@ -257,6 +309,49 @@ int8_t ESP8266_Send_Command_AT_CWJAP (const char *ssid, const char *password) {
 	return response;
 }
 
+int8_t ESP8266_Send_Command_AT_CIFSR () {
+	printf ("ESP8266_Send_Command_AT_CIFSR\r\n");
+	
+	int8_t response = RESPONSE_NOT_FOUND;
+	
+	// ESP8266_Send_String ("AT+CWJAP=\"AWS\",\"Codehappy123\"\r\n", &deviceData);
+	if (AS1_SendBlock (deviceData.handle,"AT+CIFSR\r\n", (uint16_t) strlen ((char*) "AT+CIFSR\r\n")) != ERR_OK) {
+		return ERR_FAILED;
+	}
+	response = ESP8266_Wait_For_Response (RESPONSE_SIGNATURE_OK, DEFAULT_RESPONSE_TIMEOUT);
+	// TODO: Handle response "\r\n\r\nFAIL\r\n" (e.g., from full response string "AT+CWJAP=\"AWS\",\"Codehappy123\"\r\r\n+CWJAP:3\r\n\r\nFAIL\r\n")
+	
+	return response;
+}
+
+int8_t ESP8266_Send_Command_AT_CIPMUX (uint8_t enable) {
+	printf ("ESP8266_Send_Command_AT_CIPMUX\r\n");
+	
+	int8_t response = RESPONSE_NOT_FOUND;
+	
+	if (enable == TRUE) {
+	
+		// ESP8266_Send_String ("AT+CWJAP=\"AWS\",\"Codehappy123\"\r\n", &deviceData);
+		if (AS1_SendBlock (deviceData.handle,"AT+CIPMUX=1\r\n", (uint16_t) strlen ((char*) "AT+CIPMUX=1\r\n")) != ERR_OK) {
+			return ERR_FAILED;
+		}
+		response = ESP8266_Wait_For_Response (RESPONSE_SIGNATURE_OK, DEFAULT_RESPONSE_TIMEOUT);
+		// TODO: Handle response "\r\n\r\nFAIL\r\n" (e.g., from full response string "AT+CWJAP=\"AWS\",\"Codehappy123\"\r\r\n+CWJAP:3\r\n\r\nFAIL\r\n")
+		
+	} else {
+		
+		// ESP8266_Send_String ("AT+CWJAP=\"AWS\",\"Codehappy123\"\r\n", &deviceData);
+		if (AS1_SendBlock (deviceData.handle,"AT+CIPMUX=0\r\n", (uint16_t) strlen ((char*) "AT+CIPMUX=0\r\n")) != ERR_OK) {
+			return ERR_FAILED;
+		}
+		response = ESP8266_Wait_For_Response (RESPONSE_SIGNATURE_OK, DEFAULT_RESPONSE_TIMEOUT);
+		// TODO: Handle response "\r\n\r\nFAIL\r\n" (e.g., from full response string "AT+CWJAP=\"AWS\",\"Codehappy123\"\r\r\n+CWJAP:3\r\n\r\nFAIL\r\n")
+		
+	}
+	
+	return response;
+}
+
 
 int step = 0;
 void ESP8266_Start_Web_Server () {
@@ -303,6 +398,20 @@ void ESP8266_Start_Web_Server () {
 		status = ESP8266_Send_Command_AT_CWJAP (SSID_DEFAULT, PASSWORD_DEFAULT);
 		if (status > 0) {
 			printf ("ESP8266 joined access point.\r\n");
+		} else {
+			printf ("ESP8266 could NOT join access point.\r\n");
+		}
+	} else if (step == 3) {
+		status = ESP8266_Send_Command_AT_CIFSR ();
+		if (status > 0) {
+			printf ("IP info received.\r\n");
+		} else {
+			printf ("ESP8266 could NOT join access point.\r\n");
+		}
+	} else if (step == 4) {
+		status = ESP8266_Send_Command_AT_CIPMUX (TRUE);
+		if (status > 0) {
+			printf ("ESP8266 set up for multiple connections.\r\n");
 		} else {
 			printf ("ESP8266 could NOT join access point.\r\n");
 		}

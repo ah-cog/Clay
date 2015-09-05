@@ -8,7 +8,7 @@ void Application (void) {
 	int  lineReceived = FALSE;
 	char buffer[64]   = { '\0' };
 	int  ch           = (int) '\0';
-	int server_started = FALSE;
+//	int server_started = FALSE;
 	  
 	ESP8266_Init ();
 	

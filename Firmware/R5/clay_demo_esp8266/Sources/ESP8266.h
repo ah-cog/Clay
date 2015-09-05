@@ -32,6 +32,7 @@ byte ESP8266_Get_Incoming_Character (byte *elemP);
 
 #define RESPONSE_SIGNATURE_OK    "\r\r\n\r\nOK\r\n"
 #define RESPONSE_SIGNATURE_ERROR "\r\r\n\r\nERROR\r\n"
+#define RESPONSE_SIGNATURE_FAIL  "\r\n\r\nFAIL\r\n"    // e.g., AT+CWJAP=\"AWS\",\"Codehappy123\"\r\r\n+CWJAP:3\r\n\r\nFAIL\r\n
 
 #define RESPONSE_ERROR      0 // Defined this as 0 (FALSE) so it can be used in conditional statements when returned.
 #define RESPONSE_OK         1 // Defined this as 1 (TRUE) so it can be used in conditional statements when returned.

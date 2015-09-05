@@ -3,7 +3,7 @@
   <PE_product_version v="version 10.3 for Freescale Microcontrollers" />
   <PE_core_version v="Processor Expert Version 0509" />
   <CPU_Bean name="Cpu" type="MK20DX256LL7">
-    <Enabled v="N" />
+    <Enabled v="Y" />
     <Properties>
       <Component_name v="Cpu" />
       <CPU_type v="MK20DX256VLL7" />
@@ -343,7 +343,7 @@ PE_DEBUGHALT();
     </CompilerProperties>
   </CPU_Bean>
   <CPU_Bean name="Cpu" type="MK20DX256LL7">
-    <Enabled v="Y" />
+    <Enabled v="N" />
     <Properties>
       <Component_name v="Cpu" />
       <CPU_type v="MK20DX256VLL7" />
