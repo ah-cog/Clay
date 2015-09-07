@@ -8,7 +8,7 @@
 </settings>
 <grid distance="0.0005" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
@@ -24,13 +24,13 @@
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
 <layer number="15" name="Route15" color="4" fill="6" visible="no" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="no" active="yes"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="no" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="13" fill="1" visible="no" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="no" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
@@ -103,9 +103,9 @@
 <layer number="129" name="Mask" color="7" fill="1" visible="no" active="yes"/>
 <layer number="131" name="tAdjust" color="7" fill="1" visible="no" active="yes"/>
 <layer number="132" name="bAdjust" color="7" fill="1" visible="no" active="yes"/>
-<layer number="144" name="DrillLegend" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="145" name="DrillLegend_01-16" color="2" fill="9" visible="yes" active="yes"/>
-<layer number="146" name="DrillLegend_01-20" color="3" fill="9" visible="yes" active="yes"/>
+<layer number="144" name="DrillLegend" color="7" fill="1" visible="no" active="yes"/>
+<layer number="145" name="DrillLegend_01-16" color="2" fill="9" visible="no" active="yes"/>
+<layer number="146" name="DrillLegend_01-20" color="3" fill="9" visible="no" active="yes"/>
 <layer number="150" name="Notes" color="7" fill="1" visible="no" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="no" active="yes"/>
 <layer number="152" name="_bDocu" color="7" fill="1" visible="no" active="yes"/>
@@ -1791,7 +1791,6 @@ chip</description>
 <smd name="19" x="-0.5" y="1.8" dx="0.25" dy="0.4" layer="1"/>
 <smd name="20" x="-1" y="1.8" dx="0.25" dy="0.4" layer="1"/>
 <text x="-2.2098" y="2.2352" size="0.6096" layer="25">&gt;NAME</text>
-<smd name="PAD" x="0" y="0" dx="2.6924" dy="2.6924" layer="1" rot="R180"/>
 </package>
 </packages>
 </library>
@@ -3433,7 +3432,6 @@ design rules under a new name.</description>
 <via x="40.0939" y="24.7396" extent="1-16" drill="0.3048" diameter="0.3048"/>
 <via x="39.1414" y="22.2123" extent="1-16" drill="0.3048" diameter="0.3048"/>
 <via x="31.4325" y="22.3266" extent="1-16" drill="0.3048" diameter="0.3048"/>
-<contactref element="U8" pad="PAD"/>
 <wire x1="6.963" y1="10.16" x2="8.763" y2="10.16" width="0.4064" layer="1"/>
 <via x="8.763" y="10.16" extent="1-16" drill="0.3048" diameter="0.3048"/>
 <wire x1="9.263" y1="8.36" x2="9.263" y2="9.66" width="0.4064" layer="1"/>
@@ -6012,6 +6010,7 @@ design rules under a new name.</description>
 </signal>
 </signals>
 <errors>
+<approved hash="19,1,ff8e4db050c5e2fb"/>
 <approved hash="2,20,c10a9782756b80d9"/>
 <approved hash="2,20,3c0cc46705038ff5"/>
 <approved hash="2,20,b4c517d6752b7502"/>
@@ -6028,7 +6027,6 @@ design rules under a new name.</description>
 <approved hash="4,1,fce10e9eeea4f3a9"/>
 <approved hash="4,1,6f4a0d338d36ef4f"/>
 <approved hash="19,1,b6cbf6f5f64cb672"/>
-<approved hash="19,1,ff8e4db050c5e2fb"/>
 <approved hash="19,1,bfca4df44c48be76"/>
 <approved hash="19,1,33fa77c4723b3605"/>
 <approved hash="4,1,083efe1da2ef5da4"/>
