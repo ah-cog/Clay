@@ -58,7 +58,7 @@
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="no" active="yes"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
@@ -221,18 +221,18 @@ Assembly:
 ------ WW: Week of manufacture
 ------ YY: Year of manufacture
 ------ XXXX: Unique serial number for the week of manufacture</text>
-<wire x1="31.0388" y1="15.1511" x2="31.0388" y2="16.8275" width="0.1524" layer="48"/>
-<wire x1="31.0388" y1="16.8275" x2="30.2006" y2="15.9893" width="0.1524" layer="48"/>
-<wire x1="30.2006" y1="15.9893" x2="31.0388" y2="15.1511" width="0.1524" layer="48"/>
-<wire x1="62.5221" y1="16.4338" x2="62.0903" y2="16.002" width="0.1524" layer="48"/>
-<wire x1="62.0903" y1="16.002" x2="31.0642" y2="16.002" width="0.1524" layer="48"/>
-<text x="62.3697" y="16.2814" size="1.016" layer="48" font="vector" ratio="15">Label location
+<wire x1="31.0388" y1="15.1511" x2="31.0388" y2="16.8275" width="0.1524" layer="47"/>
+<wire x1="31.0388" y1="16.8275" x2="30.2006" y2="15.9893" width="0.1524" layer="47"/>
+<wire x1="30.2006" y1="15.9893" x2="31.0388" y2="15.1511" width="0.1524" layer="47"/>
+<wire x1="62.5221" y1="16.4338" x2="62.0903" y2="16.002" width="0.1524" layer="47"/>
+<wire x1="62.0903" y1="16.002" x2="31.0642" y2="16.002" width="0.1524" layer="47"/>
+<text x="62.3697" y="16.2814" size="1.016" layer="47" font="vector" ratio="15">Label location
 (on bottom)</text>
 <wire x1="14.8209" y1="7.0485" x2="14.8209" y2="7.7216" width="0.1524" layer="25"/>
-<wire x1="21.5773" y1="24.4983" x2="30.0482" y2="24.4983" width="0.1524" layer="48"/>
-<wire x1="30.0482" y1="24.4983" x2="30.0482" y2="9.0297" width="0.1524" layer="48"/>
-<wire x1="30.0482" y1="9.0297" x2="21.5773" y2="9.0297" width="0.1524" layer="48"/>
-<wire x1="21.5773" y1="9.0297" x2="21.5773" y2="24.4856" width="0.1524" layer="48"/>
+<wire x1="21.5773" y1="24.4983" x2="30.0482" y2="24.4983" width="0.1524" layer="47"/>
+<wire x1="30.0482" y1="24.4983" x2="30.0482" y2="9.0297" width="0.1524" layer="47"/>
+<wire x1="30.0482" y1="9.0297" x2="21.5773" y2="9.0297" width="0.1524" layer="47"/>
+<wire x1="21.5773" y1="9.0297" x2="21.5773" y2="24.4856" width="0.1524" layer="47"/>
 <wire x1="49.7205" y1="46.0375" x2="49.7205" y2="32.8295" width="0.1016" layer="145"/>
 <wire x1="46.1645" y1="45.5295" x2="50.2285" y2="45.5295" width="0.1016" layer="145"/>
 <wire x1="4.572" y1="1.0795" x2="13.716" y2="1.0795" width="0.1016" layer="145"/>
