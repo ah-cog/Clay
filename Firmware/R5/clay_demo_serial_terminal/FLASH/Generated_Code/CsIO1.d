@@ -3,7 +3,7 @@ Generated_Code/CsIO1.o: ../Generated_Code/CsIO1.c \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/common.prefix \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_version.h \
  ../Generated_Code/IO_Map.h \
- Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial1_console/Static_Code/IO_Map/MK20D7.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_terminal/Static_Code/IO_Map/MK20D7.h \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/ansi_parms.h \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewlGlobals.h \
@@ -26,8 +26,8 @@ Generated_Code/CsIO1.o: ../Generated_Code/CsIO1.c \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdarg.h \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/cstdarg \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/arm/stdarg.ARM.h \
- Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial1_console/Static_Code/PDD/UART_PDD.h \
- Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial1_console/Static_Code/PDD/PDD_Types.h
+ Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_terminal/Static_Code/PDD/UART_PDD.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_terminal/Static_Code/PDD/PDD_Types.h
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix:
 
@@ -37,7 +37,7 @@ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/ewl_c_versio
 
 ../Generated_Code/IO_Map.h:
 
-Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial1_console/Static_Code/IO_Map/MK20D7.h:
+Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_terminal/Static_Code/IO_Map/MK20D7.h:
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdint.h:
 
@@ -83,6 +83,6 @@ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/cstdarg:
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/arm/stdarg.ARM.h:
 
-Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial1_console/Static_Code/PDD/UART_PDD.h:
+Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_terminal/Static_Code/PDD/UART_PDD.h:
 
-Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial1_console/Static_Code/PDD/PDD_Types.h:
+Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_terminal/Static_Code/PDD/PDD_Types.h:

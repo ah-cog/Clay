@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLL7
 **     Version     : Component 01.000, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-08-31, 16:09, # CodeGen: 6
+**     Date/Time   : 2015-09-05, 13:50, # CodeGen: 40
 **     Abstract    :
 **
 **     Settings    :
@@ -58,6 +58,8 @@
   #include "IO1.h"
   #include "AS1.h"
   #include "ESP8266_RxBuf.h"
+  #include "TI1.h"
+  #include "TU1.h"
   #include "Events.h"
 
 
@@ -155,7 +157,7 @@
     (tIsrFunc)&Cpu_Interrupt,          /* 0x4B  0x0000012C   -   ivINT_CMP0                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x4C  0x00000130   -   ivINT_CMP1                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x4D  0x00000134   -   ivINT_CMP2                     unused by PE */
-    (tIsrFunc)&Cpu_Interrupt,          /* 0x4E  0x00000138   -   ivINT_FTM0                     unused by PE */
+    (tIsrFunc)&TU1_Interrupt,          /* 0x4E  0x00000138   8   ivINT_FTM0                     used by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x4F  0x0000013C   -   ivINT_FTM1                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x50  0x00000140   -   ivINT_FTM2                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x51  0x00000144   -   ivINT_CMT                      unused by PE */
