@@ -23,12 +23,15 @@ typedef struct {
 
 ESP8266_UART_Device deviceData;
 
-void ESP8266_Init ();
+void ESP8266_Initialize ();
 void ESP8266_Send_Char (unsigned char ch, ESP8266_UART_Device *desc);
 void ESP8266_Send_String (const unsigned char *str, ESP8266_UART_Device *desc);
+int8_t ESP8266_Send_Block (const char *str);
 
 byte ESP8266_Get_Incoming_Buffer_Size ();
 byte ESP8266_Get_Incoming_Character (byte *elemP);
+
+#define HTTP_SERVER_PORT 80
 
 #define RESPONSE_SIGNATURE_OK    "\r\r\n\r\nOK\r\n"
 #define RESPONSE_SIGNATURE_OK_VARIANT "\r\n\r\nOK\r\n"
@@ -76,7 +79,7 @@ int8_t ESP8266_Send_Command_AT_CIFSR ();
 int8_t ESP8266_Send_Command_AT_CIPMUX (uint8_t enable);
 int8_t ESP8266_Send_Command_AT_CIPSERVER (uint8_t mode, uint8_t port);
 
-void ESP8266_Start_Web_Server (/* uint16_t port */);
+void ESP8266_Start_Web_Server (uint16_t port);
 int8_t ESP8266_Receive_Request_Header_Line ();
 
 #endif /* ESP8266_H_ */
