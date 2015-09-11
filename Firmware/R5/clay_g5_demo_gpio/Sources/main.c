@@ -42,6 +42,10 @@
 #include "IO12.h"
 #include "IO11.h"
 #include "IO10.h"
+#include "LED2.h"
+#include "LED1.h"
+#include "LED_DRIVER_0_RESET.h"
+#include "LED_DRIVER_1_RESET.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -62,18 +66,18 @@ int main(void)
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  (void) IO1_Init (NULL);
-  (void) IO2_Init (NULL);
-  (void) IO3_Init (NULL);
-  (void) IO4_Init (NULL);
-  (void) IO5_Init (NULL);
-  (void) IO6_Init (NULL);
-  (void) IO7_Init (NULL);
-  (void) IO8_Init (NULL);
-  (void) IO9_Init (NULL);
-  (void) IO10_Init (NULL);
-  (void) IO11_Init (NULL);
-  (void) IO12_Init (NULL);
+//  (void) IO1_Init (NULL);
+//  (void) IO2_Init (NULL);
+//  (void) IO3_Init (NULL);
+//  (void) IO4_Init (NULL);
+//  (void) IO5_Init (NULL);
+//  (void) IO6_Init (NULL);
+//  (void) IO7_Init (NULL);
+//  (void) IO8_Init (NULL);
+//  (void) IO9_Init (NULL);
+//  (void) IO10_Init (NULL);
+//  (void) IO11_Init (NULL);
+//  (void) IO12_Init (NULL);
   for(;;) {
 	  
 	  // Turn LED0 on and LED1 off.
@@ -89,9 +93,12 @@ int main(void)
 	  IO10_PutVal (NULL, TRUE);
 	  IO11_PutVal (NULL, TRUE);
 	  IO12_PutVal (NULL, TRUE);
-	  for (i = 0; i < 1000000; i++) {}
-	  for (i = 0; i < 1000000; i++) {}
-	  for (i = 0; i < 1000000; i++) {}
+	  LED1_PutVal(NULL, TRUE);
+	  LED2_PutVal(NULL, FALSE);
+	  
+//	  for (i = 0; i < 1000000; i++) {}
+//	  for (i = 0; i < 1000000; i++) {}
+//	  for (i = 0; i < 1000000; i++) {}
 	  for (i = 0; i < 1000000; i++) {}
 	  
 	  // Alternate the state of the LEDs. Turn LED0 off and LED1 on.
@@ -107,9 +114,11 @@ int main(void)
 	  IO10_PutVal (NULL, FALSE);
 	  IO11_PutVal (NULL, FALSE);
 	  IO12_PutVal (NULL, FALSE);
-	  for (i = 0; i < 1000000; i++) {}
-	  for (i = 0; i < 1000000; i++) {}
-	  for (i = 0; i < 1000000; i++) {}
+	  LED2_PutVal(NULL, TRUE);
+	  LED1_PutVal(NULL, FALSE);
+//	  for (i = 0; i < 1000000; i++) {}
+//	  for (i = 0; i < 1000000; i++) {}
+//	  for (i = 0; i < 1000000; i++) {}
 	  for (i = 0; i < 1000000; i++) {}
 	  
   }

@@ -3,7 +3,7 @@
   <PE_product_version v="version 10.3 for Freescale Microcontrollers" />
   <PE_core_version v="Processor Expert Version 0509" />
   <CPU_Bean name="Cpu" type="MK20DX256LL7">
-    <Enabled v="Y" />
+    <Enabled v="N" />
     <Properties>
       <Component_name v="Cpu" />
       <CPU_type v="MK20DX256VLL7" />
@@ -343,7 +343,7 @@ PE_DEBUGHALT();
     </CompilerProperties>
   </CPU_Bean>
   <CPU_Bean name="Cpu" type="MK20DX256LL7">
-    <Enabled v="N" />
+    <Enabled v="Y" />
     <Properties>
       <Component_name v="Cpu" />
       <CPU_type v="MK20DX256VLL7" />
@@ -1017,23 +1017,7 @@ PE_DEBUGHALT();
     </Events>
   </Bean>
   <Bean name="ESP8266_RxBuf" type="RingBufferUInt8">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="ESP8266_RxBuf" />
-      <Buffer_Size v="255" />
-    </Properties>
-    <Methods>
-      <Put v="generate code" />
-      <Get v="generate code" />
-      <NofElements v="generate code" />
-      <NofFreeElements v="generate code" />
-      <Init v="generate code" />
-    </Methods>
-    <Events>
-      <Event_module_name v="Events" />
-      <event name="OnBufferFull" v="don&amp;apos;t generate code" />
-      <event name="OnBufferEmpty" v="don&amp;apos;t generate code" />
-    </Events>
+    <Enabled v="N" />
   </Bean>
   <Bean name="TI1" type="TimerInt_LDD">
     <Enabled v="Y" />

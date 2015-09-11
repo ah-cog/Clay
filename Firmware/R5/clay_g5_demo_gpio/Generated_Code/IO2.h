@@ -6,7 +6,7 @@
 **     Component   : BitIO_LDD
 **     Version     : Component 01.033, Driver 01.03, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-10, 16:57, # CodeGen: 4
+**     Date/Time   : 2015-09-10, 20:25, # CodeGen: 10
 **     Abstract    :
 **         The HAL BitIO component provides a low level API for unified
 **         access to general purpose digital input/output pins across
@@ -22,7 +22,7 @@
 **          Initialization                                 : 
 **            Init. direction                              : Output
 **            Init. value                                  : 0
-**            Auto initialization                          : no
+**            Auto initialization                          : yes
 **          Safe mode                                      : no
 **     Contents    :
 **         Init     - LDD_TDeviceData* IO2_Init(LDD_TUserData *UserDataPtr);
@@ -105,6 +105,9 @@ extern "C" {
 /*! Peripheral base address of a device allocated by the component. This constant can be used directly in PDD macros. */
 #define IO2_PRPH_BASE_ADDRESS  0x400FF100U
   
+/*! Device data structure pointer used when auto initialization property is enabled. This constant can be passed as a first parameter to all component's methods. */
+#define IO2_DeviceData  ((LDD_TDeviceData *)PE_LDD_GetDeviceStructure(PE_LDD_COMPONENT_IO2_ID))
+
 /* Methods configuration constants - generated for all enabled component's methods */
 #define IO2_Init_METHOD_ENABLED        /*!< Init method of the component IO2 is enabled (generated) */
 #define IO2_SetDir_METHOD_ENABLED      /*!< SetDir method of the component IO2 is enabled (generated) */

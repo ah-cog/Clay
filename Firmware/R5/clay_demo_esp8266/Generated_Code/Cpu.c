@@ -7,7 +7,7 @@
 **     Version     : Component 01.000, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-09, 17:38, # CodeGen: 104
+**     Date/Time   : 2015-09-10, 20:08, # CodeGen: 105
 **     Abstract    :
 **
 **     Settings    :
@@ -63,7 +63,6 @@
 #include "CsIO1.h"
 #include "IO1.h"
 #include "AS1.h"
-#include "ESP8266_RxBuf.h"
 #include "TI1.h"
 #include "TU1.h"
 #include "PE_Types.h"
@@ -247,6 +246,7 @@ void PE_low_level_init(void)
                RCM_RPFC_RSTFLTSS_MASK |
                RCM_RPFC_RSTFLTSRW(0x03)
               );
+        /* Initialization of the FTFL_FlashConfig module */
       /* Initialization of the PMC module */
   /* PMC_LVDSC1: LVDACK=1,LVDIE=0,LVDRE=1,LVDV=0 */
   PMC_LVDSC1 = (uint8_t)((PMC_LVDSC1 & (uint8_t)~(uint8_t)(
@@ -276,11 +276,44 @@ void PE_low_level_init(void)
   NVICIP20 = NVIC_IP_PRI20(0x00);
   /* ### Serial_LDD "IO1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)IO1_Init(NULL);
-  /* ### RingBufferUInt8 "ESP8266_RxBuf" init code ... */
-  ESP8266_RxBuf_Init();
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }
+  /* Flash configuration field */
+  __attribute__ ((section (".cfmconfig"))) const uint8_t _cfm[0x10] = {
+   /* NV_BACKKEY3: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY2: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY1: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY0: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY7: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY6: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY5: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY4: KEY=0xFF */
+    0xFFU,
+   /* NV_FPROT3: PROT=0xFF */
+    0xFFU,
+   /* NV_FPROT2: PROT=0xFF */
+    0xFFU,
+   /* NV_FPROT1: PROT=0xFF */
+    0xFFU,
+   /* NV_FPROT0: PROT=0xFF */
+    0xFFU,
+   /* NV_FSEC: KEYEN=1,MEEN=3,FSLACC=3,SEC=2 */
+    0x7EU,
+   /* NV_FOPT: ??=1,??=1,??=1,??=1,??=1,NMI_DIS=1,EZPORT_DIS=1,LPBOOT=1 */
+    0xFFU,
+   /* NV_FEPROT: EPROT=0xFF */
+    0xFFU,
+   /* NV_FDPROT: DPROT=0xFF */
+    0xFFU
+  };
 
 /* END Cpu. */
 
