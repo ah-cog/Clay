@@ -18,16 +18,16 @@
         <Line>PE_Const</Line>
         <Line>IO_Map</Line>
       </GenSharedModules>
-      <ShrdHeaderAge0>1193640451</ShrdHeaderAge0>
+      <ShrdHeaderAge0>1193644929</ShrdHeaderAge0>
       <ShrdCodeAge0>-1</ShrdCodeAge0>
       <ShrdAsemblAge0>-1</ShrdAsemblAge0>
-      <ShrdHeaderAge1>1193640451</ShrdHeaderAge1>
+      <ShrdHeaderAge1>1193644929</ShrdHeaderAge1>
       <ShrdCodeAge1>-1</ShrdCodeAge1>
       <ShrdAsemblAge1>-1</ShrdAsemblAge1>
-      <ShrdHeaderAge2>1193640451</ShrdHeaderAge2>
+      <ShrdHeaderAge2>1193644929</ShrdHeaderAge2>
       <ShrdCodeAge2>-1</ShrdCodeAge2>
       <ShrdAsemblAge2>-1</ShrdAsemblAge2>
-      <ShrdHeaderAge3>1193640451</ShrdHeaderAge3>
+      <ShrdHeaderAge3>1193644929</ShrdHeaderAge3>
       <ShrdCodeAge3>-1</ShrdCodeAge3>
       <ShrdAsemblAge3>-1</ShrdAsemblAge3>
       <GenExtraFiles lines_count="10">
@@ -43,9 +43,9 @@
         <Line>Generated_Code\Vectors.c</Line>
       </GenExtraFiles>
       <GenExtraFileSrcDir4>lib\doxygen\</GenExtraFileSrcDir4>
-      <XtraAge6>1193640451</XtraAge6>
-      <XtraAge7>1193640451</XtraAge7>
-      <XtraAge9>1193640451</XtraAge9>
+      <XtraAge6>1193644929</XtraAge6>
+      <XtraAge7>1193644929</XtraAge7>
+      <XtraAge9>1193644929</XtraAge9>
       <GenExtraFileType9>4</GenExtraFileType9>
       <GenExtraFileType8>4</GenExtraFileType8>
       <GenExtraFileType7>4</GenExtraFileType7>
@@ -360,7 +360,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_demo_serial_terminal_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>17</ProjectModificationStamp>
+    <ProjectModificationStamp>20</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -428,8 +428,8 @@
     <GenComponentVersion>01.000</GenComponentVersion>
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1193640451</HeaderAge>
-    <CodeAge>1193640451</CodeAge>
+    <HeaderAge>1193644929</HeaderAge>
+    <CodeAge>1193644929</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -615,8 +615,8 @@
     <GenComponentVersion>01.016</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1193640451</HeaderAge>
-    <CodeAge>1193640451</CodeAge>
+    <HeaderAge>1193644929</HeaderAge>
+    <CodeAge>1193644929</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>0</GenNumMethods>
     <GenNumEvents>0</GenNumEvents>
@@ -666,8 +666,8 @@
       <GenComponentVersion>01.187</GenComponentVersion>
       <GenDriverVersion>01.12</GenDriverVersion>
       <GenEventModule>Events</GenEventModule>
-      <HeaderAge>1193640451</HeaderAge>
-      <CodeAge>1193640451</CodeAge>
+      <HeaderAge>1193644929</HeaderAge>
+      <CodeAge>1193644929</CodeAge>
       <AsemblAge>-1</AsemblAge>
       <GenNumMethods>36</GenNumMethods>
       <Init>true</Init>
