@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-10, 17:05, # CodeGen: 5
+**     Date/Time   : 2015-09-10, 21:39, # CodeGen: 15
 **     Abstract    :
 **
 **     Settings    :
@@ -72,6 +72,10 @@
 #include "IO12.h"
 #include "IO11.h"
 #include "IO10.h"
+#include "LED2.h"
+#include "LED1.h"
+#include "LED_DRIVER_0_RESET.h"
+#include "LED_DRIVER_1_RESET.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -168,24 +172,31 @@ void __init_hardware(void)
     /* PMC_REGSC: ACKISO=1 */
     PMC_REGSC |= PMC_REGSC_ACKISO_MASK; /* Release IO pads after wakeup from VLLS mode. */
   }
-  /* SIM_CLKDIV1: OUTDIV1=0,OUTDIV2=0,??=0,??=0,??=0,??=0,OUTDIV4=1,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0 */
+  /* SIM_CLKDIV1: OUTDIV1=0,OUTDIV2=1,??=0,??=0,??=0,??=0,OUTDIV4=2,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0,??=0 */
   SIM_CLKDIV1 = SIM_CLKDIV1_OUTDIV1(0x00) |
-                SIM_CLKDIV1_OUTDIV2(0x00) |
-                SIM_CLKDIV1_OUTDIV4(0x01); /* Update system prescalers */
+                SIM_CLKDIV1_OUTDIV2(0x01) |
+                SIM_CLKDIV1_OUTDIV4(0x02); /* Update system prescalers */
   /* SIM_SOPT2: PLLFLLSEL=0 */
   SIM_SOPT2 &= (uint32_t)~(uint32_t)(SIM_SOPT2_PLLFLLSEL_MASK); /* Select FLL as a clock source for various peripherals */
   /* SIM_SOPT1: OSC32KSEL=3 */
   SIM_SOPT1 |= SIM_SOPT1_OSC32KSEL(0x03); /* LPO 1kHz oscillator drives 32 kHz clock for various peripherals */
+  /* PORTA_PCR18: ISF=0,MUX=0 */
+  PORTA_PCR18 &= (uint32_t)~(uint32_t)((PORT_PCR_ISF_MASK | PORT_PCR_MUX(0x07)));
   /* Switch to FEI Mode */
   /* MCG_C1: CLKS=0,FRDIV=0,IREFS=1,IRCLKEN=1,IREFSTEN=0 */
   MCG_C1 = MCG_C1_CLKS(0x00) |
            MCG_C1_FRDIV(0x00) |
            MCG_C1_IREFS_MASK |
            MCG_C1_IRCLKEN_MASK;
-  /* MCG_C2: LOCRE0=0,??=0,RANGE0=0,HGO0=0,EREFS0=0,LP=0,IRCS=0 */
-  MCG_C2 = MCG_C2_RANGE0(0x00);
-  /* MCG_C4: DMX32=0,DRST_DRS=0 */
-  MCG_C4 &= (uint8_t)~(uint8_t)((MCG_C4_DMX32_MASK | MCG_C4_DRST_DRS(0x03)));
+  /* MCG_C2: LOCRE0=0,??=0,RANGE0=2,HGO0=0,EREFS0=0,LP=0,IRCS=0 */
+  MCG_C2 = MCG_C2_RANGE0(0x02);
+  /* MCG_C4: DMX32=1,DRST_DRS=2 */
+  MCG_C4 = (uint8_t)((MCG_C4 & (uint8_t)~(uint8_t)(
+            MCG_C4_DRST_DRS(0x01)
+           )) | (uint8_t)(
+            MCG_C4_DMX32_MASK |
+            MCG_C4_DRST_DRS(0x02)
+           ));
   /* OSC_CR: ERCLKEN=1,??=0,EREFSTEN=0,??=0,SC2P=0,SC4P=0,SC8P=0,SC16P=0 */
   OSC_CR = OSC_CR_ERCLKEN_MASK;
   /* MCG_C7: OSCSEL=0 */
@@ -249,6 +260,7 @@ void PE_low_level_init(void)
                RCM_RPFC_RSTFLTSS_MASK |
                RCM_RPFC_RSTFLTSRW(0x03)
               );
+        /* Initialization of the FTFL_FlashConfig module */
       /* Initialization of the PMC module */
   /* PMC_LVDSC1: LVDACK=1,LVDIE=0,LVDRE=1,LVDV=0 */
   PMC_LVDSC1 = (uint8_t)((PMC_LVDSC1 & (uint8_t)~(uint8_t)(
@@ -276,9 +288,76 @@ void PE_low_level_init(void)
   /* Common initialization of the CPU registers */
   /* NVICIP20: PRI20=0 */
   NVICIP20 = NVIC_IP_PRI20(0x00);
+  /* ### BitIO_LDD "IO3" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO3_Init(NULL);
+  /* ### BitIO_LDD "IO2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO2_Init(NULL);
+  /* ### BitIO_LDD "IO1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO1_Init(NULL);
+  /* ### BitIO_LDD "IO6" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO6_Init(NULL);
+  /* ### BitIO_LDD "IO5" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO5_Init(NULL);
+  /* ### BitIO_LDD "IO4" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO4_Init(NULL);
+  /* ### BitIO_LDD "IO9" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO9_Init(NULL);
+  /* ### BitIO_LDD "IO8" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO8_Init(NULL);
+  /* ### BitIO_LDD "IO7" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO7_Init(NULL);
+  /* ### BitIO_LDD "IO12" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO12_Init(NULL);
+  /* ### BitIO_LDD "IO11" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO11_Init(NULL);
+  /* ### BitIO_LDD "IO10" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO10_Init(NULL);
+  /* ### BitIO_LDD "LED2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)LED2_Init(NULL);
+  /* ### BitIO_LDD "LED1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)LED1_Init(NULL);
+  /* ### BitIO_LDD "LED_DRIVER_0_RESET" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)LED_DRIVER_0_RESET_Init(NULL);
+  /* ### BitIO_LDD "LED_DRIVER_1_RESET" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)LED_DRIVER_1_RESET_Init(NULL);
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }
+  /* Flash configuration field */
+  __attribute__ ((section (".cfmconfig"))) const uint8_t _cfm[0x10] = {
+   /* NV_BACKKEY3: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY2: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY1: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY0: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY7: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY6: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY5: KEY=0xFF */
+    0xFFU,
+   /* NV_BACKKEY4: KEY=0xFF */
+    0xFFU,
+   /* NV_FPROT3: PROT=0xFF */
+    0xFFU,
+   /* NV_FPROT2: PROT=0xFF */
+    0xFFU,
+   /* NV_FPROT1: PROT=0xFF */
+    0xFFU,
+   /* NV_FPROT0: PROT=0xFF */
+    0xFFU,
+   /* NV_FSEC: KEYEN=1,MEEN=3,FSLACC=3,SEC=2 */
+    0x7EU,
+   /* NV_FOPT: ??=1,??=1,??=1,??=1,??=1,NMI_DIS=0,EZPORT_DIS=1,LPBOOT=1 */
+    0xFBU,
+   /* NV_FEPROT: EPROT=0xFF */
+    0xFFU,
+   /* NV_FDPROT: DPROT=0xFF */
+    0xFFU
+  };
 
 /* END Cpu. */
 

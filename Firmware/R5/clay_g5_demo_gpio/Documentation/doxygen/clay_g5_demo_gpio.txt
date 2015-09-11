@@ -45,6 +45,10 @@
 - \subpage IO12
 - \subpage IO11
 - \subpage IO10
+- \subpage LED2
+- \subpage LED1
+- \subpage LED_DRIVER_0_RESET
+- \subpage LED_DRIVER_1_RESET
 
 
 */

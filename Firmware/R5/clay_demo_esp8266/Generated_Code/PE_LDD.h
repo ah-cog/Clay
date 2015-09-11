@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLL7
 **     Version     : Component 01.000, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-05, 13:50, # CodeGen: 40
+**     Date/Time   : 2015-09-10, 20:08, # CodeGen: 105
 **     Abstract    :
 **
 **     Settings    :
@@ -63,7 +63,6 @@
 #include "CsIO1.h"
 #include "IO1.h"
 #include "AS1.h"
-#include "ESP8266_RxBuf.h"
 #include "TI1.h"
 #include "TU1.h"
 

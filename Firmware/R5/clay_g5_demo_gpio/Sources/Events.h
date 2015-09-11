@@ -46,6 +46,10 @@
 #include "IO12.h"
 #include "IO11.h"
 #include "IO10.h"
+#include "LED2.h"
+#include "LED1.h"
+#include "LED_DRIVER_0_RESET.h"
+#include "LED_DRIVER_1_RESET.h"
 
 #ifdef __cplusplus
 extern "C" {
