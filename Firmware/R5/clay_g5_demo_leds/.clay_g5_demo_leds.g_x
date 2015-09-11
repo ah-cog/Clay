@@ -1,0 +1,77 @@
+<CodeGenerationInfo>
+  <ToolchainSettings>
+    <option>
+      <name>PE_G_4PEx_ToolChain_Compiler_SearchUserPaths</name>
+      <values lines_count="4">
+        <Line>"${ProjDirPath}/Static_Code\PDD"</Line>
+        <Line>"${ProjDirPath}/Static_Code\IO_Map"</Line>
+        <Line>"${ProjDirPath}/Sources"</Line>
+        <Line>"${ProjDirPath}/Generated_Code"</Line>
+      </values>
+    </option>
+  </ToolchainSettings>
+  <GeneratedFilesList>
+    <GeneratedByPE>
+      <File Name="Generated_Code/LED1.h" FileDate="2015-09-10, 14:56:17" FileAge="1441922177115" FileType="45637" CompNumb="10" />
+      <File Name="Static_Code/PDD/VREF_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642360" FileType="1048576" />
+      <File Name="Documentation/doxygen/pex.css" FileDate="2015-09-10, 14:47:21" FileAge="1441921641512" FileType="16384" CompNumb="4" />
+      <File Name="Generated_Code/LED1.c" FileDate="2015-09-10, 14:56:17" FileAge="1441922177112" FileType="45637" CompNumb="10" />
+      <File Name="Static_Code/PDD/WDOG_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642360" FileType="1048576" />
+      <File Name="Static_Code/PDD/PIT_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642141" FileType="1048576" />
+      <File Name="Static_Code/PDD/FMC_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642042" FileType="1048576" />
+      <File Name="Generated_Code/LED0.h" FileDate="2015-09-10, 14:56:17" FileAge="1441922177119" FileType="45637" CompNumb="9" />
+      <File Name="Sources/main.c" FileDate="2015-09-10, 14:59:52" FileAge="1441922392537" FileType="128" />
+      <File Name="Documentation/doxygen/LED1.txt" FileDate="2015-09-10, 14:56:17" FileAge="1441922177108" FileType="45637" CompNumb="10" />
+      <File Name="Static_Code/PDD/USBDCD_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642329" FileType="1048576" />
+      <File Name="Documentation/doxygen/clay_g5_demo_leds.txt" FileDate="2015-09-10, 14:56:17" FileAge="1441922177150" FileType="45637" CompNumb="4" />
+      <File Name="Generated_Code/Cpu.h" FileDate="2015-09-10, 14:59:52" FileAge="1441922392553" FileType="45637" CompNumb="4" />
+      <File Name="Generated_Code/LED0.c" FileDate="2015-09-10, 14:56:17" FileAge="1441922177119" FileType="45637" CompNumb="9" />
+      <File Name="Static_Code/PDD/CRC_PDD.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641949" FileType="1048576" />
+      <File Name="Generated_Code/Cpu.c" FileDate="2015-09-10, 14:59:52" FileAge="1441922392553" FileType="45637" CompNumb="4" />
+      <File Name="Static_Code/PDD/DMA_PDD.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641980" FileType="1048576" />
+      <File Name="Static_Code/PDD/ADC_PDD.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641901" FileType="1048576" />
+      <File Name="Static_Code/PDD/PDD_Types.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641885" FileType="1048576" />
+      <File Name="Static_Code/PDD/DAC_PDD.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641964" FileType="1048576" />
+      <File Name="Documentation/clay_g5_demo_leds_SIGNALS.txt" FileDate="2015-09-10, 14:59:52" FileAge="1441922392568" FileType="3072" />
+      <File Name="Static_Code/PDD/SIM_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642219" FileType="1048576" />
+      <File Name="Static_Code/PDD/MCM_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642110" FileType="1048576" />
+      <File Name="Static_Code/PDD/GPIO_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642095" FileType="1048576" />
+      <File Name="Documentation/doxygen/LED0.txt" FileDate="2015-09-10, 14:56:17" FileAge="1441922177119" FileType="45637" CompNumb="9" />
+      <File Name="Static_Code/PDD/SysTick_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642297" FileType="1048576" />
+      <File Name="Static_Code/PDD/DMAMUX_PDD.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641980" FileType="1048576" />
+      <File Name="Documentation/clay_g5_demo_leds_Settings.xml" FileDate="2015-09-10, 14:59:52" FileAge="1441922392615" FileType="3072" />
+      <File Name="Documentation/doxygen/pex.doxyfile" FileDate="2015-09-10, 14:47:22" FileAge="1441921642407" FileType="45637" CompNumb="4" />
+      <File Name="Static_Code/PDD/EWM_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642027" FileType="1048576" />
+      <File Name="Generated_Code/IO_Map.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642438" FileType="45637" />
+      <File Name="ProjectInfo.xml" FileDate="2015-09-10, 14:56:20" FileAge="1441922180053" FileType="45637" />
+      <File Name="Static_Code/PDD/PORT_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642141" FileType="1048576" />
+      <File Name="Static_Code/PDD/UART_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642297" FileType="1048576" />
+      <File Name="Static_Code/PDD/PDB_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642126" FileType="1048576" />
+      <File Name="Static_Code/PDD/FTFL_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642042" FileType="1048576" />
+      <File Name="Static_Code/PDD/FTM_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642058" FileType="1048576" />
+      <File Name="Documentation/clay_g5_demo_leds.txt" FileDate="2015-09-10, 14:56:20" FileAge="1441922180053" FileType="3072" />
+      <File Name="Static_Code/PDD/SAI_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642188" FileType="1048576" />
+      <File Name="Static_Code/IO_Map/MK20D7.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641839" FileType="1048576" />
+      <File Name="Generated_Code/PE_Const.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642438" FileType="45637" />
+      <File Name="Static_Code/PDD/RTC_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642173" FileType="1048576" />
+      <File Name="Static_Code/PDD/I2C_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642095" FileType="1048576" />
+      <File Name="Generated_Code/PE_Types.h" FileDate="2015-09-10, 14:56:17" FileAge="1441922177119" FileType="45637" />
+      <File Name="Sources/Events.h" FileDate="2015-09-10, 14:56:17" FileAge="1441922177228" FileType="131328" />
+      <File Name="Generated_Code/PE_Error.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642438" FileType="45637" />
+      <File Name="Static_Code/PDD/LPTMR_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642110" FileType="1048576" />
+      <File Name="Sources/Events.c" FileDate="2015-09-10, 14:47:22" FileAge="1441921642375" FileType="131328" />
+      <File Name="Static_Code/PDD/CMP_PDD.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641933" FileType="1048576" />
+      <File Name="Documentation/doxygen/RoutingReport.txt" FileDate="2015-09-10, 14:47:22" FileAge="1441921642407" FileType="45637" CompNumb="4" />
+      <File Name="Static_Code/PDD/CMT_PDD.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641949" FileType="1048576" />
+      <File Name="Static_Code/PDD/SPI_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642266" FileType="1048576" />
+      <File Name="Project_Settings/Linker_Files/ProcessorExpert.ld" FileDate="2015-09-10, 14:59:52" FileAge="1441922392553" FileType="8" CompNumb="4" />
+      <File Name="Generated_Code/Vectors.c" FileDate="2015-09-10, 14:56:17" FileAge="1441922177181" FileType="45637" CompNumb="4" />
+      <File Name="Static_Code/PDD/CAN_PDD.h" FileDate="2015-09-10, 14:47:21" FileAge="1441921641918" FileType="1048576" />
+      <File Name="Generated_Code/PE_LDD.h" FileDate="2015-09-10, 14:56:17" FileAge="1441922177181" FileType="45637" CompNumb="4" />
+      <File Name="Static_Code/PDD/USB_PDD.h" FileDate="2015-09-10, 14:47:22" FileAge="1441921642329" FileType="1048576" />
+      <File Name="Project_Settings/Debugger/MK20DX256.mem" FileDate="2015-09-10, 14:47:22" FileAge="1441921642407" FileType="45637" CompNumb="4" />
+      <File Name="Generated_Code/PE_LDD.c" FileDate="2015-09-10, 14:56:17" FileAge="1441922177150" FileType="45637" CompNumb="4" />
+    </GeneratedByPE>
+  </GeneratedFilesList>
+  <CodeGenReference>3</CodeGenReference>
+</CodeGenerationInfo>

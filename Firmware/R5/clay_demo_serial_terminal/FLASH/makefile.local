@@ -5,6 +5,6 @@
 ################################################################################
 
 export GNU_Make_Install_DirEnv=$(CWInstallLocationEnv)/gnu/bin
-export ProjDirPath=Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial1_console
+export ProjDirPath=Z:/Workspace/Checkouts/clay/Firmware/R5/clay_demo_serial_terminal
 export CWInstallLocationEnv=C:/Freescale/CW MCU v10.6.4
 export ARMSourceryDirEnv=$(CWInstallLocationEnv)/Cross_Tools/arm-none-eabi-gcc-4_7_3/bin

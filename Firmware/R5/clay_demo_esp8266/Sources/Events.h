@@ -38,6 +38,8 @@
 #include "IO1.h"
 #include "AS1.h"
 #include "ESP8266_RxBuf.h"
+#include "TI1.h"
+#include "TU1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -94,6 +96,26 @@ void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void AS1_OnBlockSent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  TI1_OnInterrupt (module Events)
+**
+**     Component   :  TI1 [TimerInt_LDD]
+*/
+/*!
+**     @brief
+**         Called if periodic event occur. Component and OnInterrupt
+**         event must be enabled. See [SetEventMask] and [GetEventMask]
+**         methods. This event is available only if a [Interrupt
+**         service/event] is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer passed as
+**                           the parameter of Init method.
+*/
+/* ===================================================================*/
+void TI1_OnInterrupt(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

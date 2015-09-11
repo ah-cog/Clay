@@ -10,12 +10,9 @@ void Application (void) {
 	int  ch           = (int) '\0';
 //	int server_started = FALSE;
 	  
-	ESP8266_Init ();
+	ESP8266_Initialize ();
 	
-	printf ("Clay\r\n");
-	printf ("\r\n");
-	
-	ESP8266_Send_Command_AT_RST ();
+	printf ("Clay\r\n\r\n");
 	
 	// "REPL" framework
 	for (;;) {
@@ -39,7 +36,7 @@ void Application (void) {
 		// Relay buffer to the bridged serial peripheral (UART0)
 		
 //		if (server_started == FALSE) {
-			ESP8266_Start_Web_Server ();
+			ESP8266_Start_Web_Server (HTTP_SERVER_PORT);
 //			server_started = TRUE;
 //		} else {
 //		

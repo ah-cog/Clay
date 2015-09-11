@@ -4,13 +4,13 @@
 /*##                                   */
 /*##     Filename  : ProcessorExpert.ld */
 /*##                                   */
-/*##     Project   : clay_demo_serial1_console */
+/*##     Project   : clay_demo_serial_terminal */
 /*##                                   */
 /*##     Processor : MK20DX256VLL7     */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2015-08-21, 01:35, # CodeGen: 12 */
+/*##     Date/Time : 2015-09-05, 16:16, # CodeGen: 0 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
