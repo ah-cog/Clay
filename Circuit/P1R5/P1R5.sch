@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -6934,6 +6934,18 @@ placed near these ports.</text>
 <text x="321.31" y="-147.32" size="2.54" layer="97" rot="R180">To IMU, page 4</text>
 <text x="321.31" y="-182.88" size="2.54" layer="97" rot="R180">To LEDs, page 3</text>
 <text x="313.69" y="-170.18" size="2.54" layer="97">To LEDs on page 3 and IMU on page 4</text>
+<text x="161.29" y="-266.7" size="1.778" layer="97">10</text>
+<text x="161.29" y="-264.16" size="1.778" layer="97">11</text>
+<text x="161.29" y="-261.62" size="1.778" layer="97">12</text>
+<text x="189.23" y="-261.62" size="1.778" layer="97">9</text>
+<text x="189.23" y="-264.16" size="1.778" layer="97">8</text>
+<text x="189.23" y="-266.7" size="1.778" layer="97">7</text>
+<text x="219.71" y="-199.39" size="1.778" layer="97">6</text>
+<text x="219.71" y="-201.93" size="1.778" layer="97">5</text>
+<text x="219.71" y="-204.47" size="1.778" layer="97">4</text>
+<text x="219.71" y="-209.55" size="1.778" layer="97">3</text>
+<text x="219.71" y="-212.09" size="1.778" layer="97">2</text>
+<text x="219.71" y="-214.63" size="1.778" layer="97">1</text>
 </plain>
 <instances>
 <instance part="U1" gate="G$1" x="171.45" y="-133.35" smashed="yes">

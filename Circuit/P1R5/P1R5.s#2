@@ -419,6 +419,7 @@ Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.&lt;br&g
 <smd name="13" x="1.5" y="0.25" dx="0.7" dy="0.28" layer="1" rot="R180"/>
 <smd name="14" x="1.5" y="-0.25" dx="0.7" dy="0.28" layer="1" rot="R180"/>
 <smd name="15" x="0" y="0" dx="1.65" dy="2.4" layer="1" rot="R90" stop="no" thermals="no" cream="no"/>
+<text x="-1.905" y="-2.667" size="0.6096" layer="21">&gt;NAME</text>
 </package>
 <package name="MK20DX256VLH7">
 <circle x="-3.818" y="3.818" radius="0.254" width="0.127" layer="21"/>
