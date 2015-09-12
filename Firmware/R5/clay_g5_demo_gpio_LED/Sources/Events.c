@@ -35,7 +35,9 @@ extern "C" {
 #endif 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#ifndef SYSTEM_TICK_H_
 #include "system_tick.h"
+#endif
 
 /*
  ** ===================================================================
@@ -54,49 +56,6 @@ void Cpu_OnNMIINT(void) {
 	/* Write your code here ... */
 }
 
-/*
- ** ===================================================================
- **     Event       :  I2CLED_DRIVER_0_OnMasterBlockSent (module Events)
- **
- **     Component   :  I2CLED_DRIVER_0 [I2C_LDD]
- */
-/*!
- **     @brief
- **         This event is called when I2C in master mode finishes the
- **         transmission of the data successfully. This event is not
- **         available for the SLAVE mode and if MasterSendBlock is
- **         disabled. 
- **     @param
- **         UserDataPtr     - Pointer to the user or
- **                           RTOS specific data. This pointer is passed
- **                           as the parameter of Init method.
- */
-/* ===================================================================*/
-void I2CLED_DRIVER_0_OnMasterBlockSent(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
-}
-
-/*
- ** ===================================================================
- **     Event       :  I2CLED_DRIVER_0_OnMasterBlockReceived (module Events)
- **
- **     Component   :  I2CLED_DRIVER_0 [I2C_LDD]
- */
-/*!
- **     @brief
- **         This event is called when I2C is in master mode and finishes
- **         the reception of the data successfully. This event is not
- **         available for the SLAVE mode and if MasterReceiveBlock is
- **         disabled.
- **     @param
- **         UserDataPtr     - Pointer to the user or
- **                           RTOS specific data. This pointer is passed
- **                           as the parameter of Init method.
- */
-/* ===================================================================*/
-void I2CLED_DRIVER_0_OnMasterBlockReceived(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
-}
 
 /*
  ** ===================================================================

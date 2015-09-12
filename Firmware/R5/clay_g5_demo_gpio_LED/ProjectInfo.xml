@@ -77,6 +77,7 @@
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Sources\Events.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Sources\led_driver_pca9552.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Sources\main.c</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Sources\system_tick.c</PathName>
     </GeneratedCs>
     <GeneratedHs>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\Cpu.h</PathName>

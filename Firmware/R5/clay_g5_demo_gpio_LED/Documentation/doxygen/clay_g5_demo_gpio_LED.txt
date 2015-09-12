@@ -49,9 +49,9 @@
 - \subpage LED1
 - \subpage LED_DRIVER_0_RESET
 - \subpage LED_DRIVER_1_RESET
-- \subpage I2C0
 - \subpage TU1
 - \subpage tick_1ms_timer
+- \subpage I2C0
 
 
 */
