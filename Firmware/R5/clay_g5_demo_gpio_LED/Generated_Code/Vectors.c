@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-10, 23:06, # CodeGen: 7
+**     Date/Time   : 2015-09-11, 22:28, # CodeGen: 12
 **     Abstract    :
 **
 **     Settings    :
@@ -70,9 +70,9 @@
   #include "LED1.h"
   #include "LED_DRIVER_0_RESET.h"
   #include "LED_DRIVER_1_RESET.h"
-  #include "I2C0.h"
   #include "tick_1ms_timer.h"
   #include "TU1.h"
+  #include "I2C0.h"
   #include "Events.h"
 
 

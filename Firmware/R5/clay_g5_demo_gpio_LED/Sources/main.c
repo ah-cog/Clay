@@ -45,17 +45,34 @@
 #include "LED2.h"
 #include "LED1.h"
 #include "LED_DRIVER_0_RESET.h"
-#include "LED_DRIVER_0_RESET.h"
 #include "LED_DRIVER_1_RESET.h"
 #include "I2C0.h"
 #include "tick_1ms_timer.h"
 #include "TU1.h"
 /* Including shared modules, which are used for whole project */
+#ifndef __PE_Types_H
 #include "PE_Types.h"
+#endif
+
+#ifndef __PE_Error_H
 #include "PE_Error.h"
+#endif
+
+#ifndef __PE_Const_H
 #include "PE_Const.h"
+#endif
+
+#ifndef __IO_Map_H
 #include "IO_Map.h"
+#endif
+
+#ifndef SYSTEM_TICK_H_
 #include "system_tick.h"
+#endif
+
+#ifndef LED_DRIVER_PCA9552_H_
+#include "led_driver_pca9552.h"
+#endif
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
@@ -63,82 +80,49 @@
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
-	/* Write your local variable definition here */
-	int i;
-	bool led_state = FALSE;
+    /* Write your local variable definition here */
+    bool led_state = FALSE;
 
-	/*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
-	PE_low_level_init();
-	/*** End of Processor Expert internal initialization.                    ***/
+    /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+    PE_low_level_init();
+    /*** End of Processor Expert internal initialization.                    ***/
 
-	/* Write your code here */
+    /* Write your code here */
 
-	init_tick();
-	
-	for (;;) {
+    init_tick();
+    init_led_drivers();
 
-		if(tick_1msec)
-		{
-			tick_1msec = FALSE;
-			
-		}
-		if(tick_250msec)
-		{
-			tick_250msec = FALSE;
-			
-		}
-		if(tick_500msec)
-		{
-			tick_500msec = FALSE;
-			
-			//toggle LEDs
-			LED1_PutVal(NULL, !led_state);
-			LED2_PutVal(NULL, led_state);
-			led_state = !led_state;
-		}
-		
-		
-		/*
-		IO1_PutVal(NULL, TRUE);
-		IO2_PutVal(NULL, TRUE);
-		IO3_PutVal(NULL, TRUE);
-		IO4_PutVal(NULL, TRUE);
-		IO5_PutVal(NULL, TRUE);
-		IO6_PutVal(NULL, TRUE);
-		IO7_PutVal(NULL, TRUE);
-		IO8_PutVal(NULL, TRUE);
-		IO9_PutVal(NULL, TRUE);
-		IO10_PutVal(NULL, TRUE);
-		IO11_PutVal(NULL, TRUE);
-		IO12_PutVal(NULL, TRUE);
-		LED1_PutVal(NULL, TRUE);
-		LED2_PutVal(NULL, FALSE);
+    delay_n_msec(5);
+    
+    color_rgb color_output = { 0, 0, 0 };
+    set_led_output(RGB_1, color_output);
 
-		for (i = 0; i < 1000000; i++) {
-		}
+    for (;;)
+    {
 
-		IO1_PutVal(NULL, FALSE);
-		IO2_PutVal(NULL, FALSE);
-		IO3_PutVal(NULL, FALSE);
-		IO4_PutVal(NULL, FALSE);
-		IO5_PutVal(NULL, FALSE);
-		IO6_PutVal(NULL, FALSE);
-		IO7_PutVal(NULL, FALSE);
-		IO8_PutVal(NULL, FALSE);
-		IO9_PutVal(NULL, FALSE);
-		IO10_PutVal(NULL, FALSE);
-		IO11_PutVal(NULL, FALSE);
-		IO12_PutVal(NULL, FALSE);
-		LED2_PutVal(NULL, TRUE);
-		LED1_PutVal(NULL, FALSE);
+        if (tick_1msec)
+        {
+            tick_1msec = FALSE;
 
-		for (i = 0; i < 1000000; i++) {
-		*/
-		
+        }
+        if (tick_250msec)
+        {
+            tick_250msec = FALSE;
 
-	}
+        }
+        if (tick_500msec)
+        {
+            tick_500msec = FALSE;
 
-	/*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+            //toggle LEDs
+            LED1_PutVal(LED1_DeviceData, !led_state);
+            LED2_PutVal(LED2_DeviceData, led_state);
+            led_state = !led_state;
+        }
+
+    }
+
+    /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
     PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */

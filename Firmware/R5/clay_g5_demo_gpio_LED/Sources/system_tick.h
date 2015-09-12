@@ -23,9 +23,8 @@ extern bool tick_500msec;
 // function prototypes ///////
 extern void init_tick();
 
-extern void tick(); 
+extern void tick();
 
 extern void delay_n_msec(uint32 n);
-
 
 #endif /* SYSTEM_TICK_H_ */

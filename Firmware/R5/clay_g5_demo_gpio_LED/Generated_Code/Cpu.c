@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-10, 23:06, # CodeGen: 7
+**     Date/Time   : 2015-09-11, 22:39, # CodeGen: 13
 **     Abstract    :
 **
 **     Settings    :
@@ -76,9 +76,9 @@
 #include "LED1.h"
 #include "LED_DRIVER_0_RESET.h"
 #include "LED_DRIVER_1_RESET.h"
-#include "I2C0.h"
 #include "tick_1ms_timer.h"
 #include "TU1.h"
+#include "I2C0.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -147,6 +147,21 @@ void __init_hardware(void)
   /*** ### MK20DX256VLH7 "Cpu" init code ... ***/
   /*** PE initialization code after reset ***/
   SCB_VTOR = (uint32_t)(&__vect_table); /* Set the interrupt vector table position */
+  /* SIM_SCGC6: RTC=1 */
+  SIM_SCGC6 |= SIM_SCGC6_RTC_MASK;
+  if ((RTC_CR & RTC_CR_OSCE_MASK) == 0u) { /* Only if the OSCILLATOR is not already enabled */
+    /* RTC_CR: SC2P=0,SC4P=0,SC8P=0,SC16P=0 */
+    RTC_CR &= (uint32_t)~(uint32_t)(
+               RTC_CR_SC2P_MASK |
+               RTC_CR_SC4P_MASK |
+               RTC_CR_SC8P_MASK |
+               RTC_CR_SC16P_MASK
+              );
+    /* RTC_CR: OSCE=1 */
+    RTC_CR |= RTC_CR_OSCE_MASK;
+    /* RTC_CR: CLKO=0 */
+    RTC_CR &= (uint32_t)~(uint32_t)(RTC_CR_CLKO_MASK);
+  }
   /* Disable the WDOG module */
   /* WDOG_UNLOCK: WDOGUNLOCK=0xC520 */
   WDOG_UNLOCK = WDOG_UNLOCK_WDOGUNLOCK(0xC520); /* Key 1 */
@@ -181,8 +196,12 @@ void __init_hardware(void)
                 SIM_CLKDIV1_OUTDIV4(0x02); /* Update system prescalers */
   /* SIM_SOPT2: PLLFLLSEL=0 */
   SIM_SOPT2 &= (uint32_t)~(uint32_t)(SIM_SOPT2_PLLFLLSEL_MASK); /* Select FLL as a clock source for various peripherals */
-  /* SIM_SOPT1: OSC32KSEL=3 */
-  SIM_SOPT1 |= SIM_SOPT1_OSC32KSEL(0x03); /* LPO 1kHz oscillator drives 32 kHz clock for various peripherals */
+  /* SIM_SOPT1: OSC32KSEL=2 */
+  SIM_SOPT1 = (uint32_t)((SIM_SOPT1 & (uint32_t)~(uint32_t)(
+               SIM_SOPT1_OSC32KSEL(0x01)
+              )) | (uint32_t)(
+               SIM_SOPT1_OSC32KSEL(0x02)
+              ));                      /* System oscillator drives 32 kHz clock for various peripherals */
   /* PORTA_PCR18: ISF=0,MUX=0 */
   PORTA_PCR18 &= (uint32_t)~(uint32_t)((PORT_PCR_ISF_MASK | PORT_PCR_MUX(0x07)));
   /* Switch to FEI Mode */
@@ -325,10 +344,10 @@ void PE_low_level_init(void)
   (void)LED_DRIVER_0_RESET_Init(NULL);
   /* ### BitIO_LDD "LED_DRIVER_1_RESET" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)LED_DRIVER_1_RESET_Init(NULL);
-  /* ### I2C_LDD "I2C0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)I2C0_Init(NULL);
   /* ### TimerInt_LDD "tick_1ms_timer" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)tick_1ms_timer_Init(NULL);
+  /* ### I2C_LDD "I2C0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)I2C0_Init(NULL);
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }

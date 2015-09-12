@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-10, 23:02, # CodeGen: 5
+**     Date/Time   : 2015-09-11, 22:28, # CodeGen: 12
 **     Abstract    :
 **
 **     Settings    :
@@ -167,10 +167,10 @@ bool PE_PeripheralUsed(uint32_t PrphBaseAddress)
     case 0x400FF080UL:
     /* Base address allocated by peripheral(s) PTB */
     case 0x400FF040UL:
-    /* Base address allocated by peripheral(s) I2C0 */
-    case 0x40066000UL:
     /* Base address allocated by peripheral(s) FTM0 */
     case 0x40038000UL:
+    /* Base address allocated by peripheral(s) I2C0 */
+    case 0x40066000UL:
       result = TRUE;
       break;
     default:
