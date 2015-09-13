@@ -1428,7 +1428,7 @@ PE_DEBUGHALT();
         <boolgroup name="MASTER mode" v="Enabled">
           <group name="Initialization">
             <Address_mode v="7-bit addressing" />
-            <Target_slave_address_init v="96" />
+            <Target_slave_address_init v="97" />
           </group>
         </boolgroup>
         <boolgroup name="SLAVE mode" v="Disabled" />

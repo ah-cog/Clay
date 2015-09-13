@@ -26,8 +26,8 @@
 // global vars ///////////////
 uint8 driver_addresses[] =
         {
-                0b1100000u,             //driver 0
-                0b1100001u              //driver 1
+                0x60u,             //driver 0
+                0x61u              //driver 1
         };
 
 // local vars ////////////////
@@ -99,11 +99,20 @@ void set_led_output(rgb_led led, color_rgb output_color)
 
     rgb_channel * channel = channels + (int) led;
 
-    I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) set_pwm_stuff,
-                (LDD_I2C_TSize) 4, LDD_I2C_SEND_STOP);
-    
+    I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, 0x60);
     delay_n_msec(1);
-    
-    I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) turn_on_led_0,
-            (LDD_I2C_TSize) 5, LDD_I2C_SEND_STOP);
+
+    I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) set_pwm_stuff, (LDD_I2C_TSize) 4, LDD_I2C_SEND_STOP);
+    delay_n_msec(1);
+
+    I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) turn_on_led_0, (LDD_I2C_TSize) 5, LDD_I2C_SEND_STOP);
+    delay_n_msec(1);
+
+    I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, 0x61);
+    delay_n_msec(1);
+
+    I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) set_pwm_stuff, (LDD_I2C_TSize) 4, LDD_I2C_SEND_STOP);
+    delay_n_msec(1);
+
+    I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) turn_on_led_0, (LDD_I2C_TSize) 5, LDD_I2C_SEND_STOP);
 }
