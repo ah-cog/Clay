@@ -93,13 +93,18 @@ int main(void)
     init_led_drivers();
 
     delay_n_msec(5);
-    
-    color_rgb color_output = { 0, 0, 0 };
-    set_led_output(RGB_1, color_output);
+
+    color_rgb colors[] = {
+            { LED_MODE_MAX, LED_MODE_OFF, LED_MODE_LOW },
+            { LED_MODE_LOW, LED_MODE_MAX, LED_MODE_OFF },
+            { LED_MODE_OFF, LED_MODE_LOW, LED_MODE_MAX }
+    };
+
+    int led_index = 0;
+    int color_index = 0;
 
     for (;;)
     {
-
         if (tick_1msec)
         {
             tick_1msec = FALSE;
@@ -118,19 +123,31 @@ int main(void)
             LED1_PutVal(LED1_DeviceData, !led_state);
             LED2_PutVal(LED2_DeviceData, led_state);
             led_state = !led_state;
+
+            color_rgb * derp = colors + color_index;
+
+            set_led_output((rgb_led) led_index, derp);
+
+            if (++led_index % RGB_INVALID == 0)
+            {
+                led_index = 0;
+                color_index = (color_index + 1) % 3;
+            }
         }
 
     }
 
     /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-  #ifdef PEX_RTOS_START
-    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-  #endif
-  /*** End of RTOS startup code.  ***/
-  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-  for(;;){}
-  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+#ifdef PEX_RTOS_START
+    PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
+    /*** End of RTOS startup code.  ***/
+    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+    for (;;)
+    {
+    }
+    /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
 /* END main */
