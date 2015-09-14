@@ -15,47 +15,67 @@
 #endif
 
 // defines ///////////////////
+#define LED_DRIVER_COUNT            2
 
 // structs ///////////////////
 
 //LED drivers
 typedef enum
 {
-    LED_DRIVER_0, LED_DRIVER_1, LED_DRIVER_BOTH
+    LED_0,
+    LED_1,
+    LED_2,        //no red
+    LED_3,
+    LED_4,
+    LED_5         //no red
+} led_driver_channel;
+
+typedef enum
+{
+    LED_DRIVER_0,
+    LED_DRIVER_1,
+    LED_DRIVER_BOTH,
 } led_driver;
+
+typedef enum
+{
+    LED_MODE_MAX,       //full on
+    LED_MODE_OFF,       //high-z
+    LED_MODE_MED,       //pwm0
+    LED_MODE_LOW        //pwm1
+} led_mode;
 
 //These are the LEDS as they are laid out on the board.
 typedef enum
 {
-    RGB_1 = 10,//DS12
-    RGB_2 = 11,//DS11
-    RGB_3 = 12,//DS10
-    RGB_4 = 7,//DS15
-    RGB_5 = 8,//DS14
-    RGB_6 = 9,//DS13
-    RGB_7 = 6,//DS9
-    RGB_8 = 5,//DS8
-    RGB_9 = 4,//DS7
-    RGB_10 = 3,//DS6
-    RGB_11 = 2,//DS5
-    RGB_12 = 1,//DS4
-    RGB_INVALID = 13
+    RGB_1,        //DS12
+    RGB_2,        //DS11
+    RGB_3,        //DS10
+    RGB_4,         //DS15
+    RGB_5,         //DS14
+    RGB_6,         //DS13
+    RGB_7,         //DS9
+    RGB_8,         //DS8
+    RGB_9,         //DS7
+    RGB_10,        //DS6
+    RGB_11,        //DS5
+    RGB_12,        //DS4
+    RGB_INVALID
 } rgb_led;
 
 //RGB Channel. Tells which driver the LED is driven by and the index of the green pin.
 typedef struct
 {
     led_driver driver_index;
-    uint32 pin_base;
-    bool has_red;
+    led_driver_channel led_index;
 } rgb_channel;
 
 //RGB color type. LED drivers support 16 bit color.
 typedef struct
 {
-    uint16 R;
-    uint16 G;    
-    uint16 B;
+    led_mode R;
+    led_mode G;
+    led_mode B;
 } color_rgb;
 
 // global vars ///////////////
@@ -66,6 +86,6 @@ extern void init_led_drivers();
 
 extern void reset_driver(led_driver Driver);
 
-extern void set_led_output(rgb_led led, color_rgb output_color);
+extern void set_led_output(rgb_led led, color_rgb * output_color);
 
 #endif /* LED_DRIVER_PCA9552_H_ */
