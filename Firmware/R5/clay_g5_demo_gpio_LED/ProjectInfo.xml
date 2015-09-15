@@ -52,6 +52,9 @@
     <GeneratedCs>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\Cpu.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\I2C0.c</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IMU_CS.c</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IMU_FSYNC.c</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IMU_INT.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IO1.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IO10.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IO11.c</PathName>
@@ -82,6 +85,9 @@
     <GeneratedHs>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\Cpu.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\I2C0.h</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IMU_CS.h</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IMU_FSYNC.h</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IMU_INT.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IO1.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IO10.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_gpio_LED\Generated_Code\IO11.h</PathName>

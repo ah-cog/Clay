@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-11, 22:28, # CodeGen: 12
+**     Date/Time   : 2015-09-14, 19:06, # CodeGen: 28
 **     Abstract    :
 **
 **     Settings    :
@@ -79,6 +79,9 @@
 #include "tick_1ms_timer.h"
 #include "TU1.h"
 #include "I2C0.h"
+#include "IMU_FSYNC.h"
+#include "IMU_CS.h"
+#include "IMU_INT.h"
 
 
 /*
