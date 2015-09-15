@@ -51,6 +51,9 @@
 #include "LED_DRIVER_0_RESET.h"
 #include "LED_DRIVER_1_RESET.h"
 #include "I2C0.h"
+#include "IMU_FSYNC.h"
+#include "IMU_CS.h"
+#include "IMU_INT.h"
 #include "tick_1ms_timer.h"
 #include "TU1.h"
 

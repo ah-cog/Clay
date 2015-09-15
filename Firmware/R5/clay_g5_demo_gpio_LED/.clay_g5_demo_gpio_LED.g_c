@@ -18,7 +18,7 @@
         <Line>PE_Const</Line>
         <Line>IO_Map</Line>
       </GenSharedModules>
-      <ShrdHeaderAge0>1194046349</ShrdHeaderAge0>
+      <ShrdHeaderAge0>1194236115</ShrdHeaderAge0>
       <ShrdCodeAge0>-1</ShrdCodeAge0>
       <ShrdAsemblAge0>-1</ShrdAsemblAge0>
       <ShrdHeaderAge1>1193980377</ShrdHeaderAge1>
@@ -30,7 +30,7 @@
       <ShrdHeaderAge3>1193980377</ShrdHeaderAge3>
       <ShrdCodeAge3>-1</ShrdCodeAge3>
       <ShrdAsemblAge3>-1</ShrdAsemblAge3>
-      <GenExtraFiles lines_count="28">
+      <GenExtraFiles lines_count="31">
         <Line>Documentation\doxygen\IO3.txt</Line>
         <Line>Documentation\doxygen\IO2.txt</Line>
         <Line>Documentation\doxygen\IO1.txt</Line>
@@ -50,6 +50,9 @@
         <Line>Documentation\doxygen\TU1.txt</Line>
         <Line>Documentation\doxygen\tick_1ms_timer.txt</Line>
         <Line>Documentation\doxygen\I2C0.txt</Line>
+        <Line>Documentation\doxygen\IMU_FSYNC.txt</Line>
+        <Line>Documentation\doxygen\IMU_CS.txt</Line>
+        <Line>Documentation\doxygen\IMU_INT.txt</Line>
         <Line>Documentation\doxygen\clay_g5_demo_gpio_LED.txt</Line>
         <Line>Documentation\doxygen\RoutingReport.txt</Line>
         <Line>Documentation\doxygen\pex.doxyfile</Line>
@@ -60,16 +63,19 @@
         <Line>Project_Settings\Linker_Files\ProcessorExpert.ld</Line>
         <Line>Generated_Code\Vectors.c</Line>
       </GenExtraFiles>
-      <GenExtraFileSrcDir22>lib\doxygen\</GenExtraFileSrcDir22>
-      <XtraAge24>1194046349</XtraAge24>
-      <XtraAge25>1194046349</XtraAge25>
-      <XtraAge27>1194046349</XtraAge27>
+      <GenExtraFileSrcDir25>lib\doxygen\</GenExtraFileSrcDir25>
+      <XtraAge27>1194236115</XtraAge27>
+      <XtraAge28>1194236115</XtraAge28>
+      <XtraAge30>1194236115</XtraAge30>
+      <GenExtraFileType30>4</GenExtraFileType30>
+      <GenExtraFileType29>4</GenExtraFileType29>
+      <GenExtraFileType28>4</GenExtraFileType28>
       <GenExtraFileType27>4</GenExtraFileType27>
       <GenExtraFileType26>4</GenExtraFileType26>
-      <GenExtraFileType25>4</GenExtraFileType25>
+      <GenExtraFileType25>5</GenExtraFileType25>
       <GenExtraFileType24>4</GenExtraFileType24>
       <GenExtraFileType23>4</GenExtraFileType23>
-      <GenExtraFileType22>5</GenExtraFileType22>
+      <GenExtraFileType22>4</GenExtraFileType22>
       <GenExtraFileType21>4</GenExtraFileType21>
       <GenExtraFileType20>4</GenExtraFileType20>
       <GenExtraFileType19>4</GenExtraFileType19>
@@ -381,10 +387,13 @@
         <Line>tick_1ms_timer_OnInterrupt</Line>
         <Line>Cpu_OnNMIINT</Line>
       </GenMethodsInEvents>
-      <GenAllModules lines_count="25">
+      <GenAllModules lines_count="28">
         <Line>Cpu</Line>
         <Line>Events</Line>
         <Line>I2C0</Line>
+        <Line>IMU_CS</Line>
+        <Line>IMU_FSYNC</Line>
+        <Line>IMU_INT</Line>
         <Line>IO_Map</Line>
         <Line>IO1</Line>
         <Line>IO10</Line>
@@ -409,7 +418,7 @@
         <Line>TU1</Line>
       </GenAllModules>
       <GenExternModules lines_count="0" />
-      <GenBeanModules lines_count="19">
+      <GenBeanModules lines_count="22">
         <Line>IO3</Line>
         <Line>IO2</Line>
         <Line>IO1</Line>
@@ -429,11 +438,14 @@
         <Line>tick_1ms_timer</Line>
         <Line>TU1</Line>
         <Line>I2C0</Line>
+        <Line>IMU_FSYNC</Line>
+        <Line>IMU_CS</Line>
+        <Line>IMU_INT</Line>
       </GenBeanModules>
     </GenFiles>
     <SignalListFile>Documentation\clay_g5_demo_gpio_LED_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>40</ProjectModificationStamp>
+    <ProjectModificationStamp>43</ProjectModificationStamp>
   </Options>
   <CpuID_20>
     <Generated>false</Generated>
@@ -499,7 +511,7 @@
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1194046699</HeaderAge>
-    <CodeAge>1194046699</CodeAge>
+    <CodeAge>1194236115</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -2835,6 +2847,267 @@
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\I2C0.txt</ExtraFile0>
   </ComponentID_49>
+  <ComponentID_54>
+    <Generated>true</Generated>
+    <GenCompName>IMU_FSYNC</GenCompName>
+    <GenComponentVersion>01.033</GenComponentVersion>
+    <GenDriverVersion>01.03</GenDriverVersion>
+    <GenEventModule />
+    <HeaderAge>1194236433</HeaderAge>
+    <CodeAge>1194236433</CodeAge>
+    <AsemblAge>-1</AsemblAge>
+    <GenNumMethods>13</GenNumMethods>
+    <Init>true</Init>
+    <Deinit>false</Deinit>
+    <GetDir>false</GetDir>
+    <SetDir>false</SetDir>
+    <SetInput>false</SetInput>
+    <SetOutput>false</SetOutput>
+    <GetVal>true</GetVal>
+    <PutVal>true</PutVal>
+    <ClrVal>true</ClrVal>
+    <SetVal>true</SetVal>
+    <NegVal>false</NegVal>
+    <ConnectPin>false</ConnectPin>
+    <GetRawVal>false</GetRawVal>
+    <GenNumEvents>0</GenNumEvents>
+    <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
+    <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
+    <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
+    <GenMethodPos>10</GenMethodPos>
+    <MethodPos>
+      <MethodPos0>Init</MethodPos0>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>122</LineBeg>
+      <LineEnd>145</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos1>GetVal</MethodPos1>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>146</LineBeg>
+      <LineEnd>167</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos2>PutVal</MethodPos2>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>168</LineBeg>
+      <LineEnd>193</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos3>ClrVal</MethodPos3>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>194</LineBeg>
+      <LineEnd>209</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos4>SetVal</MethodPos4>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>210</LineBeg>
+      <LineEnd>225</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos5>Init</MethodPos5>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>95</LineBeg>
+      <LineEnd>144</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos6>GetVal</MethodPos6>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>145</LineBeg>
+      <LineEnd>173</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos7>PutVal</MethodPos7>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>174</LineBeg>
+      <LineEnd>207</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos8>ClrVal</MethodPos8>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>208</LineBeg>
+      <LineEnd>227</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos9>SetVal</MethodPos9>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>228</LineBeg>
+      <LineEnd>247</LineEnd>
+    </MethodPos>
+    <GenExtraFilesCount>1</GenExtraFilesCount>
+    <ExtraFile0>Documentation\doxygen\IMU_FSYNC.txt</ExtraFile0>
+  </ComponentID_54>
+  <ComponentID_55>
+    <Generated>true</Generated>
+    <GenCompName>IMU_CS</GenCompName>
+    <GenComponentVersion>01.033</GenComponentVersion>
+    <GenDriverVersion>01.03</GenDriverVersion>
+    <GenEventModule />
+    <HeaderAge>1194236115</HeaderAge>
+    <CodeAge>1194236115</CodeAge>
+    <AsemblAge>-1</AsemblAge>
+    <GenNumMethods>13</GenNumMethods>
+    <Init>true</Init>
+    <Deinit>false</Deinit>
+    <GetDir>false</GetDir>
+    <SetDir>false</SetDir>
+    <SetInput>false</SetInput>
+    <SetOutput>false</SetOutput>
+    <GetVal>true</GetVal>
+    <PutVal>true</PutVal>
+    <ClrVal>true</ClrVal>
+    <SetVal>true</SetVal>
+    <NegVal>false</NegVal>
+    <ConnectPin>false</ConnectPin>
+    <GetRawVal>false</GetRawVal>
+    <GenNumEvents>0</GenNumEvents>
+    <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
+    <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
+    <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
+    <GenMethodPos>10</GenMethodPos>
+    <MethodPos>
+      <MethodPos0>Init</MethodPos0>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>122</LineBeg>
+      <LineEnd>145</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos1>GetVal</MethodPos1>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>146</LineBeg>
+      <LineEnd>167</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos2>PutVal</MethodPos2>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>168</LineBeg>
+      <LineEnd>193</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos3>ClrVal</MethodPos3>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>194</LineBeg>
+      <LineEnd>209</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos4>SetVal</MethodPos4>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>210</LineBeg>
+      <LineEnd>225</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos5>Init</MethodPos5>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>95</LineBeg>
+      <LineEnd>144</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos6>GetVal</MethodPos6>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>145</LineBeg>
+      <LineEnd>173</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos7>PutVal</MethodPos7>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>174</LineBeg>
+      <LineEnd>207</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos8>ClrVal</MethodPos8>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>208</LineBeg>
+      <LineEnd>227</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos9>SetVal</MethodPos9>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>228</LineBeg>
+      <LineEnd>247</LineEnd>
+    </MethodPos>
+    <GenExtraFilesCount>1</GenExtraFilesCount>
+    <ExtraFile0>Documentation\doxygen\IMU_CS.txt</ExtraFile0>
+  </ComponentID_55>
+  <ComponentID_56>
+    <Generated>true</Generated>
+    <GenCompName>IMU_INT</GenCompName>
+    <GenComponentVersion>01.033</GenComponentVersion>
+    <GenDriverVersion>01.03</GenDriverVersion>
+    <GenEventModule />
+    <HeaderAge>1194236488</HeaderAge>
+    <CodeAge>1194236488</CodeAge>
+    <AsemblAge>-1</AsemblAge>
+    <GenNumMethods>13</GenNumMethods>
+    <Init>true</Init>
+    <Deinit>false</Deinit>
+    <GetDir>false</GetDir>
+    <SetDir>false</SetDir>
+    <SetInput>false</SetInput>
+    <SetOutput>false</SetOutput>
+    <GetVal>true</GetVal>
+    <PutVal>false</PutVal>
+    <ClrVal>false</ClrVal>
+    <SetVal>false</SetVal>
+    <NegVal>false</NegVal>
+    <ConnectPin>false</ConnectPin>
+    <GetRawVal>false</GetRawVal>
+    <GenNumEvents>0</GenNumEvents>
+    <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
+    <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
+    <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
+    <GenMethodPos>4</GenMethodPos>
+    <MethodPos>
+      <MethodPos0>Init</MethodPos0>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>116</LineBeg>
+      <LineEnd>139</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos1>GetVal</MethodPos1>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>140</LineBeg>
+      <LineEnd>161</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos2>Init</MethodPos2>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>92</LineBeg>
+      <LineEnd>138</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos3>GetVal</MethodPos3>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>139</LineBeg>
+      <LineEnd>167</LineEnd>
+    </MethodPos>
+    <GenExtraFilesCount>1</GenExtraFilesCount>
+    <ExtraFile0>Documentation\doxygen\IMU_INT.txt</ExtraFile0>
+  </ComponentID_56>
   <UsedSrcFiles>
     <SrcFile0>Drivers\Common\CheckRegBits8_Rst.prg=1116866294</SrcFile0>
     <SrcFile1>Drivers\I2C_LDD.src=1116866294</SrcFile1>

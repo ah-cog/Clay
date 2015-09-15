@@ -52,6 +52,9 @@
 - \subpage TU1
 - \subpage tick_1ms_timer
 - \subpage I2C0
+- \subpage IMU_FSYNC
+- \subpage IMU_CS
+- \subpage IMU_INT
 
 
 */
