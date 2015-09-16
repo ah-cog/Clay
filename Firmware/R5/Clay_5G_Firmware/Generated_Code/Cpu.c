@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-16, 13:05, # CodeGen: 4
+**     Date/Time   : 2015-09-16, 15:19, # CodeGen: 23
 **     Abstract    :
 **
 **     Settings    :
@@ -60,13 +60,16 @@
 /* MODULE Cpu. */
 
 /* {Default RTOS Adapter} No RTOS includes */
+#include "Timer_1ms.h"
 #include "ESP8266_GPIO2.h"
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"
-#include "Timer_1ms.h"
-#include "TU1.h"
 #include "ESP8266_Serial.h"
+#include "TU1.h"
+#include "LED_DRIVER_0_RESET.h"
+#include "LED_DRIVER_1_RESET.h"
+#include "I2C0.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -291,6 +294,12 @@ void PE_low_level_init(void)
   (void)ESP8266_RST_Init(NULL);
   /* ### BitIO_LDD "ESP8266_CHIP_EN" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)ESP8266_CHIP_EN_Init(NULL);
+  /* ### BitIO_LDD "LED_DRIVER_0_RESET" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)LED_DRIVER_0_RESET_Init(NULL);
+  /* ### BitIO_LDD "LED_DRIVER_1_RESET" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)LED_DRIVER_1_RESET_Init(NULL);
+  /* ### I2C_LDD "I2C0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)I2C0_Init(NULL);
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }

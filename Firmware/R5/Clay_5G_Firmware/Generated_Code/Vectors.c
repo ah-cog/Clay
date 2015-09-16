@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-16, 13:05, # CodeGen: 4
+**     Date/Time   : 2015-09-16, 15:19, # CodeGen: 23
 **     Abstract    :
 **
 **     Settings    :
@@ -54,13 +54,16 @@
 */         
 
   #include "Cpu.h"
+  #include "Timer_1ms.h"
   #include "ESP8266_GPIO2.h"
   #include "ESP8266_GPIO0.h"
   #include "ESP8266_RST.h"
   #include "ESP8266_CHIP_EN.h"
-  #include "Timer_1ms.h"
-  #include "TU1.h"
   #include "ESP8266_Serial.h"
+  #include "TU1.h"
+  #include "LED_DRIVER_0_RESET.h"
+  #include "LED_DRIVER_1_RESET.h"
+  #include "I2C0.h"
   #include "Events.h"
 
 
@@ -120,7 +123,7 @@
     (tIsrFunc)&Cpu_Interrupt,          /* 0x25  0x00000094   -   ivINT_LLW                      unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x26  0x00000098   -   ivINT_Watchdog                 unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x27  0x0000009C   -   ivINT_Reserved39               unused by PE */
-    (tIsrFunc)&Cpu_Interrupt,          /* 0x28  0x000000A0   -   ivINT_I2C0                     unused by PE */
+    (tIsrFunc)&I2C0_Interrupt,         /* 0x28  0x000000A0   8   ivINT_I2C0                     used by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x29  0x000000A4   -   ivINT_I2C1                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x2A  0x000000A8   -   ivINT_SPI0                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x2B  0x000000AC   -   ivINT_SPI1                     unused by PE */

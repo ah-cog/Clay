@@ -25,6 +25,16 @@ void Application (void) {
 	
 	const char *responseData = "<html><h1>Clay</h1><button>I/O</button></html>";
 	
+	bool led_state = FALSE; // LEDs
+	color_rgb colors[] = {
+			{ LED_MODE_MAX, LED_MODE_OFF, LED_MODE_LOW },
+			{ LED_MODE_LOW, LED_MODE_MAX, LED_MODE_OFF },
+			{ LED_MODE_OFF, LED_MODE_LOW, LED_MODE_MAX }
+	}; // LEDs
+
+	int led_index = 0; // LEDs
+	int color_index = 0; // LEDs
+	
 	printf ("Clay\r\n");
 	
 	printf ("\r\n");
@@ -35,6 +45,13 @@ void Application (void) {
 	
 	printf ("Starting clock. ");
 	Start_Clock ();
+	printf ("Done.\r\n");
+	
+	printf ("\r\n");
+	
+	printf ("Starting LEDs. ");
+	init_led_drivers();
+	Wait (5);
 	printf ("Done.\r\n");
 	
 	printf ("\r\n");
@@ -172,6 +189,38 @@ void Application (void) {
 			
 			printf ("BUFFER!");
 		}
+		
+		
+		// LEDs
+		if (tick_1msec)
+			{
+				tick_1msec = FALSE;
+
+			}
+			if (tick_250msec)
+			{
+				tick_250msec = FALSE;
+
+			}
+			if (tick_500msec)
+			{
+				tick_500msec = FALSE;
+
+				//toggle LEDs
+//				LED1_PutVal(LED1_DeviceData, !led_state);
+//				LED2_PutVal(LED2_DeviceData, led_state);
+				led_state = !led_state;
+
+				color_rgb * derp = colors + color_index;
+
+				set_led_output((rgb_led) led_index, derp);
+
+				if (++led_index % RGB_INVALID == 0)
+				{
+					led_index = 0;
+					color_index = (color_index + 1) % 3;
+				}
+			}
 	}
 	
 			

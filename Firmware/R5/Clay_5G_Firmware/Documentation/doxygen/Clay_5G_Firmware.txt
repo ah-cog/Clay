@@ -33,13 +33,16 @@
 
 \page page_components Components 
 
+- \subpage TU1
+- \subpage Timer_1ms
 - \subpage ESP8266_GPIO2
 - \subpage ESP8266_GPIO0
 - \subpage ESP8266_RST
 - \subpage ESP8266_CHIP_EN
-- \subpage TU1
-- \subpage Timer_1ms
 - \subpage ESP8266_Serial
+- \subpage LED_DRIVER_0_RESET
+- \subpage LED_DRIVER_1_RESET
+- \subpage I2C0
 
 
 */
