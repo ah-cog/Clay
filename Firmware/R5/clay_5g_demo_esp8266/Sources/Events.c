@@ -38,6 +38,7 @@ extern "C" {
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
 #include "ESP8266.h"
+#include "Clock.h"
 
 /*
 ** ===================================================================
@@ -59,9 +60,9 @@ void Cpu_OnNMIINT(void)
 
 /*
 ** ===================================================================
-**     Event       :  AS1_OnBlockReceived (module Events)
+**     Event       :  ESP8266_Serial_OnBlockReceived (module Events)
 **
-**     Component   :  AS1 [Serial_LDD]
+**     Component   :  ESP8266_Serial [Serial_LDD]
 */
 /*!
 **     @brief
@@ -73,19 +74,23 @@ void Cpu_OnNMIINT(void)
 **                           as the parameter of Init method.
 */
 /* ===================================================================*/
-void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr)
+void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
 	ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 
 	(void) ptr->rxPutFct (ptr->rxChar);
-	(void) AS1_ReceiveBlock (ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof (ptr->rxChar));
+	(void) ESP8266_Serial_ReceiveBlock (ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof (ptr->rxChar));
+	
+	if (Ring_Buffer_NofElements () > 500) {
+		printf ("Ring_Buffer_NofElements: %d\r\n", Ring_Buffer_NofElements ());
+	}
 }
 
 /*
 ** ===================================================================
-**     Event       :  AS1_OnBlockSent (module Events)
+**     Event       :  ESP8266_Serial_OnBlockSent (module Events)
 **
-**     Component   :  AS1 [Serial_LDD]
+**     Component   :  ESP8266_Serial [Serial_LDD]
 */
 /*!
 **     @brief
@@ -97,12 +102,35 @@ void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr)
 **                           as the parameter of Init method.
 */
 /* ===================================================================*/
-void AS1_OnBlockSent(LDD_TUserData *UserDataPtr)
+void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
 	ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 	ptr->isSent = TRUE;
 	
 //	printf ("sent byte: %s\r\n", UserDataPtr);
+}
+
+/*
+** ===================================================================
+**     Event       :  Timer_1ms_OnInterrupt (module Events)
+**
+**     Component   :  Timer_1ms [TimerInt_LDD]
+*/
+/*!
+**     @brief
+**         Called if periodic event occur. Component and OnInterrupt
+**         event must be enabled. See [SetEventMask] and [GetEventMask]
+**         methods. This event is available only if a [Interrupt
+**         service/event] is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer passed as
+**                           the parameter of Init method.
+*/
+/* ===================================================================*/
+void Timer_1ms_OnInterrupt(LDD_TUserData *UserDataPtr)
+{
+	Tick ();
 }
 
 /* END Events */

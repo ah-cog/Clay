@@ -1,5 +1,5 @@
 /*!
-\page AS1 AS1 (Serial_LDD)
+\page ESP8266_Serial ESP8266_Serial (Serial_LDD)
 **         This component "Serial_LDD" implements an asynchronous serial
 **         communication. The component supports different settings of
 **         parity, word width, stop-bit and communication speed,
@@ -7,53 +7,53 @@
 **         Communication speed can be changed also in runtime.
 **         The component requires one on-chip asynchronous serial communication channel.
 
-- \subpage AS1_settings
-- \subpage AS1_regs_overview  
-- \subpage AS1_regs_details
-- \ref AS1_module "Component documentation" 
+- \subpage ESP8266_Serial_settings
+- \subpage ESP8266_Serial_regs_overview  
+- \subpage ESP8266_Serial_regs_details
+- \ref ESP8266_Serial_module "Component documentation" 
 
-\page AS1_regs_overview Registers Initialization Overview
+\page ESP8266_Serial_regs_overview Registers Initialization Overview
 This page initialization values for the registers of the peripheral(s) configured
 by the component. 
 <table>
-<tr><td colspan="4" class="ttitle1">AS1 Initialization</td></tr>
+<tr><td colspan="4" class="ttitle1">ESP8266_Serial Initialization</td></tr>
 <tr><td class="ttitle2">Address</td><td class="ttitle2">Register</td><td class="ttitle2">Register Value</td><td class="ttitle2">Register Description</td></tr>
 <tr><td>0x40048034</td><td>SIM_SCGC4</td><td>
     0x00000400
- </td><td>SIM_SCGC4 register, peripheral AS1.</td></tr>
+ </td><td>SIM_SCGC4 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4004A040</td><td>PORTB_PCR16</td><td>
     0x00000300
- </td><td>PORTB_PCR16 register, peripheral AS1.</td></tr>
+ </td><td>PORTB_PCR16 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4004A044</td><td>PORTB_PCR17</td><td>
     0x00000300
- </td><td>PORTB_PCR17 register, peripheral AS1.</td></tr>
+ </td><td>PORTB_PCR17 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0xE000E42D</td><td>NVICIP45</td><td>
     0x00000080
- </td><td>NVICIP45 register, peripheral AS1.</td></tr>
+ </td><td>NVICIP45 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0xE000E104</td><td>NVICISER1</td><td>
     0x00006000
- </td><td>NVICISER1 register, peripheral AS1.</td></tr>
+ </td><td>NVICISER1 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0xE000E42E</td><td>NVICIP46</td><td>
     0x00000080
- </td><td>NVICIP46 register, peripheral AS1.</td></tr>
+ </td><td>NVICIP46 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A002</td><td>UART0_C1</td><td>
     0x00000000
- </td><td>UART0_C1 register, peripheral AS1.</td></tr>
+ </td><td>UART0_C1 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A006</td><td>UART0_C3</td><td>
     0x00000000
- </td><td>UART0_C3 register, peripheral AS1.</td></tr>
+ </td><td>UART0_C3 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A00A</td><td>UART0_C4</td><td>
     0x00000000
- </td><td>UART0_C4 register, peripheral AS1.</td></tr>
+ </td><td>UART0_C4 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A005</td><td>UART0_S2</td><td>
     0x00000000
- </td><td>UART0_S2 register, peripheral AS1.</td></tr>
+ </td><td>UART0_S2 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A00D</td><td>UART0_MODEM</td><td>
     0x00000000
- </td><td>UART0_MODEM register, peripheral AS1.</td></tr>
+ </td><td>UART0_MODEM register, peripheral ESP8266_Serial.</td></tr>
 </table>
 <br/>
-\page AS1_regs_details Register Initialization Details
+\page ESP8266_Serial_regs_details Register Initialization Details
 This page contains detailed description of initialization values for the 
 registers of the peripheral(s) configured by the component. 
 
@@ -486,9 +486,9 @@ registers of the peripheral(s) configured by the component.
 </tr></table>
 */
 /*!
-\page AS1_settings Component Settings
+\page ESP8266_Serial_settings Component Settings
 \code
-**          Component name                                 : AS1
+**          Component name                                 : ESP8266_Serial
 **          Device                                         : UART0
 **          Interrupt service/event                        : Enabled
 **            Interrupt RxD                                : INT_UART0_RX_TX

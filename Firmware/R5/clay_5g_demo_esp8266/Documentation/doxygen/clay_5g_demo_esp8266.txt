@@ -37,7 +37,9 @@
 - \subpage ESP8266_GPIO0
 - \subpage ESP8266_RST
 - \subpage ESP8266_CHIP_EN
-- \subpage AS1
+- \subpage ESP8266_Serial
+- \subpage TU1
+- \subpage Timer_1ms
 
 
 */
