@@ -59,6 +59,18 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\ESP8266_RST.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\ESP8266_Serial.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\I2C0.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_1.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_10.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_11.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_12.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_2.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_3.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_4.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_5.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_6.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_7.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_8.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_9.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\LED_DRIVER_0_RESET.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\LED_DRIVER_1_RESET.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\PE_LDD.c</PathName>
@@ -83,6 +95,18 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\ESP8266_RST.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\ESP8266_Serial.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\I2C0.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_1.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_10.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_11.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_12.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_2.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_3.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_4.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_5.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_6.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_7.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_8.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_9.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_Map.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\LED_DRIVER_0_RESET.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\LED_DRIVER_1_RESET.h</PathName>
