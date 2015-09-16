@@ -37,7 +37,7 @@ extern "C" {
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
-#include "ESP8266.h"
+#include "Drivers/ESP8266.h"
 #include "Clock.h"
 
 /*

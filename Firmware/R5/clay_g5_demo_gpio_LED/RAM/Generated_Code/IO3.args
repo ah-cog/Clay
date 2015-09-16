@@ -4,14 +4,14 @@
 -g3
 -gdwarf-2
 -gstrict-dwarf
--I"E:/git/clay/Firmware/R5/clay_g5_demo_gpio/Project_Headers"
--I"E:/git/clay/Firmware/R5/clay_g5_demo_gpio/Project_Settings/Startup_Code"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_g5_demo_gpio_LED/Project_Headers"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_g5_demo_gpio_LED/Project_Settings/Startup_Code"
 -I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include"
 -I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
--I"E:/git/clay/Firmware/R5/clay_g5_demo_gpio/Generated_Code"
--I"E:/git/clay/Firmware/R5/clay_g5_demo_gpio/Sources"
--I"E:/git/clay/Firmware/R5/clay_g5_demo_gpio/Static_Code/PDD"
--I"E:/git/clay/Firmware/R5/clay_g5_demo_gpio/Static_Code/IO_Map"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_g5_demo_gpio_LED/Generated_Code"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_g5_demo_gpio_LED/Sources"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_g5_demo_gpio_LED/Static_Code/PDD"
+-I"Z:/Workspace/Checkouts/clay/Firmware/R5/clay_g5_demo_gpio_LED/Static_Code/IO_Map"
 -O0
 -ffunction-sections
 -fdata-sections
