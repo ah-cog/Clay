@@ -385,7 +385,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_5g_demo_esp8266_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>13</ProjectModificationStamp>
+    <ProjectModificationStamp>14</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>
@@ -951,104 +951,6 @@
     <GenMethodPos>0</GenMethodPos>
     <GenExtraFilesCount>0</GenExtraFilesCount>
   </ComponentID_14>
-  <ComponentID_15>
-    <Generated>false</Generated>
-    <GenCompName>ESP8266_RxBuf</GenCompName>
-    <GenComponentVersion>01.003</GenComponentVersion>
-    <GenDriverVersion>01.00</GenDriverVersion>
-    <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1194239051</HeaderAge>
-    <CodeAge>1194239051</CodeAge>
-    <AsemblAge>-1</AsemblAge>
-    <GenNumMethods>5</GenNumMethods>
-    <Put>true</Put>
-    <Get>true</Get>
-    <NofElements>true</NofElements>
-    <NofFreeElements>true</NofFreeElements>
-    <Init>true</Init>
-    <GenNumEvents>2</GenNumEvents>
-    <OnBufferFull_Selected>1</OnBufferFull_Selected>
-    <OnBufferFull_Name>ESP8266_RxBuf_OnBufferFull</OnBufferFull_Name>
-    <OnBufferFull_Priority>interrupts disabled</OnBufferFull_Priority>
-    <OnBufferEmpty_Selected>1</OnBufferEmpty_Selected>
-    <OnBufferEmpty_Name>ESP8266_RxBuf_OnBufferEmpty</OnBufferEmpty_Name>
-    <OnBufferEmpty_Priority>interrupts disabled</OnBufferEmpty_Priority>
-    <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
-    <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
-    <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
-    <GenMethodPos>10</GenMethodPos>
-    <MethodPos>
-      <MethodPos0>Put</MethodPos0>
-      <MethodType>method</MethodType>
-      <ModuleType>Header</ModuleType>
-      <LineBeg>57</LineBeg>
-      <LineEnd>70</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos1>Get</MethodPos1>
-      <MethodType>method</MethodType>
-      <ModuleType>Header</ModuleType>
-      <LineBeg>71</LineBeg>
-      <LineEnd>85</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos2>NofElements</MethodPos2>
-      <MethodType>method</MethodType>
-      <ModuleType>Header</ModuleType>
-      <LineBeg>86</LineBeg>
-      <LineEnd>97</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos3>Init</MethodPos3>
-      <MethodType>method</MethodType>
-      <ModuleType>Header</ModuleType>
-      <LineBeg>98</LineBeg>
-      <LineEnd>108</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos4>NofFreeElements</MethodPos4>
-      <MethodType>method</MethodType>
-      <ModuleType>Header</ModuleType>
-      <LineBeg>109</LineBeg>
-      <LineEnd>121</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos5>Put</MethodPos5>
-      <MethodType>method</MethodType>
-      <ModuleType>Code</ModuleType>
-      <LineBeg>47</LineBeg>
-      <LineEnd>77</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos6>Get</MethodPos6>
-      <MethodType>method</MethodType>
-      <ModuleType>Code</ModuleType>
-      <LineBeg>78</LineBeg>
-      <LineEnd>109</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos7>NofElements</MethodPos7>
-      <MethodType>method</MethodType>
-      <ModuleType>Code</ModuleType>
-      <LineBeg>110</LineBeg>
-      <LineEnd>124</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos8>NofFreeElements</MethodPos8>
-      <MethodType>method</MethodType>
-      <ModuleType>Code</ModuleType>
-      <LineBeg>125</LineBeg>
-      <LineEnd>140</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos9>Init</MethodPos9>
-      <MethodType>method</MethodType>
-      <ModuleType>Code</ModuleType>
-      <LineBeg>141</LineBeg>
-      <LineEnd>156</LineEnd>
-    </MethodPos>
-    <GenExtraFilesCount>0</GenExtraFilesCount>
-  </ComponentID_15>
   <ComponentID_16>
     <Generated>true</Generated>
     <GenCompName>ESP8266_Serial</GenCompName>

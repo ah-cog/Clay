@@ -910,7 +910,7 @@ PE_DEBUGHALT();
     </Events>
   </Bean>
   <Bean name="ESP8266_RxBuf" type="RingBufferUInt8">
-    <Enabled v="Y" />
+    <Enabled v="N" />
     <Properties>
       <Component_name v="ESP8266_RxBuf" />
       <Buffer_Size v="255" />

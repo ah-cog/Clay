@@ -909,25 +909,6 @@ PE_DEBUGHALT();
       <EmptySection_DummyValue />
     </Events>
   </Bean>
-  <Bean name="ESP8266_RxBuf" type="RingBufferUInt8">
-    <Enabled v="N" />
-    <Properties>
-      <Component_name v="ESP8266_RxBuf" />
-      <Buffer_Size v="255" />
-    </Properties>
-    <Methods>
-      <Put v="generate code" />
-      <Get v="generate code" />
-      <NofElements v="generate code" />
-      <NofFreeElements v="generate code" />
-      <Init v="generate code" />
-    </Methods>
-    <Events>
-      <Event_module_name v="Events" />
-      <event name="OnBufferFull" v="don&amp;apos;t generate code" />
-      <event name="OnBufferEmpty" v="don&amp;apos;t generate code" />
-    </Events>
-  </Bean>
   <Bean name="ESP8266_Serial" type="Serial_LDD">
     <Enabled v="Y" />
     <Properties>
