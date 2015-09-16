@@ -3,7 +3,7 @@
   <Header>
     <Name>clay_5g_demo_esp8266</Name>
     <SavedBy>mokogobo</SavedBy>
-    <ModificationStamp>13</ModificationStamp>
+    <ModificationStamp>14</ModificationStamp>
     <Date>2015-09-16</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
@@ -15950,7 +15950,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>11</Count>
+      <Count>10</Count>
       <ItemId0>10</ItemId0>
       <Value0>true</Value0>
       <ItemId1>11</ItemId1>
@@ -15961,18 +15961,16 @@
       <Value3>true</Value3>
       <ItemId4>14</ItemId4>
       <Value4>true</Value4>
-      <ItemId5>15</ItemId5>
+      <ItemId5>16</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>16</ItemId6>
-      <Value6>true</Value6>
-      <ItemId7>8</ItemId7>
-      <Value7>false</Value7>
-      <ItemId8>9</ItemId8>
+      <ItemId6>8</ItemId6>
+      <Value6>false</Value6>
+      <ItemId7>9</ItemId7>
+      <Value7>true</Value7>
+      <ItemId8>20</ItemId8>
       <Value8>true</Value8>
-      <ItemId9>20</ItemId9>
+      <ItemId9>21</ItemId9>
       <Value9>true</Value9>
-      <ItemId10>21</ItemId10>
-      <Value10>true</Value10>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -16047,7 +16045,7 @@
       <Count>0</Count>
     </BoolList_FpgaConfig>
     <BoolList_BeanConfig>
-      <Count>11</Count>
+      <Count>10</Count>
       <ItemId0>10</ItemId0>
       <Value0>true</Value0>
       <ItemId1>11</ItemId1>
@@ -16058,18 +16056,16 @@
       <Value3>true</Value3>
       <ItemId4>14</ItemId4>
       <Value4>true</Value4>
-      <ItemId5>15</ItemId5>
+      <ItemId5>16</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>16</ItemId6>
-      <Value6>true</Value6>
-      <ItemId7>8</ItemId7>
-      <Value7>false</Value7>
-      <ItemId8>9</ItemId8>
+      <ItemId6>8</ItemId6>
+      <Value6>false</Value6>
+      <ItemId7>9</ItemId7>
+      <Value7>true</Value7>
+      <ItemId8>20</ItemId8>
       <Value8>true</Value8>
-      <ItemId9>20</ItemId9>
+      <ItemId9>21</ItemId9>
       <Value9>true</Value9>
-      <ItemId10>21</ItemId10>
-      <Value10>true</Value10>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
       <Count>0</Count>
@@ -17728,144 +17724,6 @@
       </ItemState>
     </Methods>
     <Events />
-  </Bean>
-  <Bean>
-    <BeanType>RingBufferUInt8</BeanType>
-    <Name>ESP8266_RxBuf</Name>
-    <CompNumb>15</CompNumb>
-    <CompEnabled>false</CompEnabled>
-    <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
-    <IconName>RingBufferUInt8</IconName>
-    <UserFolderName />
-    <Comment lines_count="0" />
-    <Template />
-    <BeanVersion>01.003</BeanVersion>
-    <LightErrorsIgnored>false</LightErrorsIgnored>
-    <Properties>
-      <ItemState>
-        <ItemSymbol>DeviceName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>ESP8266_RxBuf</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>BufferSize</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>255</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Base>DEC</Base>
-      </ItemState>
-    </Properties>
-    <Methods>
-      <ItemState>
-        <ItemSymbol>Put</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Put</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Get</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Get</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>NofElements</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>NofElements</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>NofFreeElements</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>NofFreeElements</UsrMethodName>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>Init</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Index>0</Index>
-        <Value>true</Value>
-        <LastSelection>true</LastSelection>
-        <LastUserSel>yes</LastUserSel>
-        <UsrMethodName>Init</UsrMethodName>
-      </ItemState>
-    </Methods>
-    <Events>
-      <ItemState>
-        <ItemSymbol>EventModule</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>Events</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBufferFull</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBufferFullName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>ESP8266_RxBuf_OnBufferFull</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBufferEmpty</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
-        <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
-      </ItemState>
-      <ItemState>
-        <ItemSymbol>OnBufferEmptyName</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
-        <UserReadOnly>false</UserReadOnly>
-        <Value>ESP8266_RxBuf_OnBufferEmpty</Value>
-        <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-      </ItemState>
-    </Events>
   </Bean>
   <Bean>
     <BeanType>Serial_LDD</BeanType>
