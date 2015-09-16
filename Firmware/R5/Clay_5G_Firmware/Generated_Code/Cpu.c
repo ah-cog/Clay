@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-16, 15:19, # CodeGen: 23
+**     Date/Time   : 2015-09-16, 15:56, # CodeGen: 27
 **     Abstract    :
 **
 **     Settings    :
@@ -70,6 +70,18 @@
 #include "LED_DRIVER_0_RESET.h"
 #include "LED_DRIVER_1_RESET.h"
 #include "I2C0.h"
+#include "IO_1.h"
+#include "IO_2.h"
+#include "IO_3.h"
+#include "IO_4.h"
+#include "IO_5.h"
+#include "IO_6.h"
+#include "IO_7.h"
+#include "IO_8.h"
+#include "IO_9.h"
+#include "IO_10.h"
+#include "IO_11.h"
+#include "IO_12.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -156,8 +168,10 @@ void __init_hardware(void)
   SIM_CLKDIV1 = SIM_CLKDIV1_OUTDIV1(0x00) |
                 SIM_CLKDIV1_OUTDIV2(0x01) |
                 SIM_CLKDIV1_OUTDIV4(0x03); /* Set the system prescalers to safe value */
-  /* SIM_SCGC5: PORTC=1,PORTB=1,PORTA=1 */
-  SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK |
+  /* SIM_SCGC5: PORTE=1,PORTD=1,PORTC=1,PORTB=1,PORTA=1 */
+  SIM_SCGC5 |= SIM_SCGC5_PORTE_MASK |
+               SIM_SCGC5_PORTD_MASK |
+               SIM_SCGC5_PORTC_MASK |
                SIM_SCGC5_PORTB_MASK |
                SIM_SCGC5_PORTA_MASK;   /* Enable clock gate for ports to enable pin routing */
   if ((PMC_REGSC & PMC_REGSC_ACKISO_MASK) != 0x0U) {
@@ -244,12 +258,6 @@ void PE_low_level_init(void)
     PEX_RTOS_INIT();                   /* Initialization of the selected RTOS. Macro is defined by the RTOS component. */
   #endif
       /* Initialization of the SIM module */
-  /* PORTA_PCR4: ISF=0,MUX=7 */
-  PORTA_PCR4 = (uint32_t)((PORTA_PCR4 & (uint32_t)~(uint32_t)(
-                PORT_PCR_ISF_MASK
-               )) | (uint32_t)(
-                PORT_PCR_MUX(0x07)
-               ));
         /* Initialization of the RCM module */
   /* RCM_RPFW: RSTFLTSEL=0 */
   RCM_RPFW &= (uint8_t)~(uint8_t)(RCM_RPFW_RSTFLTSEL(0x1F));
@@ -300,6 +308,30 @@ void PE_low_level_init(void)
   (void)LED_DRIVER_1_RESET_Init(NULL);
   /* ### I2C_LDD "I2C0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)I2C0_Init(NULL);
+  /* ### BitIO_LDD "IO_1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_1_Init(NULL);
+  /* ### BitIO_LDD "IO_2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_2_Init(NULL);
+  /* ### BitIO_LDD "IO_3" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_3_Init(NULL);
+  /* ### BitIO_LDD "IO_4" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_4_Init(NULL);
+  /* ### BitIO_LDD "IO_5" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_5_Init(NULL);
+  /* ### BitIO_LDD "IO_6" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_6_Init(NULL);
+  /* ### BitIO_LDD "IO_7" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_7_Init(NULL);
+  /* ### BitIO_LDD "IO_8" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_8_Init(NULL);
+  /* ### BitIO_LDD "IO_9" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_9_Init(NULL);
+  /* ### BitIO_LDD "IO_10" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_10_Init(NULL);
+  /* ### BitIO_LDD "IO_11" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_11_Init(NULL);
+  /* ### BitIO_LDD "IO_12" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IO_12_Init(NULL);
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }
@@ -331,8 +363,8 @@ void PE_low_level_init(void)
     0xFFU,
    /* NV_FSEC: KEYEN=1,MEEN=3,FSLACC=3,SEC=2 */
     0x7EU,
-   /* NV_FOPT: ??=1,??=1,??=1,??=1,??=1,NMI_DIS=1,EZPORT_DIS=1,LPBOOT=1 */
-    0xFFU,
+   /* NV_FOPT: ??=1,??=1,??=1,??=1,??=1,NMI_DIS=0,EZPORT_DIS=1,LPBOOT=1 */
+    0xFBU,
    /* NV_FEPROT: EPROT=0xFF */
     0xFFU,
    /* NV_FDPROT: DPROT=0xFF */

@@ -169,6 +169,246 @@ Module "I2C0"      (component I2C_LDD)
                 call value. Any send or receive method directs to or from selected device, until a new slave device is selected 
                 by this method. This method is available for the MASTER mode.
 
+Module "IO_1"      (component BitIO_LDD)
+   - IO_1_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_1_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_1_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_1_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_1_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_1_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_1_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_2"      (component BitIO_LDD)
+   - IO_2_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_2_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_2_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_2_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_2_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_2_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_2_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_3"      (component BitIO_LDD)
+   - IO_3_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_3_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_3_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_3_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_3_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_3_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_3_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_4"      (component BitIO_LDD)
+   - IO_4_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_4_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_4_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_4_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_4_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_4_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_4_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_5"      (component BitIO_LDD)
+   - IO_5_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_5_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_5_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_5_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_5_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_5_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_5_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_6"      (component BitIO_LDD)
+   - IO_6_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_6_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_6_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_6_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_6_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_6_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_6_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_7"      (component BitIO_LDD)
+   - IO_7_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_7_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_7_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_7_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_7_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_7_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_7_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_8"      (component BitIO_LDD)
+   - IO_8_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_8_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_8_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_8_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_8_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_8_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_8_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_9"      (component BitIO_LDD)
+   - IO_9_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_9_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_9_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_9_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_9_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_9_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - IO_9_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_10"     (component BitIO_LDD)
+   - IO_10_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_10_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_10_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_10_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_10_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_10_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available 
+                only if the direction = _[output]_ or _[input/output]_.
+   - IO_10_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_11"     (component BitIO_LDD)
+   - IO_11_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_11_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_11_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_11_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_11_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_11_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available 
+                only if the direction = _[output]_ or _[input/output]_.
+   - IO_11_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "IO_12"     (component BitIO_LDD)
+   - IO_12_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - IO_12_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - IO_12_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - IO_12_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - IO_12_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - IO_12_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available 
+                only if the direction = _[output]_ or _[input/output]_.
+   - IO_12_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
 Module "Cpu"       (component MK20DX256LH7)
 
 ===================================================================================
