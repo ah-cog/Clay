@@ -38,8 +38,9 @@
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"
-#include "ESP8266_RxBuf.h"
-#include "AS1.h"
+#include "ESP8266_Serial.h"
+#include "Timer_1ms.h"
+#include "TU1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,9 +64,9 @@ void Cpu_OnNMIINT(void);
 
 /*
 ** ===================================================================
-**     Event       :  AS1_OnBlockReceived (module Events)
+**     Event       :  ESP8266_Serial_OnBlockReceived (module Events)
 **
-**     Component   :  AS1 [Serial_LDD]
+**     Component   :  ESP8266_Serial [Serial_LDD]
 */
 /*!
 **     @brief
@@ -77,13 +78,13 @@ void Cpu_OnNMIINT(void);
 **                           as the parameter of Init method.
 */
 /* ===================================================================*/
-void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr);
+void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
 /*
 ** ===================================================================
-**     Event       :  AS1_OnBlockSent (module Events)
+**     Event       :  ESP8266_Serial_OnBlockSent (module Events)
 **
-**     Component   :  AS1 [Serial_LDD]
+**     Component   :  ESP8266_Serial [Serial_LDD]
 */
 /*!
 **     @brief
@@ -95,7 +96,27 @@ void AS1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 **                           as the parameter of Init method.
 */
 /* ===================================================================*/
-void AS1_OnBlockSent(LDD_TUserData *UserDataPtr);
+void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  Timer_1ms_OnInterrupt (module Events)
+**
+**     Component   :  Timer_1ms [TimerInt_LDD]
+*/
+/*!
+**     @brief
+**         Called if periodic event occur. Component and OnInterrupt
+**         event must be enabled. See [SetEventMask] and [GetEventMask]
+**         methods. This event is available only if a [Interrupt
+**         service/event] is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer passed as
+**                           the parameter of Init method.
+*/
+/* ===================================================================*/
+void Timer_1ms_OnInterrupt(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

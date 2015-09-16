@@ -59,7 +59,7 @@
                 <group name="PLL 0 settings">
                   <PLL_module v="Disabled" />
                   <PLL_module_in_Stop v="Disabled" />
-                  <PLL_output__MHz_ v="0" />
+                  <PLL_output__MHz_ v="100" />
                   <Reference_clock_divider v="Auto select" />
                   <PLL_reference_clock__MHz_ v="1" />
                   <Multiplication_factor v="Auto select" />
@@ -108,13 +108,7 @@
         <list name="Shared Flash memory organization" v="1">
           <group name="Flash memory organization">
             <list name="Shared FLASH settings" v="1">
-              <group name="FlexNVM settings">
-                <FlexNVM_size v="32 KB" />
-                <DFlash_size v="32 KB" />
-                <enumgroup name="EEPROM size" v="0 bytes">
-                  <boolgroup name="FlexRAM" v="Disabled" />
-                </enumgroup>
-              </group>
+              <EmptySection_DummyValue />
             </list>
             <list name="Flash blocks" v="2">
               <group name="Flash block 0">
@@ -164,8 +158,6 @@
             <Bandgap_buffer_in_VLPx v="Disabled" />
             <group name="LVD interrupt">
               <Interrupt v="INT_LVD_LVW" />
-              <Interrupt_request v="Disabled" />
-              <Interrupt_priority v="0 (Highest)" />
               <LVD_interrupt v="Disabled" />
               <LVW_interrupt v="Disabled" />
             </group>
@@ -248,9 +240,6 @@
         <DisableInt v="don&amp;apos;t generate code" />
         <GetLLSWakeUpFlags v="don&amp;apos;t generate code" />
         <OpenBackDoor v="don&amp;apos;t generate code" />
-        <GetFlexNVMPartitionCode v="don&amp;apos;t generate code" />
-        <SetFlexNVMPartition v="don&amp;apos;t generate code" />
-        <SetFlexRAMFunction v="don&amp;apos;t generate code" />
         <MCGAutoTrim v="don&amp;apos;t generate code" />
         <VLPModeEnable v="don&amp;apos;t generate code" />
         <VLPModeDisable v="don&amp;apos;t generate code" />
@@ -277,30 +266,9 @@
     <Compiler v="GNU C Compiler" />
     <CompilerProperties>
       <Compiler v="GNU C Compiler" />
-      <enumgroup name="Unhandled vectors" v="One handler for all">
-        <Unhandled_int_code>
-          <StrgList><![CDATA[/* This code can be changed using the CPU component property "Build Options / Unhandled int code" */
-PE_DEBUGHALT();
-]]></StrgList>
-        </Unhandled_int_code>
-      </enumgroup>
-      <group name="User initialization">
-        <User_data_declarations>
-          <StrgList></StrgList>
-        </User_data_declarations>
-        <User_code_before_PE_initialization>
-          <StrgList></StrgList>
-        </User_code_before_PE_initialization>
-        <User_code_after_PE_initialization>
-          <StrgList></StrgList>
-        </User_code_after_PE_initialization>
-      </group>
       <boolgroup name="Generate debugger files" v="yes">
         <Generate_mem_file v="yes" />
       </boolgroup>
-      <group name="Startup">
-        <Add_startup_file v="no" />
-      </group>
       <boolgroup name="Generate linker file" v="yes">
         <Stack_size v="1024" />
         <Heap_size v="0" />
@@ -354,7 +322,14 @@ PE_DEBUGHALT();
             <boolgroup name="Initialize fast trim value" v="no" />
           </group>
           <boolgroup name="RTC oscillator" v="Disabled" />
-          <boolgroup name="System oscillator 0" v="Disabled" />
+          <boolgroup name="System oscillator 0" v="Enabled">
+            <enumgroup name="Clock source" v="External reference clock">
+              <group name="Clock input pin">
+                <Pin_name v="EXTAL0/PTA18/FTM0_FLT2/FTM_CLKIN0" />
+              </group>
+              <Clock_frequency__MHz_ v="8" />
+            </enumgroup>
+          </boolgroup>
           <list name="Clock source settings" v="1">
             <group name="Clock source setting 0">
               <group name="Internal reference clock">
@@ -368,7 +343,7 @@ PE_DEBUGHALT();
               <group name="External reference clock">
                 <OSC0ERCLK_clock v="Enabled" />
                 <OSC0ERCLK_in_stop v="Disabled" />
-                <OSC0ERCLK_clock__MHz_ v="0" />
+                <OSC0ERCLK_clock__MHz_ v="8" />
                 <ERCLK32K_clock_source v="Auto select" />
                 <ERCLK32K__clock__kHz_ v="0.001000000000" />
               </group>
@@ -377,13 +352,13 @@ PE_DEBUGHALT();
                   <EmptySection_DummyValue />
                 </enumgroup>
                 <MCG_output_clock v="FLL clock" />
-                <MCG_output__MHz_ v="20.971520000000" />
+                <MCG_output__MHz_ v="71.991296000000" />
                 <MCG_external_ref__clock_source v="System oscillator 0" />
-                <MCG_external_ref__clock__MHz_ v="0" />
+                <MCG_external_ref__clock__MHz_ v="8" />
                 <Clock_monitor v="Disabled" />
                 <group name="FLL settings">
                   <FLL_module v="Enabled" />
-                  <FLL_output__MHz_ v="20.971520000000" />
+                  <FLL_output__MHz_ v="71.991296000000" />
                   <MCGFFCLK_clock__kHz_ v="32.768000000000" />
                   <enumgroup name="Reference clock source" v="Slow internal clock">
                     <EmptySection_DummyValue />
@@ -642,21 +617,21 @@ PE_DEBUGHALT();
           <boolgroup name="Very low power mode" v="Disabled" />
           <enumgroup name="Clock source setting" v="configuration 0">
             <MCG_mode v="FEI" />
-            <MCG_output__MHz_ v="20.971520000000" />
+            <MCG_output__MHz_ v="71.991296000000" />
             <MCGIRCLK_clock__MHz_ v="0.032768" />
-            <OSCERCLK_clock__MHz_ v="0" />
+            <OSCERCLK_clock__MHz_ v="8" />
             <ERCLK32K__clock__kHz_ v="0.001" />
             <MCGFFCLK__kHz_ v="32.768" />
           </enumgroup>
           <group name="System clocks">
             <Core_clock_prescaler v="Auto select" />
-            <Core_clock v="20.971520000000" />
+            <Core_clock v="71.991296000000" />
             <Bus_clock_prescaler v="Auto select" />
-            <Bus_clock v="20.971520000000" />
+            <Bus_clock v="35.995648000000" />
             <Flash_clock_prescaler v="Auto select" />
-            <Flash_clock v="10.485760000000" />
+            <Flash_clock v="23.997098666667" />
             <enumgroup name="PLL/FLL clock selection" v="FLL clock">
-              <Clock_frequency__MHz_ v="20.971520000000" />
+              <Clock_frequency__MHz_ v="71.991296000000" />
             </enumgroup>
           </group>
         </group>
@@ -953,10 +928,10 @@ PE_DEBUGHALT();
       <event name="OnBufferEmpty" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
-  <Bean name="AS1" type="Serial_LDD">
+  <Bean name="ESP8266_Serial" type="Serial_LDD">
     <Enabled v="Y" />
     <Properties>
-      <Component_name v="AS1" />
+      <Component_name v="ESP8266_Serial" />
       <Device v="UART0" />
       <boolgroup name="Interrupt service/event" v="Enabled">
         <Interrupt_RxD v="INT_UART0_RX_TX" />
@@ -1056,14 +1031,168 @@ PE_DEBUGHALT();
     <Events>
       <Event_module_name v="Events" />
       <event name="OnBlockReceived" v="generate code">
-        <Event_procedure_name v="AS1_OnBlockReceived" />
+        <Event_procedure_name v="ESP8266_Serial_OnBlockReceived" />
       </event>
       <event name="OnBlockSent" v="generate code">
-        <Event_procedure_name v="AS1_OnBlockSent" />
+        <Event_procedure_name v="ESP8266_Serial_OnBlockSent" />
       </event>
       <event name="OnBreak" v="don&amp;apos;t generate code" />
       <event name="OnError" v="don&amp;apos;t generate code" />
       <event name="OnTxComplete" v="don&amp;apos;t generate code" />
+    </Events>
+  </Bean>
+  <Bean name="Timer_1ms" type="TimerInt_LDD">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="Timer_1ms" />
+      <Periodic_interrupt_source v="FTM0_MOD" />
+      <Counter v="FTM0_CNT" />
+      <boolgroup name="Interrupt service/event" v="Enabled">
+        <Interrupt v="INT_FTM0" />
+        <Interrupt_priority v="medium priority" />
+      </boolgroup>
+      <Interrupt_period v="1 ms" />
+      <group name="Initialization">
+        <Enabled_in_init__code v="yes" />
+        <list name="Auto Initialization" v="1">
+          <Auto_initialization v="no" />
+        </list>
+        <group name="Event mask">
+          <OnInterrupt v="Enabled" />
+        </group>
+      </group>
+      <list name="CPU clock/configuration selection (included)" v="1">
+        <group name="CPU clock/configuration selection">
+          <Clock_configuration_0 v="This component enabled" />
+          <Clock_configuration_1 v="This component disabled" />
+          <Clock_configuration_2 v="This component disabled" />
+          <Clock_configuration_3 v="This component disabled" />
+          <Clock_configuration_4 v="This component disabled" />
+          <Clock_configuration_5 v="This component disabled" />
+          <Clock_configuration_6 v="This component disabled" />
+          <Clock_configuration_7 v="This component disabled" />
+        </group>
+      </list>
+      <group name="Referenced components">
+        <Linked_TimerUnit v="TU1" />
+      </group>
+    </Properties>
+    <Methods>
+      <Init v="generate code" />
+      <Deinit v="don&amp;apos;t generate code" />
+      <Enable v="don&amp;apos;t generate code" />
+      <Disable v="don&amp;apos;t generate code" />
+      <SetEventMask v="don&amp;apos;t generate code" />
+      <GetEventMask v="don&amp;apos;t generate code" />
+      <GetEventStatus v="don&amp;apos;t generate code" />
+      <SelectPeriod v="don&amp;apos;t generate code" />
+      <SetPeriodUS v="don&amp;apos;t generate code" />
+      <SetPeriodMS v="don&amp;apos;t generate code" />
+      <SetPeriodSec v="don&amp;apos;t generate code" />
+      <SetPeriodReal v="don&amp;apos;t generate code" />
+      <SetFrequencyHz v="don&amp;apos;t generate code" />
+      <SetFrequencykHz v="don&amp;apos;t generate code" />
+      <SetFrequencyMHz v="don&amp;apos;t generate code" />
+      <SetOperationMode v="don&amp;apos;t generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+    </Methods>
+    <Events>
+      <Event_module_name v="Events" />
+      <event name="OnInterrupt" v="generate code">
+        <Event_procedure_name v="Timer_1ms_OnInterrupt" />
+      </event>
+    </Events>
+  </Bean>
+  <Bean name="TU1" type="TimerUnit_LDD">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="TU1" />
+      <Module_name v="FTM0" />
+      <Counter v="FTM0_CNT" />
+      <Counter_direction v="Up" />
+      <Counter_width v="16 bits" />
+      <Value_type v="uint16_t" />
+      <enumgroup name="Input clock source" v="Internal">
+        <Counter_frequency v="Auto select" />
+      </enumgroup>
+      <enumgroup name="Counter restart" v="On-match">
+        <Period_device v="FTM0_MOD" />
+        <Period v="1 ms" />
+        <boolgroup name="Interrupt" v="Enabled">
+          <Interrupt v="INT_FTM0" />
+          <Interrupt_priority v="medium priority" />
+        </boolgroup>
+      </enumgroup>
+      <list name="Channel list" v="0">
+        <EmptySection_DummyValue />
+      </list>
+      <group name="Initialization">
+        <Enabled_in_init__code v="yes" />
+        <list name="Auto Initialization" v="1">
+          <Auto_initialization v="no" />
+        </list>
+        <group name="Event mask">
+          <OnCounterRestart v="Enabled" />
+          <OnChannel0 v="Disabled" />
+          <OnChannel1 v="Disabled" />
+          <OnChannel2 v="Disabled" />
+          <OnChannel3 v="Disabled" />
+          <OnChannel4 v="Disabled" />
+          <OnChannel5 v="Disabled" />
+          <OnChannel6 v="Disabled" />
+          <OnChannel7 v="Disabled" />
+        </group>
+      </group>
+      <list name="CPU clock/configuration selection (included)" v="1">
+        <group name="CPU clock/configuration selection">
+          <Clock_configuration_0 v="This component enabled" />
+          <Clock_configuration_1 v="This component disabled" />
+          <Clock_configuration_2 v="This component disabled" />
+          <Clock_configuration_3 v="This component disabled" />
+          <Clock_configuration_4 v="This component disabled" />
+          <Clock_configuration_5 v="This component disabled" />
+          <Clock_configuration_6 v="This component disabled" />
+          <Clock_configuration_7 v="This component disabled" />
+        </group>
+      </list>
+    </Properties>
+    <Methods>
+      <Init v="generate code" />
+      <Deinit v="don&amp;apos;t generate code" />
+      <Enable v="don&amp;apos;t generate code" />
+      <Disable v="don&amp;apos;t generate code" />
+      <SetEventMask v="don&amp;apos;t generate code" />
+      <GetEventMask v="don&amp;apos;t generate code" />
+      <GetEventStatus v="don&amp;apos;t generate code" />
+      <SelectInputFrequency v="don&amp;apos;t generate code" />
+      <GetInputFrequencyReal v="don&amp;apos;t generate code" />
+      <GetInputFrequency v="don&amp;apos;t generate code" />
+      <SetPeriodTicks v="don&amp;apos;t generate code" />
+      <GetPeriodTicks v="don&amp;apos;t generate code" />
+      <ResetCounter v="don&amp;apos;t generate code" />
+      <GetCounterValue v="don&amp;apos;t generate code" />
+      <SetOffsetTicks v="don&amp;apos;t generate code" />
+      <GetOffsetTicks v="don&amp;apos;t generate code" />
+      <GetCaptureValue v="don&amp;apos;t generate code" />
+      <SelectOutputAction v="don&amp;apos;t generate code" />
+      <SelectCaptureEdge v="don&amp;apos;t generate code" />
+      <ConnectPin v="don&amp;apos;t generate code" />
+      <SetOperationMode v="don&amp;apos;t generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+    </Methods>
+    <Events>
+      <Event_module_name v="Events" />
+      <event name="OnCounterRestart" v="generate code">
+        <Event_procedure_name v="TU1_OnCounterRestart" />
+      </event>
+      <event name="OnChannel0" v="don&amp;apos;t generate code" />
+      <event name="OnChannel1" v="don&amp;apos;t generate code" />
+      <event name="OnChannel2" v="don&amp;apos;t generate code" />
+      <event name="OnChannel3" v="don&amp;apos;t generate code" />
+      <event name="OnChannel4" v="don&amp;apos;t generate code" />
+      <event name="OnChannel5" v="don&amp;apos;t generate code" />
+      <event name="OnChannel6" v="don&amp;apos;t generate code" />
+      <event name="OnChannel7" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
 </PE_PROJECT_SETTINGS_DOCUMENTATION>

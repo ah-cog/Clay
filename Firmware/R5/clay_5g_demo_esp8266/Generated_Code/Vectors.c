@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-14, 14:17, # CodeGen: 2
+**     Date/Time   : 2015-09-16, 11:15, # CodeGen: 11
 **     Abstract    :
 **
 **     Settings    :
@@ -58,8 +58,9 @@
   #include "ESP8266_GPIO0.h"
   #include "ESP8266_RST.h"
   #include "ESP8266_CHIP_EN.h"
-  #include "ESP8266_RxBuf.h"
-  #include "AS1.h"
+  #include "ESP8266_Serial.h"
+  #include "Timer_1ms.h"
+  #include "TU1.h"
   #include "Events.h"
 
 
@@ -140,8 +141,8 @@
     (tIsrFunc)&Cpu_Interrupt,          /* 0x3A  0x000000E8   -   ivINT_Reserved58               unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x3B  0x000000EC   -   ivINT_Reserved59               unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x3C  0x000000F0   -   ivINT_UART0_LON                unused by PE */
-    (tIsrFunc)&AS1_Interrupt,          /* 0x3D  0x000000F4   8   ivINT_UART0_RX_TX              used by PE */
-    (tIsrFunc)&AS1_Interrupt,          /* 0x3E  0x000000F8   8   ivINT_UART0_ERR                used by PE */
+    (tIsrFunc)&ESP8266_Serial_Interrupt, /* 0x3D  0x000000F4   8   ivINT_UART0_RX_TX              used by PE */
+    (tIsrFunc)&ESP8266_Serial_Interrupt, /* 0x3E  0x000000F8   8   ivINT_UART0_ERR                used by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x3F  0x000000FC   -   ivINT_UART1_RX_TX              unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x40  0x00000100   -   ivINT_UART1_ERR                unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x41  0x00000104   -   ivINT_UART2_RX_TX              unused by PE */
@@ -157,7 +158,7 @@
     (tIsrFunc)&Cpu_Interrupt,          /* 0x4B  0x0000012C   -   ivINT_CMP0                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x4C  0x00000130   -   ivINT_CMP1                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x4D  0x00000134   -   ivINT_CMP2                     unused by PE */
-    (tIsrFunc)&Cpu_Interrupt,          /* 0x4E  0x00000138   -   ivINT_FTM0                     unused by PE */
+    (tIsrFunc)&TU1_Interrupt,          /* 0x4E  0x00000138   8   ivINT_FTM0                     used by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x4F  0x0000013C   -   ivINT_FTM1                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x50  0x00000140   -   ivINT_FTM2                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x51  0x00000144   -   ivINT_CMT                      unused by PE */

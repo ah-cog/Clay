@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-14, 15:27, # CodeGen: 3
+**     Date/Time   : 2015-09-16, 11:15, # CodeGen: 11
 **     Abstract    :
 **
 **     Settings    :
@@ -64,8 +64,9 @@
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"
-#include "ESP8266_RxBuf.h"
-#include "AS1.h"
+#include "ESP8266_Serial.h"
+#include "Timer_1ms.h"
+#include "TU1.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -290,8 +291,6 @@ void PE_low_level_init(void)
   (void)ESP8266_RST_Init(NULL);
   /* ### BitIO_LDD "ESP8266_CHIP_EN" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)ESP8266_CHIP_EN_Init(NULL);
-  /* ### RingBufferUInt8 "ESP8266_RxBuf" init code ... */
-  ESP8266_RxBuf_Init();
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }
