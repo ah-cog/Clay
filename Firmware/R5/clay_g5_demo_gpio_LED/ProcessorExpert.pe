@@ -2,9 +2,9 @@
 <PEproject>
   <Header>
     <Name>clay_g5_demo_gpio_LED</Name>
-    <SavedBy>mokogobo</SavedBy>
-    <ModificationStamp>44</ModificationStamp>
-    <Date>2015-09-16</Date>
+    <SavedBy>thebh_000</SavedBy>
+    <ModificationStamp>45</ModificationStamp>
+    <Date>2015-09-17</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -2007,7 +2007,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
-        <Index>1</Index>
+        <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
       </ItemState>
       <ItemState>
@@ -13040,7 +13040,7 @@
         <ItemSymbol>CPUInterrupts</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntNMIGrp</ItemSymbol>
@@ -22897,7 +22897,7 @@
         <ItemSymbol>SDAPinGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SDA</ItemSymbol>
@@ -22921,7 +22921,7 @@
         <ItemSymbol>SCLPinGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SCL</ItemSymbol>
@@ -23055,7 +23055,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
+        <Value>true</Value>
         <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
@@ -23162,7 +23162,7 @@
         <ItemSymbol>EventsInitStateGrp</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnMasterBlockSentInitState</ItemSymbol>
@@ -23185,8 +23185,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnSlaveBlockSentInitState</ItemSymbol>
@@ -23641,10 +23641,10 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>1</Index>
-        <Value>false</Value>
+        <Index>0</Index>
+        <Value>true</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>never</LastUserSel>
+        <LastUserSel>always</LastUserSel>
         <UsrMethodName>SendAcknowledge</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -23780,10 +23780,10 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>false</Value>
-        <Expanded>false</Expanded>
+        <Value>true</Value>
+        <Expanded>true</Expanded>
         <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnMasterByteReceivedName</ItemSymbol>

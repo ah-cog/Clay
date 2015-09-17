@@ -137,6 +137,26 @@ void I2C0_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
 /* ===================================================================*/
 void tick_1ms_timer_OnInterrupt(LDD_TUserData *UserDataPtr);
 
+/*
+** ===================================================================
+**     Event       :  I2C0_OnMasterByteReceived (module Events)
+**
+**     Component   :  I2C0 [I2C_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when I2C is in master mode and finishes
+**         the reception of the byte successfully. This event is not
+**         available for the SLAVE mode and if MasterReceiveBlock is
+**         disabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void I2C0_OnMasterByteReceived(LDD_TUserData *UserDataPtr);
+
 /* END Events */
 
 #ifdef __cplusplus

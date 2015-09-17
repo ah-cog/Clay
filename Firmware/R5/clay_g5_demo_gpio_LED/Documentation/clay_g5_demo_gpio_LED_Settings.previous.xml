@@ -1449,7 +1449,9 @@ PE_DEBUGHALT();
         <SDA_Hold v="1.806 us" />
         <SCL_start_Hold v="5.278 us" />
         <SCL_stop_Hold v="5.362 us" />
-        <boolgroup name="Control acknowledge bit" v="Disabled" />
+        <boolgroup name="Control acknowledge bit" v="Enabled">
+          <Delay_loop_cycle_number v="200" />
+        </boolgroup>
         <boolgroup name="Low timeout" v="Disabled" />
       </group>
       <group name="Initialization">
@@ -1509,7 +1511,7 @@ PE_DEBUGHALT();
       <SlaveUpdateReceiveBlockSize v="don&amp;apos;t generate code" />
       <SlaveCancelReceptionBlock v="don&amp;apos;t generate code" />
       <SelectSlaveDevice v="generate code" />
-      <SendAcknowledge v="don&amp;apos;t generate code" />
+      <SendAcknowledge v="generate code" />
       <GetError v="don&amp;apos;t generate code" />
       <CheckBus v="don&amp;apos;t generate code" />
       <GetStats v="don&amp;apos;t generate code" />

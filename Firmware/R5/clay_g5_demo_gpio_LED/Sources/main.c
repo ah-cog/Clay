@@ -77,6 +77,10 @@
 #include "led_driver_pca9552.h"
 #endif
 
+#ifndef MPU_9250_DRIVER_H_
+#include "mpu_9250_driver.h"
+#endif
+
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
@@ -95,12 +99,14 @@ int main(void)
     init_tick();
     init_led_drivers();
 
+    mpu_9250_init();
+
     delay_n_msec(5);
 
     color_rgb colors[] = {
-            { LED_MODE_MAX, LED_MODE_OFF, LED_MODE_LOW },
-            { LED_MODE_LOW, LED_MODE_MAX, LED_MODE_OFF },
-            { LED_MODE_OFF, LED_MODE_LOW, LED_MODE_MAX }
+            { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },  //rg
+            { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },  //gb
+            { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }   //rb
     };
 
     int led_index = 0;
