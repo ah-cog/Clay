@@ -1608,9 +1608,9 @@ PE_DEBUGHALT();
     <Properties>
       <Component_name v="IMU_INT" />
       <Pin_for_I_O v="ADC1_SE5b/CMP0_IN3/PTC9/I2S0_RX_BCLK/FTM2_FLT0" />
-      <Direction v="Output" />
+      <Direction v="Input" />
       <group name="Initialization">
-        <Init__direction v="Output" />
+        <Init__direction v="Input" />
         <Init__value v="1" />
         <Auto_initialization v="yes" />
       </group>
@@ -1624,9 +1624,9 @@ PE_DEBUGHALT();
       <SetInput v="don&amp;apos;t generate code" />
       <SetOutput v="don&amp;apos;t generate code" />
       <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
+      <PutVal v="don&amp;apos;t generate code" />
+      <ClrVal v="don&amp;apos;t generate code" />
+      <SetVal v="don&amp;apos;t generate code" />
       <NegVal v="don&amp;apos;t generate code" />
       <ConnectPin v="don&amp;apos;t generate code" />
       <GetRawVal v="don&amp;apos;t generate code" />
