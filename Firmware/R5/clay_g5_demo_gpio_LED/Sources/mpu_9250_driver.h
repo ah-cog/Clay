@@ -26,9 +26,9 @@
 #define MPU9250_RA_MAG_ZOUT_H                          0x08
 
 #if MPU_ADDRESS_LINE_VALUE
-#define MPU9250_ADDRESS                                0x68 // address pin low (GND), default for InvenSense evaluation board
+#define MPU9250_ADDRESS                                0x69 // address pin low (GND), default for InvenSense evaluation board
 #else
-#define MPU9250_ADDRESS                                0x69 // address pin high (VCC)
+#define MPU9250_ADDRESS                                0x68 // address pin high (VCC)
 #endif
 
 #define MPU9250_DEFAULT_ADDRESS                        MPU9250_ADDRESS_AD0_LOW

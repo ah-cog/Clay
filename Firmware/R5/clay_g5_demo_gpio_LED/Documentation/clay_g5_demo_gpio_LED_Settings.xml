@@ -59,7 +59,7 @@
                 <group name="PLL 0 settings">
                   <PLL_module v="Disabled" />
                   <PLL_module_in_Stop v="Disabled" />
-                  <PLL_output__MHz_ v="0" />
+                  <PLL_output__MHz_ v="100" />
                   <Reference_clock_divider v="Auto select" />
                   <PLL_reference_clock__MHz_ v="1" />
                   <Multiplication_factor v="Auto select" />
@@ -106,13 +106,7 @@
         <list name="Shared Flash memory organization" v="1">
           <group name="Flash memory organization">
             <list name="Shared FLASH settings" v="1">
-              <group name="FlexNVM settings">
-                <FlexNVM_size v="32 KB" />
-                <DFlash_size v="32 KB" />
-                <enumgroup name="EEPROM size" v="0 bytes">
-                  <boolgroup name="FlexRAM" v="Disabled" />
-                </enumgroup>
-              </group>
+              <EmptySection_DummyValue />
             </list>
             <list name="Flash blocks" v="2">
               <group name="Flash block 0">
@@ -162,8 +156,6 @@
             <Bandgap_buffer_in_VLPx v="Disabled" />
             <group name="LVD interrupt">
               <Interrupt v="INT_LVD_LVW" />
-              <Interrupt_request v="Disabled" />
-              <Interrupt_priority v="0 (Highest)" />
               <LVD_interrupt v="Disabled" />
               <LVW_interrupt v="Disabled" />
             </group>
@@ -246,9 +238,6 @@
         <DisableInt v="don&amp;apos;t generate code" />
         <GetLLSWakeUpFlags v="don&amp;apos;t generate code" />
         <OpenBackDoor v="don&amp;apos;t generate code" />
-        <GetFlexNVMPartitionCode v="don&amp;apos;t generate code" />
-        <SetFlexNVMPartition v="don&amp;apos;t generate code" />
-        <SetFlexRAMFunction v="don&amp;apos;t generate code" />
         <MCGAutoTrim v="don&amp;apos;t generate code" />
         <VLPModeEnable v="don&amp;apos;t generate code" />
         <VLPModeDisable v="don&amp;apos;t generate code" />
@@ -275,30 +264,9 @@
     <Compiler v="GNU C Compiler" />
     <CompilerProperties>
       <Compiler v="GNU C Compiler" />
-      <enumgroup name="Unhandled vectors" v="One handler for all">
-        <Unhandled_int_code>
-          <StrgList><![CDATA[/* This code can be changed using the CPU component property "Build Options / Unhandled int code" */
-PE_DEBUGHALT();
-]]></StrgList>
-        </Unhandled_int_code>
-      </enumgroup>
-      <group name="User initialization">
-        <User_data_declarations>
-          <StrgList></StrgList>
-        </User_data_declarations>
-        <User_code_before_PE_initialization>
-          <StrgList></StrgList>
-        </User_code_before_PE_initialization>
-        <User_code_after_PE_initialization>
-          <StrgList></StrgList>
-        </User_code_after_PE_initialization>
-      </group>
       <boolgroup name="Generate debugger files" v="yes">
         <Generate_mem_file v="yes" />
       </boolgroup>
-      <group name="Startup">
-        <Add_startup_file v="no" />
-      </group>
       <boolgroup name="Generate linker file" v="yes">
         <Stack_size v="1024" />
         <Heap_size v="0" />
@@ -1481,7 +1449,9 @@ PE_DEBUGHALT();
         <SDA_Hold v="1.806 us" />
         <SCL_start_Hold v="5.278 us" />
         <SCL_stop_Hold v="5.362 us" />
-        <boolgroup name="Control acknowledge bit" v="Disabled" />
+        <boolgroup name="Control acknowledge bit" v="Enabled">
+          <Delay_loop_cycle_number v="200" />
+        </boolgroup>
         <boolgroup name="Low timeout" v="Disabled" />
       </group>
       <group name="Initialization">
@@ -1492,7 +1462,7 @@ PE_DEBUGHALT();
         <group name="Event mask">
           <OnMasterBlockSent v="Enabled" />
           <OnMasterBlockReceived v="Enabled" />
-          <OnMasterByteReceived v="Disabled" />
+          <OnMasterByteReceived v="Enabled" />
           <OnSlaveBlockSent v="Disabled" />
           <OnSlaveBlockReceived v="Disabled" />
           <OnSlaveByteReceived v="Disabled" />
@@ -1541,7 +1511,7 @@ PE_DEBUGHALT();
       <SlaveUpdateReceiveBlockSize v="don&amp;apos;t generate code" />
       <SlaveCancelReceptionBlock v="don&amp;apos;t generate code" />
       <SelectSlaveDevice v="generate code" />
-      <SendAcknowledge v="don&amp;apos;t generate code" />
+      <SendAcknowledge v="generate code" />
       <GetError v="don&amp;apos;t generate code" />
       <CheckBus v="don&amp;apos;t generate code" />
       <GetStats v="don&amp;apos;t generate code" />
@@ -1559,7 +1529,9 @@ PE_DEBUGHALT();
       <event name="OnMasterBlockReceived" v="generate code">
         <Event_procedure_name v="I2C0_OnMasterBlockReceived" />
       </event>
-      <event name="OnMasterByteReceived" v="don&amp;apos;t generate code" />
+      <event name="OnMasterByteReceived" v="generate code">
+        <Event_procedure_name v="I2C0_OnMasterByteReceived" />
+      </event>
       <event name="OnSlaveBlockSent" v="don&amp;apos;t generate code" />
       <event name="OnSlaveBlockReceived" v="don&amp;apos;t generate code" />
       <event name="OnSlaveByteReceived" v="don&amp;apos;t generate code" />
