@@ -98,9 +98,9 @@ int main(void)
     delay_n_msec(5);
 
     color_rgb colors[] = {
-            { LED_MODE_MAX, LED_MODE_OFF, LED_MODE_LOW },
-            { LED_MODE_LOW, LED_MODE_MAX, LED_MODE_OFF },
-            { LED_MODE_OFF, LED_MODE_LOW, LED_MODE_MAX }
+            { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_LOW },
+            { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED },
+            { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MAX }
     };
 
     int led_index = 0;

@@ -29,3 +29,13 @@
 // prototypes ////////////////
 
 // implementations ///////////
+extern void mpu_9250_init()
+{
+    I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, MPU9250_ADDRESS);
+    
+    //
+}
+
+extern void get_mpu_readings(mpu_values * data)
+{
+}
