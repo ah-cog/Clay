@@ -3,7 +3,7 @@
   <Header>
     <Name>clay_g5_demo_gpio_LED</Name>
     <SavedBy>thebh_000</SavedBy>
-    <ModificationStamp>45</ModificationStamp>
+    <ModificationStamp>49</ModificationStamp>
     <Date>2015-09-17</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
@@ -13040,7 +13040,7 @@
         <ItemSymbol>CPUInterrupts</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Expanded>true</Expanded>
+        <Expanded>false</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>IntNMIGrp</ItemSymbol>
@@ -17985,7 +17985,7 @@
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SetDir</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -17996,7 +17996,7 @@
         <Index>0</Index>
         <Value>true</Value>
         <LastSelection>true</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>yes</LastUserSel>
         <UsrMethodName>SetInput</UsrMethodName>
       </ItemState>
       <ItemState>
@@ -18006,7 +18006,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <Value>false</Value>
-        <LastSelection>true</LastSelection>
+        <LastSelection>false</LastSelection>
         <LastUserSel>no</LastUserSel>
         <UsrMethodName>SetOutput</UsrMethodName>
       </ItemState>
@@ -23056,7 +23056,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Value>true</Value>
-        <Expanded>false</Expanded>
+        <Expanded>true</Expanded>
       </ItemState>
       <ItemState>
         <ItemSymbol>SwDelayCycle</ItemSymbol>
