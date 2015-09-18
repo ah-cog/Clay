@@ -15,22 +15,42 @@
 
 // defines ///////////////////
 #define MPU_ADDRESS_LINE_VALUE                         0    //pulled down
-
 // Magnetometer Registers
-#define MPU9250_RA_MAG_ADDRESS                         0x0C
+#define MPU9250_RA_MAG_DEVICE_ID                       0x00
+#define MPU9250_RA_MAG_INFO                            0x01
+#define MPU9250_RA_MAG_ST_1                            0x02
 #define MPU9250_RA_MAG_XOUT_L                          0x03
 #define MPU9250_RA_MAG_XOUT_H                          0x04
 #define MPU9250_RA_MAG_YOUT_L                          0x05
 #define MPU9250_RA_MAG_YOUT_H                          0x06
 #define MPU9250_RA_MAG_ZOUT_L                          0x07
 #define MPU9250_RA_MAG_ZOUT_H                          0x08
+#define MPU9250_RA_MAG_ST_2                            0x09
+#define MPU9250_RA_MAG_CONTROL_1                       0x0A
+#define MPU9250_RA_MAG_CONTROL_2                       0x0B
+#define MPU9250_RA_MAG_ASTC                            0x0C
+#define MPU9250_RA_MAG_TS1                             0x0D
+#define MPU9250_RA_MAG_TS2                             0x0E
+#define MPU9250_RA_MAG_I2CDIS                          0x0F
+#define MPU9250_RA_MAG_ASAX                            0x10
+#define MPU9250_RA_MAG_ASAY                            0x11
+#define MPU9250_RA_MAG_ASAZ                            0x12
+
+#define MPU9250_RA_MAG_MODE_POWER_DOWN                 0x00
+#define MPU9250_RA_MAG_MODE_SINGLE_MEASURE             0x01
+#define MPU9250_RA_MAG_MODE_CONTINUOUS_1               0x02
+#define MPU9250_RA_MAG_MODE_CONTINUOUS_2               0x03
+#define MPU9250_RA_MAG_MODE_EXTERNAL_TRIG              0x04
+#define MPU9250_RA_MAG_MODE_SELF_TEST                  0x05
+#define MPU9250_RA_MAG_MODE_FUSE_ROM_ACCESS            0x0F
 
 #if MPU_ADDRESS_LINE_VALUE
-#define MPU9250_ADDRESS                                0x69 // address pin low (GND), default for InvenSense evaluation board
+#define MPU9250_ACCEL_ADDRESS                          0x69 // address pin low (GND), default for InvenSense evaluation board
 #else
-#define MPU9250_ADDRESS                                0x68 // address pin high (VCC)
+#define MPU9250_ACCEL_ADDRESS                          0x68 // address pin high (VCC)
 #endif
 
+#define MPU9250_MAG_ADDRESS                            0x0C //must have the pass-through enabled.         
 #define MPU9250_DEFAULT_ADDRESS                        MPU9250_ADDRESS_AD0_LOW
 
 #define MPU9250_RA_XG_OFFS_TC                          0x00 //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
