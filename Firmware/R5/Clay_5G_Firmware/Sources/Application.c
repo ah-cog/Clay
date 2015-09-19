@@ -26,7 +26,7 @@ void Application (void) {
 	const char *responseData = "<html><h1>Clay</h1><button>I/O</button></html>";
 	
 	bool led_state = FALSE; // LEDs
-	color_rgb colors[] = {
+	Color_RGB colors[] = {
 			{ LED_MODE_MAX, LED_MODE_OFF, LED_MODE_LOW },
 			{ LED_MODE_LOW, LED_MODE_MAX, LED_MODE_OFF },
 			{ LED_MODE_OFF, LED_MODE_LOW, LED_MODE_MAX }
@@ -50,7 +50,7 @@ void Application (void) {
 	printf ("\r\n");
 	
 	printf ("Starting LEDs. ");
-	init_led_drivers();
+	Enable_PCA9552();
 	Wait (5);
 	printf ("Done.\r\n");
 	
@@ -63,6 +63,21 @@ void Application (void) {
 	printf ("\r\n");
 	
 	Start_HTTP_Server (HTTP_SERVER_PORT);
+	
+	Color_RGB onColor  = { LED_MODE_MAX, LED_MODE_OFF, LED_MODE_LOW };
+	Color_RGB offColor = { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF };
+	Set_LED_Output ((RGB_LED) 0,  &offColor);
+	Set_LED_Output ((RGB_LED) 1,  &onColor);
+	Set_LED_Output ((RGB_LED) 2,  &offColor);
+	Set_LED_Output ((RGB_LED) 3,  &onColor);
+	Set_LED_Output ((RGB_LED) 4,  &offColor);
+	Set_LED_Output ((RGB_LED) 5,  &onColor);
+	Set_LED_Output ((RGB_LED) 6,  &offColor);
+	Set_LED_Output ((RGB_LED) 7,  &onColor);
+	Set_LED_Output ((RGB_LED) 8,  &offColor);
+	Set_LED_Output ((RGB_LED) 9,  &onColor);
+	Set_LED_Output ((RGB_LED) 10, &offColor);
+	Set_LED_Output ((RGB_LED) 11, &onColor);
 	
 	for (;;) {
 		if (Ring_Buffer_NofElements () > 0) {
@@ -211,15 +226,15 @@ void Application (void) {
 //				LED2_PutVal(LED2_DeviceData, led_state);
 				led_state = !led_state;
 
-				color_rgb * derp = colors + color_index;
-
-				set_led_output((rgb_led) led_index, derp);
-
-				if (++led_index % RGB_INVALID == 0)
-				{
-					led_index = 0;
-					color_index = (color_index + 1) % 3;
-				}
+//				Color_RGB * derp = colors + color_index;
+//
+//				Set_LED_Output((RGB_LED) led_index, derp);
+//
+//				if (++led_index % RGB_INVALID == 0)
+//				{
+//					led_index = 0;
+//					color_index = (color_index + 1) % 3;
+//				}
 			}
 	}
 	

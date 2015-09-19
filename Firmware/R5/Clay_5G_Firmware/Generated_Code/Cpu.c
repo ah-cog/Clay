@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-16, 15:56, # CodeGen: 27
+**     Date/Time   : 2015-09-17, 17:29, # CodeGen: 29
 **     Abstract    :
 **
 **     Settings    :
@@ -308,30 +308,6 @@ void PE_low_level_init(void)
   (void)LED_DRIVER_1_RESET_Init(NULL);
   /* ### I2C_LDD "I2C0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)I2C0_Init(NULL);
-  /* ### BitIO_LDD "IO_1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_1_Init(NULL);
-  /* ### BitIO_LDD "IO_2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_2_Init(NULL);
-  /* ### BitIO_LDD "IO_3" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_3_Init(NULL);
-  /* ### BitIO_LDD "IO_4" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_4_Init(NULL);
-  /* ### BitIO_LDD "IO_5" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_5_Init(NULL);
-  /* ### BitIO_LDD "IO_6" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_6_Init(NULL);
-  /* ### BitIO_LDD "IO_7" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_7_Init(NULL);
-  /* ### BitIO_LDD "IO_8" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_8_Init(NULL);
-  /* ### BitIO_LDD "IO_9" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_9_Init(NULL);
-  /* ### BitIO_LDD "IO_10" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_10_Init(NULL);
-  /* ### BitIO_LDD "IO_11" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_11_Init(NULL);
-  /* ### BitIO_LDD "IO_12" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)IO_12_Init(NULL);
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }
