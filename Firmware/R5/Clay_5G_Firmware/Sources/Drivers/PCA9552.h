@@ -8,46 +8,40 @@
 #ifndef LED_DRIVER_PCA9552_H_
 #define LED_DRIVER_PCA9552_H_
 
-// includes //////////////////
-
 #ifndef __PE_Types_H
 #include "PE_Types.h"
 #endif
 
-// defines ///////////////////
-#define LED_DRIVER_COUNT            2
+#define LED_DRIVER_COUNT 2
 
-// structs ///////////////////
+#define PCA9552_PRIMARY_I2C_ADDRESS 0x60
+#define PCA9552_SECONDARY_I2C_ADDRESS 0x61
 
-//LED drivers
-typedef enum
-{
+// LED drivers
+typedef enum {
     LED_0,
     LED_1,
     LED_2,        //no red
     LED_3,
     LED_4,
     LED_5         //no red
-} led_driver_channel;
+} LED_Driver_Channel;
 
-typedef enum
-{
+typedef enum {
     LED_DRIVER_0,
     LED_DRIVER_1,
     LED_DRIVER_BOTH,
-} led_driver;
+} LED_Driver;
 
-typedef enum
-{
+typedef enum {
     LED_MODE_MAX,       //full on
     LED_MODE_OFF,       //high-z
     LED_MODE_MED,       //pwm0
     LED_MODE_LOW        //pwm1
-} led_mode;
+} LED_Mode;
 
-//These are the LEDS as they are laid out on the board.
-typedef enum
-{
+// These are the LEDS as they are laid out on the board.
+typedef enum {
     RGB_1,        //DS12
     RGB_2,        //DS11
     RGB_3,        //DS10
@@ -61,31 +55,26 @@ typedef enum
     RGB_11,        //DS5
     RGB_12,        //DS4
     RGB_INVALID
-} rgb_led;
+} RGB_LED;
 
-//RGB Channel. Tells which driver the LED is driven by and the index of the green pin.
-typedef struct
-{
-    led_driver driver_index;
-    led_driver_channel led_index;
-} rgb_channel;
+// RGB Channel. Tells which driver the LED is driven by and the index of the green pin.
+typedef struct {
+    LED_Driver driver_index; // The PCA9552 device (no. 1 or no. 2).
+    LED_Driver_Channel led_index; // The index of an LED of the LED of interest associated with the specified PCA9552 device.
+} RGB_Channel;
 
-//RGB color type. LED drivers support 16 bit color.
-typedef struct
-{
-    led_mode R;
-    led_mode G;
-    led_mode B;
-} color_rgb;
+// RGB color type. LED drivers support 16 bit color.
+typedef struct {
+    LED_Mode R;
+    LED_Mode G;
+    LED_Mode B;
+} Color_RGB;
 
-// global vars ///////////////
 extern uint8 driver_addresses[];
 
-// function prototypes ///////
-extern void init_led_drivers();
-
-extern void reset_driver(led_driver Driver);
-
-extern void set_led_output(rgb_led led, color_rgb * output_color);
+extern void Enable_PCA9552 ();
+extern void Reset_PCA9552 (LED_Driver Driver);
+extern void Set_LED_Output (RGB_LED led, Color_RGB * output_color);
+extern void Set_LED_Output_Mode (RGB_Channel * led, Color_RGB * output_color);
 
 #endif /* LED_DRIVER_PCA9552_H_ */

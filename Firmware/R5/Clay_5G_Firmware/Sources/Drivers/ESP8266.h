@@ -27,8 +27,8 @@
 
 #include "Utilities/Ring_Buffer.h"
 
-#define SSID_DEFAULT "AWS" // "joopal" // "clay-2.4ghz" // "AWS"
-#define PASSWORD_DEFAULT "Codehappy123" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
+#define SSID_DEFAULT "clay-2.4ghz" // "joopal" // "clay-2.4ghz" // "AWS"
+#define PASSWORD_DEFAULT "goldenbrown" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
 
 typedef struct {
 	LDD_TDeviceData *handle;

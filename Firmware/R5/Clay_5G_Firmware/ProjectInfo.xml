@@ -84,6 +84,7 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\ESP8266.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\PCA9552.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Events.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\GPIO.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\Ring_Buffer.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\main.c</PathName>
     </GeneratedCs>
@@ -122,6 +123,7 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\ESP8266.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\PCA9552.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Events.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\GPIO.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\Ring_Buffer.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Static_Code\IO_Map\MK20D7.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Static_Code\PDD\ADC_PDD.h</PathName>

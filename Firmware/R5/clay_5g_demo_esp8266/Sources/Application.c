@@ -1,10 +1,3 @@
-#include "Clock.h"
-#include "ESP8266_Serial.h"
-#include "ESP8266.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "Application.h"
 
 void Application (void) {
@@ -30,9 +23,7 @@ void Application (void) {
 	char* httpVersion = NULL;
 	int8_t response   = RESPONSE_NOT_FOUND;
 	
-	char *responseData = "<html><h1>Clay</h1><button>I/O</button></html>";
-//	char buffer[64] = { 0 };
-//	int n;
+	const char *responseData = "<html><h1>Clay</h1><button>I/O</button></html>";
 	
 	printf ("Clay\r\n");
 	
@@ -59,25 +50,15 @@ void Application (void) {
 	for (;;) {
 		if (Ring_Buffer_NofElements () > 0) {
 			
-			ESP8266_Reset_TCP_Buffer ();
-//			ESP8266_Receive_Incoming_Request ("\r\n\r\n", DEFAULT_RESPONSE_TIMEOUT); // i.e., "0,CONNECT\r\n\r\n"
+			ESP8266_Reset_TCP_Buffer (); // Clear the incoming data buffer
+			// ESP8266_Receive_Incoming_Request ("\r\n\r\n", DEFAULT_RESPONSE_TIMEOUT); // i.e., "0,CONNECT\r\n\r\n"
 			ESP8266_Receive_Incoming_Request (DEFAULT_RESPONSE_TIMEOUT); // e.g., "Accept: */*\r\n\r\n";
-			
-//			Wait (5000); // TODO: Reduce this to about 200 ms (or possibly zero since the processing below isn't related to communications with the ESP)
-			
-			
-			
-			
-			
-			
-			
-			// TODO: Extract client number (0-4) and command ("CONNECT" or else)
-			// response = ESP8266_Wait_For_Response ("0,CONNECT\r\n\r\n", DEFAULT_RESP8ONSE_TIMEOUT); // "0,CONNECT\r\n\r\n"
-		//	response = ESP8266_Wait_For_Response ("HTTP/1.1\r\n", DEFAULT_RESPONSE_TIMEOUT); // "HTTP/1.1\r\n" (e.g., "+IPD,0,343:GET / HTTP/1.1\r\n")
+			// Wait (5000); // TODO: Reduce this to about 200 ms (or possibly zero since the processing below isn't related to communications with the ESP)
 			
 			/* Extract connection information from received data. */
 			
 			// TODO: Search for (e.g.,) "0,CONNECT\r\n\r\n"
+			// TODO: Extract client number (0-4) and command ("CONNECT" or else)
 			
 			// Search the buffer of the received data. Find the connection number (0-4).
 			connection = httpResponseBuffer[0]; // (strchr (httpResponseBuffer, '+IPD,') + 1)[0]
