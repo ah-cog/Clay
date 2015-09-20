@@ -55,6 +55,10 @@
 - \subpage IMU_FSYNC
 - \subpage IMU_CS
 - \subpage IMU_INT
+- \subpage SMasterLdd1
+- \subpage BitIoLdd1
+- \subpage BitIoLdd2
+- \subpage ExtIntLdd1
 
 
 */
