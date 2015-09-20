@@ -50,6 +50,16 @@
 #include "IMU_FSYNC.h"
 #include "IMU_CS.h"
 #include "IMU_INT.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd1.h"
+#include "CSN1.h"
+#include "BitIoLdd2.h"
+#include "IRQ1.h"
+#include "ExtIntLdd1.h"
+#include "WAIT1.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
 #include "tick_1ms_timer.h"
 #include "TU1.h"
 /* Including shared modules, which are used for whole project */
@@ -81,6 +91,10 @@
 #include "mpu_9250_driver.h"
 #endif
 
+#ifndef NRF24L01PLUS_H_
+#include "nrf24L01plus.h"
+#endif
+
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
@@ -101,6 +115,10 @@ int main(void)
 
     mpu_9250_init();
 
+    RF1_Init();
+    RF1_GetStatus();
+    uint8_t controlReg = RF1_ReadRegister(0x00);
+
     mpu_values v = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     delay_n_msec(5);
@@ -114,9 +132,6 @@ int main(void)
                     { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }        //rb
             };
 
-    int led_index = 0;
-    int color_index = 0;
-
     for (;;)
     {
         if (tick_1msec)
@@ -125,18 +140,16 @@ int main(void)
 
             if (!(power_on_time_msec % 30))
             {
-                color_rgb * derp = colors + color_index;
-
                 get_mpu_readings(&v);
 
                 if (v.x_accel < 50)
                 {
-                    set_led_output(RGB_11, colors + 1);        //-x
+                    set_led_output(RGB_12, colors + 1);        //-x
                     set_led_output(RGB_4, colors + 0);        //+x
                 }
                 else if (v.x_accel > 50)
                 {
-                    set_led_output(RGB_11, colors + 0);        //-x
+                    set_led_output(RGB_12, colors + 0);        //-x
                     set_led_output(RGB_4, colors + 1);        //+x
                 }
 
@@ -182,12 +195,6 @@ int main(void)
             LED1_PutVal(LED1_DeviceData, !led_state);
             LED2_PutVal(LED2_DeviceData, led_state);
             led_state = !led_state;
-
-//            if (++led_index % RGB_INVALID == 0)
-//            {
-//                led_index = 0;
-//                color_index = (color_index + 1) % 3;
-//            }
         }
 
     }

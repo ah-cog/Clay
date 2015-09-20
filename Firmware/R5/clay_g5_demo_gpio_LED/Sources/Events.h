@@ -54,6 +54,16 @@
 #include "IMU_FSYNC.h"
 #include "IMU_CS.h"
 #include "IMU_INT.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd1.h"
+#include "CSN1.h"
+#include "BitIoLdd2.h"
+#include "IRQ1.h"
+#include "ExtIntLdd1.h"
+#include "WAIT1.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
 #include "tick_1ms_timer.h"
 #include "TU1.h"
 
@@ -156,6 +166,19 @@ void tick_1ms_timer_OnInterrupt(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void I2C0_OnMasterByteReceived(LDD_TUserData *UserDataPtr);
+
+void RF1_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  RF1_OnInterrupt (module Events)
+**
+**     Component   :  RF1 [nRF24L01]
+**     Description :
+**         Called in case of an interrupt from the transcevier
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 

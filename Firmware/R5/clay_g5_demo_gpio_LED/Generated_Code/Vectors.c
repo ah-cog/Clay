@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-14, 19:06, # CodeGen: 28
+**     Date/Time   : 2015-09-19, 19:42, # CodeGen: 44
 **     Abstract    :
 **
 **     Settings    :
@@ -76,6 +76,16 @@
   #include "IMU_FSYNC.h"
   #include "IMU_CS.h"
   #include "IMU_INT.h"
+  #include "RF1.h"
+  #include "CE1.h"
+  #include "BitIoLdd1.h"
+  #include "CSN1.h"
+  #include "BitIoLdd2.h"
+  #include "IRQ1.h"
+  #include "ExtIntLdd1.h"
+  #include "WAIT1.h"
+  #include "SM1.h"
+  #include "SMasterLdd1.h"
   #include "Events.h"
 
 
@@ -137,7 +147,7 @@
     (tIsrFunc)&Cpu_Interrupt,          /* 0x27  0x0000009C   -   ivINT_Reserved39               unused by PE */
     (tIsrFunc)&I2C0_Interrupt,         /* 0x28  0x000000A0   8   ivINT_I2C0                     used by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x29  0x000000A4   -   ivINT_I2C1                     unused by PE */
-    (tIsrFunc)&Cpu_Interrupt,          /* 0x2A  0x000000A8   -   ivINT_SPI0                     unused by PE */
+    (tIsrFunc)&SMasterLdd1_Interrupt,  /* 0x2A  0x000000A8   8   ivINT_SPI0                     used by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x2B  0x000000AC   -   ivINT_SPI1                     unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x2C  0x000000B0   -   ivINT_Reserved44               unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x2D  0x000000B4   -   ivINT_CAN0_ORed_Message_buffer unused by PE */
@@ -200,7 +210,7 @@
     (tIsrFunc)&Cpu_Interrupt,          /* 0x66  0x00000198   -   ivINT_Reserved102              unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x67  0x0000019C   -   ivINT_PORTA                    unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x68  0x000001A0   -   ivINT_PORTB                    unused by PE */
-    (tIsrFunc)&Cpu_Interrupt,          /* 0x69  0x000001A4   -   ivINT_PORTC                    unused by PE */
+    (tIsrFunc)&ExtIntLdd1_Interrupt,   /* 0x69  0x000001A4   8   ivINT_PORTC                    used by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x6A  0x000001A8   -   ivINT_PORTD                    unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x6B  0x000001AC   -   ivINT_PORTE                    unused by PE */
     (tIsrFunc)&Cpu_Interrupt,          /* 0x6C  0x000001B0   -   ivINT_Reserved108              unused by PE */
