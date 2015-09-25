@@ -148,6 +148,7 @@
 <smd name="P$5" x="0.68" y="-0.58" dx="0.75" dy="0.45" layer="1"/>
 <smd name="R" x="-0.68" y="0.58" dx="0.75" dy="0.45" layer="1"/>
 <smd name="V" x="0.68" y="-0.57" dx="0.75" dy="0.45" layer="1"/>
+<text x="-1.143" y="0.889" size="0.6096" layer="21">&gt;NAME</text>
 </package>
 </packages>
 <symbols>

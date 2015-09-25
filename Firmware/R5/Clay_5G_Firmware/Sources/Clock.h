@@ -30,6 +30,8 @@ extern void Wait (uint32_t milliseconds);
 
 extern uint32_t Millis ();
 
+extern void Monitor_Periodic_Events ();
+
 // extern void Stop_Clock ();
 
 // TODO: Disable_Clock ()

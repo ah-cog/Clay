@@ -148,6 +148,22 @@ void I2C0_OnMasterByteReceived(LDD_TUserData *UserDataPtr)
     I2C0_SendAcknowledge(I2C0_DeviceData,LDD_I2C_ACK_BYTE);
 }
 
+/*
+** ===================================================================
+**     Event       :  RF1_OnInterrupt (module Events)
+**
+**     Component   :  RF1 [nRF24L01]
+**     Description :
+**         Called in case of an interrupt from the transcevier
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void RF1_OnInterrupt(void)
+{
+  /* write your code here */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

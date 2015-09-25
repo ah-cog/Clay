@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-14, 19:06, # CodeGen: 28
+**     Date/Time   : 2015-09-19, 19:42, # CodeGen: 44
 **     Abstract    :
 **
 **     Settings    :
@@ -82,6 +82,16 @@
 #include "IMU_FSYNC.h"
 #include "IMU_CS.h"
 #include "IMU_INT.h"
+#include "RF1.h"
+#include "CE1.h"
+#include "BitIoLdd1.h"
+#include "CSN1.h"
+#include "BitIoLdd2.h"
+#include "IRQ1.h"
+#include "ExtIntLdd1.h"
+#include "WAIT1.h"
+#include "SM1.h"
+#include "SMasterLdd1.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -315,6 +325,8 @@ void PE_low_level_init(void)
   /* Common initialization of the CPU registers */
   /* NVICIP20: PRI20=0 */
   NVICIP20 = NVIC_IP_PRI20(0x00);
+  /* GPIOC_PDDR: PDD&=~0x0100 */
+  GPIOC_PDDR &= (uint32_t)~(uint32_t)(GPIO_PDDR_PDD(0x0100));
   /* ### BitIO_LDD "IO3" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)IO3_Init(NULL);
   /* ### BitIO_LDD "IO2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
@@ -357,6 +369,15 @@ void PE_low_level_init(void)
   (void)IMU_CS_Init(NULL);
   /* ### BitIO_LDD "IMU_INT" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)IMU_INT_Init(NULL);
+  /* ### SynchroMaster "SM1" init code ... */
+  SM1_Init();
+  /* ### BitIO_LDD "BitIoLdd1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)BitIoLdd1_Init(NULL);
+  /* ### BitIO_LDD "BitIoLdd2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)BitIoLdd2_Init(NULL);
+  /* ### ExtInt_LDD "ExtIntLdd1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)ExtIntLdd1_Init(NULL);
+  /* ### nRF24L01 "RF1" init code ... */
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }

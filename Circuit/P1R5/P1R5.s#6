@@ -419,6 +419,7 @@ Commonly used for 1/4W through-hole resistors. 0.3" pitch between holes.&lt;br&g
 <smd name="13" x="1.5" y="0.25" dx="0.7" dy="0.28" layer="1" rot="R180"/>
 <smd name="14" x="1.5" y="-0.25" dx="0.7" dy="0.28" layer="1" rot="R180"/>
 <smd name="15" x="0" y="0" dx="1.65" dy="2.4" layer="1" rot="R90" stop="no" thermals="no" cream="no"/>
+<text x="-1.905" y="-2.667" size="0.6096" layer="21">&gt;NAME</text>
 </package>
 <package name="MK20DX256VLH7">
 <circle x="-3.818" y="3.818" radius="0.254" width="0.127" layer="21"/>
@@ -2717,9 +2718,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <text x="-1.27" y="-2.54" size="0.4064" layer="27">&gt;Value</text>
 </package>
 <package name="0603">
-<circle x="0" y="0" radius="0.127" width="0.127" layer="21"/>
-<circle x="0" y="0" radius="0.0254" width="0.127" layer="21"/>
-<circle x="0" y="0" radius="0.218496875" width="0.127" layer="21"/>
 <wire x1="-1.473" y1="0.602" x2="1.473" y2="0.602" width="0.0508" layer="39"/>
 <wire x1="1.473" y1="0.602" x2="1.473" y2="-0.602" width="0.0508" layer="39"/>
 <wire x1="1.473" y1="-0.602" x2="-1.473" y2="-0.602" width="0.0508" layer="39"/>
@@ -2733,6 +2731,10 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <smd name="2" x="0.85" y="0" dx="1.1" dy="1" layer="1"/>
 <text x="-0.889" y="0.762" size="0.4064" layer="25" font="vector">&gt;NAME</text>
 <text x="-1.016" y="-1.143" size="0.4064" layer="27" font="vector">&gt;VALUE</text>
+<wire x1="-1.4732" y1="0.5969" x2="1.4859" y2="0.5969" width="0.127" layer="21"/>
+<wire x1="1.4859" y1="0.5969" x2="1.4859" y2="-0.5969" width="0.127" layer="21"/>
+<wire x1="1.4859" y1="-0.5969" x2="-1.4732" y2="-0.5969" width="0.127" layer="21"/>
+<wire x1="-1.4732" y1="-0.5969" x2="-1.4732" y2="0.5969" width="0.127" layer="21"/>
 </package>
 <package name="CDRH125">
 <wire x1="-3.5" y1="6" x2="-6" y2="6" width="0.2032" layer="21"/>
