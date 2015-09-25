@@ -740,3 +740,258 @@ void Start_HTTP_Server (uint16_t port) {
 //		ESP8266_Reset_TCP_Buffer (); // Reset the buffer where Clay stores responses to AT commands.
 	}
 }
+
+void Monitor_HTTP_Server () {
+	
+	int8_t status = NULL;
+	int i = 0;
+	int j = 0;
+//	int  lineReceived = FALSE;
+//	char buffer[64]   = { '\0' };
+//	int  ch           = (int) '\0';
+//	int server_started = FALSE;
+//	byte bufferSize;
+	char buffer[64] = { 0 };
+	int n;
+	
+//	int incomingByteCount = 0; // number of bytes available to read
+//	byte bufferedByteCount = 0;
+	
+	char* tokenEnd    = NULL;
+	
+	char  connection  = NULL; // 0 to 4
+	char* operation   = NULL; // "CONNECT"
+	
+	char* httpMethod  = NULL;
+	char* httpUri     = NULL;
+	char* httpVersion = NULL;
+	int8_t response   = RESPONSE_NOT_FOUND;
+	
+	const char *responseData = "<html><h1>Clay</h1><button>I/O</button></html>";
+	
+	if (Ring_Buffer_NofElements () > 0) {
+		
+		ESP8266_Reset_TCP_Buffer (); // Clear the incoming data buffer
+		// ESP8266_Receive_Incoming_Request ("\r\n\r\n", DEFAULT_RESPONSE_TIMEOUT); // i.e., "0,CONNECT\r\n\r\n"
+		ESP8266_Receive_Incoming_Request (DEFAULT_RESPONSE_TIMEOUT); // e.g., "Accept: */*\r\n\r\n";
+		// Wait (5000); // TODO: Reduce this to about 200 ms (or possibly zero since the processing below isn't related to communications with the ESP)
+		
+		/* Extract connection information from received data. */
+		
+		// TODO: Search for (e.g.,) "0,CONNECT\r\n\r\n"
+		// TODO: Extract client number (0-4) and command ("CONNECT" or else)
+		
+		// Search the buffer of the received data. Find the connection number (0-4).
+		connection = httpResponseBuffer[0]; // (strchr (httpResponseBuffer, '+IPD,') + 1)[0]
+		// TODO: Search for the connection ID.
+		printf ("Connection: %c\r\n", connection);
+		
+		// TODO: Search for byte count of incoming data (e.g., the "82" in "+IPD,0,82:" from "+IPD,0,82:GET /hello HTTP/1.1\r\n")
+		
+		// Search the buffer of the received data. Find the operation (e.g., "CONNECT").
+		operation  = strchr (httpResponseBuffer, ',') + 1;
+		tokenEnd   = strchr (operation, '\r');
+		*tokenEnd  = NULL; // Terminate the string.
+		// TODO: Search for the connection ID.
+		printf ("Operation: %s\r\n", operation);
+		
+		/* Extract HTTP request data for the connection (if valid for the connection). */
+		
+		// Search the buffer of the received data. Find ':' and read until ' ' to get HTTP method
+		// The HTTP/1.1 methods are GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, CONNECT, and PATCH.
+		httpMethod = strchr (tokenEnd + 1, ':') + 1; // strchr (httpResponseBuffer, ':') + 1;
+		tokenEnd   = strchr (httpMethod, ' ');
+		*tokenEnd  = NULL; // Terminate the string.
+		// TODO: Search for the method (i.e., "GET", "POST", etc.) and set a flag.
+		printf ("Method: %s\r\n", httpMethod);
+		
+		// Search the buffer of the received data. Find the first ' ' following the HTTP method to read the URI
+		httpUri   = tokenEnd + 1;
+		tokenEnd  = strchr (httpUri, ' ');
+		*tokenEnd = NULL; // Terminate the string.
+		// TODO: Copy the URI.
+		printf ("URI: %s\r\n", httpUri);
+		
+		httpVersion  = tokenEnd + 1;
+		tokenEnd     = strchr (httpVersion, '\r');
+		*tokenEnd    = NULL; // Terminate the string.
+		// TODO: Verify the correctness of the HTTP version.
+		printf ("Version: %s\r\n", httpVersion);
+		
+		
+		
+		ESP8266_Reset_TCP_Buffer ();
+		
+		// TODO: Handle request that matches httpUri
+		if (strncmp (httpUri, "/hello", strlen ("/hello")) == 0) {
+			
+			/* Respond to the "/hello" request */
+			
+			// Send data to the connected client.
+			n = sprintf (buffer, "AT+CIPSEND=%c,%d\r\n", connection, strlen (responseData));
+			if (ESP8266_Send_Block (buffer) == TRUE) {
+				// Wait for ">" before sending data.
+				response = ESP8266_Wait_For_Response (">", DEFAULT_RESPONSE_TIMEOUT);
+			}
+			
+			// Send data to ESP8266.
+			n = sprintf (buffer, "%s", responseData);
+			if (ESP8266_Send_Block (buffer) == TRUE) {
+				response = ESP8266_Wait_For_Response ("SEND OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // Wait for "\r\r\nSEND OK\r\n".
+			}
+			
+//				// Brief pause here before closing the connection.
+//				Wait (200);
+//				
+//				// Close the TCP connection.
+//				n = sprintf (buffer, "AT+CIPCLOSE=%c\r\n", connection);
+//				if (ESP8266_Send_Block (buffer) == TRUE) {
+//					// Wait for "OK\r\n".
+//					Wait (500);
+//					response = ESP8266_Wait_For_Response ("OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // "AT+CIPCLOSE=0\r\n0,CLOSED\r\n\r\nOK\r\n"
+//				}
+//				
+//				// Wait for a short period of time before allowing additional AT commands.
+//				Wait (300);
+			
+		} else if (strncmp (httpUri, "/channel/", strlen ("/channel/")) == 0) {
+			
+			if (strncmp (httpMethod, "GET", strlen ("GET")) == 0) {
+				printf ("Getting state of channel.\r\n");
+			} else if (strncmp (httpMethod, "POST", strlen ("POST")) == 0) {
+				printf ("Setting state of channel.\r\n");
+				// TODO: Read POST data
+			}
+			
+		} else if (strncmp (httpUri, "/message", strlen ("/message")) == 0) {
+			
+			// e.g., for "turn 1 on" the httpUri string would be "/message?content=turn%201%20on"
+			
+			// TODO: Copy and clean the string contained in the message content.
+			
+#define MAXIMUM_MESSAGE_LENGTH 128
+			int messageLength = 0;
+			char message[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+//				char *token = NULL;
+//				char *tokenStop = NULL;
+//				char tokenBuffer[32] = { 0 };
+//				int tokenInt = 0;
+			
+			if (strncmp (httpMethod, "GET", strlen ("GET")) == 0) {
+				printf ("Getting state of channel.\r\n");
+				
+				//strncpy (message, httpUri, MAXIMUM_MESSAGE_LENGTH);
+				i = strchr (httpUri, '?') - httpUri; // Computes the offset between the beginning of the URI and the message content.
+				if (i > 0) { // The offset will be greater than 0 if the '?' character was found.
+					
+					i = i + 9; // HACK: Move past the "?content=" string. // TODO: Actually search for parameters in the parameter list.
+					j = 0;
+					for ( ; i < strlen (httpUri); ) {
+						
+						// Copy the character from the HTTP request to the message.
+						// When copying, replace any occurrences of the "%20" string with a ' ' character in the message.
+						if (httpUri[i] == '%') {
+							message[j] = ' '; // Write a ' ' character instead of the "%20" string.
+							i = i + 3; // Skip past the "%20" string.
+						} else {
+							message[j] = httpUri[i];
+							i++;
+						}
+						
+						// Move to the next character in the message.
+						j++;
+					}
+					message[j] = '\0'; // Terminate the message.
+					
+					messageLength = j; // TODO: Replace the use of j above with messageLength
+					
+					printf ("Message: %s\r\n", message);
+				} else {
+					printf ("Error: There was no message.\r\n");
+				}
+				
+//				// Get tokens from message string
+//				token = getToken (message, tokenBuffer, 0);
+//				printf ("token 0: %s\r\n", tokenBuffer);
+//				token = getToken (message, tokenBuffer, 1);
+//				printf ("token 1: %s\r\n", tokenBuffer);
+//				token = getToken (message, tokenBuffer, 2);
+//				printf ("token 2: %s\r\n", tokenBuffer);
+				
+				/* Intelligence */
+				
+				status = Process_Message (message);
+				// TODO: Get response code from Process_Message ()
+				
+				if (status == TRUE) {
+					
+					// Send data to the connected client.
+					n = sprintf (buffer, "AT+CIPSEND=%c,%d\r\n", connection, strlen ("HTTP/1.1 200 OK\r\n"));
+					if (ESP8266_Send_Block (buffer) == TRUE) {
+						// Wait for ">" before sending data.
+						response = ESP8266_Wait_For_Response (">", DEFAULT_RESPONSE_TIMEOUT);
+					}
+					
+					// Send data to ESP8266.
+					n = sprintf (buffer, "%s", "HTTP/1.1 200 OK\r\n");
+					if (ESP8266_Send_Block (buffer) == TRUE) {
+						response = ESP8266_Wait_For_Response ("SEND OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // Wait for "\r\r\nSEND OK\r\n".
+					}
+					
+				} else {
+					
+					// Send data to the connected client.
+					n = sprintf (buffer, "AT+CIPSEND=%c,%d\r\n", connection, strlen ("HTTP/1.1 400 Bad Request\r\n"));
+					if (ESP8266_Send_Block (buffer) == TRUE) {
+						// Wait for ">" before sending data.
+						response = ESP8266_Wait_For_Response (">", DEFAULT_RESPONSE_TIMEOUT);
+					}
+					
+					// Send data to ESP8266.
+					n = sprintf (buffer, "%s", "HTTP/1.1 400 Bad Request\r\n");
+					if (ESP8266_Send_Block (buffer) == TRUE) {
+						response = ESP8266_Wait_For_Response ("SEND OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // Wait for "\r\r\nSEND OK\r\n".
+					}
+					
+				}
+				
+			}
+			
+//			else if (strncmp (httpMethod, "POST", strlen ("POST")) == 0) {
+//				printf ("Setting state of channel.\r\n");
+//				// TODO: Read POST data
+//			}
+			
+		}
+		
+		
+		
+		// Brief pause here before closing the connection.
+		Wait (200);
+		
+		// Close the TCP connection.
+		n = sprintf (buffer, "AT+CIPCLOSE=%c\r\n", connection);
+		if (ESP8266_Send_Block (buffer) == TRUE) {
+			// Wait for "OK\r\n".
+			Wait (500);
+			response = ESP8266_Wait_For_Response ("OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // "AT+CIPCLOSE=0\r\n0,CLOSED\r\n\r\nOK\r\n"
+		}
+		
+		// Wait for a short period of time before allowing additional AT commands.
+		Wait (300);
+		
+//			
+//			// Close the TCP connection.
+//			n = sprintf (buffer, "AT+CIPCLOSE=%c\r\n", connection);
+//			if (ESP8266_Send_Block (buffer) == TRUE) {
+////			if (ESP8266_Send_Block ("AT+CIPCLOSE=0\r\n") == TRUE) {
+//				// Wait for "OK\r\n".
+//				Wait (200);
+//				//response = ESP8266_Wait_For_Response ("OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // "AT+CIPCLOSE=0\r\n0,CLOSED\r\n\r\nOK\r\n"
+//				ESP8266_Wait_For_Response ("OK\r\n", DEFAULT_RESPONSE_TIMEOUT);
+//			}
+		
+//			printf ("BUFFER!");
+	}
+	
+}

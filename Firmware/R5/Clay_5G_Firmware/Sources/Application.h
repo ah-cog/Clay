@@ -11,6 +11,8 @@
 #include "ESP8266_Serial.h"
 #include "Drivers/ESP8266.h"
 
+#include "Messenger.h"
+
 void Application ();
 
 #endif /* APPLICATION_H */
