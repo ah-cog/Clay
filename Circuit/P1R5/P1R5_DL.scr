@@ -1,5 +1,5 @@
 OPEN 'E:/git/clay/Circuit/P1R5/drilegend.lbr';
-Rename drilegend.pac dl43149973.pac
+Rename drilegend.pac dl43153873.pac
 Edit drilegend.pac
 LAYER 144 DrillLegend;
 Display none;
@@ -30,8 +30,6 @@ Layer 47  Measures;
 Layer 48  Document;
 Layer 51  tDocu;
 Layer 112  tSilk;
-Layer 145  DrillLegend_01-16;
-Layer 146  DrillLegend_01-20;
 Layer 144  DrillLegend;
 Change layer 144;
 Change Size 70.0000;
