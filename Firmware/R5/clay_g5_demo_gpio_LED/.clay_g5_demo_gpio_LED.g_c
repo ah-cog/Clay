@@ -475,7 +475,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_g5_demo_gpio_LED_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>56</ProjectModificationStamp>
+    <ProjectModificationStamp>57</ProjectModificationStamp>
   </Options>
   <CpuID_20>
     <Generated>false</Generated>
@@ -3173,7 +3173,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1194564950</HeaderAge>
-    <CodeAge>1194564950</CodeAge>
+    <CodeAge>1194834129</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>33</GenNumMethods>
     <ConfigureSPI>true</ConfigureSPI>

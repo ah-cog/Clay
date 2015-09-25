@@ -126,7 +126,7 @@ static void set_magnetometer_mode(uint8_t mode)
 
 static void mpu9250_write_accel_bitfield(uint8_t reg_addr, uint8_t lsb_index, uint8_t field_length, uint8_t data)
 {
-    mpu9250_write_bitfield(reg_addr, lsb_index, field_length, data, MPU9250_MAG_ADDRESS);
+    mpu9250_write_bitfield(reg_addr, lsb_index, field_length, data, MPU9250_ACCEL_ADDRESS);
 }
 
 static void mpu9250_write_accel_bit(uint8_t reg_addr, uint8_t bit_index, uint8_t data)
