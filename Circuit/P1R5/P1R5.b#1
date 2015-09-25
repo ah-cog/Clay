@@ -2223,7 +2223,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="37.7063" y="21.4757" size="0.6096" layer="25" font="vector" ratio="15"/>
 </element>
 <element name="JP1" library="SparkFun-Connectors" package="JST_2PIN" value="M20PTH" x="44.577" y="7.8105" smashed="yes" rot="R180">
-<attribute name="PARTNO" value="M20PTH" x="44.577" y="7.8105" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="PARTNO" value="S2B-PH-K-S(LF)(SN)" x="44.577" y="7.8105" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="NAME" x="46.9011" y="8.6614" size="0.6096" layer="25" font="vector" ratio="15" rot="R90"/>
 <attribute name="VALUE" x="45.847" y="10.9855" size="1.27" layer="27" rot="R180"/>
 </element>

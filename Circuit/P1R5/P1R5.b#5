@@ -6,10 +6,10 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.0005" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.005" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="yes"/>
-<layer number="2" name="Route2" color="1" fill="3" visible="no" active="yes"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
 <layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
 <layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
 <layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
@@ -22,12 +22,12 @@
 <layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
 <layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
 <layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
-<layer number="15" name="Route15" color="4" fill="6" visible="no" active="yes"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="yes"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
 <layer number="17" name="Pads" color="2" fill="1" visible="no" active="yes"/>
 <layer number="18" name="Vias" color="2" fill="1" visible="no" active="yes"/>
 <layer number="19" name="Unrouted" color="13" fill="1" visible="no" active="yes"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="no" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="yes"/>
@@ -191,7 +191,7 @@
 <text x="-5.3848" y="-22.4536" size="5.08" layer="2" font="vector" ratio="15">GND</text>
 <text x="8.9662" y="-13.9192" size="5.08" layer="15" font="vector" ratio="15">3.3v</text>
 <text x="8.4836" y="-22.352" size="5.08" layer="16" font="vector" ratio="15" rot="SR0">Bottom</text>
-<text x="73.6346" y="-7.4803" size="1.6764" layer="48" font="vector" ratio="15">Clay G5 R2
+<text x="73.6346" y="-7.4803" size="1.6764" layer="48" font="vector" ratio="15">Clay G6
 2015-09-24
 GBH</text>
 <text x="73.3679" y="25.1206" size="1.016" layer="48" font="vector" ratio="15">PCB:
@@ -1147,6 +1147,10 @@ Assembly:
 <text x="11.049" y="29.5656" size="1.4224" layer="112" font="vector" ratio="15" rot="SR270">0</text>
 <text x="11.049" y="26.6319" size="1.4224" layer="112" font="vector" ratio="15" rot="SR270">1</text>
 <text x="11.049" y="24.1046" size="1.4224" layer="112" font="vector" ratio="15" rot="SR270">2</text>
+<text x="1.3462" y="34.0868" size="1.27" layer="112" font="vector" ratio="15">G6</text>
+<text x="28.448" y="33.0581" size="0.6096" layer="112" font="vector" ratio="15">RX</text>
+<text x="30.861" y="33.0581" size="0.6096" layer="112" font="vector" ratio="15">TX</text>
+<text x="0.9017" y="46.5709" size="0.6096" layer="112" font="vector" ratio="15">SCL</text>
 </plain>
 <libraries>
 <library name="appfruits">
