@@ -6,7 +6,7 @@
 **     Component   : I2C_LDD
 **     Version     : Component 01.016, Driver 01.07, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-17, 22:04, # CodeGen: 37
+**     Date/Time   : 2015-09-26, 22:27, # CodeGen: 49
 **     Abstract    :
 **          This component encapsulates the internal I2C communication
 **          interface. The implementation of the interface is based
@@ -53,8 +53,7 @@
 **            SDA Hold                                     : 1.806 us
 **            SCL start Hold                               : 5.278 us
 **            SCL stop Hold                                : 5.362 us
-**            Control acknowledge bit                      : Enabled
-**              Delay loop cycle number                    : 200
+**            Control acknowledge bit                      : Disabled
 **            Low timeout                                  : Disabled
 **          Initialization                                 : 
 **            Enabled in init code                         : yes
@@ -86,7 +85,6 @@
 **         MasterSendBlock    - LDD_TError I2C0_MasterSendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
 **         MasterReceiveBlock - LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
 **         SelectSlaveDevice  - LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr,...
-**         SendAcknowledge    - LDD_TError I2C0_SendAcknowledge(LDD_TDeviceData *DeviceDataPtr,...
 **
 **     Copyright : 1997 - 2014 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -175,7 +173,6 @@ extern "C" {
 #define I2C0_MasterSendBlock_METHOD_ENABLED /*!< MasterSendBlock method of the component I2C0 is enabled (generated) */
 #define I2C0_MasterReceiveBlock_METHOD_ENABLED /*!< MasterReceiveBlock method of the component I2C0 is enabled (generated) */
 #define I2C0_SelectSlaveDevice_METHOD_ENABLED /*!< SelectSlaveDevice method of the component I2C0 is enabled (generated) */
-#define I2C0_SendAcknowledge_METHOD_ENABLED /*!< SendAcknowledge method of the component I2C0 is enabled (generated) */
 
 /* Events configuration constants - generated for all enabled component's events */
 #define I2C0_OnMasterBlockSent_EVENT_ENABLED /*!< OnMasterBlockSent event of the component I2C0 is enabled (generated) */
@@ -341,42 +338,6 @@ LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData *Bu
 */
 /* ===================================================================*/
 LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr, LDD_I2C_TAddrType AddrType, LDD_I2C_TAddr Addr);
-
-/*
-** ===================================================================
-**     Method      :  I2C0_SendAcknowledge (component I2C_LDD)
-*/
-/*!
-**     @brief
-**         This method send acknowledge/not acknowledge for current
-**         receiving byte. This method is available only if control
-**         acknowledge bit is enabled.
-**     @param
-**         DeviceDataPtr   - Device data structure
-**                           pointer returned by <Init> method.
-**     @param
-**         AckType         - Specify type of receiving byte
-**                           answer.
-**                           LDD_I2C_ACK_BYTE - The values of
-**                           acknowledge bit correspond to successful
-**                           byte receiving (receiver send ACK bit value
-**                           automatically according the I2C
-**                           specification).
-**                           LDD_I2C_NACK_BYTE - The values of
-**                           acknowledge bit correspond to not
-**                           successful byte receiving (receiver send
-**                           NACK bit value and terminate reception).
-**     @return
-**                         - Error code, possible codes:
-**                           ERR_OK - OK
-**                           ERR_DISABLED -  The device is disabled.
-**                           ERR_SPEED - This device does not work in
-**                           the active clock configuration.
-**                           ERR_PARAM_MODE -  Invalid acknowledge type
-**                           answer.
-*/
-/* ===================================================================*/
-LDD_TError I2C0_SendAcknowledge(LDD_TDeviceData *DeviceDataPtr, LDD_I2C_TAckType AckType);
 
 /*
 ** ===================================================================

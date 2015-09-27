@@ -27,7 +27,6 @@
 // local vars ////////////////
 static uint8_t outgoing_msg_buf[32];
 static uint8_t incoming_msg_buf[32];
-static uint8_t bypass_enable;
 
 // prototypes ////////////////
 static void send_message(uint8_t * message, int32 size, uint8_t address);
@@ -52,9 +51,13 @@ void mpu_9250_init()
     set_full_scale_accel_range(MPU9250_ACCEL_FS_2);
     set_sleep_enabled(FALSE);
 
+    //set bypass mode so we can talk to the magnetometer
+    mpu9250_write_accel_bit(MPU9250_RA_INT_PIN_CFG, 1, 1);
+
     set_magnetometer_mode(MPU9250_RA_MAG_MODE_CONTINUOUS_1);
 }
 
+//gets xyz data for accelerometer, gyro, and magnetometer
 void get_mpu_readings(mpu_values * data)
 {
     outgoing_msg_buf[0] = MPU9250_RA_ACCEL_XOUT_H;
@@ -72,15 +75,18 @@ void get_mpu_readings(mpu_values * data)
     data->y_gyro = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
     data->z_gyro = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
 
-    outgoing_msg_buf[0] = MPU9250_RA_MAG_XOUT_L;
-    receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 6, MPU9250_MAG_ADDRESS);
+    outgoing_msg_buf[0] = MPU9250_RA_MAG_ST_1;
+    receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 9, MPU9250_MAG_ADDRESS);
 
     //Note: magnetometer buffers are little endian.
-    data->x_mag = (((int16_t) incoming_msg_buf[1]) << 8) | incoming_msg_buf[0];
-    data->y_mag = (((int16_t) incoming_msg_buf[3]) << 8) | incoming_msg_buf[2];
-    data->z_mag = (((int16_t) incoming_msg_buf[5]) << 8) | incoming_msg_buf[4];
+    data->x_mag = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[1];
+    data->y_mag = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[3];
+    data->z_mag = (((int16_t) incoming_msg_buf[6]) << 8) | incoming_msg_buf[5];
 }
 
+//tx_buf contains data that will be sent to the device.
+//tx_size is the number of bytes in tx_buf
+//address is the I2C address of the device which is to be read
 static void send_message(uint8_t * message, int32 size, uint8_t address)
 {
     I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, address);
@@ -90,6 +96,11 @@ static void send_message(uint8_t * message, int32 size, uint8_t address)
     delay_n_msec(1);
 }
 
+//tx_buf contains command that will prepare the device for the read
+//tx_size is the number of bytes in tx_buf
+//rx_buf is the location where the returned data will be stored
+//rx_size is the number of bytes to read
+//address is the I2C address of the device which is to be read
 static void receive_message(uint8_t * tx_buf, int32 tx_size, uint8_t * rx_buf, int32 rx_size, uint8_t address)
 {
     send_message(tx_buf, tx_size, address);
@@ -146,43 +157,23 @@ static void mpu9250_write_mag_bitfield(uint8_t reg_addr, uint8_t lsb_index, uint
 
 static void mpu9250_write_bitfield(uint8_t reg_addr, uint8_t lsb_index, uint8_t field_length, uint8_t data, uint8_t address)
 {
-    if (address == MPU9250_MAG_ADDRESS)
-    {
-        bypass_enable = 1;
-        mpu9250_write_accel_bit(MPU9250_RA_INT_PIN_CFG, 1, 1);
-    }
-    else if (bypass_enable && address == MPU9250_ACCEL_ADDRESS)
-    {
-        bypass_enable = 0;
-        mpu9250_write_accel_bit(MPU9250_RA_INT_PIN_CFG, 1, 0);
-    }
-
     uint8_t current_value;
 
-    uint8_t mask = (1 << (field_length + 1));
+    uint8_t mask = (1 << field_length) - 1;
     uint8_t masked_data = data & mask;
 
     receive_message(&reg_addr, 1, &current_value, 1, address);
 
+    current_value &= ~mask;
+
     outgoing_msg_buf[0] = reg_addr;
-    outgoing_msg_buf[1] = (data ? (current_value | (masked_data << lsb_index)) : (current_value & ~(masked_data << lsb_index)));
+    outgoing_msg_buf[1] = current_value | (masked_data << lsb_index);
 
     return send_message(outgoing_msg_buf, 2, address);
 }
 
 static void mpu9250_write_bit(uint8_t reg_addr, uint8_t bit_index, uint8_t data, uint8_t address)
 {
-    if (address == MPU9250_MAG_ADDRESS)
-    {
-        bypass_enable = 1;
-        mpu9250_write_accel_bit(MPU9250_RA_INT_PIN_CFG, 1, 1);
-    }
-    else if (bypass_enable && address == MPU9250_ACCEL_ADDRESS)
-    {
-        bypass_enable = 0;
-        mpu9250_write_accel_bit(MPU9250_RA_INT_PIN_CFG, 1, 0);
-    }
-
     uint8_t current_value;
 
     receive_message(&reg_addr, 1, &current_value, 1, address);

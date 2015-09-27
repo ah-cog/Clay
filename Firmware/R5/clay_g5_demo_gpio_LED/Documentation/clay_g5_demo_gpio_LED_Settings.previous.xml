@@ -1649,13 +1649,13 @@ PE_DEBUGHALT();
         <Template v="CE" />
         <Properties>
           <Component_name v="CE1" />
-          <Pin_for_I_O v="XTAL0/PTA19/FTM1_FLT0/FTM_CLKIN1/LPTMR0_ALT1" />
+          <Pin_for_I_O v="PTD7/CMT_IRO/UART0_TX/FTM0_CH7/FTM0_FLT1" />
           <inhrbean type="BitIO_LDD">
             <Enabled v="Y" />
             <Template v="BitIO_LDD" />
             <Properties>
               <Component_name v="BitIoLdd1" />
-              <Pin_for_I_O v="XTAL0/PTA19/FTM1_FLT0/FTM_CLKIN1/LPTMR0_ALT1" />
+              <Pin_for_I_O v="PTD7/CMT_IRO/UART0_TX/FTM0_CH7/FTM0_FLT1" />
               <Direction v="Output" />
               <group name="Initialization">
                 <Init__direction v="Output" />
@@ -1713,13 +1713,13 @@ PE_DEBUGHALT();
         <Template v="CSN" />
         <Properties>
           <Component_name v="CSN1" />
-          <Pin_for_I_O v="TSI0_CH9/PTB16/UART0_RX/EWM_IN" />
+          <Pin_for_I_O v="ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FTM0_FLT0" />
           <inhrbean type="BitIO_LDD">
             <Enabled v="Y" />
             <Template v="BitIO_LDD" />
             <Properties>
               <Component_name v="BitIoLdd2" />
-              <Pin_for_I_O v="TSI0_CH9/PTB16/UART0_RX/EWM_IN" />
+              <Pin_for_I_O v="ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FTM0_FLT0" />
               <Direction v="Output" />
               <group name="Initialization">
                 <Init__direction v="Output" />
@@ -1778,7 +1778,70 @@ PE_DEBUGHALT();
       </boolgroup>
       <boolgroup name="Switch Bus" v="Disabled" />
       <Application_Event_Handler v="RADIO_OnInterrupt" />
-      <boolgroup name="IRQ Pin" v="Disabled" />
+      <boolgroup name="IRQ Pin" v="Enabled">
+        <inhrbean type="ExtInt">
+          <Enabled v="Y" />
+          <Template v="IRQ" />
+          <Properties>
+            <Component_name v="IRQ1" />
+            <Pin v="ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK" />
+            <inhrbean type="ExtInt_LDD">
+              <Enabled v="Y" />
+              <Template v="ExtInt_LDD" />
+              <Properties>
+                <Component_name v="ExtIntLdd1" />
+                <Pin v="ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK" />
+                <Generate_interrupt_on v="falling edge" />
+                <Interrupt v="INT_PORTC" />
+                <Interrupt_priority v="medium priority" />
+                <group name="Initialization">
+                  <Enabled_in_init__code v="yes" />
+                  <list name="Auto Initialization" v="1">
+                    <Auto_initialization v="yes" />
+                  </list>
+                </group>
+              </Properties>
+              <Methods>
+                <Init v="generate code" />
+                <Deinit v="don&amp;apos;t generate code" />
+                <Enable v="don&amp;apos;t generate code" />
+                <Disable v="don&amp;apos;t generate code" />
+                <GetVal v="generate code" />
+                <SetEdge v="don&amp;apos;t generate code" />
+                <SetOperationMode v="don&amp;apos;t generate code" />
+                <GetDriverState v="don&amp;apos;t generate code" />
+                <ConnectPin v="don&amp;apos;t generate code" />
+              </Methods>
+              <Events>
+                <Event_module_name v="Events" />
+                <event name="OnInterrupt" v="generate code">
+                  <Event_procedure_name v="ExtIntLdd1_OnInterrupt" />
+                </event>
+              </Events>
+            </inhrbean>
+            <Generate_interrupt_on v="falling edge" />
+            <Interrupt v="INT_PORTC" />
+            <Interrupt_priority v="medium priority" />
+            <group name="Initialization">
+              <Enabled_in_init__code v="yes" />
+            </group>
+          </Properties>
+          <Methods>
+            <Enable v="don&amp;apos;t generate code" />
+            <Disable v="don&amp;apos;t generate code" />
+            <GetVal v="generate code" />
+            <SetEdge v="don&amp;apos;t generate code" />
+            <ConnectPin v="don&amp;apos;t generate code" />
+          </Methods>
+          <Events>
+            <Event_module_name v="Events" />
+            <event name="OnInterrupt" v="generate code">
+              <Event_procedure_name v="IRQ1_OnInterrupt" />
+              <Priority v="same as interrupt" />
+            </event>
+          </Events>
+        </inhrbean>
+      </boolgroup>
     </Properties>
     <Methods>
       <ConfigureSPI v="generate code" />
