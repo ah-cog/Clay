@@ -475,7 +475,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_g5_demo_gpio_LED_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>57</ProjectModificationStamp>
+    <ProjectModificationStamp>58</ProjectModificationStamp>
   </Options>
   <CpuID_20>
     <Generated>false</Generated>
@@ -2726,8 +2726,8 @@
     <GenComponentVersion>01.016</GenComponentVersion>
     <GenDriverVersion>01.07</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1194556193</HeaderAge>
-    <CodeAge>1194556193</CodeAge>
+    <HeaderAge>1195029358</HeaderAge>
+    <CodeAge>1195029358</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>33</GenNumMethods>
     <Init>true</Init>
@@ -2754,7 +2754,7 @@
     <SlaveCancelReceptionBlock>false</SlaveCancelReceptionBlock>
     <SelectSlaveDevice>true</SelectSlaveDevice>
     <SetAcknowledgeMode>false</SetAcknowledgeMode>
-    <SendAcknowledge>true</SendAcknowledge>
+    <SendAcknowledge>false</SendAcknowledge>
     <GetError>false</GetError>
     <CheckBus>false</CheckBus>
     <GetStats>false</GetStats>
@@ -2803,104 +2803,76 @@
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
     <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
-    <GenMethodPos>14</GenMethodPos>
+    <GenMethodPos>10</GenMethodPos>
     <MethodPos>
       <MethodPos0>Init</MethodPos0>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>186</LineBeg>
-      <LineEnd>210</LineEnd>
+      <LineBeg>183</LineBeg>
+      <LineEnd>207</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos1>MasterSendBlock</MethodPos1>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>211</LineBeg>
-      <LineEnd>257</LineEnd>
+      <LineBeg>208</LineBeg>
+      <LineEnd>254</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos2>MasterReceiveBlock</MethodPos2>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>258</LineBeg>
-      <LineEnd>308</LineEnd>
+      <LineBeg>255</LineBeg>
+      <LineEnd>305</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos3>SelectSlaveDevice</MethodPos3>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>309</LineBeg>
-      <LineEnd>343</LineEnd>
+      <LineBeg>306</LineBeg>
+      <LineEnd>340</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos4>SendAcknowledge</MethodPos4>
-      <MethodType>method</MethodType>
+      <MethodPos4>Interrupt</MethodPos4>
+      <MethodType>internal_method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>344</LineBeg>
-      <LineEnd>379</LineEnd>
+      <LineBeg>341</LineBeg>
+      <LineEnd>353</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos5>Interrupt</MethodPos5>
       <MethodType>internal_method</MethodType>
-      <ModuleType>Header</ModuleType>
-      <LineBeg>380</LineBeg>
-      <LineEnd>392</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos6>HWEnDi</MethodPos6>
-      <MethodType>internal_method_declaration</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>193</LineBeg>
-      <LineEnd>195</LineEnd>
+      <LineBeg>190</LineBeg>
+      <LineEnd>279</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos7>Interrupt</MethodPos7>
-      <MethodType>internal_method</MethodType>
-      <ModuleType>Code</ModuleType>
-      <LineBeg>196</LineBeg>
-      <LineEnd>298</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos8>Init</MethodPos8>
+      <MethodPos6>Init</MethodPos6>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>299</LineBeg>
-      <LineEnd>384</LineEnd>
+      <LineBeg>280</LineBeg>
+      <LineEnd>364</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos9>MasterSendBlock</MethodPos9>
+      <MethodPos7>MasterSendBlock</MethodPos7>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>385</LineBeg>
-      <LineEnd>479</LineEnd>
+      <LineBeg>365</LineBeg>
+      <LineEnd>459</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos10>MasterReceiveBlock</MethodPos10>
+      <MethodPos8>MasterReceiveBlock</MethodPos8>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>480</LineBeg>
-      <LineEnd>579</LineEnd>
+      <LineBeg>460</LineBeg>
+      <LineEnd>559</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos11>SelectSlaveDevice</MethodPos11>
+      <MethodPos9>SelectSlaveDevice</MethodPos9>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>580</LineBeg>
-      <LineEnd>649</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos12>SendAcknowledge</MethodPos12>
-      <MethodType>method</MethodType>
-      <ModuleType>Code</ModuleType>
-      <LineBeg>650</LineBeg>
-      <LineEnd>701</LineEnd>
-    </MethodPos>
-    <MethodPos>
-      <MethodPos13>OneBitTimeDelay</MethodPos13>
-      <MethodType>internal_method</MethodType>
-      <ModuleType>Code</ModuleType>
-      <LineBeg>702</LineBeg>
-      <LineEnd>718</LineEnd>
+      <LineBeg>560</LineBeg>
+      <LineEnd>629</LineEnd>
     </MethodPos>
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\I2C0.txt</ExtraFile0>
@@ -3173,7 +3145,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1194564950</HeaderAge>
-    <CodeAge>1194834129</CodeAge>
+    <CodeAge>1195029358</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>33</GenNumMethods>
     <ConfigureSPI>true</ConfigureSPI>
@@ -5015,51 +4987,50 @@
     <SrcFile272>Drivers\Kinetis\IsSupported_FTFE_PDD.prg=1146382935</SrcFile272>
     <SrcFile273>Drivers\Kinetis\IsSupported_FMC_PDD.prg=1146382935</SrcFile273>
     <SrcFile274>Drivers\Common\PE_MisraRuleToDocumentation_Kinetis.prg=1116866294</SrcFile274>
-    <SrcFile275>Drivers\Common\I2C_LDDSendAcknowledge.inc=1116866294</SrcFile275>
-    <SrcFile276>Drivers\Kinetis\InitClockGate.prg=1146382935</SrcFile276>
-    <SrcFile277>Drivers\Common\TimerInt_LDDAbstract.inc=1116866294</SrcFile277>
-    <SrcFile278>Drivers\Kinetis\IsSupported_USBHS_PDD.prg=1119719708</SrcFile278>
-    <SrcFile279>Drivers\Kinetis\ExternalInterrupt.drv=1119247234</SrcFile279>
-    <SrcFile280>Drivers\Common\nRF24L01ConfigureSPI.Inc=1194564557</SrcFile280>
-    <SrcFile281>Drivers\Common\CommonRegInitialization_NotRst.prg=1116866294</SrcFile281>
-    <SrcFile282>Drivers\Kinetis\IsSupported_I2S_PDD.prg=1119719530</SrcFile282>
-    <SrcFile283>Drivers\Common\WaitWaitus.Inc=1194564557</SrcFile283>
-    <SrcFile284>Drivers\Common\InitReg32Block.prg=1116866294</SrcFile284>
-    <SrcFile285>Drivers\Kinetis\IsSupported_IRQ_PDD.prg=1146382935</SrcFile285>
-    <SrcFile286>Drivers\Common\nRF24L01WriteRead.Inc=1194564557</SrcFile286>
-    <SrcFile287>Drivers\Kinetis\I2C_LDD.drv=1146716744</SrcFile287>
-    <SrcFile288>Drivers\Common\KinetisAbstract.inc=1116866294</SrcFile288>
-    <SrcFile289>Drivers\Common\nRF24L01ResetStatusIRQ.Inc=1194564556</SrcFile289>
-    <SrcFile290>Drivers\Common\I2C_LDDOnMasterByteReceived.inc=1116866294</SrcFile290>
-    <SrcFile291>Drivers\nRF24L01.src=1194564556</SrcFile291>
-    <SrcFile292>Drivers\Kinetis\TimerUnit_LDD.drv=1146382935</SrcFile292>
-    <SrcFile293>Drivers\Kinetis\Init_SystemControl_KINETIS.prg=1119773536</SrcFile293>
-    <SrcFile294>Drivers\Kinetis\IsSupported_SIM_PDD.prg=1146382935</SrcFile294>
-    <SrcFile295>Drivers\Common\I2C_LDDMasterSendBlock.inc=1116866294</SrcFile295>
-    <SrcFile296>Drivers\sw\nRF24L01.drv=1194564557</SrcFile296>
-    <SrcFile297>Drivers\Kinetis\IsSupported_COP_PDD.prg=1146382935</SrcFile297>
-    <SrcFile298>Drivers\Common\TimerInt_LDDInterrupt.inc=1116866294</SrcFile298>
-    <SrcFile299>Drivers\Kinetis\IsSupported_NVIC_PDD.prg=1146382935</SrcFile299>
-    <SrcFile300>Drivers\Common\SynchroMasterGetCharsInRxBuf.inc=1116866294</SrcFile300>
-    <SrcFile301>Drivers\Kinetis\InitInterrupt.prg=1123044898</SrcFile301>
-    <SrcFile302>Drivers\Common\ExtInt_LDDInit.inc=1116866294</SrcFile302>
-    <SrcFile303>Drivers\Common\CommonEnabling.prg=1116866294</SrcFile303>
-    <SrcFile304>Drivers\Common\CreateIntSection.prg=1116866294</SrcFile304>
-    <SrcFile305>Drivers\Common\nRF24L01Settings.Inc=1194564556</SrcFile305>
-    <SrcFile306>Drivers\Common\SetRegBits8.prg=1127381294</SrcFile306>
-    <SrcFile307>Drivers\Common\Doxy_CollectRegInitInfo.prg=1181763784</SrcFile307>
-    <SrcFile308>Drivers\Kinetis\IsSupported_OSC_PDD.prg=1146382935</SrcFile308>
-    <SrcFile309>Drivers\Common\DeclareISR.prg=1146382935</SrcFile309>
-    <SrcFile310>Drivers\Common\nRF24L01Init.Inc=1194564556</SrcFile310>
-    <SrcFile311>Drivers\Kinetis\IsSupported_FTMRE_PDD.prg=1146382935</SrcFile311>
-    <SrcFile312>Drivers\Common\IO_MapSettings.inc=1116866294</SrcFile312>
-    <SrcFile313>Drivers\Common\BitIO_LDDSetInput.inc=1116866294</SrcFile313>
-    <SrcFile314>Drivers\VAR\InitIntRequest.prg=1122284138</SrcFile314>
-    <SrcFile315>Drivers\Common\ExtInt_LDDGetVal.inc=1116866294</SrcFile315>
-    <SrcFile316>Drivers\Common\nRF24L01PollInterrupt.Inc=1194564557</SrcFile316>
-    <SrcFile317>Drivers\Common\GeneralReturnNothing.inc=1116866294</SrcFile317>
-    <SrcFile318>Drivers\Common\UsedBaudModes.inc=1116866294</SrcFile318>
-    <SrcFile319>Drivers\Common\CommonInitialization_FLASH.prg=1116866294</SrcFile319>
-    <SrcFile320>Drivers\TimerInt_LDD.src=1116866294</SrcFile320>
+    <SrcFile275>Drivers\Kinetis\InitClockGate.prg=1146382935</SrcFile275>
+    <SrcFile276>Drivers\Common\TimerInt_LDDAbstract.inc=1116866294</SrcFile276>
+    <SrcFile277>Drivers\Kinetis\IsSupported_USBHS_PDD.prg=1119719708</SrcFile277>
+    <SrcFile278>Drivers\Kinetis\ExternalInterrupt.drv=1119247234</SrcFile278>
+    <SrcFile279>Drivers\Common\nRF24L01ConfigureSPI.Inc=1194564557</SrcFile279>
+    <SrcFile280>Drivers\Common\CommonRegInitialization_NotRst.prg=1116866294</SrcFile280>
+    <SrcFile281>Drivers\Kinetis\IsSupported_I2S_PDD.prg=1119719530</SrcFile281>
+    <SrcFile282>Drivers\Common\WaitWaitus.Inc=1194564557</SrcFile282>
+    <SrcFile283>Drivers\Common\InitReg32Block.prg=1116866294</SrcFile283>
+    <SrcFile284>Drivers\Kinetis\IsSupported_IRQ_PDD.prg=1146382935</SrcFile284>
+    <SrcFile285>Drivers\Common\nRF24L01WriteRead.Inc=1194564557</SrcFile285>
+    <SrcFile286>Drivers\Kinetis\I2C_LDD.drv=1146716744</SrcFile286>
+    <SrcFile287>Drivers\Common\KinetisAbstract.inc=1116866294</SrcFile287>
+    <SrcFile288>Drivers\Common\nRF24L01ResetStatusIRQ.Inc=1194564556</SrcFile288>
+    <SrcFile289>Drivers\Common\I2C_LDDOnMasterByteReceived.inc=1116866294</SrcFile289>
+    <SrcFile290>Drivers\nRF24L01.src=1194564556</SrcFile290>
+    <SrcFile291>Drivers\Kinetis\TimerUnit_LDD.drv=1146382935</SrcFile291>
+    <SrcFile292>Drivers\Kinetis\Init_SystemControl_KINETIS.prg=1119773536</SrcFile292>
+    <SrcFile293>Drivers\Kinetis\IsSupported_SIM_PDD.prg=1146382935</SrcFile293>
+    <SrcFile294>Drivers\Common\I2C_LDDMasterSendBlock.inc=1116866294</SrcFile294>
+    <SrcFile295>Drivers\sw\nRF24L01.drv=1194564557</SrcFile295>
+    <SrcFile296>Drivers\Kinetis\IsSupported_COP_PDD.prg=1146382935</SrcFile296>
+    <SrcFile297>Drivers\Common\TimerInt_LDDInterrupt.inc=1116866294</SrcFile297>
+    <SrcFile298>Drivers\Kinetis\IsSupported_NVIC_PDD.prg=1146382935</SrcFile298>
+    <SrcFile299>Drivers\Common\SynchroMasterGetCharsInRxBuf.inc=1116866294</SrcFile299>
+    <SrcFile300>Drivers\Kinetis\InitInterrupt.prg=1123044898</SrcFile300>
+    <SrcFile301>Drivers\Common\ExtInt_LDDInit.inc=1116866294</SrcFile301>
+    <SrcFile302>Drivers\Common\CommonEnabling.prg=1116866294</SrcFile302>
+    <SrcFile303>Drivers\Common\CreateIntSection.prg=1116866294</SrcFile303>
+    <SrcFile304>Drivers\Common\nRF24L01Settings.Inc=1194564556</SrcFile304>
+    <SrcFile305>Drivers\Common\SetRegBits8.prg=1127381294</SrcFile305>
+    <SrcFile306>Drivers\Common\Doxy_CollectRegInitInfo.prg=1181763784</SrcFile306>
+    <SrcFile307>Drivers\Kinetis\IsSupported_OSC_PDD.prg=1146382935</SrcFile307>
+    <SrcFile308>Drivers\Common\DeclareISR.prg=1146382935</SrcFile308>
+    <SrcFile309>Drivers\Common\nRF24L01Init.Inc=1194564556</SrcFile309>
+    <SrcFile310>Drivers\Kinetis\IsSupported_FTMRE_PDD.prg=1146382935</SrcFile310>
+    <SrcFile311>Drivers\Common\IO_MapSettings.inc=1116866294</SrcFile311>
+    <SrcFile312>Drivers\Common\BitIO_LDDSetInput.inc=1116866294</SrcFile312>
+    <SrcFile313>Drivers\VAR\InitIntRequest.prg=1122284138</SrcFile313>
+    <SrcFile314>Drivers\Common\ExtInt_LDDGetVal.inc=1116866294</SrcFile314>
+    <SrcFile315>Drivers\Common\nRF24L01PollInterrupt.Inc=1194564557</SrcFile315>
+    <SrcFile316>Drivers\Common\GeneralReturnNothing.inc=1116866294</SrcFile316>
+    <SrcFile317>Drivers\Common\UsedBaudModes.inc=1116866294</SrcFile317>
+    <SrcFile318>Drivers\Common\CommonInitialization_FLASH.prg=1116866294</SrcFile318>
+    <SrcFile319>Drivers\TimerInt_LDD.src=1116866294</SrcFile319>
   </UsedSrcFiles>
 </GenerationInfo_G_C>

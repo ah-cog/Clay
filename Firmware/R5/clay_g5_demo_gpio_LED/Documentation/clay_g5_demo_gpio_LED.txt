@@ -355,8 +355,6 @@ Module "I2C0"      (component I2C_LDD)
    - I2C0_SelectSlaveDevice -This method selects a new slave for communication by its 7-bit slave, 10-bit address or general 
                 call value. Any send or receive method directs to or from selected device, until a new slave device is selected 
                 by this method. This method is available for the MASTER mode.
-   - I2C0_SendAcknowledge -This method send acknowledge/not acknowledge for current receiving byte. This method is available 
-                only if control acknowledge bit is enabled.
 
 Module "IMU_FSYNC" (component BitIO_LDD)
    - IMU_FSYNC_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 

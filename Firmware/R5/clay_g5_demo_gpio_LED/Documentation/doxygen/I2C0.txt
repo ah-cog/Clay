@@ -56,7 +56,7 @@ by the component.
     0x00000000
  </td><td>I2C0_FLT register, peripheral I2C0.</td></tr>
 <tr><td>0x40066008</td><td>I2C0_SMB</td><td>
-    0x00000088
+    0x00000008
  </td><td>I2C0_SMB register, peripheral I2C0.</td></tr>
 <tr><td>0x40066001</td><td>I2C0_F</td><td>
     0x00000026
@@ -458,10 +458,10 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40066008</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000088</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000008</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
-<tr><td>7</td><td>FACK</td><td>0x01</td><td>Fast NACK/ACK enable</td>
+<tr><td>7</td><td>FACK</td><td>0x00</td><td>Fast NACK/ACK enable</td>
 <tr><td>6</td><td>ALERTEN</td><td>0x00</td><td>SMBus alert response address enable</td>
 <tr><td>5</td><td>SIICAEN</td><td>0x00</td><td>Second I2C address enable</td>
 <tr><td>4</td><td>TCKSEL</td><td>0x00</td><td>Timeout counter clock select</td>
@@ -527,8 +527,7 @@ registers of the peripheral(s) configured by the component.
 **            SDA Hold                                     : 1.806 us
 **            SCL start Hold                               : 5.278 us
 **            SCL stop Hold                                : 5.362 us
-**            Control acknowledge bit                      : Enabled
-**              Delay loop cycle number                    : 200
+**            Control acknowledge bit                      : Disabled
 **            Low timeout                                  : Disabled
 **          Initialization                                 : 
 **            Enabled in init code                         : yes

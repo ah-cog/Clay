@@ -22,7 +22,7 @@
       <File Name="Generated_Code/PE_Types.h" FileDate="2015-09-19, 19:42:44" FileAge="1442709764961" FileType="45637" />
       <File Name="Static_Code/PDD/RTC_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303388" FileType="1048576" />
       <File Name="Generated_Code/BitIoLdd2.h" FileDate="2015-09-19, 19:42:44" FileAge="1442709764911" FileType="45637" CompNumb="74" />
-      <File Name="Documentation/clay_g5_demo_gpio_LED.txt" FileDate="2015-09-19, 19:37:42" FileAge="1442709462347" FileType="3072" />
+      <File Name="Documentation/clay_g5_demo_gpio_LED.txt" FileDate="2015-09-26, 22:27:29" FileAge="1443324449444" FileType="3072" />
       <File Name="Generated_Code/ExtIntLdd1.h" FileDate="2015-09-19, 19:42:44" FileAge="1442709764774" FileType="45637" CompNumb="79" />
       <File Name="Project_Settings/Debugger/MK20DX256.mem" FileDate="2015-09-19, 15:25:03" FileAge="1442694303095" FileType="45637" CompNumb="24" />
       <File Name="Static_Code/PDD/CRC_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303344" FileType="1048576" />
@@ -37,7 +37,7 @@
       <File Name="Documentation/doxygen/ExtIntLdd1.txt" FileDate="2015-09-19, 19:42:44" FileAge="1442709764763" FileType="45637" CompNumb="79" />
       <File Name="Static_Code/PDD/UART_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303403" FileType="1048576" />
       <File Name="Static_Code/PDD/CAN_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303335" FileType="1048576" />
-      <File Name="Documentation/doxygen/I2C0.txt" FileDate="2015-09-19, 15:25:02" FileAge="1442694302810" FileType="45637" CompNumb="49" />
+      <File Name="Documentation/doxygen/I2C0.txt" FileDate="2015-09-26, 22:27:28" FileAge="1443324448194" FileType="45637" CompNumb="49" />
       <File Name="Documentation/doxygen/IO12.txt" FileDate="2015-09-19, 15:25:02" FileAge="1442694302851" FileType="45637" CompNumb="17" />
       <File Name="Generated_Code/IO9.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303013" FileType="45637" CompNumb="14" />
       <File Name="Documentation/doxygen/IMU_FSYNC.txt" FileDate="2015-09-19, 15:25:02" FileAge="1442694302813" FileType="45637" CompNumb="54" />
@@ -54,11 +54,11 @@
       <File Name="Generated_Code/IMU_FSYNC.c" FileDate="2015-09-19, 15:25:02" FileAge="1442694302950" FileType="45637" CompNumb="54" />
       <File Name="Sources/Events.c" FileDate="2015-09-19, 19:37:41" FileAge="1442709461397" FileType="131328" />
       <File Name="Generated_Code/IO7.c" FileDate="2015-09-19, 15:25:03" FileAge="1442694303002" FileType="45637" CompNumb="16" />
-      <File Name="Documentation/clay_g5_demo_gpio_LED_SIGNALS.txt" FileDate="2015-09-23, 23:06:34" FileAge="1443067594314" FileType="3072" />
+      <File Name="Documentation/clay_g5_demo_gpio_LED_SIGNALS.txt" FileDate="2015-09-26, 22:27:28" FileAge="1443324448364" FileType="3072" />
       <File Name="Generated_Code/IO6.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303000" FileType="45637" CompNumb="11" />
       <File Name="ProjectInfo.xml" FileDate="2015-09-19, 19:42:46" FileAge="1442709766038" FileType="45637" />
       <File Name="Documentation/doxygen/LED2.txt" FileDate="2015-09-19, 15:25:02" FileAge="1442694302870" FileType="45637" CompNumb="27" />
-      <File Name="Documentation/clay_g5_demo_gpio_LED_Settings.xml" FileDate="2015-09-19, 19:42:45" FileAge="1442709765266" FileType="3072" />
+      <File Name="Documentation/clay_g5_demo_gpio_LED_Settings.xml" FileDate="2015-09-26, 22:27:28" FileAge="1443324448599" FileType="3072" />
       <File Name="Generated_Code/CE1.h" FileDate="2015-09-19, 19:42:44" FileAge="1442709764804" FileType="45637" CompNumb="71" />
       <File Name="Generated_Code/IO6.c" FileDate="2015-09-19, 15:25:02" FileAge="1442694302999" FileType="45637" CompNumb="11" />
       <File Name="Documentation/doxygen/tick_1ms_timer.txt" FileDate="2015-09-19, 15:25:02" FileAge="1442694302886" FileType="45637" CompNumb="38" />
@@ -101,7 +101,7 @@
       <File Name="Generated_Code/LED2.c" FileDate="2015-09-19, 15:25:03" FileAge="1442694303020" FileType="45637" CompNumb="27" />
       <File Name="Generated_Code/SM1.c" FileDate="2015-09-19, 19:37:41" FileAge="1442709461242" FileType="45637" CompNumb="76" />
       <File Name="Generated_Code/LED1.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303018" FileType="45637" CompNumb="28" />
-      <File Name="Generated_Code/RF1.c" FileDate="2015-09-23, 23:06:34" FileAge="1443067594263" FileType="45637" CompNumb="70" />
+      <File Name="Generated_Code/RF1.c" FileDate="2015-09-26, 22:27:28" FileAge="1443324448210" FileType="45637" CompNumb="70" />
       <File Name="Generated_Code/TU1.c" FileDate="2015-09-19, 15:25:03" FileAge="1442694303064" FileType="45637" CompNumb="39" />
       <File Name="Generated_Code/LED1.c" FileDate="2015-09-19, 15:25:03" FileAge="1442694303016" FileType="45637" CompNumb="28" />
       <File Name="Documentation/doxygen/IO10.txt" FileDate="2015-09-19, 15:25:02" FileAge="1442694302819" FileType="45637" CompNumb="19" />
@@ -118,10 +118,10 @@
       <File Name="Static_Code/PDD/DAC_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303347" FileType="1048576" />
       <File Name="Static_Code/PDD/FTM_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303364" FileType="1048576" />
       <File Name="Static_Code/PDD/USBDCD_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303405" FileType="1048576" />
-      <File Name="Generated_Code/I2C0.h" FileDate="2015-09-19, 15:25:02" FileAge="1442694302896" FileType="45637" CompNumb="49" />
+      <File Name="Generated_Code/I2C0.h" FileDate="2015-09-26, 22:27:28" FileAge="1443324448143" FileType="45637" CompNumb="49" />
       <File Name="Documentation/doxygen/BitIoLdd2.txt" FileDate="2015-09-19, 19:42:44" FileAge="1442709764932" FileType="45637" CompNumb="74" />
       <File Name="Static_Code/PDD/DMAMUX_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303349" FileType="1048576" />
-      <File Name="Generated_Code/I2C0.c" FileDate="2015-09-19, 15:25:02" FileAge="1442694302894" FileType="45637" CompNumb="49" />
+      <File Name="Generated_Code/I2C0.c" FileDate="2015-09-26, 22:27:28" FileAge="1443324448166" FileType="45637" CompNumb="49" />
       <File Name="Static_Code/PDD/CMT_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303342" FileType="1048576" />
       <File Name="Generated_Code/CSN1.h" FileDate="2015-09-19, 19:42:44" FileAge="1442709764797" FileType="45637" CompNumb="72" />
       <File Name="Generated_Code/Vectors.c" FileDate="2015-09-19, 19:42:45" FileAge="1442709765017" FileType="45637" CompNumb="24" />
@@ -135,7 +135,7 @@
       <File Name="Generated_Code/IO12.c" FileDate="2015-09-19, 15:25:02" FileAge="1442694302978" FileType="45637" CompNumb="17" />
       <File Name="Generated_Code/IO11.h" FileDate="2015-09-19, 15:25:02" FileAge="1442694302975" FileType="45637" CompNumb="18" />
       <File Name="Generated_Code/WAIT1.c" FileDate="2015-09-19, 19:37:41" FileAge="1442709461257" FileType="45637" CompNumb="75" />
-      <File Name="Sources/main.c" FileDate="2015-09-22, 19:46:52" FileAge="1442969212110" FileType="128" />
+      <File Name="Sources/main.c" FileDate="2015-09-26, 22:27:28" FileAge="1443324448241" FileType="128" />
       <File Name="Static_Code/PDD/PDB_PDD.h" FileDate="2015-09-19, 15:25:03" FileAge="1442694303377" FileType="1048576" />
       <File Name="Documentation/doxygen/BitIoLdd1.txt" FileDate="2015-09-19, 19:42:44" FileAge="1442709764894" FileType="45637" CompNumb="73" />
       <File Name="Generated_Code/IO11.c" FileDate="2015-09-19, 15:25:02" FileAge="1442694302972" FileType="45637" CompNumb="18" />
@@ -157,5 +157,5 @@
       <File Name="Generated_Code/IMU_INT.c" FileDate="2015-09-19, 15:25:02" FileAge="1442694302954" FileType="45637" CompNumb="56" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>49</CodeGenReference>
+  <CodeGenReference>50</CodeGenReference>
 </CodeGenerationInfo>

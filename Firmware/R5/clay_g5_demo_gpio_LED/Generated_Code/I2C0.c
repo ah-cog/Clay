@@ -6,7 +6,7 @@
 **     Component   : I2C_LDD
 **     Version     : Component 01.016, Driver 01.07, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-17, 22:04, # CodeGen: 37
+**     Date/Time   : 2015-09-26, 22:27, # CodeGen: 49
 **     Abstract    :
 **          This component encapsulates the internal I2C communication
 **          interface. The implementation of the interface is based
@@ -53,8 +53,7 @@
 **            SDA Hold                                     : 1.806 us
 **            SCL start Hold                               : 5.278 us
 **            SCL stop Hold                                : 5.362 us
-**            Control acknowledge bit                      : Enabled
-**              Delay loop cycle number                    : 200
+**            Control acknowledge bit                      : Disabled
 **            Low timeout                                  : Disabled
 **          Initialization                                 : 
 **            Enabled in init code                         : yes
@@ -86,7 +85,6 @@
 **         MasterSendBlock    - LDD_TError I2C0_MasterSendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
 **         MasterReceiveBlock - LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
 **         SelectSlaveDevice  - LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr,...
-**         SendAcknowledge    - LDD_TError I2C0_SendAcknowledge(LDD_TDeviceData *DeviceDataPtr,...
 **
 **     Copyright : 1997 - 2014 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -176,7 +174,6 @@ typedef struct {
                                        /*       4 - 10-bit addr flag */
                                        /*       5 - 7-bit addr flag */
   LDD_I2C_TSendStop SendStop;          /* Enable/Disable generate send stop condition after transmission */
-  LDD_I2C_TAckType AckType;            /* Specify received byte acknowledge */
   uint8_t SlaveAddr;                   /* Variable for Slave address */
   uint8_t SlaveAddrHigh;               /* Variable for High byte of the Slave address (10-bit address) */
   LDD_I2C_TSize InpLenM;               /* The counter of input bufer's content */
@@ -194,9 +191,6 @@ static I2C0_TDeviceData DeviceDataPrv__DEFAULT_RTOS_ALLOC;
 static I2C0_TDeviceDataPtr INT_I2C0__DEFAULT_RTOS_ISRPARAM;
 
 #define AVAILABLE_EVENTS_MASK (LDD_I2C_ON_MASTER_BLOCK_SENT | LDD_I2C_ON_MASTER_BLOCK_RECEIVED | LDD_I2C_ON_MASTER_BYTE_RECEIVED)
-
-/* Internal method prototypes */
-static void OneBitTimeDelay(LDD_TDeviceData *DeviceDataPtr);
 
 /*
 ** ===================================================================
@@ -261,34 +255,21 @@ PE_ISR(I2C0_Interrupt)
         }
       }
     } else {
-      *(DeviceDataPrv->InpPtrM)++ = I2C_PDD_ReadDataReg(I2C0_BASE_PTR); /* Receive character */
       DeviceDataPrv->InpLenM--;        /* Decrease number of chars for the receive */
-      I2C0_OnMasterByteReceived(DeviceDataPrv->UserData); /* Invoke OnMasterByteReceived event */
-      OneBitTimeDelay(DeviceDataPrv);  /* One bit time delay */
       if (DeviceDataPrv->InpLenM != 0x00U) { /* Is any char. for reception? */
-        if (DeviceDataPrv->AckType == LDD_I2C_ACK_BYTE) {
-          I2C_PDD_EnableTransmitAcknowledge(I2C0_BASE_PTR, PDD_ENABLE); /* Transmit ACK */
-        } else {
-          DeviceDataPrv->AckType = LDD_I2C_ACK_BYTE;
-          DeviceDataPrv->SerFlag &= (uint8_t)~(MASTER_IN_PROGRES); /* No character for sending or reception */
-          DeviceDataPrv->InpLenM = 0x00U; /* Cancel data reception */
-          DeviceDataPrv->SendStop = LDD_I2C_SEND_STOP; /* Set generating stop condition */
+        if (DeviceDataPrv->InpLenM == 0x01U) {
           I2C_PDD_EnableTransmitAcknowledge(I2C0_BASE_PTR, PDD_DISABLE); /* Transmit NACK */
-          OneBitTimeDelay(DeviceDataPrv); /* One bit time delay */
-          I2C_PDD_SetMasterMode(I2C0_BASE_PTR, I2C_PDD_SLAVE_MODE); /* Switch device to slave mode (stop signal sent) */
-          I2C_PDD_SetTransmitMode(I2C0_BASE_PTR, I2C_PDD_RX_DIRECTION); /* Switch to Rx mode */
         }
       } else {
-        DeviceDataPrv->SerFlag &= (uint8_t)~(MASTER_IN_PROGRES); /* No character for sending or reception */
-        I2C_PDD_EnableTransmitAcknowledge(I2C0_BASE_PTR, PDD_DISABLE); /* Transmit NACK */
-        DeviceDataPrv->AckType = LDD_I2C_ACK_BYTE;
-        OneBitTimeDelay(DeviceDataPrv); /* One bit time delay */
-        I2C_PDD_SetMasterMode(I2C0_BASE_PTR, I2C_PDD_SLAVE_MODE); /* Switch device to slave mode (stop signal sent) */
-        I2C_PDD_SetTransmitMode(I2C0_BASE_PTR, I2C_PDD_RX_DIRECTION); /* Switch to Rx mode */
+        DeviceDataPrv->SerFlag &= (uint8_t)~(MASTER_IN_PROGRES); /* Clear flag "busy" */
+        I2C_PDD_SetMasterMode(I2C0_BASE_PTR, I2C_PDD_SLAVE_MODE); /* If no, switch device to slave mode (stop signal sent) */
+        I2C_PDD_EnableTransmitAcknowledge(I2C0_BASE_PTR, PDD_ENABLE); /* Transmit ACK */
+      }
+      *(DeviceDataPrv->InpPtrM)++ = I2C_PDD_ReadDataReg(I2C0_BASE_PTR); /* Receive character */
+      I2C0_OnMasterByteReceived(DeviceDataPrv->UserData); /* Invoke OnMasterByteReceived event */
+      if (DeviceDataPrv->InpLenM == 0x00U) { /* Is any char. for reception? */
         I2C0_OnMasterBlockReceived(DeviceDataPrv->UserData); /* Invoke OnMasterBlockReceived event */
       }
-      OneBitTimeDelay(DeviceDataPrv);  /* One bit time delay */
-      (void)I2C_PDD_ReadDataReg(I2C0_BASE_PTR); /* Dummy read from data reg */
     }
   } else {
     if ((Status & I2C_PDD_ARBIT_LOST) != 0x00U) { /* Arbitration lost? */
@@ -337,7 +318,6 @@ LDD_TDeviceData* I2C0_Init(LDD_TUserData *UserDataPtr)
   /* {Default RTOS Adapter} Set interrupt vector: IVT is static, ISR parameter is passed by the global variable */
   INT_I2C0__DEFAULT_RTOS_ISRPARAM = DeviceDataPrv;
   DeviceDataPrv->SerFlag = ADDR_7;     /* Reset all flags start with 7-bit address mode */
-  DeviceDataPrv->AckType = LDD_I2C_ACK_BYTE;
   DeviceDataPrv->SlaveAddr = 0xC2U;    /* Set variable for slave address */
   DeviceDataPrv->SendStop = LDD_I2C_SEND_STOP; /* Set variable for sending stop condition (for master mode) */
   DeviceDataPrv->InpLenM = 0x00U;      /* Set zero counter of data of reception */
@@ -372,8 +352,8 @@ LDD_TDeviceData* I2C0_Init(LDD_TUserData *UserDataPtr)
   I2C0_C2 = I2C_C2_AD(0x00);
   /* I2C0_FLT: ??=0,??=0,??=0,FLT=0 */
   I2C0_FLT = I2C_FLT_FLT(0x00);        /* Set glitch filter register */
-  /* I2C0_SMB: FACK=1,ALERTEN=0,SIICAEN=0,TCKSEL=0,SLTF=1,SHTF1=0,SHTF2=0,SHTF2IE=0 */
-  I2C0_SMB = (I2C_SMB_FACK_MASK | I2C_SMB_SLTF_MASK);
+  /* I2C0_SMB: FACK=0,ALERTEN=0,SIICAEN=0,TCKSEL=0,SLTF=1,SHTF1=0,SHTF2=0,SHTF2IE=0 */
+  I2C0_SMB = I2C_SMB_SLTF_MASK;
   /* I2C0_F: MULT=0,ICR=0x26 */
   I2C0_F = (I2C_F_MULT(0x00) | I2C_F_ICR(0x26)); /* Set prescaler bits */
   I2C_PDD_EnableDevice(I2C0_BASE_PTR, PDD_ENABLE); /* Enable device */
@@ -646,75 +626,6 @@ LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr, LDD_I2C_TAddrT
       return ERR_PARAM_ADDRESS_TYPE;   /* If value of address type is invalid, return error */
   }
   return ERR_OK;                       /* OK */
-}
-
-/*
-** ===================================================================
-**     Method      :  I2C0_SendAcknowledge (component I2C_LDD)
-*/
-/*!
-**     @brief
-**         This method send acknowledge/not acknowledge for current
-**         receiving byte. This method is available only if control
-**         acknowledge bit is enabled.
-**     @param
-**         DeviceDataPtr   - Device data structure
-**                           pointer returned by <Init> method.
-**     @param
-**         AckType         - Specify type of receiving byte
-**                           answer.
-**                           LDD_I2C_ACK_BYTE - The values of
-**                           acknowledge bit correspond to successful
-**                           byte receiving (receiver send ACK bit value
-**                           automatically according the I2C
-**                           specification).
-**                           LDD_I2C_NACK_BYTE - The values of
-**                           acknowledge bit correspond to not
-**                           successful byte receiving (receiver send
-**                           NACK bit value and terminate reception).
-**     @return
-**                         - Error code, possible codes:
-**                           ERR_OK - OK
-**                           ERR_DISABLED -  The device is disabled.
-**                           ERR_SPEED - This device does not work in
-**                           the active clock configuration.
-**                           ERR_PARAM_MODE -  Invalid acknowledge type
-**                           answer.
-*/
-/* ===================================================================*/
-LDD_TError I2C0_SendAcknowledge(LDD_TDeviceData *DeviceDataPtr, LDD_I2C_TAckType AckType)
-{
-  I2C0_TDeviceData *DeviceDataPrv = (I2C0_TDeviceData *)DeviceDataPtr;
-
-  /* {Default RTOS Adapter} Critical section begin, general PE function is used */
-  EnterCritical();
-  if ((DeviceDataPrv->AckType == LDD_I2C_ACK_BYTE)||(DeviceDataPrv->AckType == LDD_I2C_NACK_BYTE)) {
-    DeviceDataPrv->AckType = AckType;
-  } else {
-    /* {Default RTOS Adapter} Critical section end, general PE function is used */
-    ExitCritical();
-    return ERR_PARAM_MODE;             /* If value of acknowledge mode is invalid, return error */
-  }
-  /* {Default RTOS Adapter} Critical section end, general PE function is used */
-  ExitCritical();
-  return ERR_OK;                       /* OK */
-}
-
-/*
-** ===================================================================
-**     Method      :  OneBitTimeDelay (component I2C_LDD)
-**
-**     Description :
-**         Software one bit clock delay loop.
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
-static void OneBitTimeDelay(LDD_TDeviceData *DeviceDataPtr)
-{
-  volatile uint32_t j;
-
-  (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  for(j=0U; j<0xC8UL; j++){}           /* Software delay loop */
 }
 
 /* END I2C0. */

@@ -79,6 +79,9 @@
 #include "IO_Map.h"
 #endif
 
+/* User includes (#include below this line is not maintained by Processor Expert) */
+#include <cstdlib>
+
 #ifndef SYSTEM_TICK_H_
 #include "system_tick.h"
 #endif
@@ -94,8 +97,6 @@
 #ifndef NRF24L01PLUS_H_
 #include "nrf24L01plus.h"
 #endif
-
-/* User includes (#include below this line is not maintained by Processor Expert) */
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -164,14 +165,14 @@ int main(void)
                     set_led_output(RGB_9, colors + 1);        //+y
                 }
 
-                if (v.z_accel < 15010)        //-z
+                if (v.z_accel > 0)        //+z
                 {
                     set_led_output(RGB_10, colors + 1);
                     set_led_output(RGB_7, colors + 1);
                     set_led_output(RGB_6, colors + 1);
                     set_led_output(RGB_3, colors + 1);
                 }
-                else if (v.z_accel > 15030)        //+z
+                else if (v.z_accel < 0)        //-z
                 {
                     set_led_output(RGB_10, colors + 3);
                     set_led_output(RGB_7, colors + 3);
@@ -179,14 +180,53 @@ int main(void)
                     set_led_output(RGB_3, colors + 3);
                 }
 
+                if (abs(v.y_mag) >= abs(v.x_mag))
+                {
+                    if (v.y_mag > 0)
+                    {
+                        //strongest magnetic field towards y+
+                        set_led_output(RGB_11, colors);              //y-
+                        set_led_output(RGB_8, colors);              //x+
+                        set_led_output(RGB_5, colors + 1);          //y+
+                        set_led_output(RGB_2, colors);             //x-
+                    }
+                    else
+                    {
+                        //strongest magnetic field towards y-
+                        set_led_output(RGB_11, colors + 1);          //y-
+                        set_led_output(RGB_8, colors);              //x+
+                        set_led_output(RGB_5, colors);              //y+
+                        set_led_output(RGB_2, colors);             //x-
+                    }
+                }
+                else
+                {
+                    if (v.x_mag > 0)
+                    {
+                        //strongest magnetic field towards x+
+                        set_led_output(RGB_11, colors);              //y-
+                        set_led_output(RGB_8, colors + 1);          //x+
+                        set_led_output(RGB_5, colors);              //y+
+                        set_led_output(RGB_2, colors);             //x-
+                    }
+                    else
+                    {
+                        //strongest magnetic field towards x-
+                        set_led_output(RGB_11, colors);              //y-
+                        set_led_output(RGB_8, colors);              //x+
+                        set_led_output(RGB_5, colors);              //y+
+                        set_led_output(RGB_2, colors + 1);         //x-
+                    }
+                }
             }
-
         }
+
         if (tick_250msec)
         {
             tick_250msec = FALSE;
 
         }
+
         if (tick_500msec)
         {
             tick_500msec = FALSE;
@@ -200,14 +240,16 @@ int main(void)
     }
 
     /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-  #ifdef PEX_RTOS_START
-    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-  #endif
-  /*** End of RTOS startup code.  ***/
-  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-  for(;;){}
-  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+#ifdef PEX_RTOS_START
+    PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
+    /*** End of RTOS startup code.  ***/
+    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+    for (;;)
+    {
+    }
+    /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
 /* END main */

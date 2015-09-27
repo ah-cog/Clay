@@ -145,7 +145,7 @@ void tick_1ms_timer_OnInterrupt(LDD_TUserData *UserDataPtr) {
 void I2C0_OnMasterByteReceived(LDD_TUserData *UserDataPtr)
 {
   /* Write your code here ... */
-    I2C0_SendAcknowledge(I2C0_DeviceData,LDD_I2C_ACK_BYTE);
+    //I2C0_SendAcknowledge(I2C0_DeviceData,LDD_I2C_ACK_BYTE);
 }
 
 /*
