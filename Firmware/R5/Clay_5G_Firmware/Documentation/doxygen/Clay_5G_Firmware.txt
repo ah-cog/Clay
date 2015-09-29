@@ -55,6 +55,9 @@
 - \subpage IO_10
 - \subpage IO_11
 - \subpage IO_12
+- \subpage IMU_FSYNC
+- \subpage IMU_CS
+- \subpage IMU_INT
 
 
 */
