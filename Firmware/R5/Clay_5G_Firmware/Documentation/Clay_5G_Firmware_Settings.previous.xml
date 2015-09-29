@@ -1377,7 +1377,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1409,7 +1409,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1441,7 +1441,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1473,7 +1473,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1505,7 +1505,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1537,7 +1537,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1569,7 +1569,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1601,7 +1601,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1633,7 +1633,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1665,7 +1665,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1697,7 +1697,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1729,7 +1729,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>

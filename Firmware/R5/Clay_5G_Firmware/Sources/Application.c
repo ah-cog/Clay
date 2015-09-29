@@ -60,6 +60,10 @@ void Application (void) {
 	dynamicString = NULL;
 	*/
 	
+	printf ("Enabling MPU-9250. ");
+	mpu_9250_init();
+	printf ("Done.\r\n");
+	
 	printf ("\r\n");
 	
 	Start_HTTP_Server (HTTP_SERVER_PORT);

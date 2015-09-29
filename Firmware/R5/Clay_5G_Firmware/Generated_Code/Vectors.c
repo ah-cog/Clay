@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-16, 15:56, # CodeGen: 27
+**     Date/Time   : 2015-09-28, 18:11, # CodeGen: 31
 **     Abstract    :
 **
 **     Settings    :
@@ -76,6 +76,9 @@
   #include "IO_10.h"
   #include "IO_11.h"
   #include "IO_12.h"
+  #include "IMU_FSYNC.h"
+  #include "IMU_CS.h"
+  #include "IMU_INT.h"
   #include "Events.h"
 
 
