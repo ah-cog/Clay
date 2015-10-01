@@ -43,7 +43,10 @@ Sources/GPIO.o: ../Sources/GPIO.c \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_9.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_10.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_11.h \
- Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_FSYNC.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_CS.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_INT.h
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix:
 
@@ -134,3 +137,9 @@ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_10.h:
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_11.h:
 
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_FSYNC.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_CS.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_INT.h:

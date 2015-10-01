@@ -61,6 +61,9 @@ Sources/Drivers/ESP8266.o: ../Sources/Drivers/ESP8266.c \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_10.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_11.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_FSYNC.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_CS.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_INT.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Sources/Utilities/Ring_Buffer.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/PE_Error.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/PE_Const.h \
@@ -190,6 +193,12 @@ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_10.h:
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_11.h:
 
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_FSYNC.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_CS.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_INT.h:
 
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Sources/Utilities/Ring_Buffer.h:
 

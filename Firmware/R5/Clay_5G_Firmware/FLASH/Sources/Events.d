@@ -40,6 +40,9 @@ Sources/Events.o: ../Sources/Events.c \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_10.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_11.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_FSYNC.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_CS.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_INT.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/ESP8266_GPIO0.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/ESP8266_RST.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/ESP8266_CHIP_EN.h \
@@ -66,8 +69,8 @@ Sources/Events.o: ../Sources/Events.c \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/stdlib.h \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/cstdlib \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/div_t.h \
- ../Sources/Clock.h ../Sources/Drivers/PCA9552.h \
- ../Sources/Drivers/ESP8266.h \
+ ../Sources/Drivers/PCA9552.h ../Sources/mpu_9250_driver.h \
+ ../Sources/Clock.h ../Sources/Drivers/ESP8266.h \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/string.h \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/cstring \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/string_api.h \
@@ -93,7 +96,11 @@ Sources/Events.o: ../Sources/Events.c \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_10.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_11.h \
  Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h \
- Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Sources/Utilities/Ring_Buffer.h
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_FSYNC.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_CS.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_INT.h \
+ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Sources/Utilities/Ring_Buffer.h \
+ ../Sources/Messenger.h ../Sources/Utilities/String.h ../Sources/GPIO.h
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix:
 
@@ -177,6 +184,12 @@ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_11.h:
 
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h:
 
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_FSYNC.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_CS.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_INT.h:
+
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/ESP8266_GPIO0.h:
 
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/ESP8266_RST.h:
@@ -229,9 +242,11 @@ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/cstdlib:
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/div_t.h:
 
-../Sources/Clock.h:
-
 ../Sources/Drivers/PCA9552.h:
+
+../Sources/mpu_9250_driver.h:
+
+../Sources/Clock.h:
 
 ../Sources/Drivers/ESP8266.h:
 
@@ -285,4 +300,16 @@ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_11.h:
 
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IO_12.h:
 
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_FSYNC.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_CS.h:
+
+Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Generated_Code/IMU_INT.h:
+
 Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Sources/Utilities/Ring_Buffer.h:
+
+../Sources/Messenger.h:
+
+../Sources/Utilities/String.h:
+
+../Sources/GPIO.h:

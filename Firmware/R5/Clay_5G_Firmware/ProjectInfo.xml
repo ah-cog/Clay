@@ -59,6 +59,9 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\ESP8266_RST.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\ESP8266_Serial.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\I2C0.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IMU_CS.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IMU_FSYNC.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IMU_INT.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_1.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_10.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_11.c</PathName>
@@ -85,8 +88,11 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\PCA9552.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Events.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\GPIO.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Messenger.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\Ring_Buffer.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\String.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\main.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\mpu_9250_driver.c</PathName>
     </GeneratedCs>
     <GeneratedHs>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\Cpu.h</PathName>
@@ -96,6 +102,9 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\ESP8266_RST.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\ESP8266_Serial.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\I2C0.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IMU_CS.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IMU_FSYNC.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IMU_INT.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_1.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_10.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\IO_11.h</PathName>
@@ -124,7 +133,10 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\PCA9552.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Events.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\GPIO.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Messenger.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\Ring_Buffer.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\String.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\mpu_9250_driver.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Static_Code\IO_Map\MK20D7.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Static_Code\PDD\ADC_PDD.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Static_Code\PDD\CAN_PDD.h</PathName>

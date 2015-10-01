@@ -28,7 +28,9 @@ Generated_Code/PE_LDD.o: ../Generated_Code/PE_LDD.c \
  ../Generated_Code/IO_5.h ../Generated_Code/IO_6.h \
  ../Generated_Code/IO_7.h ../Generated_Code/IO_8.h \
  ../Generated_Code/IO_9.h ../Generated_Code/IO_10.h \
- ../Generated_Code/IO_11.h ../Generated_Code/IO_12.h
+ ../Generated_Code/IO_11.h ../Generated_Code/IO_12.h \
+ ../Generated_Code/IMU_FSYNC.h ../Generated_Code/IMU_CS.h \
+ ../Generated_Code/IMU_INT.h
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include/lib_ewl.prefix:
 
@@ -115,3 +117,9 @@ Z:/Workspace/Checkouts/clay/Firmware/R5/Clay_5G_Firmware/Static_Code/PDD/GPIO_PD
 ../Generated_Code/IO_11.h:
 
 ../Generated_Code/IO_12.h:
+
+../Generated_Code/IMU_FSYNC.h:
+
+../Generated_Code/IMU_CS.h:
+
+../Generated_Code/IMU_INT.h:

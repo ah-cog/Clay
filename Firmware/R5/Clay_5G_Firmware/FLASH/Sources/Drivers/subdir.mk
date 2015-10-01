@@ -37,7 +37,7 @@ OBJS_OS_FORMAT += \
 # Each subdirectory must supply rules for building sources it contributes
 Sources/Drivers/ESP8266.o: ../Sources/Drivers/ESP8266.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #7 $<'
+	@echo 'Executing target #10 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/Drivers/ESP8266.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/ESP8266.o"
 	@echo 'Finished building: $<'
@@ -45,7 +45,7 @@ Sources/Drivers/ESP8266.o: ../Sources/Drivers/ESP8266.c
 
 Sources/Drivers/PCA9552.o: ../Sources/Drivers/PCA9552.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #8 $<'
+	@echo 'Executing target #11 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-gcc" "$<" @"Sources/Drivers/PCA9552.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/PCA9552.o"
 	@echo 'Finished building: $<'
