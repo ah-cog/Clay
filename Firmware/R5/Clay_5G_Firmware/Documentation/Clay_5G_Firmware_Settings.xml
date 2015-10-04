@@ -1047,7 +1047,7 @@ PE_DEBUGHALT();
       <CancelBlockReception v="don&amp;apos;t generate code" />
       <GetError v="don&amp;apos;t generate code" />
       <GetSentDataNum v="don&amp;apos;t generate code" />
-      <GetReceivedDataNum v="don&amp;apos;t generate code" />
+      <GetReceivedDataNum v="generate code" />
       <GetTxCompleteStatus v="don&amp;apos;t generate code" />
       <SetEventMask v="don&amp;apos;t generate code" />
       <GetEventMask v="don&amp;apos;t generate code" />
@@ -1075,7 +1075,7 @@ PE_DEBUGHALT();
       <GetDriverState v="don&amp;apos;t generate code" />
     </Methods>
     <Events>
-      <Event_module_name v="Events" />
+      <Event_module_name v="Events_ESP8266" />
       <event name="OnBlockReceived" v="generate code">
         <Event_procedure_name v="ESP8266_Serial_OnBlockReceived" />
       </event>

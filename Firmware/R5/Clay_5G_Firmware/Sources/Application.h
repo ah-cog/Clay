@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "Drivers/PCA9552.h"
-#include "mpu_9250_driver.h"
+#include "Drivers/MPU9250.h"
 
 #include "Clock.h"
 
