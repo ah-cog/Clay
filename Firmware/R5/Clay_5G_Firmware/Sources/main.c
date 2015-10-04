@@ -30,6 +30,7 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "Events_ESP8266.h"
 #include "ESP8266_GPIO2.h"
 #include "LED_DRIVER_0_RESET.h"
 #include "LED_DRIVER_1_RESET.h"

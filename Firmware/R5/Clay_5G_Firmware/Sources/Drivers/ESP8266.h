@@ -48,6 +48,29 @@ typedef struct {
 
 ESP8266_Profile esp8266_profile;
 
+#define REMOTE_CONNECTION_LIMIT      5
+#define REMOTE_CONNECTION_COUNT      REMOTE_CONNECTION_LIMIT
+#define DISCONNECTED_CONNECTION_ID  -1
+#define DISCONNECTED_CONNECTION_TYPE 0
+#define TCP_CONNECTION_TYPE          1
+#define UDP_CONNECTION_TYPE          2
+
+typedef struct {
+	int8_t id; // The ID number for the connection in the range 0-4. The "no connection ID assigned" value is -1.
+	uint8_t type; // i.e., TCP or UDP
+	int8_t status; // i.e., CONNECTED, CLOSED
+	// TODO: Include any buffer info, incoming byte size info, etc.
+} ESP8266_Connection;
+
+ESP8266_Connection remoteConnections[REMOTE_CONNECTION_COUNT];
+#define CHANNEL_BUFFER_SIZE 512 // The size of per-channel buffers
+char channelBuffer[REMOTE_CONNECTION_LIMIT][CHANNEL_BUFFER_SIZE];
+
+void Initialize_Remote_Connections ();
+void Reset_Connection (int id);
+void Set_Connection_Type (int id, int type);
+// Get_Channel_Type (None or UDP or TCP)
+
 void Enable_ESP8266 (); // Formerly ESP8266_Initialize ()
 void ESP8266_Send_Byte (unsigned char ch); // Formerly ESP8266_Send_Char (unsigned char ch, ESP8266_UART_Device *desc)
 void ESP8266_Send_Bytes (const unsigned char *str); // Formerly ESP8266_Send_String (const unsigned char *str, ESP8266_UART_Device *desc)
@@ -112,6 +135,14 @@ int8_t ESP8266_Send_Command_AT_CWJAP (const char *ssid, const char *password);
 int8_t ESP8266_Send_Command_AT_CIFSR ();
 int8_t ESP8266_Send_Command_AT_CIPMUX (uint8_t enable);
 int8_t ESP8266_Send_Command_AT_CIPSERVER (uint8_t mode, uint8_t port);
+
+void Monitor_Network_Communications ();
+
+#define UDP_SERVER_PORT 4445
+
+void Start_UDP_Server (uint16_t port);
+void Send_UDP_Message (const char* address, const char *message);
+void Broadcast_UDP_Message (const char *message);
 
 void Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // TODO: check for any incoming data on serial

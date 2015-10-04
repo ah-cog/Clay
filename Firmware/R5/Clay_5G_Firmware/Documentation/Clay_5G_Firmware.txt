@@ -99,6 +99,7 @@ Module "ESP8266_Serial" (component Serial_LDD)
                 call the method immediately after the last receive operation has finished (e.g. from the <OnBlockReceived> 
                 event). This method finishes immediately after calling it - it doesn't wait the end of data reception. Use 
                 event <OnBlockReceived> to check the end of data reception.
+   - ESP8266_Serial_GetReceivedDataNum -Returns the number of received characters in the receive buffer.
 
 Module "TU1"       (component TimerUnit_LDD)
    - TU1_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 

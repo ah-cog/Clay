@@ -10,7 +10,7 @@
 
 #include "PE_Types.h"
 
-#include "mpu_9250_driver.h"
+#include "Drivers/MPU9250.h"
 #include "Drivers/PCA9552.h"
 
 extern uint32_t power_on_time_msec;

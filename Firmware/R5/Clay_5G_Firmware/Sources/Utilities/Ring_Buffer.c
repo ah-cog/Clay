@@ -84,6 +84,21 @@ byte Ring_Buffer_Get (byte *elemP)
 **         ---             - Number of elements in the buffer.
 ** ===================================================================
 */
+uint8_t Ring_Buffer_Has_Data () {
+	
+  return (Ring_Buffer_inSize > 0 ? TRUE : FALSE);
+}
+
+/*
+** ===================================================================
+**     Method      :  Ring_Buffer_NofElements (component RingBufferUInt8)
+**     Description :
+**         Returns the actual number of elements in the buffer.
+**     Parameters  : None
+**     Returns     :
+**         ---             - Number of elements in the buffer.
+** ===================================================================
+*/
 uint16_t Ring_Buffer_NofElements (void)
 {
   return Ring_Buffer_inSize;
