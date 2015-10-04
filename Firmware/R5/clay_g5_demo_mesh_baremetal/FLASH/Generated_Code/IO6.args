@@ -1,0 +1,23 @@
+-mcpu=cortex-m4
+-mthumb
+-mfloat-abi=soft
+-g3
+-gdwarf-2
+-gstrict-dwarf
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Project_Headers"
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Project_Settings/Startup_Code"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Generated_Code"
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Sources"
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Static_Code/PDD"
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Static_Code/IO_Map"
+-O0
+-ffunction-sections
+-fdata-sections
+-Wall
+-std=gnu99
+-v
+-c
+-fmessage-length=0
+-specs=ewl_c_noio.specs
