@@ -100,41 +100,6 @@ void Cpu_OnNMIINT(void);
 /* ===================================================================*/
 void Timer_1ms_OnInterrupt(LDD_TUserData *UserDataPtr);
 
-/*
-** ===================================================================
-**     Event       :  ESP8266_Serial_OnBlockReceived (module Events)
-**
-**     Component   :  ESP8266_Serial [Serial_LDD]
-*/
-/*!
-**     @brief
-**         This event is called when the requested number of data is
-**         moved to the input buffer.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr);
-
-/*
-** ===================================================================
-**     Event       :  ESP8266_Serial_OnBlockSent (module Events)
-**
-**     Component   :  ESP8266_Serial [Serial_LDD]
-*/
-/*!
-**     @brief
-**         This event is called after the last character from the
-**         output buffer is moved to the transmitter. 
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
-/* ===================================================================*/
-void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr);
 
 /*
 ** ===================================================================

@@ -6,7 +6,7 @@
 **     Component   : Serial_LDD
 **     Version     : Component 01.187, Driver 01.12, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-16, 14:33, # CodeGen: 14
+**     Date/Time   : 2015-10-02, 10:29, # CodeGen: 34
 **     Abstract    :
 **         This component "Serial_LDD" implements an asynchronous serial
 **         communication. The component supports different settings of
@@ -64,9 +64,10 @@
 **            Clock configuration 6                        : This component disabled
 **            Clock configuration 7                        : This component disabled
 **     Contents    :
-**         Init         - LDD_TDeviceData* ESP8266_Serial_Init(LDD_TUserData *UserDataPtr);
-**         SendBlock    - LDD_TError ESP8266_Serial_SendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
-**         ReceiveBlock - LDD_TError ESP8266_Serial_ReceiveBlock(LDD_TDeviceData *DeviceDataPtr,...
+**         Init               - LDD_TDeviceData* ESP8266_Serial_Init(LDD_TUserData *UserDataPtr);
+**         SendBlock          - LDD_TError ESP8266_Serial_SendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
+**         ReceiveBlock       - LDD_TError ESP8266_Serial_ReceiveBlock(LDD_TDeviceData *DeviceDataPtr,...
+**         GetReceivedDataNum - uint16_t ESP8266_Serial_GetReceivedDataNum(LDD_TDeviceData *DeviceDataPtr);
 **
 **     Copyright : 1997 - 2014 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -120,7 +121,7 @@
 
 /* {Default RTOS Adapter} No RTOS includes */
 #include "ESP8266_Serial.h"
-#include "Events.h"
+#include "Events_ESP8266.h"
 #include "UART_PDD.h"
 #include "SIM_PDD.h"
 
@@ -351,6 +352,29 @@ LDD_TError ESP8266_Serial_SendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData *B
   /* {Default RTOS Adapter} Critical section end, general PE function is used */
   ExitCritical();
   return ERR_OK;                       /* OK */
+}
+
+/*
+** ===================================================================
+**     Method      :  ESP8266_Serial_GetReceivedDataNum (component Serial_LDD)
+*/
+/*!
+**     @brief
+**         Returns the number of received characters in the receive
+**         buffer. 
+**     @param
+**         DeviceDataPtr   - Device data structure
+**                           pointer returned by [Init] method.
+**     @return
+**                         - Number of received characters in the receive
+**                           buffer.
+*/
+/* ===================================================================*/
+uint16_t ESP8266_Serial_GetReceivedDataNum(LDD_TDeviceData *DeviceDataPtr)
+{
+  ESP8266_Serial_TDeviceDataPtr DeviceDataPrv = (ESP8266_Serial_TDeviceDataPtr)DeviceDataPtr;
+
+  return (DeviceDataPrv->InpRecvDataNum); /* Return the number of received characters. */
 }
 
 /*

@@ -6,7 +6,7 @@
 **     Component   : Serial_LDD
 **     Version     : Component 01.187, Driver 01.12, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-16, 14:33, # CodeGen: 14
+**     Date/Time   : 2015-10-02, 10:29, # CodeGen: 34
 **     Abstract    :
 **         This component "Serial_LDD" implements an asynchronous serial
 **         communication. The component supports different settings of
@@ -64,9 +64,10 @@
 **            Clock configuration 6                        : This component disabled
 **            Clock configuration 7                        : This component disabled
 **     Contents    :
-**         Init         - LDD_TDeviceData* ESP8266_Serial_Init(LDD_TUserData *UserDataPtr);
-**         SendBlock    - LDD_TError ESP8266_Serial_SendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
-**         ReceiveBlock - LDD_TError ESP8266_Serial_ReceiveBlock(LDD_TDeviceData *DeviceDataPtr,...
+**         Init               - LDD_TDeviceData* ESP8266_Serial_Init(LDD_TUserData *UserDataPtr);
+**         SendBlock          - LDD_TError ESP8266_Serial_SendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
+**         ReceiveBlock       - LDD_TError ESP8266_Serial_ReceiveBlock(LDD_TDeviceData *DeviceDataPtr,...
+**         GetReceivedDataNum - uint16_t ESP8266_Serial_GetReceivedDataNum(LDD_TDeviceData *DeviceDataPtr);
 **
 **     Copyright : 1997 - 2014 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -135,6 +136,7 @@ extern "C" {
 #define ESP8266_Serial_Init_METHOD_ENABLED /*!< Init method of the component ESP8266_Serial is enabled (generated) */
 #define ESP8266_Serial_SendBlock_METHOD_ENABLED /*!< SendBlock method of the component ESP8266_Serial is enabled (generated) */
 #define ESP8266_Serial_ReceiveBlock_METHOD_ENABLED /*!< ReceiveBlock method of the component ESP8266_Serial is enabled (generated) */
+#define ESP8266_Serial_GetReceivedDataNum_METHOD_ENABLED /*!< GetReceivedDataNum method of the component ESP8266_Serial is enabled (generated) */
 
 /* Events configuration constants - generated for all enabled component's events */
 #define ESP8266_Serial_OnBlockReceived_EVENT_ENABLED /*!< OnBlockReceived event of the component ESP8266_Serial is enabled (generated) */
@@ -267,6 +269,24 @@ LDD_TError ESP8266_Serial_ReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData
 */
 /* ===================================================================*/
 LDD_TError ESP8266_Serial_SendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData *BufferPtr, uint16_t Size);
+
+/*
+** ===================================================================
+**     Method      :  ESP8266_Serial_GetReceivedDataNum (component Serial_LDD)
+*/
+/*!
+**     @brief
+**         Returns the number of received characters in the receive
+**         buffer. 
+**     @param
+**         DeviceDataPtr   - Device data structure
+**                           pointer returned by [Init] method.
+**     @return
+**                         - Number of received characters in the receive
+**                           buffer.
+*/
+/* ===================================================================*/
+uint16_t ESP8266_Serial_GetReceivedDataNum(LDD_TDeviceData *DeviceDataPtr);
 
 /*
 ** ===================================================================

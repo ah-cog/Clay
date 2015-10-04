@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-28, 18:11, # CodeGen: 31
+**     Date/Time   : 2015-10-02, 10:29, # CodeGen: 34
 **     Abstract    :
 **
 **     Settings    :
@@ -90,6 +90,7 @@
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "Events.h"
+#include "Events_ESP8266.h"
 #include "Cpu.h"
 
 #ifdef __cplusplus
