@@ -266,30 +266,20 @@ int8_t ESP8266_Wait_For_Response (const char* response, uint32_t milliseconds) {
  * Returns: Returns the channel number for which the data was received. This corresponds to the data received from a single "+IPD" data segment.
  */
 int8_t ESP8266_Receive_Incoming_Data (uint32_t milliseconds) {
-	// DEBUG: printf ("\tESP8266_Wait_For_Response \"%s\"\r\n", response);
 	
-	// Block until receive "OK" or "ERROR" is received, an unknown response was received, or a timeout period has expired.
-	// char httpResponseBuffer[RESPONSE_BUFFER_SIZE]; // TODO: Make this big enough only to store expected responses and only buffer the most recent set of received characters (i.e., shift characters into and out of the "sliding window" buffer).
-	// int bufferSize;
-//	int i;
 	int8_t commandResponse = RESPONSE_NOT_FOUND;
-//	for (responseBufferSize = 0; responseBufferSize < HTTP_RESPONSE_BUFFER_SIZE; responseBufferSize++) { httpResponseBuffer[responseBufferSize] = (char) 0; } // Initialize the buffer. This might not be necessary.
-//	responseBufferSize = 0;
-//	uint8_t incomingBufferSize = 0;
-//	char *responseLocation = NULL;
-//	const char *response = "\r\n\r\n";
-//	int responseCount = 0;
-//	const int expectedResponseCount = 2;
 //	char *ipd = NULL;
-	char *connection = NULL;
-	char *size       = NULL;
+	char *connectionPtr = NULL;
+	char *sizePtr       = NULL;
 	
+	// State machine status flags.
 	uint8_t receivingSegmentHeader =  FALSE; // if FALSE, then we're LOOKING_FOR_SEGMENT
 	uint8_t receivedSegmentHeader  =  FALSE;
 	uint8_t receivingSegmentData   =  FALSE;
 	uint8_t receivedSegmentData    =  FALSE;
-	int8_t channel                 = -1;
-	uint16_t segmentDataSize       =  0;
+	
+	int8_t connectionID            = -1;
+	uint16_t dataLength            =  0;
 	
 	uint16_t segmentBytesReceived = 0;
 	
@@ -420,9 +410,9 @@ int8_t ESP8266_Receive_Incoming_Data (uint32_t milliseconds) {
 								httpResponseBuffer[responseBufferSize] = '\0'; // HACK to quickly NULL-terminate. Instead, should search for the ':' character
 								
 								// Parse the IPD header (connection ID and data byte size)
-								channel  = atoi (&httpResponseBuffer[5]); // Point to the connection byte
+								connectionID  = atoi (&httpResponseBuffer[5]); // Point to the connection byte
 //								size        = &httpResponseBuffer[7]; // connection + 2; // Point to the incoming byte count
-								segmentDataSize = atoi (&httpResponseBuffer[7]);
+								dataLength = atoi (&httpResponseBuffer[7]);
 								
 								// Flag the IPD header as received.
 								receivedSegmentHeader = TRUE;
@@ -454,13 +444,13 @@ int8_t ESP8266_Receive_Incoming_Data (uint32_t milliseconds) {
 //							if (receivedSegmentHeader == TRUE) {
 								
 								// Buffer incoming bytes until the expected number of bytes has been reached (or exceeded).
-								if (segmentBytesReceived < segmentDataSize) {
+								if (segmentBytesReceived < dataLength) {
 									httpResponseBuffer[responseBufferSize++] = ch;
 									segmentBytesReceived++;
 								}
 								
 								// Tell the state machine that the segment's data has been received.
-								if (segmentBytesReceived == segmentDataSize) {
+								if (segmentBytesReceived == dataLength) {
 									receivedSegmentData = TRUE;
 								}
 								
@@ -474,7 +464,7 @@ int8_t ESP8266_Receive_Incoming_Data (uint32_t milliseconds) {
 						if (receivedSegmentData) {
 							// TODO: Parse the segment data!
 							
-							return channel;
+							return connectionID;
 							
 							// TODO: Return the channel number on which data was received (or sent?). (Later, after getting the data, check the status of the connection and close it if necessary!)
 						}

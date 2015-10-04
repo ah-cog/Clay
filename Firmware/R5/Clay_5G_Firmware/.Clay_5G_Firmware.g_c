@@ -69,7 +69,7 @@
       <GenExtraFileSrcDir28>lib\doxygen\</GenExtraFileSrcDir28>
       <XtraAge30>1195153272</XtraAge30>
       <XtraAge31>1195153272</XtraAge31>
-      <XtraAge33>1195529152</XtraAge33>
+      <XtraAge33>1195614063</XtraAge33>
       <GenExtraFileType33>4</GenExtraFileType33>
       <GenExtraFileType32>4</GenExtraFileType32>
       <GenExtraFileType31>4</GenExtraFileType31>
@@ -463,7 +463,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_5G_Firmware_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>32</ProjectModificationStamp>
+    <ProjectModificationStamp>33</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>
@@ -472,7 +472,7 @@
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1194552048</HeaderAge>
-    <CodeAge>1195529152</CodeAge>
+    <CodeAge>1195614063</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>11</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -540,7 +540,7 @@
     <GenDriverVersion>01.04</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1194552048</HeaderAge>
-    <CodeAge>1195529152</CodeAge>
+    <CodeAge>1195614063</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -1211,8 +1211,8 @@
     <GenComponentVersion>01.187</GenComponentVersion>
     <GenDriverVersion>01.12</GenDriverVersion>
     <GenEventModule>Events_ESP8266</GenEventModule>
-    <HeaderAge>1195529152</HeaderAge>
-    <CodeAge>1195529152</CodeAge>
+    <HeaderAge>1195614063</HeaderAge>
+    <CodeAge>1195614063</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>36</GenNumMethods>
     <Init>true</Init>
