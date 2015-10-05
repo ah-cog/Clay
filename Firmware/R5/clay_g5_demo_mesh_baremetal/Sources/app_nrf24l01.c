@@ -13,7 +13,7 @@
 #endif
 
 // defines ///////////////////
-#define TX_TIMEOUT_MS        1000
+#define RF_TIMEOUT_MS        1000
 
 // structs ///////////////////
 
@@ -25,11 +25,12 @@ static uint8_t mesh_rx_buf[128];
 
 static volatile uint8_t isr_flag;
 static volatile uint8_t tx_in_progress;
-static volatile uint8_t isr_flag;
 
 static volatile uint8_t status_reg;
 static volatile uint32_t tx_time_ms;
 
+static volatile uint8_t rx_in_progress;
+static volatile uint32_t rx_start_time_ms;
 static volatile uint8_t rx_data_ready;
 static volatile uint32_t rx_data_count;
 
@@ -44,7 +45,7 @@ void mesh_init(bool prx)
     RF1_Init();
 
     RF1_WriteRegister(RF1_CONFIG, 0);        //power down
-    delay_n_msec(20);
+    delay_n_msec(4);
 
     RF1_WriteRegister(RF1_RX_PW_P0, 24);        //set payload size
 
@@ -89,7 +90,7 @@ void mesh_state_update()
         isr_flag = FALSE; /* reset interrupt flag */
         if (status_reg & RF1_STATUS_RX_DR)
         { /* data received interrupt */
-            RF1_ResetStatusIRQ(RF1_STATUS_RX_DR); /* clear bit */
+            RF1_ResetStatusIRQ(RF1_STATUS_RX_DR | RF1_STATUS_TX_DS | RF1_STATUS_MAX_RT);
             if (readbytes > 0)
             {
                 RF1_RxPayload(mesh_rx_buf, readbytes);
@@ -102,21 +103,15 @@ void mesh_state_update()
             tx_time_ms = 0; /* reset timeout counter */
             tx_in_progress = FALSE;
             RF1_ResetStatusIRQ(RF1_STATUS_TX_DS); /* clear bit */
-#if !MESH_TRANSMIT
-            mesh_listen();
-#endif
         }
         if (status_reg & RF1_STATUS_MAX_RT)
         { /* retry timeout interrupt */
             RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
             tx_in_progress = FALSE;
             tx_time_ms = 0;
-#if!MESH_TRANSMIT
-            mesh_listen();
-#endif
         }
 
-        if (tx_in_progress && (power_on_time_msec - tx_time_ms) > TX_TIMEOUT_MS)
+        if (tx_in_progress && (power_on_time_msec - tx_time_ms) > RF_TIMEOUT_MS)
         {
             tx_in_progress = FALSE;
         }
@@ -127,6 +122,14 @@ void mesh_send_string(uint8_t * tx_buf, uint32_t length, uint32_t destinationAdd
 {
     if (!tx_in_progress && !isr_flag)
     {
+        //TODO: this is where we basically ignore the 'jamming' detection. may need review later.
+        //      see nrf spec version 2.0, appendix E
+        if (RF1_ReadRegister(8) >= 0x70)
+        {
+            //dummy write to channel, in case we have had many lost packets.
+            RF1_WriteRegister(RF1_RF_CH, MESH_CHANNEL_NUMBER);                           // set channel
+        }
+
         RF1_ResetStatusIRQ(RF1_STATUS_RX_DR | RF1_STATUS_TX_DS | RF1_STATUS_MAX_RT);
 
         RF1_WriteRegister(RF1_CONFIG, MESH_RADIO_TRANSMIT_CONFIG);
@@ -150,7 +153,12 @@ int mesh_receive_string(uint8_t * rx_buf, uint32_t length)
 {
     int rval = -1;
 
-    mesh_listen();
+    if (!rx_in_progress || (power_on_time_msec - rx_start_time_ms) > (RF_TIMEOUT_MS * 5))
+    {
+        mesh_listen();
+        rx_in_progress = TRUE;
+        rx_start_time_ms = power_on_time_msec;
+    }
 
     if (rx_data_ready)
     {
