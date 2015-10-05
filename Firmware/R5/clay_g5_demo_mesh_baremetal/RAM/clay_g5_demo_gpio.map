@@ -1,0 +1,1857 @@
+Archive member included because of file (symbol)
+
+C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+                              ./Project_Settings/Startup_Code/__arm_start.o (exit)
+C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+                              ./Project_Settings/Startup_Code/__arm_start.o (memset)
+C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+                              C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o) (__fill_mem)
+C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+                              ./Project_Settings/Startup_Code/__arm_start.o (__init_cpp)
+C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                              C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o) (__destroy_global_chain)
+C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+                              ./Project_Settings/Startup_Code/__arm_start.o (__copy_rom_sections_to_ram)
+
+Allocating common symbols
+Common symbol       size              file
+
+tick_250msec        0x1               ./Sources/system_tick.o
+tick_1msec          0x1               ./Sources/system_tick.o
+tick_500msec        0x1               ./Sources/system_tick.o
+power_on_time_msec  0x4               ./Sources/system_tick.o
+SR_reg              0x1               ./Generated_Code/Cpu.o
+SMasterLdd1_DeviceDataPtr
+                    0x4               ./Generated_Code/SM1.o
+
+Discarded input sections
+
+ .text          0x00000000        0x0 ./Generated_Code/tick_1ms_timer.o
+ .data          0x00000000        0x0 ./Generated_Code/tick_1ms_timer.o
+ .bss           0x00000000        0x0 ./Generated_Code/tick_1ms_timer.o
+ .text          0x00000000        0x0 ./Generated_Code/WAIT1.o
+ .data          0x00000000        0x0 ./Generated_Code/WAIT1.o
+ .bss           0x00000000        0x0 ./Generated_Code/WAIT1.o
+ .text.WAIT1_WaitLongCycles
+                0x00000000       0x3c ./Generated_Code/WAIT1.o
+ .text.WAIT1_Waitms
+                0x00000000       0x34 ./Generated_Code/WAIT1.o
+ .text          0x00000000        0x0 ./Generated_Code/Vectors.o
+ .data          0x00000000        0x0 ./Generated_Code/Vectors.o
+ .bss           0x00000000        0x0 ./Generated_Code/Vectors.o
+ .text          0x00000000        0x0 ./Generated_Code/TU1.o
+ .data          0x00000000        0x0 ./Generated_Code/TU1.o
+ .bss           0x00000000        0x0 ./Generated_Code/TU1.o
+ .text          0x00000000        0x0 ./Generated_Code/SMasterLdd1.o
+ .data          0x00000000        0x0 ./Generated_Code/SMasterLdd1.o
+ .bss           0x00000000        0x0 ./Generated_Code/SMasterLdd1.o
+ .text          0x00000000        0x0 ./Generated_Code/SM1.o
+ .data          0x00000000        0x0 ./Generated_Code/SM1.o
+ .bss           0x00000000        0x0 ./Generated_Code/SM1.o
+ .text.SM1_RecvBlock
+                0x00000000       0x5c ./Generated_Code/SM1.o
+ .text.SM1_SendBlock
+                0x00000000      0x18c ./Generated_Code/SM1.o
+ .text.SM1_ClearRxBuf
+                0x00000000       0xc4 ./Generated_Code/SM1.o
+ .text.SM1_ClearTxBuf
+                0x00000000       0xac ./Generated_Code/SM1.o
+ .text.SM1_CharsInRxBuf
+                0x00000000       0x28 ./Generated_Code/SM1.o
+ .text.SM1_CharsInTxBuf
+                0x00000000       0x28 ./Generated_Code/SM1.o
+ .text.SM1_GetError
+                0x00000000       0xd8 ./Generated_Code/SM1.o
+ .text          0x00000000        0x0 ./Generated_Code/RF1.o
+ .data          0x00000000        0x0 ./Generated_Code/RF1.o
+ .bss           0x00000000        0x0 ./Generated_Code/RF1.o
+ .text.RF1_Deinit
+                0x00000000        0xc ./Generated_Code/RF1.o
+ .text.RF1_GetStatusClrIRQ
+                0x00000000       0x54 ./Generated_Code/RF1.o
+ .text.RF1_StopRxTx
+                0x00000000       0x18 ./Generated_Code/RF1.o
+ .text.RF1_StartRxTx
+                0x00000000       0x18 ./Generated_Code/RF1.o
+ .text.RF1_SetChannel
+                0x00000000       0x2c ./Generated_Code/RF1.o
+ .text.RF1_GetChannel
+                0x00000000       0x28 ./Generated_Code/RF1.o
+ .text.RF1_EnableAutoAck
+                0x00000000       0x2c ./Generated_Code/RF1.o
+ .text.RF1_ReadNofRxPayload
+                0x00000000       0x28 ./Generated_Code/RF1.o
+ .text.RF1_SetStaticPipePayload
+                0x00000000       0x48 ./Generated_Code/RF1.o
+ .text.RF1_EnableDynamicPayloadLength
+                0x00000000       0x30 ./Generated_Code/RF1.o
+ .text.RF1_WriteFeature
+                0x00000000       0x30 ./Generated_Code/RF1.o
+ .text.RF1_ReadFeature
+                0x00000000       0x28 ./Generated_Code/RF1.o
+ .text.RF1_ReadObserveTxRegister
+                0x00000000       0x3c ./Generated_Code/RF1.o
+ .text.RF1_ReadReceivedPowerDetector
+                0x00000000       0x28 ./Generated_Code/RF1.o
+ .text.RF1_ConstantCarrierWave
+                0x00000000       0x9c ./Generated_Code/RF1.o
+ .text.RF1_SetOutputPower
+                0x00000000       0x84 ./Generated_Code/RF1.o
+ .text.RF1_GetOutputPower
+                0x00000000       0x78 ./Generated_Code/RF1.o
+ .text.RF1_SetDataRate
+                0x00000000       0x6c ./Generated_Code/RF1.o
+ .text.RF1_GetDataRate
+                0x00000000       0x64 ./Generated_Code/RF1.o
+ .text.RF1_PollInterrupt
+                0x00000000       0x34 ./Generated_Code/RF1.o
+ .text.RF1_GetFifoStatus
+                0x00000000       0x28 ./Generated_Code/RF1.o
+ .text          0x00000000        0x0 ./Generated_Code/PE_LDD.o
+ .data          0x00000000        0x0 ./Generated_Code/PE_LDD.o
+ .bss           0x00000000        0x0 ./Generated_Code/PE_LDD.o
+ .rodata.PE_CpuClockConfigurations
+                0x00000000       0x28 ./Generated_Code/PE_LDD.o
+ .text.PE_FillMemory
+                0x00000000       0x30 ./Generated_Code/PE_LDD.o
+ .text.PE_PeripheralUsed
+                0x00000000       0xa4 ./Generated_Code/PE_LDD.o
+ .text.LDD_SetClockConfiguration
+                0x00000000       0x14 ./Generated_Code/PE_LDD.o
+ .text          0x00000000        0x0 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .data          0x00000000        0x0 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .bss           0x00000000        0x0 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .text.LED_DRIVER_1_RESET_GetVal
+                0x00000000       0x30 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .text.LED_DRIVER_1_RESET_ClrVal
+                0x00000000       0x20 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .text.LED_DRIVER_1_RESET_SetVal
+                0x00000000       0x20 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .text          0x00000000        0x0 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .data          0x00000000        0x0 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .bss           0x00000000        0x0 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .text.LED_DRIVER_0_RESET_GetVal
+                0x00000000       0x30 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .text.LED_DRIVER_0_RESET_ClrVal
+                0x00000000       0x20 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .text.LED_DRIVER_0_RESET_SetVal
+                0x00000000       0x20 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .text          0x00000000        0x0 ./Generated_Code/LED2.o
+ .data          0x00000000        0x0 ./Generated_Code/LED2.o
+ .bss           0x00000000        0x0 ./Generated_Code/LED2.o
+ .text.LED2_GetVal
+                0x00000000       0x30 ./Generated_Code/LED2.o
+ .text.LED2_ClrVal
+                0x00000000       0x20 ./Generated_Code/LED2.o
+ .text.LED2_SetVal
+                0x00000000       0x20 ./Generated_Code/LED2.o
+ .text          0x00000000        0x0 ./Generated_Code/LED1.o
+ .data          0x00000000        0x0 ./Generated_Code/LED1.o
+ .bss           0x00000000        0x0 ./Generated_Code/LED1.o
+ .text.LED1_GetVal
+                0x00000000       0x30 ./Generated_Code/LED1.o
+ .text.LED1_ClrVal
+                0x00000000       0x20 ./Generated_Code/LED1.o
+ .text.LED1_SetVal
+                0x00000000       0x20 ./Generated_Code/LED1.o
+ .text          0x00000000        0x0 ./Generated_Code/IRQ1.o
+ .data          0x00000000        0x0 ./Generated_Code/IRQ1.o
+ .bss           0x00000000        0x0 ./Generated_Code/IRQ1.o
+ .text          0x00000000        0x0 ./Generated_Code/IO9.o
+ .data          0x00000000        0x0 ./Generated_Code/IO9.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO9.o
+ .text.IO9_SetDir
+                0x00000000       0x50 ./Generated_Code/IO9.o
+ .text.IO9_SetInput
+                0x00000000       0x2c ./Generated_Code/IO9.o
+ .text.IO9_GetVal
+                0x00000000       0x54 ./Generated_Code/IO9.o
+ .text.IO9_PutVal
+                0x00000000       0x3c ./Generated_Code/IO9.o
+ .text.IO9_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO9.o
+ .text.IO9_SetVal
+                0x00000000       0x20 ./Generated_Code/IO9.o
+ .text          0x00000000        0x0 ./Generated_Code/IO8.o
+ .data          0x00000000        0x0 ./Generated_Code/IO8.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO8.o
+ .text.IO8_SetDir
+                0x00000000       0x50 ./Generated_Code/IO8.o
+ .text.IO8_SetInput
+                0x00000000       0x2c ./Generated_Code/IO8.o
+ .text.IO8_GetVal
+                0x00000000       0x54 ./Generated_Code/IO8.o
+ .text.IO8_PutVal
+                0x00000000       0x3c ./Generated_Code/IO8.o
+ .text.IO8_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO8.o
+ .text.IO8_SetVal
+                0x00000000       0x20 ./Generated_Code/IO8.o
+ .text          0x00000000        0x0 ./Generated_Code/IO7.o
+ .data          0x00000000        0x0 ./Generated_Code/IO7.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO7.o
+ .text.IO7_SetDir
+                0x00000000       0x50 ./Generated_Code/IO7.o
+ .text.IO7_SetInput
+                0x00000000       0x2c ./Generated_Code/IO7.o
+ .text.IO7_GetVal
+                0x00000000       0x54 ./Generated_Code/IO7.o
+ .text.IO7_PutVal
+                0x00000000       0x3c ./Generated_Code/IO7.o
+ .text.IO7_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO7.o
+ .text.IO7_SetVal
+                0x00000000       0x20 ./Generated_Code/IO7.o
+ .text          0x00000000        0x0 ./Generated_Code/IO6.o
+ .data          0x00000000        0x0 ./Generated_Code/IO6.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO6.o
+ .text.IO6_SetDir
+                0x00000000       0x50 ./Generated_Code/IO6.o
+ .text.IO6_SetInput
+                0x00000000       0x2c ./Generated_Code/IO6.o
+ .text.IO6_GetVal
+                0x00000000       0x54 ./Generated_Code/IO6.o
+ .text.IO6_PutVal
+                0x00000000       0x3c ./Generated_Code/IO6.o
+ .text.IO6_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO6.o
+ .text.IO6_SetVal
+                0x00000000       0x20 ./Generated_Code/IO6.o
+ .text          0x00000000        0x0 ./Generated_Code/IO5.o
+ .data          0x00000000        0x0 ./Generated_Code/IO5.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO5.o
+ .text.IO5_SetDir
+                0x00000000       0x50 ./Generated_Code/IO5.o
+ .text.IO5_SetInput
+                0x00000000       0x2c ./Generated_Code/IO5.o
+ .text.IO5_GetVal
+                0x00000000       0x54 ./Generated_Code/IO5.o
+ .text.IO5_PutVal
+                0x00000000       0x3c ./Generated_Code/IO5.o
+ .text.IO5_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO5.o
+ .text.IO5_SetVal
+                0x00000000       0x20 ./Generated_Code/IO5.o
+ .text          0x00000000        0x0 ./Generated_Code/IO4.o
+ .data          0x00000000        0x0 ./Generated_Code/IO4.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO4.o
+ .text.IO4_SetDir
+                0x00000000       0x50 ./Generated_Code/IO4.o
+ .text.IO4_SetInput
+                0x00000000       0x2c ./Generated_Code/IO4.o
+ .text.IO4_GetVal
+                0x00000000       0x54 ./Generated_Code/IO4.o
+ .text.IO4_PutVal
+                0x00000000       0x3c ./Generated_Code/IO4.o
+ .text.IO4_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO4.o
+ .text.IO4_SetVal
+                0x00000000       0x20 ./Generated_Code/IO4.o
+ .text          0x00000000        0x0 ./Generated_Code/IO3.o
+ .data          0x00000000        0x0 ./Generated_Code/IO3.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO3.o
+ .text.IO3_SetDir
+                0x00000000       0x50 ./Generated_Code/IO3.o
+ .text.IO3_SetInput
+                0x00000000       0x2c ./Generated_Code/IO3.o
+ .text.IO3_GetVal
+                0x00000000       0x54 ./Generated_Code/IO3.o
+ .text.IO3_PutVal
+                0x00000000       0x3c ./Generated_Code/IO3.o
+ .text.IO3_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO3.o
+ .text.IO3_SetVal
+                0x00000000       0x20 ./Generated_Code/IO3.o
+ .text          0x00000000        0x0 ./Generated_Code/IO2.o
+ .data          0x00000000        0x0 ./Generated_Code/IO2.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO2.o
+ .text.IO2_SetDir
+                0x00000000       0x50 ./Generated_Code/IO2.o
+ .text.IO2_SetInput
+                0x00000000       0x2c ./Generated_Code/IO2.o
+ .text.IO2_GetVal
+                0x00000000       0x54 ./Generated_Code/IO2.o
+ .text.IO2_PutVal
+                0x00000000       0x3c ./Generated_Code/IO2.o
+ .text.IO2_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO2.o
+ .text.IO2_SetVal
+                0x00000000       0x20 ./Generated_Code/IO2.o
+ .text          0x00000000        0x0 ./Generated_Code/IO12.o
+ .data          0x00000000        0x0 ./Generated_Code/IO12.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO12.o
+ .text.IO12_SetDir
+                0x00000000       0x50 ./Generated_Code/IO12.o
+ .text.IO12_SetInput
+                0x00000000       0x2c ./Generated_Code/IO12.o
+ .text.IO12_GetVal
+                0x00000000       0x54 ./Generated_Code/IO12.o
+ .text.IO12_PutVal
+                0x00000000       0x3c ./Generated_Code/IO12.o
+ .text.IO12_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO12.o
+ .text.IO12_SetVal
+                0x00000000       0x20 ./Generated_Code/IO12.o
+ .text          0x00000000        0x0 ./Generated_Code/IO11.o
+ .data          0x00000000        0x0 ./Generated_Code/IO11.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO11.o
+ .text.IO11_SetDir
+                0x00000000       0x50 ./Generated_Code/IO11.o
+ .text.IO11_SetInput
+                0x00000000       0x2c ./Generated_Code/IO11.o
+ .text.IO11_GetVal
+                0x00000000       0x54 ./Generated_Code/IO11.o
+ .text.IO11_PutVal
+                0x00000000       0x3c ./Generated_Code/IO11.o
+ .text.IO11_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO11.o
+ .text.IO11_SetVal
+                0x00000000       0x20 ./Generated_Code/IO11.o
+ .text          0x00000000        0x0 ./Generated_Code/IO10.o
+ .data          0x00000000        0x0 ./Generated_Code/IO10.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO10.o
+ .text.IO10_SetDir
+                0x00000000       0x50 ./Generated_Code/IO10.o
+ .text.IO10_SetInput
+                0x00000000       0x2c ./Generated_Code/IO10.o
+ .text.IO10_GetVal
+                0x00000000       0x54 ./Generated_Code/IO10.o
+ .text.IO10_PutVal
+                0x00000000       0x3c ./Generated_Code/IO10.o
+ .text.IO10_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO10.o
+ .text.IO10_SetVal
+                0x00000000       0x20 ./Generated_Code/IO10.o
+ .text          0x00000000        0x0 ./Generated_Code/IO1.o
+ .data          0x00000000        0x0 ./Generated_Code/IO1.o
+ .bss           0x00000000        0x0 ./Generated_Code/IO1.o
+ .text.IO1_SetDir
+                0x00000000       0x50 ./Generated_Code/IO1.o
+ .text.IO1_SetInput
+                0x00000000       0x2c ./Generated_Code/IO1.o
+ .text.IO1_GetVal
+                0x00000000       0x54 ./Generated_Code/IO1.o
+ .text.IO1_PutVal
+                0x00000000       0x3c ./Generated_Code/IO1.o
+ .text.IO1_ClrVal
+                0x00000000       0x20 ./Generated_Code/IO1.o
+ .text.IO1_SetVal
+                0x00000000       0x20 ./Generated_Code/IO1.o
+ .text          0x00000000        0x0 ./Generated_Code/IMU_INT.o
+ .data          0x00000000        0x0 ./Generated_Code/IMU_INT.o
+ .bss           0x00000000        0x0 ./Generated_Code/IMU_INT.o
+ .text.IMU_INT_GetVal
+                0x00000000       0x30 ./Generated_Code/IMU_INT.o
+ .text          0x00000000        0x0 ./Generated_Code/IMU_FSYNC.o
+ .data          0x00000000        0x0 ./Generated_Code/IMU_FSYNC.o
+ .bss           0x00000000        0x0 ./Generated_Code/IMU_FSYNC.o
+ .text.IMU_FSYNC_GetVal
+                0x00000000       0x30 ./Generated_Code/IMU_FSYNC.o
+ .text.IMU_FSYNC_PutVal
+                0x00000000       0x3c ./Generated_Code/IMU_FSYNC.o
+ .text.IMU_FSYNC_ClrVal
+                0x00000000       0x20 ./Generated_Code/IMU_FSYNC.o
+ .text.IMU_FSYNC_SetVal
+                0x00000000       0x20 ./Generated_Code/IMU_FSYNC.o
+ .text          0x00000000        0x0 ./Generated_Code/IMU_CS.o
+ .data          0x00000000        0x0 ./Generated_Code/IMU_CS.o
+ .bss           0x00000000        0x0 ./Generated_Code/IMU_CS.o
+ .text.IMU_CS_GetVal
+                0x00000000       0x30 ./Generated_Code/IMU_CS.o
+ .text.IMU_CS_PutVal
+                0x00000000       0x3c ./Generated_Code/IMU_CS.o
+ .text.IMU_CS_ClrVal
+                0x00000000       0x20 ./Generated_Code/IMU_CS.o
+ .text.IMU_CS_SetVal
+                0x00000000       0x20 ./Generated_Code/IMU_CS.o
+ .text          0x00000000        0x0 ./Generated_Code/I2C0.o
+ .data          0x00000000        0x0 ./Generated_Code/I2C0.o
+ .bss           0x00000000        0x0 ./Generated_Code/I2C0.o
+ .text          0x00000000        0x0 ./Generated_Code/ExtIntLdd1.o
+ .data          0x00000000        0x0 ./Generated_Code/ExtIntLdd1.o
+ .bss           0x00000000        0x0 ./Generated_Code/ExtIntLdd1.o
+ .text.ExtIntLdd1_GetVal
+                0x00000000       0x30 ./Generated_Code/ExtIntLdd1.o
+ .text          0x00000000        0x0 ./Generated_Code/Cpu.o
+ .data          0x00000000        0x0 ./Generated_Code/Cpu.o
+ .bss           0x00000000        0x0 ./Generated_Code/Cpu.o
+ .text          0x00000000        0x0 ./Generated_Code/CSN1.o
+ .data          0x00000000        0x0 ./Generated_Code/CSN1.o
+ .bss           0x00000000        0x0 ./Generated_Code/CSN1.o
+ .debug_info    0x00000000       0x76 ./Generated_Code/CSN1.o
+ .debug_abbrev  0x00000000       0x28 ./Generated_Code/CSN1.o
+ .debug_aranges
+                0x00000000       0x18 ./Generated_Code/CSN1.o
+ .debug_macinfo
+                0x00000000    0x59ece ./Generated_Code/CSN1.o
+ .debug_line    0x00000000      0x2aa ./Generated_Code/CSN1.o
+ .debug_str     0x00000000      0x144 ./Generated_Code/CSN1.o
+ .comment       0x00000000       0x7a ./Generated_Code/CSN1.o
+ .ARM.attributes
+                0x00000000       0x33 ./Generated_Code/CSN1.o
+ .text          0x00000000        0x0 ./Generated_Code/CE1.o
+ .data          0x00000000        0x0 ./Generated_Code/CE1.o
+ .bss           0x00000000        0x0 ./Generated_Code/CE1.o
+ .debug_info    0x00000000       0x76 ./Generated_Code/CE1.o
+ .debug_abbrev  0x00000000       0x28 ./Generated_Code/CE1.o
+ .debug_aranges
+                0x00000000       0x18 ./Generated_Code/CE1.o
+ .debug_macinfo
+                0x00000000    0x59ec9 ./Generated_Code/CE1.o
+ .debug_line    0x00000000      0x2a8 ./Generated_Code/CE1.o
+ .debug_str     0x00000000      0x143 ./Generated_Code/CE1.o
+ .comment       0x00000000       0x7a ./Generated_Code/CE1.o
+ .ARM.attributes
+                0x00000000       0x33 ./Generated_Code/CE1.o
+ .text          0x00000000        0x0 ./Generated_Code/BitIoLdd2.o
+ .data          0x00000000        0x0 ./Generated_Code/BitIoLdd2.o
+ .bss           0x00000000        0x0 ./Generated_Code/BitIoLdd2.o
+ .text.BitIoLdd2_GetVal
+                0x00000000       0x30 ./Generated_Code/BitIoLdd2.o
+ .text.BitIoLdd2_PutVal
+                0x00000000       0x3c ./Generated_Code/BitIoLdd2.o
+ .text          0x00000000        0x0 ./Generated_Code/BitIoLdd1.o
+ .data          0x00000000        0x0 ./Generated_Code/BitIoLdd1.o
+ .bss           0x00000000        0x0 ./Generated_Code/BitIoLdd1.o
+ .text.BitIoLdd1_GetVal
+                0x00000000       0x30 ./Generated_Code/BitIoLdd1.o
+ .text.BitIoLdd1_PutVal
+                0x00000000       0x3c ./Generated_Code/BitIoLdd1.o
+ .text          0x00000000        0x0 ./Project_Settings/Startup_Code/__arm_start.o
+ .data          0x00000000        0x0 ./Project_Settings/Startup_Code/__arm_start.o
+ .bss           0x00000000        0x0 ./Project_Settings/Startup_Code/__arm_start.o
+ .text.__iar_program_start
+                0x00000000        0x4 ./Project_Settings/Startup_Code/__arm_start.o
+ .text          0x00000000        0x0 ./Project_Settings/Startup_Code/__arm_end.o
+ .data          0x00000000        0x0 ./Project_Settings/Startup_Code/__arm_end.o
+ .bss           0x00000000        0x0 ./Project_Settings/Startup_Code/__arm_end.o
+ .text          0x00000000        0x0 ./Sources/system_tick.o
+ .data          0x00000000        0x0 ./Sources/system_tick.o
+ .bss           0x00000000        0x0 ./Sources/system_tick.o
+ .text          0x00000000        0x0 ./Sources/mpu_9250_driver.o
+ .data          0x00000000        0x0 ./Sources/mpu_9250_driver.o
+ .bss           0x00000000        0x0 ./Sources/mpu_9250_driver.o
+ .text          0x00000000        0x0 ./Sources/main.o
+ .data          0x00000000        0x0 ./Sources/main.o
+ .bss           0x00000000        0x0 ./Sources/main.o
+ .text          0x00000000        0x0 ./Sources/led_driver_pca9552.o
+ .data          0x00000000        0x0 ./Sources/led_driver_pca9552.o
+ .bss           0x00000000        0x0 ./Sources/led_driver_pca9552.o
+ .text          0x00000000        0x0 ./Sources/app_nrf24l01.o
+ .data          0x00000000        0x0 ./Sources/app_nrf24l01.o
+ .bss           0x00000000        0x0 ./Sources/app_nrf24l01.o
+ .bss.rx_in_progress
+                0x00000000        0x1 ./Sources/app_nrf24l01.o
+ .bss.rx_start_time_ms
+                0x00000000        0x4 ./Sources/app_nrf24l01.o
+ .text.mesh_receive_string
+                0x00000000       0xdc ./Sources/app_nrf24l01.o
+ .text.mesh_listen
+                0x00000000       0x20 ./Sources/app_nrf24l01.o
+ .text          0x00000000        0x0 ./Sources/Events.o
+ .data          0x00000000        0x0 ./Sources/Events.o
+ .bss           0x00000000        0x0 ./Sources/Events.o
+ .text          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .data          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .bss           0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .text          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .data          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .bss           0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .text          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .data          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .bss           0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .text          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .data          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .bss           0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .bss.__dso_handle
+                0x00000000        0x4 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .text          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .data          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .bss           0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .text.__register_global_object
+                0x00000000       0x14 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .text.__cxa_atexit
+                0x00000000       0x38 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .text.__aeabi_atexit
+                0x00000000        0xa C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .text.__register_atexit
+                0x00000000        0x8 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .text.__init_hardware
+                0x00000000        0x4 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .bss.atexit_curr_func
+                0x00000000        0x4 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .bss.atexit_funcs
+                0x00000000      0x300 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .text          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+ .data          0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+ .bss           0x00000000        0x0 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+ .text.__flush_cache
+                0x00000000        0x2 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+m_interrupts     0x00000000         0x000001bc         xr
+m_text           0x00000410         0x0003fbf0         xr
+m_data           0x1fff8000         0x00008000         rw
+m_data_20000000  0x20000000         0x00008000         rw
+m_cfmprotrom     0x00000400         0x00000010         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD ./Generated_Code/tick_1ms_timer.o
+LOAD ./Generated_Code/WAIT1.o
+LOAD ./Generated_Code/Vectors.o
+LOAD ./Generated_Code/TU1.o
+LOAD ./Generated_Code/SMasterLdd1.o
+LOAD ./Generated_Code/SM1.o
+LOAD ./Generated_Code/RF1.o
+LOAD ./Generated_Code/PE_LDD.o
+LOAD ./Generated_Code/LED_DRIVER_1_RESET.o
+LOAD ./Generated_Code/LED_DRIVER_0_RESET.o
+LOAD ./Generated_Code/LED2.o
+LOAD ./Generated_Code/LED1.o
+LOAD ./Generated_Code/IRQ1.o
+LOAD ./Generated_Code/IO9.o
+LOAD ./Generated_Code/IO8.o
+LOAD ./Generated_Code/IO7.o
+LOAD ./Generated_Code/IO6.o
+LOAD ./Generated_Code/IO5.o
+LOAD ./Generated_Code/IO4.o
+LOAD ./Generated_Code/IO3.o
+LOAD ./Generated_Code/IO2.o
+LOAD ./Generated_Code/IO12.o
+LOAD ./Generated_Code/IO11.o
+LOAD ./Generated_Code/IO10.o
+LOAD ./Generated_Code/IO1.o
+LOAD ./Generated_Code/IMU_INT.o
+LOAD ./Generated_Code/IMU_FSYNC.o
+LOAD ./Generated_Code/IMU_CS.o
+LOAD ./Generated_Code/I2C0.o
+LOAD ./Generated_Code/ExtIntLdd1.o
+LOAD ./Generated_Code/Cpu.o
+LOAD ./Generated_Code/CSN1.o
+LOAD ./Generated_Code/CE1.o
+LOAD ./Generated_Code/BitIoLdd2.o
+LOAD ./Generated_Code/BitIoLdd1.o
+LOAD ./Project_Settings/Startup_Code/__arm_start.o
+LOAD ./Project_Settings/Startup_Code/__arm_end.o
+LOAD ./Sources/system_tick.o
+LOAD ./Sources/mpu_9250_driver.o
+LOAD ./Sources/main.o
+LOAD ./Sources/led_driver_pca9552.o
+LOAD ./Sources/app_nrf24l01.o
+LOAD ./Sources/Events.o
+START GROUP
+LOAD C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a
+LOAD C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libm.a
+LOAD c:/freescale/cw mcu v10.6.4/cross_tools/arm-none-eabi-gcc-4_7_3/bin/../lib/gcc/arm-none-eabi/4.7.3/armv7e-m\libgcc.a
+LOAD C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a
+END GROUP
+                0x20000000                _estack = 0x20000000
+                0x20000000                __SP_INIT = _estack
+                0x00000000                __heap_size = 0x0
+                0x00000400                __stack_size = 0x400
+
+.interrupts     0x00000000      0x1bc
+                0x00000000                __vector_table = .
+                0x00000000                . = ALIGN (0x4)
+ *(.vectortable)
+ .vectortable   0x00000000      0x1bc ./Generated_Code/Vectors.o
+                0x00000000                __vect_table
+                0x000001bc                . = ALIGN (0x4)
+
+.cfmprotect     0x00000400       0x10
+                0x00000400                . = ALIGN (0x4)
+ *(.cfmconfig)
+ .cfmconfig     0x00000400       0x10 ./Generated_Code/Cpu.o
+                0x00000400                _cfm
+                0x00000410                . = ALIGN (0x4)
+
+.text           0x00000410     0x403c
+                0x00000410                . = ALIGN (0x4)
+ *(.text)
+ *(.text*)
+ .text.tick_1ms_timer_Init
+                0x00000410       0x64 ./Generated_Code/tick_1ms_timer.o
+                0x00000410                tick_1ms_timer_Init
+ .text.TU1_OnCounterRestart
+                0x00000474       0x28 ./Generated_Code/tick_1ms_timer.o
+                0x00000474                TU1_OnCounterRestart
+ .text.WAIT1_Wait10Cycles
+                0x0000049c        0x8 ./Generated_Code/WAIT1.o
+                0x0000049c                WAIT1_Wait10Cycles
+ .text.WAIT1_Wait100Cycles
+                0x000004a4       0x1c ./Generated_Code/WAIT1.o
+                0x000004a4                WAIT1_Wait100Cycles
+ .text.WAIT1_WaitCycles
+                0x000004c0       0x3c ./Generated_Code/WAIT1.o
+                0x000004c0                WAIT1_WaitCycles
+ .text.TU1_Init
+                0x000004fc      0x198 ./Generated_Code/TU1.o
+                0x000004fc                TU1_Init
+ .text.TU1_Interrupt
+                0x00000694       0x80 ./Generated_Code/TU1.o
+                0x00000694                TU1_Interrupt
+ .text.SMasterLdd1_Init
+                0x00000714      0x19c ./Generated_Code/SMasterLdd1.o
+                0x00000714                SMasterLdd1_Init
+ .text.SMasterLdd1_ReceiveBlock
+                0x000008b0       0xac ./Generated_Code/SMasterLdd1.o
+                0x000008b0                SMasterLdd1_ReceiveBlock
+ .text.SMasterLdd1_SendBlock
+                0x0000095c       0xc4 ./Generated_Code/SMasterLdd1.o
+                0x0000095c                SMasterLdd1_SendBlock
+ .text.SMasterLdd1_Interrupt
+                0x00000a20      0x14c ./Generated_Code/SMasterLdd1.o
+                0x00000a20                SMasterLdd1_Interrupt
+ .text.SM1_RecvChar
+                0x00000b6c      0x130 ./Generated_Code/SM1.o
+                0x00000b6c                SM1_RecvChar
+ .text.SM1_SendChar
+                0x00000c9c      0x150 ./Generated_Code/SM1.o
+                0x00000c9c                SM1_SendChar
+ .text.SM1_GetCharsInRxBuf
+                0x00000dec       0x18 ./Generated_Code/SM1.o
+                0x00000dec                SM1_GetCharsInRxBuf
+ .text.SM1_GetCharsInTxBuf
+                0x00000e04       0x18 ./Generated_Code/SM1.o
+                0x00000e04                SM1_GetCharsInTxBuf
+ .text.SM1_Init
+                0x00000e1c       0xa8 ./Generated_Code/SM1.o
+                0x00000e1c                SM1_Init
+ .text.SMasterLdd1_OnBlockReceived
+                0x00000ec4       0xdc ./Generated_Code/SM1.o
+                0x00000ec4                SMasterLdd1_OnBlockReceived
+ .text.SMasterLdd1_OnBlockSent
+                0x00000fa0       0xd4 ./Generated_Code/SM1.o
+                0x00000fa0                SMasterLdd1_OnBlockSent
+ .text.RF1_ConfigureSPI
+                0x00001074        0xc ./Generated_Code/RF1.o
+                0x00001074                RF1_ConfigureSPI
+ .text.SPIWriteRead
+                0x00001080       0x5c ./Generated_Code/RF1.o
+ .text.SPIWriteReadBuffer
+                0x000010dc       0x48 ./Generated_Code/RF1.o
+ .text.SPIWriteBuffer
+                0x00001124       0x3c ./Generated_Code/RF1.o
+ .text.RF1_Init
+                0x00001160       0x2c ./Generated_Code/RF1.o
+                0x00001160                RF1_Init
+ .text.IRQ1_OnInterrupt
+                0x0000118c       0x1c ./Generated_Code/RF1.o
+                0x0000118c                IRQ1_OnInterrupt
+ .text.RF1_WriteRegister
+                0x000011a8       0x54 ./Generated_Code/RF1.o
+                0x000011a8                RF1_WriteRegister
+ .text.RF1_ReadRegister
+                0x000011fc       0x54 ./Generated_Code/RF1.o
+                0x000011fc                RF1_ReadRegister
+ .text.RF1_ReadRegisterData
+                0x00001250       0x54 ./Generated_Code/RF1.o
+                0x00001250                RF1_ReadRegisterData
+ .text.RF1_WriteRegisterData
+                0x000012a4       0x58 ./Generated_Code/RF1.o
+                0x000012a4                RF1_WriteRegisterData
+ .text.RF1_WriteRead
+                0x000012fc       0x4c ./Generated_Code/RF1.o
+                0x000012fc                RF1_WriteRead
+ .text.RF1_Write
+                0x00001348       0x44 ./Generated_Code/RF1.o
+                0x00001348                RF1_Write
+ .text.RF1_GetStatus
+                0x0000138c       0x14 ./Generated_Code/RF1.o
+                0x0000138c                RF1_GetStatus
+ .text.RF1_ResetStatusIRQ
+                0x000013a0       0x20 ./Generated_Code/RF1.o
+                0x000013a0                RF1_ResetStatusIRQ
+ .text.RF1_TxPayload
+                0x000013c0       0x54 ./Generated_Code/RF1.o
+                0x000013c0                RF1_TxPayload
+ .text.RF1_RxPayload
+                0x00001414       0x44 ./Generated_Code/RF1.o
+                0x00001414                RF1_RxPayload
+ .text.LED_DRIVER_1_RESET_Init
+                0x00001458       0x84 ./Generated_Code/LED_DRIVER_1_RESET.o
+                0x00001458                LED_DRIVER_1_RESET_Init
+ .text.LED_DRIVER_1_RESET_PutVal
+                0x000014dc       0x3c ./Generated_Code/LED_DRIVER_1_RESET.o
+                0x000014dc                LED_DRIVER_1_RESET_PutVal
+ .text.LED_DRIVER_0_RESET_Init
+                0x00001518       0x84 ./Generated_Code/LED_DRIVER_0_RESET.o
+                0x00001518                LED_DRIVER_0_RESET_Init
+ .text.LED_DRIVER_0_RESET_PutVal
+                0x0000159c       0x3c ./Generated_Code/LED_DRIVER_0_RESET.o
+                0x0000159c                LED_DRIVER_0_RESET_PutVal
+ .text.LED2_Init
+                0x000015d8       0x84 ./Generated_Code/LED2.o
+                0x000015d8                LED2_Init
+ .text.LED2_PutVal
+                0x0000165c       0x3c ./Generated_Code/LED2.o
+                0x0000165c                LED2_PutVal
+ .text.LED1_Init
+                0x00001698       0x84 ./Generated_Code/LED1.o
+                0x00001698                LED1_Init
+ .text.LED1_PutVal
+                0x0000171c       0x3c ./Generated_Code/LED1.o
+                0x0000171c                LED1_PutVal
+ .text.ExtIntLdd1_OnInterrupt
+                0x00001758       0x14 ./Generated_Code/IRQ1.o
+                0x00001758                ExtIntLdd1_OnInterrupt
+ .text.IO9_Init
+                0x0000176c       0x84 ./Generated_Code/IO9.o
+                0x0000176c                IO9_Init
+ .text.IO8_Init
+                0x000017f0       0x84 ./Generated_Code/IO8.o
+                0x000017f0                IO8_Init
+ .text.IO7_Init
+                0x00001874       0x84 ./Generated_Code/IO7.o
+                0x00001874                IO7_Init
+ .text.IO6_Init
+                0x000018f8       0x84 ./Generated_Code/IO6.o
+                0x000018f8                IO6_Init
+ .text.IO5_Init
+                0x0000197c       0x84 ./Generated_Code/IO5.o
+                0x0000197c                IO5_Init
+ .text.IO4_Init
+                0x00001a00       0x84 ./Generated_Code/IO4.o
+                0x00001a00                IO4_Init
+ .text.IO3_Init
+                0x00001a84       0x84 ./Generated_Code/IO3.o
+                0x00001a84                IO3_Init
+ .text.IO2_Init
+                0x00001b08       0x84 ./Generated_Code/IO2.o
+                0x00001b08                IO2_Init
+ .text.IO12_Init
+                0x00001b8c       0x84 ./Generated_Code/IO12.o
+                0x00001b8c                IO12_Init
+ .text.IO11_Init
+                0x00001c10       0x84 ./Generated_Code/IO11.o
+                0x00001c10                IO11_Init
+ .text.IO10_Init
+                0x00001c94       0x84 ./Generated_Code/IO10.o
+                0x00001c94                IO10_Init
+ .text.IO1_Init
+                0x00001d18       0x84 ./Generated_Code/IO1.o
+                0x00001d18                IO1_Init
+ .text.IMU_INT_Init
+                0x00001d9c       0x6c ./Generated_Code/IMU_INT.o
+                0x00001d9c                IMU_INT_Init
+ .text.IMU_FSYNC_Init
+                0x00001e08       0x84 ./Generated_Code/IMU_FSYNC.o
+                0x00001e08                IMU_FSYNC_Init
+ .text.IMU_CS_Init
+                0x00001e8c       0x84 ./Generated_Code/IMU_CS.o
+                0x00001e8c                IMU_CS_Init
+ .text.I2C0_Interrupt
+                0x00001f10      0x370 ./Generated_Code/I2C0.o
+                0x00001f10                I2C0_Interrupt
+ .text.I2C0_Init
+                0x00002280      0x1c8 ./Generated_Code/I2C0.o
+                0x00002280                I2C0_Init
+ .text.I2C0_MasterSendBlock
+                0x00002448      0x1f8 ./Generated_Code/I2C0.o
+                0x00002448                I2C0_MasterSendBlock
+ .text.I2C0_MasterReceiveBlock
+                0x00002640      0x1f0 ./Generated_Code/I2C0.o
+                0x00002640                I2C0_MasterReceiveBlock
+ .text.I2C0_SelectSlaveDevice
+                0x00002830      0x100 ./Generated_Code/I2C0.o
+                0x00002830                I2C0_SelectSlaveDevice
+ .text.ExtIntLdd1_Init
+                0x00002930       0xa8 ./Generated_Code/ExtIntLdd1.o
+                0x00002930                ExtIntLdd1_Init
+ .text.ExtIntLdd1_Interrupt
+                0x000029d8       0x4c ./Generated_Code/ExtIntLdd1.o
+                0x000029d8                ExtIntLdd1_Interrupt
+ .text.Cpu_INT_NMIInterrupt
+                0x00002a24       0x1c ./Generated_Code/Cpu.o
+                0x00002a24                Cpu_INT_NMIInterrupt
+ .text.Cpu_Interrupt
+                0x00002a40       0x18 ./Generated_Code/Cpu.o
+                0x00002a40                Cpu_Interrupt
+ .text.__init_hardware
+                0x00002a58      0x280 ./Generated_Code/Cpu.o
+                0x00002a58                __init_hardware
+ .text.Cpu_SetBASEPRI
+                0x00002cd8       0x18 ./Generated_Code/Cpu.o
+                0x00002cd8                Cpu_SetBASEPRI
+ .text.PE_low_level_init
+                0x00002cf0      0x1a8 ./Generated_Code/Cpu.o
+                0x00002cf0                PE_low_level_init
+ .text.BitIoLdd2_Init
+                0x00002e98       0x84 ./Generated_Code/BitIoLdd2.o
+                0x00002e98                BitIoLdd2_Init
+ .text.BitIoLdd2_ClrVal
+                0x00002f1c       0x20 ./Generated_Code/BitIoLdd2.o
+                0x00002f1c                BitIoLdd2_ClrVal
+ .text.BitIoLdd2_SetVal
+                0x00002f3c       0x20 ./Generated_Code/BitIoLdd2.o
+                0x00002f3c                BitIoLdd2_SetVal
+ .text.BitIoLdd1_Init
+                0x00002f5c       0x84 ./Generated_Code/BitIoLdd1.o
+                0x00002f5c                BitIoLdd1_Init
+ .text.BitIoLdd1_ClrVal
+                0x00002fe0       0x20 ./Generated_Code/BitIoLdd1.o
+                0x00002fe0                BitIoLdd1_ClrVal
+ .text.BitIoLdd1_SetVal
+                0x00003000       0x20 ./Generated_Code/BitIoLdd1.o
+                0x00003000                BitIoLdd1_SetVal
+ .text.zero_fill_bss
+                0x00003020       0x2c ./Project_Settings/Startup_Code/__arm_start.o
+ .text.__thumb_startup
+                0x0000304c       0x30 ./Project_Settings/Startup_Code/__arm_start.o
+                0x0000304c                __thumb_startup
+ .text._ExitProcess
+                0x0000307c        0xc ./Project_Settings/Startup_Code/__arm_end.o
+                0x0000307c                _ExitProcess
+ .text.init_tick
+                0x00003088       0x44 ./Sources/system_tick.o
+                0x00003088                init_tick
+ .text.tick     0x000030cc       0x9c ./Sources/system_tick.o
+                0x000030cc                tick
+ .text.delay_n_msec
+                0x00003168       0x34 ./Sources/system_tick.o
+                0x00003168                delay_n_msec
+ .text.mpu_9250_init
+                0x0000319c       0x40 ./Sources/mpu_9250_driver.o
+                0x0000319c                mpu_9250_init
+ .text.get_mpu_readings
+                0x000031dc      0x1d4 ./Sources/mpu_9250_driver.o
+                0x000031dc                get_mpu_readings
+ .text.send_message
+                0x000033b0       0x5c ./Sources/mpu_9250_driver.o
+ .text.receive_message
+                0x0000340c       0x48 ./Sources/mpu_9250_driver.o
+ .text.set_clock_source
+                0x00003454       0x24 ./Sources/mpu_9250_driver.o
+ .text.set_full_scale_gyro_range
+                0x00003478       0x24 ./Sources/mpu_9250_driver.o
+ .text.set_full_scale_accel_range
+                0x0000349c       0x24 ./Sources/mpu_9250_driver.o
+ .text.set_sleep_enabled
+                0x000034c0       0x24 ./Sources/mpu_9250_driver.o
+ .text.set_magnetometer_mode
+                0x000034e4       0x34 ./Sources/mpu_9250_driver.o
+ .text.mpu9250_write_accel_bitfield
+                0x00003518       0x28 ./Sources/mpu_9250_driver.o
+ .text.mpu9250_write_accel_bit
+                0x00003540       0x30 ./Sources/mpu_9250_driver.o
+ .text.mpu9250_write_mag_bit
+                0x00003570       0x30 ./Sources/mpu_9250_driver.o
+ .text.mpu9250_write_mag_bitfield
+                0x000035a0       0x28 ./Sources/mpu_9250_driver.o
+ .text.mpu9250_write_bitfield
+                0x000035c8       0xa0 ./Sources/mpu_9250_driver.o
+ .text.mpu9250_write_bit
+                0x00003668       0x98 ./Sources/mpu_9250_driver.o
+ .text.update_imu_leds
+                0x00003700      0x22c ./Sources/main.o
+                0x00003700                update_imu_leds
+ .text.main     0x0000392c      0x1b8 ./Sources/main.o
+                0x0000392c                main
+ .text.init_led_drivers
+                0x00003ae4       0x8c ./Sources/led_driver_pca9552.o
+                0x00003ae4                init_led_drivers
+ .text.reset_driver
+                0x00003b70       0x6c ./Sources/led_driver_pca9552.o
+                0x00003b70                reset_driver
+ .text.set_led_output
+                0x00003bdc       0xb4 ./Sources/led_driver_pca9552.o
+                0x00003bdc                set_led_output
+ .text.set_led_output_mode
+                0x00003c90      0x1ac ./Sources/led_driver_pca9552.o
+ .text.mesh_init
+                0x00003e3c      0x10c ./Sources/app_nrf24l01.o
+                0x00003e3c                mesh_init
+ .text.mesh_state_update
+                0x00003f48      0x144 ./Sources/app_nrf24l01.o
+                0x00003f48                mesh_state_update
+ .text.mesh_send_string
+                0x0000408c       0xa0 ./Sources/app_nrf24l01.o
+                0x0000408c                mesh_send_string
+ .text.mesh_broadcast_string
+                0x0000412c       0x20 ./Sources/app_nrf24l01.o
+                0x0000412c                mesh_broadcast_string
+ .text.mesh_interrupt_handler
+                0x0000414c       0x34 ./Sources/app_nrf24l01.o
+                0x0000414c                mesh_interrupt_handler
+ .text.set_tx_destination_address
+                0x00004180       0x68 ./Sources/app_nrf24l01.o
+ .text.Cpu_OnNMIINT
+                0x000041e8        0xc ./Sources/Events.o
+                0x000041e8                Cpu_OnNMIINT
+ .text.I2C0_OnMasterBlockSent
+                0x000041f4       0x14 ./Sources/Events.o
+                0x000041f4                I2C0_OnMasterBlockSent
+ .text.I2C0_OnMasterBlockReceived
+                0x00004208       0x14 ./Sources/Events.o
+                0x00004208                I2C0_OnMasterBlockReceived
+ .text.tick_1ms_timer_OnInterrupt
+                0x0000421c       0x14 ./Sources/Events.o
+                0x0000421c                tick_1ms_timer_OnInterrupt
+ .text.I2C0_OnMasterByteReceived
+                0x00004230       0x14 ./Sources/Events.o
+                0x00004230                I2C0_OnMasterByteReceived
+ .text.RF1_OnInterrupt
+                0x00004244        0xc ./Sources/Events.o
+                0x00004244                RF1_OnInterrupt
+ .text.exit     0x00004250       0x38 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+                0x00004250                exit
+ .text.memset   0x00004288        0xc C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+                0x00004288                memset
+ .text.__fill_mem
+                0x00004294       0x76 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+                0x00004294                __fill_mem
+ *fill*         0x0000430a        0x2 00
+ .text.__init_cpp
+                0x0000430c       0x4c C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+                0x0000430c                __init_cpp
+ .text.__fini_cpp
+                0x00004358       0x34 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+                0x00004358                __fini_cpp
+ .text.__destroy_global_chain
+                0x0000438c       0x18 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x0000438c                __destroy_global_chain
+ .text.__init_registers
+                0x000043a4       0x24 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x000043a4                __init_registers
+ .text.__init_user
+                0x000043c8        0x4 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x000043c8                __init_user
+ .text.__copy_rom_section
+                0x000043cc       0x44 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+                0x000043cc                __copy_rom_section
+ .text.__copy_rom_sections_to_ram
+                0x00004410       0x30 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+                0x00004410                __copy_rom_sections_to_ram
+ *(.rodata)
+ .rodata        0x00004440        0xc ./Sources/main.o
+ *(.rodata*)
+ *(.glue_7)
+ .glue_7        0x00000000        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x00000000        0x0 linker stubs
+ *(.eh_frame)
+ *(.init)
+ *(.fini)
+                0x0000444c                . = ALIGN (0x4)
+                0x0000444c                _etext = .
+
+.vfp11_veneer   0x0000444c        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x0000444c        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.iplt           0x0000444c        0x0
+ .iplt          0x00000000        0x0 ./Generated_Code/tick_1ms_timer.o
+
+.rel.dyn        0x0000444c        0x0
+ .rel.iplt      0x00000000        0x0 ./Generated_Code/tick_1ms_timer.o
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+
+.ARM            0x0000444c        0x0
+                0x0000444c                __exidx_start = .
+ *(.ARM.exidx*)
+                0x0000444c                __exidx_end = .
+
+.ctors          0x0000444c        0x0
+                0x0000444c                __CTOR_LIST__ = .
+ *crtbegin.o(.ctors)
+ *(EXCLUDE_FILE(*crtend.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+                0x0000444c                __CTOR_END__ = .
+
+.dtors          0x0000444c        0x0
+                0x0000444c                __DTOR_LIST__ = .
+ *crtbegin.o(.dtors)
+ *(EXCLUDE_FILE(*crtend.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+                0x0000444c                __DTOR_END__ = .
+
+.preinit_array  0x0000444c        0x0
+                0x0000444c                PROVIDE (__preinit_array_start, .)
+ *(.preinit_array*)
+                0x0000444c                PROVIDE (__preinit_array_end, .)
+
+.init_array     0x0000444c        0x0
+                0x0000444c                PROVIDE (__init_array_start, .)
+ *(SORT(.init_array.*))
+ *(.init_array*)
+                0x0000444c                PROVIDE (__init_array_end, .)
+
+.fini_array     0x0000444c        0x0
+                0x0000444c                PROVIDE (__fini_array_start, .)
+ *(SORT(.fini_array.*))
+ *(.fini_array*)
+                0x0000444c                PROVIDE (__fini_array_end, .)
+                0x0000444c                ___ROM_AT = .
+
+.data           0x1fff8000       0x2c load address 0x0000444c
+                0x1fff8000                . = ALIGN (0x4)
+                0x1fff8000                _sdata = .
+ *(.data)
+ *(.data*)
+ .data.driver_info
+                0x1fff8000        0xc ./Sources/led_driver_pca9552.o
+                0x1fff8000                driver_info
+ .data.pwm_settings
+                0x1fff800c        0x8 ./Sources/led_driver_pca9552.o
+ .data.channels
+                0x1fff8014       0x18 ./Sources/led_driver_pca9552.o
+                0x1fff802c                . = ALIGN (0x4)
+                0x1fff802c                _edata = .
+                0x0000002c                ___data_size = (_edata - _sdata)
+                0x00004478                ___m_data_20000000_ROMStart = (___ROM_AT + SIZEOF (.data))
+
+.igot.plt       0x1fff802c        0x0 load address 0x00004478
+ .igot.plt      0x00000000        0x0 ./Generated_Code/tick_1ms_timer.o
+
+.m_data_20000000
+                0x20000000        0x0 load address 0x00004478
+                0x20000000                . = ALIGN (0x4)
+                0x20000000                ___m_data_20000000_RAMStart = .
+ *(.m_data_20000000)
+                0x20000000                ___m_data_20000000_RAMEnd = .
+                0x20000000                . = ALIGN (0x4)
+                0x00000000                ___m_data_20000000_ROMSize = (___m_data_20000000_RAMEnd - ___m_data_20000000_RAMStart)
+                0x20000000                . = ALIGN (0x4)
+
+.bss            0x1fff802c      0x2d0 load address 0x00004478
+                0x1fff802c                __START_BSS = .
+                0x1fff802c                PROVIDE (__bss_start__, __START_BSS)
+ *(.bss)
+ *(.bss*)
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff802c        0xc ./Generated_Code/tick_1ms_timer.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8038        0xc ./Generated_Code/TU1.o
+ .bss.INT_FTM0__DEFAULT_RTOS_ISRPARAM
+                0x1fff8044        0x4 ./Generated_Code/TU1.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8048       0x20 ./Generated_Code/SMasterLdd1.o
+ .bss.INT_SPI0__DEFAULT_RTOS_ISRPARAM
+                0x1fff8068        0x4 ./Generated_Code/SMasterLdd1.o
+ .bss.SerFlag   0x1fff806c        0x1 ./Generated_Code/SM1.o
+ .bss.ErrFlag   0x1fff806d        0x1 ./Generated_Code/SM1.o
+ .bss.SM1_InpLen
+                0x1fff806e        0x2 ./Generated_Code/SM1.o
+ .bss.InpIndexR
+                0x1fff8070        0x1 ./Generated_Code/SM1.o
+ .bss.InpIndexW
+                0x1fff8071        0x1 ./Generated_Code/SM1.o
+ *fill*         0x1fff8072        0x2 00
+ .bss.InpBuffer
+                0x1fff8074       0x10 ./Generated_Code/SM1.o
+ .bss.BufferRead
+                0x1fff8084        0x1 ./Generated_Code/SM1.o
+ *fill*         0x1fff8085        0x1 00
+ .bss.SM1_OutLen
+                0x1fff8086        0x2 ./Generated_Code/SM1.o
+ .bss.OutIndexR
+                0x1fff8088        0x1 ./Generated_Code/SM1.o
+ .bss.OutIndexW
+                0x1fff8089        0x1 ./Generated_Code/SM1.o
+ *fill*         0x1fff808a        0x2 00
+ .bss.OutBuffer
+                0x1fff808c       0x10 ./Generated_Code/SM1.o
+ .bss.PE_LDD_DeviceDataList
+                0x1fff809c       0x68 ./Generated_Code/PE_LDD.o
+                0x1fff809c                PE_LDD_DeviceDataList
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8104        0x4 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8108        0x4 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff810c        0x4 ./Generated_Code/LED2.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8110        0x4 ./Generated_Code/LED1.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8114        0x4 ./Generated_Code/IO9.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8118        0x4 ./Generated_Code/IO8.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff811c        0x4 ./Generated_Code/IO7.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8120        0x4 ./Generated_Code/IO6.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8124        0x4 ./Generated_Code/IO5.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8128        0x4 ./Generated_Code/IO4.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff812c        0x4 ./Generated_Code/IO3.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8130        0x4 ./Generated_Code/IO2.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8134        0x4 ./Generated_Code/IO12.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8138        0x4 ./Generated_Code/IO11.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff813c        0x4 ./Generated_Code/IO10.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8140        0x4 ./Generated_Code/IO1.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8144        0x4 ./Generated_Code/IMU_INT.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8148        0x4 ./Generated_Code/IMU_FSYNC.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff814c        0x4 ./Generated_Code/IMU_CS.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8150       0x18 ./Generated_Code/I2C0.o
+ .bss.INT_I2C0__DEFAULT_RTOS_ISRPARAM
+                0x1fff8168        0x4 ./Generated_Code/I2C0.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff816c        0x4 ./Generated_Code/ExtIntLdd1.o
+ .bss.INT_PORTC__DEFAULT_RTOS_ISRPARAM
+                0x1fff8170        0x4 ./Generated_Code/ExtIntLdd1.o
+ .bss.SR_lock   0x1fff8174        0x1 ./Generated_Code/Cpu.o
+                0x1fff8174                SR_lock
+ *fill*         0x1fff8175        0x3 00
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff8178        0x4 ./Generated_Code/BitIoLdd2.o
+ .bss.DeviceDataPrv__DEFAULT_RTOS_ALLOC
+                0x1fff817c        0x4 ./Generated_Code/BitIoLdd1.o
+ .bss.argv      0x1fff8180        0x4 ./Project_Settings/Startup_Code/__arm_start.o
+ .bss.outgoing_msg_buf
+                0x1fff8184       0x20 ./Sources/mpu_9250_driver.o
+ .bss.incoming_msg_buf
+                0x1fff81a4       0x20 ./Sources/mpu_9250_driver.o
+ .bss.mesh_tx_buf
+                0x1fff81c4       0x80 ./Sources/app_nrf24l01.o
+ .bss.mesh_rx_buf
+                0x1fff8244       0x80 ./Sources/app_nrf24l01.o
+ .bss.isr_flag  0x1fff82c4        0x1 ./Sources/app_nrf24l01.o
+ .bss.tx_in_progress
+                0x1fff82c5        0x1 ./Sources/app_nrf24l01.o
+ .bss.status_reg
+                0x1fff82c6        0x1 ./Sources/app_nrf24l01.o
+ *fill*         0x1fff82c7        0x1 00
+ .bss.tx_time_ms
+                0x1fff82c8        0x4 ./Sources/app_nrf24l01.o
+ .bss.rx_data_ready
+                0x1fff82cc        0x1 ./Sources/app_nrf24l01.o
+ *fill*         0x1fff82cd        0x3 00
+ .bss.rx_data_count
+                0x1fff82d0        0x4 ./Sources/app_nrf24l01.o
+ .bss.__stdio_exit
+                0x1fff82d4        0x4 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+                0x1fff82d4                __stdio_exit
+ .bss.__console_exit
+                0x1fff82d8        0x4 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+                0x1fff82d8                __console_exit
+ .bss.__global_destructor_chain
+                0x1fff82dc        0x4 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                0x1fff82dc                __global_destructor_chain
+ .bss.__S_romp  0x1fff82e0        0xc C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+ *(COMMON)
+ COMMON         0x1fff82ec        0x4 ./Generated_Code/SM1.o
+                0x1fff82ec                SMasterLdd1_DeviceDataPtr
+ COMMON         0x1fff82f0        0x1 ./Generated_Code/Cpu.o
+                0x1fff82f0                SR_reg
+ *fill*         0x1fff82f1        0x3 00
+ COMMON         0x1fff82f4        0x8 ./Sources/system_tick.o
+                0x1fff82f4                tick_250msec
+                0x1fff82f5                tick_1msec
+                0x1fff82f6                tick_500msec
+                0x1fff82f8                power_on_time_msec
+                0x1fff82fc                . = ALIGN (0x4)
+                0x1fff82fc                __END_BSS = .
+                0x1fff82fc                PROVIDE (__bss_end__, __END_BSS)
+                0x00004478                _romp_at = ((___ROM_AT + SIZEOF (.data)) + SIZEOF (.m_data_20000000))
+
+.romp           0x1fff82fc       0x24 load address 0x00004478
+                0x00004478                __S_romp = _romp_at
+                0x1fff82fc        0x4 LONG 0x444c ___ROM_AT
+                0x1fff8300        0x4 LONG 0x1fff8000 _sdata
+                0x1fff8304        0x4 LONG 0x2c ___data_size
+                0x1fff8308        0x4 LONG 0x4478 ___m_data_20000000_ROMStart
+                0x1fff830c        0x4 LONG 0x20000000 ___m_data_20000000_RAMStart
+                0x1fff8310        0x4 LONG 0x0 ___m_data_20000000_ROMSize
+                0x1fff8314        0x4 LONG 0x0
+                0x1fff8318        0x4 LONG 0x0
+                0x1fff831c        0x4 LONG 0x0
+
+._user_heap_stack
+                0x1fff8320      0x400 load address 0x0000449c
+                0x1fff8320                . = ALIGN (0x4)
+                0x1fff8320                PROVIDE (end, .)
+                0x1fff8320                PROVIDE (_end, .)
+                0x1fff8320                __heap_addr = .
+                0x1fff8320                . = (. + __heap_size)
+                0x1fff8720                . = (. + __stack_size)
+ *fill*         0x1fff8320      0x400 00
+                0x1fff8720                . = ALIGN (0x4)
+
+.ARM.attributes
+                0x00000000       0x33
+ *(.ARM.attributes)
+ .ARM.attributes
+                0x00000000       0x33 ./Generated_Code/tick_1ms_timer.o
+ .ARM.attributes
+                0x00000033       0x33 ./Generated_Code/WAIT1.o
+ .ARM.attributes
+                0x00000066       0x33 ./Generated_Code/Vectors.o
+ .ARM.attributes
+                0x00000099       0x33 ./Generated_Code/TU1.o
+ .ARM.attributes
+                0x000000cc       0x33 ./Generated_Code/SMasterLdd1.o
+ .ARM.attributes
+                0x000000ff       0x33 ./Generated_Code/SM1.o
+ .ARM.attributes
+                0x00000132       0x33 ./Generated_Code/RF1.o
+ .ARM.attributes
+                0x00000165       0x33 ./Generated_Code/PE_LDD.o
+ .ARM.attributes
+                0x00000198       0x33 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .ARM.attributes
+                0x000001cb       0x33 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .ARM.attributes
+                0x000001fe       0x33 ./Generated_Code/LED2.o
+ .ARM.attributes
+                0x00000231       0x33 ./Generated_Code/LED1.o
+ .ARM.attributes
+                0x00000264       0x33 ./Generated_Code/IRQ1.o
+ .ARM.attributes
+                0x00000297       0x33 ./Generated_Code/IO9.o
+ .ARM.attributes
+                0x000002ca       0x33 ./Generated_Code/IO8.o
+ .ARM.attributes
+                0x000002fd       0x33 ./Generated_Code/IO7.o
+ .ARM.attributes
+                0x00000330       0x33 ./Generated_Code/IO6.o
+ .ARM.attributes
+                0x00000363       0x33 ./Generated_Code/IO5.o
+ .ARM.attributes
+                0x00000396       0x33 ./Generated_Code/IO4.o
+ .ARM.attributes
+                0x000003c9       0x33 ./Generated_Code/IO3.o
+ .ARM.attributes
+                0x000003fc       0x33 ./Generated_Code/IO2.o
+ .ARM.attributes
+                0x0000042f       0x33 ./Generated_Code/IO12.o
+ .ARM.attributes
+                0x00000462       0x33 ./Generated_Code/IO11.o
+ .ARM.attributes
+                0x00000495       0x33 ./Generated_Code/IO10.o
+ .ARM.attributes
+                0x000004c8       0x33 ./Generated_Code/IO1.o
+ .ARM.attributes
+                0x000004fb       0x33 ./Generated_Code/IMU_INT.o
+ .ARM.attributes
+                0x0000052e       0x33 ./Generated_Code/IMU_FSYNC.o
+ .ARM.attributes
+                0x00000561       0x33 ./Generated_Code/IMU_CS.o
+ .ARM.attributes
+                0x00000594       0x33 ./Generated_Code/I2C0.o
+ .ARM.attributes
+                0x000005c7       0x33 ./Generated_Code/ExtIntLdd1.o
+ .ARM.attributes
+                0x000005fa       0x33 ./Generated_Code/Cpu.o
+ .ARM.attributes
+                0x0000062d       0x33 ./Generated_Code/BitIoLdd2.o
+ .ARM.attributes
+                0x00000660       0x33 ./Generated_Code/BitIoLdd1.o
+ .ARM.attributes
+                0x00000693       0x33 ./Project_Settings/Startup_Code/__arm_start.o
+ .ARM.attributes
+                0x000006c6       0x33 ./Project_Settings/Startup_Code/__arm_end.o
+ .ARM.attributes
+                0x000006f9       0x33 ./Sources/system_tick.o
+ .ARM.attributes
+                0x0000072c       0x33 ./Sources/mpu_9250_driver.o
+ .ARM.attributes
+                0x0000075f       0x33 ./Sources/main.o
+ .ARM.attributes
+                0x00000792       0x33 ./Sources/led_driver_pca9552.o
+ .ARM.attributes
+                0x000007c5       0x33 ./Sources/app_nrf24l01.o
+ .ARM.attributes
+                0x000007f8       0x33 ./Sources/Events.o
+ .ARM.attributes
+                0x0000082b       0x33 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .ARM.attributes
+                0x0000085e       0x33 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .ARM.attributes
+                0x00000891       0x33 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .ARM.attributes
+                0x000008c4       0x33 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .ARM.attributes
+                0x000008f7       0x33 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .ARM.attributes
+                0x0000092a       0x33 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+OUTPUT(clay_g5_demo_gpio.elf elf32-littlearm)
+
+.debug_info     0x00000000     0xa6f7
+ .debug_info    0x00000000      0x179 ./Generated_Code/tick_1ms_timer.o
+ .debug_info    0x00000179      0x135 ./Generated_Code/WAIT1.o
+ .debug_info    0x000002ae      0x105 ./Generated_Code/Vectors.o
+ .debug_info    0x000003b3      0x6be ./Generated_Code/TU1.o
+ .debug_info    0x00000a71      0x8db ./Generated_Code/SMasterLdd1.o
+ .debug_info    0x0000134c      0x586 ./Generated_Code/SM1.o
+ .debug_info    0x000018d2      0x7f1 ./Generated_Code/RF1.o
+ .debug_info    0x000020c3      0x24e ./Generated_Code/PE_LDD.o
+ .debug_info    0x00002311      0x36b ./Generated_Code/LED_DRIVER_1_RESET.o
+ .debug_info    0x0000267c      0x36b ./Generated_Code/LED_DRIVER_0_RESET.o
+ .debug_info    0x000029e7      0x36b ./Generated_Code/LED2.o
+ .debug_info    0x00002d52      0x36b ./Generated_Code/LED1.o
+ .debug_info    0x000030bd       0xa7 ./Generated_Code/IRQ1.o
+ .debug_info    0x00003164      0x3cd ./Generated_Code/IO9.o
+ .debug_info    0x00003531      0x3cd ./Generated_Code/IO8.o
+ .debug_info    0x000038fe      0x3cd ./Generated_Code/IO7.o
+ .debug_info    0x00003ccb      0x3cd ./Generated_Code/IO6.o
+ .debug_info    0x00004098      0x3cd ./Generated_Code/IO5.o
+ .debug_info    0x00004465      0x3cd ./Generated_Code/IO4.o
+ .debug_info    0x00004832      0x3cd ./Generated_Code/IO3.o
+ .debug_info    0x00004bff      0x3cd ./Generated_Code/IO2.o
+ .debug_info    0x00004fcc      0x3cd ./Generated_Code/IO12.o
+ .debug_info    0x00005399      0x3cd ./Generated_Code/IO11.o
+ .debug_info    0x00005766      0x3cd ./Generated_Code/IO10.o
+ .debug_info    0x00005b33      0x3cd ./Generated_Code/IO1.o
+ .debug_info    0x00005f00      0x2e5 ./Generated_Code/IMU_INT.o
+ .debug_info    0x000061e5      0x36b ./Generated_Code/IMU_FSYNC.o
+ .debug_info    0x00006550      0x36b ./Generated_Code/IMU_CS.o
+ .debug_info    0x000068bb      0x8fb ./Generated_Code/I2C0.o
+ .debug_info    0x000071b6      0x46a ./Generated_Code/ExtIntLdd1.o
+ .debug_info    0x00007620      0xc1b ./Generated_Code/Cpu.o
+ .debug_info    0x0000823b      0x36b ./Generated_Code/BitIoLdd2.o
+ .debug_info    0x000085a6      0x36b ./Generated_Code/BitIoLdd1.o
+ .debug_info    0x00008911      0x12a ./Project_Settings/Startup_Code/__arm_start.o
+ .debug_info    0x00008a3b       0x54 ./Project_Settings/Startup_Code/__arm_end.o
+ .debug_info    0x00008a8f      0x130 ./Sources/system_tick.o
+ .debug_info    0x00008bbf      0x5d7 ./Sources/mpu_9250_driver.o
+ .debug_info    0x00009196      0x347 ./Sources/main.o
+ .debug_info    0x000094dd      0x52b ./Sources/led_driver_pca9552.o
+ .debug_info    0x00009a08      0x314 ./Sources/app_nrf24l01.o
+ .debug_info    0x00009d1c      0x14d ./Sources/Events.o
+ .debug_info    0x00009e69       0xe8 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .debug_info    0x00009f51       0xec C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .debug_info    0x0000a03d      0x135 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_info    0x0000a172      0x136 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_info    0x0000a2a8      0x2b5 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_info    0x0000a55d      0x19a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+
+.debug_abbrev   0x00000000     0x33c7
+ .debug_abbrev  0x00000000       0xd2 ./Generated_Code/tick_1ms_timer.o
+ .debug_abbrev  0x000000d2       0xa3 ./Generated_Code/WAIT1.o
+ .debug_abbrev  0x00000175       0xa3 ./Generated_Code/Vectors.o
+ .debug_abbrev  0x00000218      0x141 ./Generated_Code/TU1.o
+ .debug_abbrev  0x00000359      0x1a8 ./Generated_Code/SMasterLdd1.o
+ .debug_abbrev  0x00000501      0x196 ./Generated_Code/SM1.o
+ .debug_abbrev  0x00000697      0x16e ./Generated_Code/RF1.o
+ .debug_abbrev  0x00000805      0x102 ./Generated_Code/PE_LDD.o
+ .debug_abbrev  0x00000907      0x12b ./Generated_Code/LED_DRIVER_1_RESET.o
+ .debug_abbrev  0x00000a32      0x12b ./Generated_Code/LED_DRIVER_0_RESET.o
+ .debug_abbrev  0x00000b5d      0x12b ./Generated_Code/LED2.o
+ .debug_abbrev  0x00000c88      0x12b ./Generated_Code/LED1.o
+ .debug_abbrev  0x00000db3       0x60 ./Generated_Code/IRQ1.o
+ .debug_abbrev  0x00000e13      0x151 ./Generated_Code/IO9.o
+ .debug_abbrev  0x00000f64      0x151 ./Generated_Code/IO8.o
+ .debug_abbrev  0x000010b5      0x151 ./Generated_Code/IO7.o
+ .debug_abbrev  0x00001206      0x151 ./Generated_Code/IO6.o
+ .debug_abbrev  0x00001357      0x151 ./Generated_Code/IO5.o
+ .debug_abbrev  0x000014a8      0x151 ./Generated_Code/IO4.o
+ .debug_abbrev  0x000015f9      0x151 ./Generated_Code/IO3.o
+ .debug_abbrev  0x0000174a      0x151 ./Generated_Code/IO2.o
+ .debug_abbrev  0x0000189b      0x151 ./Generated_Code/IO12.o
+ .debug_abbrev  0x000019ec      0x151 ./Generated_Code/IO11.o
+ .debug_abbrev  0x00001b3d      0x151 ./Generated_Code/IO10.o
+ .debug_abbrev  0x00001c8e      0x151 ./Generated_Code/IO1.o
+ .debug_abbrev  0x00001ddf      0x105 ./Generated_Code/IMU_INT.o
+ .debug_abbrev  0x00001ee4      0x12b ./Generated_Code/IMU_FSYNC.o
+ .debug_abbrev  0x0000200f      0x12b ./Generated_Code/IMU_CS.o
+ .debug_abbrev  0x0000213a      0x173 ./Generated_Code/I2C0.o
+ .debug_abbrev  0x000022ad      0x134 ./Generated_Code/ExtIntLdd1.o
+ .debug_abbrev  0x000023e1      0x15d ./Generated_Code/Cpu.o
+ .debug_abbrev  0x0000253e      0x12b ./Generated_Code/BitIoLdd2.o
+ .debug_abbrev  0x00002669      0x12b ./Generated_Code/BitIoLdd1.o
+ .debug_abbrev  0x00002794       0x92 ./Project_Settings/Startup_Code/__arm_start.o
+ .debug_abbrev  0x00002826       0x4c ./Project_Settings/Startup_Code/__arm_end.o
+ .debug_abbrev  0x00002872       0x8e ./Sources/system_tick.o
+ .debug_abbrev  0x00002900      0x127 ./Sources/mpu_9250_driver.o
+ .debug_abbrev  0x00002a27      0x14c ./Sources/main.o
+ .debug_abbrev  0x00002b73      0x192 ./Sources/led_driver_pca9552.o
+ .debug_abbrev  0x00002d05      0x14c ./Sources/app_nrf24l01.o
+ .debug_abbrev  0x00002e51       0x77 ./Sources/Events.o
+ .debug_abbrev  0x00002ec8       0x7a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .debug_abbrev  0x00002f42       0x62 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .debug_abbrev  0x00002fa4       0x87 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_abbrev  0x0000302b       0x99 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_abbrev  0x000030c4      0x1cc C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_abbrev  0x00003290      0x137 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+
+.debug_loc      0x00000000     0x38ee
+ .debug_loc     0x00000000       0x70 ./Generated_Code/tick_1ms_timer.o
+ .debug_loc     0x00000070       0xa8 ./Generated_Code/WAIT1.o
+ .debug_loc     0x00000118       0x70 ./Generated_Code/TU1.o
+ .debug_loc     0x00000188       0xe0 ./Generated_Code/SMasterLdd1.o
+ .debug_loc     0x00000268      0x2ec ./Generated_Code/SM1.o
+ .debug_loc     0x00000554      0x7c4 ./Generated_Code/RF1.o
+ .debug_loc     0x00000d18       0x9c ./Generated_Code/PE_LDD.o
+ .debug_loc     0x00000db4      0x118 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .debug_loc     0x00000ecc      0x118 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .debug_loc     0x00000fe4      0x118 ./Generated_Code/LED2.o
+ .debug_loc     0x000010fc      0x118 ./Generated_Code/LED1.o
+ .debug_loc     0x00001214       0x38 ./Generated_Code/IRQ1.o
+ .debug_loc     0x0000124c      0x188 ./Generated_Code/IO9.o
+ .debug_loc     0x000013d4      0x188 ./Generated_Code/IO8.o
+ .debug_loc     0x0000155c      0x188 ./Generated_Code/IO7.o
+ .debug_loc     0x000016e4      0x188 ./Generated_Code/IO6.o
+ .debug_loc     0x0000186c      0x188 ./Generated_Code/IO5.o
+ .debug_loc     0x000019f4      0x188 ./Generated_Code/IO4.o
+ .debug_loc     0x00001b7c      0x188 ./Generated_Code/IO3.o
+ .debug_loc     0x00001d04      0x188 ./Generated_Code/IO2.o
+ .debug_loc     0x00001e8c      0x188 ./Generated_Code/IO12.o
+ .debug_loc     0x00002014      0x188 ./Generated_Code/IO11.o
+ .debug_loc     0x0000219c      0x188 ./Generated_Code/IO10.o
+ .debug_loc     0x00002324      0x188 ./Generated_Code/IO1.o
+ .debug_loc     0x000024ac       0x70 ./Generated_Code/IMU_INT.o
+ .debug_loc     0x0000251c      0x118 ./Generated_Code/IMU_FSYNC.o
+ .debug_loc     0x00002634      0x118 ./Generated_Code/IMU_CS.o
+ .debug_loc     0x0000274c      0x118 ./Generated_Code/I2C0.o
+ .debug_loc     0x00002864       0xa8 ./Generated_Code/ExtIntLdd1.o
+ .debug_loc     0x0000290c       0xe8 ./Generated_Code/Cpu.o
+ .debug_loc     0x000029f4      0x118 ./Generated_Code/BitIoLdd2.o
+ .debug_loc     0x00002b0c      0x118 ./Generated_Code/BitIoLdd1.o
+ .debug_loc     0x00002c24       0x2c ./Project_Settings/Startup_Code/__arm_start.o
+ .debug_loc     0x00002c50       0x38 ./Project_Settings/Startup_Code/__arm_end.o
+ .debug_loc     0x00002c88       0x90 ./Sources/system_tick.o
+ .debug_loc     0x00002d18      0x33c ./Sources/mpu_9250_driver.o
+ .debug_loc     0x00003054       0x72 ./Sources/main.o
+ .debug_loc     0x000030c6       0xe0 ./Sources/led_driver_pca9552.o
+ .debug_loc     0x000031a6      0x1a8 ./Sources/app_nrf24l01.o
+ .debug_loc     0x0000334e      0x138 ./Sources/Events.o
+ .debug_loc     0x00003486       0x3e C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .debug_loc     0x000034c4       0x64 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .debug_loc     0x00003528      0x12c C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_loc     0x00003654       0x9d C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_loc     0x000036f1      0x144 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_loc     0x00003835       0xb9 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+
+.debug_aranges  0x00000000      0xcb0
+ .debug_aranges
+                0x00000000       0x28 ./Generated_Code/tick_1ms_timer.o
+ .debug_aranges
+                0x00000028       0x40 ./Generated_Code/WAIT1.o
+ .debug_aranges
+                0x00000068       0x18 ./Generated_Code/Vectors.o
+ .debug_aranges
+                0x00000080       0x28 ./Generated_Code/TU1.o
+ .debug_aranges
+                0x000000a8       0x38 ./Generated_Code/SMasterLdd1.o
+ .debug_aranges
+                0x000000e0       0x88 ./Generated_Code/SM1.o
+ .debug_aranges
+                0x00000168      0x140 ./Generated_Code/RF1.o
+ .debug_aranges
+                0x000002a8       0x30 ./Generated_Code/PE_LDD.o
+ .debug_aranges
+                0x000002d8       0x40 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .debug_aranges
+                0x00000318       0x40 ./Generated_Code/LED_DRIVER_0_RESET.o
+ .debug_aranges
+                0x00000358       0x40 ./Generated_Code/LED2.o
+ .debug_aranges
+                0x00000398       0x40 ./Generated_Code/LED1.o
+ .debug_aranges
+                0x000003d8       0x20 ./Generated_Code/IRQ1.o
+ .debug_aranges
+                0x000003f8       0x50 ./Generated_Code/IO9.o
+ .debug_aranges
+                0x00000448       0x50 ./Generated_Code/IO8.o
+ .debug_aranges
+                0x00000498       0x50 ./Generated_Code/IO7.o
+ .debug_aranges
+                0x000004e8       0x50 ./Generated_Code/IO6.o
+ .debug_aranges
+                0x00000538       0x50 ./Generated_Code/IO5.o
+ .debug_aranges
+                0x00000588       0x50 ./Generated_Code/IO4.o
+ .debug_aranges
+                0x000005d8       0x50 ./Generated_Code/IO3.o
+ .debug_aranges
+                0x00000628       0x50 ./Generated_Code/IO2.o
+ .debug_aranges
+                0x00000678       0x50 ./Generated_Code/IO12.o
+ .debug_aranges
+                0x000006c8       0x50 ./Generated_Code/IO11.o
+ .debug_aranges
+                0x00000718       0x50 ./Generated_Code/IO10.o
+ .debug_aranges
+                0x00000768       0x50 ./Generated_Code/IO1.o
+ .debug_aranges
+                0x000007b8       0x28 ./Generated_Code/IMU_INT.o
+ .debug_aranges
+                0x000007e0       0x40 ./Generated_Code/IMU_FSYNC.o
+ .debug_aranges
+                0x00000820       0x40 ./Generated_Code/IMU_CS.o
+ .debug_aranges
+                0x00000860       0x40 ./Generated_Code/I2C0.o
+ .debug_aranges
+                0x000008a0       0x30 ./Generated_Code/ExtIntLdd1.o
+ .debug_aranges
+                0x000008d0       0x40 ./Generated_Code/Cpu.o
+ .debug_aranges
+                0x00000910       0x40 ./Generated_Code/BitIoLdd2.o
+ .debug_aranges
+                0x00000950       0x40 ./Generated_Code/BitIoLdd1.o
+ .debug_aranges
+                0x00000990       0x30 ./Project_Settings/Startup_Code/__arm_start.o
+ .debug_aranges
+                0x000009c0       0x20 ./Project_Settings/Startup_Code/__arm_end.o
+ .debug_aranges
+                0x000009e0       0x30 ./Sources/system_tick.o
+ .debug_aranges
+                0x00000a10       0x90 ./Sources/mpu_9250_driver.o
+ .debug_aranges
+                0x00000aa0       0x28 ./Sources/main.o
+ .debug_aranges
+                0x00000ac8       0x38 ./Sources/led_driver_pca9552.o
+ .debug_aranges
+                0x00000b00       0x58 ./Sources/app_nrf24l01.o
+ .debug_aranges
+                0x00000b58       0x48 ./Sources/Events.o
+ .debug_aranges
+                0x00000ba0       0x20 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .debug_aranges
+                0x00000bc0       0x20 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .debug_aranges
+                0x00000be0       0x20 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_aranges
+                0x00000c00       0x28 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_aranges
+                0x00000c28       0x58 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_aranges
+                0x00000c80       0x30 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+
+.debug_macinfo  0x00000000   0xe52726
+ .debug_macinfo
+                0x00000000    0x70714 ./Generated_Code/tick_1ms_timer.o
+ .debug_macinfo
+                0x00070714    0x591b9 ./Generated_Code/WAIT1.o
+ .debug_macinfo
+                0x000c98cd    0x70724 ./Generated_Code/Vectors.o
+ .debug_macinfo
+                0x00139ff1    0x625c3 ./Generated_Code/TU1.o
+ .debug_macinfo
+                0x0019c5b4    0x5eec8 ./Generated_Code/SMasterLdd1.o
+ .debug_macinfo
+                0x001fb47c    0x5eeed ./Generated_Code/SM1.o
+ .debug_macinfo
+                0x0025a369    0x709b1 ./Generated_Code/RF1.o
+ .debug_macinfo
+                0x002cad1a    0x70694 ./Generated_Code/PE_LDD.o
+ .debug_macinfo
+                0x0033b3ae    0x59e38 ./Generated_Code/LED_DRIVER_1_RESET.o
+ .debug_macinfo
+                0x003951e6    0x59e3a ./Generated_Code/LED_DRIVER_0_RESET.o
+ .debug_macinfo
+                0x003ef020    0x59d90 ./Generated_Code/LED2.o
+ .debug_macinfo
+                0x00448db0    0x59d90 ./Generated_Code/LED1.o
+ .debug_macinfo
+                0x004a2b40    0x6513b ./Generated_Code/IRQ1.o
+ .debug_macinfo
+                0x00507c7b    0x59dc0 ./Generated_Code/IO9.o
+ .debug_macinfo
+                0x00561a3b    0x59dc0 ./Generated_Code/IO8.o
+ .debug_macinfo
+                0x005bb7fb    0x59dc0 ./Generated_Code/IO7.o
+ .debug_macinfo
+                0x006155bb    0x59dc2 ./Generated_Code/IO6.o
+ .debug_macinfo
+                0x0066f37d    0x59dc2 ./Generated_Code/IO5.o
+ .debug_macinfo
+                0x006c913f    0x59dc0 ./Generated_Code/IO4.o
+ .debug_macinfo
+                0x00722eff    0x59dc0 ./Generated_Code/IO3.o
+ .debug_macinfo
+                0x0077ccbf    0x59dc0 ./Generated_Code/IO2.o
+ .debug_macinfo
+                0x007d6a7f    0x59dce ./Generated_Code/IO12.o
+ .debug_macinfo
+                0x0083084d    0x59dce ./Generated_Code/IO11.o
+ .debug_macinfo
+                0x0088a61b    0x59dce ./Generated_Code/IO10.o
+ .debug_macinfo
+                0x008e43e9    0x59dc0 ./Generated_Code/IO1.o
+ .debug_macinfo
+                0x0093e1a9    0x59d53 ./Generated_Code/IMU_INT.o
+ .debug_macinfo
+                0x00997efc    0x59dce ./Generated_Code/IMU_FSYNC.o
+ .debug_macinfo
+                0x009f1cca    0x59da8 ./Generated_Code/IMU_CS.o
+ .debug_macinfo
+                0x00a4ba72    0x73998 ./Generated_Code/I2C0.o
+ .debug_macinfo
+                0x00abf40a    0x5d4a1 ./Generated_Code/ExtIntLdd1.o
+ .debug_macinfo
+                0x00b1c8ab    0x70724 ./Generated_Code/Cpu.o
+ .debug_macinfo
+                0x00b8cfcf    0x59dcc ./Generated_Code/BitIoLdd2.o
+ .debug_macinfo
+                0x00be6d9b    0x59dcc ./Generated_Code/BitIoLdd1.o
+ .debug_macinfo
+                0x00c40b67     0x3f82 ./Project_Settings/Startup_Code/__arm_start.o
+ .debug_macinfo
+                0x00c44ae9     0x356b ./Project_Settings/Startup_Code/__arm_end.o
+ .debug_macinfo
+                0x00c48054     0xba28 ./Sources/system_tick.o
+ .debug_macinfo
+                0x00c53a7c    0x5bab4 ./Sources/mpu_9250_driver.o
+ .debug_macinfo
+                0x00caf530    0x7347e ./Sources/main.o
+ .debug_macinfo
+                0x00d229ae    0x5a288 ./Sources/led_driver_pca9552.o
+ .debug_macinfo
+                0x00d7cc36    0x652ba ./Sources/app_nrf24l01.o
+ .debug_macinfo
+                0x00de1ef0    0x70836 ./Sources/Events.o
+
+.debug_line     0x00000000     0x9c42
+ .debug_line    0x00000000      0x536 ./Generated_Code/tick_1ms_timer.o
+ .debug_line    0x00000536      0x292 ./Generated_Code/WAIT1.o
+ .debug_line    0x000007c8      0x69f ./Generated_Code/Vectors.o
+ .debug_line    0x00000e67      0x2fa ./Generated_Code/TU1.o
+ .debug_line    0x00001161      0x34c ./Generated_Code/SMasterLdd1.o
+ .debug_line    0x000014ad      0x44a ./Generated_Code/SM1.o
+ .debug_line    0x000018f7      0x822 ./Generated_Code/RF1.o
+ .debug_line    0x00002119      0x484 ./Generated_Code/PE_LDD.o
+ .debug_line    0x0000259d      0x31a ./Generated_Code/LED_DRIVER_1_RESET.o
+ .debug_line    0x000028b7      0x31a ./Generated_Code/LED_DRIVER_0_RESET.o
+ .debug_line    0x00002bd1      0x2fe ./Generated_Code/LED2.o
+ .debug_line    0x00002ecf      0x2fe ./Generated_Code/LED1.o
+ .debug_line    0x000031cd      0x337 ./Generated_Code/IRQ1.o
+ .debug_line    0x00003504      0x324 ./Generated_Code/IO9.o
+ .debug_line    0x00003828      0x324 ./Generated_Code/IO8.o
+ .debug_line    0x00003b4c      0x324 ./Generated_Code/IO7.o
+ .debug_line    0x00003e70      0x324 ./Generated_Code/IO6.o
+ .debug_line    0x00004194      0x324 ./Generated_Code/IO5.o
+ .debug_line    0x000044b8      0x324 ./Generated_Code/IO4.o
+ .debug_line    0x000047dc      0x324 ./Generated_Code/IO3.o
+ .debug_line    0x00004b00      0x324 ./Generated_Code/IO2.o
+ .debug_line    0x00004e24      0x326 ./Generated_Code/IO12.o
+ .debug_line    0x0000514a      0x326 ./Generated_Code/IO11.o
+ .debug_line    0x00005470      0x326 ./Generated_Code/IO10.o
+ .debug_line    0x00005796      0x324 ./Generated_Code/IO1.o
+ .debug_line    0x00005aba      0x2cb ./Generated_Code/IMU_INT.o
+ .debug_line    0x00005d85      0x308 ./Generated_Code/IMU_FSYNC.o
+ .debug_line    0x0000608d      0x302 ./Generated_Code/IMU_CS.o
+ .debug_line    0x0000638f      0x61d ./Generated_Code/I2C0.o
+ .debug_line    0x000069ac      0x301 ./Generated_Code/ExtIntLdd1.o
+ .debug_line    0x00006cad      0x73e ./Generated_Code/Cpu.o
+ .debug_line    0x000073eb      0x308 ./Generated_Code/BitIoLdd2.o
+ .debug_line    0x000076f3      0x308 ./Generated_Code/BitIoLdd1.o
+ .debug_line    0x000079fb      0x2bf ./Project_Settings/Startup_Code/__arm_start.o
+ .debug_line    0x00007cba      0x26d ./Project_Settings/Startup_Code/__arm_end.o
+ .debug_line    0x00007f27      0x21a ./Sources/system_tick.o
+ .debug_line    0x00008141      0x3e6 ./Sources/mpu_9250_driver.o
+ .debug_line    0x00008527      0x58c ./Sources/main.o
+ .debug_line    0x00008ab3      0x3dc ./Sources/led_driver_pca9552.o
+ .debug_line    0x00008e8f      0x484 ./Sources/app_nrf24l01.o
+ .debug_line    0x00009313      0x51e ./Sources/Events.o
+ .debug_line    0x00009831       0x94 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .debug_line    0x000098c5       0x8f C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .debug_line    0x00009954       0xcd C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_line    0x00009a21       0x67 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_line    0x00009a88      0x111 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_line    0x00009b99       0xa9 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+
+.debug_str      0x00000000     0x2a9a
+ .debug_str     0x00000000      0x1f6 ./Generated_Code/tick_1ms_timer.o
+                                0x222 (size before relaxing)
+ .debug_str     0x000001f6       0x96 ./Generated_Code/WAIT1.o
+                                0x1c1 (size before relaxing)
+ .debug_str     0x0000028c       0x55 ./Generated_Code/Vectors.o
+                                0x189 (size before relaxing)
+ .debug_str     0x000002e1      0x261 ./Generated_Code/TU1.o
+                                0x40a (size before relaxing)
+ .debug_str     0x00000542      0x233 ./Generated_Code/SMasterLdd1.o
+                                0x525 (size before relaxing)
+ .debug_str     0x00000775      0x1e3 ./Generated_Code/SM1.o
+                                0x37e (size before relaxing)
+ .debug_str     0x00000958      0x335 ./Generated_Code/RF1.o
+                                0x4b0 (size before relaxing)
+ .debug_str     0x00000c8d      0x172 ./Generated_Code/PE_LDD.o
+                                0x2ec (size before relaxing)
+ .debug_str     0x00000dff      0x12a ./Generated_Code/LED_DRIVER_1_RESET.o
+                                0x33a (size before relaxing)
+ .debug_str     0x00000f29       0xe8 ./Generated_Code/LED_DRIVER_0_RESET.o
+                                0x33a (size before relaxing)
+ .debug_str     0x00001011       0x78 ./Generated_Code/LED2.o
+                                0x2ca (size before relaxing)
+ .debug_str     0x00001089       0x78 ./Generated_Code/LED1.o
+                                0x2ca (size before relaxing)
+ .debug_str     0x00001101       0x30 ./Generated_Code/IRQ1.o
+                                0x175 (size before relaxing)
+ .debug_str     0x00001131       0x88 ./Generated_Code/IO9.o
+                                0x2da (size before relaxing)
+ .debug_str     0x000011b9       0x88 ./Generated_Code/IO8.o
+                                0x2da (size before relaxing)
+ .debug_str     0x00001241       0x88 ./Generated_Code/IO7.o
+                                0x2da (size before relaxing)
+ .debug_str     0x000012c9       0x88 ./Generated_Code/IO6.o
+                                0x2da (size before relaxing)
+ .debug_str     0x00001351       0x88 ./Generated_Code/IO5.o
+                                0x2da (size before relaxing)
+ .debug_str     0x000013d9       0x88 ./Generated_Code/IO4.o
+                                0x2da (size before relaxing)
+ .debug_str     0x00001461       0x88 ./Generated_Code/IO3.o
+                                0x2da (size before relaxing)
+ .debug_str     0x000014e9       0x88 ./Generated_Code/IO2.o
+                                0x2da (size before relaxing)
+ .debug_str     0x00001571       0x92 ./Generated_Code/IO12.o
+                                0x2e4 (size before relaxing)
+ .debug_str     0x00001603       0x92 ./Generated_Code/IO11.o
+                                0x2e4 (size before relaxing)
+ .debug_str     0x00001695       0x92 ./Generated_Code/IO10.o
+                                0x2e4 (size before relaxing)
+ .debug_str     0x00001727       0x88 ./Generated_Code/IO1.o
+                                0x2da (size before relaxing)
+ .debug_str     0x000017af       0x63 ./Generated_Code/IMU_INT.o
+                                0x2b5 (size before relaxing)
+ .debug_str     0x00001812       0xa0 ./Generated_Code/IMU_FSYNC.o
+                                0x2f2 (size before relaxing)
+ .debug_str     0x000018b2       0x88 ./Generated_Code/IMU_CS.o
+                                0x2da (size before relaxing)
+ .debug_str     0x0000193a      0x1ca ./Generated_Code/I2C0.o
+                                0x553 (size before relaxing)
+ .debug_str     0x00001b04       0xa8 ./Generated_Code/ExtIntLdd1.o
+                                0x35f (size before relaxing)
+ .debug_str     0x00001bac      0x23a ./Generated_Code/Cpu.o
+                                0x54d (size before relaxing)
+ .debug_str     0x00001de6       0xa0 ./Generated_Code/BitIoLdd2.o
+                                0x2f2 (size before relaxing)
+ .debug_str     0x00001e86       0xa0 ./Generated_Code/BitIoLdd1.o
+                                0x2f2 (size before relaxing)
+ .debug_str     0x00001f26       0x85 ./Project_Settings/Startup_Code/__arm_start.o
+                                0x1b7 (size before relaxing)
+ .debug_str     0x00001fab       0x3a ./Project_Settings/Startup_Code/__arm_end.o
+                                 0xee (size before relaxing)
+ .debug_str     0x00001fe5       0x6f ./Sources/system_tick.o
+                                0x1aa (size before relaxing)
+ .debug_str     0x00002054      0x22d ./Sources/mpu_9250_driver.o
+                                0x478 (size before relaxing)
+ .debug_str     0x00002281       0xeb ./Sources/main.o
+                                0x310 (size before relaxing)
+ .debug_str     0x0000236c      0x1e8 ./Sources/led_driver_pca9552.o
+                                0x49e (size before relaxing)
+ .debug_str     0x00002554      0x15f ./Sources/app_nrf24l01.o
+                                0x2f5 (size before relaxing)
+ .debug_str     0x000026b3       0x98 ./Sources/Events.o
+                                0x1dd (size before relaxing)
+ .debug_str     0x0000274b       0x5a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+                                0x157 (size before relaxing)
+ .debug_str     0x000027a5       0x23 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+                                0x140 (size before relaxing)
+ .debug_str     0x000027c8       0x2d C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+                                0x152 (size before relaxing)
+ .debug_str     0x000027f5      0x126 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+                                0x181 (size before relaxing)
+ .debug_str     0x0000291b       0xe9 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+                                0x1b5 (size before relaxing)
+ .debug_str     0x00002a04       0x96 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+                                0x13c (size before relaxing)
+
+.comment        0x00000000       0x79
+ .comment       0x00000000       0x79 ./Generated_Code/tick_1ms_timer.o
+                                 0x7a (size before relaxing)
+ .comment       0x00000000       0x7a ./Generated_Code/WAIT1.o
+ .comment       0x00000000       0x7a ./Generated_Code/Vectors.o
+ .comment       0x00000000       0x7a ./Generated_Code/TU1.o
+ .comment       0x00000000       0x7a ./Generated_Code/SMasterLdd1.o
+ .comment       0x00000000       0x7a ./Generated_Code/SM1.o
+ .comment       0x00000000       0x7a ./Generated_Code/RF1.o
+ .comment       0x00000000       0x7a ./Generated_Code/PE_LDD.o
+ .comment       0x00000000       0x7a ./Generated_Code/LED_DRIVER_1_RESET.o
+ .comment       0x00000000       0x7a ./Generated_Code/LED_DRIVER_0_RESET.o
+ .comment       0x00000000       0x7a ./Generated_Code/LED2.o
+ .comment       0x00000000       0x7a ./Generated_Code/LED1.o
+ .comment       0x00000000       0x7a ./Generated_Code/IRQ1.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO9.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO8.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO7.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO6.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO5.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO4.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO3.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO2.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO12.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO11.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO10.o
+ .comment       0x00000000       0x7a ./Generated_Code/IO1.o
+ .comment       0x00000000       0x7a ./Generated_Code/IMU_INT.o
+ .comment       0x00000000       0x7a ./Generated_Code/IMU_FSYNC.o
+ .comment       0x00000000       0x7a ./Generated_Code/IMU_CS.o
+ .comment       0x00000000       0x7a ./Generated_Code/I2C0.o
+ .comment       0x00000000       0x7a ./Generated_Code/ExtIntLdd1.o
+ .comment       0x00000000       0x7a ./Generated_Code/Cpu.o
+ .comment       0x00000000       0x7a ./Generated_Code/BitIoLdd2.o
+ .comment       0x00000000       0x7a ./Generated_Code/BitIoLdd1.o
+ .comment       0x00000000       0x7a ./Project_Settings/Startup_Code/__arm_start.o
+ .comment       0x00000000       0x7a ./Project_Settings/Startup_Code/__arm_end.o
+ .comment       0x00000000       0x7a ./Sources/system_tick.o
+ .comment       0x00000000       0x7a ./Sources/mpu_9250_driver.o
+ .comment       0x00000000       0x7a ./Sources/main.o
+ .comment       0x00000000       0x7a ./Sources/led_driver_pca9552.o
+ .comment       0x00000000       0x7a ./Sources/app_nrf24l01.o
+ .comment       0x00000000       0x7a ./Sources/Events.o
+ .comment       0x00000000       0x7a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .comment       0x00000000       0x7a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .comment       0x00000000       0x7a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .comment       0x00000000       0x7a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .comment       0x00000000       0x7a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .comment       0x00000000       0x7a C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
+
+.debug_frame    0x00000000     0x2060
+ .debug_frame   0x00000000       0x50 ./Generated_Code/tick_1ms_timer.o
+ .debug_frame   0x00000050       0x90 ./Generated_Code/WAIT1.o
+ .debug_frame   0x000000e0       0x50 ./Generated_Code/TU1.o
+ .debug_frame   0x00000130       0x88 ./Generated_Code/SMasterLdd1.o
+ .debug_frame   0x000001b8      0x1ac ./Generated_Code/SM1.o
+ .debug_frame   0x00000364      0x48c ./Generated_Code/RF1.o
+ .debug_frame   0x000007f0       0x64 ./Generated_Code/PE_LDD.o
+ .debug_frame   0x00000854       0x9c ./Generated_Code/LED_DRIVER_1_RESET.o
+ .debug_frame   0x000008f0       0x9c ./Generated_Code/LED_DRIVER_0_RESET.o
+ .debug_frame   0x0000098c       0x9c ./Generated_Code/LED2.o
+ .debug_frame   0x00000a28       0x9c ./Generated_Code/LED1.o
+ .debug_frame   0x00000ac4       0x30 ./Generated_Code/IRQ1.o
+ .debug_frame   0x00000af4       0xd4 ./Generated_Code/IO9.o
+ .debug_frame   0x00000bc8       0xd4 ./Generated_Code/IO8.o
+ .debug_frame   0x00000c9c       0xd4 ./Generated_Code/IO7.o
+ .debug_frame   0x00000d70       0xd4 ./Generated_Code/IO6.o
+ .debug_frame   0x00000e44       0xd4 ./Generated_Code/IO5.o
+ .debug_frame   0x00000f18       0xd4 ./Generated_Code/IO4.o
+ .debug_frame   0x00000fec       0xd4 ./Generated_Code/IO3.o
+ .debug_frame   0x000010c0       0xd4 ./Generated_Code/IO2.o
+ .debug_frame   0x00001194       0xd4 ./Generated_Code/IO12.o
+ .debug_frame   0x00001268       0xd4 ./Generated_Code/IO11.o
+ .debug_frame   0x0000133c       0xd4 ./Generated_Code/IO10.o
+ .debug_frame   0x00001410       0xd4 ./Generated_Code/IO1.o
+ .debug_frame   0x000014e4       0x48 ./Generated_Code/IMU_INT.o
+ .debug_frame   0x0000152c       0x9c ./Generated_Code/IMU_FSYNC.o
+ .debug_frame   0x000015c8       0x9c ./Generated_Code/IMU_CS.o
+ .debug_frame   0x00001664       0xa8 ./Generated_Code/I2C0.o
+ .debug_frame   0x0000170c       0x6c ./Generated_Code/ExtIntLdd1.o
+ .debug_frame   0x00001778       0xa4 ./Generated_Code/Cpu.o
+ .debug_frame   0x0000181c       0x9c ./Generated_Code/BitIoLdd2.o
+ .debug_frame   0x000018b8       0x9c ./Generated_Code/BitIoLdd1.o
+ .debug_frame   0x00001954       0x4c ./Project_Settings/Startup_Code/__arm_start.o
+ .debug_frame   0x000019a0       0x2c ./Project_Settings/Startup_Code/__arm_end.o
+ .debug_frame   0x000019cc       0x5c ./Sources/system_tick.o
+ .debug_frame   0x00001a28      0x1ec ./Sources/mpu_9250_driver.o
+ .debug_frame   0x00001c14       0x50 ./Sources/main.o
+ .debug_frame   0x00001c64       0x8c ./Sources/led_driver_pca9552.o
+ .debug_frame   0x00001cf0      0x108 ./Sources/app_nrf24l01.o
+ .debug_frame   0x00001df8       0xb8 ./Sources/Events.o
+ .debug_frame   0x00001eb0       0x28 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(exit.o)
+ .debug_frame   0x00001ed8       0x28 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(memset.o)
+ .debug_frame   0x00001f00       0x2c C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\libc.a(__filll_mem.o)
+ .debug_frame   0x00001f2c       0x40 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(gcc_ctor_dtor.o)
+ .debug_frame   0x00001f6c       0xac C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(__arm_eabi_init.o)
+ .debug_frame   0x00002018       0x48 C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/lib/armv7e-m\librt.a(ROMCopy.o)
