@@ -13,9 +13,17 @@
 #endif
 
 // defines ///////////////////
-#define RF_TIMEOUT_MS        1000
+#define RF_TIMEOUT_MS        300
 
 // structs ///////////////////
+typedef enum
+{
+    ACTIVE_RECEIVING,
+    IDLE_RECEIVING,
+    RX_DATA_READY,
+    TX_MESSAGE_PENDING,
+    TRANSMITTING
+} mesh_state;
 
 // global vars ///////////////
 
@@ -33,6 +41,12 @@ static volatile uint8_t rx_in_progress;
 static volatile uint32_t rx_start_time_ms;
 static volatile uint8_t rx_data_ready;
 static volatile uint32_t rx_data_count;
+
+static volatile mesh_state state;
+
+static uint32_t pending_tx_length;
+static uint32_t pending_tx_destination_address;
+static uint8_t * pending_tx_data;
 
 // prototypes ////////////////
 static void set_tx_destination_address(uint32_t destination);
@@ -73,12 +87,15 @@ void mesh_init()
     RF1_WriteRegister(RF1_EN_AA, RF1_EN_AA_ENAA_P0);
 
     RF1_WriteRegister(RF1_CONFIG, MESH_RADIO_TRANSMIT_CONFIG);
+
+    pending_tx_length = 0;
 }
 
 void mesh_state_update()
 {
     uint8_t readbytes = RF1_ReadRegister(RF1_RX_PW_P0);
     status_reg = RF1_GetStatus();
+
     if (isr_flag)
     { /* check if we have received an interrupt */
         isr_flag = FALSE; /* reset interrupt flag */
@@ -90,17 +107,23 @@ void mesh_state_update()
                 RF1_RxPayload(mesh_rx_buf, readbytes);
                 rx_data_count = readbytes;
                 rx_data_ready = TRUE;
+                state = RX_DATA_READY;
             }
         }
         if (status_reg & RF1_STATUS_TX_DS)
         { /* data sent interrupt */
+            RF1_ResetStatusIRQ(RF1_STATUS_TX_DS); /* clear bit */
+
+            state = IDLE_RECEIVING;
             tx_time_ms = 0; /* reset timeout counter */
             tx_in_progress = FALSE;
-            RF1_ResetStatusIRQ(RF1_STATUS_TX_DS); /* clear bit */
         }
         if (status_reg & RF1_STATUS_MAX_RT)
         { /* retry timeout interrupt */
             RF1_ResetStatusIRQ(RF1_STATUS_MAX_RT); /* clear bit */
+
+            //send back to RX mode. Could retry here.
+            state = IDLE_RECEIVING;
             tx_in_progress = FALSE;
             tx_time_ms = 0;
         }
@@ -110,6 +133,86 @@ void mesh_state_update()
             tx_in_progress = FALSE;
         }
     }
+
+    switch (state)
+    {
+    case ACTIVE_RECEIVING:
+        {
+        if (!rx_in_progress)
+        {
+            mesh_listen();
+            rx_in_progress = TRUE;
+            rx_start_time_ms = power_on_time_msec;
+        }
+
+        if ((power_on_time_msec - rx_start_time_ms) > (RF_TIMEOUT_MS / 2))
+        {
+            state = (pending_tx_length > 0 ? TX_MESSAGE_PENDING : IDLE_RECEIVING);
+        }
+        break;
+    }
+    case IDLE_RECEIVING:
+        {
+        if ((power_on_time_msec - rx_start_time_ms) > (RF_TIMEOUT_MS * 10))
+        {
+            rx_in_progress = FALSE;
+            state = ACTIVE_RECEIVING;
+        }
+        break;
+    }
+    case RX_DATA_READY:
+        {
+        break;
+    }
+    case TX_MESSAGE_PENDING:
+        {
+        rx_in_progress = FALSE;
+
+        //TODO: this is where we basically ignore the 'jamming' detection. may need review later.
+        //      see nrf spec version 2.0, appendix E
+        if (RF1_ReadRegister(8) >= 0x70)
+        {
+            //dummy write to channel, in case we have had many lost packets.
+            RF1_WriteRegister(RF1_RF_CH, MESH_CHANNEL_NUMBER);                           // set channel
+        }
+
+        if (RF1_ReadRegister(RF1_RPD) == 0)
+        {
+            RF1_ResetStatusIRQ(RF1_STATUS_RX_DR | RF1_STATUS_TX_DS | RF1_STATUS_MAX_RT);
+
+            RF1_WriteRegister(RF1_CONFIG, MESH_RADIO_TRANSMIT_CONFIG);
+
+            delay_n_msec(3);
+
+            set_tx_destination_address(pending_tx_destination_address);
+            RF1_TxPayload(pending_tx_data, pending_tx_length);
+            pending_tx_length = 0;
+            tx_time_ms = power_on_time_msec;
+            state = TRANSMITTING;
+        }
+        else
+        {
+            state = ACTIVE_RECEIVING;
+        }
+        break;
+    }
+    case TRANSMITTING:
+        {
+        rx_in_progress = FALSE;
+
+        if (power_on_time_msec - tx_time_ms > RF_TIMEOUT_MS)
+        {
+            state = IDLE_RECEIVING;
+        }
+
+        break;
+    }
+    default:
+        {
+        break;
+    }
+    }
+
 }
 
 //TODO: come up with way to do spectrum sharing. round robin seems like maybe an OK way to do it
@@ -120,32 +223,14 @@ void mesh_state_update()
 
 void mesh_send_string(uint8_t * tx_buf, uint32_t length, uint32_t destinationAddress)
 {
-    if ((!rx_in_progress || (power_on_time_msec - rx_start_time_ms) > (RF_TIMEOUT_MS * 5))
-            && (!tx_in_progress || (power_on_time_msec - tx_time_ms) > (RF_TIMEOUT_MS)))
+    //TODO: enqueue packets;
+
+    if (state != TX_MESSAGE_PENDING && state != TRANSMITTING && state != ACTIVE_RECEIVING)
     {
-        //TODO: this is where we basically ignore the 'jamming' detection. may need review later.
-        //      see nrf spec version 2.0, appendix E
-        if (RF1_ReadRegister(8) >= 0x70)
-        {
-            //dummy write to channel, in case we have had many lost packets.
-            RF1_WriteRegister(RF1_RF_CH, MESH_CHANNEL_NUMBER);                           // set channel
-        }
-
-        while (RF1_ReadRegister(RF1_RPD) > 0)
-        {
-            ;                           //wait for a chance on the spectrum
-        }
-
-        RF1_ResetStatusIRQ(RF1_STATUS_RX_DR | RF1_STATUS_TX_DS | RF1_STATUS_MAX_RT);
-
-        RF1_WriteRegister(RF1_CONFIG, MESH_RADIO_TRANSMIT_CONFIG);
-
-        delay_n_msec(3);
-
-        set_tx_destination_address(destinationAddress);
-        RF1_TxPayload(tx_buf, length);
-        tx_time_ms = power_on_time_msec;
-        tx_in_progress = TRUE;
+        pending_tx_data = tx_buf;
+        pending_tx_destination_address = destinationAddress;
+        pending_tx_length = length;
+        state = TX_MESSAGE_PENDING;
     }
 }
 
@@ -159,18 +244,15 @@ int mesh_receive_string(uint8_t * rx_buf, uint32_t length)
 {
     int rval = -1;
 
-    if ((!rx_in_progress || (power_on_time_msec - rx_start_time_ms) > (RF_TIMEOUT_MS))
-            && (!tx_in_progress || (power_on_time_msec - tx_time_ms) > (RF_TIMEOUT_MS)))
-    {
-        mesh_listen();
-        rx_in_progress = TRUE;
-        rx_start_time_ms = power_on_time_msec;
-    }
-
     if (rx_data_ready)
     {
         rval = (rx_data_count > length ? length : rx_data_count);
         rx_data_ready = FALSE;
+
+        if (state == RX_DATA_READY)
+        {
+            state = IDLE_RECEIVING;
+        }
 
         for (int i = 0; i < rval; ++i)
         {

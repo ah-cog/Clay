@@ -233,8 +233,6 @@ int main(void)
             tick_250msec = FALSE;
             mesh_broadcast_string(local_imu_data.bytes, 24);
 
-//            update_imu_leds(&local_imu_data, colors);
-
             if (mesh_receive_string(remote_imu_data.bytes, 24) > 0)
             {
                 update_imu_leds(&remote_imu_data, colors);
