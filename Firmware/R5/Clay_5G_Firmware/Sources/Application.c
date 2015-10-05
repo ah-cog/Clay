@@ -16,7 +16,9 @@
 
 void Application (void) {
 	
-//	char *dynamicString = NULL;
+	uint8_t status = 0;
+	Message *message = NULL;
+//	uint16_t messageCount = 0;
 	
 	/* Start Clay */
 	
@@ -34,7 +36,6 @@ void Application (void) {
 	
 	printf ("\r\n");
 	
-	
 	printf ("Enabling LED controls. "); // printf ("Starting lights. ");
 	Enable_PCA9552();
 	Wait (5);
@@ -49,28 +50,219 @@ void Application (void) {
 	printf ("Enabling MPU-9250. ");
 	mpu_9250_init();
 	printf ("Done.\r\n");
+
+	// TODO: Start_Spatial_Sensing ()
+	
+	printf ("\r\n");
+	
+	// TODO: Enable_GPIO ()
+	
+	printf ("Initializing message queue. ");
+	if ((status = Initialize_Message_Queue ()) == TRUE) {
+		printf ("Done.\r\n");
+	} else {
+		printf ("Failed.\r\n");
+	}
+
+	/*
+	if (status > 0) {
+		printf ("Creating message. ");
+		message = Create_Message ("one");
+		printf ("Queueing message \"%s\". ", (*message).content);
+		messageCount = Queue_Incoming_Message (message);
+		printf ("Size: %d.\r\n", messageCount);
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Creating message. ");
+		message = Create_Message ("two");
+		printf ("Queueing message \"%s\". ", (*message).content);
+		messageCount = Queue_Incoming_Message (message);
+		printf ("Size: %d.\r\n", messageCount);
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Dequeuing message ");
+		message = Dequeue_Incoming_Message ();
+		printf ("\"%s\".", (*message).content);
+//		printf ("Size: %d.\r\n", messageCount);
+		printf ("Deleting message. ");
+		Delete_Message (message); // status = Delete_Message (message);
+		printf ("Done.\r\n");
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Creating message. ");
+		message = Create_Message ("three");
+		printf ("Queueing message \"%s\". ", (*message).content);
+		messageCount = Queue_Incoming_Message (message);
+		printf ("Size: %d.\r\n", messageCount);
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Creating message. ");
+		message = Create_Message ("four");
+		printf ("Queueing message \"%s\". ", (*message).content);
+		messageCount = Queue_Incoming_Message (message);
+		printf ("Size: %d.\r\n", messageCount);
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Creating message. ");
+		message = Create_Message ("five");
+		printf ("Queueing message \"%s\". ", (*message).content);
+		messageCount = Queue_Incoming_Message (message);
+		printf ("Size: %d.\r\n", messageCount);
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Dequeuing message ");
+		message = Dequeue_Incoming_Message ();
+		printf ("\"%s\".", (*message).content);
+//		printf ("Size: %d.\r\n", messageCount);
+		printf ("Deleting message. ");
+		Delete_Message (message); // status = Delete_Message (message);
+		printf ("Done.\r\n");
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Dequeuing message ");
+		message = Dequeue_Incoming_Message ();
+		printf ("\"%s\".", (*message).content);
+//		printf ("Size: %d.\r\n", messageCount);
+		printf ("Deleting message. ");
+		Delete_Message (message); // status = Delete_Message (message);
+		printf ("Done.\r\n");
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Dequeuing message ");
+		message = Dequeue_Incoming_Message ();
+		printf ("\"%s\".", (*message).content);
+//		printf ("Size: %d.\r\n", messageCount);
+		printf ("Deleting message. ");
+		Delete_Message (message); // status = Delete_Message (message);
+		printf ("Done.\r\n");
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+		
+		printf ("Dequeuing message ");
+		message = Dequeue_Incoming_Message ();
+		printf ("\"%s\".", (*message).content);
+//		printf ("Size: %d.\r\n", messageCount);
+		printf ("Deleting message. ");
+		Delete_Message (message); // status = Delete_Message (message);
+		printf ("Done.\r\n");
+		
+		if (incomingMessageQueue != NULL) {
+			message = incomingMessageQueue;
+			printf ("%s <-- ", (*message).content);
+			while ((*message).previous != NULL) {
+				message = (*message).previous;
+				printf ("%s <-- ", (*message).content);
+			}
+			printf ("\r\n");
+		} else {
+			printf ("There aren't any incoming messages.\r\n");
+		}
+	}
+	*/
 	
 	printf ("\r\n");
 	
 	printf ("Enabling ESP8266. ");
 	Enable_ESP8266 ();
 	printf ("Done.\r\n");
-	
-	// TODO: Enable_GPIO ()
-	
-	// TODO: Enable_MPU9250 ()
-	// TODO: Start_Spatial_Sensing ()
-	
-	// Test dynamic memory allocation.
-	/*
-	dynamicString = (char *) malloc (16);
-	strcpy (dynamicString, "tutorialspoint");
-	printf("String = %s,  Address = %u\n", dynamicString, dynamicString);
-	free(dynamicString);
-	dynamicString = NULL;
-	*/
-	
-	printf ("\r\n");
 	
 	printf ("Starting HTTP Server. ");
 	Start_HTTP_Server (HTTP_SERVER_PORT);
@@ -89,6 +281,14 @@ void Application (void) {
 		Monitor_Network_Communications ();
 		
 		// TODO: Monitor_Messages ();
+		
+		if (Has_Incoming_Message () == TRUE) {
+			message = Dequeue_Incoming_Message ();
+			status = Process_Message (message);
+			if (status == TRUE) {
+				Delete_Message (message);
+			}
+		}
 		
 		// TODO: Monitor_Orientation ();
 		

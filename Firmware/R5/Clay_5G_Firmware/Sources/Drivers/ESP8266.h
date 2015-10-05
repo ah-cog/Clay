@@ -27,6 +27,8 @@
 
 #include "Utilities/Ring_Buffer.h"
 
+#include "Messenger.h"
+
 #define SSID_DEFAULT "clay-2.4ghz" // "joopal" // "clay-2.4ghz" // "AWS"
 #define PASSWORD_DEFAULT "goldenbrown" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
 
@@ -63,8 +65,9 @@ typedef struct {
 } ESP8266_Connection;
 
 ESP8266_Connection remoteConnections[REMOTE_CONNECTION_COUNT];
-#define CHANNEL_BUFFER_SIZE 512 // The size of per-channel buffers
-char channelBuffer[REMOTE_CONNECTION_LIMIT][CHANNEL_BUFFER_SIZE];
+#define CONNECTION_BUFFER_SIZE 512 // The size of per-channel buffers
+char connectionDataQueue[REMOTE_CONNECTION_LIMIT][CONNECTION_BUFFER_SIZE];
+int connectionDataQueueSize[REMOTE_CONNECTION_LIMIT];
 
 void Initialize_Remote_Connections ();
 void Reset_Connection (int id);
@@ -81,7 +84,7 @@ byte ESP8266_Get_Incoming_Character (byte *elemP);
 
 uint8_t ESP8266_Has_Incoming_Data ();
 void ESP8266_Buffer_Incoming_Data ();
-void ESP8266_Reset_TCP_Buffer ();
+void ESP8266_Reset_Data_Buffer ();
 uint8_t ESP8266_Has_Incoming_Request ();
 int8_t ESP8266_Receive_Incoming_Request (uint32_t milliseconds);
 
@@ -102,10 +105,10 @@ int8_t ESP8266_Receive_Incoming_Request (uint32_t milliseconds);
 
 #define HTTP_RESPONSE_BUFFER_SIZE 2048 // Store this many of the most recent chars in AT command response buffer
 
-char httpResponseBuffer[HTTP_RESPONSE_BUFFER_SIZE];
-int responseBufferSize;
+char incomingDataQueue[HTTP_RESPONSE_BUFFER_SIZE];
+int incomingDataQueueSize;
 
-void ESP8266_Reset_TCP_Buffer ();
+void ESP8266_Reset_Data_Buffer ();
 
 //typedef struct {
 //	uint8_t id; // 0-4
@@ -148,8 +151,8 @@ void Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // TODO: check for any incoming data on serial
 // TODO: Put the available data into the local buffer
 // TODO: monitor the buffer for complete requests, timeouts, errors, or malformed requests (such as may occur when overwriting two of them unwittingly due to client-server sync mishaps).
-void Monitor_HTTP_Server ();
-int8_t ESP8266_Receive_Request_Header_Line ();
+//void Monitor_HTTP_Server ();
+//int8_t ESP8266_Receive_Request_Header_Line ();
 // int8_t HTTP_Server_Has_Request (HTTP_Server *http_server); // Returns TRUE if any incoming requests are queued.
 // Request* HTTP_Server_Fetch_Next_Request (); // Returns a pointer to the next request on the queue (if any) or NULL if there are no requests.
 // int8_t HTTP_Server_Process_Request (); // or HTTP_Server_Handle_Request (); // Performs the request handler function defined for the received request.
