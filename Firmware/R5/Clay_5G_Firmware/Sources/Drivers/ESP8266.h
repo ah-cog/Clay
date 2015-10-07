@@ -117,6 +117,7 @@ void Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // TODO: check for any incoming data on serial
 // TODO: Put the available data into the local buffer
 // TODO: monitor the buffer for complete requests, timeouts, errors, or malformed requests (such as may occur when overwriting two of them unwittingly due to client-server sync mishaps).
+void Monitor_HTTP_Server ();
 int8_t ESP8266_Receive_Request_Header_Line ();
 // int8_t HTTP_Server_Has_Request (HTTP_Server *http_server); // Returns TRUE if any incoming requests are queued.
 // Request* HTTP_Server_Fetch_Next_Request (); // Returns a pointer to the next request on the queue (if any) or NULL if there are no requests.

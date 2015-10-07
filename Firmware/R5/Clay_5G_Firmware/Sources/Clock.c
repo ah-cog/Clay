@@ -51,7 +51,7 @@ void Tick () {
 }
 
 ///will block for n milliseconds
-extern void Wait (uint32_t milliseconds) {
+void Wait (uint32_t milliseconds) {
 	
     int start = power_on_time_msec;
     while (power_on_time_msec - start < milliseconds) {
@@ -59,6 +59,45 @@ extern void Wait (uint32_t milliseconds) {
     }
 }
 
-extern uint32_t Millis () {
+uint32_t Millis () {
 	return power_on_time_msec;
+}
+
+void Monitor_Periodic_Events () {
+	
+	// LEDs
+	if (tick_1msec) {
+		tick_1msec = FALSE;
+		
+		// TODO: Perform any periodic actions (1 ms).
+	}
+	
+	if (tick_250msec) {
+		tick_250msec = FALSE;
+		
+		// TODO: Perform any periodic actions (1 ms).
+	}
+	
+	if (tick_500msec) {
+		tick_500msec = FALSE;
+		
+		// TODO: Perform any periodic actions (1 ms).
+
+		/*
+		//toggle LEDs
+		LED1_PutVal(LED1_DeviceData, !led_state);
+		LED2_PutVal(LED2_DeviceData, led_state);
+		led_state = !led_state;
+
+		Color_RGB * derp = colors + color_index;
+
+		Set_LED_Output((RGB_LED) led_index, derp);
+
+		if (++led_index % RGB_INVALID == 0)
+		{
+			led_index = 0;
+			color_index = (color_index + 1) % 3;
+		}
+		*/
+	}
 }

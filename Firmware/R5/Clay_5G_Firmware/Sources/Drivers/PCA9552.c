@@ -90,6 +90,9 @@ static RGB_Channel channels[] = {
 	{ LED_DRIVER_0, LED_0 },        //DS4
 };
 
+Color_RGB onColor  = { LED_MODE_MAX, LED_MODE_OFF, LED_MODE_LOW };
+Color_RGB offColor = { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF };
+
 /**
  * Enables both PCA9552 LED drivers.
  */
@@ -192,4 +195,21 @@ void Set_LED_Output_Mode (RGB_Channel* led, Color_RGB * output_color) {
     	break;
     }
     }
+}
+
+int8_t Start_Light_Behavior () {
+	
+	// Start LEDs (and initialize their state)
+	Set_LED_Output ((RGB_LED) 0,  &offColor);
+	Set_LED_Output ((RGB_LED) 1,  &offColor);
+	Set_LED_Output ((RGB_LED) 2,  &offColor);
+	Set_LED_Output ((RGB_LED) 3,  &offColor);
+	Set_LED_Output ((RGB_LED) 4,  &offColor);
+	Set_LED_Output ((RGB_LED) 5,  &offColor);
+	Set_LED_Output ((RGB_LED) 6,  &offColor);
+	Set_LED_Output ((RGB_LED) 7,  &offColor);
+	Set_LED_Output ((RGB_LED) 8,  &offColor);
+	Set_LED_Output ((RGB_LED) 9,  &offColor);
+	Set_LED_Output ((RGB_LED) 10, &offColor);
+	Set_LED_Output ((RGB_LED) 11, &offColor);
 }
