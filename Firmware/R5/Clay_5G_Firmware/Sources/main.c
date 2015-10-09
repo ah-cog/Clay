@@ -30,6 +30,7 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "Events_ESP8266.h"
 #include "ESP8266_GPIO2.h"
 #include "LED_DRIVER_0_RESET.h"
 #include "LED_DRIVER_1_RESET.h"
@@ -46,6 +47,9 @@
 #include "IO_10.h"
 #include "IO_11.h"
 #include "IO_12.h"
+#include "IMU_FSYNC.h"
+#include "IMU_CS.h"
+#include "IMU_INT.h"
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"

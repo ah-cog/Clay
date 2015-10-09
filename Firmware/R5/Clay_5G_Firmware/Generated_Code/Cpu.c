@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-17, 17:29, # CodeGen: 29
+**     Date/Time   : 2015-10-02, 10:29, # CodeGen: 34
 **     Abstract    :
 **
 **     Settings    :
@@ -82,11 +82,15 @@
 #include "IO_10.h"
 #include "IO_11.h"
 #include "IO_12.h"
+#include "IMU_FSYNC.h"
+#include "IMU_CS.h"
+#include "IMU_INT.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
 #include "Events.h"
+#include "Events_ESP8266.h"
 #include "Cpu.h"
 
 #ifdef __cplusplus
@@ -308,6 +312,12 @@ void PE_low_level_init(void)
   (void)LED_DRIVER_1_RESET_Init(NULL);
   /* ### I2C_LDD "I2C0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)I2C0_Init(NULL);
+  /* ### BitIO_LDD "IMU_FSYNC" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IMU_FSYNC_Init(NULL);
+  /* ### BitIO_LDD "IMU_CS" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IMU_CS_Init(NULL);
+  /* ### BitIO_LDD "IMU_INT" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IMU_INT_Init(NULL);
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }

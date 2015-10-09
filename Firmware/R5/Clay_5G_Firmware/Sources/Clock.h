@@ -7,14 +7,12 @@
 
 #ifndef CLOCK_H_
 #define CLOCK_H_
-// includes //////////////////
+
 #include "PE_Types.h"
 
-// defines ///////////////////
+#include "Drivers/MPU9250.h"
+#include "Drivers/PCA9552.h"
 
-// structs ///////////////////
-
-// global vars ///////////////
 extern uint32_t power_on_time_msec;
 extern bool tick_1msec;
 extern bool tick_250msec;

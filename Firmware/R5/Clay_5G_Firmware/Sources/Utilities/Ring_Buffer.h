@@ -50,6 +50,21 @@ byte Ring_Buffer_Get (byte *elemP);
 ** ===================================================================
 */
 
+uint8_t Ring_Buffer_Has_Data ();
+/*
+** ===================================================================
+**     Method      :  Ring_Buffer_Has_Data (component RingBufferUInt8)
+**     Description :
+**         Checks if the buffer contains any data.
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**       * elemP           - Pointer to where to store the received
+**                           element
+**     Returns     :
+**         ---             - Error code
+** ===================================================================
+*/
+
 uint16_t Ring_Buffer_NofElements (void);
 /*
 ** ===================================================================

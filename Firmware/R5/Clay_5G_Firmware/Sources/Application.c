@@ -16,7 +16,7 @@
 
 void Application (void) {
 	
-	char *dynamicString = NULL;
+//	char *dynamicString = NULL;
 	
 	/* Start Clay */
 	
@@ -26,7 +26,7 @@ void Application (void) {
 	
 	printf ("Enabling clock. ");
 	Enable_Clock ();
-	printf ("Done.\r\n");
+	printf ("Done.\r\n"); // printf ("I'm keeping time. ");
 	
 	printf ("Starting clock. ");
 	Start_Clock ();
@@ -34,10 +34,20 @@ void Application (void) {
 	
 	printf ("\r\n");
 	
-	printf ("Starting LEDs. ");
+	
+	printf ("Enabling LED controls. "); // printf ("Starting lights. ");
 	Enable_PCA9552();
 	Wait (5);
+	printf ("Done.\r\n");
+	
+	printf ("Starting LEDs. ");
 	Start_Light_Behavior (); // previously Start_Light_Feedback ()
+	printf ("Done.\r\n");
+	
+	printf ("\r\n");
+	
+	printf ("Enabling MPU-9250. ");
+	mpu_9250_init();
 	printf ("Done.\r\n");
 	
 	printf ("\r\n");
@@ -62,12 +72,21 @@ void Application (void) {
 	
 	printf ("\r\n");
 	
+	printf ("Starting HTTP Server. ");
 	Start_HTTP_Server (HTTP_SERVER_PORT);
+	printf ("Done.\r\n");
+	
+	printf ("Starting UDP Server. ");
+	Start_UDP_Server (4445);
+	printf ("Done.\r\n");
+	
+//	Broadcast_UDP_Message("hello");
 	
 	for (;;) {
 		
 		// Check and process any incoming requests
-		Monitor_HTTP_Server ();
+		//Monitor_HTTP_Server ();
+		Monitor_Network_Communications ();
 		
 		// TODO: Monitor_Messages ();
 		
@@ -76,6 +95,6 @@ void Application (void) {
 		// TODO: Monitor_Behavior (); // TODO: In this function, Consider_Behavior (), Engage_Behavior (), Perform_Behavior ().
 		
 		// Check and perform "scheduled" periodic events
-		Monitor_Periodic_Events ();
+//		Monitor_Periodic_Events ();
 	}
 }
