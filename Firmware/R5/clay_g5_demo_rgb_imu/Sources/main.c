@@ -221,8 +221,8 @@ int main(void)
             tick_500msec = FALSE;
 
             //toggle LEDs
-//            LED1_PutVal(LED1_DeviceData, !led_state);
-//            LED2_PutVal(LED2_DeviceData, led_state);
+            LED1_PutVal(LED1_DeviceData, !led_state);
+            LED2_PutVal(LED2_DeviceData, led_state);
             led_state = !led_state;
         }
 

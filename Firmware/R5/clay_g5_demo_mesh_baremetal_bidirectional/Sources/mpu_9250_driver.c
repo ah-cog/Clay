@@ -90,10 +90,10 @@ void get_mpu_readings(mpu_values * data)
 static void send_message(uint8_t * message, int32 size, uint8_t address)
 {
     I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, address);
-    delay_n_msec(1);
+    delay_n_ms(1);
 
     I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) message, (LDD_I2C_TSize) size, LDD_I2C_SEND_STOP);
-    delay_n_msec(1);
+    delay_n_ms(1);
 }
 
 //tx_buf contains command that will prepare the device for the read
@@ -106,7 +106,7 @@ static void receive_message(uint8_t * tx_buf, int32 tx_size, uint8_t * rx_buf, i
     send_message(tx_buf, tx_size, address);
 
     I2C0_MasterReceiveBlock(I2C0_DeviceData, rx_buf, rx_size, LDD_I2C_SEND_STOP);
-    delay_n_msec(1);
+    delay_n_ms(1);
 }
 
 static void set_clock_source(uint8_t source)

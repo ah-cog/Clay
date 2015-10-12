@@ -99,6 +99,90 @@
 #endif
 
 ///
+void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[]);
+
+/*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
+int main(void)
+/*lint -restore Enable MISRA rule (6.3) checking. */
+{
+    /* Write your local variable definition here */
+
+    /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+    PE_low_level_init();
+    /*** End of Processor Expert internal initialization.                    ***/
+
+    bool led_state = FALSE;
+
+    init_tick();
+
+    delay_n_ms(100);
+
+    init_led_drivers();
+
+    mpu_9250_init();
+
+    meshInit();
+
+    mpu_values local_imu_data = { { 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+    mpu_values remote_imu_data = { { 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+
+    color_rgb
+    colors[] =
+            {
+                    { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
+                    { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg
+                    { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
+                    { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }         //rb
+            };
+
+    for (;;)
+    {
+        if (tick_1msec)
+        {
+            tick_1msec = FALSE;
+
+            if (!(power_on_time_msec % 30))
+            {
+                get_mpu_readings(&local_imu_data);
+                meshStateUpdate();
+            }
+        }
+
+        if (tick_250msec)
+        {
+            tick_250msec = FALSE;
+            meshBroadcast(local_imu_data.bytes, 24, NULL);
+
+            if (meshReceiveString(remote_imu_data.bytes, 24) > 0)
+            {
+                update_imu_leds(&remote_imu_data, colors);
+            }
+        }
+
+        if (tick_500msec)
+        {
+            tick_500msec = FALSE;
+
+            //toggle LEDs
+            LED1_PutVal(LED1_DeviceData, !led_state);
+            LED2_PutVal(LED2_DeviceData, led_state);
+            led_state = !led_state;
+        }
+    }
+
+    /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+#ifdef PEX_RTOS_START
+    PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
+    /*** End of RTOS startup code.  ***/
+    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+    for (;;)
+    {
+    }
+    /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+} /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
+
 void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[])
 {
     if (remote_imu_data->values.x_accel < 50)
@@ -180,88 +264,6 @@ void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[])
         }
     }
 }
-
-/*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
-int main(void)
-/*lint -restore Enable MISRA rule (6.3) checking. */
-{
-    /* Write your local variable definition here */
-
-    /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
-    PE_low_level_init();
-    /*** End of Processor Expert internal initialization.                    ***/
-
-    bool led_state = FALSE;
-
-    init_tick();
-
-    delay_n_msec(100);
-
-    init_led_drivers();
-
-    mpu_9250_init();
-
-    mesh_init();
-
-    mpu_values local_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    mpu_values remote_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
-    color_rgb
-    colors[] =
-            {
-                    { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-                    { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg
-                    { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
-                    { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }         //rb
-            };
-
-    for (;;)
-    {
-        if (tick_1msec)
-        {
-            tick_1msec = FALSE;
-
-            if (!(power_on_time_msec % 30))
-            {
-                get_mpu_readings(&local_imu_data);
-                mesh_state_update();
-            }
-        }
-
-        if (tick_250msec)
-        {
-            tick_250msec = FALSE;
-            mesh_broadcast_string(local_imu_data.bytes, 24);
-
-            if (mesh_receive_string(remote_imu_data.bytes, 24) > 0)
-            {
-                update_imu_leds(&remote_imu_data, colors);
-            }
-        }
-
-        if (tick_500msec)
-        {
-            tick_500msec = FALSE;
-
-            //toggle LEDs
-            LED1_PutVal(LED1_DeviceData, !led_state);
-            LED2_PutVal(LED2_DeviceData, led_state);
-            led_state = !led_state;
-        }
-    }
-
-    /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-#ifdef PEX_RTOS_START
-    PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-#endif
-    /*** End of RTOS startup code.  ***/
-    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-    for (;;)
-    {
-    }
-    /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
-} /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
 /* END main */
 /*!

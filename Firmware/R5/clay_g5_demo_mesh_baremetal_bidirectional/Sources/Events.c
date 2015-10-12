@@ -169,7 +169,7 @@ void I2C0_OnMasterByteReceived(LDD_TUserData *UserDataPtr)
  */
 void RF1_OnInterrupt(void)
 {
-    mesh_interrupt_handler();
+    meshInterruptHandler();
 }
 
 /* END Events */
