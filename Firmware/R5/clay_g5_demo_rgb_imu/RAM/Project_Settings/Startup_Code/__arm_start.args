@@ -1,0 +1,22 @@
+-mcpu=cortex-m4
+-mthumb
+-mfloat-abi=soft
+-g3
+-gdwarf-2
+-gstrict-dwarf
+-I"E:/git/clay/Firmware/R5/clay_g5_demo_rgb_imu/Project_Headers"
+-I"E:/git/clay/Firmware/R5/clay_g5_demo_rgb_imu/Project_Settings/Startup_Code"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
+-I"E:/git/clay/Firmware/R5/clay_g5_demo_rgb_imu/Generated_Code"
+-I"E:/git/clay/Firmware/R5/clay_g5_demo_rgb_imu/Sources"
+-I"E:/git/clay/Firmware/R5/clay_g5_demo_rgb_imu/Static_Code/PDD"
+-I"E:/git/clay/Firmware/R5/clay_g5_demo_rgb_imu/Static_Code/IO_Map"
+-O0
+-ffunction-sections
+-fdata-sections
+-Wall
+-std=gnu99
+-c
+-fmessage-length=0
+-specs=ewl_c_noio.specs

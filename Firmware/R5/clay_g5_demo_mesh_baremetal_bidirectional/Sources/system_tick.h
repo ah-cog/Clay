@@ -25,6 +25,6 @@ extern void init_tick();
 
 extern void tick();
 
-extern void delay_n_msec(uint32 n);
+extern void delay_n_ms(uint32 n);
 
 #endif /* SYSTEM_TICK_H_ */
