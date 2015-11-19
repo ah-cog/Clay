@@ -28,7 +28,7 @@
 
 #define MESH_CHANNEL_NUMBER         60
 
-#define MESH_TRANSMIT       1               // true == transmitter, false = receiver
+#define MESH_TRANSMIT       0               // true == transmitter, false = receiver
 // structs ///////////////////
 typedef enum
 {
