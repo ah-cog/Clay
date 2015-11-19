@@ -77,7 +77,9 @@
 
 #define MESH_RX_TIMEOUT_MS  1
 
-#if 1
+#define MESH_ITEM_1 1  //defined == rx
+
+#if MESH_ITEM_1
 #define THIS_NODE_ADDR 1u
 #define REMOTE_NODE_ADDR 2u
 #else
@@ -131,7 +133,7 @@
 
 static uint8_t hb_led_count = 0;
 
-static uint8_t size = sizeof(mpu_values);
+static uint8_t size = sizeof(mpu_values) - 2;
 static mpu_values local_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static mpu_values remote_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -182,17 +184,20 @@ int main(void)
 
     for (;;)
     {
+        uint8_t source = REMOTE_NODE_ADDR;
+        if (meshManager.recvfromAck((uint8_t*) &remote_imu_data, &size, &source))
+        {
+            update_imu_leds(&remote_imu_data, colors);
+        }
+
         if (tick_1msec)
         {
             tick_1msec = FALSE;
 
-            if (meshManager.recvfromAck((uint8_t*) &remote_imu_data, &size))
-            {
-                update_imu_leds(&remote_imu_data, colors);
-            }
-
+#if !MESH_ITEM_1           
             get_mpu_readings(&local_imu_data);
-            meshManager.sendtoWait((uint8_t*) &local_imu_data, sizeof(mpu_values), REMOTE_NODE_ADDR, 0);
+            meshManager.sendtoWait((uint8_t*) &local_imu_data, sizeof(mpu_values) - 2, REMOTE_NODE_ADDR, 0);
+#endif
 
         }
 

@@ -151,7 +151,7 @@ int main(void)
         if (tick_250msec)
         {
             tick_250msec = FALSE;
-            meshBroadcast(local_imu_data.bytes, 24, NULL);
+          //  meshBroadcast(local_imu_data.bytes, 24, NULL);
 
             if (meshReceiveString(remote_imu_data.bytes, 24) > 0)
             {

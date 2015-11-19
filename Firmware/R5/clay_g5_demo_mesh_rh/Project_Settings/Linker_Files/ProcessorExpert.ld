@@ -4,13 +4,13 @@
 /*##                                   */
 /*##     Filename  : ProcessorExpert.ld */
 /*##                                   */
-/*##     Project   : Copy of clay_g5_demo_mesh_baremetal */
+/*##     Project   : clay_g5_demo_mesh_rh */
 /*##                                   */
 /*##     Processor : MK20DX256VLH7     */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2015-11-12, 23:45, # CodeGen: 3 */
+/*##     Date/Time : 2015-11-18, 20:56, # CodeGen: 2 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -32,8 +32,8 @@ _estack = 0x20000000;    /* end of m_data */
 __SP_INIT = _estack;
 
 /* Generate a link error if heap and stack don't fit into RAM */
-__heap_size = 0x00;                    /* required amount of heap  */
-__stack_size = 0x0400;                 /* required amount of stack */
+__heap_size = 0x2000;                  /* required amount of heap  */
+__stack_size = 0x2000;                 /* required amount of stack */
 
 
 MEMORY {
