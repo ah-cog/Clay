@@ -25,9 +25,67 @@
 	<natures>
 		<nature>com.freescale.processorexpert.core.expertprojectnature</nature>
 		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>.external_binary</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben/Desktop</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben/Desktop/dtf</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben/Desktop/dtf/git</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben/Desktop/dtf/git/clay</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben/Desktop/dtf/git/clay/Firmware</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben/Desktop/dtf/git/clay/Firmware/R5</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_radiohead</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>.external_binary/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_radiohead/FLASH</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+	</linkedResources>
 	<variableList>
 		<variable>
 			<name>PREVIOUS_PROJECT_LOC</name>

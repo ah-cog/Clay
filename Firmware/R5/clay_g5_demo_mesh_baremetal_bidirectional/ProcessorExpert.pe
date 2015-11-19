@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PEproject>
   <Header>
-    <Name>clay_g5_demo_mesh_baremetal</Name>
+    <Name>clay_g5_demo_mesh_baremetal_bidirectional</Name>
     <SavedBy>Ben</SavedBy>
-    <ModificationStamp>96</ModificationStamp>
-    <Date>2015-10-02</Date>
+    <ModificationStamp>97</ModificationStamp>
+    <Date>2015-11-11</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>

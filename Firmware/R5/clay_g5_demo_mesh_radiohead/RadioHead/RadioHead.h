@@ -551,6 +551,8 @@
 #ifndef RadioHead_h
 #define RadioHead_h
 
+#define RH_PLATFORM RH_PLATFORM_MK20DX_PE
+
 // Official version numbers are maintained automatically by Makefile:
 #define RH_VERSION_MAJOR 1
 #define RH_VERSION_MINOR 50
@@ -566,152 +568,164 @@
 #define RH_PLATFORM_STM32F4_HAL      8 
 #define RH_PLATFORM_RASPI            9
 #define RH_PLATFORM_NRF51            10
+#define RH_PLATFORM_MK20DX_PE        11
 
 ////////////////////////////////////////////////////
 // Select platform automatically, if possible
 #ifndef RH_PLATFORM
- #if defined(MPIDE)
-  #define RH_PLATFORM RH_PLATFORM_UNO32
- #elif defined(NRF51)
-  #define RH_PLATFORM RH_PLATFORM_NRF51
- #elif defined(ARDUINO)
-  #define RH_PLATFORM RH_PLATFORM_ARDUINO
- #elif defined(__MSP430G2452__) || defined(__MSP430G2553__)
-  #define RH_PLATFORM RH_PLATFORM_MSP430
- #elif defined(MCU_STM32F103RE)
-  #define RH_PLATFORM RH_PLATFORM_STM32
- #elif defined(USE_STDPERIPH_DRIVER)
-  #define RH_PLATFORM RH_PLATFORM_STM32STD
- #elif defined(RASPBERRY_PI)
-  #define RH_PLATFORM RH_PLATFORM_RASPI
+#if defined(MPIDE)
+#define RH_PLATFORM RH_PLATFORM_UNO32
+#elif defined(NRF51)
+#define RH_PLATFORM RH_PLATFORM_NRF51
+#elif defined(ARDUINO)
+#define RH_PLATFORM RH_PLATFORM_ARDUINO
+#elif defined(__MSP430G2452__) || defined(__MSP430G2553__)
+#define RH_PLATFORM RH_PLATFORM_MSP430
+#elif defined(MCU_STM32F103RE)
+#define RH_PLATFORM RH_PLATFORM_STM32
+#elif defined(USE_STDPERIPH_DRIVER)
+#define RH_PLATFORM RH_PLATFORM_STM32STD
+#elif defined(RASPBERRY_PI)
+#define RH_PLATFORM RH_PLATFORM_RASPI
 #elif defined(__unix__) // Linux
-  #define RH_PLATFORM RH_PLATFORM_UNIX
+#define RH_PLATFORM RH_PLATFORM_UNIX
 #elif defined(__APPLE__) // OSX
-  #define RH_PLATFORM RH_PLATFORM_UNIX
- #else
-  #error Platform not defined! 	
- #endif
+#define RH_PLATFORM RH_PLATFORM_UNIX
+#elif defined(RH_CLAY)
+#define RH_PLATFORM RH_PLATFORM_MK20DX_PE
+#else
+#error Platform not defined! 	
+#endif
 #endif
 
 #if defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtinyX4__) || defined(__AVR_ATtinyX5__) || defined(__AVR_ATtiny2313__) || defined(__AVR_ATtiny4313__) || defined(__AVR_ATtinyX313__)
- #define RH_PLATFORM_ATTINY
+#define RH_PLATFORM_ATTINY
 #endif
 
 ////////////////////////////////////////////////////
 // Platform specific headers:
 #if (RH_PLATFORM == RH_PLATFORM_ARDUINO)
- #if (ARDUINO >= 100)
-  #include <Arduino.h>
- #else
-  #include <wiring.h>
- #endif
- #ifdef RH_PLATFORM_ATTINY
-  #warning Arduino TinyCore does not support hardware SPI. Use software SPI instead.
- #else
-  #include <SPI.h>
-  #define RH_HAVE_HARDWARE_SPI
-  #define RH_HAVE_SERIAL
- #endif
+#if (ARDUINO >= 100)
+#include <Arduino.h>
+#else
+#include <wiring.h>
+#endif
+#ifdef RH_PLATFORM_ATTINY
+#warning Arduino TinyCore does not support hardware SPI. Use software SPI instead.
+#else
+#include <SPI.h>
+#define RH_HAVE_HARDWARE_SPI
+#define RH_HAVE_SERIAL
+#endif
 
 #elif (RH_PLATFORM == RH_PLATFORM_MSP430) // LaunchPad specific
- #include "legacymsp430.h"
- #include "Energia.h"
- #include <SPI.h>
- #define RH_HAVE_HARDWARE_SPI
- #define RH_HAVE_SERIAL
+#include "legacymsp430.h"
+#include "Energia.h"
+#include <SPI.h>
+#define RH_HAVE_HARDWARE_SPI
+#define RH_HAVE_SERIAL
 
 #elif (RH_PLATFORM == RH_PLATFORM_UNO32)
- #include <WProgram.h>
- #include <string.h>
- #include <SPI.h>
- #define RH_HAVE_HARDWARE_SPI
- #define memcpy_P memcpy
- #define RH_HAVE_SERIAL
+#include <WProgram.h>
+#include <string.h>
+#include <SPI.h>
+#define RH_HAVE_HARDWARE_SPI
+#define memcpy_P memcpy
+#define RH_HAVE_SERIAL
 
 #elif (RH_PLATFORM == RH_PLATFORM_STM32) // Maple, Flymaple etc
- #include <wirish.h>	
- #include <stdint.h>
- #include <string.h>
- #include <HardwareSPI.h>
- #define RH_HAVE_HARDWARE_SPI
- // Defines which timer to use on Maple
- #define MAPLE_TIMER 1
- #define PROGMEM
- #define memcpy_P memcpy
- #define Serial SerialUSB
- #define RH_HAVE_SERIAL
+#include <wirish.h>	
+#include <stdint.h>
+#include <string.h>
+#include <HardwareSPI.h>
+#define RH_HAVE_HARDWARE_SPI
+// Defines which timer to use on Maple
+#define MAPLE_TIMER 1
+#define PROGMEM
+#define memcpy_P memcpy
+#define Serial SerialUSB
+#define RH_HAVE_SERIAL
 
 #elif (RH_PLATFORM == RH_PLATFORM_STM32STD) // STM32 with STM32F4xx_StdPeriph_Driver 
- #include <stm32f4xx.h>
- #include <wirish.h>	
- #include <stdint.h>
- #include <string.h>
- #include <math.h>
- #include <HardwareSPI.h>
- #define RH_HAVE_HARDWARE_SPI
- #define Serial SerialUSB
- #define RH_HAVE_SERIAL
+#include <stm32f4xx.h>
+#include <wirish.h>	
+#include <stdint.h>
+#include <string.h>
+#include <math.h>
+#include <HardwareSPI.h>
+#define RH_HAVE_HARDWARE_SPI
+#define Serial SerialUSB
+#define RH_HAVE_SERIAL
 
 #elif (RH_PLATFORM == RH_PLATFORM_GENERIC_AVR8) 
- #include <avr/io.h>
- #include <avr/interrupt.h>
- #include <util/delay.h>
- #include <string.h>
- #include <stdbool.h>
- #define RH_HAVE_HARDWARE_SPI
- #include <SPI.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <string.h>
+#include <stdbool.h>
+#define RH_HAVE_HARDWARE_SPI
+#include <SPI.h>
 
 // For Steve Childress port to ARM M4 w/CMSIS with STM's Hardware Abstraction lib. 
 // See ArduinoWorkarounds.h (not supplied)
 #elif (RH_PLATFORM == RH_PLATFORM_STM32F4_HAL) 
- #include <ArduinoWorkarounds.h>
- #include <stm32f4xx.h> // Also using ST's CubeMX to generate I/O and CPU setup source code for IAR/EWARM, not GCC ARM.
- #include <stdint.h>
- #include <string.h>
- #include <math.h>
- #define RH_HAVE_HARDWARE_SPI // using HAL (Hardware Abstraction Libraries from ST along with CMSIS, not arduino libs or pins concept.
-
+#include <ArduinoWorkarounds.h>
+#include <stm32f4xx.h> // Also using ST's CubeMX to generate I/O and CPU setup source code for IAR/EWARM, not GCC ARM.
+#include <stdint.h>
+#include <string.h>
+#include <math.h>
+#define RH_HAVE_HARDWARE_SPI // using HAL (Hardware Abstraction Libraries from ST along with CMSIS, not arduino libs or pins concept.
 #elif (RH_PLATFORM == RH_PLATFORM_RASPI)
- #define RH_HAVE_HARDWARE_SPI
- #define RH_HAVE_SERIAL
- #define PROGMEM
- #include <RHutil/RasPi.h>
- #include <string.h>
- //Define SS for CS0 or pin 24
- #define SS 8
+#define RH_HAVE_HARDWARE_SPI
+#define RH_HAVE_SERIAL
+#define PROGMEM
+#include <RHutil/RasPi.h>
+#include <string.h>
+//Define SS for CS0 or pin 24
+#define SS 8
 
 #elif (RH_PLATFORM == RH_PLATFORM_NRF51)
- #define RH_HAVE_SERIAL
- #define PROGMEM
-  #include <Arduino.h>
+#define RH_HAVE_SERIAL
+#define PROGMEM
+#include <Arduino.h>
 
 #elif (RH_PLATFORM == RH_PLATFORM_UNIX) 
- // Simulate the sketch on Linux and OSX
- #include <RHutil/simulator.h>
- #define RH_HAVE_SERIAL
+// Simulate the sketch on Linux and OSX
+#include <RHutil/simulator.h>
+#define RH_HAVE_SERIAL
+
+#elif (RH_PLATFORM == RH_PLATFORM_MK20DX_PE)
+#include "wirish.h" 
+#include <stdint.h>
+#include <string.h>
+#include <math.h>
+#include "HardwareSPI.h"
+#define RH_HAVE_HARDWARE_SPI
+//#define Serial SerialUSB
+//#define RH_HAVE_SERIAL
 
 #else
- #error Platform unknown!
+#error Platform unknown!
 #endif
 
 ////////////////////////////////////////////////////
 // This is an attempt to make a portable atomic block
 #if (RH_PLATFORM == RH_PLATFORM_ARDUINO)
 #if defined(__arm__)
-  #include <RHutil/atomic.h>
- #else
-  #include <util/atomic.h>
- #endif
- #define ATOMIC_BLOCK_START     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
- #define ATOMIC_BLOCK_END }
+#include <RHutil/atomic.h>
+#else
+#include <util/atomic.h>
+#endif
+#define ATOMIC_BLOCK_START     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+#define ATOMIC_BLOCK_END }
 #elif (RH_PLATFORM == RH_PLATFORM_UNO32)
- #include <peripheral/int.h>
- #define ATOMIC_BLOCK_START unsigned int __status = INTDisableInterrupts(); {
- #define ATOMIC_BLOCK_END } INTRestoreInterrupts(__status);
+#include <peripheral/int.h>
+#define ATOMIC_BLOCK_START unsigned int __status = INTDisableInterrupts(); {
+#define ATOMIC_BLOCK_END } INTRestoreInterrupts(__status);
 #else 
- // TO BE DONE:
- #define ATOMIC_BLOCK_START
- #define ATOMIC_BLOCK_END
+// TO BE DONE:
+#define ATOMIC_BLOCK_START
+#define ATOMIC_BLOCK_END
 #endif
 
 ////////////////////////////////////////////////////
@@ -719,68 +733,72 @@
 // instead of spin-loops
 // Recent Arduino IDE or Teensy 3 has yield()
 #if (RH_PLATFORM == RH_PLATFORM_ARDUINO && ARDUINO >= 155 && !defined(RH_PLATFORM_ATTINY)) || (TEENSYDUINO && defined(__MK20DX128__))
- #define YIELD yield();
+#define YIELD yield();
 #else
- #define YIELD
+#define YIELD
 #endif
 
 ////////////////////////////////////////////////////
 // digitalPinToInterrupt is not available prior to Arduino 1.5.6 and 1.0.6
 // See http://arduino.cc/en/Reference/attachInterrupt
 #ifndef NOT_AN_INTERRUPT
- #define NOT_AN_INTERRUPT -1
+#define NOT_AN_INTERRUPT -1
 #endif
 #ifndef digitalPinToInterrupt
- #if (RH_PLATFORM == RH_PLATFORM_ARDUINO) && !defined(__arm__)
+#if (RH_PLATFORM == RH_PLATFORM_ARDUINO) && !defined(__arm__)
 
-  #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-   // Arduino Mega, Mega ADK, Mega Pro
-   // 2->0, 3->1, 21->2, 20->3, 19->4, 18->5
-   #define digitalPinToInterrupt(p) ((p) == 2 ? 0 : ((p) == 3 ? 1 : ((p) >= 18 && (p) <= 21 ? 23 - (p) : NOT_AN_INTERRUPT)))
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+// Arduino Mega, Mega ADK, Mega Pro
+// 2->0, 3->1, 21->2, 20->3, 19->4, 18->5
+#define digitalPinToInterrupt(p) ((p) == 2 ? 0 : ((p) == 3 ? 1 : ((p) >= 18 && (p) <= 21 ? 23 - (p) : NOT_AN_INTERRUPT)))
 
-  #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) 
-   // Arduino 1284 and 1284P - See Manicbug and Optiboot
-   // 10->0, 11->1, 2->2
-   #define digitalPinToInterrupt(p) ((p) == 10 ? 0 : ((p) == 11 ? 1 : ((p) == 2 ? 2 : NOT_AN_INTERRUPT)))
+#elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) 
+// Arduino 1284 and 1284P - See Manicbug and Optiboot
+// 10->0, 11->1, 2->2
+#define digitalPinToInterrupt(p) ((p) == 10 ? 0 : ((p) == 11 ? 1 : ((p) == 2 ? 2 : NOT_AN_INTERRUPT)))
 
-  #elif defined(__AVR_ATmega32U4__)
-   // Leonardo, Yun, Micro, Pro Micro, Flora, Esplora
-   // 3->0, 2->1, 0->2, 1->3, 7->4
-   #define digitalPinToInterrupt(p) ((p) == 0 ? 2 : ((p) == 1 ? 3 : ((p) == 2 ? 1 : ((p) == 3 ? 0 : ((p) == 7 ? 4 : NOT_AN_INTERRUPT)))))
+#elif defined(__AVR_ATmega32U4__)
+// Leonardo, Yun, Micro, Pro Micro, Flora, Esplora
+// 3->0, 2->1, 0->2, 1->3, 7->4
+#define digitalPinToInterrupt(p) ((p) == 0 ? 2 : ((p) == 1 ? 3 : ((p) == 2 ? 1 : ((p) == 3 ? 0 : ((p) == 7 ? 4 : NOT_AN_INTERRUPT)))))
 
-  #else
-   // All other arduino except Due:
-   // Serial Arduino, Extreme, NG, BT, Uno, Diecimila, Duemilanove, Nano, Menta, Pro, Mini 04, Fio, LilyPad, Ethernet etc
-   // 2->0, 3->1
-   #define digitalPinToInterrupt(p)  ((p) == 2 ? 0 : ((p) == 3 ? 1 : NOT_AN_INTERRUPT))
+#else
+// All other arduino except Due:
+// Serial Arduino, Extreme, NG, BT, Uno, Diecimila, Duemilanove, Nano, Menta, Pro, Mini 04, Fio, LilyPad, Ethernet etc
+// 2->0, 3->1
+#define digitalPinToInterrupt(p)  ((p) == 2 ? 0 : ((p) == 3 ? 1 : NOT_AN_INTERRUPT))
 
-  #endif
- 
- #elif (RH_PLATFORM == RH_PLATFORM_UNO32)
-  #define digitalPinToInterrupt(p) ((p) == 38 ? 0 : ((p) == 2 ? 1 : ((p) == 7 ? 2 : ((p) == 8 ? 3 : ((p) == 735 ? 4 : NOT_AN_INTERRUPT)))))
+#endif
 
- #else
-  // Everything else (including Due and Teensy) interrupt number the same as the interrupt pin number
-  #define digitalPinToInterrupt(p) (p)
- #endif
+#elif (RH_PLATFORM == RH_PLATFORM_UNO32)
+#define digitalPinToInterrupt(p) ((p) == 38 ? 0 : ((p) == 2 ? 1 : ((p) == 7 ? 2 : ((p) == 8 ? 3 : ((p) == 735 ? 4 : NOT_AN_INTERRUPT)))))
+
+#else
+// Everything else (including Due and Teensy) interrupt number the same as the interrupt pin number
+#define digitalPinToInterrupt(p) (p)
+#endif
 #endif
 
 // On some platforms, attachInterrupt() takes a pin number, not an interrupt number
 #if (RH_PLATFORM == RH_PLATFORM_ARDUINO) && defined (__arm__) && (defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_SAM_DUE))
- #define RH_ATTACHINTERRUPT_TAKES_PIN_NUMBER
+#define RH_ATTACHINTERRUPT_TAKES_PIN_NUMBER
 #endif
 
 // Slave select pin, some platforms such as ATTiny do not define it.
 #ifndef SS
- #define SS 10
+#define SS 10
 #endif
 
 // These defs cause trouble on some versions of Arduino
-#undef abs
-#undef round
-#undef double
+//#undef abs
+//#undef round
+//#undef double
 
 // This is the address that indicates a broadcast
 #define RH_BROADCAST_ADDRESS 0xff
+
+typedef unsigned short int uint16_t;
+typedef unsigned char uint8_t;
+typedef signed char int8_t;
 
 #endif

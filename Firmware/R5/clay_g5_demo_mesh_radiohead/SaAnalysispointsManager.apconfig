@@ -1,6 +1,6 @@
 <Analysispoints>
 	<Name>AnalysispointsManager</Name>
-	<ProjectPath>C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/SaAnalysispointsManager.apconfig</ProjectPath>
+	<ProjectPath>C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_radiohead/SaAnalysispointsManager.apconfig</ProjectPath>
 	<MaxNumberOfCores>1</MaxNumberOfCores>
 	<Comments>Analysispoints Manager</Comments>
 	<IgnoreAll>false</IgnoreAll>

@@ -6,6 +6,6 @@ USER_OBJS :=
 
 USER_OBJS_QUOTED :=
 
-LIBS := -lrt
+LIBS :=
 
-LIBS_QUOTED := "-lrt"
+LIBS_QUOTED :=

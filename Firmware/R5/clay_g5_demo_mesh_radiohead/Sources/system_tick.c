@@ -10,6 +10,12 @@
 #include "PE_Types.h"
 #endif
 
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif 
+
 // defines ///////////////////
 
 // structs ///////////////////
@@ -49,9 +55,14 @@ void tick()
 }
 
 ///will block for n milliseconds
-extern void delay_n_msec(uint32 n)
+void delay_n_msec(uint32 n)
 {
     int start = power_on_time_msec;
     while (power_on_time_msec - start < n)
         ;
 }
+
+
+#ifdef __cplusplus
+}
+#endif 
