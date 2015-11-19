@@ -10,6 +10,11 @@
 // includes //////////////////
 #include "PE_Types.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif 
+
 // defines ///////////////////
 
 // structs ///////////////////
@@ -25,6 +30,11 @@ extern void init_tick();
 
 extern void tick();
 
-extern void delay_n_msec(uint32 n);
+extern void delay_n_msec(uint32_t n);
+
+#ifdef __cplusplus
+}
+#endif 
 
 #endif /* SYSTEM_TICK_H_ */
+

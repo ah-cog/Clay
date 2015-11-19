@@ -6,8 +6,8 @@
 #ifndef RHDatagram_h
 #define RHDatagram_h
 
-#include <RHGenericDriver.h>
-
+#include "RHGenericDriver.h"
+#define NULL 0
 // This is the maximum possible message size for radios supported by RadioHead.
 // Not all radios support this length, and many are much smaller
 #define RH_MAX_MESSAGE_LEN 255

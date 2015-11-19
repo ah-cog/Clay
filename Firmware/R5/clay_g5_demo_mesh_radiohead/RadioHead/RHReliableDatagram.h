@@ -7,8 +7,11 @@
 #ifndef RHReliableDatagram_h
 #define RHReliableDatagram_h
 
-#include <RHDatagram.h>
+#include <stdint.h>
+#include "RHDatagram.h"
 
+
+#define NULL 0
 // The acknowledgement bit in the FLAGS
 // The top 4 bits of the flags are reserved for RadioHead. The lower 4 bits are reserved
 // for application layer use.

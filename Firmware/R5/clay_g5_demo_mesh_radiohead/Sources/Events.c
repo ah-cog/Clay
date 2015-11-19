@@ -40,8 +40,8 @@ extern "C"
 #include "system_tick.h"
 #endif
 
-#ifndef APP_NRF24L01_H_
-#include "app_nrf24l01.h"
+#ifndef _wirish_h
+#include "../RadioHead/wirish.h"
 #endif
 
 /*
@@ -158,18 +158,69 @@ void I2C0_OnMasterByteReceived(LDD_TUserData *UserDataPtr)
 
 /*
  ** ===================================================================
- **     Event       :  RF1_OnInterrupt (module Events)
+ **     Event       :  SM1_OnBlockSent (module Events)
  **
- **     Component   :  RF1 [nRF24L01]
- **     Description :
- **         Called in case of an interrupt from the transcevier
- **     Parameters  : None
- **     Returns     : Nothing
- ** ===================================================================
+ **     Component   :  SM1 [SPIMaster_LDD]
  */
-void RF1_OnInterrupt(void)
+/*!
+ **     @brief
+ **         This event is called after the last character from the
+ **         output buffer is moved to the transmitter. This event is
+ **         available only if the SendBlock method is enabled.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. The pointer is passed
+ **                           as the parameter of Init method. 
+ */
+/* ===================================================================*/
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
-    mesh_interrupt_handler();
+    /* Write your code here ... */
+}
+
+/*
+ ** ===================================================================
+ **     Event       :  SM1_OnBlockReceived (module Events)
+ **
+ **     Component   :  SM1 [SPIMaster_LDD]
+ */
+/*!
+ **     @brief
+ **         This event is called when the requested number of data is
+ **         moved to the input buffer. This method is available only if
+ **         the ReceiveBlock method is enabled.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. The pointer is passed
+ **                           as the parameter of Init method. 
+ */
+/* ===================================================================*/
+void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr)
+{
+    /* Write your code here ... */
+}
+
+/*
+ ** ===================================================================
+ **     Event       :  MESH_IRQ_OnInterrupt (module Events)
+ **
+ **     Component   :  MESH_IRQ [ExtInt_LDD]
+ */
+/*!
+ **     @brief
+ **         This event is called when an active signal edge/level has
+ **         occurred.
+ **     @param
+ **         UserDataPtr     - Pointer to RTOS device
+ **                           data structure pointer.
+ */
+/* ===================================================================*/
+void MESH_IRQ_OnInterrupt(LDD_TUserData *UserDataPtr)
+{
+    /* Write your code here ... */
+    if (mesh_irq_handler != NULL) {
+        mesh_irq_handler();
+    }
 }
 
 /* END Events */

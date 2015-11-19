@@ -4,20 +4,27 @@
 -g3
 -gdwarf-2
 -gstrict-dwarf
--I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Project_Headers"
--I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Project_Settings/Startup_Code"
--I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include"
--I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
--I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Generated_Code"
--I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Sources"
--I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Static_Code/PDD"
--I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_baremetal/Static_Code/IO_Map"
+-nostdinc
+-nostdinc++
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_radiohead/Project_Headers"
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_radiohead/Project_Settings/Startup_Code"
+-I"C:/Freescale/CW MCU v10.6/MCU/ARM_GCC_Support/ewl/EWL_C/include"
+-I"C:/Freescale/CW MCU v10.6/MCU/ARM_GCC_Support/ewl/EWL_C++/include"
+-I"C:/Freescale/CW MCU v10.6/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_radiohead/Generated_Code"
+-I"C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_mesh_radiohead/Sources"
+-I"C:/Freescale/CW MCU v10.6/MCU/ProcessorExpert/lib/Kinetis/iofiles"
+-I"C:/Freescale/CW MCU v10.6/MCU/ProcessorExpert/lib/Kinetis/pdd/inc"
 -O0
 -ffunction-sections
 -fdata-sections
 -Wall
--std=gnu99
--v
+-fno-exceptions
+-fno-rtti
 -c
 -fmessage-length=0
--specs=ewl_c_noio.specs
+-c
+-fmessage-length=0
+-Iinclude
+-include lib_ewl_c++.prefix
+-specs=ewl_c++_noio.specs

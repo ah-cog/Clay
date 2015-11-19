@@ -3,8 +3,9 @@
 // Copyright (C) 2014 Mike McCauley
 // $Id: RH_ASK.cpp,v 1.15 2015/03/09 06:04:26 mikem Exp $
 
-#include <RH_ASK.h>
-#include <RHCRC.h>
+#include "RH_ASK.h"
+#include "RHCRC.h"
+#include "wirish.h"
 
 #if (RH_PLATFORM == RH_PLATFORM_STM32) // Maple etc
 HardwareTimer timer(MAPLE_TIMER);

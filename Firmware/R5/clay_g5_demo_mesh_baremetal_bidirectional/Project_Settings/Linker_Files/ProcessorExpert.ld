@@ -4,13 +4,13 @@
 /*##                                   */
 /*##     Filename  : ProcessorExpert.ld */
 /*##                                   */
-/*##     Project   : clay_g5_demo_mesh_baremetal */
+/*##     Project   : clay_g5_demo_mesh_baremetal_bidirectional */
 /*##                                   */
 /*##     Processor : MK20DX256VLH7     */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2015-10-02, 19:00, # CodeGen: 10 */
+/*##     Date/Time : 2015-11-11, 23:15, # CodeGen: 0 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */

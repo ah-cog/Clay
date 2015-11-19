@@ -1,0 +1,27 @@
+-mcpu=cortex-m4
+-mthumb
+-mfloat-abi=soft
+-g3
+-gdwarf-2
+-gstrict-dwarf
+-nostdinc
+-nostdinc++
+-I"C:/Users/Ben/Desktop/dtf/cw_workspace/Copy of clay_g5_demo_mesh_baremetal/Project_Headers"
+-I"C:/Users/Ben/Desktop/dtf/cw_workspace/Copy of clay_g5_demo_mesh_baremetal/Project_Settings/Startup_Code"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C/include"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C++/include"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_Runtime/include"
+-I"C:/Users/Ben/Desktop/dtf/cw_workspace/Copy of clay_g5_demo_mesh_baremetal/Generated_Code"
+-I"C:/Users/Ben/Desktop/dtf/cw_workspace/Copy of clay_g5_demo_mesh_baremetal/Sources"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ProcessorExpert/lib/Kinetis/iofiles"
+-I"C:/Freescale/CW MCU v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc"
+-O0
+-ffunction-sections
+-fdata-sections
+-Wall
+-fno-exceptions
+-fno-rtti
+-c
+-fmessage-length=0
+-Iinclude
+-include lib_ewl_c++.prefix
