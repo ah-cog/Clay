@@ -75,18 +75,6 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include <cstdlib>
 
-#define MESH_RX_TIMEOUT_MS  1
-
-#define MESH_ITEM_1 1  //defined == rx
-
-#if MESH_ITEM_1
-#define THIS_NODE_ADDR 1u
-#define REMOTE_NODE_ADDR 2u
-#else
-#define THIS_NODE_ADDR 2u
-#define REMOTE_NODE_ADDR 1u
-#endif
-
 #ifndef SYSTEM_TICK_H_
 #include "system_tick.h"
 #endif
@@ -131,7 +119,24 @@
 #include "../RadioHead/RHHardwareSPI.h"
 #endif
 
+#define MESH_RX_TIMEOUT_MS  1
+
+//#define MESH_ITEM_1 1  //defined == rx
+#if MESH_ITEM_1
+#define THIS_NODE_ADDR 1u
+#define REMOTE_NODE_ADDR 2u
+#else
+#define THIS_NODE_ADDR 2u
+#define REMOTE_NODE_ADDR 1u
+#endif
+
 static uint8_t hb_led_count = 0;
+
+#if MESH_ITEM_1
+static uint8_t receive = 0;
+#else
+static uint8_t receive = 1;
+#endif
 
 static uint8_t size = sizeof(mpu_values) - 2;
 static mpu_values local_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -184,21 +189,25 @@ int main(void)
 
     for (;;)
     {
-        uint8_t source = REMOTE_NODE_ADDR;
-        if (meshManager.recvfromAck((uint8_t*) &remote_imu_data, &size, &source))
+        if (receive)
         {
-            update_imu_leds(&remote_imu_data, colors);
+            uint8_t source = REMOTE_NODE_ADDR;
+            if (meshManager.recvfromAck((uint8_t*) &remote_imu_data, &size, &source))
+            {
+                update_imu_leds(&remote_imu_data, colors);
+                receive = (receive ? 0 : 1);
+            }
+        }
+        else
+        {
+            get_mpu_readings(&local_imu_data);
+            meshManager.sendtoWait((uint8_t*) &local_imu_data, sizeof(mpu_values) - 2, REMOTE_NODE_ADDR, 0);
+            receive = (receive ? 0 : 1);
         }
 
         if (tick_1msec)
         {
             tick_1msec = FALSE;
-
-#if !MESH_ITEM_1           
-            get_mpu_readings(&local_imu_data);
-            meshManager.sendtoWait((uint8_t*) &local_imu_data, sizeof(mpu_values) - 2, REMOTE_NODE_ADDR, 0);
-#endif
-
         }
 
         if (tick_250msec)
