@@ -89,6 +89,11 @@ unsigned long millis()
     return power_on_time_msec;
 }
 
+void update_random_seed(int32_t seed)
+{
+    srand(seed);
+}
+
 long random(long from, long to)
 {    
     return from + (rand() % (to - from));

@@ -796,8 +796,4 @@
 // This is the address that indicates a broadcast
 #define RH_BROADCAST_ADDRESS 0xff
 
-typedef unsigned short int uint16_t;
-typedef unsigned char uint8_t;
-typedef signed char int8_t;
-
 #endif

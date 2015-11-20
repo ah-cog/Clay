@@ -81,13 +81,17 @@ typedef enum WiringPinMode
 extern void pinMode(uint8_t pin, WiringPinMode mode);
 extern uint32_t millis();
 
-extern "C"{extern void delay(uint32_t millis);}
+extern "C"
+{
+extern void delay(uint32_t millis);
+}
 extern void attachInterrupt(uint8_t, void (*)(void), int mode);
 extern void digitalWrite(uint8_t pin, uint8_t val);
 extern uint8_t digitalRead(uint8_t pin);
 
 //extern long random(long to);
-extern long random(long from, long to);
+extern long random(int32_t from, int32_t to);
+extern void update_random_seed(int32_t seed);
 
 #define HIGH 0x1
 #define LOW  0x0
