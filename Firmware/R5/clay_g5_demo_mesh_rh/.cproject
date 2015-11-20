@@ -295,12 +295,13 @@
 									<listOptionValue builtIn="false" value="RadioHead/RHRouter.cpp"/>
 									<listOptionValue builtIn="false" value="RadioHead/RHSPIDriver.cpp"/>
 									<listOptionValue builtIn="false" value="RadioHead/RHSoftwareSPI.cpp"/>
-									<listOptionValue builtIn="false" value="RadioHead/RH_ASK.cpp"/>
 									<listOptionValue builtIn="false" value="RadioHead/RH_NRF24.cpp"/>
 									<listOptionValue builtIn="false" value="RadioHead/RH_Serial.cpp"/>
 									<listOptionValue builtIn="false" value="RadioHead/RH_TCP.cpp"/>
 									<listOptionValue builtIn="false" value="RadioHead/wirish.cpp"/>
 									<listOptionValue builtIn="false" value="Sources/main.cpp"/>
+									<listOptionValue builtIn="false" value="Generated_Code/MESH_CS.c"/>
+									<listOptionValue builtIn="false" value="Sources/Mesh.c"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.ldflags.1138338399" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.ldflags" valueType="stringList">
 									<listOptionValue builtIn="false" value="--undefined=__pformatter_"/>
@@ -309,6 +310,7 @@
 									<listOptionValue builtIn="false" value="-lc++ -lrt -lsupc++ -lc -lgcc -luart"/>
 									<listOptionValue builtIn="false" value="--end-group"/>
 								</option>
+								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.libs.954309724" name="Libraries (-l)" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.libs" valueType="libs"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.cpp.linker.input.643994396" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

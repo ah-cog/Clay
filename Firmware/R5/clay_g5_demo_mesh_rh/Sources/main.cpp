@@ -74,6 +74,12 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include <cstdlib>
+#include <cmath>
+#include <cstdint>
+
+#ifndef MESH_H_
+#include "Mesh.h"
+#endif
 
 #ifndef SYSTEM_TICK_H_
 #include "system_tick.h"
@@ -87,58 +93,15 @@
 #include "mpu_9250_driver.h"
 #endif
 
-#ifndef RadioHead_h
-#include "..\RadioHead\RadioHead.h"
-#endif
+#define MESH_TX_MAX_TIME_MSEC   5
+#define MESH_RX_MAX_TIME_MSEC   5  
 
-#ifndef RHMesh_h
-#include "../RadioHead/RHMesh.h"
-#endif
-
-#ifndef RH_NRF24_h
-#include "../RadioHead/RH_NRF24.h"
-#endif
-
-#ifndef RHGenericDriver_h
-#include "../RadioHead/RHGenericDriver.h"
-#endif
-
-#ifndef _wirish_h
-#include "../RadioHead/wirish.h"
-#endif
-
-#ifndef _HardwareSPI_h
-#include "../RadioHead/HardwareSPI.h"
-#endif
-
-#ifndef RHGenericSPI_h
-#include "../RadioHead/RHGenericSPI.h"
-#endif
-
-#ifndef RHHardwareSPI_h
-#include "../RadioHead/RHHardwareSPI.h"
-#endif
-
-#define MESH_RX_TIMEOUT_MS  1
-
-//#define MESH_ITEM_1 1  //defined == rx
-#if MESH_ITEM_1
-#define THIS_NODE_ADDR 1u
-#define REMOTE_NODE_ADDR 2u
-#else
-#define THIS_NODE_ADDR 2u
-#define REMOTE_NODE_ADDR 1u
-#endif
+static uint8_t receive = 0;
+static uint32_t mode_start_time = 0;
 
 static uint8_t hb_led_count = 0;
 
-#if MESH_ITEM_1
-static uint8_t receive = 0;
-#else
-static uint8_t receive = 1;
-#endif
-
-static uint8_t size = sizeof(mpu_values) - 2;
+static uint32_t size = sizeof(mpu_values) - 2;
 static mpu_values local_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static mpu_values remote_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -175,60 +138,64 @@ int main(void)
     mpu_9250_init();
     upcount_hb_leds();
 
-    RH_NRF24 meshRadio(MESH_CE_PIN_INDEX, MESH_SELECT_PIN_INDEX);
-    upcount_hb_leds();
-
-    RHMesh meshManager(meshRadio);
-    upcount_hb_leds();
-
-    meshManager.init();
-    upcount_hb_leds();
-
-    meshManager.setThisAddress(THIS_NODE_ADDR);
+    mesh_init();
     upcount_hb_leds();
 
     for (;;)
     {
-        if (receive)
+        if (receive || (power_on_time_msec - mode_start_time) > MESH_RX_MAX_TIME_MSEC)
         {
-            uint8_t source = REMOTE_NODE_ADDR;
-            if (meshManager.recvfromAck((uint8_t*) &remote_imu_data, &size, &source))
+            if (mode_start_time == 0)
+            {
+                mode_start_time = power_on_time_msec;
+            }
+            uint8_t source;
+            if (mesh_rx(&remote_imu_data.bytes, &size, &source))
             {
                 update_imu_leds(&remote_imu_data, colors);
-                receive = (receive ? 0 : 1);
+                receive = 0;
+                mode_start_time = 0;
             }
         }
         else
         {
+            if (mode_start_time == 0)
+            {
+                mode_start_time = power_on_time_msec;
+            }
+
             get_mpu_readings(&local_imu_data);
-            meshManager.sendtoWait((uint8_t*) &local_imu_data, sizeof(mpu_values) - 2, REMOTE_NODE_ADDR, 0);
-            receive = (receive ? 0 : 1);
+            if (mesh_tx(&local_imu_data.bytes, sizeof(local_imu_data) - 2,
+                    get_first_node()) || (power_on_time_msec - mode_start_time) > MESH_TX_MAX_TIME_MSEC)
+                    {                    mode_start_time = 0;
+                    receive = 1;
+                }
+            }
+
+            if (tick_1msec)
+            {
+                tick_1msec = FALSE;
+            }
+
+            if (tick_250msec)
+            {
+                tick_250msec = FALSE;
+            }
+
+            if (tick_500msec)
+            {
+                tick_500msec = FALSE;
+                upcount_hb_leds();
+            }
         }
 
-        if (tick_1msec)
-        {
-            tick_1msec = FALSE;
-        }
-
-        if (tick_250msec)
-        {
-            tick_250msec = FALSE;
-        }
-
-        if (tick_500msec)
-        {
-            tick_500msec = FALSE;
-            upcount_hb_leds();
-        }
-    }
-
-    /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+            /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+            /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
 #ifdef PEX_RTOS_START
-    PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+            PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
 #endif
-    /*** End of RTOS startup code.  ***/
-    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+            /*** End of RTOS startup code.  ***/
+            /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
     for (;;)
     {
     }
@@ -274,8 +241,8 @@ void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[])
         set_led_output(RGB_3, colors + 3);
     }
 
-    if (abs(remote_imu_data->values.y_mag)
-            >= abs(remote_imu_data->values.x_mag))
+    if (std::abs(remote_imu_data->values.y_mag)
+            >= std::abs(remote_imu_data->values.x_mag))
     {
         if (remote_imu_data->values.y_mag > 0)
         {
