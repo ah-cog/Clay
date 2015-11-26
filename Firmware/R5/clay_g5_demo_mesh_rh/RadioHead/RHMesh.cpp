@@ -13,6 +13,20 @@
 
 #include <RHMesh.h>
 
+#ifndef LED_DRIVER_PCA9552_H_
+#include "led_driver_pca9552.h"
+#endif
+
+static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
+        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //red
+        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //green
+        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED }         //blue
+};
+
+#define RED_OUTPUT  (colors + 1)
+#define GREEN_OUTPUT  (colors + 2)
+#define BLUE_OUTPUT  (colors + 3)
+
 uint8_t RHMesh::_tmpMessage[RH_ROUTER_MAX_MESSAGE_LEN];
 
 ////////////////////////////////////////////////////////////////////
@@ -80,6 +94,7 @@ bool RHMesh::doArp(uint8_t address)
                     addRouteTo(address, headerFrom());
                     return true;
                 }
+                //possible todo add callback to process messages here
             }
         }
         YIELD;
@@ -189,7 +204,7 @@ bool RHMesh::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t* d
             // If it originally came from us, ignore it
             if (_source == _thisAddress)
                 return false;
-
+           
             uint8_t numRoutes = tmpMessageLen - sizeof(MeshMessageHeader) - 2;
             uint8_t i;
             // Are we already mentioned?
@@ -203,6 +218,19 @@ bool RHMesh::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t* d
                 addRouteTo(d->route[i], headerFrom());
             if (isPhysicalAddress(&d->dest, d->destlen))
             {
+                set_led_output(RGB_12, GREEN_OUTPUT);
+                
+                if(numRoutes > 0)
+                {
+                    set_led_output(RGB_11, BLUE_OUTPUT);
+                }
+                else
+                {
+                    set_led_output(RGB_11, GREEN_OUTPUT);
+                }
+                    
+                
+                // NOTE: this is where the response for the route discovery is sent. gbh
                 // This route discovery is for us. Unicast the whole route back to the originator
                 // as a RH_MESH_MESSAGE_TYPE_ROUTE_DISCOVERY_RESPONSE
                 // We are certain to have a route there, because we just got it
@@ -211,6 +239,7 @@ bool RHMesh::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t* d
             }
             else if (i < _max_hops)
             {
+                set_led_output(RGB_12, BLUE_OUTPUT);
                 // Its for someone else, rebroadcast it, after adding ourselves to the list
                 d->route[numRoutes] = _thisAddress;
                 tmpMessageLen++;

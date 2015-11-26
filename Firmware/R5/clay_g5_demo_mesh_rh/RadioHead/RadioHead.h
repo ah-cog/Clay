@@ -700,8 +700,7 @@
 #include <math.h>
 #include "HardwareSPI.h"
 #define RH_HAVE_HARDWARE_SPI
-//#define Serial SerialUSB
-//#define RH_HAVE_SERIAL
+
 
 #else
 #error Platform unknown!

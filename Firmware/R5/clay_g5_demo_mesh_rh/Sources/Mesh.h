@@ -13,12 +13,36 @@
 #define MESH_MAX_NODES 10
 //
 #define MESH_RESERVED_ADDRESS 254
+//#define MESH_STARTUP_ADDRESS 253
+#define MESH_STARTUP_ADDRESS 3
 //
+#define MESH_CMD_CHANGE_MESH_MODE       0x00
+#define MESH_CMD_UPDATE_IMU_DATA        0x01
+#define MESH_CMD_ADDRESS_CLAIM_MSG      0x02
+#define MESH_CMD_TERMINATION            0xEE
+//
+typedef void (*cmd_func)(uint8_t * data, uint8_t len);
 
-extern void mesh_init(void);
-extern uint8_t mesh_rx(void * data, uint32_t * dataLength, uint8_t * source);
+typedef struct
+{
+    uint8_t cmd;
+    cmd_func function;
+} mesh_command;
+
+extern mesh_command commands[];
+extern uint32_t command_count;
+
+extern void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback);
+extern void mesh_process_commands(void);
+extern void mesh_do_routing(void);
+extern uint8_t mesh_rx(void * data, uint8_t * dataLength, uint8_t * source);
+extern uint8_t mesh_tx_command(void * data, uint32_t dataLength, uint8_t destination);
 extern uint8_t mesh_tx(void * data, uint32_t dataLength, uint8_t destination);
-extern void mesh_discover_nodes();
+extern uint8_t mesh_broadcast_command(void * data, uint32_t dataLength);
+extern uint8_t mesh_broadcast(void * data, uint32_t dataLength);
+extern void mesh_discover_nodes_and_get_address();
 extern uint8_t get_first_node();
+extern uint8_t get_last_node();
+extern uint8_t get_next_node(uint8_t startAddr);
 
 #endif /* MESH_H_ */
