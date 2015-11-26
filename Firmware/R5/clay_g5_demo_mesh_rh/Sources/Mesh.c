@@ -65,7 +65,6 @@ static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },     
 #define MESH_RX_BUF_LEN                 0xFF
 #define RH_MESH_PACKET_SIZE             22
 #define MAX_MESH_NODE_COUNT             10
-#define ADDRESS_2                       0
 
 typedef enum
 {
@@ -141,6 +140,24 @@ void mesh_process_commands(void)
 
     if (mesh_rx(rx_buf, &size, &source))
     {
+        switch (source)
+        {
+            case 1:
+                {
+                set_led_output(RGB_1, GREEN_OUTPUT);
+                break;
+            }
+            case 2:
+                {
+                set_led_output(RGB_1, BLUE_OUTPUT);
+                break;
+            }
+            case 3:
+                {
+                set_led_output(RGB_1, RED_OUTPUT);
+                break;
+            }
+        }
         set_led_output(RGB_8, GREEN_OUTPUT);
 
         if (size == 3 && rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)

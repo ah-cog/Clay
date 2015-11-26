@@ -306,24 +306,24 @@ bool RH_NRF24::available()
     {
         if (_mode == RHModeTx)
         {
-            set_led_output(RGB_10, BLUE_OUTPUT);
+            set_led_output(RGB_7, BLUE_OUTPUT);
             return false;
         }
 
         setModeRx();
         if (spiReadRegister(RH_NRF24_REG_17_FIFO_STATUS) & RH_NRF24_RX_EMPTY)
         {
-            set_led_output(RGB_10, BLUE_OUTPUT);
+            set_led_output(RGB_7, BLUE_OUTPUT);
             return false;
         }
 
-        set_led_output(RGB_10, GREEN_OUTPUT);
+        set_led_output(RGB_7, GREEN_OUTPUT);
         // Manual says that messages > 32 octets should be discarded
         uint8_t
         len = spiRead(RH_NRF24_COMMAND_R_RX_PL_WID);
         if (len > 32)
         {
-            set_led_output(RGB_10, BLUE_OUTPUT);
+            set_led_output(RGB_7, BLUE_OUTPUT);
             flushRx();
             clearRxBuf();
             setModeIdle();

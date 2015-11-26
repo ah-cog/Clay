@@ -101,6 +101,29 @@
 #define MESH_MODE_BROADCAST     1
 #define MESH_MODE_RX_ONLY       2
 
+#if(ADDRESS_3 )
+#define TRANSMIT                1
+#else
+#define TRANSMIT                0
+#endif
+
+#define LED_TIME_SEGMENT_COUNT      40
+#define LED_MINIMUM_ON_COUNT        (LED_TIME_SEGMENT_COUNT / 10)
+#define LED_UPDATE_PERIOD_MS        (1000 / LED_TIME_SEGMENT_COUNT)
+
+typedef struct
+{
+    uint8_t x_on;
+    uint8_t x_sign;
+    uint8_t y_on;
+    uint8_t y_sign;
+    uint8_t z_on;
+    uint8_t z_sign;
+} led_time_segment_values;
+
+static led_time_segment_values LED_IMU_Levels[LED_TIME_SEGMENT_COUNT];
+static uint32_t LED_time_segment = 0;
+
 static uint8_t transmit = 0;
 static uint32_t mode_start_time = 0;
 static uint8_t mesh_mode = 0;
@@ -116,13 +139,16 @@ static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },     
         { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
         { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED },        //rb
         { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //r
+        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //g
+        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED },        //b
         };
 
 ///
-void update_imu_leds(const mpu_values * remote_imu_data, color_rgb colors[]);
-void upcount_hb_leds();
-void update_mesh_mode(uint8_t * data, uint8_t len);
-void mesh_update_imu_leds(uint8_t * data, uint8_t len);
+static void update_imu_leds(const mpu_values * remote_imu_data, color_rgb colors[]);
+static void upcount_hb_leds();
+static void update_mesh_mode(uint8_t * data, uint8_t len);
+static void mesh_update_imu_leds(uint8_t * data, uint8_t len);
+static void update_3LED_imu();
 ///
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
@@ -159,9 +185,9 @@ int main(void)
     //rgb 5 is green/blue when successful, red otherwise
 
     //RX
+    //rgb 7 is green when the NRF driver is receiving a message in the 'available' method.
     //rgb 8 is blue when no message received, green when message received
-    //rgb 9 is blue when last received message was address broadcast, green when it was application message.
-    //rgb 10 is green when the NRF driver is receiving a message in the 'available' method.
+    //rgb 9 is blue when last received message was address broadcast, green when it was application message.    
     //rgb 11 is green when last node search message was direct, blue when indirect, and is only updated when this board was the target of the search
     //rgb 12 is whether the received node search message was for this node or for another node. green means for this node, blue means another    
 
@@ -181,41 +207,55 @@ int main(void)
         {
             get_mpu_readings(&local_imu_data);
 
-//            uint8_t tx_buf[sizeof(local_imu_data) + 2];
-//            tx_buf[0] = MESH_CMD_UPDATE_IMU_DATA;
-//
-//            for (int i = 0; i < sizeof(local_imu_data); ++i)
-//            {
-//                tx_buf[i + 1] = local_imu_data.bytes[i];
-//            }
+            uint8_t tx_buf[sizeof(local_imu_data) - 2];
+            tx_buf[0] = MESH_CMD_UPDATE_IMU_DATA;
 
-//            tx_buf[sizeof(local_imu_data) + 1] = MESH_CMD_TERMINATION;
+            for (int i = 0; i < sizeof(local_imu_data) - 4; ++i)
+            {
+                tx_buf[i + 1] = local_imu_data.bytes[i];
+            }
+
+            tx_buf[sizeof(local_imu_data) + 1] = MESH_CMD_TERMINATION;
 
 //            if (mesh_tx_command(tx_buf, sizeof(local_imu_data) + 2, get_next_node(0xFF))
 //            if (mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, get_next_node(0xFF))           
             if (get_first_node())
             {
                 tx_start = power_on_time_msec;
-                if (TRANSMIT && mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, target_address) == RH_ROUTER_ERROR_NO_ROUTE)
+//                if (TRANSMIT && mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, target_address) == RH_ROUTER_ERROR_NO_ROUTE)
+                if (TRANSMIT && mesh_tx(tx_buf, sizeof(local_imu_data) - 2, target_address) == RH_ROUTER_ERROR_NO_ROUTE)
                 {
-                    set_led_output(RGB_5, colors + 2);
+                    set_led_output(RGB_2, colors + 2);
                 }
                 else
                 {
-                    set_led_output(RGB_5, colors + 4);
+                    set_led_output(RGB_2, colors + 4);
                 }
                 tx_time = power_on_time_msec - tx_start;
 
 #if TRANSMIT
+#if ADDRESS_3
                 if (target_address == 2)
+#elif ADDRESS_2
+                if (target_address == 1)
+#endif
                 {
-                    set_led_output(RGB_4, colors + 4);
+                    set_led_output(RGB_3, colors + 5);
+#if ADDRESS_3
                     target_address = 1;
+#elif ADDRESS_2
+                    target_address = 3;
+#endif
                 }
                 else
                 {
-                    set_led_output(RGB_4, colors + 2);
+                    set_led_output(RGB_3, colors + 6);
+#if ADDRESS_3
                     target_address = 2;
+#elif ADDRESS_2
+                    target_address = 1;
+
+#endif
                 }
 #endif
             }
@@ -227,10 +267,15 @@ int main(void)
         if (tick_1msec)
         {
             tick_1msec = FALSE;
+            if (!(power_on_time_msec % LED_UPDATE_PERIOD_MS))
+            {
+                update_3LED_imu();
+            }
         }
 
         if (tick_250msec)
         {
+            mesh_update_imu_leds(NULL, 7);
             tick_250msec = FALSE;
         }
 
@@ -256,7 +301,7 @@ int main(void)
     /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
-void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[])
+static void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[])
 {
     if (remote_imu_data->values.x_accel < 50)
     {
@@ -336,24 +381,120 @@ void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[])
     }
 }
 
-void upcount_hb_leds()
+static void upcount_hb_leds()
 {
 //    LED1_PutVal(LED1_DeviceData, !(hb_led_count & 0x02));
     LED2_PutVal(LED2_DeviceData, !(hb_led_count & 0x01));
     hb_led_count = (hb_led_count + 1) % 4;
 }
 
-void update_mesh_mode(uint8_t * data, uint8_t len)
+static void update_mesh_mode(uint8_t * data, uint8_t len)
 {
     if (len < 2) return;
 
     mesh_mode = data[1];
 }
 
-void mesh_update_imu_leds(uint8_t * data, uint8_t len)
+static void mesh_update_imu_leds(uint8_t * data, uint8_t len)
 {
-    if (len < sizeof(mpu_values) + 1) return;
-    update_imu_leds((mpu_values*) (data + 1), colors);
+    if (data != NULL) return;
+    mpu_values * imu_data = &local_imu_data;
+
+    if (imu_data->values.x_accel == 0 && imu_data->values.y_accel == 0 && imu_data->values.z_accel == 0) return;
+//    if (len < 6) return;
+
+//    mpu_values * imu_data = (mpu_values*) (data + 1);
+    uint32_t x_on_periods = LED_MINIMUM_ON_COUNT + (abs(imu_data->values.x_accel) / 16000.0) * LED_TIME_SEGMENT_COUNT;
+    uint32_t y_on_periods = LED_MINIMUM_ON_COUNT + (abs(imu_data->values.y_accel) / 16000.0) * LED_TIME_SEGMENT_COUNT;
+    uint32_t z_on_periods = LED_MINIMUM_ON_COUNT + (abs(imu_data->values.z_accel) / 16000.0) * LED_TIME_SEGMENT_COUNT;
+
+    for (int i = 0; i < LED_TIME_SEGMENT_COUNT; ++i)
+    {
+        LED_IMU_Levels[i].x_on = (i % x_on_periods ? 0 : 1);
+        LED_IMU_Levels[i].y_on = (i % y_on_periods ? 0 : 1);
+        LED_IMU_Levels[i].z_on = (i % z_on_periods ? 0 : 1);
+
+        if (imu_data->values.x_accel > 0)
+        {
+            LED_IMU_Levels[i].x_sign = 1;
+        }
+        else
+        {
+            LED_IMU_Levels[i].x_sign = 0;
+        }
+
+        if (imu_data->values.y_accel > 0)
+        {
+            LED_IMU_Levels[i].y_sign = 1;
+        }
+        else
+        {
+            LED_IMU_Levels[i].y_sign = 0;
+        }
+
+        if (imu_data->values.z_accel > 0)
+        {
+            LED_IMU_Levels[i].z_sign = 1;
+        }
+        else
+        {
+            LED_IMU_Levels[i].z_sign = 0;
+        }
+    }
+
+}
+
+static void update_3LED_imu()
+{
+    led_time_segment_values v = LED_IMU_Levels[LED_time_segment];
+    LED_time_segment = (LED_time_segment + 1)% LED_TIME_SEGMENT_COUNT; 
+    if (v.x_on)
+    {
+        if (1 || v.x_sign)
+        {
+            set_led_output(RGB_4, colors + 4);        //x+
+        }
+        else
+        {
+            set_led_output(RGB_4, colors + 5);        //x-
+        }
+    }
+    else
+    {
+        set_led_output(RGB_4, colors);
+    }
+
+    if (v.y_on)
+    {
+        if (1 || v.y_sign)
+        {
+            set_led_output(RGB_5, colors + 4);        //y
+        }
+        else
+        {
+            set_led_output(RGB_5, colors + 6);        //y
+        }
+    }
+    else
+    {
+        set_led_output(RGB_5, colors);
+    }
+
+    if (v.z_on)
+    {
+        if (1 || v.z_sign)
+        {
+            set_led_output(RGB_6, colors + 5);        //z
+        }
+        else
+        {
+            set_led_output(RGB_6, colors + 6);        //z
+        }
+    }
+    else
+    {
+        set_led_output(RGB_6, colors);
+    }
 }
 
 /* END main */
