@@ -21,6 +21,10 @@
 #define MESH_CMD_ADDRESS_CLAIM_MSG      0x02
 #define MESH_CMD_TERMINATION            0xEE
 //
+#define ADDRESS_1                       0
+#define ADDRESS_2                       2
+#define ADDRESS_3                       0
+//
 typedef void (*cmd_func)(uint8_t * data, uint8_t len);
 
 typedef struct
