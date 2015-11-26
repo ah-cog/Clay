@@ -81,6 +81,8 @@
 #include "Mesh.h"
 #endif
 
+#include "../RadioHead/RHRouter.h"
+
 #ifndef SYSTEM_TICK_H_
 #include "system_tick.h"
 #endif
@@ -94,10 +96,14 @@
 #endif
 
 #define MESH_TX_MAX_TIME_MSEC   5
-#define MESH_RX_MAX_TIME_MSEC   5  
+#define MESH_RX_MAX_TIME_MSEC   800
+#define MESH_MODE_RX_TX         0
+#define MESH_MODE_BROADCAST     1
+#define MESH_MODE_RX_ONLY       2
 
-static uint8_t receive = 0;
+static uint8_t transmit = 0;
 static uint32_t mode_start_time = 0;
+static uint8_t mesh_mode = 0;
 
 static uint8_t hb_led_count = 0;
 
@@ -108,12 +114,15 @@ static mpu_values remote_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
         { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg
         { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }         //rb
-};
+        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED },        //rb
+        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //r
+        };
 
 ///
-void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[]);
+void update_imu_leds(const mpu_values * remote_imu_data, color_rgb colors[]);
 void upcount_hb_leds();
+void update_mesh_mode(uint8_t * data, uint8_t len);
+void mesh_update_imu_leds(uint8_t * data, uint8_t len);
 ///
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
@@ -138,65 +147,110 @@ int main(void)
     mpu_9250_init();
     upcount_hb_leds();
 
-    mesh_init();
+    mesh_init(update_mesh_mode, mesh_update_imu_leds);
     upcount_hb_leds();
+
+    uint32_t tx_start;
+    uint32_t tx_time;
+
+    //mesh diagnostic LEDs.
+    //TX
+    //rgb 4 is whether the packet is being sent to 1 or 2
+    //rgb 5 is green/blue when successful, red otherwise
+
+    //RX
+    //rgb 8 is blue when no message received, green when message received
+    //rgb 9 is blue when last received message was address broadcast, green when it was application message.
+    //rgb 10 is green when the NRF driver is receiving a message in the 'available' method.
+    //rgb 11 is green when last node search message was direct, blue when indirect, and is only updated when this board was the target of the search
+    //rgb 12 is whether the received node search message was for this node or for another node. green means for this node, blue means another    
+
+    int target_address = 2;
 
     for (;;)
     {
-        if (receive || (power_on_time_msec - mode_start_time) > MESH_RX_MAX_TIME_MSEC)
-        {
-            if (mode_start_time == 0)
-            {
-                mode_start_time = power_on_time_msec;
-            }
-            uint8_t source;
-            if (mesh_rx(&remote_imu_data.bytes, &size, &source))
-            {
-                update_imu_leds(&remote_imu_data, colors);
-                receive = 0;
-                mode_start_time = 0;
-            }
-        }
-        else
-        {
-            if (mode_start_time == 0)
-            {
-                mode_start_time = power_on_time_msec;
-            }
+        mesh_process_commands();
 
+        uint8_t source;
+        if ((power_on_time_msec - mode_start_time) > MESH_RX_MAX_TIME_MSEC)
+        {
+            transmit = 1;
+            mode_start_time = 0;
+        }
+        if (transmit)
+        {
             get_mpu_readings(&local_imu_data);
-            if (mesh_tx(&local_imu_data.bytes, sizeof(local_imu_data) - 2,
-                    get_first_node()) || (power_on_time_msec - mode_start_time) > MESH_TX_MAX_TIME_MSEC)
-                    {                    mode_start_time = 0;
-                    receive = 1;
+
+//            uint8_t tx_buf[sizeof(local_imu_data) + 2];
+//            tx_buf[0] = MESH_CMD_UPDATE_IMU_DATA;
+//
+//            for (int i = 0; i < sizeof(local_imu_data); ++i)
+//            {
+//                tx_buf[i + 1] = local_imu_data.bytes[i];
+//            }
+
+//            tx_buf[sizeof(local_imu_data) + 1] = MESH_CMD_TERMINATION;
+
+//            if (mesh_tx_command(tx_buf, sizeof(local_imu_data) + 2, get_next_node(0xFF))
+//            if (mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, get_next_node(0xFF))           
+            if (get_first_node())
+            {
+                tx_start = power_on_time_msec;
+                if (TRANSMIT && mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, target_address) == RH_ROUTER_ERROR_NO_ROUTE)
+                {
+                    set_led_output(RGB_5, colors + 2);
                 }
-            }
+                else
+                {
+                    set_led_output(RGB_5, colors + 4);
+                }
+                tx_time = power_on_time_msec - tx_start;
 
-            if (tick_1msec)
-            {
-                tick_1msec = FALSE;
+#if TRANSMIT
+                if (target_address == 2)
+                {
+                    set_led_output(RGB_4, colors + 4);
+                    target_address = 1;
+                }
+                else
+                {
+                    set_led_output(RGB_4, colors + 2);
+                    target_address = 2;
+                }
+#endif
             }
+            transmit = 0;
+            mode_start_time = power_on_time_msec;
 
-            if (tick_250msec)
-            {
-                tick_250msec = FALSE;
-            }
-
-            if (tick_500msec)
-            {
-                tick_500msec = FALSE;
-                upcount_hb_leds();
-            }
         }
 
-            /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-            /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+        if (tick_1msec)
+        {
+            tick_1msec = FALSE;
+        }
+
+        if (tick_250msec)
+        {
+            tick_250msec = FALSE;
+        }
+
+        if (tick_500msec)
+        {
+            tick_500msec = FALSE;
+//                mesh_discover_nodes();
+            upcount_hb_leds();
+        }
+    }
+
+    /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
 #ifdef PEX_RTOS_START
-            PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+    PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
 #endif
-            /*** End of RTOS startup code.  ***/
-            /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-    for (;;)
+    /*** End of RTOS startup code.  ***/
+    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+    for (;;
+            )
     {
     }
     /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
@@ -284,9 +338,22 @@ void update_imu_leds(const mpu_values* remote_imu_data, color_rgb colors[])
 
 void upcount_hb_leds()
 {
-    LED1_PutVal(LED1_DeviceData, !(hb_led_count & 0x02));
+//    LED1_PutVal(LED1_DeviceData, !(hb_led_count & 0x02));
     LED2_PutVal(LED2_DeviceData, !(hb_led_count & 0x01));
     hb_led_count = (hb_led_count + 1) % 4;
+}
+
+void update_mesh_mode(uint8_t * data, uint8_t len)
+{
+    if (len < 2) return;
+
+    mesh_mode = data[1];
+}
+
+void mesh_update_imu_leds(uint8_t * data, uint8_t len)
+{
+    if (len < sizeof(mpu_values) + 1) return;
+    update_imu_leds((mpu_values*) (data + 1), colors);
 }
 
 /* END main */

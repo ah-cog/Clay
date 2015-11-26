@@ -6,6 +6,20 @@
 #include <RH_NRF24.h>
 #define NRF_TIMEOUT_MS 1
 
+#ifndef LED_DRIVER_PCA9552_H_
+#include "led_driver_pca9552.h"
+#endif
+
+static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
+        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //red
+        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //green
+        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED }         //blue
+};
+
+#define RED_OUTPUT  (colors + 1)
+#define GREEN_OUTPUT  (colors + 2)
+#define BLUE_OUTPUT  (colors + 3)
+
 RH_NRF24::RH_NRF24(uint8_t chipEnablePin, uint8_t slaveSelectPin, RHGenericSPI& spi)
         :
                 RHNRFSPIDriver(slaveSelectPin, spi),
@@ -33,6 +47,10 @@ bool RH_NRF24::init()
     spiWriteRegister(RH_NRF24_REG_1C_DYNPD, RH_NRF24_DPL_ALL);
     // Enable dynamic payload length, disable payload-with-ack, enable noack
     spiWriteRegister(RH_NRF24_REG_1D_FEATURE, RH_NRF24_EN_DPL | RH_NRF24_EN_DYN_ACK);
+
+    //setup retry stuff
+//    spiWriteRegister(RH_NRF24_REG_04_SETUP_RETR, 0x1F);
+//    spiWriteRegister(RH_NRF24_REG_04_SETUP_RETR, 0x0);
 
     // Test if there is actually a device connected and responding
     // CAUTION: RFM73 and version 2.0 silicon may require ACTIVATE
@@ -193,7 +211,9 @@ bool RH_NRF24::send(const uint8_t* data, uint8_t len)
     _buf[2] = _txHeaderId;
     _buf[3] = _txHeaderFlags;
     memcpy(_buf + RH_NRF24_HEADER_LEN, data, len);
-    spiBurstWrite(RH_NRF24_COMMAND_W_TX_PAYLOAD_NOACK, _buf, len + RH_NRF24_HEADER_LEN);
+//NOTE: changed ACK here
+    spiBurstWrite(RH_NRF24_COMMAND_W_TX_PAYLOAD_NOACK, _buf, len + RH_NRF24_HEADER_LEN);        //original RH value had noack.
+//    spiBurstWrite(RH_NRF24_COMMAND_W_TX_PAYLOAD, _buf, len + RH_NRF24_HEADER_LEN);
     setModeTx();
     // Radio will return to Standby II mode after transmission is complete
     _txGood++;
@@ -285,14 +305,25 @@ bool RH_NRF24::available()
     if (!_rxBufValid)
     {
         if (_mode == RHModeTx)
+        {
+            set_led_output(RGB_10, BLUE_OUTPUT);
             return false;
+        }
+
         setModeRx();
         if (spiReadRegister(RH_NRF24_REG_17_FIFO_STATUS) & RH_NRF24_RX_EMPTY)
+        {
+            set_led_output(RGB_10, BLUE_OUTPUT);
             return false;
+        }
+
+        set_led_output(RGB_10, GREEN_OUTPUT);
         // Manual says that messages > 32 octets should be discarded
-        uint8_t len = spiRead(RH_NRF24_COMMAND_R_RX_PL_WID);
+        uint8_t
+        len = spiRead(RH_NRF24_COMMAND_R_RX_PL_WID);
         if (len > 32)
         {
+            set_led_output(RGB_10, BLUE_OUTPUT);
             flushRx();
             clearRxBuf();
             setModeIdle();
