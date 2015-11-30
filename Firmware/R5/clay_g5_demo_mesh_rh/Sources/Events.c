@@ -36,7 +36,11 @@
 #endif
 
 #ifndef _wirish_h
-#include "../RadioHead/wirish.h"
+#include "wirish.h"
+#endif
+
+#ifndef MESH_H_
+#include "Mesh.h"
 #endif
 
 #ifdef __cplusplus
@@ -174,7 +178,8 @@ extern "C"
     void MESH_IRQ_OnInterrupt(LDD_TUserData *UserDataPtr)
     {
         /* Write your code here ... */
-        if(mesh_irq_handler != NULL)
+        //this method is used with the bitIO ldd.
+        if (mesh_rx_enabled)
         {
             mesh_irq_handler();
         }
@@ -222,6 +227,34 @@ extern "C"
     void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr)
     {
         /* Write your code here ... */
+    }
+
+    /*
+     ** ===================================================================
+     **     Event       :  MESH_IRQ_OnPortEvent (module Events)
+     **
+     **     Component   :  MESH_IRQ [GPIO_LDD]
+     */
+    /*!
+     **     @brief
+     **         Called if defined event on any pin of the port occured.
+     **         OnPortEvent event and GPIO interrupt must be enabled. See
+     **         SetEventMask() and GetEventMask() methods. This event is
+     **         enabled if [Interrupt service/event] is Enabled and disabled
+     **         if [Interrupt service/event] is Disabled.
+     **     @param
+     **         UserDataPtr     - Pointer to RTOS device
+     **                           data structure pointer.
+     */
+    /* ===================================================================*/
+    void MESH_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
+    {        
+        /* Write your code here ... */
+        //this method is used with the GPIO LDD.
+        if (mesh_rx_enabled)
+        {
+            mesh_irq_handler();
+        }
     }
 
     /* END Events */

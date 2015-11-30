@@ -81,7 +81,7 @@
 #include "Mesh.h"
 #endif
 
-#include "../RadioHead/RHRouter.h"
+#include "RHRouter.h"
 
 #ifndef SYSTEM_TICK_H_
 #include "system_tick.h"
@@ -96,7 +96,7 @@
 #endif
 
 #define MESH_TX_MAX_TIME_MSEC   5
-#define MESH_RX_MAX_TIME_MSEC   800
+#define MESH_RX_MAX_TIME_MSEC   10
 #define MESH_MODE_RX_TX         0
 #define MESH_MODE_BROADCAST     1
 #define MESH_MODE_RX_ONLY       2
@@ -134,13 +134,13 @@ static uint32_t size = sizeof(mpu_values) - 2;
 static mpu_values local_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static mpu_values remote_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-        { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg
-        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED },        //rb
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //r
-        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //g
-        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED },        //b
+static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off 0
+        { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg 1
+        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb 2
+        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED },        //rb 3
+        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //r 4 
+        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //g 5 
+        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED },        //b 6
         };
 
 ///
@@ -162,9 +162,6 @@ int main(void)
     /*** End of Processor Expert internal initialization.                    ***/
 
     init_tick();
-    upcount_hb_leds();
-
-    delay_n_msec(100);
     upcount_hb_leds();
 
     init_led_drivers();
@@ -195,14 +192,19 @@ int main(void)
 
     for (;;)
     {
-        mesh_process_commands();
-
-        uint8_t source;
-        if ((power_on_time_msec - mode_start_time) > MESH_RX_MAX_TIME_MSEC)
+        if (!transmit)
         {
-            transmit = 1;
-            mode_start_time = 0;
+            mesh_process_commands();
         }
+
+#if TRANSMIT
+            if ((power_on_time_msec - mode_start_time) > MESH_RX_MAX_TIME_MSEC)
+            {
+                transmit = 1;
+                mode_start_time = 0;
+            }
+#endif 
+            
         if (transmit)
         {
             get_mpu_readings(&local_imu_data);
@@ -210,55 +212,55 @@ int main(void)
             uint8_t tx_buf[sizeof(local_imu_data) - 2];
             tx_buf[0] = MESH_CMD_UPDATE_IMU_DATA;
 
-            for (int i = 0; i < sizeof(local_imu_data) - 4; ++i)
+            for (uint32_t i = 0; i < sizeof(local_imu_data) - 4; ++i)
             {
                 tx_buf[i + 1] = local_imu_data.bytes[i];
             }
 
             tx_buf[sizeof(local_imu_data) + 1] = MESH_CMD_TERMINATION;
 
-//            if (mesh_tx_command(tx_buf, sizeof(local_imu_data) + 2, get_next_node(0xFF))
-//            if (mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, get_next_node(0xFF))           
-            if (get_first_node())
-            {
-                tx_start = power_on_time_msec;
+//            if (get_first_node())
+//            {
+            tx_start = power_on_time_msec;
 //                if (TRANSMIT && mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, target_address) == RH_ROUTER_ERROR_NO_ROUTE)
-                if (TRANSMIT && mesh_tx(tx_buf, sizeof(local_imu_data) - 2, target_address) == RH_ROUTER_ERROR_NO_ROUTE)
-                {
-                    set_led_output(RGB_2, colors + 2);
-                }
-                else
-                {
-                    set_led_output(RGB_2, colors + 4);
-                }
-                tx_time = power_on_time_msec - tx_start;
+            if (TRANSMIT && !mesh_tx(tx_buf, sizeof(local_imu_data) - 2, target_address))
+            {
+                set_led_output(RGB_4, colors + 5);
+            }
+            else
+            {
+                set_led_output(RGB_4, colors + 4);
+            }
+            tx_time = power_on_time_msec - tx_start;
 
 #if TRANSMIT
 #if ADDRESS_3
-                if (target_address == 2)
+            if (target_address == 2)
 #elif ADDRESS_2
-                if (target_address == 1)
+            if (target_address == 1)
 #endif
-                {
-                    set_led_output(RGB_3, colors + 5);
+            {
 #if ADDRESS_3
-                    target_address = 1;
+                target_address = 1;
+                set_led_output(RGB_5, colors + 4);
 #elif ADDRESS_2
-                    target_address = 3;
-#endif
-                }
-                else
-                {
-                    set_led_output(RGB_3, colors + 6);
-#if ADDRESS_3
-                    target_address = 2;
-#elif ADDRESS_2
-                    target_address = 1;
-
-#endif
-                }
+                target_address = 3;
+                set_led_output(RGB_5, colors + 6);
 #endif
             }
+            else
+            {                
+#if ADDRESS_3
+                target_address = 2;
+                set_led_output(RGB_5, colors + 5);
+#elif ADDRESS_2
+                target_address = 1;
+                set_led_output(RGB_5, colors + 4);
+
+#endif
+            }
+#endif
+//            }
             transmit = 0;
             mode_start_time = power_on_time_msec;
 
@@ -267,15 +269,15 @@ int main(void)
         if (tick_1msec)
         {
             tick_1msec = FALSE;
-            if (!(power_on_time_msec % LED_UPDATE_PERIOD_MS))
-            {
-                update_3LED_imu();
-            }
+//            if (!(power_on_time_msec % LED_UPDATE_PERIOD_MS))
+//            {
+//                update_3LED_imu();
+//            }
         }
 
         if (tick_250msec)
         {
-            mesh_update_imu_leds(NULL, 7);
+//            mesh_update_imu_leds(NULL, 7);
             tick_250msec = FALSE;
         }
 
@@ -395,8 +397,13 @@ static void update_mesh_mode(uint8_t * data, uint8_t len)
     mesh_mode = data[1];
 }
 
+uint8_t derp = 0;
+
 static void mesh_update_imu_leds(uint8_t * data, uint8_t len)
 {
+    LED1_PutVal(LED1_DeviceData, derp);
+    derp = !derp;
+    
     if (data != NULL) return;
     mpu_values * imu_data = &local_imu_data;
 
@@ -447,7 +454,7 @@ static void mesh_update_imu_leds(uint8_t * data, uint8_t len)
 static void update_3LED_imu()
 {
     led_time_segment_values v = LED_IMU_Levels[LED_time_segment];
-    LED_time_segment = (LED_time_segment + 1)% LED_TIME_SEGMENT_COUNT; 
+    LED_time_segment = (LED_time_segment + 1) % LED_TIME_SEGMENT_COUNT;
     if (v.x_on)
     {
         if (1 || v.x_sign)

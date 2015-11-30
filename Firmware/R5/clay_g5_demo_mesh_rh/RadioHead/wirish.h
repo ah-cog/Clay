@@ -11,10 +11,9 @@
 #define PROGMEM
 #define memcpy_P memcpy
 
+#define MESH_IRQ_PIN_INDEX 0u
 #define MESH_CE_PIN_INDEX 1u
 #define MESH_SELECT_PIN_INDEX 2u
-
-extern void (*mesh_irq_handler)(void);
 
 typedef enum WiringPinMode
 {
