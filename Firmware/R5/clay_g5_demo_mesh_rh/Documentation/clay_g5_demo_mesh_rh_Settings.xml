@@ -49,7 +49,7 @@
                   <EmptySection_DummyValue />
                 </enumgroup>
                 <MCG_output_clock v="FLL clock" />
-                <MCG_output__MHz_ v="20.971520000000" />
+                <MCG_output__MHz_ v="71.991296000000" />
                 <MCG_external_ref__clock_source v="System oscillator 0" />
                 <MCG_external_ref__clock__MHz_ v="8" />
                 <Clock_monitor v="Disabled" />
@@ -66,7 +66,7 @@
                 <group name="PLL 0 settings">
                   <PLL_module v="Disabled" />
                   <PLL_module_in_Stop v="Disabled" />
-                  <PLL_output__MHz_ v="100" />
+                  <PLL_output__MHz_ v="0" />
                   <Reference_clock_divider v="Auto select" />
                   <PLL_reference_clock__MHz_ v="1" />
                   <Multiplication_factor v="Auto select" />
@@ -113,7 +113,13 @@
         <list name="Shared Flash memory organization" v="1">
           <group name="Flash memory organization">
             <list name="Shared FLASH settings" v="1">
-              <EmptySection_DummyValue />
+              <group name="FlexNVM settings">
+                <FlexNVM_size v="32 KB" />
+                <DFlash_size v="32 KB" />
+                <enumgroup name="EEPROM size" v="0 bytes">
+                  <boolgroup name="FlexRAM" v="Disabled" />
+                </enumgroup>
+              </group>
             </list>
             <list name="Flash blocks" v="2">
               <group name="Flash block 0">
@@ -163,6 +169,8 @@
             <Bandgap_buffer_in_VLPx v="Disabled" />
             <group name="LVD interrupt">
               <Interrupt v="INT_LVD_LVW" />
+              <Interrupt_request v="Disabled" />
+              <Interrupt_priority v="0 (Highest)" />
               <LVD_interrupt v="Disabled" />
               <LVW_interrupt v="Disabled" />
             </group>
@@ -245,6 +253,9 @@
         <DisableInt v="don&amp;apos;t generate code" />
         <GetLLSWakeUpFlags v="don&amp;apos;t generate code" />
         <OpenBackDoor v="don&amp;apos;t generate code" />
+        <GetFlexNVMPartitionCode v="don&amp;apos;t generate code" />
+        <SetFlexNVMPartition v="don&amp;apos;t generate code" />
+        <SetFlexRAMFunction v="don&amp;apos;t generate code" />
         <MCGAutoTrim v="don&amp;apos;t generate code" />
         <VLPModeEnable v="don&amp;apos;t generate code" />
         <VLPModeDisable v="don&amp;apos;t generate code" />
@@ -271,39 +282,74 @@
     <Compiler v="GNU C Compiler" />
     <CompilerProperties>
       <Compiler v="GNU C Compiler" />
+      <enumgroup name="Unhandled vectors" v="One handler for all">
+        <Unhandled_int_code>
+          <StrgList><![CDATA[/* This code can be changed using the CPU component property "Build Options / Unhandled int code" */
+PE_DEBUGHALT();
+]]></StrgList>
+        </Unhandled_int_code>
+      </enumgroup>
+      <group name="User initialization">
+        <User_data_declarations>
+          <StrgList></StrgList>
+        </User_data_declarations>
+        <User_code_before_PE_initialization>
+          <StrgList></StrgList>
+        </User_code_before_PE_initialization>
+        <User_code_after_PE_initialization>
+          <StrgList></StrgList>
+        </User_code_after_PE_initialization>
+      </group>
       <boolgroup name="Generate debugger files" v="yes">
         <Generate_mem_file v="yes" />
       </boolgroup>
+      <group name="Startup">
+        <Add_startup_file v="no" />
+      </group>
       <boolgroup name="Generate linker file" v="yes">
-        <Stack_size v="1024" />
-        <Heap_size v="0" />
+        <Stack_size v="8192" />
+        <Heap_size v="8192" />
         <Set_memory_segments_to_default v="Click to set default &amp;gt;" />
-        <Default_memory_for_interrupts v="INTERNAL RAM" />
-        <Default_memory_for_code v="INTERNAL RAM" />
+        <Default_memory_for_interrupts v="INTERNAL FLASH" />
+        <Default_memory_for_code v="INTERNAL FLASH" />
         <Default_memory_for_data v="INTERNAL RAM" />
-        <list name="ROM/RAM Areas" v="3">
+        <list name="ROM/RAM Areas" v="6">
           <group name="MemoryArea0">
             <boolgroup name="ROM/RAM Area" v="Enabled">
               <Name v="m_interrupts" />
               <Qualifier v="RX" />
-              <Address v="536838144" />
+              <Address v="0" />
               <Size v="444" />
             </boolgroup>
           </group>
           <group name="MemoryArea1">
-            <boolgroup name="ROM/RAM Area" v="Enabled">
-              <Name v="m_text" />
-              <Qualifier v="RX" />
-              <Address v="536870912" />
-              <Size v="32768" />
-            </boolgroup>
+            <boolgroup name="ROM/RAM Area" v="Disabled" />
           </group>
           <group name="MemoryArea2">
             <boolgroup name="ROM/RAM Area" v="Enabled">
+              <Name v="m_text" />
+              <Qualifier v="RX" />
+              <Address v="1040" />
+              <Size v="261104" />
+            </boolgroup>
+          </group>
+          <group name="MemoryArea3">
+            <boolgroup name="ROM/RAM Area" v="Disabled" />
+          </group>
+          <group name="MemoryArea4">
+            <boolgroup name="ROM/RAM Area" v="Enabled">
               <Name v="m_data" />
               <Qualifier v="RW" />
-              <Address v="536838588" />
-              <Size v="32324" />
+              <Address v="536838144" />
+              <Size v="32768" />
+            </boolgroup>
+          </group>
+          <group name="MemoryArea5">
+            <boolgroup name="ROM/RAM Area" v="Enabled">
+              <Name v="m_data_20000000" />
+              <Qualifier v="RW" />
+              <Address v="536870912" />
+              <Size v="32768" />
             </boolgroup>
           </group>
         </list>
@@ -1275,7 +1321,7 @@ PE_DEBUGHALT();
       <Counter v="FTM0_CNT" />
       <boolgroup name="Interrupt service/event" v="Enabled">
         <Interrupt v="INT_FTM0" />
-        <Interrupt_priority v="medium priority" />
+        <Interrupt_priority v="maximal priority" />
       </boolgroup>
       <Interrupt_period v="1 ms" />
       <group name="Initialization">
@@ -1569,7 +1615,7 @@ PE_DEBUGHALT();
         <Period v="1 ms" />
         <boolgroup name="Interrupt" v="Enabled">
           <Interrupt v="INT_FTM0" />
-          <Interrupt_priority v="medium priority" />
+          <Interrupt_priority v="maximal priority" />
         </boolgroup>
       </enumgroup>
       <list name="Channel list" v="0">
@@ -1651,9 +1697,9 @@ PE_DEBUGHALT();
       <Device v="SPI0" />
       <boolgroup name="Interrupt service/event" v="Enabled">
         <Input_interrupt v="INT_SPI0" />
-        <Input_interrupt_priority v="medium priority" />
+        <Input_interrupt_priority v="high priority" />
         <Output_interrupt v="INT_SPI0" />
-        <Output_interrupt_priority v="medium priority" />
+        <Output_interrupt_priority v="high priority" />
       </boolgroup>
       <group name="Settings">
         <boolgroup name="Input pin" v="Enabled">
@@ -1787,22 +1833,17 @@ PE_DEBUGHALT();
     </Events>
   </Bean>
   <Bean name="MESH_IRQ" type="ExtInt_LDD">
-    <Enabled v="Y" />
+    <Enabled v="N" />
     <Properties>
       <Component_name v="MESH_IRQ" />
       <Pin v="ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK" />
-      <Generate_interrupt_on sel_value="rising edge">
-        
-rising or falling edge
-
-        <EmptySection_DummyValue />
-      </Generate_interrupt_on>
+      <Generate_interrupt_on v="falling edge" />
       <Interrupt v="INT_PORTC" />
       <Interrupt_priority v="medium priority" />
       <group name="Initialization">
         <Enabled_in_init__code v="yes" />
         <list name="Auto Initialization" v="1">
-          <Auto_initialization v="no" />
+          <Auto_initialization v="yes" />
         </list>
       </group>
     </Properties>
@@ -1854,6 +1895,71 @@ rising or falling edge
     </Methods>
     <Events>
       <EmptySection_DummyValue />
+    </Events>
+  </Bean>
+  <Bean name="MESH_IRQ" type="GPIO_LDD">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="MESH_IRQ" />
+      <Port v="PTC" />
+      <Port_width v="32 bits" />
+      <Mask_of_allocated_pins v="256" />
+      <boolgroup name="Interrupt service/event" v="Enabled">
+        <Interrupt v="INT_PORTC" />
+        <Interrupt_priority v="medium priority" />
+      </boolgroup>
+      <list name="Bit fields" v="1">
+        <group name="Bit field">
+          <Field_name v="MESH_IRQ_BITFIELD" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Falling edge" />
+              <Lock_initialization_function v="yes" />
+            </group>
+          </list>
+        </group>
+      </list>
+      <group name="Initialization">
+        <list name="Auto Initialization" v="1">
+          <Auto_initialization v="yes" />
+        </list>
+        <group name="Event mask">
+          <OnPortEvent v="Enabled" />
+        </group>
+      </group>
+    </Properties>
+    <Methods>
+      <Init v="generate code" />
+      <Deinit v="don&amp;apos;t generate code" />
+      <SetEventMask v="don&amp;apos;t generate code" />
+      <GetEventMask v="don&amp;apos;t generate code" />
+      <SetPortEventCondition v="don&amp;apos;t generate code" />
+      <GetPortEventStatus v="don&amp;apos;t generate code" />
+      <SetPortValue v="don&amp;apos;t generate code" />
+      <GetPortValue v="don&amp;apos;t generate code" />
+      <ClearPortBits v="don&amp;apos;t generate code" />
+      <SetPortBits v="don&amp;apos;t generate code" />
+      <TogglePortBits v="don&amp;apos;t generate code" />
+      <SetPortInputDirection v="don&amp;apos;t generate code" />
+      <SetPortOutputDirection v="don&amp;apos;t generate code" />
+      <SetFieldValue v="generate code" />
+      <GetFieldValue v="generate code" />
+      <ClearFieldBits v="generate code" />
+      <SetFieldBits v="generate code" />
+      <ToggleFieldBits v="generate code" />
+      <SetFieldInputDirection v="don&amp;apos;t generate code" />
+      <SetFieldOutputDirection v="don&amp;apos;t generate code" />
+      <SetOperationMode v="don&amp;apos;t generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+      <ConnectPin v="don&amp;apos;t generate code" />
+    </Methods>
+    <Events>
+      <Event_module_name v="Events" />
+      <event name="OnPortEvent" v="generate code">
+        <Event_procedure_name v="MESH_IRQ_OnPortEvent" />
+      </event>
     </Events>
   </Bean>
 </PE_PROJECT_SETTINGS_DOCUMENTATION>

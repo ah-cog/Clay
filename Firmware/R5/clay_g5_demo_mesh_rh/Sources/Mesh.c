@@ -8,35 +8,35 @@
 #include "Mesh.h"
 
 #ifndef RHMesh_h
-#include "../RadioHead/RHMesh.h"
+#include "RHMesh.h"
 #endif
 
 #ifndef RH_NRF24_h
-#include "../RadioHead/RH_NRF24.h"
+#include "RH_NRF24.h"
 #endif
 
 #ifndef RHGenericDriver_h
-#include "../RadioHead/RHGenericDriver.h"
+#include "RHGenericDriver.h"
 #endif
 
 #ifndef _wirish_h
-#include "../RadioHead/wirish.h"
+#include "wirish.h"
 #endif
 
 #ifndef _HardwareSPI_h
-#include "../RadioHead/HardwareSPI.h"
+#include "HardwareSPI.h"
 #endif
 
 #ifndef RHGenericSPI_h
-#include "../RadioHead/RHGenericSPI.h"
+#include "RHGenericSPI.h"
 #endif
 
 #ifndef RHHardwareSPI_h
-#include "../RadioHead/RHHardwareSPI.h"
+#include "RHHardwareSPI.h"
 #endif
 
 #ifndef RHRouter_h
-#include "../RadioHead/RHRouter.h"
+#include "RHRouter.h"
 #endif
 
 #ifndef SYSTEM_TICK_H_
@@ -45,6 +45,10 @@
 
 #ifndef LED_DRIVER_PCA9552_H_
 #include "led_driver_pca9552.h"
+#endif
+
+#ifndef _wirish_h
+#include "wirish.h"
 #endif
 
 static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
@@ -57,8 +61,6 @@ static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },     
 #define GREEN_OUTPUT  (colors + 2)
 #define BLUE_OUTPUT  (colors + 3)
 
-#define MESH_ALIVE_PERIOD_MS            1000
-#define MESH_NODE_DISCONNECT_TIMEOUT_MS (3 * MESH_ALIVE_PERIOD_MS)
 //
 #define DO_ROUTING_TIMEOUT_MSEC         2
 //
@@ -83,28 +85,34 @@ typedef struct
 ///global vars 
 mesh_command commands[] =
         {
-                { MESH_CMD_CHANGE_MESH_MODE, 0 },        //change mesh mode: transmit/receive, transmit only, receive only
-                { MESH_CMD_UPDATE_IMU_DATA, 0 }         //update IMU LED data.
+                { MESH_CMD_CHANGE_MESH_MODE, NULL },        //change mesh mode: transmit/receive, transmit only, receive only
+                { MESH_CMD_UPDATE_IMU_DATA, NULL },         //update IMU LED data.
+                { MESH_CMD_ADDRESS_CLAIM_MSG, NULL }        //address claim message.
         };
 uint32_t command_count = sizeof(commands) / sizeof(mesh_command);
 
-static found_mesh_node mesh_nodes[MAX_MESH_NODE_COUNT];
+bool mesh_rx_enabled;
+bool mesh_messages_available;
 
 ///local vars
 uint8_t rx_buf[MESH_RX_BUF_LEN];
 static RHMesh * meshManager;
 static RH_NRF24 * meshRadio;
-static uint32_t rx_buf_size;
+static uint8_t rx_buf_size;
 static uint8_t rx_buf_source;
 
 static uint8_t do_routing_data;
 static uint8_t do_routing_length;
 static uint32_t time_last_alive_sent_ms;
 
+static found_mesh_node mesh_nodes[MAX_MESH_NODE_COUNT];
+
 ///prototypes
 static bool findUnusedAddressInRoutingTable();
 static void clear_mesh_nodes();
 static void send_alive_msg();
+static void start_mesh_rx();
+static void stop_mesh_rx();
 
 ///functions
 void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
@@ -123,44 +131,49 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
     mesh_discover_nodes_and_get_address();
 
     clear_mesh_nodes();
+    digitalWrite(MESH_CE_PIN_INDEX, 0);
+
+    mesh_rx_enabled = false;
+    mesh_messages_available = false;
 }
 
 void mesh_process_commands(void)
 {
-    uint8_t size;
-    uint8_t source;
     uint8_t available_spot = MESH_MAX_NODES;
 
     meshManager->printRoutingTable();
 
     if (power_on_time_msec - time_last_alive_sent_ms >= MESH_ALIVE_PERIOD_MS)
     {
+        //TODO: turn off the rx stuff momentarily, if it's on
         send_alive_msg();
     }
 
-    if (mesh_rx(rx_buf, &size, &source))
+    if (mesh_messages_available)
     {
-        switch (source)
+        mesh_messages_available = false;
+        set_led_output(RGB_8, GREEN_OUTPUT);
+
+        switch (rx_buf_source)
         {
             case 1:
-                {
-                set_led_output(RGB_1, GREEN_OUTPUT);
-                break;
-            }
-            case 2:
-                {
-                set_led_output(RGB_1, BLUE_OUTPUT);
-                break;
-            }
-            case 3:
                 {
                 set_led_output(RGB_1, RED_OUTPUT);
                 break;
             }
+            case 2:
+                {
+                set_led_output(RGB_1, GREEN_OUTPUT);
+                break;
+            }
+            case 3:
+                {
+                set_led_output(RGB_1, BLUE_OUTPUT);
+                break;
+            }
         }
-        set_led_output(RGB_8, GREEN_OUTPUT);
 
-        if (size == 3 && rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
+        if (rx_buf_size == 3 && rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
         {
             set_led_output(RGB_9, BLUE_OUTPUT);
             for (int i = 0; i < MESH_MAX_NODES; ++i)
@@ -187,13 +200,13 @@ void mesh_process_commands(void)
                 }
             }
         }
-        else if (size > 0)
+        else if (rx_buf_size > 0)
         {
             set_led_output(RGB_9, GREEN_OUTPUT);
 
             if (rx_buf[0] < command_count && commands[rx_buf[0]].function != NULL)
             {
-                commands[rx_buf[0]].function(rx_buf, size);
+                commands[rx_buf[0]].function(rx_buf, rx_buf_size);
             }
 
         }
@@ -202,6 +215,19 @@ void mesh_process_commands(void)
     {
         set_led_output(RGB_8, BLUE_OUTPUT);
     }
+
+    uint8_t statusReg = meshRadio->statusRead();
+    uint8_t pinState_CE = digitalRead(MESH_CE_PIN_INDEX);
+    uint8_t pinState_IRQ = digitalRead(MESH_IRQ_PIN_INDEX);
+
+    if (!mesh_rx_enabled)
+    {
+        start_mesh_rx();
+    }
+//    else if (!digitalRead(MESH_CE_PIN_INDEX))
+//    {
+//        stop_mesh_rx();
+//    }
 }
 
 void mesh_do_routing(void)
@@ -210,82 +236,21 @@ void mesh_do_routing(void)
     meshManager->recvfromAckTimeout(&do_routing_data, &do_routing_length, DO_ROUTING_TIMEOUT_MSEC);
 }
 
-uint8_t mesh_tx_command(void * data, uint32_t len, uint8_t destination)
-{
-    uint8_t rval = 1;
-    uint8_t max_rt = 4;
-
-    if (len > RH_MESH_PACKET_SIZE)
-    {
-        uint8_t length_remaining = len;
-        uint8_t offset = 0;
-        while (length_remaining > 0 && --max_rt)
-        {
-            if (rval && length_remaining >= RH_MESH_PACKET_SIZE
-                    && mesh_tx(((uint8_t*) data) + offset * RH_MESH_PACKET_SIZE, RH_MESH_PACKET_SIZE, destination))
-            {
-                length_remaining -= RH_MESH_PACKET_SIZE;
-                ++offset;
-                rval = 1;
-            }
-            else if (rval &= mesh_tx(((uint8_t*) data) + offset * RH_MESH_PACKET_SIZE, length_remaining, destination))
-            {
-                length_remaining = 0;
-                rval = 1;
-            }
-            else
-            {
-                rval = 0;
-            }
-        }
-    }
-    else
-    {
-        rval = mesh_tx(data, len, destination);
-    }
-
-    return rval;
-}
-
-uint8_t mesh_broadcast_command(void * data, uint32_t len)
-{
-    uint8_t rval = 1;
-
-    if (len > RH_MESH_PACKET_SIZE)
-    {
-        uint8_t length_remaining = len;
-        uint8_t offset = 0;
-        while (length_remaining > 0)
-        {
-            if (rval && length_remaining >= RH_MESH_PACKET_SIZE
-                    && mesh_broadcast(((uint8_t*) data) + offset * RH_MESH_PACKET_SIZE, RH_MESH_PACKET_SIZE))
-            {
-                length_remaining -= RH_MESH_PACKET_SIZE;
-                ++offset;
-                rval = 1;
-            }
-            else if (mesh_broadcast(((uint8_t*) data) + offset * RH_MESH_PACKET_SIZE, length_remaining))
-            {
-                length_remaining = 0;
-                rval = 1;
-            }
-            else
-            {
-                rval = 0;
-            }
-        }
-    }
-    else
-    {
-        rval = mesh_broadcast(data, len);
-    }
-
-    return rval;
-}
-
 uint8_t mesh_tx(void * data, uint32_t dataLength, uint8_t destination)
 {
-    return meshManager->sendtoWait((uint8_t*) data, dataLength, destination, 0);
+    //store state of rx enable.
+    bool rx_enable_push = mesh_rx_enabled;
+    stop_mesh_rx();
+
+    uint8_t rval = meshManager->sendtoWait((uint8_t*) data, dataLength, destination, 0);
+
+    //resume rx, if it was in progress
+    if (rx_enable_push)
+    {
+        start_mesh_rx();
+    }
+
+    return rval;
 }
 
 uint8_t mesh_broadcast(void * data, uint32_t dataLength)
@@ -317,7 +282,7 @@ void mesh_discover_nodes_and_get_address()
     meshManager->setThisAddress(3);
 #endif
 
-#if ADDRESS_1 || ADDRESS_2 || ADDRESS_3
+#if (ADDRESS_1 || ADDRESS_2 || ADDRESS_3)
     update_random_seed(meshManager->thisAddress());
     return;
 #endif
@@ -336,42 +301,6 @@ void mesh_discover_nodes_and_get_address()
     {
         findUnusedAddressInRoutingTable();
     }
-}
-
-static bool findUnusedAddressInRoutingTable()
-{
-    bool rval = false;
-    RHRouter
-    ::RoutingTableEntry * foundRoute;
-
-    for (uint32_t i = 0; i < MESH_STARTUP_ADDRESS; ++i)
-    {
-        foundRoute = meshManager->getRouteTo(meshManager->thisAddress());
-        if (!foundRoute)
-        {
-            meshManager->setThisAddress(i);
-            update_random_seed(i);
-            rval = true;
-        }
-    }
-
-    return rval;
-}
-
-static void clear_mesh_nodes()
-{
-    for (int i = 0; i < MESH_MAX_NODES; ++i)
-    {
-        mesh_nodes[i].status = NODE_NOT_CONNECTED;
-    }
-}
-
-//broadcast address to all nodes.
-static void send_alive_msg()
-{
-    uint8_t buf[] = { MESH_CMD_ADDRESS_CLAIM_MSG, meshManager->thisAddress(), MESH_CMD_TERMINATION };
-    mesh_tx(buf, 3, 0xFF);
-    time_last_alive_sent_ms = power_on_time_msec;
 }
 
 ///returns the first node to which a route is found.
@@ -443,7 +372,7 @@ uint8_t get_last_node()
 //        }
 //    }
 
-    return rval;
+//    return rval;
 }
 
 uint8_t get_next_node(uint8_t startAddr)
@@ -487,4 +416,108 @@ uint8_t get_next_node(uint8_t startAddr)
 //    meshManager->printRoutingTable();
 //
 //    return rval;
+}
+
+///handles routing and message reception. messages are stored into a local buffer.
+void mesh_irq_handler(void)
+{
+//    mesh_messages_available = true;
+//    digitalWrite(MESH_CE_PIN_INDEX, 0);
+//    mesh_rx_expected = false;
+
+    mesh_rx_enabled = false;
+    rx_buf_size = 0xFF;        //0xFF is max value, that way entire message is returned.
+
+    uint8_t pinState_IRQ = digitalRead(MESH_IRQ_PIN_INDEX);
+
+    //go get the message, put it in the buffer, and set the flag that says it's there.
+    if (mesh_rx(rx_buf, &rx_buf_size, &rx_buf_source))
+    {
+//        digitalWrite(MESH_CE_PIN_INDEX, 0);
+        stop_mesh_rx();
+    }
+
+    uint8_t statusReg = meshRadio->statusRead();
+    uint8_t pinState_CE = digitalRead(MESH_CE_PIN_INDEX);
+    pinState_IRQ = digitalRead(MESH_IRQ_PIN_INDEX);
+
+    if (rx_buf_size > 0 && rx_buf_size != 0xFF)        //actual return of rx_buf_size shouldn't ever exceed 0d30.
+    {
+        mesh_messages_available = true;
+    }
+    else
+    {
+        mesh_messages_available = false;
+        start_mesh_rx();
+    }
+
+    if (statusReg > 0x0F)
+    {
+//        mesh_irq_handler();
+        //        meshRadio->spiWriteRegister(RH_NRF24_REG_07_STATUS, RH_NRF24_RX_DR);
+        statusReg = meshRadio->statusRead();
+    }
+}
+
+static bool findUnusedAddressInRoutingTable()
+{
+    bool rval = false;
+    RHRouter
+    ::RoutingTableEntry * foundRoute;
+
+    for (uint32_t i = 0; i < MESH_STARTUP_ADDRESS; ++i)
+    {
+        foundRoute = meshManager->getRouteTo(meshManager->thisAddress());
+        if (!foundRoute)
+        {
+            meshManager->setThisAddress(i);
+            update_random_seed(i);
+            rval = true;
+        }
+    }
+
+    return rval;
+}
+
+static void clear_mesh_nodes()
+{
+    for (int i = 0; i < MESH_MAX_NODES; ++i)
+    {
+        mesh_nodes[i].status = NODE_NOT_CONNECTED;
+    }
+}
+
+//broadcast address to all nodes.
+static void send_alive_msg()
+{
+    uint8_t buf[] = { MESH_CMD_ADDRESS_CLAIM_MSG, meshManager->thisAddress(), MESH_CMD_TERMINATION };
+    mesh_tx(buf, 3, 0xFF);
+    time_last_alive_sent_ms = power_on_time_msec;
+}
+
+static void start_mesh_rx()
+{
+    meshRadio->setModeRx();
+    mesh_rx_enabled = true;
+    set_led_output(RGB_6, GREEN_OUTPUT);
+}
+
+static void stop_mesh_rx()
+{
+    if (mesh_rx_enabled)
+    {
+        mesh_rx_enabled = false;
+        meshRadio->setModeIdle();
+        set_led_output(RGB_6, BLUE_OUTPUT);
+    }
+
+    //HACK this needs more analysis.
+//    uint8_t statusReg = meshRadio->statusRead();
+//
+//    if (statusReg & 0x40)
+//    {
+//        mesh_irq_handler();
+////        meshRadio->spiWriteRegister(RH_NRF24_REG_07_STATUS, RH_NRF24_RX_DR);
+//        statusReg = meshRadio->statusRead();
+//    }
 }

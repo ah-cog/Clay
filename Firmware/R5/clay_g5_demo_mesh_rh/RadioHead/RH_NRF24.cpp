@@ -330,15 +330,20 @@ bool RH_NRF24::available()
             return false;
         }
         // Clear read interrupt
+        setModeIdle();
         spiWriteRegister(RH_NRF24_REG_07_STATUS, RH_NRF24_RX_DR);
+        uint8_t statreg = statusRead();
         // Get the message into the RX buffer, so we can inspect the headers
         spiBurstRead(RH_NRF24_COMMAND_R_RX_PAYLOAD, _buf, len);
         _bufLen = len;
         // 140 microsecs (32 octet payload)
         validateRxBuf();
-        if (_rxBufValid)
-            setModeIdle();        // Got one
+        //NOTE set mode idle regardless. We're using interrupts now, and we can't handle the 
+        //     second interrupt in time if it is generated. 
+//        if (_rxBufValid)
+//            setModeIdle();        // Got one
     }
+    set_led_output(RGB_7, BLUE_OUTPUT);
     return _rxBufValid;
 }
 

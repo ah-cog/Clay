@@ -1,10 +1,11 @@
 /*!
-\page MESH_IRQ MESH_IRQ (ExtInt_LDD)
-**         This component, "ExtInt_LDD", provide a low level API 
-**         for unified access of external interrupts handling
-**         across various device designs.
-**         The component uses one pin which generates interrupt on 
-**         selected edge.
+\page MESH_IRQ MESH_IRQ (GPIO_LDD)
+**         The HAL GPIO component will provide a low level API for unified
+**         access to general purpose digital input/output pins across
+**         various device designs.
+**
+**         RTOS drivers using HAL GPIO API will be simpler and more
+**         portable to various microprocessors.
 
 - \subpage MESH_IRQ_settings
 - \subpage MESH_IRQ_regs_overview  
@@ -48,7 +49,7 @@ by the component.
     0x00000100
  </td><td>PORTC_PCR9 register, peripheral MESH_IRQ.</td></tr>
 <tr><td>0x4004B020</td><td>PORTC_PCR8</td><td>
-    0x00090100
+    0x010A8100
  </td><td>PORTC_PCR8 register, peripheral MESH_IRQ.</td></tr>
 <tr><td>0xE000E459</td><td>NVICIP89</td><td>
     0x00000080
@@ -663,12 +664,12 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x4004B020</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00090100</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x010A8100</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
-<tr><td>24</td><td>ISF</td><td>0x00</td><td>Interrupt Status Flag</td>
+<tr><td>24</td><td>ISF</td><td>0x01</td><td>Interrupt Status Flag</td>
 <tr><td>16 - 19</td><td>IRQC</td><td>0x08</td><td>Interrupt Configuration</td>
-<tr><td>15</td><td>LK</td><td>0x00</td><td>Lock Register</td>
+<tr><td>15</td><td>LK</td><td>0x01</td><td>Lock Register</td>
 <tr><td>8 - 10</td><td>MUX</td><td>0x00</td><td>Pin Mux Control</td>
 <tr><td>6</td><td>DSE</td><td>0x00</td><td>Drive Strength Enable</td>
 <tr><td>5</td><td>ODE</td><td>0x00</td><td>Open Drain Enable</td>
@@ -748,14 +749,25 @@ registers of the peripheral(s) configured by the component.
 \page MESH_IRQ_settings Component Settings
 \code
 **          Component name                                 : MESH_IRQ
-**          Pin                                            : ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK
-**          Pin signal                                     : 
-**          Generate interrupt on                          : rising or falling edge
-**          Interrupt                                      : INT_PORTC
-**          Interrupt priority                             : medium priority
+**          Port                                           : PTC
+**          Port width                                     : 32 bits
+**          Mask of allocated pins                         : 100
+**          Interrupt service/event                        : Enabled
+**            Interrupt                                    : INT_PORTC
+**            Interrupt priority                           : medium priority
+**          Bit fields                                     : 1
+**            Bit field                                    : 
+**              Field name                                 : MESH_IRQ_BITFIELD
+**              Pins                                       : 1
+**                Pin                                      : 
+**                  Pin                                    : ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK
+**                  Pin signal                             : 
+**                  Initial pin direction                  : Input
+**                  Initial pin event                      : Falling edge
+**                  Lock initialization function           : yes
 **          Initialization                                 : 
-**            Enabled in init. code                        : yes
-**            Auto initialization                          : no
-**          Threshold level                                : 0
+**            Auto initialization                          : yes
+**            Event mask                                   : 
+**              OnPortEvent                                : Enabled
 \endcode
 */
