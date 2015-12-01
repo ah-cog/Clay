@@ -95,12 +95,12 @@
 #include "mpu_9250_driver.h"
 #endif
 
-#define STATISTICS_TIME_S       1800
-#define MESH_TX_MAX_TIME_MSEC   5
-#define MESH_RX_MAX_TIME_MSEC   20
-#define MESH_MODE_RX_TX         0
-#define MESH_MODE_BROADCAST     1
-#define MESH_MODE_RX_ONLY       2
+#ifndef MESH_STATISTICS_H_
+#include "mesh_stastistics.h"
+#endif
+
+#define STATISTICS_TIME_S       300
+#define MSG_TX_PERIOD_MS   50
 
 #if(ADDRESS_3 )
 #define TRANSMIT                1
@@ -131,17 +131,46 @@ static uint8_t mesh_mode = 0;
 
 static uint8_t hb_led_count = 0;
 
-static uint64_t transmit_count_1 = 0;
-static uint64_t transmit_count_2 = 0;
-static uint64_t transmit_count_3 = 0;
-static uint64_t transmit_fail_1 = 0;
-static uint64_t transmit_fail_2 = 0;
-static uint64_t transmit_fail_3 = 0;
-static double transmit_time_success_total = 0;
-static double transmit_time_fail_total = 0;
-static bool last_tx_successful;
+///statistics variables////////////////////////////////////////////////
+///statistics variables////////////////////////////////////////////////
 
-static uint32_t start_time = 0;
+//tx period values
+//DON'T FORGET TO UPDATE TX_PERIOD_ARRAY_LENGTH IF YOU CHANGE THE PERIOD VALUES IN THE ARRAY. THIS VALUE MUST BE UPDATED IN Mesh.h AND RHReliableDatagram.H AS WELL
+uint32_t message_tx_period_ms_array[TX_PERIOD_ARRAY_LENGTH] = { 10, 20, 40, 80, 120, 160, 200, 250, 300, 350, 400, 450, 500 };
+uint32_t current_message_period_index;
+//DON'T FORGET TO UPDATE TX_PERIOD_ARRAY_LENGTH IF YOU CHANGE THE PERIOD VALUES IN THE ARRAY. THIS VALUE MUST BE UPDATED IN Mesh.h AND RHReliableDatagram.H AS WELL
+
+//collection time values
+uint32_t start_time = 0;
+uint32_t collection_duration_s[] = { 0 };
+
+//transmission accumulator vars
+uint32_t * transmit_count_ptr;
+uint32_t transmit_count_1[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t transmit_count_2[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t transmit_count_3[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+
+
+//tx failure accumulator vars
+uint32_t * transmit_fail_ptr;
+uint32_t transmit_fail_1[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t transmit_fail_2[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t transmit_fail_3[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+
+//tx return value accumulators
+uint32_t ERROR_NONE_count[TX_PERIOD_ARRAY_LENGTH] = { 0 };                          //return value of 0
+uint32_t ERROR_INVALID_LENGTH_count[TX_PERIOD_ARRAY_LENGTH] = { 0 };                //return value of 1
+uint32_t ERROR_NO_ROUTE_count[TX_PERIOD_ARRAY_LENGTH] = { 0 };                      //return value of 2
+uint32_t ERROR_TIMEOUT_count[TX_PERIOD_ARRAY_LENGTH] = { 0 };                       //return value of 3
+uint32_t ERROR_NO_REPLY_count[TX_PERIOD_ARRAY_LENGTH] = { 0 };                      //return value of 4
+uint32_t ERROR_UNABLE_TO_DELIVER_count[TX_PERIOD_ARRAY_LENGTH] = { 0 };             //return value of 5
+uint8_t last_tx_return_value;
+
+//tx time accumulators
+uint32_t transmit_time_success_total[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t transmit_time_fail_total[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+///end statistics variables////////////////////////////////////////////
+///end statistics variables////////////////////////////////////////////
 
 static uint32_t size = sizeof(mpu_values) - 2;
 static mpu_values local_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -162,6 +191,7 @@ static void upcount_hb_leds();
 static void update_mesh_mode(uint8_t * data, uint8_t len);
 static void mesh_update_imu_leds(uint8_t * data, uint8_t len);
 static void update_3LED_imu();
+static void reset_statistics_collector();
 ///
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
@@ -204,14 +234,15 @@ int main(void)
 
     int target_address = 2;
 
+    current_message_period_index = 0;
     start_time = power_on_time_msec;
 
     for (;;)
     {
         //run for 2 minutes.
-        if ((power_on_time_msec - start_time) >= 1000 * STATISTICS_TIME_S)
+        if ((power_on_time_msec - start_time) >= (1000 * STATISTICS_TIME_S))
         {
-            start_time = power_on_time_msec;
+            reset_statistics_collector();
         }
 
         if (!transmit)
@@ -220,15 +251,61 @@ int main(void)
         }
 
 #if TRANSMIT
-        if ((power_on_time_msec - mode_start_time) > MESH_RX_MAX_TIME_MSEC)
+        if ((power_on_time_msec - mode_start_time) > message_tx_period_ms_array[current_message_period_index])
         {
             transmit = 1;
             mode_start_time = 0;
         }
 #endif 
 
-        if (transmit)
+        if (TRANSMIT && transmit)
         {
+
+            //update the target address
+#if TRANSMIT
+#if ADDRESS_3 || ADDRESS_1
+            if (target_address == 2)
+            #elif ADDRESS_2
+            if (target_address == 1)
+#endif
+            {
+#if ADDRESS_3
+                target_address = 1;
+                transmit_count_ptr = transmit_count_1 + current_message_period_index;
+                transmit_fail_ptr = transmit_fail_1 + current_message_period_index;
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_5, colors + 4);
+#endif
+#elif ADDRESS_2 || ADDRESS_1
+                target_address = 3;
+                transmit_count_ptr = transmit_count_3 + current_message_period_index;;
+                transmit_fail_ptr = transmit_fail_3 + current_message_period_index;;
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_5, colors + 6);
+#endif
+#endif
+            }
+            else
+            {
+#if ADDRESS_3 || ADDRESS_1
+                target_address = 2;
+                transmit_count_ptr = transmit_count_2 + current_message_period_index;
+                transmit_fail_ptr = transmit_fail_2 + current_message_period_index;
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_5, colors + 5);
+#endif
+#elif ADDRESS_2
+                target_address = 1;
+                transmit_count_ptr = transmit_count_1 + current_message_period_index;;
+                transmit_fail_ptr = transmit_fail_1 + current_message_period_index;;
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_5, colors + 4);
+#endif
+#endif
+            }
+#endif
+
+            //read the mpu and prepare the command to be sent
             get_mpu_readings(&local_imu_data);
 
             uint8_t tx_buf[sizeof(local_imu_data) - 2];
@@ -241,88 +318,67 @@ int main(void)
 
             tx_buf[sizeof(local_imu_data) + 1] = MESH_CMD_TERMINATION;
 
-            if (TRANSMIT)
-            {
-                tx_start = power_on_time_msec;
-                last_tx_successful = !mesh_tx(tx_buf, sizeof(local_imu_data) - 2, target_address);
-                tx_time = power_on_time_msec - tx_start;
-            }
+            //send the message
+            tx_start = power_on_time_msec;
+            last_tx_return_value = mesh_tx(tx_buf, sizeof(local_imu_data) - 2, target_address);
+            tx_time = power_on_time_msec - tx_start;
 
-            if (last_tx_successful)
+            //update return value accumulators
+            switch (last_tx_return_value)
             {
+                case 0:
+                    {
 #if ENABLE_DIAGNOSTIC_LED
-                set_led_output(RGB_4, colors + 5);
+                    set_led_output(RGB_4, colors + 5);
 #endif
-
-                transmit_time_success_total += tx_time;
+                    transmit_time_success_total[current_message_period_index] += tx_time;
+                    ++ERROR_NONE_count[current_message_period_index];
+                    break;
+                }
+                case 1:
+                    {
+                    ++ERROR_INVALID_LENGTH_count[current_message_period_index];
+                    break;
+                }
+                case 2:
+                    {
+                    ++ERROR_NO_ROUTE_count[current_message_period_index];
+                    break;
+                }
+                case 3:
+                    {
+                    ++ERROR_TIMEOUT_count[current_message_period_index];
+                    break;
+                }
+                case 4:
+                    {
+                    ++ERROR_NO_REPLY_count[current_message_period_index];
+                    break;
+                }
+                case 5:
+                    {
+                    ++ERROR_UNABLE_TO_DELIVER_count[current_message_period_index];
+                    break;
+                }
+                default:
+                    {
+                    break;
+                }
             }
-            else
+
+            //increment transmit counter
+            ++(*transmit_count_ptr);
+
+            //increment fail counter if necessary
+            if (last_tx_return_value > 0)
             {
 #if ENABLE_DIAGNOSTIC_LED
                 set_led_output(RGB_4, colors + 4);
 #endif
 
-                transmit_time_fail_total += tx_time;
+                ++(*transmit_fail_ptr);
+                transmit_time_fail_total[current_message_period_index] += tx_time;
             }
-
-            switch (target_address)
-            {
-                case 1:
-                    {
-                    ++transmit_count_1;
-                    transmit_fail_1 += (last_tx_successful ? 0 : 1);
-                    break;
-                }
-                case 2:
-                    {
-                    ++transmit_count_2;
-                    transmit_fail_2 += (last_tx_successful ? 0 : 1);
-                    break;
-                }
-                case 3:
-                    {
-                    ++transmit_count_3;
-                    transmit_fail_3 += (last_tx_successful ? 0 : 1);
-                    break;
-                }
-                default:
-                    break;
-            }
-
-#if TRANSMIT
-#if ADDRESS_3
-            if (target_address == 2)
-            #elif ADDRESS_2
-            if (target_address == 1)
-#endif
-            {
-#if ADDRESS_3
-                target_address = 1;
-#if ENABLE_DIAGNOSTIC_LED
-                set_led_output(RGB_5, colors + 4);
-#endif
-#elif ADDRESS_2
-                target_address = 3;
-#if ENABLE_DIAGNOSTIC_LED
-                set_led_output(RGB_5, colors + 6);
-#endif
-#endif
-            }
-            else
-            {
-#if ADDRESS_3
-                target_address = 2;
-#if ENABLE_DIAGNOSTIC_LED
-                set_led_output(RGB_5, colors + 5);
-#endif
-#elif ADDRESS_2
-                target_address = 1;
-#if ENABLE_DIAGNOSTIC_LED
-                set_led_output(RGB_5, colors + 4);
-#endif
-#endif
-            }
-#endif
 
             transmit = 0;
             mode_start_time = power_on_time_msec;
@@ -558,6 +614,14 @@ static void update_3LED_imu()
     {
         set_led_output(RGB_6, colors);
     }
+}
+
+static void reset_statistics_collector()
+{
+    //reset start time and set message period for the next collection
+    collection_duration_s[current_message_period_index] += (power_on_time_msec - start_time);
+    current_message_period_index = (current_message_period_index + 1) % TX_PERIOD_ARRAY_LENGTH;
+    start_time = power_on_time_msec;
 }
 
 /* END main */

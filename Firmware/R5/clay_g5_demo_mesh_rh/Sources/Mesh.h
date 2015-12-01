@@ -42,14 +42,6 @@ typedef struct
 extern bool mesh_rx_enabled;
 extern bool mesh_messages_available;
 
-extern uint64_t messages_received_1;
-extern uint64_t messages_received_2;
-extern uint64_t messages_received_3;
-
-extern uint64_t alives_received_1;
-extern uint64_t alives_received_2;
-extern uint64_t alives_received_3;
-
 extern mesh_command commands[];
 extern uint32_t command_count;
 

@@ -20,8 +20,6 @@
 /// The default number of retries
 #define RH_DEFAULT_RETRIES 3
 
-extern uint32_t RH_RelDG_retry_count;
-extern uint32_t RH_RelDG_total_send_count;
 
 /////////////////////////////////////////////////////////////////////
 /// \class RHReliableDatagram RHReliableDatagram.h <RHReliableDatagram.h>
