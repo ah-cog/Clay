@@ -51,15 +51,19 @@
 #include "wirish.h"
 #endif
 
-static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //red
-        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //green
-        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED }         //blue
+#if ENABLE_DIAGNOSTIC_LED
+static color_rgb colors[] =
+{
+    {   LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF},        //off
+    {   LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF},        //red
+    {   LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF},        //green
+    {   LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED}         //blue
 };
 
 #define RED_OUTPUT  (colors + 1)
 #define GREEN_OUTPUT  (colors + 2)
 #define BLUE_OUTPUT  (colors + 3)
+#endif
 
 //
 #define DO_ROUTING_TIMEOUT_MSEC         2
@@ -105,6 +109,14 @@ static uint8_t do_routing_data;
 static uint8_t do_routing_length;
 static uint32_t time_last_alive_sent_ms;
 
+uint64_t messages_received_1;
+uint64_t messages_received_2;
+uint64_t messages_received_3;
+
+uint64_t alives_received_1;
+uint64_t alives_received_2;
+uint64_t alives_received_3;
+
 static found_mesh_node mesh_nodes[MAX_MESH_NODE_COUNT];
 
 ///prototypes
@@ -135,6 +147,14 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
 
     mesh_rx_enabled = false;
     mesh_messages_available = false;
+
+    messages_received_1 = 0;
+    messages_received_2 = 0;
+    messages_received_3 = 0;
+
+    alives_received_1 = 0;
+    alives_received_2 = 0;
+    alives_received_3 = 0;
 }
 
 void mesh_process_commands(void)
@@ -152,30 +172,71 @@ void mesh_process_commands(void)
     if (mesh_messages_available)
     {
         mesh_messages_available = false;
+
+#if ENABLE_DIAGNOSTIC_LED
         set_led_output(RGB_8, GREEN_OUTPUT);
+#endif
 
         switch (rx_buf_source)
         {
             case 1:
                 {
+#if ENABLE_DIAGNOSTIC_LED
                 set_led_output(RGB_1, RED_OUTPUT);
+#endif
+
+                if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
+                {
+                    ++alives_received_1;
+                }
+                else
+                {
+                    ++messages_received_1;
+                }
+
                 break;
             }
             case 2:
                 {
+#if ENABLE_DIAGNOSTIC_LED
                 set_led_output(RGB_1, GREEN_OUTPUT);
+#endif
+
+                if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
+                {
+                    ++alives_received_2;
+                }
+                else
+                {
+                    ++messages_received_2;
+                }
+
                 break;
             }
             case 3:
                 {
+#if ENABLE_DIAGNOSTIC_LED
                 set_led_output(RGB_1, BLUE_OUTPUT);
+#endif
+
+                if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
+                {
+                    ++alives_received_3;
+                }
+                else
+                {
+                    ++messages_received_3;
+                }
+
                 break;
             }
         }
 
         if (rx_buf_size == 3 && rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
         {
+#if ENABLE_DIAGNOSTIC_LED
             set_led_output(RGB_9, BLUE_OUTPUT);
+#endif
             for (int i = 0; i < MESH_MAX_NODES; ++i)
             {
                 if (mesh_nodes[i].address == rx_buf[1])
@@ -202,7 +263,9 @@ void mesh_process_commands(void)
         }
         else if (rx_buf_size > 0)
         {
+#if ENABLE_DIAGNOSTIC_LED
             set_led_output(RGB_9, GREEN_OUTPUT);
+#endif
 
             if (rx_buf[0] < command_count && commands[rx_buf[0]].function != NULL)
             {
@@ -211,23 +274,17 @@ void mesh_process_commands(void)
 
         }
     }
+#if ENABLE_DIAGNOSTIC_LED
     else
     {
         set_led_output(RGB_8, BLUE_OUTPUT);
     }
-
-    uint8_t statusReg = meshRadio->statusRead();
-    uint8_t pinState_CE = digitalRead(MESH_CE_PIN_INDEX);
-    uint8_t pinState_IRQ = digitalRead(MESH_IRQ_PIN_INDEX);
+#endif
 
     if (!mesh_rx_enabled)
     {
         start_mesh_rx();
     }
-//    else if (!digitalRead(MESH_CE_PIN_INDEX))
-//    {
-//        stop_mesh_rx();
-//    }
 }
 
 void mesh_do_routing(void)
@@ -421,25 +478,15 @@ uint8_t get_next_node(uint8_t startAddr)
 ///handles routing and message reception. messages are stored into a local buffer.
 void mesh_irq_handler(void)
 {
-//    mesh_messages_available = true;
-//    digitalWrite(MESH_CE_PIN_INDEX, 0);
-//    mesh_rx_expected = false;
-
     mesh_rx_enabled = false;
     rx_buf_size = 0xFF;        //0xFF is max value, that way entire message is returned.
 
     uint8_t pinState_IRQ = digitalRead(MESH_IRQ_PIN_INDEX);
 
-    //go get the message, put it in the buffer, and set the flag that says it's there.
     if (mesh_rx(rx_buf, &rx_buf_size, &rx_buf_source))
     {
-//        digitalWrite(MESH_CE_PIN_INDEX, 0);
         stop_mesh_rx();
     }
-
-    uint8_t statusReg = meshRadio->statusRead();
-    uint8_t pinState_CE = digitalRead(MESH_CE_PIN_INDEX);
-    pinState_IRQ = digitalRead(MESH_IRQ_PIN_INDEX);
 
     if (rx_buf_size > 0 && rx_buf_size != 0xFF)        //actual return of rx_buf_size shouldn't ever exceed 0d30.
     {
@@ -449,13 +496,6 @@ void mesh_irq_handler(void)
     {
         mesh_messages_available = false;
         start_mesh_rx();
-    }
-
-    if (statusReg > 0x0F)
-    {
-//        mesh_irq_handler();
-        //        meshRadio->spiWriteRegister(RH_NRF24_REG_07_STATUS, RH_NRF24_RX_DR);
-        statusReg = meshRadio->statusRead();
     }
 }
 
@@ -499,7 +539,9 @@ static void start_mesh_rx()
 {
     meshRadio->setModeRx();
     mesh_rx_enabled = true;
+#if ENABLE_DIAGNOSTIC_LED
     set_led_output(RGB_6, GREEN_OUTPUT);
+#endif
 }
 
 static void stop_mesh_rx()
@@ -508,16 +550,8 @@ static void stop_mesh_rx()
     {
         mesh_rx_enabled = false;
         meshRadio->setModeIdle();
+#if ENABLE_DIAGNOSTIC_LED
         set_led_output(RGB_6, BLUE_OUTPUT);
+#endif
     }
-
-    //HACK this needs more analysis.
-//    uint8_t statusReg = meshRadio->statusRead();
-//
-//    if (statusReg & 0x40)
-//    {
-//        mesh_irq_handler();
-////        meshRadio->spiWriteRegister(RH_NRF24_REG_07_STATUS, RH_NRF24_RX_DR);
-//        statusReg = meshRadio->statusRead();
-//    }
 }
