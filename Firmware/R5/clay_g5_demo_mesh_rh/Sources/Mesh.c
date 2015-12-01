@@ -51,6 +51,10 @@
 #include "wirish.h"
 #endif
 
+#ifndef MESH_STATISTICS_H_
+#include "mesh_stastistics.h"
+#endif
+
 #if ENABLE_DIAGNOSTIC_LED
 static color_rgb colors[] =
 {
@@ -109,13 +113,15 @@ static uint8_t do_routing_data;
 static uint8_t do_routing_length;
 static uint32_t time_last_alive_sent_ms;
 
-uint64_t messages_received_1;
-uint64_t messages_received_2;
-uint64_t messages_received_3;
+///statistics variables////////////////////////////////////////////////
+uint32_t messages_received_1[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t messages_received_2[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t messages_received_3[TX_PERIOD_ARRAY_LENGTH] = { 0 };
 
-uint64_t alives_received_1;
-uint64_t alives_received_2;
-uint64_t alives_received_3;
+uint32_t alives_received_1[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t alives_received_2[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+uint32_t alives_received_3[TX_PERIOD_ARRAY_LENGTH] = { 0 };
+///end statistics variables////////////////////////////////////////////
 
 static found_mesh_node mesh_nodes[MAX_MESH_NODE_COUNT];
 
@@ -147,14 +153,6 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
 
     mesh_rx_enabled = false;
     mesh_messages_available = false;
-
-    messages_received_1 = 0;
-    messages_received_2 = 0;
-    messages_received_3 = 0;
-
-    alives_received_1 = 0;
-    alives_received_2 = 0;
-    alives_received_3 = 0;
 }
 
 void mesh_process_commands(void)
@@ -187,11 +185,11 @@ void mesh_process_commands(void)
 
                 if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
                 {
-                    ++alives_received_1;
+                    ++alives_received_1[current_message_period_index];
                 }
                 else
                 {
-                    ++messages_received_1;
+                    ++messages_received_1[current_message_period_index];
                 }
 
                 break;
@@ -204,11 +202,11 @@ void mesh_process_commands(void)
 
                 if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
                 {
-                    ++alives_received_2;
+                    ++alives_received_2[current_message_period_index];
                 }
                 else
                 {
-                    ++messages_received_2;
+                    ++messages_received_2[current_message_period_index];
                 }
 
                 break;
@@ -221,11 +219,11 @@ void mesh_process_commands(void)
 
                 if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
                 {
-                    ++alives_received_3;
+                    ++alives_received_3[current_message_period_index];
                 }
                 else
                 {
-                    ++messages_received_3;
+                    ++messages_received_3[current_message_period_index];
                 }
 
                 break;
