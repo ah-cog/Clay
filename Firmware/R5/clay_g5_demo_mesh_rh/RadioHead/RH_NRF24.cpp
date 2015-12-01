@@ -6,15 +6,19 @@
 #include <RH_NRF24.h>
 #define NRF_TIMEOUT_MS 1
 
+#if ENABLE_DIAGNOSTIC_LED
 #ifndef LED_DRIVER_PCA9552_H_
 #include "led_driver_pca9552.h"
 #endif
 
-static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //red
-        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //green
-        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED }         //blue
+static color_rgb colors[] =
+{
+    {   LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF},        //off
+    {   LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF},        //red
+    {   LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF},        //green
+    {   LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED}         //blue
 };
+#endif 
 
 #define RED_OUTPUT  (colors + 1)
 #define GREEN_OUTPUT  (colors + 2)
@@ -306,24 +310,32 @@ bool RH_NRF24::available()
     {
         if (_mode == RHModeTx)
         {
+#if ENABLE_DIAGNOSTIC_LED
             set_led_output(RGB_7, BLUE_OUTPUT);
+#endif
             return false;
         }
 
         setModeRx();
         if (spiReadRegister(RH_NRF24_REG_17_FIFO_STATUS) & RH_NRF24_RX_EMPTY)
         {
+#if ENABLE_DIAGNOSTIC_LED
             set_led_output(RGB_7, BLUE_OUTPUT);
+#endif
             return false;
         }
 
+#if ENABLE_DIAGNOSTIC_LED
         set_led_output(RGB_7, GREEN_OUTPUT);
+#endif
         // Manual says that messages > 32 octets should be discarded
         uint8_t
         len = spiRead(RH_NRF24_COMMAND_R_RX_PL_WID);
         if (len > 32)
         {
+#if ENABLE_DIAGNOSTIC_LED
             set_led_output(RGB_7, BLUE_OUTPUT);
+#endif
             flushRx();
             clearRxBuf();
             setModeIdle();
@@ -343,7 +355,9 @@ bool RH_NRF24::available()
 //        if (_rxBufValid)
 //            setModeIdle();        // Got one
     }
+#if ENABLE_DIAGNOSTIC_LED
     set_led_output(RGB_7, BLUE_OUTPUT);
+#endif
     return _rxBufValid;
 }
 
