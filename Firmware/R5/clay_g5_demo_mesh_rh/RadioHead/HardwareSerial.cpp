@@ -65,12 +65,10 @@ HardwareSerial::HardwareSerial()
 
 void HardwareSerial::begin(unsigned long baud)
 {
-    //TODO: PE init code
 }
 
 void HardwareSerial::end()
 {
-    //TODO: PE de-init code
 }
 
 int HardwareSerial::available(void)
@@ -85,7 +83,6 @@ int HardwareSerial::read(void)
 
 size_t HardwareSerial::write(uint8_t ch)
 {
-    //TODO: PE serial write
     return 1;
 }
 
@@ -93,27 +90,21 @@ extern "C"
 {
 void USART1_IRQHandler(void)
 {
-    //TODO: PE irq code
 }
 void USART2_IRQHandler(void)
 {
-    //TODO: PE irq code
 }
 void USART3_IRQHandler(void)
 {
-    //TODO: PE irq code
 }
 void UART4_IRQHandler(void)
 {
-    //TODO: PE irq code
 }
 void UART5_IRQHandler(void)
 {
-    //TODO: PE irq code
 }
 void USART6_IRQHandler(void)
 {
-    //TODO: PE irq code
 }
 }
 

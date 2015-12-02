@@ -20,7 +20,6 @@
 /// The default number of retries
 #define RH_DEFAULT_RETRIES 3
 
-
 /////////////////////////////////////////////////////////////////////
 /// \class RHReliableDatagram RHReliableDatagram.h <RHReliableDatagram.h>
 /// \brief RHDatagram subclass for sending addressed, acknowledged, retransmitted datagrams.
@@ -76,7 +75,7 @@
 /// to process the acknowledgement. Best practice is to use the same processors (and
 /// radios) throughout your network.
 ///
-class RHReliableDatagram : public RHDatagram
+class RHReliableDatagram: public RHDatagram
 {
 public:
     /// Constructor. 
@@ -93,6 +92,12 @@ public:
     /// The actual timeout is randomly varied between timeout and timeout*2.
     /// \param[in] timeout The new timeout period in milliseconds
     void setTimeout(uint16_t timeout);
+
+    //added by GBH
+    /// Returns the currently configured tx timeout.
+    /// Can be changed with setTimeout().
+    /// \return The currently configured maximum number of retries.
+    uint16_t timeout();
 
     /// Sets the maximum number of retries. Defaults to 3 at construction time. 
     /// If set to 0, each message will only ever be sent once.
@@ -151,7 +156,8 @@ public:
     /// \param[in] flags If present and not NULL, the referenced uint8_t will be set to the FLAGS
     /// (not just those addressed to this node).
     /// \return true if a valid message was copied to buf
-    bool recvfromAckTimeout(uint8_t* buf, uint8_t* len,  uint16_t timeout, uint8_t* from = NULL, uint8_t* to = NULL, uint8_t* id = NULL, uint8_t* flags = NULL);
+    bool recvfromAckTimeout(uint8_t* buf, uint8_t* len, uint16_t timeout, uint8_t* from = NULL, uint8_t* to = NULL, uint8_t* id = NULL,
+            uint8_t* flags = NULL);
 
     /// Returns the number of retransmissions 
     /// we have had to send since starting or since the last call to resetRetransmissions().
@@ -160,7 +166,7 @@ public:
 
     /// Resets the count of the number of retransmissions 
     /// to 0. 
-    void resetRetransmissions(); 
+    void resetRetransmissions();
 
 protected:
     /// Send an ACK for the message id to the given from address

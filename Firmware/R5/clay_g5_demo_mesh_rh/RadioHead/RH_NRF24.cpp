@@ -50,7 +50,7 @@ bool RH_NRF24::init()
     // Enable dynamic payload length on all pipes
     spiWriteRegister(RH_NRF24_REG_1C_DYNPD, RH_NRF24_DPL_ALL);
     // Enable dynamic payload length, disable payload-with-ack, enable noack
-    spiWriteRegister(RH_NRF24_REG_1D_FEATURE, RH_NRF24_EN_DPL | RH_NRF24_EN_DYN_ACK);
+    spiWriteRegister(RH_NRF24_REG_1D_FEATURE, RH_NRF24_EN_DPL | RH_NRF24_EN_ACK_PAY | RH_NRF24_EN_DYN_ACK);
 
     //setup retry stuff
 //    spiWriteRegister(RH_NRF24_REG_04_SETUP_RETR, 0x1F);
@@ -351,13 +351,16 @@ bool RH_NRF24::available()
         // 140 microsecs (32 octet payload)
         validateRxBuf();
         //NOTE set mode idle regardless. We're using interrupts now, and we can't handle the 
-        //     second interrupt in time if it is generated. 
+        //     second interrupt in time if it is generated.
+        //TODO: is the operation below necessary for some other modes?
 //        if (_rxBufValid)
 //            setModeIdle();        // Got one
     }
 #if ENABLE_DIAGNOSTIC_LED
     set_led_output(RGB_7, BLUE_OUTPUT);
 #endif
+    
+    uint8_t statusReg = statusRead();
     return _rxBufValid;
 }
 

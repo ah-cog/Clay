@@ -99,9 +99,6 @@
 #include "mesh_stastistics.h"
 #endif
 
-#define STATISTICS_TIME_S       300
-#define MSG_TX_PERIOD_MS   50
-
 #if(ADDRESS_3 )
 #define TRANSMIT                1
 #else
@@ -125,7 +122,6 @@ typedef struct
 static led_time_segment_values LED_IMU_Levels[LED_TIME_SEGMENT_COUNT];
 static uint32_t LED_time_segment = 0;
 
-static uint8_t transmit = 0;
 static uint32_t mode_start_time = 0;
 static uint8_t mesh_mode = 0;
 
@@ -142,14 +138,13 @@ uint32_t current_message_period_index;
 
 //collection time values
 uint32_t start_time = 0;
-uint32_t collection_duration_s[] = { 0 };
+uint32_t collection_duration_s[TX_PERIOD_ARRAY_LENGTH] = { 0 };
 
 //transmission accumulator vars
 uint32_t * transmit_count_ptr;
 uint32_t transmit_count_1[TX_PERIOD_ARRAY_LENGTH] = { 0 };
 uint32_t transmit_count_2[TX_PERIOD_ARRAY_LENGTH] = { 0 };
 uint32_t transmit_count_3[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-
 
 //tx failure accumulator vars
 uint32_t * transmit_fail_ptr;
@@ -221,8 +216,8 @@ int main(void)
 
     //mesh diagnostic LEDs.
     // TX
-    //     rgb 4 is green when last tx was successful, red if not. (note: this is not the status of the transmission indicated by rgb 5)
-    //     rgb 5 is red when transmitter is attempting to send to address 1, green when sending to 2, blue when sending to 3
+    //     rgb 4 is green when last tx was successful, red if not.
+    //     rgb 5 shows last address sent to. red when last sent to address 1, green when last sent to 2, blue when last sent to 3
     // RX
     //     led 1 is toggled when an IMU update message is received
     //     rgb 1 is red when address 1 sent the last message, green when address 2, blue when address 3
@@ -234,49 +229,53 @@ int main(void)
 
     int target_address = 2;
 
+    //used to make sure these variables get initialized. they'll never be accessed otherwise.
+#if ADDRESS_1
+    transmit_count_1[0] = 0;
+    transmit_fail_1[0] = 0;
+#elif ADDRESS_2
+    transmit_count_2[0] = 0;
+    transmit_fail_2[0] = 0;
+#elif ADDRESS_3
+    transmit_count_3[0] = 0;
+    transmit_fail_3[0] = 0;
+#endif
+
     current_message_period_index = 0;
     start_time = power_on_time_msec;
 
+    int collectionCount = 1;
+
     for (;;)
     {
-        //run for 2 minutes.
         if ((power_on_time_msec - start_time) >= (1000 * STATISTICS_TIME_S))
         {
+            if (current_message_period_index == 12) ++collectionCount;
             reset_statistics_collector();
         }
 
-        if (!transmit)
-        {
-            mesh_process_commands();
-        }
+        mesh_process_commands();
 
 #if TRANSMIT
         if ((power_on_time_msec - mode_start_time) > message_tx_period_ms_array[current_message_period_index])
         {
-            transmit = 1;
-            mode_start_time = 0;
-        }
-#endif 
-
-        if (TRANSMIT && transmit)
-        {
+            mode_start_time = power_on_time_msec;
 
             //update the target address
-#if TRANSMIT
-#if ADDRESS_3 || ADDRESS_1
+#if ADDRESS_3 || ADDRESS_1              //address 3 or address 1 will send to 2 occasionally
             if (target_address == 2)
-            #elif ADDRESS_2
+#elif ADDRESS_2             //address 2 will send to address 1 (so will address 3, but that's covered in the 'else' below)
             if (target_address == 1)
 #endif
             {
-#if ADDRESS_3
+#if ADDRESS_3                           //address 3 needs to switch up and send to 2 instead of 1 at this point.
                 target_address = 1;
                 transmit_count_ptr = transmit_count_1 + current_message_period_index;
                 transmit_fail_ptr = transmit_fail_1 + current_message_period_index;
 #if ENABLE_DIAGNOSTIC_LED
                 set_led_output(RGB_5, colors + 4);
 #endif
-#elif ADDRESS_2 || ADDRESS_1
+#elif ADDRESS_2 || ADDRESS_1            //on module with address 2 at this point, we're sending to 1. on module with address 1, we're sending to 2. in either case, we need to send to 3 on the next iteration.
                 target_address = 3;
                 transmit_count_ptr = transmit_count_3 + current_message_period_index;;
                 transmit_fail_ptr = transmit_fail_3 + current_message_period_index;;
@@ -287,14 +286,14 @@ int main(void)
             }
             else
             {
-#if ADDRESS_3 || ADDRESS_1
+#if ADDRESS_3 || ADDRESS_1              //on module with address 3, we last sent to 1, on module with address 1, we last sent to 3. in both cases, the next address we need to send to is address 2
                 target_address = 2;
                 transmit_count_ptr = transmit_count_2 + current_message_period_index;
                 transmit_fail_ptr = transmit_fail_2 + current_message_period_index;
 #if ENABLE_DIAGNOSTIC_LED
                 set_led_output(RGB_5, colors + 5);
 #endif
-#elif ADDRESS_2
+#elif ADDRESS_2                         //on module with address 2, we last sent to 3, so we need to send to 1 next.
                 target_address = 1;
                 transmit_count_ptr = transmit_count_1 + current_message_period_index;;
                 transmit_fail_ptr = transmit_fail_1 + current_message_period_index;;
@@ -303,7 +302,6 @@ int main(void)
 #endif
 #endif
             }
-#endif
 
             //read the mpu and prepare the command to be sent
             get_mpu_readings(&local_imu_data);
@@ -326,8 +324,8 @@ int main(void)
             //update return value accumulators
             switch (last_tx_return_value)
             {
-                case 0:
-                    {
+                case RH_ROUTER_ERROR_NONE:
+                {
 #if ENABLE_DIAGNOSTIC_LED
                     set_led_output(RGB_4, colors + 5);
 #endif
@@ -335,33 +333,33 @@ int main(void)
                     ++ERROR_NONE_count[current_message_period_index];
                     break;
                 }
-                case 1:
-                    {
+                case RH_ROUTER_ERROR_INVALID_LENGTH:
+                {
                     ++ERROR_INVALID_LENGTH_count[current_message_period_index];
                     break;
                 }
-                case 2:
-                    {
+                case RH_ROUTER_ERROR_NO_ROUTE:
+                {
                     ++ERROR_NO_ROUTE_count[current_message_period_index];
                     break;
                 }
-                case 3:
-                    {
+                case RH_ROUTER_ERROR_TIMEOUT:
+                {
                     ++ERROR_TIMEOUT_count[current_message_period_index];
                     break;
                 }
-                case 4:
-                    {
+                case RH_ROUTER_ERROR_NO_REPLY:
+                {
                     ++ERROR_NO_REPLY_count[current_message_period_index];
                     break;
                 }
-                case 5:
-                    {
+                case RH_ROUTER_ERROR_UNABLE_TO_DELIVER:
+                {
                     ++ERROR_UNABLE_TO_DELIVER_count[current_message_period_index];
                     break;
                 }
                 default:
-                    {
+                {
                     break;
                 }
             }
@@ -380,9 +378,9 @@ int main(void)
                 transmit_time_fail_total[current_message_period_index] += tx_time;
             }
 
-            transmit = 0;
             mode_start_time = power_on_time_msec;
         }
+#endif
 
         if (tick_1msec)
         {
@@ -619,7 +617,7 @@ static void update_3LED_imu()
 static void reset_statistics_collector()
 {
     //reset start time and set message period for the next collection
-    collection_duration_s[current_message_period_index] += (power_on_time_msec - start_time);
+    collection_duration_s[current_message_period_index] += (power_on_time_msec - start_time) / 1000;
     current_message_period_index = (current_message_period_index + 1) % TX_PERIOD_ARRAY_LENGTH;
     start_time = power_on_time_msec;
 }

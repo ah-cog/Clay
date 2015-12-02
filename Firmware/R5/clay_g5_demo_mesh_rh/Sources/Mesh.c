@@ -133,6 +133,8 @@ static void start_mesh_rx();
 static void stop_mesh_rx();
 
 ///functions
+
+//initialize the mesh objects.
 void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
 {
     commands[0].function = changeMeshModeCallback;
@@ -144,8 +146,16 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
     RHMesh(*meshRadio);
 
     meshManager->init();
-    meshManager->setRetries(3);
-    meshManager->setTimeout(10);
+    set_RH_retry_count(3);
+    set_RH_timeout(10);
+
+    //enable auto-ack on all pipes.
+    meshRadio->spiWriteRegister(RH_NRF24_REG_01_EN_AA, 0x3F);
+
+    //enable hw ack.
+    set_hw_retry_count(15);
+    set_hw_retry_delay(_500uS);
+
     mesh_discover_nodes_and_get_address();
 
     clear_mesh_nodes();
@@ -153,8 +163,10 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
 
     mesh_rx_enabled = false;
     mesh_messages_available = false;
+
 }
 
+//call periodically to parse received messages and to enable the radio to receive.
 void mesh_process_commands(void)
 {
     uint8_t available_spot = MESH_MAX_NODES;
@@ -163,7 +175,6 @@ void mesh_process_commands(void)
 
     if (power_on_time_msec - time_last_alive_sent_ms >= MESH_ALIVE_PERIOD_MS)
     {
-        //TODO: turn off the rx stuff momentarily, if it's on
         send_alive_msg();
     }
 
@@ -285,12 +296,7 @@ void mesh_process_commands(void)
     }
 }
 
-void mesh_do_routing(void)
-{
-    do_routing_length = 0;
-    meshManager->recvfromAckTimeout(&do_routing_data, &do_routing_length, DO_ROUTING_TIMEOUT_MSEC);
-}
-
+//send message to one node. Stops the radio if it's in receive mode and starts it again once the TX is complete.
 uint8_t mesh_tx(void * data, uint32_t dataLength, uint8_t destination)
 {
     //store state of rx enable.
@@ -308,25 +314,19 @@ uint8_t mesh_tx(void * data, uint32_t dataLength, uint8_t destination)
     return rval;
 }
 
+//send message to all nodes. Stops the radio if it's in receive mode and starts it again once the TX is complete.
 uint8_t mesh_broadcast(void * data, uint32_t dataLength)
 {
-    uint8_t current_addr = get_first_node();
-    uint8_t rval = 1;
-
-    while (current_addr <= get_first_node())
-    {
-        rval &= meshManager->sendtoWait((uint8_t*) data, dataLength, current_addr, 0);
-        current_addr = get_next_node(current_addr);
-    }
-
-    return rval;
+    return mesh_tx(data, dataLength, 0xFF);
 }
 
+//calls into RH library and retrieves a message if one is available.
 uint8_t mesh_rx(void * data, uint8_t * dataLength, uint8_t * source)
 {
     return meshManager->recvfromAck((uint8_t*) data, (uint8_t*) dataLength, (uint8_t*) source);
 }
 
+//sets the radio address to an address that is available on the network.
 void mesh_discover_nodes_and_get_address()
 {
 #if ADDRESS_1
@@ -361,6 +361,7 @@ void mesh_discover_nodes_and_get_address()
 ///returns the first node to which a route is found.
 uint8_t get_first_node()
 {
+    return 0;        //not implemented
     int rval = 0;
     for (int i = 0; i < MESH_MAX_NODES; ++i)
     {
@@ -397,6 +398,7 @@ uint8_t get_first_node()
 //counts down to the highest-valued node with an address.
 uint8_t get_last_node()
 {
+    return 0;        //not implemented
     int rval = 0;
     for (int i = MESH_MAX_NODES; i >= 0; --i)
     {
@@ -479,14 +481,12 @@ void mesh_irq_handler(void)
     mesh_rx_enabled = false;
     rx_buf_size = 0xFF;        //0xFF is max value, that way entire message is returned.
 
-    uint8_t pinState_IRQ = digitalRead(MESH_IRQ_PIN_INDEX);
-
     if (mesh_rx(rx_buf, &rx_buf_size, &rx_buf_source))
     {
         stop_mesh_rx();
     }
 
-    if (rx_buf_size > 0 && rx_buf_size != 0xFF)        //actual return of rx_buf_size shouldn't ever exceed 0d30.
+    if (rx_buf_size > 0 && rx_buf_size != 0xFF)        //actual return of rx_buf_size shouldn't ever exceed 0d30. 0xFF is a default value.
     {
         mesh_messages_available = true;
     }
@@ -497,8 +497,44 @@ void mesh_irq_handler(void)
     }
 }
 
+//sets the retry count in radiohead. 
+//returns true if set successful (which should _always_ be the case)
+bool set_RH_retry_count(uint8_t retries)
+{
+    meshManager->setRetries(retries);
+    return meshManager->retries() == retries;
+}
+
+//sets the timeout in radiohead.
+//returns true if set successful (which should _always_ be the case)
+bool set_RH_timeout(uint16_t timeout_ms)
+{
+    meshManager->setTimeout(timeout_ms);
+    return meshManager->timeout() == timeout_ms;
+}
+
+//sets the retry count on the NRF radio. set to 0 to disable.
+//returns true if the set was successful.
+bool set_hw_retry_count(uint8_t retransmitCount)
+{
+    if (retransmitCount > 0xF) return false;
+
+    meshRadio->spiWriteRegister(RH_NRF24_REG_04_SETUP_RETR, retransmitCount & RH_NRF24_ARC);
+    return (meshRadio->spiReadRegister(RH_NRF24_REG_04_SETUP_RETR) & RH_NRF24_ARC);
+}
+
+//sets the retry count on the NRF radio. set to 0 to disable.
+//returns true if the set was successful.
+bool set_hw_retry_delay(mesh_HW_retry_interval retransmitDelay)
+{
+    meshRadio->spiWriteRegister(RH_NRF24_REG_04_SETUP_RETR, ((uint8_t) retransmitDelay << 4) & RH_NRF24_ARD);
+    return (((meshRadio->spiReadRegister(RH_NRF24_REG_04_SETUP_RETR) & RH_NRF24_ARD) >> 4) == (uint8_t) retransmitDelay);
+}
+
+//looks for an address that hasn't been added to the routing table.
 static bool findUnusedAddressInRoutingTable()
 {
+    return false;
     bool rval = false;
     RHRouter
     ::RoutingTableEntry * foundRoute;
@@ -517,6 +553,7 @@ static bool findUnusedAddressInRoutingTable()
     return rval;
 }
 
+//clears the mesh_nodes array, which contains a list of modules which have sent address broadcasts.
 static void clear_mesh_nodes()
 {
     for (int i = 0; i < MESH_MAX_NODES; ++i)
@@ -533,6 +570,7 @@ static void send_alive_msg()
     time_last_alive_sent_ms = power_on_time_msec;
 }
 
+//tells the radio to start receiving data. It will listen until data is available.
 static void start_mesh_rx()
 {
     meshRadio->setModeRx();
@@ -542,6 +580,7 @@ static void start_mesh_rx()
 #endif
 }
 
+//puts the radio back into idle mode. 
 static void stop_mesh_rx()
 {
     if (mesh_rx_enabled)

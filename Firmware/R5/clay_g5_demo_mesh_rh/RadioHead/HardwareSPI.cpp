@@ -20,12 +20,10 @@ HardwareSPI::HardwareSPI(uint32_t spiPortNumber)
 
 void HardwareSPI::begin(SPIFrequency frequency, uint32_t bitOrder, uint32_t mode)
 {
-    //TODO: PE init code
 }
 
 void HardwareSPI::end(void)
 {
-    //TODO: PE de-init code
 }
 
 static uint8_t rval = 0;

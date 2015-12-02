@@ -33,7 +33,6 @@ void SysTickConfig()
     //tick implemented in system_tick.c
 }
 
-//TODO: Interrupt handlers for GPIOs
 // These interrupt handlers have to be extern C else they dont get linked in to the interrupt vectors
 void pinMode(uint8_t pin, WiringPinMode mode)
 {
