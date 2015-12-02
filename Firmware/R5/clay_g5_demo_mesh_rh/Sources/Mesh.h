@@ -33,6 +33,26 @@
 //
 typedef void (*cmd_func)(uint8_t * data, uint8_t len);
 
+typedef enum
+{
+    _250uS = 0,
+    _500uS = 1,
+    _750uS = 2,
+    _1000uS = 3,
+    _1250uS = 4,
+    _1500uS = 5,
+    _1750uS = 6,
+    _2000uS = 7,
+    _2250uS = 8,
+    _2500uS = 9,
+    _2750uS = 10,
+    _3000uS = 11,
+    _3250uS = 12,
+    _3500uS = 13,
+    _3750uS = 14,
+    _4000uS = 15
+} mesh_HW_retry_interval;
+
 typedef struct
 {
     uint8_t cmd;
@@ -47,7 +67,6 @@ extern uint32_t command_count;
 
 extern void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback);
 extern void mesh_process_commands(void);
-extern void mesh_do_routing(void);
 extern uint8_t mesh_rx(void * data, uint8_t * dataLength, uint8_t * source);
 extern uint8_t mesh_tx(void * data, uint32_t dataLength, uint8_t destination);
 extern uint8_t mesh_broadcast(void * data, uint32_t dataLength);
@@ -56,5 +75,9 @@ extern uint8_t get_first_node();
 extern uint8_t get_last_node();
 extern uint8_t get_next_node(uint8_t startAddr);
 extern void mesh_irq_handler(void);
+extern bool set_RH_retry_count(uint8_t retries);
+extern bool set_RH_timeout(uint16_t timeout_ms);
+extern bool set_hw_retry_count(uint8_t retransmitCount);
+extern bool set_hw_retry_delay(mesh_HW_retry_interval retransmitDelay);
 
 #endif /* MESH_H_ */

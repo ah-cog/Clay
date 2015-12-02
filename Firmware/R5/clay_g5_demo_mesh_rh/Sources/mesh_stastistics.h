@@ -9,6 +9,7 @@
 #define MESH_STASTISTICS_H_
 
 #define TX_PERIOD_ARRAY_LENGTH  13
+#define STATISTICS_TIME_S       30
 
 //tx & timinng vars -- used in main.cpp /////////////////////////////////////
 //DON'T FORGET TO UPDATE  IF YOU CHANGE THE PERIOD VALUES IN THE ARRAY. THIS VALUE MUST BE UPDATED IN Mesh.h AND RHReliableDatagram.H AS WELL

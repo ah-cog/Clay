@@ -41,6 +41,12 @@ void RHReliableDatagram::setTimeout(uint16_t timeout)
 }
 
 ////////////////////////////////////////////////////////////////////
+uint16_t RHReliableDatagram::timeout()
+{
+    return _timeout;
+}
+
+////////////////////////////////////////////////////////////////////
 void RHReliableDatagram::setRetries(uint8_t retries)
 {
     _retries = retries;
@@ -65,7 +71,7 @@ bool RHReliableDatagram::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address)
         setHeaderId(thisSequenceNumber);
         setHeaderFlags(RH_FLAGS_NONE, RH_FLAGS_ACK);        // Clear the ACK flag
         sendto(buf, len, address);
-        bool derp = waitPacketSent();
+        waitPacketSent();
 
         // Never wait for ACKS to broadcasts:
         if (address == RH_BROADCAST_ADDRESS)
