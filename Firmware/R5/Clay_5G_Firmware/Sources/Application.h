@@ -15,8 +15,6 @@
 
 #include "ESP8266_Serial.h"
 #include "Drivers/ESP8266.h"
-#include "LED1.h"
-#include "LED2.h"
 
 #include "Messenger.h"
 
