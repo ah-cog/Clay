@@ -17,16 +17,27 @@
 
 // defines ///////////////////
 //radio config
-#define MESH_RADIO_ADDRESS_WIDTH        0x02 //SETUP_AW register - 4 byte address width.
-//set rx address 0 to this value. The device should always receive this data. Write to this address to broadcast
-#define MESH_RADIO_ADDRESS_GLOBAL    0xAFAFAFAFu
-#define MESH_RADIO_ADDRESS_UNIQUE    0x01010100u
+#define MESH_RADIO_ADDRESS_WIDTH     0x02 //SETUP_AW register - 4 byte address width.
+//
+#define MESH_RADIO_ADDRESS_BASE      0xA5A50000
+#define MESH_RADIO_ADDRESS_GLOBAL    (MESH_RADIO_ADDRESS_BASE + 0x0000u)
+
+//
+#define MESH_RADIO_ADDRESS_0         (MESH_RADIO_ADDRESS_BASE + 0xB000u)
+#define MESH_RADIO_ADDRESS_1         (MESH_RADIO_ADDRESS_BASE + 0xB001u)
+#define MESH_RADIO_ADDRESS_2         (MESH_RADIO_ADDRESS_BASE + 0xB002u)
+
+//
+#define MESH_PACKET_SIZE             32
 
 //Pass interrupts through to IRQ pin, enable 1 byte CRC, power up into PRX mode.
 #define MESH_RADIO_RECEIVE_CONFIG    (RF1_CONFIG_EN_CRC | RF1_CONFIG_PWR_UP | RF1_CONFIG_PRIM_RX)
-#define MESH_RADIO_TRANSMIT_CONFIG    (RF1_CONFIG_EN_CRC | RF1_CONFIG_PWR_UP)
+#define MESH_RADIO_TRANSMIT_CONFIG   (RF1_CONFIG_EN_CRC | RF1_CONFIG_PWR_UP)
 
-#define MESH_CHANNEL_NUMBER         60
+#define MESH_CHANNEL_NUMBER          60
+
+#define MESH_MODULE_MAX_COUNT        10
+#define TX_MESSAGE_BUFFER_LENGTH     10
 // structs ///////////////////
 typedef enum
 {
@@ -42,11 +53,37 @@ typedef enum
 //contains information about other NRF devices
 typedef struct
 {
-    uint32_t module_address;
-    uint32_t ping;
+    uint32_t moduleAddress;        //the address of the module
+    uint32_t ping;                  //round trip time for a message
+
+    //TODO: is this dumb? How should messages be sent? Non-directly communicable devices found and removed?
+    bool direct;                    //true if the module should be addressed directly
 } clay_mesh_module;
 
+typedef enum
+{
+    OK,
+    TIMED_OUT,
+    EXCEEDED_MAX_RETRY,
+    ERROR
+} message_status;
+
+typedef void (*messageCompleteCallback)(message_status);
+
+typedef struct
+{
+    uint8_t * data;
+    uint32_t length;
+    uint32_t destination;
+    uint32_t lastPacket;
+    uint32_t messageId;
+    bool transmissionComplete;
+    uint8_t retryCount;
+    messageCompleteCallback onMessageComplete;
+} mesh_message;
+
 // global vars ///////////////
+extern clay_mesh_module clayModules[MESH_MODULE_MAX_COUNT];
 
 // local vars ////////////////
 
@@ -54,16 +91,16 @@ typedef struct
 
 // implementations ///////////
 
-extern void mesh_init();
+extern void meshInit();
 
-extern void mesh_state_update();
+extern void meshStateUpdate();
 
-extern void mesh_send_string(uint8_t * tx_buf, uint32_t length, uint32_t destinationAddress);
+extern bool meshSend(uint8_t * tx_buf, uint32_t length, uint32_t destinationAddress, messageCompleteCallback messageComplete);
 
-extern void mesh_broadcast_string(uint8_t * tx_buf, uint32_t length);
+extern bool meshBroadcast(uint8_t * tx_buf, uint32_t length, messageCompleteCallback messageComplete);
 
-extern int mesh_receive_string(uint8_t * rx_buf, uint32_t length);
+extern int meshReceiveString(uint8_t * rx_buf, uint32_t length);
 
-extern void mesh_interrupt_handler();
+extern void meshInterruptHandler();
 
 #endif /* APP_NRF24L01_H_ */

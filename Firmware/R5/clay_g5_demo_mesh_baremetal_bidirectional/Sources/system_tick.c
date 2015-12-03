@@ -49,7 +49,7 @@ void tick()
 }
 
 ///will block for n milliseconds
-extern void delay_n_msec(uint32 n)
+extern void delay_n_ms(uint32 n)
 {
     int start = power_on_time_msec;
     while (power_on_time_msec - start < n)

@@ -115,10 +115,10 @@ void init_led_drivers()
     for (int i = 0; i < LED_DRIVER_COUNT; ++i)
     {
         I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, driver_info[i].address);
-        delay_n_msec(1);
+        delay_n_ms(1);
 
         I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) pwm_settings, (LDD_I2C_TSize) 5, LDD_I2C_SEND_STOP);
-        delay_n_msec(1);
+        delay_n_ms(1);
     }
 }
 
@@ -128,7 +128,7 @@ void reset_driver(led_driver driver)
     {
         LED_DRIVER_0_RESET_PutVal(NULL, FALSE);
 
-        delay_n_msec(reset_hold_time_msec);
+        delay_n_ms(reset_hold_time_msec);
 
         LED_DRIVER_0_RESET_PutVal(NULL, TRUE);
     }
@@ -137,7 +137,7 @@ void reset_driver(led_driver driver)
     {
         LED_DRIVER_1_RESET_PutVal(NULL, FALSE);
 
-        delay_n_msec(reset_hold_time_msec);
+        delay_n_ms(reset_hold_time_msec);
 
         LED_DRIVER_1_RESET_PutVal(NULL, TRUE);
     }
@@ -152,11 +152,11 @@ void set_led_output(rgb_led led, color_rgb *output_color)
     set_led_output_mode(channel, output_color);
 
     I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, driver_info[channel->driver_index].address);
-    delay_n_msec(1);
+    delay_n_ms(1);
 
     I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) driver_info[channel->driver_index].led_state.i2c_message, (LDD_I2C_TSize) 5,
             LDD_I2C_SEND_STOP);
-    delay_n_msec(1);
+    delay_n_ms(1);
 }
 
 static void set_led_output_mode(rgb_channel* led, color_rgb * output_color)
