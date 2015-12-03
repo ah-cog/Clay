@@ -58,8 +58,6 @@
 - \subpage IMU_FSYNC
 - \subpage IMU_CS
 - \subpage IMU_INT
-- \subpage LED1
-- \subpage LED2
 
 
 */
