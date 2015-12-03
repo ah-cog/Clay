@@ -13,6 +13,11 @@
 
 #include <RHMesh.h>
 
+
+#ifndef MESH_STASTISTICS_H_
+#include "mesh_stastistics.h"
+#endif
+
 #if ENABLE_DIAGNOSTIC_LED
 #ifndef LED_DRIVER_PCA9552_H_
 #include "led_driver_pca9552.h"
@@ -42,7 +47,7 @@ RHMesh::RHMesh(RHGenericDriver& driver, uint8_t thisAddress)
 
 ////////////////////////////////////////////////////////////////////
 // Public methods
-
+uint32_t doArpTime;
 ////////////////////////////////////////////////////////////////////
 // Discovers a route to the destination (if necessary), sends and 
 // waits for delivery to the next hop (but not for delivery to the final destination)
@@ -54,8 +59,13 @@ uint8_t RHMesh::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address, uint8_t f
     if (address != RH_BROADCAST_ADDRESS)
     {
         RoutingTableEntry* route = getRouteTo(address);
+        doArpTime = millis();
         if (!route && !doArp(address))
+        {
             return RH_ROUTER_ERROR_NO_ROUTE;
+        }
+        experiment_data.do_arp_time_total_ms += millis() - doArpTime;
+        ++experiment_data.do_arp_success_count;
     }
 
     // Now have a route. Contruct an application layer message and send it via that route
@@ -68,6 +78,7 @@ uint8_t RHMesh::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address, uint8_t f
 ////////////////////////////////////////////////////////////////////
 bool RHMesh::doArp(uint8_t address)
 {
+    ++experiment_data.route_table_miss;
     // Need to discover a route
     // Broadcast a route discovery message with nothing in it
     MeshRouteDiscoveryMessage* p = (MeshRouteDiscoveryMessage*) &_tmpMessage;

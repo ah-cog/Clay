@@ -463,7 +463,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_g5_demo_mesh_rh_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>150</ProjectModificationStamp>
+    <ProjectModificationStamp>151</ProjectModificationStamp>
   </Options>
   <CpuID_20>
     <Generated>false</Generated>
@@ -474,7 +474,7 @@
     <HeaderAge>1199466931</HeaderAge>
     <CodeAge>1199467279</CodeAge>
     <AsemblAge>-1</AsemblAge>
-    <GenNumMethods>14</GenNumMethods>
+    <GenNumMethods>11</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
     <GetClockConfiguration>false</GetClockConfiguration>
     <SetOperationMode>false</SetOperationMode>
@@ -482,9 +482,6 @@
     <DisableInt>false</DisableInt>
     <GetLLSWakeUpFlags>false</GetLLSWakeUpFlags>
     <OpenBackDoor>false</OpenBackDoor>
-    <GetFlexNVMPartitionCode>false</GetFlexNVMPartitionCode>
-    <SetFlexNVMPartition>false</SetFlexNVMPartition>
-    <SetFlexRAMFunction>false</SetFlexRAMFunction>
     <MCGAutoTrim>false</MCGAutoTrim>
     <VLPModeEnable>false</VLPModeEnable>
     <VLPModeDisable>false</VLPModeDisable>
@@ -520,8 +517,6 @@
     <OnLLSWakeUpINT_Selected>0</OnLLSWakeUpINT_Selected>
     <OnLLSWakeUpINT_Name>Cpu_OnLLSWakeUpINT</OnLLSWakeUpINT_Name>
     <OnLLSWakeUpINT_Priority>interrupts disabled</OnLLSWakeUpINT_Priority>
-    <ISR_ISRDefaultName>isr_default</ISR_ISRDefaultName>
-    <ISR_ISRnameINITPC>_startup</ISR_ISRnameINITPC>
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
     <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
