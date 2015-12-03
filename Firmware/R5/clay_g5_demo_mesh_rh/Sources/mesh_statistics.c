@@ -111,7 +111,7 @@ void setup_next_experiment()
     if (60 <= experiment_index && experiment_index < 90)
     {
         experiment_data.settings.min_rh_retry_count = random(0, 15);
-        experiment_data.settings.max_rh_retry_count = (random(0, 1) ? random(experiment_data.settings.min_rh_retry_count + 10, 3000) : 0);
+        experiment_data.settings.max_rh_retry_count = (random(0, 1) ? random(experiment_data.settings.min_rh_retry_count, 15) : 0);
     }
     else
     {
@@ -189,7 +189,7 @@ void setup_next_experiment()
 
     re_init_mesh_retries();
 
-    experiment_index = (experiment_index + 1) % 180;
+    experiment_index = (experiment_index + 1) % 150;
 
     //reset counters
     transmissions_sent_for_this_experiment = 0;
