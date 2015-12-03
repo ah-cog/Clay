@@ -16,52 +16,54 @@
 
 void Application (void) {
 	
+	int n = 0;
 	uint8_t status = 0;
 	Message *message = NULL;
 //	uint16_t messageCount = 0;
+	char buffer2[32] = { 0 };
 	
 	/* Start Clay */
 	
-	printf ("Clay\r\n");
+	D(printf ("Clay\r\n"));
 	
-	printf ("\r\n");
+	D(printf ("\r\n"));
 	
-	printf ("Enabling clock. ");
+	D(printf ("Enabling clock. "));
 	Enable_Clock ();
-	printf ("Done.\r\n"); // printf ("I'm keeping time. ");
+	D(printf ("Done.\r\n")); // printf ("I'm keeping time. ");
 	
-	printf ("Starting clock. ");
+	D(printf ("Starting clock. "));
 	Start_Clock ();
-	printf ("Done.\r\n");
+	D(printf ("Done.\r\n"));
 	
-	printf ("\r\n");
+	D(printf ("\r\n"));
 	
-	printf ("Enabling LED controls. "); // printf ("Starting lights. ");
+	D(printf ("Enabling LED controls. ")); // printf ("Starting lights. ");
 	Enable_PCA9552();
 	Wait (5);
-	printf ("Done.\r\n");
+	D(printf ("Done.\r\n"));
 	
-	printf ("Starting LEDs. ");
+	D(printf ("Starting LEDs. "));
 	Start_Light_Behavior (); // previously Start_Light_Feedback ()
-	printf ("Done.\r\n");
+	D(printf ("Done.\r\n"));
 	
-	printf ("\r\n");
+	D(printf ("\r\n"));
 	
-	printf ("Enabling MPU-9250. ");
+	D(printf ("Enabling MPU-9250. "));
 	mpu_9250_init();
-	printf ("Done.\r\n");
+	D(printf ("Done.\r\n"));
 
 	// TODO: Start_Spatial_Sensing ()
 	
-	printf ("\r\n");
+	D(printf ("\r\n"));
 	
 	// TODO: Enable_GPIO ()
 	
-	printf ("Initializing message queue. ");
+	D(printf ("Initializing message queue. "));
 	if ((status = Initialize_Message_Queue ()) == TRUE) {
-		printf ("Done.\r\n");
+		D(printf ("Done.\r\n"));
 	} else {
-		printf ("Failed.\r\n");
+		D(printf ("Failed.\r\n"));
 	}
 
 	/*
@@ -258,23 +260,49 @@ void Application (void) {
 	}
 	*/
 	
-	printf ("\r\n");
+	D(printf ("\r\n"));
 	
-	printf ("Enabling ESP8266. ");
+	D(printf ("Enabling ESP8266. "));
 	Enable_ESP8266 ();
-	printf ("Done.\r\n");
+	D(printf ("Done.\r\n"));
 	
-	printf ("Starting HTTP Server. ");
+	//	D(printf ("Setting Wi-Fi Network. "));
+	//	Set_WiFi_Network (SSID_DEFAULT, PASSWORD_DEFAULT);
+	//	D(printf ("Done.\r\n"));
+	
+	// TODO: Generate SSID according to regular expression and set up access point to facilitate discovery.
+	
+	D(printf ("Enabling Wi-Fi. "));
+	Enable_WiFi (SSID_DEFAULT, PASSWORD_DEFAULT);
+	D(printf ("Done.\r\n"));
+	
+	D(printf ("Starting HTTP Server. "));
 	Start_HTTP_Server (HTTP_SERVER_PORT);
-	printf ("Done.\r\n");
+	D(printf ("Done.\r\n"));
 	
-	printf ("Starting UDP Server. ");
+	// TODO: Eanble_UDP_Communications
+	
+	D(printf ("Starting UDP Server. "));
 	Start_UDP_Server (4445);
-	printf ("Done.\r\n");
+	D(printf ("Done.\r\n"));
 	
-//	Broadcast_UDP_Message("hello");
+	// TODO: Enable_UDP_Broadcast
+	// TODO: Start_Discovery_Broadcast
 	
 	for (;;) {
+		
+		Send_HTTP_Request ("192.168.1.105", 8080, "test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test");
+		
+		// Periodically send a datagram announcing the presence of this device.
+		// TODO: Only broadcast UDP message if an address has been received!
+		if (Has_Internet_Address () == TRUE) {
+			char *address = Get_Internet_Address ();
+			// TODO: Create and buffer the command to broadcast the unit's address.
+			n = sprintf (buffer2, "connect to %s", address); // Create message to send.
+//			printf("buffer = %s\r\n", buffer2);
+			Broadcast_UDP_Message (buffer2);
+			// TODO: Queue a (periodic) UDP broadcast announcing the unit's presence on the network.
+		}
 		
 		// Check and process any incoming requests
 		//Monitor_HTTP_Server ();

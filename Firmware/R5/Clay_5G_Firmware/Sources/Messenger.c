@@ -149,9 +149,12 @@ int8_t Process_Message (Message *message) {
 	// TODO: Queue the message rather than executing it immediately (unless specified)
 	// TODO: Parse the message rather than brute force like this.
 	
+	D(printf("messageContent = %s\r\n", messageContent));
+	
 	// turn light 1 on
 	// ^
 	if ((status = getToken (messageContent, token, 0)) != NULL) { // status = getToken (message, token, 0);
+
 		if (strncmp (token, "turn", strlen ("turn")) == 0) {
 			
 			if ((status = getToken (messageContent, token, 1)) != NULL) {
@@ -255,7 +258,34 @@ int8_t Process_Message (Message *message) {
 				}
 				
 			}
+			
+		} else if (strncmp (token, "ping", strlen ("ping")) == 0) {
+			
+
+			
+			if ((status = getToken (messageContent, token, 1)) != NULL) {
+			
+				// turn lights on
+				//      ^
+				if (strncmp (token, "lights", strlen ("lights")) == 0) {
+				
+					// Queue_Outgoing_Message ("pong <ip>"); // TODO: Send this via UDP datagram.
+					// Send_UDP_Message()
+//					printf("got ping\r\n");
+					Broadcast_UDP_Message ("pong <ip>");
+					
+					result = TRUE;
+					
+				}
+				
+			}
+			
+		} else {
+			D(printf ("WTFping\r\n"));
 		}
+		
+	} else {
+		D(printf ("status = %d\r\n", status));
 	}
 	
 	return result;

@@ -91,6 +91,7 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Events_ESP8266.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\GPIO.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Messenger.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\Debug.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\Ring_Buffer.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\String.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\main.c</PathName>
@@ -137,6 +138,7 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Events_ESP8266.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\GPIO.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Messenger.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\Debug.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\Ring_Buffer.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Utilities\String.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Static_Code\IO_Map\MK20D7.h</PathName>
