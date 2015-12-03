@@ -17,11 +17,6 @@
 #include "mesh_stastistics.h"
 #endif
 
-///statistics variables////////////////////////////////////////////////
-uint32_t RH_RelDG_retry_count[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-uint32_t RH_RelDG_total_send_count[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-///end statistics variables////////////////////////////////////////////
-
 ////////////////////////////////////////////////////////////////////
 // Constructors
 RHReliableDatagram::RHReliableDatagram(RHGenericDriver& driver, uint8_t thisAddress)
@@ -66,7 +61,7 @@ bool RHReliableDatagram::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address)
     uint8_t retries = 0;
     while (retries++ <= _retries)
     {
-        ++RH_RelDG_total_send_count[current_message_period_index];
+        ++experiment_data.RH_total_send_count;
 
         setHeaderId(thisSequenceNumber);
         setHeaderFlags(RH_FLAGS_NONE, RH_FLAGS_ACK);        // Clear the ACK flag
@@ -121,7 +116,7 @@ bool RHReliableDatagram::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address)
         // Timeout exhausted, maybe retry
         YIELD;
     }
-    RH_RelDG_retry_count[current_message_period_index] += retries;
+    experiment_data.RH_retry_count += retries;
 
     // Retries exhausted
     return false;

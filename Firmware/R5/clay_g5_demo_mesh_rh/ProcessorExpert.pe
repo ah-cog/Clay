@@ -4,7 +4,7 @@
     <Name>clay_g5_demo_mesh_rh</Name>
     <SavedBy>thebh_000</SavedBy>
     <ModificationStamp>150</ModificationStamp>
-    <Date>2015-11-30</Date>
+    <Date>2015-12-02</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -2007,7 +2007,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
-        <Index>1</Index>
+        <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
       </ItemState>
       <ItemState>
