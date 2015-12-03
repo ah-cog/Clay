@@ -142,21 +142,24 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
 
     meshRadio = new
     RH_NRF24(MESH_CE_PIN_INDEX, MESH_SELECT_PIN_INDEX);
-    meshManager = new
-    RHMesh(*meshRadio);
-
-    meshManager->init();
-    set_RH_retry_count(3);
-    set_RH_timeout(10);
 
     //enable auto-ack on all pipes.
     meshRadio->spiWriteRegister(RH_NRF24_REG_01_EN_AA, 0x3F);
 
-    //enable hw ack.
-    set_hw_retry_count(15);
-    set_hw_retry_delay(_500uS);
+    meshManager = new
+    RHMesh(*meshRadio);
 
+    meshManager->init();
+
+    //set address and seed RNG.
     mesh_discover_nodes_and_get_address();
+
+    //enable hw ack.
+    set_hw_retry_delay((mesh_HW_retry_interval) random(0, 15)); //default: no retries
+    set_hw_retry_count(random(1, 15));
+
+    set_RH_retry_count(random(3, 8));  //default: 3 retries @ 10msec
+    set_RH_timeout(random(10, 30));
 
     clear_mesh_nodes();
     digitalWrite(MESH_CE_PIN_INDEX, 0);
@@ -321,6 +324,7 @@ uint8_t mesh_broadcast(void * data, uint32_t dataLength)
 }
 
 //calls into RH library and retrieves a message if one is available.
+//note: this is used in the interrupt handler. direct call behavior is untested
 uint8_t mesh_rx(void * data, uint8_t * dataLength, uint8_t * source)
 {
     return meshManager->recvfromAck((uint8_t*) data, (uint8_t*) dataLength, (uint8_t*) source);

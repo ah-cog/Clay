@@ -99,7 +99,7 @@
 #include "mesh_stastistics.h"
 #endif
 
-#if(ADDRESS_3 )
+#if(ADDRESS_3 || ADDRESS_2 || ADDRESS_1)
 #define TRANSMIT                1
 #else
 #define TRANSMIT                0
