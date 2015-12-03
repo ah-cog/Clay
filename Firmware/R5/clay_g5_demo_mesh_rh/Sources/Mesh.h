@@ -53,6 +53,20 @@ typedef enum
     _4000uS = 15
 } mesh_HW_retry_interval;
 
+typedef enum
+{
+    _1Mbps = 0,
+    _2Mbps = 1
+} mesh_radio_datarate;
+
+typedef enum
+{
+    _18dBm = 0,
+    _12dBm = 1,
+    _6dBm = 2,
+    _0dBm = 3
+} mesh_radio_tx_attenuation;
+
 typedef struct
 {
     uint8_t cmd;
@@ -79,5 +93,6 @@ extern bool set_RH_retry_count(uint8_t retries);
 extern bool set_RH_timeout(uint16_t timeout_ms);
 extern bool set_hw_retry_count(uint8_t retransmitCount);
 extern bool set_hw_retry_delay(mesh_HW_retry_interval retransmitDelay);
+extern void re_init_mesh_retries();
 
 #endif /* MESH_H_ */

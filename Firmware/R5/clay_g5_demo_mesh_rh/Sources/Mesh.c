@@ -109,19 +109,7 @@ static RH_NRF24 * meshRadio;
 static uint8_t rx_buf_size;
 static uint8_t rx_buf_source;
 
-static uint8_t do_routing_data;
-static uint8_t do_routing_length;
 static uint32_t time_last_alive_sent_ms;
-
-///statistics variables////////////////////////////////////////////////
-uint32_t messages_received_1[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-uint32_t messages_received_2[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-uint32_t messages_received_3[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-
-uint32_t alives_received_1[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-uint32_t alives_received_2[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-uint32_t alives_received_3[TX_PERIOD_ARRAY_LENGTH] = { 0 };
-///end statistics variables////////////////////////////////////////////
 
 static found_mesh_node mesh_nodes[MAX_MESH_NODE_COUNT];
 
@@ -155,11 +143,18 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
     mesh_discover_nodes_and_get_address();
 
     //enable hw ack.
-    set_hw_retry_delay((mesh_HW_retry_interval) random(0, 15)); //default: no retries
-    set_hw_retry_count(random(1, 15));
+    set_hw_retry_delay(experiment_data.settings.randomize_hw_retry_count ? experiment_data.settings.retry_interval : _500uS);        //default: no retries
+    set_hw_retry_count(experiment_data.settings.randomize_hw_retry_count ? experiment_data.settings.max_rh_retry_count : 15);
 
-    set_RH_retry_count(random(3, 8));  //default: 3 retries @ 10msec
-    set_RH_timeout(random(10, 30));
+    set_RH_retry_count(
+            experiment_data.settings.max_rh_retry_count ?
+                    random(experiment_data.settings.min_rh_retry_count, experiment_data.settings.max_rh_retry_count) :
+                    experiment_data.settings.max_rh_retry_count);        //default: 3 retries @ 10msec
+
+    set_RH_timeout(
+            experiment_data.settings.max_rh_retry_timeout_ms ?
+                    random(experiment_data.settings.min_rh_retry_timeout_ms, experiment_data.settings.max_rh_retry_timeout_ms) :
+                    experiment_data.settings.max_rh_retry_timeout_ms);
 
     clear_mesh_nodes();
     digitalWrite(MESH_CE_PIN_INDEX, 0);
@@ -184,65 +179,30 @@ void mesh_process_commands(void)
     if (mesh_messages_available)
     {
         mesh_messages_available = false;
+        ++experiment_data.alives_received[rx_buf_source > MAX_NODE_COUNT ? MAX_NODE_COUNT + 1 : rx_buf_source - 1];
 
 #if ENABLE_DIAGNOSTIC_LED
         set_led_output(RGB_8, GREEN_OUTPUT);
-#endif
 
         switch (rx_buf_source)
         {
             case 1:
-                {
-#if ENABLE_DIAGNOSTIC_LED
+            {
                 set_led_output(RGB_1, RED_OUTPUT);
-#endif
-
-                if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
-                {
-                    ++alives_received_1[current_message_period_index];
-                }
-                else
-                {
-                    ++messages_received_1[current_message_period_index];
-                }
-
                 break;
             }
             case 2:
-                {
-#if ENABLE_DIAGNOSTIC_LED
+            {
                 set_led_output(RGB_1, GREEN_OUTPUT);
-#endif
-
-                if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
-                {
-                    ++alives_received_2[current_message_period_index];
-                }
-                else
-                {
-                    ++messages_received_2[current_message_period_index];
-                }
-
                 break;
             }
             case 3:
-                {
-#if ENABLE_DIAGNOSTIC_LED
+            {
                 set_led_output(RGB_1, BLUE_OUTPUT);
-#endif
-
-                if (rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
-                {
-                    ++alives_received_3[current_message_period_index];
-                }
-                else
-                {
-                    ++messages_received_3[current_message_period_index];
-                }
-
                 break;
             }
         }
+#endif
 
         if (rx_buf_size == 3 && rx_buf[0] == MESH_CMD_ADDRESS_CLAIM_MSG)
         {
@@ -253,11 +213,13 @@ void mesh_process_commands(void)
             {
                 if (mesh_nodes[i].address == rx_buf[1])
                 {
+                    //already found this node
                     mesh_nodes[i].last_alive_received = power_on_time_msec;
                     mesh_nodes[i].status = NODE_CONNECTED;
                 }
                 else if (mesh_nodes[i].status == NODE_CONNECTED && mesh_nodes[i].last_alive_received > MESH_NODE_DISCONNECT_TIMEOUT_MS)
                 {
+                    //haven't heard from this node for a while
                     mesh_nodes[i].status = NODE_NOT_CONNECTED;
                     available_spot = i;
                 }
@@ -267,9 +229,11 @@ void mesh_process_commands(void)
                 }
                 else if (i == MESH_MAX_NODES - 1 && available_spot < MESH_MAX_NODES)
                 {
+                    //add this node
                     mesh_nodes[available_spot].address = rx_buf[1];
                     mesh_nodes[available_spot].status = NODE_CONNECTED;
                     mesh_nodes[available_spot].last_alive_received = power_on_time_msec;
+                    ++experiment_data.detected_node_count;
                 }
             }
         }
@@ -279,6 +243,7 @@ void mesh_process_commands(void)
             set_led_output(RGB_9, GREEN_OUTPUT);
 #endif
 
+            ++experiment_data.messages_received[rx_buf_source > MAX_NODE_COUNT ? MAX_NODE_COUNT + 1 : rx_buf_source - 1];
             if (rx_buf[0] < command_count && commands[rx_buf[0]].function != NULL)
             {
                 commands[rx_buf[0]].function(rx_buf, rx_buf_size);
@@ -479,9 +444,14 @@ uint8_t get_next_node(uint8_t startAddr)
 //    return rval;
 }
 
+uint32_t irq_handler_time;
+
 ///handles routing and message reception. messages are stored into a local buffer.
 void mesh_irq_handler(void)
 {
+    ++experiment_data.rx_interrupt_count;
+    irq_handler_time = power_on_time_msec;
+
     mesh_rx_enabled = false;
     rx_buf_size = 0xFF;        //0xFF is max value, that way entire message is returned.
 
@@ -499,6 +469,8 @@ void mesh_irq_handler(void)
         mesh_messages_available = false;
         start_mesh_rx();
     }
+
+    experiment_data.rx_interrupt_time_total_ms += power_on_time_msec - irq_handler_time;
 }
 
 //sets the retry count in radiohead. 
@@ -533,6 +505,25 @@ bool set_hw_retry_delay(mesh_HW_retry_interval retransmitDelay)
 {
     meshRadio->spiWriteRegister(RH_NRF24_REG_04_SETUP_RETR, ((uint8_t) retransmitDelay << 4) & RH_NRF24_ARD);
     return (((meshRadio->spiReadRegister(RH_NRF24_REG_04_SETUP_RETR) & RH_NRF24_ARD) >> 4) == (uint8_t) retransmitDelay);
+}
+
+void re_init_mesh_retries()
+{
+    //enable hw ack.
+    set_hw_retry_delay(experiment_data.settings.randomize_hw_retry_count ? experiment_data.settings.retry_interval : _500uS);        //default: no retries
+    set_hw_retry_count(experiment_data.settings.randomize_hw_retry_count ? experiment_data.settings.max_rh_retry_count : 15);
+
+    set_RH_retry_count(
+            experiment_data.settings.max_rh_retry_count ?
+                    random(experiment_data.settings.min_rh_retry_count, experiment_data.settings.max_rh_retry_count) :
+                    experiment_data.settings.max_rh_retry_count);        //default: 3 retries @ 10msec
+
+    set_RH_timeout(
+            experiment_data.settings.max_rh_retry_timeout_ms ?
+                    random(experiment_data.settings.min_rh_retry_timeout_ms, experiment_data.settings.max_rh_retry_timeout_ms) :
+                    experiment_data.settings.max_rh_retry_timeout_ms);
+
+    clear_mesh_nodes();
 }
 
 //looks for an address that hasn't been added to the routing table.

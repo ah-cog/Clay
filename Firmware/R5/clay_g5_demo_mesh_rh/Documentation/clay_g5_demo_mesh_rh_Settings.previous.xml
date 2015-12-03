@@ -1910,7 +1910,7 @@ PE_DEBUGHALT();
       </boolgroup>
       <list name="Bit fields" v="1">
         <group name="Bit field">
-          <Field_name v="IRQ" />
+          <Field_name v="MESH_IRQ_BITFIELD" />
           <list name="Pins" v="1">
             <group name="Pin">
               <Pin v="ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK" />

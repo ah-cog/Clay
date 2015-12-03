@@ -85,6 +85,7 @@
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\Mesh.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\led_driver_pca9552.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\main.c</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\mesh_statistics.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\mpu_9250_driver.c</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\system_tick.c</PathName>
     </GeneratedCs>
@@ -144,6 +145,7 @@
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\Events.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\Mesh.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\led_driver_pca9552.h</PathName>
+      <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\mesh_stastistics.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\mpu_9250_driver.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\system_tick.h</PathName>
       <PathName>E:\git\clay\Firmware\R5\clay_g5_demo_mesh_rh\Sources\temp.h</PathName>
