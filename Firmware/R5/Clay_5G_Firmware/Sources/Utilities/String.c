@@ -24,7 +24,10 @@ int8_t getToken (const char *string, char *tokenBuffer, int tokenIndex) {
 		if (tokenIndex == 0) {
 			
 			token = string;
-			tokenStop = strchr (token, ' ');
+			tokenStop = strchr (token, ' '); // i.e., the case for a multi-token message (e.g., "turn light 1 on")
+			if (tokenStop == NULL) {
+				tokenStop = token + strlen (token); // i.e., the case for a single-token message
+			}
 			
 		} else {
 		

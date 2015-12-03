@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "Utilities/Debug.h"
 #include "Utilities/String.h"
 
 #include "Timer_1ms.h"
