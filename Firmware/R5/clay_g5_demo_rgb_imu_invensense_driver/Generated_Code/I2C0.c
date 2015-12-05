@@ -6,7 +6,7 @@
 **     Component   : I2C_LDD
 **     Version     : Component 01.016, Driver 01.07, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-12-04, 20:15, # CodeGen: 0
+**     Date/Time   : 2015-12-05, 02:02, # CodeGen: 3
 **     Abstract    :
 **          This component encapsulates the internal I2C communication
 **          interface. The implementation of the interface is based
@@ -81,10 +81,13 @@
 **            Clock configuration 6                        : This component disabled
 **            Clock configuration 7                        : This component disabled
 **     Contents    :
-**         Init               - LDD_TDeviceData* I2C0_Init(LDD_TUserData *UserDataPtr);
-**         MasterSendBlock    - LDD_TError I2C0_MasterSendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
-**         MasterReceiveBlock - LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
-**         SelectSlaveDevice  - LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr,...
+**         Init                         - LDD_TDeviceData* I2C0_Init(LDD_TUserData *UserDataPtr);
+**         MasterSendBlock              - LDD_TError I2C0_MasterSendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
+**         MasterGetBlockSentStatus     - bool I2C0_MasterGetBlockSentStatus(LDD_TDeviceData *DeviceDataPtr);
+**         MasterReceiveBlock           - LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
+**         MasterGetBlockReceivedStatus - bool I2C0_MasterGetBlockReceivedStatus(LDD_TDeviceData *DeviceDataPtr);
+**         SelectSlaveDevice            - LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr,...
+**         GetDriverState               - LDD_TDriverState I2C0_GetDriverState(LDD_TDeviceData *DeviceDataPtr);
 **
 **     Copyright : 1997 - 2014 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -165,6 +168,10 @@ extern "C" {
 #define ADDR_10                 0x10U  /* 10-bit addr flag */
 #define ADDR_7                  0x20U  /* 7-bit addr flag */
 
+/* StatusFlag bits */
+#define MASTER_BLOCK_SENT       0x01U  /* Master data block sent flag */
+#define MASTER_BLOCK_RECEIVED   0x02U  /* Master data block received flag */
+
 typedef struct {
   uint8_t SerFlag;                     /* Flags for serial communication */
                                        /* Bits: 0 - Running int from TX */
@@ -173,6 +180,7 @@ typedef struct {
                                        /*       3 - General Call flag */
                                        /*       4 - 10-bit addr flag */
                                        /*       5 - 7-bit addr flag */
+  uint8_t StatusFlag;                  /* Flags for status of communication */
   LDD_I2C_TSendStop SendStop;          /* Enable/Disable generate send stop condition after transmission */
   uint8_t SlaveAddr;                   /* Variable for Slave address */
   uint8_t SlaveAddrHigh;               /* Variable for High byte of the Slave address (10-bit address) */
@@ -246,6 +254,7 @@ PE_ISR(I2C0_Interrupt)
                 I2C_PDD_SetMasterMode(I2C0_BASE_PTR, I2C_PDD_SLAVE_MODE); /* Switch device to slave mode (stop signal sent) */
                 I2C_PDD_SetTransmitMode(I2C0_BASE_PTR, I2C_PDD_RX_DIRECTION); /* Switch to Rx mode */
               }
+              DeviceDataPrv->StatusFlag |= MASTER_BLOCK_SENT; /* Set data block sent flag */
               I2C0_OnMasterBlockSent(DeviceDataPrv->UserData); /* Invoke OnMasterBlockSent event */
             }
           }
@@ -268,6 +277,7 @@ PE_ISR(I2C0_Interrupt)
       *(DeviceDataPrv->InpPtrM)++ = I2C_PDD_ReadDataReg(I2C0_BASE_PTR); /* Receive character */
       I2C0_OnMasterByteReceived(DeviceDataPrv->UserData); /* Invoke OnMasterByteReceived event */
       if (DeviceDataPrv->InpLenM == 0x00U) { /* Is any char. for reception? */
+        DeviceDataPrv->StatusFlag |= MASTER_BLOCK_RECEIVED; /* Set data block received flag */
         I2C0_OnMasterBlockReceived(DeviceDataPrv->UserData); /* Invoke OnMasterBlockReceived event */
       }
     }
@@ -322,6 +332,7 @@ LDD_TDeviceData* I2C0_Init(LDD_TUserData *UserDataPtr)
   DeviceDataPrv->SendStop = LDD_I2C_SEND_STOP; /* Set variable for sending stop condition (for master mode) */
   DeviceDataPrv->InpLenM = 0x00U;      /* Set zero counter of data of reception */
   DeviceDataPrv->OutLenM = 0x00U;      /* Set zero counter of data of transmission */
+  DeviceDataPrv->StatusFlag = 0x00U;   /* Clear data block transfer complete flags */
   /* SIM_SCGC4: I2C0=1 */
   SIM_SCGC4 |= SIM_SCGC4_I2C0_MASK;
   /* I2C0_C1: IICEN=0,IICIE=0,MST=0,TX=0,TXAK=0,RSTA=0,WUEN=0,DMAEN=0 */
@@ -460,6 +471,39 @@ LDD_TError I2C0_MasterSendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData *Buffe
 
 /*
 ** ===================================================================
+**     Method      :  I2C0_MasterGetBlockSentStatus (component I2C_LDD)
+*/
+/*!
+**     @brief
+**         This method returns current state of MasterSendBlock method.
+**         This method is available only for the MASTER mode and if
+**         method MasterSendBlock is enabled.
+**     @param
+**         DeviceDataPtr   - Device data structure
+**                           pointer returned by <Init> method.
+**     @return
+**                         - Return value:
+**                           <true> - data block is completely
+**                           transmitted.
+**                           <false> - data block isn't completely
+**                           transmitted.
+*/
+/* ===================================================================*/
+bool I2C0_MasterGetBlockSentStatus(LDD_TDeviceData *DeviceDataPtr)
+{
+  uint8_t Status;                      /* Temporary variable for flag saving */
+
+  /* {Default RTOS Adapter} Critical section begin, general PE function is used */
+  EnterCritical();
+  Status = ((I2C0_TDeviceDataPtr)DeviceDataPtr)->StatusFlag; /* Save flag for return */
+  ((I2C0_TDeviceDataPtr)DeviceDataPtr)->StatusFlag &= (uint8_t)(~(uint8_t)MASTER_BLOCK_SENT); /* Clear data block sent flag */
+  /* {Default RTOS Adapter} Critical section end, general PE function is used */
+  ExitCritical();
+  return (bool)(((Status & MASTER_BLOCK_SENT) != 0x00U)? TRUE : FALSE); /* Return saved status */
+}
+
+/*
+** ===================================================================
 **     Method      :  I2C0_MasterReceiveBlock (component I2C_LDD)
 */
 /*!
@@ -560,6 +604,38 @@ LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData *Bu
 
 /*
 ** ===================================================================
+**     Method      :  I2C0_MasterGetBlockReceivedStatus (component I2C_LDD)
+*/
+/*!
+**     @brief
+**         This method returns current state of MasterReceiveBlock
+**         method. This method is available only for the MASTER mode
+**         and if method MasterReceiveBlock is enabled.
+**     @param
+**         DeviceDataPtr   - Device data structure
+**                           pointer returned by <Init> method.
+**     @return
+**                         - Return value:
+**                           <true> - data block is completely received.
+**                           <false> - data block isn't completely
+**                           received.
+*/
+/* ===================================================================*/
+bool I2C0_MasterGetBlockReceivedStatus(LDD_TDeviceData *DeviceDataPtr)
+{
+  uint8_t Status;                      /* Temporary variable for flag saving */
+
+  /* {Default RTOS Adapter} Critical section begin, general PE function is used */
+  EnterCritical();
+  Status = ((I2C0_TDeviceDataPtr)DeviceDataPtr)->StatusFlag; /* Save flag for return */
+  ((I2C0_TDeviceDataPtr)DeviceDataPtr)->StatusFlag &= (uint8_t)(~(uint8_t)MASTER_BLOCK_RECEIVED); /* Clear data block received flag */
+  /* {Default RTOS Adapter} Critical section end, general PE function is used */
+  ExitCritical();
+  return (bool)(((Status & MASTER_BLOCK_RECEIVED) != 0x00U)? TRUE : FALSE); /* Return saved status */
+}
+
+/*
+** ===================================================================
 **     Method      :  I2C0_SelectSlaveDevice (component I2C_LDD)
 */
 /*!
@@ -626,6 +702,48 @@ LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr, LDD_I2C_TAddrT
       return ERR_PARAM_ADDRESS_TYPE;   /* If value of address type is invalid, return error */
   }
   return ERR_OK;                       /* OK */
+}
+
+/*
+** ===================================================================
+**     Method      :  I2C0_GetDriverState (component I2C_LDD)
+*/
+/*!
+**     @brief
+**         This method returns the current driver status.
+**     @param
+**         DeviceDataPtr   - Device data structure
+**                           pointer returned by <Init> method.
+**     @return
+**                         - The current driver status mask.
+**                           Following status masks defined in PE_Types.h
+**                           can be used to check the current driver
+**                           status.
+**                           PE_LDD_DRIVER_DISABLED_IN_CLOCK_CONFIGURATIO
+**                           N - 1 - Driver is disabled in the current
+**                           mode; 0 - Driver is enabled in the current
+**                           mode.  
+**                           PE_LDD_DRIVER_DISABLED_BY_USER - 1 - Driver
+**                           is disabled by the user; 0 - Driver is
+**                           enabled by the user.        
+**                           PE_LDD_DRIVER_BUSY - 1 - Driver is the BUSY
+**                           state; 0 - Driver is in the IDLE state.
+*/
+/* ===================================================================*/
+LDD_TDriverState I2C0_GetDriverState(LDD_TDeviceData *DeviceDataPtr)
+{
+  LDD_TDriverState DriverState = 0x00U;
+  I2C0_TDeviceDataPtr DeviceDataPrv = (I2C0_TDeviceDataPtr)DeviceDataPtr;
+
+  if (DeviceDataPrv->InpLenM != 0x00U) {
+    DriverState |= PE_LDD_DRIVER_BUSY;
+    return DriverState;
+  }
+  if (DeviceDataPrv->OutLenM != 0x00U) {
+    DriverState |= PE_LDD_DRIVER_BUSY;
+    return DriverState;
+  }
+  return DriverState;
 }
 
 /* END I2C0. */

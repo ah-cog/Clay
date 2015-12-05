@@ -19,12 +19,16 @@
 #endif
 
 // defines ///////////////////
+#define SEND_TIMEOUT_MSEC   20
 
 // structs ///////////////////
 
 // global vars ///////////////
+bool i2c_tx_complete;
+bool i2c_rx_complete;
 
 // local vars ////////////////
+static uint32_t start_time;
 static uint8_t outgoing_msg_buf[32];
 static uint8_t incoming_msg_buf[32];
 
@@ -92,13 +96,14 @@ uint8_t write_mpu9250(uint8_t device_addr, uint8_t reg_addr, uint8_t length, uin
     //send device address + write
     //send register address
     //send data
-    
+
     local_inv_data[0] = reg_addr;
-    
-    for (int i = 0; i < length; ++i) {
+
+    for (int i = 0; i < length; ++i)
+    {
         local_inv_data[i + 1] = data[i];
     }
-    
+
     send_message(local_inv_data, length + 1, device_addr);
     return 0;
 }
@@ -109,7 +114,7 @@ uint8_t read_mpu9250(uint8_t device_addr, uint8_t reg_addr, uint8_t length, uint
     //send device address + write
     //send register address     
     //send read
-    
+
     receive_message(&reg_addr, 1, data, length, device_addr);
     return 0;
 }
@@ -120,10 +125,20 @@ uint8_t read_mpu9250(uint8_t device_addr, uint8_t reg_addr, uint8_t length, uint
 static void send_message(uint8_t * message, int32 size, uint8_t address)
 {
     I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, address);
-    delay_n_msec(1);
+
+    i2c_tx_complete = FALSE;
+    start_time = power_on_time_msec;
 
     I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) message, (LDD_I2C_TSize) size, LDD_I2C_SEND_STOP);
-    delay_n_msec(1);
+//    while (I2C0_GetDriverState(I2C0_DeviceData ) & PE_LDD_DRIVER_BUSY)
+//        ;
+    while (!i2c_tx_complete && (power_on_time_msec - start_time) < SEND_TIMEOUT_MSEC)
+        ;
+
+    if ((power_on_time_msec - start_time) > SEND_TIMEOUT_MSEC)
+    {
+        i2c_tx_complete = FALSE;
+    }
 }
 
 //tx_buf contains command that will prepare the device for the read
@@ -136,8 +151,19 @@ static void receive_message(uint8_t * tx_buf, int32 tx_size, uint8_t * rx_buf, i
 //    I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) tx_buf, (LDD_I2C_TSize) tx_size, LDD_I2C_NO_SEND_STOP);
     send_message(tx_buf, tx_size, address);
 
+    i2c_rx_complete = FALSE;
+    start_time = power_on_time_msec;
+
     I2C0_MasterReceiveBlock(I2C0_DeviceData, rx_buf, rx_size, LDD_I2C_SEND_STOP);
-    delay_n_msec(1);
+//    while (I2C0_GetDriverState(I2C0_DeviceData ) & PE_LDD_DRIVER_BUSY)
+//        ;
+    while (!i2c_rx_complete && (power_on_time_msec - start_time) < SEND_TIMEOUT_MSEC)
+        ;
+
+    if ((power_on_time_msec - start_time) > SEND_TIMEOUT_MSEC)
+    {
+        i2c_rx_complete = FALSE;
+    }
 }
 
 static void set_clock_source(uint8_t source)
