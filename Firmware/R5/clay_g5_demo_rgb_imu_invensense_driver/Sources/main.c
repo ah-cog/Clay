@@ -135,6 +135,7 @@ static mpu_values v = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static void update_imu_leds(const mpu_values* v);
 
 static void tap_cb(unsigned char direction, unsigned char count);
+static void android_orient_cb(unsigned char orientation);
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -207,11 +208,13 @@ int main(void)
     }
     derp = dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_pdata.orientation));
     derp = dmp_register_tap_cb(tap_cb);
-
+    derp = dmp_register_android_orient_cb(android_orient_cb);
     derp = dmp_enable_feature(
-            DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO | DMP_FEATURE_GYRO_CAL);
+            DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP | DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO
+            | DMP_FEATURE_GYRO_CAL);
     derp = dmp_set_fifo_rate(20);
     derp = dmp_set_interrupt_mode(DMP_INT_CONTINUOUS);
+
     derp = mpu_set_dmp_state(1);
 
     (void) accuracy;
@@ -303,6 +306,7 @@ int main(void)
         if (tick_250msec)
         {
             tick_250msec = FALSE;
+            derp = dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more);
 //            inv_get_6axis_quaternion(&data);
         }
 
@@ -435,6 +439,23 @@ static void tap_cb(unsigned char direction, unsigned char count)
             return;
     }
     return;
+}
+
+static void android_orient_cb(unsigned char orientation)
+{
+    switch (orientation)
+    {
+        case ANDROID_ORIENT_PORTRAIT:
+            break;
+        case ANDROID_ORIENT_LANDSCAPE:
+            break;
+        case ANDROID_ORIENT_REVERSE_PORTRAIT:
+            break;
+        case ANDROID_ORIENT_REVERSE_LANDSCAPE:
+            break;
+        default:
+            return;
+    }
 }
 
 /* END main */
