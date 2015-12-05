@@ -119,15 +119,16 @@ static inv_time_t timestamp;
 
 static int16_t gyro[20];
 static int16_t accel[20];
-static uint32_t quat[20];
+static int32_t quat[20];
 static uint32_t sensor_timestamp;
-static uint16_t sensors;
+static int16_t sensors;
 static uint8_t more;
 
 static uint16_t gyro_rate;
 static uint16_t gyro_fsr;
-static uint16_t accel_fsr;
+static uint8_t accel_fsr;
 static uint16_t compass_fsr;
+static uint8_t fw_load_attempts = 0;
 
 static mpu_values v = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -151,6 +152,12 @@ int main(void)
 
 //    mpu_9250_init();
 
+    IMU_CS_PutVal(IMU_CS_DeviceData, 0);
+    IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 1);
+    delay_n_msec(5);
+    IMU_CS_PutVal(IMU_CS_DeviceData, 1);
+    IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 0);
+
     ///initialize mpu driver from invensense. see arm project included in the library download zip for more info.
     int8_t derp = mpu_init(NULL);
 
@@ -164,8 +171,8 @@ int main(void)
     derp = inv_enable_eMPL_outputs();
     derp = inv_start_mpl();
 
-//    derp = mpu_set_int_level(1);
-//    derp = mpu_set_int_latched(0);
+    derp = mpu_set_int_level(1);
+    derp = mpu_set_int_latched(0);
 
     derp = mpu_set_sensors(INV_XYZ_ACCEL | INV_XYZ_GYRO | INV_XYZ_COMPASS);
     derp = mpu_configure_fifo(INV_XYZ_ACCEL | INV_XYZ_GYRO);
@@ -194,31 +201,92 @@ int main(void)
     derp = 1;
     while (derp)
     {
+        ++fw_load_attempts;
         derp = dmp_load_motion_driver_firmware();
+        delay_n_msec(200);
     }
     derp = dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_pdata.orientation));
     derp = dmp_register_tap_cb(tap_cb);
 
-//    derp = dmp_set_interrupt_mode()
-
     derp = dmp_enable_feature(
             DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO | DMP_FEATURE_GYRO_CAL);
     derp = dmp_set_fifo_rate(20);
+    derp = dmp_set_interrupt_mode(DMP_INT_CONTINUOUS);
     derp = mpu_set_dmp_state(1);
+
+    (void) accuracy;
+    (void) data;
+    (void) timestamp;
+    (void) v;
+    (void) derp;
+    update_imu_leds(NULL);
 
     init_led_drivers();
 
     delay_n_msec(5);
 
+    if ((fw_load_attempts) > 11)
+    {
+        set_led_output(RGB_12, colors + 1);
+    }
+    else if ((fw_load_attempts) > 10)
+    {
+        set_led_output(RGB_11, colors + 1);
+    }
+    else if ((fw_load_attempts) > 9)
+    {
+        set_led_output(RGB_10, colors + 1);
+    }
+    else if ((fw_load_attempts) > 8)
+    {
+        set_led_output(RGB_9, colors + 1);
+    }
+    else if ((fw_load_attempts) > 7)
+    {
+        set_led_output(RGB_8, colors + 1);
+    }
+    else if ((fw_load_attempts) > 6)
+    {
+        set_led_output(RGB_7, colors + 1);
+    }
+    else if ((fw_load_attempts) > 5)
+    {
+        set_led_output(RGB_6, colors + 1);
+    }
+    else if ((fw_load_attempts) > 4)
+    {
+        set_led_output(RGB_5, colors + 1);
+    }
+    else if ((fw_load_attempts) > 3)
+    {
+        set_led_output(RGB_4, colors + 1);
+    }
+    else if ((fw_load_attempts) > 2)
+    {
+        set_led_output(RGB_3, colors + 1);
+    }
+    else if ((fw_load_attempts) > 1)
+    {
+        set_led_output(RGB_2, colors + 1);
+    }
+    else
+    {
+        set_led_output(RGB_1, colors + 1);
+    }
+
     for (;;)
     {
+
         if (data_ready)
         {
             LED1_PutVal(LED1_DeviceData, led_1_state);
             led_1_state = !led_1_state;
 
-            data_ready = 0;
+//            int16_t intStatus;
+//            derp = mpu_get_int_status(&intStatus);
+
             derp = dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more);
+            data_ready = more > 0;
         }
 
         if (tick_1msec)
@@ -250,18 +318,22 @@ int main(void)
     }
 
     /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-  #ifdef PEX_RTOS_START
-    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-  #endif
-  /*** End of RTOS startup code.  ***/
-  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-  for(;;){}
-  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+#ifdef PEX_RTOS_START
+    PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
+    /*** End of RTOS startup code.  ***/
+    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+    for (;;)
+    {
+    }
+    /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
 static void update_imu_leds(const mpu_values* v)
 {
+    if (!v) return;
+
     if (v->x_accel < 50)
     {
         set_led_output(RGB_12, colors + 1);        //-x

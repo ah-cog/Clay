@@ -104,7 +104,9 @@
 		</cconfiguration>
 		<cconfiguration id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1680972858">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1680972858" moduleId="org.eclipse.cdt.core.settings" name="FLASH">
-				<externalSettings/>
+				<externalSettings>
+					<externalSetting/>
+				</externalSettings>
 				<extensions>
 					<extension id="org.eclipse.cdt.managedbuilder.core.ManagedBuildManager" point="org.eclipse.cdt.core.ScannerInfoProvider"/>
 					<extension id="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
@@ -273,54 +275,9 @@
 							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug.294261010" name="ARM Ltd Windows GNU Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug"/>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1680972858.756377568" name="/" resourcePath="libmplmpu">
-						<toolChain errorParsers="" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug.1223865868" name="ARM Ltd Windows GCC (G++ Lite)" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.toolchain.debug" unusedChildren="">
-							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level.1852105188.444518228" name="Debug level" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level.1852105188"/>
-							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.librarian.1795118996.942572937" name="Enable automatic library configurations" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.librarian.1795118996"/>
-							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.model.1123694805.1032764925" name="Model" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.sharedoption.model.1123694805"/>
-							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.other.685915569.768401514" name="Other debugging flags" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.other.685915569"/>
-							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash.667031092.2067433989" name="Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createflash.667031092"/>
-							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level.990669918" name="Debug level" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.debugging.level" value="org.eclipse.cdt.cross.arm.gnu.base.option.debugging.level.max" valueType="enumerated"/>
-							<targetPlatform id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.debug" isAbstract="false" name="Windows Platform" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.platform.debug"/>
-							<tool errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.1332288489" name="ARM Ltd Windows GCC Assembler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.520284511">
-								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.1051896350" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input"/>
-							</tool>
-							<tool errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.659948465" name="ARM Ltd Windows GCC C Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.312087842">
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.include.paths.974316820" name="Include paths (-I)" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Headers&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/libmplmpu/core/driver/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/libmplmpu/core/driver/eMPL&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/libmplmpu/core/eMPL-hal&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/libmplmpu/core/mllite&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/libmplmpu/core/driver/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Project_Settings/Startup_Code&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/EWL_C/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${MCUToolsBaseDir}/ARM_GCC_Support/ewl/EWL_Runtime/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Static_Code\PDD&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Static_Code\IO_Map&quot;"/>
-								</option>
-								<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.260720303" name="ARM Ltd Windows GCC C Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input"/>
-								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.compiler.input.asmSourcePreproc.1893938649" superClass="org.eclipse.cdt.cross.arm.gnu.c.compiler.input.asmSourcePreproc"/>
-							</tool>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug.80658285" name="ARM Ltd Windows GCC C++ Compiler" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.compiler.debug.1181172340"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug.152051324" name="ARM Ltd Windows GCC C Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.linker.debug.2088203007"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug.242978927" name="ARM Ltd Windows GCC C++ Linker" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.linker.debug.915663856"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.archiver.base.65629519" name="ARM Ltd Windows GCC Archiver" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.archiver.base.768168511"/>
-							<tool errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser" id="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.disassembler.debug.741398036" name="ARM Ltd Windows GCC Disassembler" superClass="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.disassembler.debug.256571280"/>
-							<tool errorParsers="com.freescale.core.ide.cdt.errorParsers.GCCErrorParser" id="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.preprocessor.debug.1407212833" name="ARM Ltd Windows GCC C Preprocessor" superClass="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.preprocessor.debug.890684646">
-								<inputType id="com.freescale.cdt.cross.arm.gnu.preprocessor.source.1526827263" name="Preprocessor Input" superClass="com.freescale.cdt.cross.arm.gnu.preprocessor.source"/>
-							</tool>
-							<tool id="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.preprocessor.debug.1985575660" name="ARM Ltd Windows GCC C++ Preprocessor" superClass="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.preprocessor.debug.400744456"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.2119253816" name="ARM Ltd Windows GNU Create Flash Image" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createflash.debug.2048647296"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug.833760512" name="ARM Ltd Windows GNU Create Listing" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.createlisting.debug.1283535295"/>
-							<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug.1383632825" name="ARM Ltd Windows GNU Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.printsize.debug.294261010"/>
-						</toolChain>
-					</folderInfo>
 					<fileInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1680972858..settings/com.freescale.processorexpert.core.prefs" name="com.freescale.processorexpert.core.prefs" rcbsApplicability="disable" resourcePath=".settings/com.freescale.processorexpert.core.prefs" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding=".settings/com.freescale.processorexpert.core.prefs|Sources/nrf24L01plus.c|Sources/temp.h|Sources/nrf24L01plus.h" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Sources/nrf24L01plus.h|Sources/nrf24L01plus.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -342,13 +299,13 @@
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.50715313;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.50715313.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.909209584;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.375382090">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1680972858;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1680972858.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.520284511;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.1982523469">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.50715313;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.50715313.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.assembler.debug.832540809;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.assembler.base.input.699911855">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.50715313;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.50715313.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.909209584;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.375382090">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.cross.arm.gnu.ARM_CS_GCCWinManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1680972858;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.debug.1680972858.;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.elf.c.compiler.debug.312087842;org.eclipse.cdt.cross.arm.gnu.sourcery.windows.c.compiler.base.input.1705819278">

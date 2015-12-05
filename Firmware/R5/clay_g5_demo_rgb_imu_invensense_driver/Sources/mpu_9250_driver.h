@@ -419,6 +419,8 @@ typedef struct
 } mpu_values;
 
 // global vars ///////////////
+extern bool i2c_tx_complete;
+extern bool i2c_rx_complete;
 
 // local vars ////////////////
 

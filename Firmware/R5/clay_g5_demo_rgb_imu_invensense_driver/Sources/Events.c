@@ -40,6 +40,8 @@ extern "C"
 #include "system_tick.h"
 #endif
 
+#include "mpu_9250_driver.h"
+
 /*
  ** ===================================================================
  **     Event       :  I2C0_OnMasterBlockSent (module Events)
@@ -61,6 +63,7 @@ extern "C"
 void I2C0_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
 {
     /* Write your code here ... */
+    i2c_tx_complete = TRUE;
 }
 
 /*
@@ -84,6 +87,7 @@ void I2C0_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
 void I2C0_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
 {
     /* Write your code here ... */
+    i2c_rx_complete = TRUE;
 }
 
 /*

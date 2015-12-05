@@ -6,7 +6,7 @@
 **     Component   : I2C_LDD
 **     Version     : Component 01.016, Driver 01.07, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-12-04, 20:15, # CodeGen: 0
+**     Date/Time   : 2015-12-05, 02:02, # CodeGen: 3
 **     Abstract    :
 **          This component encapsulates the internal I2C communication
 **          interface. The implementation of the interface is based
@@ -81,10 +81,13 @@
 **            Clock configuration 6                        : This component disabled
 **            Clock configuration 7                        : This component disabled
 **     Contents    :
-**         Init               - LDD_TDeviceData* I2C0_Init(LDD_TUserData *UserDataPtr);
-**         MasterSendBlock    - LDD_TError I2C0_MasterSendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
-**         MasterReceiveBlock - LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
-**         SelectSlaveDevice  - LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr,...
+**         Init                         - LDD_TDeviceData* I2C0_Init(LDD_TUserData *UserDataPtr);
+**         MasterSendBlock              - LDD_TError I2C0_MasterSendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
+**         MasterGetBlockSentStatus     - bool I2C0_MasterGetBlockSentStatus(LDD_TDeviceData *DeviceDataPtr);
+**         MasterReceiveBlock           - LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData...
+**         MasterGetBlockReceivedStatus - bool I2C0_MasterGetBlockReceivedStatus(LDD_TDeviceData *DeviceDataPtr);
+**         SelectSlaveDevice            - LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr,...
+**         GetDriverState               - LDD_TDriverState I2C0_GetDriverState(LDD_TDeviceData *DeviceDataPtr);
 **
 **     Copyright : 1997 - 2014 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -171,8 +174,11 @@ extern "C" {
 /* Methods configuration constants - generated for all enabled component's methods */
 #define I2C0_Init_METHOD_ENABLED       /*!< Init method of the component I2C0 is enabled (generated) */
 #define I2C0_MasterSendBlock_METHOD_ENABLED /*!< MasterSendBlock method of the component I2C0 is enabled (generated) */
+#define I2C0_MasterGetBlockSentStatus_METHOD_ENABLED /*!< MasterGetBlockSentStatus method of the component I2C0 is enabled (generated) */
 #define I2C0_MasterReceiveBlock_METHOD_ENABLED /*!< MasterReceiveBlock method of the component I2C0 is enabled (generated) */
+#define I2C0_MasterGetBlockReceivedStatus_METHOD_ENABLED /*!< MasterGetBlockReceivedStatus method of the component I2C0 is enabled (generated) */
 #define I2C0_SelectSlaveDevice_METHOD_ENABLED /*!< SelectSlaveDevice method of the component I2C0 is enabled (generated) */
+#define I2C0_GetDriverState_METHOD_ENABLED /*!< GetDriverState method of the component I2C0 is enabled (generated) */
 
 /* Events configuration constants - generated for all enabled component's events */
 #define I2C0_OnMasterBlockSent_EVENT_ENABLED /*!< OnMasterBlockSent event of the component I2C0 is enabled (generated) */
@@ -255,6 +261,28 @@ LDD_TError I2C0_MasterSendBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData *Buffe
 
 /*
 ** ===================================================================
+**     Method      :  I2C0_MasterGetBlockSentStatus (component I2C_LDD)
+*/
+/*!
+**     @brief
+**         This method returns current state of MasterSendBlock method.
+**         This method is available only for the MASTER mode and if
+**         method MasterSendBlock is enabled.
+**     @param
+**         DeviceDataPtr   - Device data structure
+**                           pointer returned by <Init> method.
+**     @return
+**                         - Return value:
+**                           <true> - data block is completely
+**                           transmitted.
+**                           <false> - data block isn't completely
+**                           transmitted.
+*/
+/* ===================================================================*/
+bool I2C0_MasterGetBlockSentStatus(LDD_TDeviceData *DeviceDataPtr);
+
+/*
+** ===================================================================
 **     Method      :  I2C0_MasterReceiveBlock (component I2C_LDD)
 */
 /*!
@@ -306,6 +334,27 @@ LDD_TError I2C0_MasterReceiveBlock(LDD_TDeviceData *DeviceDataPtr, LDD_TData *Bu
 
 /*
 ** ===================================================================
+**     Method      :  I2C0_MasterGetBlockReceivedStatus (component I2C_LDD)
+*/
+/*!
+**     @brief
+**         This method returns current state of MasterReceiveBlock
+**         method. This method is available only for the MASTER mode
+**         and if method MasterReceiveBlock is enabled.
+**     @param
+**         DeviceDataPtr   - Device data structure
+**                           pointer returned by <Init> method.
+**     @return
+**                         - Return value:
+**                           <true> - data block is completely received.
+**                           <false> - data block isn't completely
+**                           received.
+*/
+/* ===================================================================*/
+bool I2C0_MasterGetBlockReceivedStatus(LDD_TDeviceData *DeviceDataPtr);
+
+/*
+** ===================================================================
 **     Method      :  I2C0_SelectSlaveDevice (component I2C_LDD)
 */
 /*!
@@ -351,6 +400,34 @@ LDD_TError I2C0_SelectSlaveDevice(LDD_TDeviceData *DeviceDataPtr, LDD_I2C_TAddrT
 */
 /* {Default RTOS Adapter} ISR function prototype */
 PE_ISR(I2C0_Interrupt);
+
+/*
+** ===================================================================
+**     Method      :  I2C0_GetDriverState (component I2C_LDD)
+*/
+/*!
+**     @brief
+**         This method returns the current driver status.
+**     @param
+**         DeviceDataPtr   - Device data structure
+**                           pointer returned by <Init> method.
+**     @return
+**                         - The current driver status mask.
+**                           Following status masks defined in PE_Types.h
+**                           can be used to check the current driver
+**                           status.
+**                           PE_LDD_DRIVER_DISABLED_IN_CLOCK_CONFIGURATIO
+**                           N - 1 - Driver is disabled in the current
+**                           mode; 0 - Driver is enabled in the current
+**                           mode.  
+**                           PE_LDD_DRIVER_DISABLED_BY_USER - 1 - Driver
+**                           is disabled by the user; 0 - Driver is
+**                           enabled by the user.        
+**                           PE_LDD_DRIVER_BUSY - 1 - Driver is the BUSY
+**                           state; 0 - Driver is in the IDLE state.
+*/
+/* ===================================================================*/
+LDD_TDriverState I2C0_GetDriverState(LDD_TDeviceData *DeviceDataPtr);
 
 /* END I2C0. */
 
