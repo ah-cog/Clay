@@ -99,14 +99,14 @@ struct platform_data_s
 };
 
 static struct platform_data_s gyro_pdata = {
-        .orientation = { 1, 0, 0,
-                0, 1, 0,
+        .orientation = { 0, -1, 0,
+                1, 0, 0,
                 0, 0, 1 }
 };
 
 static struct platform_data_s compass_pdata = {
-        .orientation = { 0, 1, 0,
-                1, 0, 0,
+        .orientation = { 1, 0, 0,
+                0, -1, 0,
                 0, 0, -1 }
 };
 
@@ -199,6 +199,10 @@ int main(void)
             inv_orientation_matrix_to_scalar(compass_pdata.orientation),
             (long) compass_fsr << 15);
 
+    int32 gyro_test[100];
+    int32 accel_test[100];
+    derp = mpu_run_self_test(gyro_test, accel_test);
+
     derp = 1;
     while (derp)
     {
@@ -213,7 +217,7 @@ int main(void)
             DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP | DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO
             | DMP_FEATURE_GYRO_CAL);
     derp = dmp_set_fifo_rate(20);
-    derp = dmp_set_interrupt_mode(DMP_INT_CONTINUOUS);
+    derp = dmp_set_interrupt_mode(DMP_INT_GESTURE);
 
     derp = mpu_set_dmp_state(1);
 
@@ -280,13 +284,13 @@ int main(void)
     for (;;)
     {
 
+        int16_t intStatus;
+        derp = mpu_get_int_status(&intStatus);
+
         if (data_ready)
         {
             LED1_PutVal(LED1_DeviceData, led_1_state);
             led_1_state = !led_1_state;
-
-//            int16_t intStatus;
-//            derp = mpu_get_int_status(&intStatus);
 
             derp = dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more);
             data_ready = more > 0;
@@ -306,8 +310,6 @@ int main(void)
         if (tick_250msec)
         {
             tick_250msec = FALSE;
-            derp = dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more);
-//            inv_get_6axis_quaternion(&data);
         }
 
         if (tick_500msec)
