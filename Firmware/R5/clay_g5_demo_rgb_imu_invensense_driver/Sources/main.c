@@ -74,14 +74,7 @@
 #include <cstdlib>
 #include "system_tick.h"
 #include "led_driver_pca9552.h"
-#include "mpu_9250_driver.h"
-
-#include "inv_mpu.h"
-#include "inv_mpu_dmp_motion_driver.h"
-#include "eMPL_outputs.h"
-#include "invensense.h"
-#include "invensense_adv.h"
-#include "data_builder.h"
+#include "dmp_imu.h"
 
 #include "nrf24L01plus.h"
 
@@ -93,49 +86,12 @@ color_rgb colors[] =
                 { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }        //rb
         };
 
-struct platform_data_s
-{
-    signed char orientation[9];
-};
-
-static struct platform_data_s gyro_pdata = {
-        .orientation = { 0, -1, 0,
-                1, 0, 0,
-                0, 0, 1 }
-};
-
-static struct platform_data_s compass_pdata = {
-        .orientation = { 1, 0, 0,
-                0, -1, 0,
-                0, 0, -1 }
-};
-
 static bool led_2_state = FALSE;
 static bool led_1_state = FALSE;
-
-static int32_t data[100] = { 0 };
-static int8_t accuracy;
-static inv_time_t timestamp;
-
-static int16_t gyro[20];
-static int16_t accel[20];
-static int32_t quat[20];
-static uint32_t sensor_timestamp;
-static int16_t sensors;
-static uint8_t more;
-
-static uint16_t gyro_rate;
-static uint16_t gyro_fsr;
-static uint8_t accel_fsr;
-static uint16_t compass_fsr;
-static uint8_t fw_load_attempts = 0;
 
 static mpu_values v = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 static void update_imu_leds(const mpu_values* v);
-
-static void tap_cb(unsigned char direction, unsigned char count);
-static void android_orient_cb(unsigned char orientation);
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -151,149 +107,20 @@ int main(void)
 
     init_tick();
 
-//    mpu_9250_init();
-
-    IMU_CS_PutVal(IMU_CS_DeviceData, 0);
-    IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 1);
-    delay_n_msec(5);
-    IMU_CS_PutVal(IMU_CS_DeviceData, 1);
-    IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 0);
-
-    ///initialize mpu driver from invensense. see arm project included in the library download zip for more info.
-    int8_t derp = mpu_init(NULL);
-
-    derp = inv_init_mpl();
-    derp = inv_enable_quaternion();
-    derp = inv_enable_9x_sensor_fusion();
-    derp = inv_enable_fast_nomot();                 //enable quick calibration
-    derp = inv_enable_gyro_tc();                    //enable temperature compensation
-    derp = inv_enable_vector_compass_cal();         //enable compass calibration
-    derp = inv_enable_magnetic_disturbance();        //enable compass calibration
-    derp = inv_enable_eMPL_outputs();
-    derp = inv_start_mpl();
-
-    derp = mpu_set_int_level(1);
-    derp = mpu_set_int_latched(0);
-
-    derp = mpu_set_sensors(INV_XYZ_ACCEL | INV_XYZ_GYRO | INV_XYZ_COMPASS);
-    derp = mpu_configure_fifo(INV_XYZ_ACCEL | INV_XYZ_GYRO);
-    derp = mpu_set_sample_rate(20);                 //hz
-    derp = mpu_set_compass_sample_rate(10);          //msec
-
-    derp = mpu_get_sample_rate(&gyro_rate);
-    derp = mpu_get_gyro_fsr(&gyro_fsr);
-    derp = mpu_get_accel_fsr(&accel_fsr);
-    derp = mpu_get_compass_fsr(&compass_fsr);
-
-    inv_set_gyro_sample_rate(1000000L / gyro_rate);         //(1 / 20hz) in usec
-    inv_set_accel_sample_rate(1000000L / gyro_rate);        //(1 / 20hz) in usec
-    inv_set_compass_sample_rate(10000);               //usec
-
-    inv_set_gyro_orientation_and_scale(
-            inv_orientation_matrix_to_scalar(gyro_pdata.orientation),
-            (long) gyro_fsr << 15);
-    inv_set_accel_orientation_and_scale(
-            inv_orientation_matrix_to_scalar(gyro_pdata.orientation),
-            (long) accel_fsr << 15);
-    inv_set_compass_orientation_and_scale(
-            inv_orientation_matrix_to_scalar(compass_pdata.orientation),
-            (long) compass_fsr << 15);
-
-    int32 gyro_test[100];
-    int32 accel_test[100];
-    derp = mpu_run_self_test(gyro_test, accel_test);
-
-    derp = 1;
-    while (derp)
-    {
-        ++fw_load_attempts;
-        derp = dmp_load_motion_driver_firmware();
-        delay_n_msec(200);
-    }
-    derp = dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_pdata.orientation));
-    derp = dmp_register_tap_cb(tap_cb);
-    derp = dmp_register_android_orient_cb(android_orient_cb);
-    derp = dmp_enable_feature(
-            DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP | DMP_FEATURE_ANDROID_ORIENT | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO
-            | DMP_FEATURE_GYRO_CAL);
-    derp = dmp_set_fifo_rate(20);
-    derp = dmp_set_interrupt_mode(DMP_INT_GESTURE);
-
-    derp = mpu_set_dmp_state(1);
-
-    (void) accuracy;
-    (void) data;
-    (void) timestamp;
-    (void) v;
-    (void) derp;
-    update_imu_leds(NULL);
+    clay_imu_init();
 
     init_led_drivers();
 
     delay_n_msec(5);
 
-    if ((fw_load_attempts) > 11)
-    {
-        set_led_output(RGB_12, colors + 1);
-    }
-    else if ((fw_load_attempts) > 10)
-    {
-        set_led_output(RGB_11, colors + 1);
-    }
-    else if ((fw_load_attempts) > 9)
-    {
-        set_led_output(RGB_10, colors + 1);
-    }
-    else if ((fw_load_attempts) > 8)
-    {
-        set_led_output(RGB_9, colors + 1);
-    }
-    else if ((fw_load_attempts) > 7)
-    {
-        set_led_output(RGB_8, colors + 1);
-    }
-    else if ((fw_load_attempts) > 6)
-    {
-        set_led_output(RGB_7, colors + 1);
-    }
-    else if ((fw_load_attempts) > 5)
-    {
-        set_led_output(RGB_6, colors + 1);
-    }
-    else if ((fw_load_attempts) > 4)
-    {
-        set_led_output(RGB_5, colors + 1);
-    }
-    else if ((fw_load_attempts) > 3)
-    {
-        set_led_output(RGB_4, colors + 1);
-    }
-    else if ((fw_load_attempts) > 2)
-    {
-        set_led_output(RGB_3, colors + 1);
-    }
-    else if ((fw_load_attempts) > 1)
-    {
-        set_led_output(RGB_2, colors + 1);
-    }
-    else
-    {
-        set_led_output(RGB_1, colors + 1);
-    }
-
     for (;;)
     {
-
-        int16_t intStatus;
-        derp = mpu_get_int_status(&intStatus);
-
         if (data_ready)
         {
             LED1_PutVal(LED1_DeviceData, led_1_state);
             led_1_state = !led_1_state;
 
-            derp = dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors, &more);
-            data_ready = more > 0;
+            periodic_callback();
         }
 
         if (tick_1msec)
@@ -340,31 +167,31 @@ static void update_imu_leds(const mpu_values* v)
 {
     if (!v) return;
 
-    if (v->x_accel < 50)
+    if (v->accel.val.x < 50)
     {
         set_led_output(RGB_12, colors + 1);        //-x
         set_led_output(RGB_4, colors + 0);        //+x
     }
     else
-    if (v->x_accel > 50)
+    if (v->accel.val.x > 50)
     {
         set_led_output(RGB_12, colors + 0);        //-x
         set_led_output(RGB_4, colors + 1);        //+x
     }
 
-    if (v->y_accel < 50)
+    if (v->accel.val.y < 50)
     {
         set_led_output(RGB_1, colors + 1);        //-y
         set_led_output(RGB_9, colors + 0);        //+y
     }
     else
-    if (v->y_accel > 50)
+    if (v->accel.val.y > 50)
     {
         set_led_output(RGB_1, colors + 0);        //-y
         set_led_output(RGB_9, colors + 1);        //+y
     }
 
-    if (v->z_accel > 0)        //+z
+    if (v->accel.val.z > 0)        //+z
     {
         set_led_output(RGB_10, colors + 1);
         set_led_output(RGB_7, colors + 1);
@@ -372,7 +199,7 @@ static void update_imu_leds(const mpu_values* v)
         set_led_output(RGB_3, colors + 1);
     }
     else
-    if (v->z_accel < 0)        //-z
+    if (v->accel.val.z < 0)        //-z
     {
         set_led_output(RGB_10, colors + 3);
         set_led_output(RGB_7, colors + 3);
@@ -380,9 +207,9 @@ static void update_imu_leds(const mpu_values* v)
         set_led_output(RGB_3, colors + 3);
     }
 
-    if (abs(v->y_mag) >= abs(v->x_mag))
+    if (abs(v->mag.val.y) >= abs(v->mag.val.x))
     {
-        if (v->y_mag > 0)
+        if (v->mag.val.y > 0)
         {
             //strongest magnetic field towards y+
             set_led_output(RGB_11, colors);        //y-
@@ -401,7 +228,7 @@ static void update_imu_leds(const mpu_values* v)
     }
     else
     {
-        if (v->x_mag > 0)
+        if (v->mag.val.x > 0)
         {
             //strongest magnetic field towards x+
             set_led_output(RGB_11, colors);        //y-
@@ -417,46 +244,6 @@ static void update_imu_leds(const mpu_values* v)
             set_led_output(RGB_5, colors);        //y+
             set_led_output(RGB_2, colors + 1);        //x-
         }
-    }
-}
-
-static void tap_cb(unsigned char direction, unsigned char count)
-{
-    data_ready = 0;
-    switch (direction)
-    {
-        case TAP_X_UP:
-            break;
-        case TAP_X_DOWN:
-            break;
-        case TAP_Y_UP:
-            break;
-        case TAP_Y_DOWN:
-            break;
-        case TAP_Z_UP:
-            break;
-        case TAP_Z_DOWN:
-            break;
-        default:
-            return;
-    }
-    return;
-}
-
-static void android_orient_cb(unsigned char orientation)
-{
-    switch (orientation)
-    {
-        case ANDROID_ORIENT_PORTRAIT:
-            break;
-        case ANDROID_ORIENT_LANDSCAPE:
-            break;
-        case ANDROID_ORIENT_REVERSE_PORTRAIT:
-            break;
-        case ANDROID_ORIENT_REVERSE_LANDSCAPE:
-            break;
-        default:
-            return;
     }
 }
 

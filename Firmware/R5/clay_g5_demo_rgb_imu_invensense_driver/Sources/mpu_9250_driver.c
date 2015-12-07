@@ -68,24 +68,24 @@ void get_mpu_readings(mpu_values * data)
     receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 6, MPU9250_ACCEL_ADDRESS);
 
     //I2Cdev::readBytes(devAddr, MPU6050_RA_ACCEL_XOUT_H, 6, buffer);
-    data->x_accel = (((int16_t) incoming_msg_buf[0]) << 8) | incoming_msg_buf[1];
-    data->y_accel = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
-    data->z_accel = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
+    data->accel.val.x = (((int16_t) incoming_msg_buf[0]) << 8) | incoming_msg_buf[1];
+    data->accel.val.y = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
+    data->accel.val.z = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
 
     outgoing_msg_buf[0] = MPU9250_RA_GYRO_XOUT_H;
     receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 6, MPU9250_ACCEL_ADDRESS);
 
-    data->x_gyro = (((int16_t) incoming_msg_buf[0]) << 8) | incoming_msg_buf[1];
-    data->y_gyro = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
-    data->z_gyro = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
+    data->gyro.val.x = (((int16_t) incoming_msg_buf[0]) << 8) | incoming_msg_buf[1];
+    data->gyro.val.y = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
+    data->gyro.val.z = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
 
     outgoing_msg_buf[0] = MPU9250_RA_MAG_ST_1;
     receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 9, MPU9250_MAG_ADDRESS);
 
     //Note: magnetometer buffers are little endian.
-    data->x_mag = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[1];
-    data->y_mag = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[3];
-    data->z_mag = (((int16_t) incoming_msg_buf[6]) << 8) | incoming_msg_buf[5];
+    data->mag.val.x = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[1];
+    data->mag.val.y = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[3];
+    data->mag.val.z = (((int16_t) incoming_msg_buf[6]) << 8) | incoming_msg_buf[5];
 }
 
 uint8_t local_inv_data[0x100];
