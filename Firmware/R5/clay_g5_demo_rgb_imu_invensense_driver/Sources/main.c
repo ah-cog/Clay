@@ -78,20 +78,8 @@
 
 #include "nrf24L01plus.h"
 
-color_rgb colors[] =
-        {
-                { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-                { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg
-                { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
-                { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }        //rb
-        };
-
 static bool led_2_state = FALSE;
 static bool led_1_state = FALSE;
-
-static mpu_values v = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
-static void update_imu_leds(const mpu_values* v);
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -126,12 +114,6 @@ int main(void)
         if (tick_1msec)
         {
             tick_1msec = FALSE;
-
-            if (!(power_on_time_msec % 30))
-            {
-//                get_mpu_readings(&v);
-//                update_imu_leds(&v);
-            }
         }
 
         if (tick_250msec)
@@ -162,90 +144,6 @@ int main(void)
     }
     /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
-
-static void update_imu_leds(const mpu_values* v)
-{
-    if (!v) return;
-
-    if (v->accel.val.x < 50)
-    {
-        set_led_output(RGB_12, colors + 1);        //-x
-        set_led_output(RGB_4, colors + 0);        //+x
-    }
-    else
-    if (v->accel.val.x > 50)
-    {
-        set_led_output(RGB_12, colors + 0);        //-x
-        set_led_output(RGB_4, colors + 1);        //+x
-    }
-
-    if (v->accel.val.y < 50)
-    {
-        set_led_output(RGB_1, colors + 1);        //-y
-        set_led_output(RGB_9, colors + 0);        //+y
-    }
-    else
-    if (v->accel.val.y > 50)
-    {
-        set_led_output(RGB_1, colors + 0);        //-y
-        set_led_output(RGB_9, colors + 1);        //+y
-    }
-
-    if (v->accel.val.z > 0)        //+z
-    {
-        set_led_output(RGB_10, colors + 1);
-        set_led_output(RGB_7, colors + 1);
-        set_led_output(RGB_6, colors + 1);
-        set_led_output(RGB_3, colors + 1);
-    }
-    else
-    if (v->accel.val.z < 0)        //-z
-    {
-        set_led_output(RGB_10, colors + 3);
-        set_led_output(RGB_7, colors + 3);
-        set_led_output(RGB_6, colors + 3);
-        set_led_output(RGB_3, colors + 3);
-    }
-
-    if (abs(v->mag.val.y) >= abs(v->mag.val.x))
-    {
-        if (v->mag.val.y > 0)
-        {
-            //strongest magnetic field towards y+
-            set_led_output(RGB_11, colors);        //y-
-            set_led_output(RGB_8, colors);        //x+
-            set_led_output(RGB_5, colors + 1);        //y+
-            set_led_output(RGB_2, colors);        //x-
-        }
-        else
-        {
-            //strongest magnetic field towards y-
-            set_led_output(RGB_11, colors + 1);        //y-
-            set_led_output(RGB_8, colors);        //x+
-            set_led_output(RGB_5, colors);        //y+
-            set_led_output(RGB_2, colors);        //x-
-        }
-    }
-    else
-    {
-        if (v->mag.val.x > 0)
-        {
-            //strongest magnetic field towards x+
-            set_led_output(RGB_11, colors);        //y-
-            set_led_output(RGB_8, colors + 1);        //x+
-            set_led_output(RGB_5, colors);        //y+
-            set_led_output(RGB_2, colors);        //x-
-        }
-        else
-        {
-            //strongest magnetic field towards x-
-            set_led_output(RGB_11, colors);        //y-
-            set_led_output(RGB_8, colors);        //x+
-            set_led_output(RGB_5, colors);        //y+
-            set_led_output(RGB_2, colors + 1);        //x-
-        }
-    }
-}
 
 /* END main */
 /*!

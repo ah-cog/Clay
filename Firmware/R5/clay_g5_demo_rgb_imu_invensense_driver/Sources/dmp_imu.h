@@ -35,7 +35,7 @@ typedef union quaternion
 extern uint8_t clay_imu_init();
 extern void tap_callback();
 extern void periodic_callback();
-extern const quaternion const * get_quaternion_history(uint8_t* count);
-extern const mpu_values const * get_raw_history(uint8_t* count);
+extern const quaternion const * get_quaternion_history(uint8_t * count, uint8_t * head);
+extern const mpu_values const * get_raw_history(uint8_t * count, uint8_t * head);
 
 #endif /* RAW_IMU_H_ */

@@ -22,12 +22,12 @@
 #include "data_builder.h"
 
 // defines ////////////////////////////////////////////////////////////////////
-#define MAX_HISTORY_COUNT       100 //.5 seconds worth @ 200hz update rate
+#define MAX_HISTORY_COUNT       100 //MAX_HISTORY_COUNT * (1 / DEFAULT_MPU_HZ) = seconds worth of data stored in buffer 
 #if MAX_HISTORY_COUNT > 0xFF
 #error you need to increase the size of the index vars for the history buffers
 #endif
 
-#define DEFAULT_MPU_HZ          20
+#define DEFAULT_MPU_HZ          50
 #define COMPASS_READ_MS         100                 
 // global vars ////////////////////////////////////////////////////////////////
 
@@ -65,6 +65,7 @@ static void tap_cb(unsigned char direction, unsigned char count);
 static void android_orient_cb(unsigned char orientation);
 static void add_datapoint(quaternion * quat, mpu_values * mpu_raw);
 
+//initalizes mpu and dmp. returns 1 if successful, 0 if not.
 uint8_t clay_imu_init()
 {
     raw_head = 0;
@@ -83,30 +84,30 @@ uint8_t clay_imu_init()
     IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 0);
 
     ///initialize mpu driver from invensense. see arm project included in the library download zip for more info.
-    int8_t derp = mpu_init(NULL);
+    int8_t status = !mpu_init(NULL);
 
-    derp = inv_init_mpl();
-    derp = inv_enable_quaternion();
-    derp = inv_enable_9x_sensor_fusion();
-    derp = inv_enable_fast_nomot();                 //enable quick calibration
-    derp = inv_enable_gyro_tc();                    //enable temperature compensation
-    derp = inv_enable_vector_compass_cal();         //enable compass calibration
-    derp = inv_enable_magnetic_disturbance();        //enable compass calibration
-    derp = inv_enable_eMPL_outputs();
-    derp = inv_start_mpl();
+    status = status && !inv_init_mpl();
+    status = status && !inv_enable_quaternion();
+    status = status && !inv_enable_9x_sensor_fusion();
+    status = status && !inv_enable_fast_nomot();                 //enable quick calibration
+    status = status && !inv_enable_gyro_tc();                    //enable temperature compensation
+    status = status && !inv_enable_vector_compass_cal();         //enable compass calibration
+    status = status && !inv_enable_magnetic_disturbance();        //enable compass calibration
+    status = status && !inv_enable_eMPL_outputs();
+    status = status && !inv_start_mpl();
 
-    derp = mpu_set_int_level(1);
-    derp = mpu_set_int_latched(0);
+    status = status && !mpu_set_int_level(1);
+    status = status && !mpu_set_int_latched(0);
 
-    derp = mpu_set_sensors(INV_XYZ_ACCEL | INV_XYZ_GYRO | INV_XYZ_COMPASS);
-    derp = mpu_configure_fifo(INV_XYZ_ACCEL | INV_XYZ_GYRO);
-    derp = mpu_set_sample_rate(DEFAULT_MPU_HZ);                 //hz
-    derp = mpu_set_compass_sample_rate(1000 / COMPASS_READ_MS);          //msec
+    status = status && !mpu_set_sensors(INV_XYZ_ACCEL | INV_XYZ_GYRO | INV_XYZ_COMPASS);
+    status = status && !mpu_configure_fifo(INV_XYZ_ACCEL | INV_XYZ_GYRO);
+    status = status && !mpu_set_sample_rate(DEFAULT_MPU_HZ);                 //hz
+    status = status && !mpu_set_compass_sample_rate(1000 / COMPASS_READ_MS);          //msec
 
-    derp = mpu_get_sample_rate(&gyro_rate);
-    derp = mpu_get_gyro_fsr(&gyro_fsr);
-    derp = mpu_get_accel_fsr(&accel_fsr);
-    derp = mpu_get_compass_fsr(&compass_fsr);
+    status = status && !mpu_get_sample_rate(&gyro_rate);
+    status = status && !mpu_get_gyro_fsr(&gyro_fsr);
+    status = status && !mpu_get_accel_fsr(&accel_fsr);
+    status = status && !mpu_get_compass_fsr(&compass_fsr);
 
     inv_set_gyro_sample_rate(1000000L / gyro_rate);         //(1 / 20hz) in usec
     inv_set_accel_sample_rate(1000000L / gyro_rate);        //(1 / 20hz) in usec
@@ -124,25 +125,29 @@ uint8_t clay_imu_init()
 
     int32 gyro_test[100];
     int32 accel_test[100];
-    derp = mpu_run_self_test(gyro_test, accel_test);
+    status = status && mpu_run_self_test(gyro_test, accel_test) == 0x07;
 
-    derp = 1;
-    while (derp)
+    while (status)
     {
         ++fw_load_attempts;
-        derp = dmp_load_motion_driver_firmware();
+        status = dmp_load_motion_driver_firmware();
         delay_n_msec(200);
     }
-    derp = dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_pdata.orientation));
-    derp = dmp_register_tap_cb(tap_cb);
-    derp = dmp_register_android_orient_cb(android_orient_cb);
-    derp = dmp_enable_feature(
+
+    if (!status) status = 1;        //pretty much all of the dmp/inv functions return 0 for success. We need to set this to 1 to avoid short-circuiting the next setup step.
+
+    status = status && !dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_pdata.orientation));
+    status = status && !dmp_register_tap_cb(tap_cb);
+    status = status && !dmp_register_android_orient_cb(android_orient_cb);
+    status = status && !dmp_enable_feature(
             DMP_FEATURE_6X_LP_QUAT | DMP_FEATURE_TAP | DMP_FEATURE_SEND_RAW_ACCEL | DMP_FEATURE_SEND_CAL_GYRO
             | DMP_FEATURE_GYRO_CAL);
-    derp = dmp_set_fifo_rate(DEFAULT_MPU_HZ);
-    derp = dmp_set_interrupt_mode(DMP_INT_CONTINUOUS);
+    status = status && !dmp_set_fifo_rate(DEFAULT_MPU_HZ);
+    status = status && !dmp_set_interrupt_mode(DMP_INT_CONTINUOUS);
 
-    derp = mpu_set_dmp_state(1);
+    status = status && !mpu_set_dmp_state(1);
+
+    return status;
 }
 
 void tap_callback()
@@ -164,6 +169,8 @@ void periodic_callback()
     status = dmp_read_fifo(v.gyro.array, v.accel.array, q.array, &gyro_timestamp, &sensors, &more);
     status = mpu_get_compass_reg(v.mag.array, &mag_timestamp);
 
+    (void) status;        //shut up, warnings
+
     v.gyro.val.timestamp = gyro_timestamp;
     v.accel.val.timestamp = gyro_timestamp;
     v.mag.val.timestamp = mag_timestamp;
@@ -174,15 +181,17 @@ void periodic_callback()
     data_ready = more > 0;
 }
 
-const quaternion const * get_quaternion_history(uint8_t* count)
+const quaternion const * get_quaternion_history(uint8_t* count, uint8_t * head)
 {
     *count = quat_count;
+    *head = quat_head;
     return quat_history;
 }
 
-const mpu_values const * get_raw_history(uint8_t* count)
+const mpu_values const * get_raw_history(uint8_t* count, uint8_t * head)
 {
     *count = raw_count;
+    *head = raw_head;
     return raw_history;
 }
 
@@ -196,7 +205,14 @@ static void add_datapoint(quaternion * quat, mpu_values * mpu_raw)
         quat_dest->array[i] = quat->array[i];
     }
     quat_head = (quat_head + 1) % MAX_HISTORY_COUNT;
-    quat_count = (quat_count == MAX_HISTORY_COUNT ? MAX_HISTORY_COUNT : (quat_count + 1));
+    if (quat_count == MAX_HISTORY_COUNT)
+    {
+        quat_tail = (quat_tail + 1 % MAX_HISTORY_COUNT);
+    }
+    else
+    {
+        ++quat_count;
+    }
 
     for (int i = 0; i < 3; ++i)
     {
@@ -205,7 +221,14 @@ static void add_datapoint(quaternion * quat, mpu_values * mpu_raw)
         raw_dest->mag.array[i] = mpu_raw->mag.array[i];
     }
     raw_head = (raw_head + 1) % MAX_HISTORY_COUNT;
-    raw_count = (raw_count == MAX_HISTORY_COUNT ? MAX_HISTORY_COUNT : (raw_count + 1));
+    if (raw_count == MAX_HISTORY_COUNT)
+    {
+        raw_tail = (raw_tail + 1) % MAX_HISTORY_COUNT;
+    }
+    else
+    {
+        ++raw_count;
+    }
 }
 
 static void tap_cb(unsigned char direction, unsigned char count)
