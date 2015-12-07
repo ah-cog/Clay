@@ -402,20 +402,26 @@
 #define MPU9250_DMP_MEMORY_BANK_SIZE                   256
 #define MPU9250_DMP_MEMORY_CHUNK_SIZE                  16
 
+typedef struct _3axis_s
+{
+    int16_t x;
+    int16_t y;
+    int16_t z;
+    uint32_t timestamp;
+}_3axis_s;
+
+typedef union _3axis
+{
+    _3axis_s val;
+    int16_t array[5];
+}_3axis;
+
 // structs ///////////////////
 typedef struct
 {
-    int16_t x_accel;
-    int16_t y_accel;
-    int16_t z_accel;
-
-    int16_t x_gyro;
-    int16_t y_gyro;
-    int16_t z_gyro;
-
-    int16_t x_mag;
-    int16_t y_mag;
-    int16_t z_mag;
+    _3axis accel;
+    _3axis gyro;
+    _3axis mag;
 } mpu_values;
 
 // global vars ///////////////
