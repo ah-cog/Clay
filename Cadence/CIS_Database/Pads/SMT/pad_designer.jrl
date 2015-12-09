@@ -1,0 +1,9 @@
+\t (00:00:00) pad_designer 16.6 S013 (v16-6-112AN) Windows 32
+\t (00:00:00)     Journal start - Thu Nov 20 18:37:02 2014
+\t (00:00:00)         Host=KYLE-PC User=Kyle Pid=8368 CPUs=8
+\t (00:00:00) 
+\i (00:00:04) setwindow form.padedit
+\i (00:00:04) pse_open C:/Users/Kyle/Dropbox/CIS_Database/Pads/PTH/c160h90.pad 
+\i (00:00:05) FORM padedit layers  
+\i (00:00:08) pse_exit
+\t (00:00:08)     Journal end - Thu Nov 20 18:37:11 2014

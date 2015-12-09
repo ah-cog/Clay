@@ -1,0 +1,17 @@
+ISO-10303-21;
+HEADER;
+FILE_DESCRIPTION (( 'STEP AP214' ),
+    '1' );
+FILE_NAME ('User Library-CAPC1608X___.STEP',
+    '2014-06-22T18:49:21',
+    ( 'Windows User' ),
+    ( '' ),
+    'SwSTEP 2.0',
+    'SolidWorks 2014',
+    '' );
+FILE_SCHEMA (( 'AUTOMOTIVE_DESIGN' ));
+ENDSEC;
+
+DATA;
+ENDSEC;
+END-ISO-10303-21;

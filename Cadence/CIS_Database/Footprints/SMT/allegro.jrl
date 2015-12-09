@@ -1,0 +1,23 @@
+\t (00:00:00) allegro 16.6 S016 (v16-6-112BA) Windows 32
+\t (00:00:00)     Journal start - Sat Nov 15 22:28:37 2014
+\t (00:00:00)         Host=KYLE-PC User=Kyle Pid=8436 CPUs=8
+\t (00:00:00) 
+\t (00:00:00) Opening existing design...
+\d (00:00:00) Database opened: C:/Users/Kyle/Dropbox/CIS_Database/Footprints/SMT/CAPC1608X95N.dra
+\i (00:00:00) trapsize 25
+\i (00:00:00) trapsize 25
+\i (00:00:01) generaledit 
+\i (00:00:04) zoom in 1 
+\i (00:00:04) setwindow pcb
+\i (00:00:04) zoom in -0.301 0.475
+\i (00:00:04) trapsize 13
+\i (00:00:04) zoom in 1 
+\i (00:00:04) setwindow pcb
+\i (00:00:04) zoom in -0.301 0.476
+\i (00:00:04) trapsize 6
+\i (00:00:04) zoom out 1 
+\i (00:00:04) setwindow pcb
+\i (00:00:04) zoom out -0.302 0.477
+\i (00:00:04) trapsize 13
+\i (00:00:15) exit 
+\t (00:00:15)     Journal end - Sat Nov 15 22:28:52 2014

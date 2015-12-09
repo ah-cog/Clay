@@ -1,0 +1,4 @@
+1. Create ODBC source. Use the 32-bit odbc manager if on a 64 bit machine.
+    -under system DSN, create a "Microsoft Access Driver" named "CIS_AccessDatabase" and put the path to Database.mdb in your Clay/Cadence/CIS_Database folder.
+2. In OrCAD, create or open a project and navigate to a schematic page.. This is necessary to get the CIS options.
+3. Go to options/cis configuration and select the CIS_CONFIGURATION.DBC file in your Clay/Cadence/CIS_Database folder.
