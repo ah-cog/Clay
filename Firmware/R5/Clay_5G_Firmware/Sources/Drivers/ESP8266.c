@@ -200,11 +200,11 @@ int8_t ESP8266_Wait_For_Response (const char* response, uint32_t milliseconds) {
 	while (commandResponse < 0) {
 		// TODO: Check timer in while condition and break if timeout period expires.
 		
-//		currentTime = Millis ();
-//		if (currentTime - startTime > milliseconds) {
+		currentTime = Millis ();
+		if ((currentTime - startTime) > milliseconds) {
 //			printf ("TIMEOUT!!!\r\n");
-//			return RESPONSE_TIMEOUT;
-//		}
+			return RESPONSE_TIMEOUT;
+		}
 		
 		// Buffer all incoming characters
 		incomingBufferSize = ESP8266_Get_Incoming_Buffer_Size ();
@@ -237,6 +237,9 @@ int8_t ESP8266_Wait_For_Response (const char* response, uint32_t milliseconds) {
 			// Check the buffer after every character to see if an expected response was received. Check this after every character prevents reading characters in the buffer that may be sent in response to a different command.
 			// Option 1: Search for an expected response after every character to avoid removing characters from the buffer that aren't associated with this command.
 			// commandResponse = ESP8266_Search_For_Response (response, responseBuffer, bufferSize);
+			
+			// Update the start time of the receive operation after each segment of data is received FROM THE ESP8266 to ensure that continuous segments are read in their entirety.
+//			startTime = Millis ();
 		}
 		
 //		// Empty the remaining characters on the buffer
@@ -259,6 +262,20 @@ int8_t ESP8266_Wait_For_Response (const char* response, uint32_t milliseconds) {
 	// TODO: Return RESPONSE_TIMEOUT if timeout period expires.
 	return commandResponse; // Hack. Replace with suggestion in the TODO on the previous line.
 	
+}
+
+void Generate_Discovery_Message () {
+	// Periodically send a datagram announcing the presence of this device.
+	// TODO: Only broadcast UDP message if an address has been received!
+	if (Has_Internet_Address () == TRUE) {
+		char *address = Get_Internet_Address ();
+		// TODO: Create and buffer the command to broadcast the unit's address.
+//		n = 
+		sprintf (discoveryMessage, "connect to %s", address); // Create message to send.
+//			printf("buffer = %s\r\n", buffer2);
+//		Broadcast_UDP_Message (buffer2, 4445);
+		// TODO: Queue a (periodic) UDP broadcast announcing the unit's presence on the network.
+	}
 }
 
 /**
@@ -293,11 +310,10 @@ int8_t ESP8266_Receive_Incoming_Data (uint32_t milliseconds) {
 	while (commandResponse < 0) {
 		// TODO: Check timer in while condition and break if timeout period expires.
 		
-//		currentTime = Millis ();
-//		if (currentTime - startTime > milliseconds) {
-//			printf ("TIMEOUT!!!\r\n");
-//			return RESPONSE_TIMEOUT;
-//		}
+		currentTime = Millis ();
+		if ((currentTime - startTime) > milliseconds) {
+			return RESPONSE_TIMEOUT;
+		}
 		
 		// Buffer all incoming characters
 //		incomingBufferSize = ESP8266_Get_Incoming_Buffer_Size ();
@@ -426,6 +442,9 @@ int8_t ESP8266_Receive_Incoming_Data (uint32_t milliseconds) {
 			}
 			
 			// Check the buffer after every character to see if an expected response was received. Check this after every character prevents reading characters in the buffer that may be sent in response to a different command.
+			
+			// Update the start time of the receive operation after each segment of data is received to ensure that continuous segments are read in their entirety.
+			startTime = Millis ();
 			
 		}
 		
@@ -588,7 +607,7 @@ int8_t ESP8266_Send_Command_AT_CWMODE (uint8_t mode) {
 	// DEBUG: printf ("ESP8266_Send_Command_AT_CWMODE\r\n");
 	
 	int8_t response = NULL;
-	char buffer[64] = { 0 };
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int n;
 	
 	n = sprintf (buffer, "AT+CWMODE_CUR=%d\r\n", mode);
@@ -605,7 +624,7 @@ int8_t ESP8266_Send_Command_AT_CWJAP (const char *ssid, const char *password) {
 	// DEBUG: printf ("ESP8266_Send_Command_AT_CWJAP\r\n");
 	
 	int8_t response = NULL;
-	char buffer[64] = { 0 };
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int n;
 	
 	n = sprintf (buffer, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID_DEFAULT, PASSWORD_DEFAULT);
@@ -644,7 +663,7 @@ int8_t ESP8266_Send_Command_AT_CIFSR () { // ESP8266_Send_Command_AT_CIFSR
 					length = strchr (stationIP, '"') - stationIP;
 					stationIP[length] = '\0';
 					strncpy (esp8266_profile.stationIPBuffer, stationIP, length);
-					D(printf ("IP: %s\r\n", esp8266_profile.stationIPBuffer));
+//					D(printf ("IP: %s\r\n", esp8266_profile.stationIPBuffer));
 				}
 				
 				// TODO: Block until receive MAC address in buffer!
@@ -656,7 +675,7 @@ int8_t ESP8266_Send_Command_AT_CIFSR () { // ESP8266_Send_Command_AT_CIFSR
 					length = strchr (stationMAC, '"') - stationMAC; // Measure the length of the MAC address substring
 					stationMAC[length] = '\0'; // Terminate the stored MAC address string.
 					strncpy (esp8266_profile.stationMACBuffer, stationMAC, length);
-					D(printf ("MAC: %s\r\n", esp8266_profile.stationMACBuffer));
+//					D(printf ("MAC: %s\r\n", esp8266_profile.stationMACBuffer));
 				}
 			}
 //		}
@@ -670,7 +689,7 @@ int8_t ESP8266_Send_Command_AT_CIPMUX (uint8_t enable) {
 	// DEBUG: printf ("ESP8266_Send_Command_AT_CIPMUX\r\n");
 	
 	int8_t response = NULL;
-	char buffer[64] = { 0 };
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int n;
 	
 	n = sprintf (buffer, "AT+CIPMUX=%d\r\n", enable);
@@ -686,7 +705,7 @@ int8_t ESP8266_Send_Command_AT_CIPSERVER (uint8_t mode, uint8_t port) {
 	// DEBUG: printf ("ESP8266_Send_Command_AT_CIPSERVER\r\n");
 	
 	int8_t response = NULL;
-	char buffer[64] = { 0 };
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int n;
 	
 	n = sprintf (buffer, "AT+CIPSERVER=%d,%d\r\n", mode, port);
@@ -719,7 +738,7 @@ int8_t ESP8266_Send_Command_AT_CIPSERVER (uint8_t mode, uint8_t port) {
 //	int8_t response   = RESPONSE_NOT_FOUND;
 //	
 //	char *responseData = "<html><h1>Clay</h1><button>I/O</button></html>";
-//	char buffer[64] = { 0 };
+//	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 //	int n;
 //	
 //	// TODO: Extract client number (0-4) and command ("CONNECT" or else)
@@ -857,7 +876,7 @@ void Start_UDP_Server (uint16_t port) {
 	// DEBUG: printf ("ESP8266_Send_Command_AT_CIPSERVER\r\n");
 	
 	int8_t response = NULL;
-	char buffer[64] = { 0 };
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int n;
 	
 	// The following variables correspond to parameters in the following AT command:
@@ -872,7 +891,7 @@ void Start_UDP_Server (uint16_t port) {
 	
 	// AT+CIPSTART=0,"UDP","0.0.0.0",4445,4445,2
 	n = sprintf (buffer, "AT+CIPSTART=%d,\"%s\",\"%s\",%d,%d,%d\r\n", channel, protocol, remoteAddress, remotePort, localPort, mode);
-	D(printf ("%s\r\n", buffer));
+//	D(printf ("%s\r\n", buffer));
 	
 	if (ESP8266_Send_Block (buffer) == TRUE) {
 		response = ESP8266_Wait_For_Response (RESPONSE_SIGNATURE_OK_VARIANT, DEFAULT_RESPONSE_TIMEOUT);
@@ -881,9 +900,9 @@ void Start_UDP_Server (uint16_t port) {
 	return response;
 }
 
-void Broadcast_UDP_Message (const char *message) {
+void Broadcast_UDP_Message (const char *message, uint16_t port) {
 	int8_t response = NULL;
-	char buffer[64] = { 0 };
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int n;
 	
 	// The following variables correspond to parameters in the following AT command:
@@ -893,7 +912,7 @@ void Broadcast_UDP_Message (const char *message) {
 	const char *protocol      = "UDP";
 	const char *remoteAddress = "255.255.255.255";
 	//const char *remoteAddress = "192.168.43.122";
-	uint16_t    remotePort    = 4446; // port; // 4445
+	uint16_t    remotePort    = port; // port; // 4445
 	uint16_t    localPort     = 1002; // 1002 // TODO: Randomize this!
 	uint8_t     mode          = 2;
 	
@@ -932,7 +951,7 @@ void Broadcast_UDP_Message (const char *message) {
 
 	
 	// Brief pause here before closing the connection.
-	Wait (200); // TODO: Make a preprocessor directive for this timeout!
+	Wait (50); // Wait (200); // TODO: Make a preprocessor directive for this timeout!
 	
 	// TODO: Put this into a separate command?
 	
@@ -940,12 +959,12 @@ void Broadcast_UDP_Message (const char *message) {
 	n = sprintf (buffer, "AT+CIPCLOSE=%d\r\n", channel);
 	if (ESP8266_Send_Block (buffer) == TRUE) {
 		// Wait for "OK\r\n".
-		Wait (500);
+		Wait (200); // Wait (500);
 		response = ESP8266_Wait_For_Response ("OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // "AT+CIPCLOSE=0\r\n0,CLOSED\r\n\r\nOK\r\n"
 	}
 	
 	// Wait for a short period of time before allowing additional AT commands.
-	Wait (300);
+	Wait (100); // Wait (300);
 	
 	return response;
 }
@@ -990,45 +1009,45 @@ uint8_t Enable_WiFi (const char* ssid, const char *password) {
 	
 	while (1) {
 		if (step == 0) {
-			D(printf ("Resetting ESP8266. "));
+//			D(printf ("Resetting ESP8266. "));
 			if ((status = ESP8266_Send_Command_AT_RST ()) > 0) {
-				D(printf ("ESP8266 reset successfully.\r\n"));
+//				D(printf ("ESP8266 reset successfully.\r\n"));
 			} else {
-				D(printf ("ESP8266 reset failed.\r\n"));
+//				D(printf ("ESP8266 reset failed.\r\n"));
 			}
 			step++;
 		} else if (step == 1) {
-			D(printf ("Testing communications with ESP8266. "));
+//			D(printf ("Testing communications with ESP8266. "));
 			if ((status = ESP8266_Send_Command_AT ()) > 0) {
-				D(printf ("ESP8266 online.\r\n"));
+//				D(printf ("ESP8266 online.\r\n"));
 			} else {
-				D(printf ("ESP8266 not responding.\r\n"));
+//				D(printf ("ESP8266 not responding.\r\n"));
 			}
 			step++;
 		} else if (step == 2) {
-			D(printf ("Setting mode of ESP8266. "));
+//			D(printf ("Setting mode of ESP8266. "));
 			if ((status = ESP8266_Send_Command_AT_CWMODE ((uint8_t) 3)) > 0) {
-				D(printf ("ESP8266 mode set.\r\n"));
+//				D(printf ("ESP8266 mode set.\r\n"));
 			} else {
-				D(printf ("ESP8266 mode NOT set.\r\n"));
+//				D(printf ("ESP8266 mode NOT set.\r\n"));
 			}
 			step++;
 		} else if (step == 3) {
-			D(printf ("Joining access point. "));
+//			D(printf ("Joining access point. "));
 			// TODO: Get list of APs and see if the specified one exists.
 			Set_WiFi_Network (ssid, password); // Set the Wi-Fi network.
 			if ((status = ESP8266_Send_Command_AT_CWJAP (esp8266_profile.wifi_ssid, esp8266_profile.wifi_password)) > 0) { // if ((status = ESP8266_Send_Command_AT_CWJAP (esp8266_profile.wifi_ssid, esp8266_profile.wifi_password)) > 0) { // if ((status = ESP8266_Send_Command_AT_CWJAP (SSID_DEFAULT, PASSWORD_DEFAULT)) > 0) {
-				D(printf ("ESP8266 joined access point.\r\n"));
+//				D(printf ("ESP8266 joined access point.\r\n"));
 			} else {
-				D(printf ("ESP8266 could NOT join access point.\r\n"));
+//				D(printf ("ESP8266 could NOT join access point.\r\n"));
 			}
 			step++;
 		} else if (step == 4) {
-			D(printf ("Getting IP address. "));
+//			D(printf ("Getting IP address. "));
 			if ((status = ESP8266_Send_Command_AT_CIFSR ()) > 0) {
-				D(printf ("IP info received.\r\n"));
+//				D(printf ("IP info received.\r\n"));
 			} else {
-				D(printf ("ESP8266 could NOT join access point.\r\n"));
+//				D(printf ("ESP8266 could NOT join access point.\r\n"));
 			}
 			step++;
 //		} else if (step == 5) {
@@ -1132,19 +1151,19 @@ void Start_HTTP_Server (uint16_t port) {
 //			step++;
 //		} else if (step == 5) {
 		if (step == 5) {
-			D(printf ("Configuring to accept multiple incoming connections. "));
+//			D(printf ("Configuring to accept multiple incoming connections. "));
 			if ((status = ESP8266_Send_Command_AT_CIPMUX (TRUE)) > 0) {
-				D(printf ("ESP8266 set up for multiple connections.\r\n"));
+//				D(printf ("ESP8266 set up for multiple connections.\r\n"));
 			} else {
-				D(printf ("ESP8266 could NOT join access point.\r\n"));
+//				D(printf ("ESP8266 could NOT join access point.\r\n"));
 			}
 			step++;
 		} else if (step == 6) {
-			D(printf ("Configuring as TCP server. "));
+//			D(printf ("Configuring as TCP server. "));
 			if ((status = ESP8266_Send_Command_AT_CIPSERVER (TRUE, port)) > 0) {
-				D(printf ("ESP8266 server listening on port 80.\r\n"));
+//				D(printf ("ESP8266 server listening on port 80.\r\n"));
 			} else {
-				D(printf ("ESP8266 could not start server.\r\n"));
+//				D(printf ("ESP8266 could not start server.\r\n"));
 			}
 			step++;
 //		} else if (step == 7) {
@@ -1170,11 +1189,11 @@ void Start_HTTP_Server (uint16_t port) {
 //	int i = 0;
 //	int j = 0;
 ////	int  lineReceived = FALSE;
-////	char buffer[64]   = { '\0' };
+////	char buffer[MAXIMUM_MESSAGE_LENGTH]   = { '\0' };
 ////	int  ch           = (int) '\0';
 ////	int server_started = FALSE;
 ////	byte bufferSize;
-//	char buffer[64] = { 0 };
+//	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 //	int n;
 //	
 ////	int incomingByteCount = 0; // number of bytes available to read
@@ -1431,7 +1450,7 @@ void Process_HTTP_Request (int connection, const char *httpMethod, const char *h
 	int n;
 	int i;
 	int j;
-	char buffer[64] = { 0 };
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int8_t response   = RESPONSE_NOT_FOUND;
 		
 	const char *responseData = "<html><h1>Clay</h1><button>I/O</button></html>";
@@ -1470,9 +1489,9 @@ void Process_HTTP_Request (int connection, const char *httpMethod, const char *h
 	} else if (strncmp (httpUri, "/channel/", strlen ("/channel/")) == 0) {
 		
 		if (strncmp (httpMethod, "GET", strlen ("GET")) == 0) {
-			D(printf ("Getting state of channel.\r\n"));
+//			D(printf ("Getting state of channel.\r\n"));
 		} else if (strncmp (httpMethod, "POST", strlen ("POST")) == 0) {
-			D(printf ("Setting state of channel.\r\n"));
+//			D(printf ("Setting state of channel.\r\n"));
 			// TODO: Read POST data
 		}
 		
@@ -1521,7 +1540,7 @@ void Process_HTTP_Request (int connection, const char *httpMethod, const char *h
 				
 //				printf ("Message: %s\r\n", messageContent); // DEBUG
 			} else {
-				D(printf ("Error: There was no message.\r\n"));
+//				D(printf ("Error: There was no message.\r\n"));
 			}
 			
 			/* Process the extracted message */
@@ -1583,7 +1602,7 @@ void Process_HTTP_Request (int connection, const char *httpMethod, const char *h
 void Monitor_Network_Communications () { // void Monitor_Network_Communications () {
 	
 	int8_t status = NULL;
-	char buffer[64] = { 0 };
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int n;
 	
 	char* tokenEnd    = NULL;
@@ -1615,12 +1634,13 @@ void Monitor_Network_Communications () { // void Monitor_Network_Communications 
 		// End of message tokens:
 		// - "0,CLOSED\r\n\r\n"
 		
-		if ((connection = ESP8266_Receive_Incoming_Data (DEFAULT_RESPONSE_TIMEOUT)) >= 0) { // e.g., "Accept: */*\r\n\r\n";
+		//if ((connection = ESP8266_Receive_Incoming_Data (DEFAULT_RESPONSE_TIMEOUT)) >= 0) { // e.g., "Accept: */*\r\n\r\n"; //if ((connection = ESP8266_Receive_Incoming_Data (DEFAULT_RESPONSE_TIMEOUT)) >= 0) { // e.g., "Accept: */*\r\n\r\n";
+		if ((connection = ESP8266_Receive_Incoming_Data (10)) >= 0) {
 			
 			// Check the protocol type being used on the specified connection ID: UDP or TCP/HTTP.
 			// Parse the data based on the protocol being used.
 			
-			D(printf("connectionDataQueue[connection] = %s\r\n", connectionDataQueue[connection]));
+//			D(printf("connectionDataQueue[connection] = %s\r\n", connectionDataQueue[connection]));
 			
 			if (strstr (connectionDataQueue[connection], "HTTP/1.1") != NULL) { // if (strstr (incomingDataQueue, "HTTP/1.1") != NULL) {
 //				printf ("RECEIVING TCP/HTTP DATA\r\n");
@@ -1704,6 +1724,8 @@ void Monitor_Network_Communications () { // void Monitor_Network_Communications 
 				
 				ESP8266_Reset_Data_Buffer ();
 				
+				// TODO: Run AT commands to get IP for the connection ID (before closing it)
+				
 				// TODO: Queue the message for later processing.
 //				status = Process_Message (message);
 //				printf ("Creating message. ");
@@ -1713,6 +1735,8 @@ void Monitor_Network_Communications () { // void Monitor_Network_Communications 
 	//			printf ("Size: %d.\r\n", messageCount);
 				
 				status = TRUE;
+				
+				// TODO: Move the acknowledgment code here?
 				
 //				printf ("RECEIVING UDP DATA: %s\r\n", messageContent);
 				

@@ -91,6 +91,8 @@ static RGB_Channel channels[] = {
 };
 
 Color_RGB onColor  = { LED_MODE_MAX, LED_MODE_OFF, LED_MODE_LOW };
+Color_RGB colorA  = { LED_MODE_MED, LED_MODE_MED, LED_MODE_LOW };
+Color_RGB colorB  = { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MAX };
 Color_RGB offColor = { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF };
 
 /**

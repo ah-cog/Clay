@@ -455,6 +455,46 @@ Module "IMU_INT"   (component BitIO_LDD)
                 returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
                 property for limitations). This method cannot be disabled if direction is [input].
 
+Module "LED2"      (component BitIO_LDD)
+   - LED2_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - LED2_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - LED2_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - LED2_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - LED2_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - LED2_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - LED2_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
+Module "LED1"      (component BitIO_LDD)
+   - LED1_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - LED1_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - LED1_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - LED1_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - LED1_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - LED1_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
+   - LED1_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
+                direction = _[output]_ or _[input/output]_.
+
 Module "Cpu"       (component MK20DX256LH7)
 
 ===================================================================================

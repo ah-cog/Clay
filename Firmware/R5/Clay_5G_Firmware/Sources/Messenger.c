@@ -10,7 +10,11 @@
 //Message *incomingMessageQueue = NULL;
 //Message *outgoingMessageQueue = NULL;
 
-uint8_t Initialize_Message_Queue () {
+char grammarSymbolBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
+char uuidBuffer[DEFAULT_UUID_LENGTH] = { 0 };
+char behaviorDescriptionBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
+
+uint8_t Initialize_Incoming_Message_Queue () {
 	incomingMessageQueue = NULL;
 	return TRUE;
 }
@@ -135,24 +139,150 @@ int8_t Has_Incoming_Message () {
 	return FALSE;
 }
 
-int8_t Process_Message (Message *message) {
+int8_t Process_Incoming_Message (Message *message) {
 	
 	int8_t status = NULL;
 	int8_t result = NULL;
-	char token[32] = { 0 };
+	char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int tokenInt = 0;
 	int i;
 	
 	char *messageContent = NULL;
 	messageContent = (*message).content;
 	
-	// TODO: Queue the message rather than executing it immediately (unless specified)
-	// TODO: Parse the message rather than brute force like this.
+//	getToken (messageContent, token, 0)
 	
-	D(printf("messageContent = %s\r\n", messageContent));
+	if ((status = getToken (messageContent, token, 0)) != NULL) { // status = getToken (message, token, 0);
+
+		// create behavior
+		// ^
+		if (strncmp (token, "create", strlen ("create")) == 0) {
+			
+			if ((status = getToken (messageContent, token, 1)) != NULL) {
+			
+				// create behavior <uuid> "turn lights on"
+				//        ^
+				if (strncmp (token, "behavior", strlen ("behavior")) == 0) {
+					
+					// Get UUID (parameter index 2)
+					status = getToken (messageContent, uuidBuffer, 2);
+
+					// Get command (parenthesized string index 3)
+					status = getToken (messageContent, behaviorDescriptionBuffer, 3);
+					
+					// TODO: Send the acknowledgment .
+					// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
+					// TODO: Send_UDP_Message ();
+					strncpy (token, "got ", 4);
+					strncpy (token + 4, messageContent, strlen (messageContent));
+					// TODO: Queue the outgoing UDP message!
+					Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
+					// TODO: Queue the message rather than executing it immediately (unless specified)
+					// TODO: Parse the message rather than brute force like this.
+					
+					// Delete the message
+					if (message != NULL) {
+						Delete_Message (message);
+					}
+					
+					// Check if the behavior is already in the cache. If nay, cache it!
+					if (Has_Cached_Behavior_By_UUID (uuidBuffer) == FALSE) {
+						
+						// Parse the message content and perform the corresponding behavior operation
+						Behavior *behavior = Create_Behavior (uuidBuffer, behaviorDescriptionBuffer);
+						if (behavior != NULL) {
+							// NOTE: The behavior was successfully created.
+							// Add the behavior to the local cache!
+							Cache_Behavior (behavior);
+							result = TRUE;
+						}
+						
+					}
+					
+					// TODO: Send the acknowledgment .
+					// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
+					// TODO: Send_UDP_Message ();
+					strncpy (token, "got ", 4);
+					strncpy (token + 4, messageContent, strlen (messageContent));
+					// TODO: Queue the outgoing UDP message!
+					Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
+					
+					// TODO: Queue the message rather than executing it immediately (unless specified)
+					// TODO: Parse the message rather than brute force like this.
+					
+				}
+				
+				/*
+				// create loop <uuid>
+				//        ^
+				else if (strncmp (token, "loop", strlen ("loop")) == 0) {
+					
+					// TODO:
+					
+				}
+				*/
+				
+			}
+			
+		} else if (strncmp (token, "add", strlen ("add")) == 0) { 
+			
+			if ((status = getToken (messageContent, token, 1)) != NULL) {
+		
+				// add behavior <uuid> [to loop <uuid>]
+				//     ^
+				if (strncmp (token, "behavior", strlen ("behavior")) == 0) {
+				
+					// Get UUID (parameter index 2)
+					status = getToken (messageContent, uuidBuffer, 2);
+					
+					// TODO: Send the acknowledgment .
+					// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
+					// TODO: Send_UDP_Message ();
+					strncpy (token, "got ", 4);
+					strncpy (token + 4, messageContent, strlen (messageContent));
+					// TODO: Queue the outgoing UDP message!
+					Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
+					// TODO: Queue the message rather than executing it immediately (unless specified)
+					// TODO: Parse the message rather than brute force like this.
+					
+					// Delete the message
+					if (message != NULL) {
+						Delete_Message (message);
+					}
+					
+					// Check if the behavior is already in the cache. If nay, cache it!
+					if (Has_Cached_Behavior_By_UUID (uuidBuffer) == TRUE) {
+						
+						// TODO: Only call either Get_Cached_Behavior_By_UUID. Don't call both Has_Cached_Behavior_By_UUID and Get_Cached_Behavior_By_UUID. They do the same search work. Don't search multiple times for no reason during behavior construct recall!
+						
+						// Parse the message content and perform the corresponding behavior operation
+						Behavior *behavior = Get_Cached_Behavior_By_UUID (uuidBuffer);
+						if (behavior != NULL) {
+							// NOTE: The behavior was successfully created.
+							// Add the behavior to the local cache!
+							Add_Behavior (behavior);
+							result = TRUE;
+						}
+						
+					} else {
+						
+						// TODO: The behavior is not in the cache! Return response indicating this! Or request it from the cloud!
+						
+						result = FALSE;
+						
+					}
+					
+				}
+			
+			}
+			
+		}
+			
+	}
 	
-	// turn light 1 on
-	// ^
+	// TODO: Store message UUID for use in message acknowledgment protocol. If it has been received, then don't apply it again, just send the acknowledgment packet.
+	
+	/*
 	if ((status = getToken (messageContent, token, 0)) != NULL) { // status = getToken (message, token, 0);
 
 		if (strncmp (token, "turn", strlen ("turn")) == 0) {
@@ -259,9 +389,20 @@ int8_t Process_Message (Message *message) {
 				
 			}
 			
-		} else if (strncmp (token, "ping", strlen ("ping")) == 0) {
+		} else if (strncmp (token, "wait", strlen ("wait")) == 0) {
 			
-
+			Wait (1000);
+					
+//			if ((status = getToken (behaviorContent, token, 1)) != NULL) {
+//			
+//				// turn lights on
+//				//      ^
+//				if (strncmp (token, "lights", strlen ("lights")) == 0) {
+//					
+//				}
+//			}
+			
+		} else if (strncmp (token, "ping", strlen ("ping")) == 0) {
 			
 			if ((status = getToken (messageContent, token, 1)) != NULL) {
 			
@@ -281,12 +422,13 @@ int8_t Process_Message (Message *message) {
 			}
 			
 		} else {
-			D(printf ("WTFping\r\n"));
+//			D(printf ("WTFping\r\n"));
 		}
 		
 	} else {
-		D(printf ("status = %d\r\n", status));
+//		D(printf ("status = %d\r\n", status));
 	}
+	*/
 	
 	return result;
 }
