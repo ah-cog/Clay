@@ -8,6 +8,7 @@
 
 #include "Utilities/Debug.h"
 
+#include "Drivers/LEDs.h"
 #include "Drivers/PCA9552.h"
 #include "Drivers/MPU9250.h"
 
@@ -16,6 +17,7 @@
 #include "ESP8266_Serial.h"
 #include "Drivers/ESP8266.h"
 
+#include "Behavior.h"
 #include "Messenger.h"
 
 void Application ();

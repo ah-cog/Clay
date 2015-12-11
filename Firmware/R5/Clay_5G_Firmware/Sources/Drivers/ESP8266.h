@@ -20,6 +20,7 @@
 #define ESP8266_H_
 
 #include <stdio.h>
+#include <math.h>
 #include <string.h>
 
 #include "PE_Types.h"
@@ -120,12 +121,14 @@ int8_t ESP8266_Receive_Incoming_Request (uint32_t milliseconds);
 #define RESPONSE_NOT_FOUND -1
 #define RESPONSE_TIMEOUT   -2
 
-#define DEFAULT_RESPONSE_TIMEOUT 10000
+#define DEFAULT_RESPONSE_TIMEOUT 5000 // 10000
 
 #define HTTP_RESPONSE_BUFFER_SIZE 2048 // Store this many of the most recent chars in AT command response buffer
 
 char incomingDataQueue[HTTP_RESPONSE_BUFFER_SIZE];
 int incomingDataQueueSize;
+
+char discoveryMessage[32];
 
 void ESP8266_Reset_Data_Buffer ();
 
@@ -160,11 +163,14 @@ int8_t ESP8266_Send_Command_AT_CIPSERVER (uint8_t mode, uint8_t port);
 
 void Monitor_Network_Communications ();
 
-#define UDP_SERVER_PORT 4445
+#define DISCOVERY_BROADCAST_PORT 4445
+#define MESSAGE_PORT 4446
 
 void Start_UDP_Server (uint16_t port);
 void Send_UDP_Message (const char* address, const char *message);
-void Broadcast_UDP_Message (const char *message);
+void Broadcast_UDP_Message (const char *message, uint16_t port);
+
+void Generate_Discovery_Message (); 
 
 void Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // TODO: check for any incoming data on serial
