@@ -1,0 +1,23 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    CREATE SYMBOL                                                    )
+(                                                                     )
+(    Drawing          : CL_SOIC8.dra                                  )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Fri Dec 11 00:47:14 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Create Symbol of type: PACKAGE
+    Directory = E:/git/clay/Cadence/CIS_Database/Footprints/SMT
+    Name      = cl_soic8.psm
+    User      = thebh_000
+    Machine   = STEELGIANT
+
+
+Create symbol started.
+ 
+
+Create symbol completed.
+

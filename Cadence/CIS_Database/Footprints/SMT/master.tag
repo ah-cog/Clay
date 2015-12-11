@@ -1,0 +1,1 @@
+JST2_SIDE_SMT.dra

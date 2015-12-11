@@ -1,0 +1,23 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    CREATE SYMBOL                                                    )
+(                                                                     )
+(    Drawing          : PAD64A.dra                                    )
+(    Software Version : 16.6S016                                      )
+(    Date/Time        : Thu Nov 20 18:48:07 2014                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Create Symbol of type: PACKAGE
+    Directory = C:/Users/Kyle/Dropbox/CIS_Database/Footprints/PTH
+    Name      = pad64a.psm
+    User      = Kyle
+    Machine   = KYLE-PC
+
+
+Create symbol started.
+ 
+
+Create symbol completed.
+

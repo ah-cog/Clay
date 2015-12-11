@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<CadenceAllegroParameter xmlns="">
+
+  <parameter_header>
+    <version>16.5</version>
+  </parameter_header>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>FAB</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>OUTLINE</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>MANUFACTURING</class>
+      <subclass>NCDRILL_LEGEND</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>MANUFACTURING</class>
+      <subclass>NCDRILL_FIGURE</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>OUTLINE</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>TITLE_BLOCK</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>TITLE_DATA</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>REVISION_BLOCK</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>REVISION_DATA</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>FABRICATION_NOTES</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>ASB</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>OUTLINE</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>TITLE_BLOCK</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>TITLE_DATA</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>REVISION_BLOCK</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>REVISION_DATA</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>REF DES</class>
+      <subclass>ASSEMBLY_BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PACKAGE GEOMETRY</class>
+      <subclass>ASSEMBLY_BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>OUTLINE</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>AST</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>OUTLINE</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>TITLE_BLOCK</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>TITLE_DATA</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>REVISION_BLOCK</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>DRAWING FORMAT</class>
+      <subclass>REVISION_DATA</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>OUTLINE</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>REF DES</class>
+      <subclass>ASSEMBLY_TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PACKAGE GEOMETRY</class>
+      <subclass>ASSEMBLY_TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>ASSEMBLY_NOTES</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>SPB</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>PIN</class>
+      <subclass>PASTEMASK_BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PACKAGE GEOMETRY</class>
+      <subclass>PASTEMASK_BOTTOM</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>SPT</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>PIN</class>
+      <subclass>PASTEMASK_TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PACKAGE GEOMETRY</class>
+      <subclass>PASTEMASK_TOP</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>SSB</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>REF DES</class>
+      <subclass>SILKSCREEN_BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PACKAGE GEOMETRY</class>
+      <subclass>SILKSCREEN_BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>SILKSCREEN_BOTTOM</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>SST</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>REF DES</class>
+      <subclass>SILKSCREEN_TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PACKAGE GEOMETRY</class>
+      <subclass>SILKSCREEN_TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>SILKSCREEN_TOP</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>SMT</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>PIN</class>
+      <subclass>SOLDERMASK_TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PACKAGE GEOMETRY</class>
+      <subclass>SOLDERMASK_TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>SOLDERMASK_TOP</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>SMB</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>PIN</class>
+      <subclass>SOLDERMASK_BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PACKAGE GEOMETRY</class>
+      <subclass>PASTEMASK_BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>BOARD GEOMETRY</class>
+      <subclass>SOLDERMASK_BOTTOM</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>BOT</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>ETCH</class>
+      <subclass>BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PIN</class>
+      <subclass>BOTTOM</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>VIA CLASS</class>
+      <subclass>BOTTOM</subclass>
+    </art_class_type>
+  </artwork_film>
+
+  <artwork_film>
+    <art_film_type>
+      <film_negative>false</film_negative>
+      <film_name>TOP</film_name>
+      <undef_line_width>0.000 MM</undef_line_width>
+      <no_of_wheels>10</no_of_wheels>
+      <wheelnum>1</wheelnum>
+      <wheelnum>2</wheelnum>
+      <wheelnum>3</wheelnum>
+      <wheelnum>4</wheelnum>
+      <wheelnum>5</wheelnum>
+      <wheelnum>6</wheelnum>
+      <wheelnum>7</wheelnum>
+      <wheelnum>8</wheelnum>
+      <wheelnum>9</wheelnum>
+      <wheelnum>10</wheelnum>
+    </art_film_type>
+    <art_film_block_type>
+      <mirror_code>0</mirror_code>
+      <rotate_code>0</rotate_code>
+      <offset>0.000,0.000</offset>
+      <block_name/>
+      <block_negative>false</block_negative>
+      <draw_pad>false</draw_pad>
+      <flash_unconnect_pads>true</flash_unconnect_pads>
+      <full_contact>false</full_contact>
+      <aper_rot>false</aper_rot>
+      <fill_out_shapes>true</fill_out_shapes>
+      <vector_based>1</vector_based>
+      <shape_bound>2.540 MM</shape_bound>
+    </art_film_block_type>
+    <art_class_type>
+      <class>ETCH</class>
+      <subclass>TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>PIN</class>
+      <subclass>TOP</subclass>
+    </art_class_type>
+    <art_class_type>
+      <class>VIA CLASS</class>
+      <subclass>TOP</subclass>
+    </art_class_type>
+  </artwork_film>
+
+</CadenceAllegroParameter>

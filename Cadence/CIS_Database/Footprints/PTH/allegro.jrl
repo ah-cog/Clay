@@ -1,0 +1,33 @@
+\t (00:00:00) allegro 16.6 S016 (v16-6-112BA) Windows 32
+\t (00:00:00)     Journal start - Thu Nov 20 18:49:19 2014
+\t (00:00:00)         Host=KYLE-PC User=Kyle Pid=7216 CPUs=8
+\t (00:00:00) 
+\t (00:00:02) Opening existing design...
+\d (00:00:02) Database opened: C:/Users/Kyle/Dropbox/CIS_Database/Footprints/PTH/GTM2088ARGB.dra
+\t (00:00:02) Grids are drawn 0.800, 0.800 apart for enhanced viewability.
+\i (00:00:02) trapsize 343
+\i (00:00:02) trapsize 338
+\i (00:00:02) trapsize 344
+\i (00:00:02) trapsize 344
+\i (00:00:03) generaledit 
+\i (00:00:04) zoom in 1 
+\i (00:00:04) setwindow pcb
+\i (00:00:04) zoom in 5.567 23.299
+\i (00:00:04) trapsize 172
+\i (00:00:04) zoom in 1 
+\i (00:00:04) setwindow pcb
+\i (00:00:04) zoom in -15.361 23.299
+\i (00:00:04) trapsize 86
+\i (00:00:05) zoom in 1 
+\i (00:00:05) setwindow pcb
+\i (00:00:05) zoom in -15.360 23.300
+\i (00:00:05) trapsize 43
+\i (00:00:09) prepopup -14.166 22.845
+\i (00:00:11) pop dyn_option_select '@:@Show element' 
+\i (00:00:11) show element 
+\i (00:00:11) generaledit 
+\i (00:00:16) setwindow text
+\i (00:00:16) close 
+\i (00:00:19) setwindow pcb
+\i (00:00:19) exit 
+\t (00:00:19)     Journal end - Thu Nov 20 18:49:37 2014

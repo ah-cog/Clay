@@ -1,0 +1,14 @@
+1. Create ODBC source. Use the 32-bit odbc manager if on a 64 bit machine.
+    -under system DSN, create a "Microsoft Access Driver" named "CIS_AccessDatabase" and put the path to Database.mdb in your Clay/Cadence/CIS_Database folder.
+2. In OrCAD, create or open a project and navigate to a schematic page.. This is necessary to get the CIS options.
+3. Go to options/cis configuration and select the CIS_CONFIGURATION.DBC file in your Clay/Cadence/CIS_Database folder.
+4. Edit your Capture.ini file at "%HOME%\cdssetup\OrCAD_Capture\16.6.0". Add: 
+    -under the section [Allegro Footprints] paths to SymbolLibraries, Footprints\PTH and Footprints\SMD. (Dir0=<path1>...)
+    -Under section [Part Selector Configured Libraries], set the number of configured libraries to 1 and add Library0=<path to symlib.olb>
+5. In PCB Designer, go to setup/user preferences, then navigate to paths/library, and add the 'footprints/smd'
+    and 'footprints/pth' directies from the CIS_Database folder to the psm path. Add 'pads/pth' and 'pads/smt' to the padpath.
+    
+    
+    
+It doesn't seem like cadence likes having environment variables in any of its configuration files, otherwise steps 4 & 5 could be accomplished 
+    by copying the settings files in this directory. I may write a script to make the changes later, but for now, it's all manual.
