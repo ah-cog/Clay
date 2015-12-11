@@ -1,0 +1,23 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    CREATE SYMBOL                                                    )
+(                                                                     )
+(    Drawing          : C0603.dra                                     )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Thu Dec 10 07:56:12 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Create Symbol of type: PACKAGE
+    Directory = E:/git/clay/Cadence/CIS_Database/Footprints/SMT
+    Name      = c0603.psm
+    User      = thebh_000
+    Machine   = STEELGIANT
+
+
+Create symbol started.
+ 
+
+Create symbol completed.
+

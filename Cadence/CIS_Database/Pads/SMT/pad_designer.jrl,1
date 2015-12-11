@@ -1,12 +1,147 @@
-\t (00:00:00) pad_designer 16.6 S013 (v16-6-112AN) Windows 32
-\t (00:00:00)     Journal start - Thu Nov 20 18:32:38 2014
-\t (00:00:00)         Host=KYLE-PC User=Kyle Pid=8804 CPUs=8
+\t (00:00:00) pad_designer 16.6 P001 (v16-6-112A) Windows 32
+\t (00:00:00)     Journal start - Fri Dec 11 01:03:04 2015
+\t (00:00:00)         Host=STEELGIANT User=thebh_000 Pid=19324 CPUs=8
 \t (00:00:00) 
-\i (00:00:01) setwindow form.padedit
-\i (00:00:01) FORM padedit layers  
-\i (00:00:03) FORM padedit parameters  
-\i (00:00:11) FORM padedit layers  
-\i (00:00:17) FORM padedit parameters  
-\i (00:00:23) FORM padedit layers  
-\i (00:00:32) pse_exit
-\t (00:00:32)     Journal end - Thu Nov 20 18:33:11 2014
+\i (00:00:13) setwindow form.padedit
+\i (00:00:13) pse_open E:/git/clay/Cadence/CIS_Database/Pads/SMT/r012_025.pad 
+\i (00:00:14) FORM padedit layers  
+\i (00:00:29) FORM padedit height .000 
+\i (00:00:53) FORM padedit height 55 
+\i (00:00:53) FORM padedit grid row soldermask_bottom 
+\i (00:00:54) FORM padedit grid row soldermask_top 
+\i (00:00:58) FORM padedit height 55 
+\i (00:00:58) FORM padedit grid row pastemask_top 
+\i (00:01:05) FORM padedit height 52 
+\i (00:01:08) pse_save_as 
+\i (00:01:13) fillin "r012_055.pad"
+\i (00:13:12) FORM padedit grid row begin_layer 
+\i (00:16:25) FORM padedit width 34 
+\i (00:16:27) FORM padedit height 106 
+\i (00:16:36) FORM padedit grid row soldermask_top 
+\i (00:16:38) FORM padedit width 34 
+\i (00:16:39) FORM padedit height 103 
+\i (00:16:41) FORM padedit height 106 
+\i (00:16:43) FORM padedit grid row pastemask_top 
+\i (00:16:54) FORM padedit width 30 
+\i (00:16:55) FORM padedit height 100 
+\i (00:17:00) pse_save_as 
+\i (00:17:10) fillin "r034_106.pad"
+\i (00:22:14) FORM padedit grid row begin_layer 
+\i (00:22:29) FORM padedit width 40.000 
+\i (00:22:29) FORM padedit grid row soldermask_top 
+\i (00:22:35) FORM padedit width 40.000 
+\i (00:22:35) FORM padedit grid row soldermask_bottom 
+\i (00:22:38) pse_save_as 
+\i (00:22:43) fillin "r040_106.pad"
+\i (01:14:55) FORM padedit grid row soldermask_top 
+\i (01:14:58) FORM padedit grid row soldermask_bottom 
+\i (01:14:58) FORM padedit grid row pastemask_top 
+\i (01:15:00) FORM padedit geometry Null 
+\i (01:15:01) FORM padedit grid row begin_layer 
+\i (01:15:11) FORM padedit width 40 
+\i (01:15:19) FORM padedit height 32 
+\i (01:15:21) FORM padedit grid row soldermask_top 
+\i (01:15:24) FORM padedit width 40 
+\i (01:15:25) FORM padedit height 32 
+\i (01:15:28) pse_save_as 
+\i (01:16:13) fillin "mnt040_032.pad"
+\i (01:16:47) FORM padedit parameters  
+\i (01:16:51) FORM padedit plating Non-Plated 
+\i (01:17:13) FORM padedit hole_size_x 35 
+\i (01:17:16) FORM padedit layers  
+\i (01:17:17) FORM padedit grid row begin_layer 
+\i (01:17:19) FORM padedit geometry Null 
+\i (01:17:19) FORM padedit grid row soldermask_top 
+\i (01:17:24) FORM padedit geometry Circle 
+\i (01:17:29) FORM padedit parameters  
+\i (01:18:34) FORM padedit layers  
+\i (01:18:36) FORM padedit grid row soldermask_top 
+\i (01:18:43) FORM padedit width 37.000 
+\i (01:18:45) FORM padedit parameters  
+\i (01:18:58) FORM padedit hole_size_x 36.000 
+\i (01:18:58) FORM padedit layers  
+\i (01:19:01) FORM padedit height 38.000 
+\i (01:19:04) pse_save_as 
+\i (01:19:10) setwindow text
+\i (01:19:10) close 
+\e (01:19:10) Cannot save padstack or update design.
+\i (01:19:13) setwindow form.padedit
+\i (01:19:13) FORM padedit parameters  
+\i (01:19:23) FORM padedit layers  
+\i (01:19:24) FORM padedit grid row begin_layer 
+\i (01:19:25) FORM padedit geometry Circle 
+\i (01:19:28) pse_save_as 
+\i (01:19:32) setwindow text
+\i (01:19:32) close 
+\i (01:19:43) fillin no 
+\i (01:19:49) setwindow form.padedit
+\i (01:19:49) FORM padedit width 40 
+\i (01:19:51) FORM padedit geometry_ant Circle 
+\i (01:19:53) FORM padedit width_ant 40 
+\i (01:19:54) FORM padedit parameters  
+\i (01:19:57) FORM padedit antipad_keepouts YES 
+\i (01:19:58) FORM padedit layers  
+\i (01:20:08) FORM padedit parameters  
+\i (01:20:43) FORM padedit layers  
+\i (01:20:45) FORM padedit geometry_ant Null 
+\i (01:20:48) FORM padedit width 1 
+\i (01:20:50) FORM padedit height 1 
+\i (01:21:03) pse_save_as 
+\i (01:22:01) setwindow text
+\i (01:22:01) close 
+\i (01:22:03) fillin no 
+\i (01:22:05) setwindow form.padedit
+\i (01:22:05) FORM padedit geometry Null 
+\i (01:22:06) FORM padedit geometry_ant Circle 
+\i (01:22:10) pse_save 
+\i (01:22:18) setwindow text
+\i (01:22:18) close 
+\i (01:22:19) fillin no 
+\i (01:22:23) setwindow form.padedit
+\i (01:22:23) FORM padedit geometry_th Circle 
+\i (01:22:33) FORM padedit width_th 42 
+\i (01:22:37) FORM padedit width_ant 42 
+\i (01:22:56) pse_save_as 
+\i (01:23:08) fillin "MH_c36.pad"
+\i (01:23:10) FORM padedit parameters  
+\i (01:24:02) FORM padedit layers  
+\i (01:24:16) FORM padedit grid row filmmask_top 
+\i (01:24:21) FORM padedit grid row soldermask_top 
+\i (01:24:38) FORM padedit parameters  
+\i (01:24:47) FORM padedit layers  
+\i (01:35:16) pse_open E:/git/clay/Cadence/CIS_Database/Pads/SMT/r040_106.pad 
+\i (01:36:31) FORM padedit width 28 
+\i (01:36:34) FORM padedit height 60 
+\i (01:36:34) FORM padedit grid row begin_layer 
+\i (01:36:35) FORM padedit grid row soldermask_top 
+\i (01:36:37) FORM padedit width 28 
+\i (01:36:38) FORM padedit height 60 
+\i (01:36:39) FORM padedit grid row soldermask_bottom 
+\i (01:36:40) FORM padedit grid row pastemask_top 
+\i (01:36:42) FORM padedit width 25 
+\i (01:36:49) FORM padedit height 55 
+\i (01:36:59) pse_save_as 
+\i (01:37:11) fillin "r028_60.pad"
+\i (01:37:45) pse_save_as 
+\i (01:37:49) fillin "r028_060.pad"
+\i (01:37:52) pse_save_as 
+\i (01:38:01) fillin "menu_cancel"
+\i (01:54:39) FORM padedit width 79 
+\i (01:54:44) FORM padedit width 47 
+\i (01:54:46) FORM padedit width 48 
+\i (01:54:47) FORM padedit height 79 
+\i (01:54:51) FORM padedit grid row soldermask_top 
+\i (01:54:54) FORM padedit grid row begin_layer 
+\i (01:54:56) FORM padedit width 48 
+\i (01:54:57) FORM padedit height 79 
+\i (01:54:58) FORM padedit grid row soldermask_top 
+\i (01:55:01) FORM padedit width 48 
+\i (01:55:02) FORM padedit height 79 
+\i (01:55:03) FORM padedit grid row soldermask_bottom 
+\i (01:55:04) FORM padedit grid row pastemask_top 
+\i (01:55:07) FORM padedit width 45 
+\i (01:55:08) FORM padedit height 75 
+\i (01:55:16) pse_save_as 
+\i (01:55:22) fillin "r048_079.pad"
+\i (01:55:24) pse_exit
+\t (01:55:24)     Journal end - Fri Dec 11 02:58:29 2015

@@ -1,1 +1,1 @@
-TF20D.dra
+JST2_SIDE_SMT.dra
