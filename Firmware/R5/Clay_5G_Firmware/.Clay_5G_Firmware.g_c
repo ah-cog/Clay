@@ -471,7 +471,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_5G_Firmware_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>42</ProjectModificationStamp>
+    <ProjectModificationStamp>43</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>

@@ -10,6 +10,7 @@
 //Message *incomingMessageQueue = NULL;
 //Message *outgoingMessageQueue = NULL;
 
+char messageUuidBuffer[DEFAULT_UUID_LENGTH] = { 0 };
 char grammarSymbolBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
 char uuidBuffer[DEFAULT_UUID_LENGTH] = { 0 };
 char behaviorDescriptionBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
@@ -151,6 +152,7 @@ int8_t Process_Incoming_Message (Message *message) {
 	messageContent = (*message).content;
 	
 //	getToken (messageContent, token, 0)
+	// TODO: char* tokenX = tokenizeString (char *string, int stringLength, char separator) --OR-- tokenizeString (char *string, char separator, token1, token2, token3, ...)
 	
 	if ((status = getToken (messageContent, token, 0)) != NULL) { // status = getToken (message, token, 0);
 
@@ -188,6 +190,8 @@ int8_t Process_Incoming_Message (Message *message) {
 					// Check if the behavior is already in the cache. If nay, cache it!
 					if (Has_Cached_Behavior_By_UUID (uuidBuffer) == FALSE) {
 						
+						// TODO: Get available memory and only create the behavior if there's enough memory. Otherwise, move something out of memory to make room for it (and stream the moved thing back in when it's needed).
+						
 						// Parse the message content and perform the corresponding behavior operation
 						Behavior *behavior = Create_Behavior (uuidBuffer, behaviorDescriptionBuffer);
 						if (behavior != NULL) {
@@ -197,9 +201,14 @@ int8_t Process_Incoming_Message (Message *message) {
 							result = TRUE;
 						}
 						
+					} else {
+						
+						// The behavior construct already exists in the cache. There's no need to create it!
+						return TRUE;
+						
 					}
 					
-					// TODO: Send the acknowledgment .
+					// TODO: Send the acknowledgment.
 					// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
 					// TODO: Send_UDP_Message ();
 					strncpy (token, "got ", 4);
@@ -224,13 +233,15 @@ int8_t Process_Incoming_Message (Message *message) {
 				
 			}
 			
-		} else if (strncmp (token, "add", strlen ("add")) == 0) { 
+		} else if (strncmp (token, "add", strlen ("add")) == 0) {
 			
 			if ((status = getToken (messageContent, token, 1)) != NULL) {
 		
 				// add behavior <uuid> [to loop <uuid>]
 				//     ^
 				if (strncmp (token, "behavior", strlen ("behavior")) == 0) {
+					
+					// TODO: Check for "add behavior <uuid> (to loop <loop-uuid>) after <other-uuid>"
 				
 					// Get UUID (parameter index 2)
 					status = getToken (messageContent, uuidBuffer, 2);
@@ -275,6 +286,86 @@ int8_t Process_Incoming_Message (Message *message) {
 				}
 			
 			}
+			
+		} else if (strncmp (token, "remove", strlen ("remove")) == 0) { 
+			
+			if ((status = getToken (messageContent, token, 1)) != NULL) {
+		
+				// add behavior <uuid> [to loop <uuid>]
+				//     ^
+				if (strncmp (token, "behavior", strlen ("behavior")) == 0) {
+				
+					// Get UUID (parameter index 2)
+					status = getToken (messageContent, uuidBuffer, 2);
+					
+					// TODO: Send the acknowledgment .
+					// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
+					// TODO: Send_UDP_Message ();
+					strncpy (token, "got ", 4);
+					strncpy (token + 4, messageContent, strlen (messageContent));
+					// TODO: Queue the outgoing UDP message!
+					Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
+					// TODO: Queue the message rather than executing it immediately (unless specified)
+					// TODO: Parse the message rather than brute force like this.
+					
+					// Delete the message
+					if (message != NULL) {
+						Delete_Message (message);
+					}
+					
+					// Check if the behavior is already in the cache. If nay, cache it!
+					if (Has_Behavior_By_UUID (uuidBuffer) == TRUE) {
+						
+						// TODO: Only call either Get_Cached_Behavior_By_UUID. Don't call both Has_Cached_Behavior_By_UUID and Get_Cached_Behavior_By_UUID. They do the same search work. Don't search multiple times for no reason during behavior construct recall!
+						
+						// Parse the message content and perform the corresponding behavior operation
+						Behavior *behavior = Get_Behavior_By_UUID (uuidBuffer);
+						if (behavior != NULL) {
+							// NOTE: The behavior was successfully created.
+							// Add the behavior to the local cache!
+							Remove_Behavior (behavior);
+							result = TRUE;
+						}
+						
+					} else {
+						
+						// TODO: The behavior is not in the cache! Return response indicating this! Or request it from the cloud!
+						
+						result = FALSE;
+						
+					}
+					
+				}
+			
+			}
+			
+		} else if (strncmp (token, "reset", strlen ("reset")) == 0) {
+			
+			// HACK: Remove the "reset" command. This is used for testing!
+			
+			// Remove behaviors constructs from loop
+			// Delete behaviors
+			// Set loop to null
+			// Delete behaviors
+			// Remove behavior constructs from cache
+			// Set cache to null
+			
+			// Delete the message
+			if (message != NULL) {
+				Delete_Message (message);
+			}
+			
+			// TODO: Send the acknowledgment .
+			// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
+			// TODO: Send_UDP_Message ();
+			strncpy (token, "got ", 4);
+			strncpy (token + 4, messageContent, strlen (messageContent));
+			// TODO: Queue the outgoing UDP message!
+			Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
+			// TODO: Queue the message rather than executing it immediately (unless specified)
+			// TODO: Parse the message rather than brute force like this.
+			
+			result = TRUE;
 			
 		}
 			

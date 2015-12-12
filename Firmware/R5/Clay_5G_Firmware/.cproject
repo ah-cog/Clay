@@ -209,7 +209,7 @@
 									<listOptionValue builtIn="false" value="Sources/Utilities/String.c"/>
 									<listOptionValue builtIn="false" value="Sources/main.c"/>
 								</option>
-								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags.85164757" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags" valueType="stringList"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags.85164757" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.linker.input.1831356331" superClass="org.eclipse.cdt.cross.arm.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
