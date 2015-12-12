@@ -10,14 +10,18 @@
     (CompileFileAddedOrDeleted "x"))
   (Folder "Outputs")
   (Folder "Referenced Projects")
-  (PartMRUSelector)
+  (PartMRUSelector
+    (GPIO_3X3_100
+      (FullPartName "GPIO_3X3_100.Normal")
+      (LibraryName
+         "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (DeviceIndex "0")))
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources" "E:\GIT\CLAY\CIRCUIT\R6\clayr6.dsn")
-      (Path "Design Resources" "E:\GIT\CLAY\CIRCUIT\R6\clayr6.dsn" "SCHEMATIC1")
-      (Select "Design Resources" "E:\GIT\CLAY\CIRCUIT\R6\clayr6.dsn"
-         "SCHEMATIC1" "PAGE1"))
+      (Path "Design Resources" "E:\git\clay\Circuit\R6\clayr6.dsn")
+      (Path "Design Resources" "E:\git\clay\Circuit\R6\clayr6.dsn"
+         "Design Cache"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -28,9 +32,10 @@
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 0 1 -1 -1 -8 -31 0 1636 0 440")
-        (Scroll "-309 0")
-        (Zoom "100")
+        (Scroll "-370 0")
+        (Zoom "42")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6\CLAYR6.DSN")
       (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))))
+      (Page "PAGE1")))
+  (MPSSessionName "thebh_000"))
