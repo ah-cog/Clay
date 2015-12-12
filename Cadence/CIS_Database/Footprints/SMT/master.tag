@@ -1,1 +1,1 @@
-JST2_SIDE_SMT.dra
+WIRE_26AWG.dra

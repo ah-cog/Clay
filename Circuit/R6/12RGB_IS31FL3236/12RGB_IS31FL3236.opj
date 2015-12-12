@@ -1,0 +1,78 @@
+(ExpressProject "12RGB_IS31FL3236"
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (NoModify)
+    (File ".\12rgb_is31fl3236.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x"))
+  (Folder "Outputs")
+  (Folder "Referenced Projects")
+  (PartMRUSelector
+    (LTST_C19FD1WT
+      (FullPartName "LTST_C19FD1WT.Normal")
+      (LibraryName
+         "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (DeviceIndex "0"))
+    (VCC_ARROW
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (TESTPOINT
+      (FullPartName "TESTPOINT.Normal")
+      (LibraryName
+         "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (DeviceIndex "0"))
+    (PORTRIGHT-R
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (PORTBOTH-R
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (RESISTOR
+      (FullPartName "RESISTOR.Normal")
+      (LibraryName
+         "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (DeviceIndex "0"))
+    (PORTNO-R
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (VCC
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (GND
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (IS31FL3236
+      (FullPartName "IS31FL3236.Normal")
+      (LibraryName
+         "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (DeviceIndex "0")))
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources"
+         "E:\GIT\CLAY\CIRCUIT\R6\12RGB_IS31FL3236\12rgb_is31fl3236.dsn")
+      (Path "Design Resources"
+         "E:\GIT\CLAY\CIRCUIT\R6\12RGB_IS31FL3236\12rgb_is31fl3236.dsn"
+         "Design Cache")
+      (Select "Design Resources"
+         "E:\GIT\CLAY\CIRCUIT\R6\12RGB_IS31FL3236\12rgb_is31fl3236.dsn"
+         "Design Cache"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -8 -31 0 200 0 475"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 156 1795 156 670")
+        (Scroll "0 390")
+        (Zoom "146")
+        (Occurrence "/"))
+      (Path "E:\GIT\CLAY\CIRCUIT\R6\12RGB_IS31FL3236\12RGB_IS31FL3236.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE1"))))

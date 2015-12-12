@@ -14,13 +14,26 @@
     (FileView
       (Path "Design Resources")
       (Path "Design Resources"
-         "C:\Users\Kyle\Dropbox\CIS_Database\SymbolLibraries\symlib.olb")
+         "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb")
       (Select "Design Resources"
-         "C:\Users\Kyle\Dropbox\CIS_Database\SymbolLibraries\symlib.olb" "WIRE"))
+         "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb"
+         "INDUCTOR"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
       (Frame
-        (Placement "44 2 3 -1 -1 -8 -30 0 200 0 707"))
-      (Tab 0)))
-  (MPSSessionName "Kyle"))
+        (Placement "44 0 1 -1 -1 -8 -31 0 200 0 707"))
+      (Tab 0))
+    (Doc
+      (Type "COrPartDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 208 1844 208 678")
+        (PackageScroll "0 0")
+        (PackageZoom "1")
+        (PartPackage "Part")
+        (Scroll "6726 1701")
+        (Zoom "950"))
+      (Path "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (Package "INDUCTOR")))
+  (MPSSessionName "thebh_000")
+  (ISPCBBASICLICENSE "false"))
