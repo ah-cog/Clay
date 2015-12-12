@@ -6,6 +6,7 @@
  */
 
 #include "Clock.h"
+#include "Drivers/ESP8266.h"
 
 // defines ///////////////////
 
@@ -16,6 +17,7 @@ uint32_t power_on_time_msec;
 uint8_t  tick_1msec;
 uint8_t  tick_250msec;
 uint8_t  tick_500msec;
+uint8_t  tick_3000msec;
 
 // function prototypes ///////
 
@@ -31,6 +33,7 @@ void Start_Clock () {
     tick_1msec = FALSE;
     tick_250msec = FALSE;
     tick_500msec = FALSE;
+    tick_3000msec = FALSE;
 }
 
 //call this every 1msec to increment the power on time and set the flags.
@@ -47,6 +50,10 @@ void Tick () {
     if (!(power_on_time_msec % 500))
     {
         tick_500msec = TRUE;
+    }
+    
+    if (!(power_on_time_msec % 3000)) {
+    	tick_3000msec = TRUE;
     }
 }
 
@@ -72,6 +79,8 @@ Color_RGB
                     { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }        //rb
             };
 
+
+
 void Monitor_Periodic_Events () {
 	
 	mpu_values v = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -82,6 +91,7 @@ void Monitor_Periodic_Events () {
 		
 		// TODO: Perform any periodic actions (1 ms).
 		
+		/*
         if (!(power_on_time_msec % 30))
         {
             get_mpu_readings(&v);
@@ -124,6 +134,7 @@ void Monitor_Periodic_Events () {
             }
 
         }
+        */
 	}
 	
 	if (tick_250msec) {
@@ -153,5 +164,30 @@ void Monitor_Periodic_Events () {
 			color_index = (color_index + 1) % 3;
 		}
 		*/
+	}
+	
+	if (tick_3000msec) {
+		tick_3000msec = FALSE;
+		
+	// Periodically send a datagram announcing the presence of this device.
+		// TODO: Only broadcast UDP message if an address has been received!
+//		if (Has_Internet_Address () == TRUE) {
+//			char *address = Get_Internet_Address ();
+//			// TODO: Create and buffer the command to broadcast the unit's address.
+//			n = sprintf (buffer2, "connect to %s", address); // Create message to send.
+//	//			printf("buffer = %s\r\n", buffer2);
+//	//		Broadcast_UDP_Message (buffer2, 4445);
+//			// TODO: Queue a (periodic) UDP broadcast announcing the unit's presence on the network.
+//		}
+		
+		Broadcast_UDP_Message (discoveryMessage, DISCOVERY_BROADCAST_PORT);
+		
+//		Wait (200);
+		
+//		if (Has_Behaviors() == TRUE) {
+//			Broadcast_UDP_Message ("got turn light 1 on", DISCOVERY_BROADCAST_PORT);
+//		}
+		
+//		Wait (200);
 	}
 }

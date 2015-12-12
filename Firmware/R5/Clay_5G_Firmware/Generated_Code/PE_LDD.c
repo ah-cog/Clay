@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-11-14, 19:33, # CodeGen: 41
+**     Date/Time   : 2015-12-08, 18:25, # CodeGen: 51
 **     Abstract    :
 **
 **     Settings    :
@@ -68,7 +68,9 @@
 ** Array of initialized device structures of LDD components.
 ** ===========================================================================
 */
-LDD_TDeviceData *PE_LDD_DeviceDataList[25] = {
+LDD_TDeviceData *PE_LDD_DeviceDataList[27] = {
+    NULL,
+    NULL,
     NULL,
     NULL,
     NULL,
