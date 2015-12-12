@@ -56,7 +56,11 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Select "Design Resources"))
+      (Path "Design Resources" "E:\git\clay\Circuit\R6\MPU9250\mpu9250.dsn")
+      (Path "Design Resources" "E:\git\clay\Circuit\R6\MPU9250\mpu9250.dsn"
+         "Design Cache")
+      (Select "Design Resources" "E:\git\clay\Circuit\R6\MPU9250\mpu9250.dsn"
+         "Design Cache" "MPU9250"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -67,8 +71,8 @@
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 0 1 -1 -1 -8 -31 52 1684 52 518")
-        (Scroll "51 686")
-        (Zoom "196")
+        (Scroll "-316 0")
+        (Zoom "98")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6\MPU9250\MPU9250.DSN")
       (Schematic "SCHEMATIC1")
