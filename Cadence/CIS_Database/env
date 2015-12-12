@@ -1,0 +1,13 @@
+source $TELENV
+
+### User Preferences section
+### This section is computer generated.
+### Please do not modify to the end of the file.
+### Place your hand edits above this section.
+###
+funckey r iangle 90
+funckey Del Delete
+set padpath = C:/Users/Kyle/Dropbox/CIS_Database/Pads/SMT/ C:/Users/Kyle/Dropbox/CIS_Database/Pads/PTH/
+set psmpath = C:/Users/Kyle/Dropbox/CIS_Database/Footprints/PTH/ C:/Users/Kyle/Dropbox/CIS_Database/Footprints/SMT/
+set steppath = C:/USERS/KYLE/DROPBOX/CIS_Database/StepFiles/
+set step_display_resistors_capacitors
