@@ -85,6 +85,7 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Project_Settings\Startup_Code\__arm_end.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Project_Settings\Startup_Code\__arm_start.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Application.c</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Behavior.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Clock.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\ESP8266.c</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\LEDs.c</PathName>
@@ -135,6 +136,7 @@
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Generated_Code\Timer_1ms.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Project_Settings\Startup_Code\runtime_configuration.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Application.h</PathName>
+      <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Behavior.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Clock.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\ESP8266.h</PathName>
       <PathName>Z:\Workspace\Checkouts\clay\Firmware\R5\Clay_5G_Firmware\Sources\Drivers\LEDs.h</PathName>
