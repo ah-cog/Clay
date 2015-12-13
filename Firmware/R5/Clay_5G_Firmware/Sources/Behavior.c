@@ -1,5 +1,10 @@
 #include "Behavior.h"
 
+uint8_t Initialize_Behavior () {
+	
+	
+}
+
 Behavior_Construct* Create_Behavior_Construct (const char *behaviorUuid, const Behavior *behavior) {
 	
 	// Allocate memory for behavior construct.
@@ -228,6 +233,70 @@ int16_t Add_Behavior (Behavior *behavior) {
 		// (*behaviorConstruct).previous = NULL; // NOTE: This should already be NULL at this point, so this is redundant, but adds some degree of robustness.
 		(*behaviorConstruct).previous = previousBehaviorConstruct;
 		(*previousBehaviorConstruct).next = behaviorConstruct;
+		behaviorConstructCount++;
+		
+	}
+	
+	return behaviorConstructCount;
+}
+
+int16_t Add_Before_Behavior (Behavior *behavior, Behavior *otherBehavior) {
+	// TODO: Consider changing to "int16_t Add_Behavior (char *behaviorUuid)" and search for the behavior in the local cache and universal repository.
+	
+	Behavior_Construct *nextBehaviorConstruct = NULL; // The behavior construct presently at the end of the list. This will be set as the previous behavior construct to the one created for the newly-cached behavior.
+	uint16_t behaviorConstructCount = 0;
+	
+	// Create a behavior construct to denote to the behavior for the loop!
+	// NOTE: This construct must be different than the construct for the behavior cache to preserve their unique link structures and prevent infinite looping during list traversal.
+	Behavior_Construct *behaviorConstruct = Create_Behavior_Construct ((*behavior).uuid, behavior);
+	
+	// TODO: Consider checking of the behavior has a behavior construct in the cache. If so reference that one. If not, create one. That, or note that doing it manually is required with Has_Cached_Behavior () _before_ calling Add_Behavior.
+	
+	if (loop == NULL) {
+		
+		// The loop is empty, so add it to the loop as the only element.
+		loop = behaviorConstruct;
+		
+		(*behaviorConstruct).previous = NULL;
+		(*behaviorConstruct).next = NULL;
+		
+		behaviorConstructCount = 1;
+		
+		// Set the loop pointer to the only behavior
+		currentBehaviorConstruct = behaviorConstruct;
+		
+		
+	} else {
+		
+		// Search for the last element in the loop (represented as a list).
+		nextBehaviorConstruct = loop; // Get the front of the queue.
+		behaviorConstructCount++;
+		while (strncmp ((*nextBehaviorConstruct).behaviorUuid, (*otherBehavior).uuid, strlen ((*otherBehavior).uuid) != 0)) {
+		//while ((*nextBehaviorConstruct).next != otherBehavior) {
+			nextBehaviorConstruct = (*nextBehaviorConstruct).next;
+			behaviorConstructCount++;
+		}
+		
+		// Update the linked list to add the message to the back of the queue.
+		// (*behaviorConstruct).previous = NULL; // NOTE: This should already be NULL at this point, so this is redundant, but adds some degree of robustness.
+		
+		// Link the new behavior into the loop.
+		(*behaviorConstruct).previous = (*nextBehaviorConstruct).previous;
+		(*behaviorConstruct).next = nextBehaviorConstruct;
+		
+		// Update the previous behavior (if it's not NULL)
+		if ((*behaviorConstruct).previous != NULL) {
+			(*(*behaviorConstruct).previous).next = behaviorConstruct;
+		}
+		
+		// Update the next behavior
+		(*nextBehaviorConstruct).previous = behaviorConstruct;
+		
+		// Update the loop's current behavior.
+		if ((*behaviorConstruct).previous == NULL) {
+			loop = behaviorConstruct; // Update the added behavior's links to the be the first in the loop.
+		}
+		
 		behaviorConstructCount++;
 		
 	}
@@ -574,31 +643,15 @@ int8_t Perform_Behavior (Behavior *behavior) {
 			// TODO: "touch at <x,y>"
 			// TOOD: "drag to <x,y>"
 			
-		} else if (strncmp (token, "ping", strlen ("ping")) == 0) {
-			
-			if ((status = getToken (behaviorContent, token, 1)) != NULL) {
-			
-				// turn lights on
-				//      ^
-				if (strncmp (token, "lights", strlen ("lights")) == 0) {
-				
-					// Queue_Outgoing_Message ("pong <ip>"); // TODO: Send this via UDP datagram.
-					// Send_UDP_Message()
-//					printf("got ping\r\n");
-					Broadcast_UDP_Message ("pong <ip>");
-					
-					result = TRUE;
-					
-				}
-				
-			}
-			
 		} else {
-//			D(printf ("WTFping\r\n"));
+			
+			result = TRUE;
+			
 		}
 		
 	} else {
-//		D(printf ("status = %d\r\n", status));
+		
+		result = TRUE;
 	}
 	
 	return result;
