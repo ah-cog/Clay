@@ -1,0 +1,172 @@
+\t (00:00:00) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:00)     Journal start - Sat Dec 12 15:35:01 2015
+\t (00:00:00)         Host=STEELGIANT User=thebh_000 Pid=14308 CPUs=8
+\t (00:00:00) 
+\t (00:00:00) Opening existing design...
+\d (00:00:00) Database opened: E:/git/clay/Circuit/R6/allegro_bak/CLAYR6.brd
+\t (00:00:00) Grids are drawn 20.00, 20.00 apart for enhanced viewability.
+\i (00:00:00) trapsize 652
+\i (00:00:00) trapsize 640
+\i (00:00:00) trapsize 654
+\i (00:00:00) trapsize 654
+\i (00:00:01) generaledit 
+\i (00:00:01) trapsize 946
+\i (00:00:02) trapsize 654
+\i (00:00:04) trapsize 946
+\i (00:00:04) trapsize 654
+\i (00:00:35) techfile out 
+\i (00:00:42) setwindow form.tech_out
+\i (00:00:42) FORM tech_out techfile clay_tech 
+\i (00:00:42) FORM tech_out browse  
+\i (00:01:01) fillin "E:\git\clay\Circuit\R6\allegro_settings\clay_tech.tcf"
+\i (00:01:03) FORM tech_out execute  
+\t (00:01:03) Starting Export techfile...
+\i (00:01:54) FORM tech_out cancel  
+\i (00:01:54) setwindow pcb
+\i (00:01:54) generaledit 
+\i (00:02:18) xhilite 
+\i (00:02:18) xrefdes J1 
+\i (00:02:18) xname_flush 
+\i (00:02:18) trapsize 344
+\t (00:02:18) Symbol "J1" highlighted.
+\i (00:02:18) done 
+\i (00:02:18) generaledit 
+\i (00:02:32) xdehilite 
+\i (00:02:32) xrefdes J1 
+\i (00:02:32) xname_flush 
+\t (00:02:32) Symbol "J1" dehighlighted.
+\i (00:02:32) done 
+\i (00:02:32) xhilite 
+\i (00:02:32) xrefdes D1 
+\i (00:02:32) xname_flush 
+\i (00:02:32) trapsize 198
+\t (00:02:32) Symbol "D1" highlighted.
+\i (00:02:32) done 
+\i (00:02:32) generaledit 
+\i (00:03:37) xdehilite 
+\i (00:03:37) xrefdes D1 
+\i (00:03:37) xname_flush 
+\t (00:03:37) Symbol "D1" dehighlighted.
+\i (00:03:37) done 
+\i (00:03:37) generaledit 
+\i (00:03:42) xhilite 
+\i (00:03:43) xrefdes C3 
+\i (00:03:43) xname_flush 
+\i (00:03:43) trapsize 83
+\t (00:03:43) Symbol "C3" highlighted.
+\i (00:03:43) done 
+\i (00:03:43) generaledit 
+\i (00:04:01) xdehilite 
+\i (00:04:01) xrefdes C3 
+\i (00:04:01) xname_flush 
+\t (00:04:01) Symbol "C3" dehighlighted.
+\i (00:04:01) done 
+\i (00:04:01) generaledit 
+\i (00:04:02) xhilite 
+\i (00:04:02) xrefdes U1 
+\i (00:04:02) xname_flush 
+\i (00:04:02) trapsize 233
+\t (00:04:02) Symbol "U1" highlighted.
+\i (00:04:02) done 
+\i (00:04:02) generaledit 
+\i (00:04:46) xdehilite 
+\i (00:04:46) xrefdes U1 
+\i (00:04:46) xname_flush 
+\t (00:04:46) Symbol "U1" dehighlighted.
+\i (00:04:46) done 
+\i (00:04:46) generaledit 
+\i (00:04:48) xhilite 
+\i (00:04:48) xrefdes C1 
+\i (00:04:48) xname_flush 
+\i (00:04:48) trapsize 83
+\t (00:04:48) Symbol "C1" highlighted.
+\i (00:04:48) done 
+\i (00:04:48) generaledit 
+\i (00:05:29) xdehilite 
+\i (00:05:29) xrefdes C1 
+\i (00:05:29) xname_flush 
+\t (00:05:29) Symbol "C1" dehighlighted.
+\i (00:05:29) done 
+\i (00:05:29) xhilite 
+\i (00:05:29) xrefdes R1 
+\i (00:05:29) xname_flush 
+\i (00:05:29) trapsize 83
+\t (00:05:29) Symbol "R1" highlighted.
+\i (00:05:29) done 
+\i (00:05:29) generaledit 
+\i (00:05:36) xdehilite 
+\i (00:05:36) xrefdes R1 
+\i (00:05:36) xname_flush 
+\t (00:05:36) Symbol "R1" dehighlighted.
+\i (00:05:36) done 
+\i (00:05:37) xhilite 
+\i (00:05:37) xrefdes R2 
+\i (00:05:37) xname_flush 
+\i (00:05:37) trapsize 83
+\t (00:05:37) Symbol "R2" highlighted.
+\i (00:05:37) done 
+\i (00:05:37) generaledit 
+\i (00:05:45) xdehilite 
+\i (00:05:45) xrefdes R2 
+\i (00:05:45) xname_flush 
+\t (00:05:45) Symbol "R2" dehighlighted.
+\i (00:05:46) done 
+\i (00:05:46) xhilite 
+\i (00:05:46) xrefdes W1 
+\i (00:05:46) xname_flush 
+\i (00:05:46) trapsize 100
+\t (00:05:46) Symbol "W1" highlighted.
+\i (00:05:46) done 
+\i (00:05:46) generaledit 
+\i (00:05:49) xdehilite 
+\i (00:05:49) xrefdes W1 
+\i (00:05:49) xname_flush 
+\t (00:05:49) Symbol "W1" dehighlighted.
+\i (00:05:49) done 
+\i (00:05:49) xhilite 
+\i (00:05:49) xrefdes W2 
+\i (00:05:49) xname_flush 
+\i (00:05:49) trapsize 100
+\t (00:05:49) Symbol "W2" highlighted.
+\i (00:05:49) done 
+\i (00:05:49) generaledit 
+\i (00:06:11) xhilite 
+\i (00:06:11) xrefdes J2 
+\i (00:06:11) xname_flush 
+\i (00:06:11) trapsize 651
+\t (00:06:11) Symbol "J2" highlighted.
+\i (00:06:11) done 
+\i (00:06:11) generaledit 
+\i (00:06:15) xdehilite 
+\i (00:06:15) xrefdes J2 
+\i (00:06:15) xname_flush 
+\t (00:06:15) Symbol "J2" dehighlighted.
+\i (00:06:15) done 
+\i (00:06:15) generaledit 
+\i (00:06:16) xhilite 
+\i (00:06:16) xrefdes Sw1 
+\i (00:06:16) xname_flush 
+\i (00:06:16) trapsize 290
+\t (00:06:16) Symbol "Sw1" highlighted.
+\i (00:06:16) done 
+\i (00:06:16) generaledit 
+\i (00:06:36) zoom out 1 
+\i (00:06:36) setwindow pcb
+\i (00:06:36) zoom out -37.40 929.88
+\i (00:06:36) trapsize 580
+\i (00:06:37) zoom out 1 
+\i (00:06:37) setwindow pcb
+\i (00:06:37) zoom out -253.27 864.89
+\i (00:06:37) trapsize 1161
+\i (00:06:37) zoom out 1 
+\i (00:06:37) setwindow pcb
+\i (00:06:37) zoom out 48.50 936.86
+\i (00:06:37) trapsize 2321
+\i (00:06:37) zoom in 1 
+\i (00:06:37) setwindow pcb
+\i (00:06:37) zoom in 549.90 1150.41
+\i (00:06:37) trapsize 1161
+\i (00:06:39) exit 
+\e (00:06:39) Do you want to save the changes you made to CLAYR6.brd?
+\i (00:06:40) fillin no 
+\t (00:06:40)     Journal end - Sat Dec 12 15:41:41 2015

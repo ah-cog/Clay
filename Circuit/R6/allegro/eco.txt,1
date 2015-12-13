@@ -1,0 +1,41 @@
+|------------------------------------------------------------------------------|
+|                                 ECO   REPORT                                 |
+|                                                                    Page   1  |
+|------------------------------------------------------------------------------|
+|  E:/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd                                   |
+|                                                    Sun Dec 13 09:59:51 2015  |
+|------------------------------------------------------------------------------|
+| NET CHANGES                                                                  |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|   net  name |  type of change |    pin_id     |   x   |   y   |   to  net    |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+  LED1         pins MOVED FROM this net (to net name listed on right)
+                                 U5.3            -360.12  331.85
+                                                                         N28503
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  LED2         pins MOVED FROM this net (to net name listed on right)
+                                 U5.4            -360.12  312.16
+                                                                         N28501
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  N26835       pins MOVED FROM this net (to net name listed on right)
+                                 U5.98           -251.85  440.12
+                                                PTD5/ADC0_SE6B/SPI0_PCS2/UART0_
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  N28501       pins MOVED FROM this net (to net name listed on right)
+                                 U5.1            -360.12  371.22
+                                                                         N26835
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  N28503       pins MOVED FROM this net (to net name listed on right)
+                                 U5.99           -271.54  440.12
+                                                PTD6/LLWU_P16/ADC0_SE7B/SPI0_PC
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  PTE5/SPI1_PCS2/UART3_RX/SDHC0_D pins MOVED FROM this net (to net name listed on right)
+                                 U5.6            -360.12  272.80
+                                                                           LED1
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  PTE6/SPI1_PCS3/UART3_CTS_B/I2S0 pins MOVED FROM this net (to net name listed on right)
+                                 U5.7            -360.12  253.11
+                                                                           LED2
+|------------------------------------------------------------------------------|
+|   total ECO changes reported  7                                              |
+|------------------------------------------------------------------------------|

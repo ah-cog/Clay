@@ -14,13 +14,31 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources" ".\lm3658_battery_charger.dsn")
-      (Path "Design Resources" ".\lm3658_battery_charger.dsn" "SCHEMATIC1")
-      (Select "Design Resources" ".\lm3658_battery_charger.dsn" "SCHEMATIC1"
-         "PAGE1"))
+      (Path "Design Resources"
+         "E:\git\clay\Circuit\R6\BATTERY_CHARGER\lm3658_battery_charger.dsn")
+      (Path "Design Resources"
+         "E:\git\clay\Circuit\R6\BATTERY_CHARGER\lm3658_battery_charger.dsn"
+         "SCHEMATIC1")
+      (Path "Design Resources"
+         "E:\git\clay\Circuit\R6\BATTERY_CHARGER\lm3658_battery_charger.dsn"
+         "Design Cache")
+      (Select "Design Resources"
+         "E:\git\clay\Circuit\R6\BATTERY_CHARGER\lm3658_battery_charger.dsn"
+         "SCHEMATIC1" "PAGE1"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
       (Frame
         (Placement "44 2 3 -1 -1 -8 -31 0 200 0 475"))
-      (Tab 0))))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 52 1714 52 430")
+        (Scroll "-326 0")
+        (Zoom "100")
+        (Occurrence "/"))
+      (Path "E:\GIT\CLAY\CIRCUIT\R6\BATTERY_CHARGER\LM3658_BATTERY_CHARGER.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE1")))
+  (MPSSessionName "thebh_000"))

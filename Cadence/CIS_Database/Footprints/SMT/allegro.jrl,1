@@ -1,132 +1,252 @@
-\t (00:00:50) allegro 16.6 P004 (v16-6-112G) Windows 32
-\t (00:00:50)     Journal start - Fri Dec 11 16:05:18 2015
-\t (00:00:50)         Host=STEELGIANT User=thebh_000 Pid=9144 CPUs=8
-\t (00:00:50) 
-\d (00:00:50) Database opened: E:/git/clay/Cadence/CIS_Database/Footprints/SMT/FTSH-1XX.dra
-\i (00:00:50) generaledit 
-\i (00:00:52) zoom in 1 
-\i (00:00:52) setwindow pcb
-\i (00:00:52) zoom in -0.904 -0.373
-\i (00:00:52) trapsize 36
-\i (00:00:52) zoom out 1 
-\i (00:00:52) setwindow pcb
-\i (00:00:52) zoom out -0.933 -0.394
-\i (00:00:52) trapsize 72
-\i (00:00:52) zoom out 1 
-\i (00:00:52) setwindow pcb
-\i (00:00:52) zoom out -0.962 -0.395
-\i (00:00:52) trapsize 123
-\i (00:00:53) zoom in 1 
-\i (00:00:53) setwindow pcb
-\i (00:00:53) zoom in -1.218 1.759
-\i (00:00:53) trapsize 61
-\i (00:00:56) save_as 
-\i (00:01:01) fillin "FTSH_10.dra"
-\t (00:01:01) Symbol 'ftsh_10.psm' created.
-\i (00:01:01) generaledit 
-\i (00:01:38) zoom in 1 
-\i (00:01:38) setwindow pcb
-\i (00:01:38) zoom in -3.714 -0.061
-\i (00:01:38) trapsize 31
-\i (00:01:39) zoom out 1 
-\i (00:01:39) setwindow pcb
-\i (00:01:39) zoom out -3.301 0.389
-\i (00:01:39) trapsize 62
-\i (00:01:42) save_as 
-\i (00:01:46) fillin "FTSH_10.dra"
-\t (00:01:47) Symbol 'ftsh_10.psm' created.
-\i (00:01:47) generaledit 
-\e (00:03:06) Command not found: xhilite
-\i (00:03:06) xname_flush 
-\i (00:03:06) done 
-\i (00:03:06) generaledit 
-\e (00:03:34) Command not found: xhilite
-\i (00:03:34) xname_flush 
-\i (00:03:34) done 
-\i (00:03:35) generaledit 
-\i (00:04:32) zoom in 1 
-\i (00:04:32) setwindow pcb
-\i (00:04:32) zoom in -0.184 0.191
-\i (00:04:32) trapsize 31
-\i (00:04:33) zoom out 1 
-\i (00:04:33) setwindow pcb
-\i (00:04:33) zoom out -0.184 0.191
-\i (00:04:33) trapsize 62
-\i (00:04:37) zoom in 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom in -3.210 0.228
-\i (00:04:37) trapsize 31
-\i (00:04:37) zoom in 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom in -3.210 0.229
-\i (00:04:37) trapsize 15
-\i (00:04:37) zoom in 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom in -3.210 0.229
-\i (00:04:37) trapsize 8
-\i (00:04:37) zoom in 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom in -3.209 0.230
-\i (00:04:37) trapsize 4
-\i (00:04:37) zoom out 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom out -3.209 0.230
-\i (00:04:37) trapsize 8
-\i (00:04:42) grid toggle 
-\i (00:04:42) generaledit 
-\i (00:04:43) color192 
-\i (00:04:43) setwindow cvf.dialog
-\i (00:04:43) cvf layer_mode
-\i (00:04:43) setwindow pcb
-\i (00:04:43) generaledit 
-\i (00:04:47) setwindow cvf.dialog
-\i (00:04:47) cvf global_visible
-\i (00:04:48) cvf okay
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out 1 
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out -3.079 0.057
-\i (00:04:49) trapsize 15
-\i (00:04:49) zoom out 1 
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out -3.079 0.058
-\i (00:04:49) trapsize 31
-\i (00:04:49) zoom out 1 
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out -3.079 0.058
-\i (00:04:49) trapsize 62
-\i (00:04:49) zoom out 1 
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out -2.177 0.144
-\i (00:04:49) trapsize 123
-\i (00:04:50) zoom in 1 
-\i (00:04:50) setwindow pcb
-\i (00:04:50) zoom in -0.283 -0.332
-\i (00:04:50) trapsize 61
-\i (00:04:51) zoom in 1 
-\i (00:04:51) setwindow pcb
-\i (00:04:51) zoom in -1.771 0.320
-\i (00:04:51) trapsize 31
-\i (00:04:52) zoom out 1 
-\i (00:04:52) setwindow pcb
-\i (00:04:52) zoom out -1.789 0.338
-\i (00:04:52) trapsize 62
-\i (00:05:34) roam y 96 
-\i (00:05:34) roam y 96
-\i (00:05:34) roam y -96 
-\i (00:05:34) roam y -96
-\i (00:05:42) drag_start grid -5.597 3.665
-\i (00:05:43) drag_stop 4.981 -4.121
-\i (00:05:43) prepopup 0.258 -0.812
-\i (00:05:45) pick grid -6.643 3.112
-\t (00:05:45) last pick:  -6.600  3.200
-\i (00:05:47) new 
-\e (00:05:47) Do you want to save the changes you made to E:/git/clay/Cadence/CIS_Database/Footprints/SMT/FTSH_10.dra?
-\i (00:05:49) fillin no 
-\i (00:05:56) newdrawfillin "FTSH_10.dra" "Package Symbol"
-\t (00:05:56) Starting new design...
-\i (00:05:56) trapsize 123
-\i (00:05:56) trapsize 123
-\i (00:05:56) generaledit 
-\i (00:05:57) zoom in 1 
-\i (00:05:57
+\t (00:00:48) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:48)     Journal start - Sun Dec 13 02:21:58 2015
+\t (00:00:48)         Host=STEELGIANT User=thebh_000 Pid=12120 CPUs=8
+\t (00:00:48) 
+\d (00:00:48) Database opened: E:/git/clay/Cadence/CIS_Database/Footprints/SMT/JST2_SIDE_SMT.dra
+\i (00:00:48) etchedit 
+\i (00:00:51) save_as 
+\i (00:01:01) fillin "E:\git\clay\Cadence\CIS_Database\Footprints\PTH\JST2_SIDE_PTH.dra"
+\i (00:01:01) cd "E:\git\clay\Cadence\CIS_Database\Footprints\PTH"
+\t (00:01:01) Symbol 'jst2_side_pth.psm' created.
+\i (00:01:01) etchedit 
+\i (00:01:03) zoom out 1 
+\i (00:01:03) setwindow pcb
+\i (00:01:03) zoom out 58.207 -107.379
+\i (00:01:03) trapsize 3690
+\i (00:01:04) zoom in 1 
+\i (00:01:04) setwindow pcb
+\i (00:01:04) zoom in -122.974 -81.550
+\i (00:01:04) trapsize 1845
+\i (00:07:00) zoom out 1 
+\i (00:07:00) setwindow pcb
+\i (00:07:00) zoom out -4.893 -60.517
+\i (00:07:00) trapsize 3690
+\i (00:07:05) show measure 
+\i (00:07:06) prepopup 57.838 143.542
+\i (00:07:09) pop dyn_option_select 'Snap pick to@:@Segment Midpoint' 
+\t (00:07:09) last pick:  -0.094  143.700
+\i (00:07:10) prepopup -9.321 -150.922
+\i (00:07:12) pop dyn_option_select 'Snap pick to@:@Segment Midpoint' 
+\t (00:07:12) last pick:  -0.094  -155.512
+\i (00:07:30) prepopup 25.365 144.281
+\i (00:07:32) pop dyn_option_select 'Snap pick to@:@Segment Midpoint' 
+\t (00:07:32) last pick:  -0.094  143.700
+\i (00:07:33) prepopup 402.487 167.897
+\i (00:07:34) done 
+\i (00:07:34) etchedit 
+\i (00:07:35) prepopup 7.653 152.399
+\t (00:07:36) last pick:  541.971  74.908
+\w (00:07:36) WARNING(SPMHUT-40): Pick is outside the extent of the drawing ... pick again.
+\i (00:07:37) zoom in 1 
+\i (00:07:37) setwindow pcb
+\i (00:07:37) zoom in 7.653 124.354
+\i (00:07:37) trapsize 1845
+\i (00:07:37) zoom in 1 
+\i (00:07:37) setwindow pcb
+\i (00:07:37) zoom in -139.948 125.461
+\i (00:07:37) trapsize 923
+\i (00:07:37) prepopup -33.491 143.542
+\i (00:07:40) show measure 
+\i (00:07:41) prepopup -28.878 142.251
+\i (00:07:42) reject 
+\i (00:07:43) cns show 
+\i (00:07:44) show measure 
+\i (00:07:44) prepopup -17.254 138.930
+\i (00:07:45) pick grid 2.118 113.099
+\t (00:07:45) last pick:  2.000  113.000
+\i (00:07:46) prepopup -1.018 133.210
+\i (00:07:48) pop dyn_option_select 'Snap pick to@:@Segment Vertex' 
+\i (00:07:48) zoom out 1 
+\i (00:07:48) setwindow pcb
+\i (00:07:48) zoom out 1.565 146.125
+\i (00:07:48) trapsize 1845
+\i (00:07:48) zoom out 1 
+\i (00:07:48) setwindow pcb
+\i (00:07:48) zoom out 134.959 146.126
+\i (00:07:48) trapsize 3690
+\i (00:07:49) zoom in 1 
+\i (00:07:49) setwindow pcb
+\i (00:07:49) zoom in 0.273 119.188
+\i (00:07:49) trapsize 1845
+\i (00:07:49) zoom in 1 
+\i (00:07:49) setwindow pcb
+\i (00:07:49) zoom in -145.114 125.461
+\i (00:07:49) trapsize 923
+\i (00:07:50) zoom in 1 
+\i (00:07:50) setwindow pcb
+\i (00:07:50) zoom in 1.565 144.281
+\i (00:07:50) trapsize 461
+\i (00:07:51) prepopup -14.210 143.912
+\i (00:07:53) pop dyn_option_select 'Snap pick to@:@Segment Midpoint' 
+\t (00:07:53) last pick:  -0.094  143.700
+\i (00:07:53) zoom out 1 
+\i (00:07:53) setwindow pcb
+\i (00:07:53) zoom out -18.361 139.392
+\i (00:07:53) trapsize 923
+\i (00:07:53) zoom out 1 
+\i (00:07:53) setwindow pcb
+\i (00:07:53) zoom out -18.914 139.392
+\i (00:07:53) trapsize 1845
+\i (00:07:55) prepopup -184.967 50.093
+\i (00:07:56) done 
+\i (00:07:56) etchedit 
+\i (00:07:57) zoom out 1 
+\i (00:07:57) setwindow pcb
+\i (00:07:57) zoom out -8.214 175.186
+\i (00:07:57) trapsize 3690
+\i (00:07:58) zoom out 1 
+\i (00:07:58) setwindow pcb
+\i (00:07:58) zoom out 135.328 -142.804
+\i (00:07:58) trapsize 3690
+\i (00:14:20) add pin 
+\t (00:14:20) Using 'R060_134.pad'.
+\i (00:14:50) setwindow form.mini
+\i (00:14:50) FORM mini pad_browse  
+\i (00:16:11) fillin "menu_cancel"
+\i (00:16:12) FORM mini pad_browse  
+\i (00:16:16) fillin "C050_030"
+\t (00:16:16) Using 'C050_030.pad'.
+\i (00:16:21) setwindow pcb
+\i (00:16:21) prepopup -9.321 -46.863
+\i (00:16:25) done 
+\t (00:16:25) Exiting from Add Pin.
+\i (00:16:26) etchedit 
+\i (00:16:27) zoom in 1 
+\i (00:16:27) setwindow pcb
+\i (00:16:27) zoom in 1.749 143.542
+\i (00:16:27) trapsize 1845
+\i (00:16:27) zoom in 1 
+\i (00:16:27) setwindow pcb
+\i (00:16:27) zoom in -144.007 143.542
+\i (00:16:27) trapsize 923
+\i (00:16:27) zoom in 1 
+\i (00:16:27) setwindow pcb
+\i (00:16:27) zoom in -144.007 143.543
+\i (00:16:27) trapsize 461
+\i (00:16:29) zoom in 1 
+\i (00:16:29) setwindow pcb
+\i (00:16:29) zoom in -155.353 144.188
+\i (00:16:29) trapsize 231
+\i (00:16:29) zoom in 1 
+\i (00:16:29) setwindow pcb
+\i (00:16:29) zoom in -155.353 144.188
+\i (00:16:29) trapsize 115
+\i (00:16:29) zoom in 1 
+\i (00:16:29) setwindow pcb
+\i (00:16:29) zoom in -155.352 144.188
+\i (00:16:29) trapsize 58
+\i (00:16:29) zoom in 1 
+\i (00:16:29) setwindow pcb
+\i (00:16:29) zoom in -155.352 144.188
+\i (00:16:29) trapsize 29
+\i (00:16:30) zoom out 1 
+\i (00:16:30) setwindow pcb
+\i (00:16:30) zoom out -155.490 143.992
+\i (00:16:30) trapsize 58
+\i (00:16:30) zoom out 1 
+\i (00:16:30) setwindow pcb
+\i (00:16:30) zoom out -155.491 143.993
+\i (00:16:30) trapsize 115
+\i (00:16:30) zoom out 1 
+\i (00:16:30) setwindow pcb
+\i (00:16:30) zoom out -155.490 143.993
+\i (00:16:30) trapsize 231
+\i (00:16:30) zoom out 1 
+\i (00:16:30) setwindow pcb
+\i (00:16:30) zoom out -155.490 143.809
+\i (00:16:30) trapsize 461
+\i (00:16:31) zoom out 1 
+\i (00:16:31) setwindow pcb
+\i (00:16:31) zoom out -120.065 131.908
+\i (00:16:31) trapsize 923
+\i (00:16:34) zoom out 1 
+\i (00:16:34) setwindow pcb
+\i (00:16:34) zoom out -132.796 137.628
+\i (00:16:34) trapsize 1845
+\i (00:16:36) show measure 
+\i (00:16:40) pick 0 143.7 
+\t (00:16:41) last pick:  0.000  143.700
+\i (00:16:44) prepopup 5.443 229.511
+\i (00:16:45) done 
+\i (00:16:45) etchedit 
+\i (00:16:47) add pin 
+\t (00:16:47) Using 'C050_030.pad'.
+\i (00:16:47) zoom out 1 
+\i (00:16:47) setwindow pcb
+\i (00:16:47) zoom out 28.691 230.618
+\i (00:16:47) trapsize 3690
+\i (00:17:32) setwindow form.mini
+\i (00:17:32) FORM mini x_spacing 78.740 
+\i (00:17:34) setwindow pcb
+\i (00:17:34) ipick -39.37 -246.063 
+\t (00:17:34) last pick:  -39.370  -102.363
+\t (00:17:34) Using 'C050_030.pad'.
+\i (00:17:36) prepopup -44.745 -106.642
+\i (00:17:36) done 
+\t (00:17:36) Exiting from Add Pin.
+\i (00:17:37) etchedit 
+\i (00:17:37) prepopup -26.295 -184.133
+\i (00:17:38) pop dyn_option_select @:@Delete 
+\i (00:17:39) delete 
+\i (00:17:39) etchedit 
+\i (00:17:39) prepopup 46.030 -173.801
+\i (00:17:41) pop dyn_option_select @:@Delete 
+\i (00:17:41) delete 
+\i (00:17:41) etchedit 
+\i (00:17:45) auto_pin_renumber 
+\i (00:17:46) setwindow form.pinRenumber
+\i (00:17:46) FORM pinRenumber done  
+\i (00:17:46) setwindow pcb
+\i (00:17:46) etchedit 
+\i (00:17:48) setwindow form.find
+\i (00:17:48) FORM find all_off  
+\i (00:17:52) setwindow pcb
+\i (00:17:52) prepopup 311.712 -32.103
+\t (00:17:52) last pick:  397.321  -8.487
+\w (00:17:52) WARNING(SPMHUT-40): Pick is outside the extent of the drawing ... pick again.
+\i (00:17:54) generaledit 
+\i (00:17:57) setwindow form.find
+\i (00:17:57) FORM find all_off  
+\i (00:17:57) FORM find text YES 
+\i (00:17:58) setwindow pcb
+\i (00:17:58) drag_start grid -119.284 -60.148
+\i (00:17:59) drag_stop 12.819 -109.594
+\i (00:17:59) prepopup -13.011 -91.144
+\i (00:18:00) pop dyn_option_select @:@Move 
+\i (00:18:00) move 
+\t (00:18:00) last pick:  -13.000  -91.000
+\t (00:18:00) Pick new location for the element(s).
+\i (00:18:02) pick grid 43.078 -103.690
+\t (00:18:02) last pick:  43.000  -104.000
+\i (00:18:02) generaledit 
+\i (00:18:04) prepopup 392.155 -26.199
+\t (00:18:04) last pick:  324.996  1.845
+\w (00:18:04) WARNING(SPMHUT-40): Pick is outside the extent of the drawing ... pick again.
+\i (00:18:06) save 
+\i (00:18:08) fillin yes 
+\t (00:18:08) Symbol 'jst2_side_pth.psm' created.
+\i (00:18:08) generaledit 
+\i (00:18:49) pick grid 283.668 241.697
+\t (00:18:49) last pick:  284.000  242.000
+\i (00:18:51) setwindow form.find
+\i (00:18:51) FORM find all_on  
+\t (00:18:51) last pick:  405.439  -39.483
+\w (00:18:51) WARNING(SPMHUT-40): Pick is outside the extent of the drawing ... pick again.
+\i (00:18:52) setwindow pcb
+\i (00:18:52) prepopup -131.830 74.170
+\i (00:18:53) pick grid 276.288 35.055
+\t (00:18:53) last pick:  276.000  35.000
+\i (00:18:55) prepopup -118.546 66.052
+\i (00:18:56) pop dyn_option_select @:@Delete 
+\i (00:18:56) delete 
+\i (00:18:56) generaledit 
+\i (00:18:57) prepopup 110.974 80.812
+\i (00:18:57) pop dyn_option_select @:@Delete 
+\i (00:18:57) delete 
+\i (00:18:58) generaledit 
+\i (00:18:59) save 
+\i (00:19:00) fillin yes 
+\t (00:19:00) Symbol 'jst2_side_pth.psm' created.
+\i (00:19:01) generaledit 
+\i (00:19:05) exit 
+\t (00:19:05)     Journal end - Sun Dec 13 02:40:15 2015

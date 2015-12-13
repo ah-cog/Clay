@@ -2,9 +2,9 @@
 (                                                                     )
 (    DRC Update                                                       )
 (                                                                     )
-(    Drawing          : QFP100_14x14.dra                              )
+(    Drawing          : QFN44_5x5.dra                                 )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Fri Dec 11 01:04:51 2015                      )
+(    Date/Time        : Sat Dec 12 16:57:56 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -20,7 +20,7 @@
  ========= check standalone text              0:00:00
  ========= check standalone rectangles        0:00:00
 
- ..... Total number of DRC errors  0
+ ..... Total number of DRC errors  44
 
  ..... DRC update completed, total CPU time   0:00:00
  *************************************************************************

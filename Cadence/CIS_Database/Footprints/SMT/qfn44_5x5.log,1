@@ -4,7 +4,7 @@
 (                                                                     )
 (    Drawing          : QFN44_5x5.dra                                 )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Thu Dec 10 19:23:39 2015                      )
+(    Date/Time        : Thu Dec 10 19:48:37 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -18,8 +18,6 @@ Create Symbol of type: PACKAGE
 
 Create symbol started.
  
- ERROR(SPMHCS-1): Symbol is missing a refdes. 
- ERROR(SPMHCS-1): Symbol is missing a refdes. 
 
-ERROR(SPMHA1-291): Create symbol has been aborted.
+Create symbol completed.
 

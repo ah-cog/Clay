@@ -16,7 +16,7 @@
       (Path "Design Resources"
          "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb")
       (Select "Design Resources"
-         "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb"))
+         "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb" "DIODE"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")

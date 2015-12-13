@@ -1,1 +1,1 @@
-CLAY_R6_Board_2x2.dra
+TP_030.dra
