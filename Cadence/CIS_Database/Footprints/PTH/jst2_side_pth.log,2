@@ -2,16 +2,16 @@
 (                                                                     )
 (    CREATE SYMBOL                                                    )
 (                                                                     )
-(    Drawing          : GPIO_3x3_100.dra                              )
+(    Drawing          : JST2_SIDE_PTH.dra                             )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sat Dec 12 01:36:46 2015                      )
+(    Date/Time        : Sun Dec 13 02:39:18 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
 
 Create Symbol of type: PACKAGE
-    Directory = E:/git/clay/Cadence/CIS_Database/Footprints/SMT
-    Name      = gpio_3x3_100.psm
+    Directory = E:/git/clay/Cadence/CIS_Database/Footprints/PTH
+    Name      = jst2_side_pth.psm
     User      = thebh_000
     Machine   = STEELGIANT
 

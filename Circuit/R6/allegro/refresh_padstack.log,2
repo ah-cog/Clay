@@ -1,0 +1,217 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Refresh Padstack                                                 )
+(                                                                     )
+(    Drawing          : CLAYR6.brd                                    )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sat Dec 12 20:10:07 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Sat Dec 12 20:10:07 2015				Page     1
+
+
+------ Pad Stack Refresh Options ------
+
+Input design = 'E:/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd'
+Output design = ''
+Reset symbol text and size locations = 'NO'
+
+
+------ Library Paths ------
+PSMPATH =  E:/git/clay/Cadence/CIS_Database/Footprints/SMT/ 
+           E:/git/clay/Cadence/CIS_Database/Footprints/PTH/ 
+           . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.6/share/local/pcb/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols 
+
+PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/ 
+           E:/git/clay/Cadence/CIS_Database/Pads/PTH/ 
+           . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.6/share/local/pcb/padstacks 
+           C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols 
+
+
+------ Pad Stack Refresh Messages ------
+
+'MV024_012'  pad stack refresh starting.
+
+     'MV024_012'  pad stack refreshed successfully.
+     
+'MV018_012'  pad stack refresh starting.
+
+     'MV018_012'  pad stack refreshed successfully.
+     
+'C018_012'  pad stack refresh starting.
+
+     'C018_012'  pad stack refreshed successfully.
+     
+'VIA'  pad stack refresh starting.
+
+     'VIA'  pad stack refreshed successfully.
+     
+'R009_020'  pad stack refresh starting.
+
+     'R009_020'  pad stack refreshed successfully.
+     
+'R009_015'  pad stack refresh starting.
+
+     'R009_015'  pad stack refreshed successfully.
+     
+'R030_055'  pad stack refresh starting.
+
+     'R030_055'  pad stack refreshed successfully.
+     
+'R020_024'  pad stack refresh starting.
+
+     'R020_024'  pad stack refreshed successfully.
+     
+'R048_079'  pad stack refresh starting.
+
+     'R048_079'  pad stack refreshed successfully.
+     
+'C032_016'  pad stack refresh starting.
+
+     'C032_016'  pad stack refreshed successfully.
+     
+'R022_055'  pad stack refresh starting.
+
+     'R022_055'  pad stack refreshed successfully.
+     
+'S148_148'  pad stack refresh starting.
+
+     'S148_148'  pad stack refreshed successfully.
+     
+'TPS612_EXPOSED_PAD'  pad stack refresh starting.
+
+     'TPS612_EXPOSED_PAD'  pad stack refreshed successfully.
+     
+'R011_033'  pad stack refresh starting.
+
+     'R011_033'  pad stack refreshed successfully.
+     
+'C100M200K200'  pad stack refresh starting.
+
+     'C100M200K200'  pad stack refreshed successfully.
+     
+'R012_055'  pad stack refresh starting.
+
+     'R012_055'  pad stack refreshed successfully.
+     
+'S100_100'  pad stack refresh starting.
+
+     'S100_100'  pad stack refreshed successfully.
+     
+'R010_020'  pad stack refresh starting.
+
+     'R010_020'  pad stack refreshed successfully.
+     
+'R010_015'  pad stack refresh starting.
+
+     'R010_015'  pad stack refreshed successfully.
+     
+'R012_018'  pad stack refresh starting.
+
+     'R012_018'  pad stack refreshed successfully.
+     
+'R008_015'  pad stack refresh starting.
+
+     'R008_015'  pad stack refreshed successfully.
+     
+'R063_079'  pad stack refresh starting.
+
+     'R063_079'  pad stack refreshed successfully.
+     
+'R024_010'  pad stack refresh starting.
+
+     'R024_010'  pad stack refreshed successfully.
+     
+'C008M008'  pad stack refresh starting.
+
+     'C008M008'  pad stack refreshed successfully.
+     
+'MNT040_032'  pad stack refresh starting.
+
+     'MNT040_032'  pad stack refreshed successfully.
+     Sat Dec 12 20:10:07 2015				Page     2
+
+
+     
+'R028_060'  pad stack refresh starting.
+
+     'R028_060'  pad stack refreshed successfully.
+     
+'MH_C36'  pad stack refresh starting.
+
+     'MH_C36'  pad stack refreshed successfully.
+     
+'R031_035'  pad stack refresh starting.
+
+     'R031_035'  pad stack refreshed successfully.
+     
+'R052_134'  pad stack refresh starting.
+
+     'R052_134'  pad stack refreshed successfully.
+     
+'R040_106'  pad stack refresh starting.
+
+     'R040_106'  pad stack refreshed successfully.
+     
+'R060_047'  pad stack refresh starting.
+
+     'R060_047'  pad stack refreshed successfully.
+     
+'R030_110'  pad stack refresh starting.
+
+     'R030_110'  pad stack refreshed successfully.
+     
+'R060_134'  pad stack refresh starting.
+
+     'R060_134'  pad stack refreshed successfully.
+     
+'R040_138'  pad stack refresh starting.
+
+     'R040_138'  pad stack refreshed successfully.
+     
+'C048_040'  pad stack refresh starting.
+
+     'C048_040'  pad stack refreshed successfully.
+     
+'R024_024'  pad stack refresh starting.
+
+     'R024_024'  pad stack refreshed successfully.
+     
+'R025_045'  pad stack refresh starting.
+
+     'R025_045'  pad stack refreshed successfully.
+     
+'R057_070'  pad stack refresh starting.
+
+     'R057_070'  pad stack refreshed successfully.
+     
+'R040_044'  pad stack refresh starting.
+
+     'R040_044'  pad stack refreshed successfully.
+     
+'R038_040'  pad stack refresh starting.
+
+     'R038_040'  pad stack refreshed successfully.
+     
+'R020_030'  pad stack refresh starting.
+
+     'R020_030'  pad stack refreshed successfully.
+     
+'R030_063'  pad stack refresh starting.
+
+     'R030_063'  pad stack refreshed successfully.
+     
+Completed refreshing all pad stacks successfully.

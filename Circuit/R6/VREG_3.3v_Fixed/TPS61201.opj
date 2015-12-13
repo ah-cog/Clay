@@ -68,8 +68,8 @@
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 0 1 -1 -1 -8 -31 26 1662 26 496")
-        (Scroll "51 686")
-        (Zoom "196")
+        (Scroll "-449 0")
+        (Zoom "72")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6\VREG_3.3V_FIXED\TPS61201.DSN")
       (Schematic "SCHEMATIC1")

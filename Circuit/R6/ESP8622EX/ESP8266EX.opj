@@ -28,7 +28,7 @@
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 0 1 -1 -1 -8 -31 130 1766 130 600")
-        (Scroll "156 78")
+        (Scroll "156 701")
         (Zoom "132")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6\ESP8622EX\ESP8266EX.DSN")

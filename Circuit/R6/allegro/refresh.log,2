@@ -1,0 +1,104 @@
+Sun Dec 13 06:46:59 2015				Page     1
+
+
+ 
+Update Symbols/Modules Logfile
+	Sun Dec 13 06:46:59 2015
+
+------ Module Refresh Messages ------
+
+SUMMARY:    Updated 0 out of 0 modules
+
+------ End Module Messages     ------
+
+
+
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Refresh Symbol                                                   )
+(                                                                     )
+(    Drawing          : CLAYR6.brd                                    )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sun Dec 13 06:47:00 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Sun Dec 13 06:47:00 2015				Page     1
+
+
+------ Symbol Refresh Directives ------
+
+Input design = 'E:/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd'
+Output design = ''
+Update mechanical symbols = 'NO'
+Update format symbols = 'NO'
+Update package symbols = 'YES'
+Update shape/flash symbols = 'NO'
+Update symbol padstacks = 'NO'
+Reset symbol text and size locations = 'NO'
+Reset Pin Escapes (fanouts) = 'NO'
+Ripup Etch = 'NO'
+Reset custom drill data = 'NO'
+
+
+------ Library Paths ------
+PSMPATH =  E:/git/clay/Cadence/CIS_Database/Footprints/SMT/ 
+           E:/git/clay/Cadence/CIS_Database/Footprints/PTH/ 
+           . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.6/share/local/pcb/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols 
+
+PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/ 
+           E:/git/clay/Cadence/CIS_Database/Pads/PTH/ 
+           . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.6/share/local/pcb/padstacks 
+           C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols 
+
+
+------ Symbol Refresh Messages ------
+
+'GPIO_3X3_100'  symbol refreshed successfully.
+'JST2_SIDE_PTH'  symbol refreshed successfully.
+'2X1_HEADER_100'  symbol refreshed successfully.
+'TP_030'  symbol refreshed successfully.
+'C0603'  symbol refreshed successfully.
+'TXC_XTAL_5X3'  symbol refreshed successfully.
+'L0402'  symbol refreshed successfully.
+'ANT_1206'  symbol refreshed successfully.
+'SOT23_3'  symbol refreshed successfully.
+'PKMCS'  symbol refreshed successfully.
+'QFN20_4X4'  symbol refreshed successfully.
+'QFN32_5X5'  symbol refreshed successfully.
+'QFN24_3X3'  symbol refreshed successfully.
+'QFN44_5X5'  symbol refreshed successfully.
+'L1210'  symbol refreshed successfully.
+'LED_0402'  symbol refreshed successfully.
+'C0805'  symbol refreshed successfully.
+'VSON10_3X3'  symbol refreshed successfully.
+'ABS06'  symbol refreshed successfully.
+'FTSH_10'  symbol refreshed successfully.
+'ASCO'  symbol refreshed successfully.
+'QFP100_14X14'  symbol refreshed successfully.
+'CUS_12TB'  symbol refreshed successfully.
+'WIRE_26AWG'  symbol refreshed successfully.
+'R0402'  symbol refreshed successfully.
+'WSON10_3X3'  symbol refreshed successfully.
+'C0402'  symbol refreshed successfully.
+'DO_221AC'  symbol refreshed successfully.
+'CL_SOIC8'  symbol refreshed successfully.
+'LTST_C19FD1WT'  symbol refreshed successfully.
+'FERRITE0805'  symbol refreshed successfully.
+
+
+----- Symbol Update Summary ----
+
+Completed refreshing all symbols successfully.

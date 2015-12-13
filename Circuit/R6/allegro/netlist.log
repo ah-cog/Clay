@@ -1,0 +1,79 @@
+{ Using PSTWRITER 16.6.0 d001Dec-13-2015 at 10:02:05 }
+
+#1 WARNING(ORCAP-36005): Net "PTD0/LLWU_P12/SPI0_PCS0/UART2_RTS_B/FTM3_CH0/FB_ALE" is renamed to "PTD0/LLWU_P12/SPI0_PCS0/UART2_R".
+#2 WARNING(ORCAP-36005): Net "PTC1/LLWU_P6/ADC0_SE15/SPI0_PCS3/UART1_RTS_B/FTM0_CH0/FB_AD13/I2S0_TXD0" is renamed to "PTC1/LLWU_P6/ADC0_SE15/SPI0_PCS".
+#3 WARNING(ORCAP-36005): Net "PTA2/JTAG_TDO/TRACE_SWO/EZP_D0/UART0_TX/FTM0_CH7" is renamed to "PTA2/JTAG_TDO/TRACE_SWO/EZP_D0/".
+#4 WARNING(ORCAP-36005): Net "PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_B" is renamed to "PTB17/SPI1_SIN/UART0_TX/FTM_CLK".
+#5 WARNING(ORCAP-36005): Net "PTD5/ADC0_SE6B/SPI0_PCS2/UART0_CTS_B/UART0_COL_B/FTM0_CH5/FB_AD1/EWM_OUT_B/SPI1_SCK" is renamed to "PTD5/ADC0_SE6B/SPI0_PCS2/UART0_".
+#6 WARNING(ORCAP-36005): Net "PTB20/SPI2_PCS0/FB_AD31/CMP0_OUT" is renamed to "PTB20/SPI2_PCS0/FB_AD31/CMP0_OU".
+#7 WARNING(ORCAP-36005): Net "VREF_OUT/CMP1_IN5/CMP0_IN5/ADC1_SE18" is renamed to "VREF_OUT/CMP1_IN5/CMP0_IN5/ADC1".
+#8 WARNING(ORCAP-36005): Net "PTB2/ADC0_SE12/I2C0_SCL/UART0_RTS_B/ENET0_1588_TMR0/FTM0_FLT3" is renamed to "PTB2/ADC0_SE12/I2C0_SCL/UART0_R".
+#9 WARNING(ORCAP-36005): Net "PTD6/LLWU_P16/ADC0_SE7B/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT" is renamed to "PTD6/LLWU_P16/ADC0_SE7B/SPI0_PC".
+#10 WARNING(ORCAP-36005): Net "PTA18/EXTAL0/FTM0_FLT2/FTM_CLKIN0" is renamed to "PTA18/EXTAL0/FTM0_FLT2/FTM_CLKI".
+#11 WARNING(ORCAP-36005): Net "PTC10/ADC1_SE6B/I2C1_SCL/FTM3_CH6/I2S0_RX_FS/FB_AD5" is renamed to "PTC10/ADC1_SE6B/I2C1_SCL/FTM3_C".
+#12 WARNING(ORCAP-36005): Net "PTA1/JTAG_TDI/EZP_DI/UART0_RX/FTM0_CH6" is renamed to "PTA1/JTAG_TDI/EZP_DI/UART0_RX/F".
+#13 WARNING(ORCAP-36005): Net "PTA0/JTAG_TCLK/SWD_CLK/EZP_CLK/UART0_CTS_B/UART0_COL_B/FTM0_CH5" is renamed to "PTA0/JTAG_TCLK/SWD_CLK/EZP_CLK/".
+#14 WARNING(ORCAP-36005): Net "PTE4/LLWU_P2/SPI1_PCS0/UART3_TX/SDHC0_D3/TRACE_D0" is renamed to "PTE4/LLWU_P2/SPI1_PCS0/UART3_TX".
+#15 WARNING(ORCAP-36005): Net "PTB11/ADC1_SE15/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2" is renamed to "PTB11/ADC1_SE15/SPI1_SCK/UART3_".
+#16 WARNING(ORCAP-36005): Net "PTB10/ADC1_SE14/SPI1_PCS0/UART3_RX/FB_AD19/FTM0_FLT1" is renamed to "PTB10/ADC1_SE14/SPI1_PCS0/UART3".
+#17 WARNING(ORCAP-36005): Net "PTC9/ADC1_SE5B/CMP0_IN3/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0" is renamed to "PTC9/ADC1_SE5B/CMP0_IN3/FTM3_CH".
+#18 WARNING(ORCAP-36005): Net "PTC2/ADC0_SE4B/CMP1_IN0/SPI0_PCS2/UART1_CTS_B/FTM0_CH1/FB_AD12/I2S0_TX_FS" is renamed to "PTC2/ADC0_SE4B/CMP1_IN0/SPI0_PC".
+#19 WARNING(ORCAP-36005): Net "PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FTB_AD17/EWM_IN" is renamed to "PTB16/SPI1_SOUT/UART0_RX/FTM_CL".
+#20 WARNING(ORCAP-36005): Net "PTB9/SPI1_PCS1/UART3_CTS_B/FB_AD20" is renamed to "PTB9/SPI1_PCS1/UART3_CTS_B/FB_A".
+#21 WARNING(ORCAP-36005): Net "PTC18/UART3_RTS_B/ENET0_1588_TMR2/FB_TBST_B" is renamed to "PTC18/UART3_RTS_B/ENET0_1588_TM".
+#22 WARNING(ORCAP-36005): Net "PTD2/LLWU_P13/SPI0_SOUT/UART2_RX/FTM3_CH2/FB_AD4/I2C0_SCL" is renamed to "PTD2/LLWU_P13/SPI0_SOUT/UART2_R".
+#23 WARNING(ORCAP-36005): Net "PTA3/JTAG_TMS/SWD_DIO/UART0_RTS_B/FTM0_CH0" is renamed to "PTA3/JTAG_TMS/SWD_DIO/UART0_RTS".
+#24 WARNING(ORCAP-36005): Net "PTC0/ADC0_SE14/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1" is renamed to "PTC0/ADC0_SE14/SPI0_PCS4/PDB0_E".
+#25 WARNING(ORCAP-36005): Net "PTD3/SPI0_SIN/UART2_TX/FTM3_CH3/FB_AD3/I2C0_SDA" is renamed to "PTD3/SPI0_SIN/UART2_TX/FTM3_CH3".
+#26 WARNING(ORCAP-36005): Net "PTB3/ADC0_SE13/I2C0_SDA/UART0_CTS_B/UART0_COL_B/ENET0_1588_TMR1/FTM0_FLT0" is renamed to "PTB3/ADC0_SE13/I2C0_SDA/UART0_C".
+#27 WARNING(ORCAP-36005): Net "PTA19/XTAL0/FTM1_FLT0/FTM_CLKIN1/LPTMR0_ALT1" is renamed to "PTA19/XTAL0/FTM1_FLT0/FTM_CLKIN".
+#28 WARNING(ORCAP-36005): Net "PTD7/CMT_IRQ/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN" is renamed to "PTD7/CMT_IRQ/UART0_TX/FTM0_CH7/".
+#29 WARNING(ORCAP-36006): Part Name "LTST_C19FD1WT_LTST_C19FD1WT_LTST_C19FD1WT" is renamed to "LTST_C19FD1WT_LTST_C19FD1WT_LTS".
+#30 WARNING(ORCAP-36006): Part Name "CON_2PIN_2X1_HEADER_100_640456-2" is renamed to "CON_2PIN_2X1_HEADER_100_640456-".
+#31 WARNING(ORCAP-36006): Part Name "CON_2PIN_JST2_SIDE_PTH_S2B-PH-K-S(LF)(SN)" is renamed to "CON_2PIN_JST2_SIDE_PTH_S2B-PH-K".
+#32 WARNING(ORCAP-36006): Part Name "GPIO_3X3_100_GPIO_3X3_100_GPIO_3X3_100" is renamed to "GPIO_3X3_100_GPIO_3X3_100_GPIO_".
+#33 WARNING(ORCAP-36042): Pin "GND" is renamed to "GND#3" as visible power pin of same name already exists in Package LM3658 , U1: SCHEMATIC1, PAGE1 (4.00, 1.90).
+#34 WARNING(ORCAP-36042): Pin "GND" is renamed to "GND#11" as visible power pin of same name already exists in Package LM3658 , U1: SCHEMATIC1, PAGE1 (4.00, 1.90).
+#35 WARNING(ORCAP-36042): Pin "VDDIO" is renamed to "VDDIO#13" as visible power pin of same name already exists in Package MPU9250 , U2: SCHEMATIC1, PAGE1 (3.50, 2.00).
+#36 WARNING(ORCAP-36042): Pin "VDDIO" is renamed to "VDDIO#8" as visible power pin of same name already exists in Package MPU9250 , U2: SCHEMATIC1, PAGE1 (3.50, 2.00).
+#37 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#14" as visible power pin of same name already exists in Package NRF24L01 , U3: SCHEMATIC1, PAGE1 (4.00, 2.10).
+#38 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#15" as visible power pin of same name already exists in Package NRF24L01 , U3: SCHEMATIC1, PAGE1 (4.00, 2.10).
+#39 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#17" as visible power pin of same name already exists in Package NRF24L01 , U3: SCHEMATIC1, PAGE1 (4.00, 2.10).
+#40 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#18" as visible power pin of same name already exists in Package NRF24L01 , U3: SCHEMATIC1, PAGE1 (4.00, 2.10).
+#41 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#20" as visible power pin of same name already exists in Package NRF24L01 , U3: SCHEMATIC1, PAGE1 (4.00, 2.10).
+#42 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#7" as visible power pin of same name already exists in Package NRF24L01 , U3: SCHEMATIC1, PAGE1 (4.00, 2.10).
+#43 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#8" as visible power pin of same name already exists in Package NRF24L01 , U3: SCHEMATIC1, PAGE1 (4.00, 2.10).
+#44 WARNING(ORCAP-36042): Pin "GND" is renamed to "GND#17" as visible power pin of same name already exists in Package IS31FL3236 , U4: SCHEMATIC1, PAGE1 (5.50, 2.80).
+#45 WARNING(ORCAP-36042): Pin "GND" is renamed to "GND#39" as visible power pin of same name already exists in Package IS31FL3236 , U4: SCHEMATIC1, PAGE1 (5.50, 2.80).
+#46 WARNING(ORCAP-36042): Pin "GND" is renamed to "GND#45" as visible power pin of same name already exists in Package IS31FL3236 , U4: SCHEMATIC1, PAGE1 (5.50, 2.80).
+#47 WARNING(ORCAP-36006): Part Name "MK64FN1M0VLL12_QFP100_14X14_MK64FN1M0VLL12" is renamed to "MK64FN1M0VLL12_QFP100_14X14_MK6".
+#48 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#8" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#49 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#9" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#50 WARNING(ORCAP-36042): Pin "VREF_OUT/CMP1_IN5/CMP0_IN5/ADC1_SE18" is renamed to "VREF_OUT/CMP1_IN5/CMP0_IN5/ADC1" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#51 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#40" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#52 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#41" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#53 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#48" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#54 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#49" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#55 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#60" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#56 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#61" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#57 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#74" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#58 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#75" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#59 WARNING(ORCAP-36042): Pin "VSS" is renamed to "VSS#88" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#60 WARNING(ORCAP-36042): Pin "VDD" is renamed to "VDD#89" as visible power pin of same name already exists in Package MK64FN1M0VLL12 , U5: SCHEMATIC1, PAGE1 (12.00, 3.50).
+#61 WARNING(ORCAP-36006): Part Name "TPS61201_VSON10_3X3_TPS61201DRCT" is renamed to "TPS61201_VSON10_3X3_TPS61201DRC".
+#62 WARNING(ORCAP-36042): Pin "VDDPST" is renamed to "VDDPST#11" as visible power pin of same name already exists in Package ESP8266EX , U7: SCHEMATIC1, PAGE1 (7.10, 2.30).
+#63 WARNING(ORCAP-36042): Pin "VDDA" is renamed to "VDDA#30" as visible power pin of same name already exists in Package ESP8266EX , U7: SCHEMATIC1, PAGE1 (7.10, 2.30).
+#64 WARNING(ORCAP-36042): Pin "VDDA" is renamed to "VDDA#1" as visible power pin of same name already exists in Package ESP8266EX , U7: SCHEMATIC1, PAGE1 (7.10, 2.30).
+#65 WARNING(ORCAP-36042): Pin "VDD3P3" is renamed to "VDD3P3#3" as visible power pin of same name already exists in Package ESP8266EX , U7: SCHEMATIC1, PAGE1 (7.10, 2.30).
+#66 WARNING(ORCAP-36042): Pin "VDD3P3" is renamed to "VDD3P3#4" as visible power pin of same name already exists in Package ESP8266EX , U7: SCHEMATIC1, PAGE1 (7.10, 2.30).
+#67 WARNING(ORCAP-36042): Pin "VDDPST" is renamed to "VDDPST#17" as visible power pin of same name already exists in Package ESP8266EX , U7: SCHEMATIC1, PAGE1 (7.10, 2.30).
+INFO(ORCAP-36080): Scanning netlist files ...
+
+Loading... E:\GIT\CLAY\CIRCUIT\R6\allegro/pstchip.dat
+
+Loading... E:\GIT\CLAY\CIRCUIT\R6\allegro/pstchip.dat
+
+Loading... E:\GIT\CLAY\CIRCUIT\R6\allegro/pstxprt.dat
+
+Loading... E:\GIT\CLAY\CIRCUIT\R6\allegro/pstxnet.dat
+packaging the design view...

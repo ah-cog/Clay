@@ -58,9 +58,7 @@
       (Path "Design Resources")
       (Path "Design Resources" "E:\git\clay\Circuit\R6\MPU9250\mpu9250.dsn")
       (Path "Design Resources" "E:\git\clay\Circuit\R6\MPU9250\mpu9250.dsn"
-         "Design Cache")
-      (Select "Design Resources" "E:\git\clay\Circuit\R6\MPU9250\mpu9250.dsn"
-         "Design Cache" "MPU9250"))
+         "Design Cache"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
