@@ -115,7 +115,7 @@ Behavior* Get_Cached_Behavior_By_UUID (char *behaviorUuid) {
 		}
 	}
 	
-	return behaviorConstruct;
+	return NULL;
 }
 
 uint8_t Has_Cached_Behaviors () {
@@ -235,47 +235,154 @@ int16_t Add_Behavior (Behavior *behavior) {
 	return behaviorConstructCount;
 }
 
-//Behavior* Remove_Behavior (Behavior *behavior) {
-////Message* Dequeue_Incoming_Message () {
-//	
-//	Behavior *behavior = NULL;
-//	
-//	if (loop != NULL) {
-//		
-//		// Reference the behavior at the front of the queue.
-//		behavior = loop;
-//		
-//		// Update the linked list to remove the behavior from the front of the queue.
-//		if ((*behavior).previous != NULL) {
-//			
-//			// There are additional behavior on the queue. Set the previous element to the front of the queue.
-//			
-//			loop = (*behavior).previous;
-//			// loop = (*behavior).next; // NOTE: This should already be NULL at this point, so this is redundant, but adds some degree of robustness.
-//			(*loop).next = NULL; // Set as the first element in the queue.
-//			
-//			// Unlink the behavior from linked list to finish dequeuing process.
-//			(*behavior).previous = NULL;
-//			(*behavior).next = NULL;
-//			
-//		} else {
-//			
-//			// There are no more behaviors in the queue, so remove links.
-//			
-//			loop = NULL; // Remove the link to any behaviors at the front of the queue.
-//			
-//			// Unlink the behaviors from linked list to finish dequeuing process.
-//			(*behavior).previous = NULL;
-//			(*behavior).next = NULL;
-//			
-//		}
-//	}
-//	
-//	return behavior;
-//}
+Behavior* Remove_Behavior (Behavior *behavior) {
+	
+	Behavior_Construct *behaviorConstruct = NULL;
+	
+	// Get the behavior construct associated with the specified behavior.
+	if (behavior != NULL && (*behavior).uuid != NULL) {
+		behaviorConstruct = Get_Behavior_Construct_By_UUID ((*behavior).uuid);
+	}
+	
+	if (loop != NULL) {
+		
+		// Reference the behavior at the front of the queue.
+		// behaviorConstruct = loop;
+		
+		// Update the linked list to remove the behavior from the front of the queue.
+		if ((*behaviorConstruct).previous == NULL && (*behaviorConstruct).next != NULL) {
+			
+			// The behavior in the first in the loop.
+			
+			loop = (*behaviorConstruct).next; // Update the loop's first behavior to be the next one.
+			
+			// TODO: Check the state of the loop pointer, and update it if it points to the behavior being removed!
+			
+			(*loop).next = NULL; // Update the the new first behavior in the loop so it doesn't link to a "previous" behavior.
+			
+			// Unlink the behavior from linked list to finish dequeuing process.
+			(*behaviorConstruct).previous = NULL;
+			(*behaviorConstruct).next = NULL;
+			
+			// Free the behavior construct from memory.
+			// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+			Delete_Behavior_Construct (behaviorConstruct);
+			
+		} else if ((*behaviorConstruct).previous != NULL && (*behaviorConstruct).next != NULL) {
+			
+			// The behavior is within the loop. It has previous and next behaviors.
+			
+			(*(*behaviorConstruct).previous).next = (*behaviorConstruct).next; // Update the previous behavior to skip this behavior and point to the next behavior.
+			
+			(*(*behaviorConstruct).next).previous = (*behaviorConstruct).previous; // Update the next behavior skip this behavior and point to the previous behavior.
+			
+			// TODO: Check the state of the loop pointer, and update it if it points to the behavior being removed!
+			
+			// Unlink the behavior from linked list to finish dequeuing process.
+			(*behaviorConstruct).previous = NULL;
+			(*behaviorConstruct).next = NULL;
+			
+			// Free the behavior construct from memory.
+			// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+			Delete_Behavior_Construct (behaviorConstruct);
+			
+		} else if ((*behaviorConstruct).previous != NULL && (*behaviorConstruct).next == NULL) {
+			
+			// The behavior is the last in the loop. It has previous behaviors only.
+			
+			(*(*behaviorConstruct).previous).next = NULL; // Update the previous behavior be the new last behavior in the loop. That is, make it point to no other behavior (and point to NULL).
+			
+			// TODO: Check the state of the loop pointer, and update it if it points to the behavior being removed!
+			
+			// Unlink the behavior from linked list to finish dequeuing process.
+			(*behaviorConstruct).previous = NULL;
+			(*behaviorConstruct).next = NULL;
+			
+			// Free the behavior construct from memory.
+			// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+			Delete_Behavior_Construct (behaviorConstruct);
+			
+		} else {
+			
+			// There are no more behaviors in the loop, so remove all links and reset the loop to its "empty" state.
+			
+			loop = NULL; // Remove the link to any behaviors at the front of the loop.
+			
+			currentBehaviorConstruct = NULL; // Reset the current behavior to NULL, so no behavior will be performed.
+			
+			// Unlink the behaviors from linked list to finish dequeuing process.
+			(*behaviorConstruct).previous = NULL;
+			(*behaviorConstruct).next = NULL;
+			
+			// Free the behavior construct from memory.
+			// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+			Delete_Behavior_Construct (behaviorConstruct);
+			
+		}
+	}
+	
+	return NULL;
+}
 
 uint8_t Has_Behaviors () {
 	return (loop != NULL ? TRUE : FALSE);
+}
+
+uint8_t Has_Behavior_By_UUID (char *behaviorUuid) {
+	
+	Behavior_Construct *behaviorConstruct = NULL;
+	
+	if (loop != NULL) {
+		
+		// Search for the last element in the queue.
+		behaviorConstruct = loop; // Get the front of the queue.
+		while (behaviorConstruct != NULL) {
+			if (strncmp (behaviorUuid, (*behaviorConstruct).behaviorUuid, strlen ((*behaviorConstruct).behaviorUuid)) == 0) {
+				return TRUE;
+			}
+			behaviorConstruct = (*behaviorConstruct).next;
+		}
+	}
+	
+	return FALSE;
+}
+
+Behavior* Get_Behavior_By_UUID (char *behaviorUuid) {
+	
+	Behavior_Construct *behaviorConstruct = NULL; 
+	
+	if (loop != NULL) {
+		
+		// Search for the behavior construct associated with the behavior that has the specified UUID.
+		behaviorConstruct = loop; // Get the first behavior construct in the cache list.
+		while (behaviorConstruct != NULL) {
+			if (strncmp (behaviorUuid, (*behaviorConstruct).behaviorUuid, strlen ((*behaviorConstruct).behaviorUuid)) == 0) {
+				return (*behaviorConstruct).behavior; // Return the behavior associated with the specified behavior construct.
+			}
+			behaviorConstruct = (*behaviorConstruct).next;
+		}
+	}
+	
+	return NULL;
+}
+
+Behavior_Construct* Get_Behavior_Construct_By_UUID (char *behaviorUuid) {
+	
+	Behavior_Construct *behaviorConstruct = NULL; 
+	
+	if (loop != NULL) {
+		
+		// Search for the behavior construct associated with the behavior that has the specified UUID.
+		behaviorConstruct = loop; // Get the first behavior construct in the cache list.
+		while (behaviorConstruct != NULL) {
+			if (strncmp (behaviorUuid, (*behaviorConstruct).behaviorUuid, strlen ((*behaviorConstruct).behaviorUuid)) == 0) {
+				return behaviorConstruct; // Return the behavior associated with the specified behavior construct.
+			}
+			behaviorConstruct = (*behaviorConstruct).next;
+		}
+	}
+	
+	return NULL;
 }
 
 uint32_t behaviorStartTime = 0;
@@ -457,6 +564,7 @@ int8_t Perform_Behavior (Behavior *behavior) {
 				// TODO: Add parameter for "say" to specify maximum frequency of phrase
 				// TODO: Add parameters for alternative phrases
 				//Broadcast_UDP_Message ("say i should say something");
+				Broadcast_UDP_Message ("say hey", 4445);
 				
 				result = TRUE;
 				

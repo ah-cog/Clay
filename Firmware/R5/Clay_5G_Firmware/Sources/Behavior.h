@@ -66,8 +66,9 @@ Behavior_Construct* currentBehaviorConstruct; // Pointer to the loop's current b
 uint8_t Initialize_Loop ();
 
 int16_t Add_Behavior (Behavior *behavior); // TODO: int16_t Add_Behavior (Behavior *loop, Behavior *behavior);
-//Behavior* Remove_Behavior (Behavior *loop, Behavior *behavior); // TODO: Behavior* Remove_Behavior (Behavior *loop, Behavior *behavior);
+Behavior* Remove_Behavior (Behavior *behavior); // TODO: Behavior* Remove_Behavior (Behavior *loop, Behavior *behavior);
 uint8_t Has_Behaviors ();
+Behavior_Construct* Get_Behavior_Construct_By_UUID (char *behaviorUuid);
 
 int8_t Perform_Behavior (Behavior *behavior);
 
