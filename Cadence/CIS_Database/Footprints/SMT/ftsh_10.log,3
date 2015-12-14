@@ -4,7 +4,7 @@
 (                                                                     )
 (    Drawing          : FTSH_10.dra                                   )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Fri Dec 11 16:30:02 2015                      )
+(    Date/Time        : Fri Dec 11 16:30:32 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -18,8 +18,6 @@ Create Symbol of type: PACKAGE
 
 Create symbol started.
  
- ERROR(SPMHCS-1): Symbol is missing a refdes. 
- ERROR(SPMHCS-1): Symbol is missing a refdes. 
 
-ERROR(SPMHA1-291): Create symbol has been aborted.
+Create symbol completed.
 

@@ -14,9 +14,7 @@
     (FileView
       (Path "Design Resources")
       (Path "Design Resources"
-         "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb")
-      (Select "Design Resources"
-         "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb" "DIODE"))
+         "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -33,6 +31,28 @@
         (Scroll "6726 1701")
         (Zoom "950"))
       (Path "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
-      (Package "INDUCTOR")))
+      (Package "INDUCTOR"))
+    (Doc
+      (Type "COrPartDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 130 1474 130 603")
+        (PackageScroll "0 0")
+        (PackageZoom "1")
+        (PartPackage "Part")
+        (Scroll "3499 1360")
+        (Zoom "502"))
+      (Path "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (Package "SPST_NO"))
+    (Doc
+      (Type "COrPartDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 156 1500 156 629")
+        (PackageScroll "0 0")
+        (PackageZoom "1")
+        (PartPackage "Part")
+        (Scroll "3559 1104")
+        (Zoom "653"))
+      (Path "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (Package "SWITCH_SPDT")))
   (MPSSessionName "thebh_000")
   (ISPCBBASICLICENSE "false"))

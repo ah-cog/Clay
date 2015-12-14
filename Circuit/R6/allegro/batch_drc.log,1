@@ -4,7 +4,7 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sun Dec 13 05:47:14 2015                      )
+(    Date/Time        : Sun Dec 13 22:04:51 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -20,7 +20,7 @@
  ========= check standalone text              0:00:00
  ========= check standalone rectangles        0:00:00
 
- ..... Total number of DRC errors  1
+ ..... Total number of DRC errors  21
 
 
 WARNING: 15 dynamic shape(s) out of date; checking skipped on these elements.

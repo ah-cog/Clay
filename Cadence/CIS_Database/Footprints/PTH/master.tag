@@ -1,1 +1,1 @@
-GPIO_3x3_100.dra
+JST2_SIDE_PTH.dra
