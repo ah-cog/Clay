@@ -856,7 +856,7 @@
         </attribute>
         <attribute>
           <name>CDS_LAYER_THICKNESS</name>
-          <value>1.20</value>
+          <value>1.40</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -992,7 +992,7 @@
         </attribute>
         <attribute>
           <name>CDS_LAYER_THICKNESS</name>
-          <value>1.20</value>
+          <value>1.40</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1060,7 +1060,7 @@
         </attribute>
         <attribute>
           <name>CDS_LAYER_THICKNESS</name>
-          <value>8.00</value>
+          <value>40.40</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1123,7 +1123,7 @@
         </attribute>
         <attribute>
           <name>CDS_LAYER_THICKNESS</name>
-          <value>1.20</value>
+          <value>1.40</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1254,7 +1254,7 @@
         </attribute>
         <attribute>
           <name>CDS_LAYER_THICKNESS</name>
-          <value>1.20</value>
+          <value>1.40</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1374,17 +1374,17 @@
         <name>DEFAULT</name>
         <attribute>
           <name>MIN_LINE_WIDTH</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
           <name>MIN_NECK_WIDTH</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
           <name>MIN_BVIA_STAGGER</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1444,7 +1444,7 @@
         </attribute>
         <attribute>
           <name>VIA_LIST</name>
-          <value>VIA</value>
+          <value>MV024_012</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <objectFlag>fObjectNOTReadOnly</objectFlag>
@@ -1782,7 +1782,7 @@
         </attribute>
         <attribute>
           <name>SN_LINE_TO_THRUPIN_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1802,7 +1802,7 @@
         </attribute>
         <attribute>
           <name>SN_LINE_TO_SMDPIN_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1817,7 +1817,7 @@
         </attribute>
         <attribute>
           <name>SN_LINE_TO_THRUVIA_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1827,12 +1827,12 @@
         </attribute>
         <attribute>
           <name>SN_LINE_TO_LINE_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
           <name>SN_LINE_TO_SHAPE_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1862,7 +1862,7 @@
         </attribute>
         <attribute>
           <name>SN_BBV_TO_LINE_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1907,7 +1907,7 @@
         </attribute>
         <attribute>
           <name>SN_LINE_TO_TESTPIN_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1937,7 +1937,7 @@
         </attribute>
         <attribute>
           <name>SN_LINE_TO_TESTVIA_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>
@@ -1967,7 +1967,7 @@
         </attribute>
         <attribute>
           <name>SN_BONDPAD_TO_LINE_SPACING</name>
-          <value>5.00,5.00,5.00,5.00</value>
+          <value>6.00,6.00,6.00,6.00</value>
           <Origin>gBackEnd</Origin>
         </attribute>
         <attribute>

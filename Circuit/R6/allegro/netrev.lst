@@ -4,7 +4,7 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sun Dec 13 10:02:06 2015                      )
+(    Date/Time        : Sun Dec 13 20:56:32 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -63,7 +63,7 @@ PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/
 ------ Summary Statistics ------
 
 
-netrev run on Dec 13 10:02:06 2015
+netrev run on Dec 13 20:56:32 2015
    DESIGN NAME : 'CLAYR6'
    PACKAGING ON Sep 10 2012 04:46:09
 
@@ -88,6 +88,6 @@ netrev run on Dec 13 10:02:06 2015
  No oversight detected
  No warning detected
 
-cpu time      0:00:42
+cpu time      0:01:07
 elapsed time  0:00:00
 

@@ -1,5 +1,5 @@
 FILE_TYPE=LIBRARY_PARTS;
-{ Using PSTWRITER 16.6.0 d001Dec-13-2015 at 09:59:51}
+{ Using PSTWRITER 16.6.0 d001Dec-13-2015 at 20:27:35}
 primitive 'ANTENNA_ANT_1206_2450AT18A100E';
   pin
     'IN':
@@ -653,6 +653,21 @@ primitive 'SWITCH_SPDT_CUS_12TB_CUS-12TB';
     PART_NAME='SWITCH_SPDT';
     JEDEC_TYPE='CUS_12TB';
     VALUE='CUS-12TB';
+  end_body;
+end_primitive;
+primitive 'SPST_NO_TAC_SWITCH_B3U_1000P_B3';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='SPST_NO';
+    JEDEC_TYPE='TAC_SWITCH_B3U_1000P';
+    VALUE='B3U-1000P';
   end_body;
 end_primitive;
 primitive 'TESTPOINT_TP_030_TP';
