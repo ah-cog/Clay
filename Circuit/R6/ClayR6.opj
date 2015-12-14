@@ -76,7 +76,8 @@
       (Path "Design Resources" "E:\git\clay\Circuit\R6\clayr6.dsn" "SCHEMATIC1")
       (Path "Design Resources" "E:\git\clay\Circuit\R6\clayr6.dsn"
          "Design Cache")
-      (Path "Outputs"))
+      (Path "Outputs")
+      (Select "Design Resources" "E:\git\clay\Circuit\R6\clayr6.dsn"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -87,7 +88,7 @@
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 0 1 -1 -1 -8 -31 0 1344 0 473")
-        (Scroll "0 527")
+        (Scroll "0 874")
         (Zoom "100")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6\CLAYR6.DSN")
@@ -96,11 +97,11 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 78 1714 78 548")
-        (Scroll "714 118")
-        (Zoom "200")
-        (Occurrence "/WiFi"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6\ESP8622EX\ESP8266EX.DSN")
+        (Placement "44 0 1 -1 -1 -8 -31 104 1740 104 574")
+        (Scroll "-38 0")
+        (Zoom "100")
+        (Occurrence "/RGB_LED"))
+      (Path "E:\GIT\CLAY\CIRCUIT\R6\12RGB_IS31FL3236\12RGB_IS31FL3236.DSN")
       (Schematic "SCHEMATIC1")
       (Page "PAGE1")))
   (MPSSessionName "thebh_000")
