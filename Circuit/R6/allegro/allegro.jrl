@@ -1,0 +1,923 @@
+\t (00:00:00) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:00)     Journal start - Sun Dec 13 22:48:22 2015
+\t (00:00:00)         Host=STEELGIANT User=thebh_000 Pid=18972 CPUs=8
+\t (00:00:00) 
+\t (00:00:02) Opening existing design...
+\d (00:00:02) Database opened: E:/git/clay/Circuit/R6/allegro/CLAYR6.brd
+\t (00:00:02) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:00:02) trapsize 2606
+\i (00:00:02) trapsize 2558
+\i (00:00:02) trapsize 2614
+\i (00:00:02) trapsize 2614
+\i (00:00:03) generaledit 
+\i (00:00:59) artwork 
+\i (00:01:01) color192 
+\i (00:01:01) setwindow cvf.dialog
+\i (00:01:01) cvf layer_mode
+\i (00:01:09) cvf global_invisible
+\i (00:01:10) cvf apply
+\i (00:01:11) cvf layer_tree_item 'Package Geometry'
+\i (00:01:12) cvf layer_tree_item 'Board Geometry'
+\i (00:01:14) cvf layers_visible board_geometry/outline TRUE
+\i (00:01:16) cvf apply
+\i (00:01:19) setwindow form.film_control
+\i (00:01:19) FORM film_control filmtree popup Add TOP 
+\i (00:01:21) fillin "OUTLINE"
+\i (00:01:28) setwindow cvf.dialog
+\i (00:01:28) cvf layers_visible board_geometry/outline FALSE
+\i (00:01:31) cvf layers_visible board_geometry/silkscreen_top TRUE
+\i (00:01:34) cvf layer_tree_item 'Package Geometry'
+\i (00:01:36) cvf layers_visible package_geometry/silkscreen_top TRUE
+\i (00:01:40) cvf global_visible
+\i (00:01:41) cvf apply
+\i (00:01:50) cvf global_invisible
+\i (00:01:52) cvf layers_visible package_geometry/silkscreen_top TRUE
+\i (00:01:53) cvf apply
+\i (00:01:56) cvf layer_tree_item 'Embedded Geomerty'
+\i (00:01:57) cvf layer_tree_item 'Board Geometry'
+\i (00:01:59) cvf layers_visible board_geometry/silkscreen_top TRUE
+\i (00:02:00) cvf apply
+\i (00:02:04) cvf layers_visible board_geometry/outline TRUE
+\i (00:02:05) cvf apply
+\i (00:02:08) cvf layers_visible board_geometry/outline FALSE
+\i (00:02:09) cvf apply
+\i (00:02:25) setwindow pcb
+\i (00:02:25) zoom in 1 
+\i (00:02:25) setwindow pcb
+\i (00:02:25) zoom in 943.42 -203.87
+\t (00:02:25) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:02:25) trapsize 1307
+\i (00:02:26) zoom out 1 
+\i (00:02:26) setwindow pcb
+\i (00:02:26) zoom out 943.43 -193.41
+\t (00:02:26) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:02:26) trapsize 2614
+\i (00:02:30) setwindow cvf.dialog
+\i (00:02:30) cvf layer_tree_item 'Components'
+\i (00:02:33) cvf layers_visible components ref_des/silkscreen_top TRUE
+\i (00:02:34) cvf apply
+\i (00:02:36) setwindow pcb
+\i (00:02:36) prepopup 4059.05 867.78
+\i (00:02:38) setwindow form.film_control
+\i (00:02:38) FORM film_control cancel  
+\i (00:02:38) setwindow pcb
+\i (00:02:38) generaledit 
+\i (00:02:40) save 
+\i (00:02:41) fillin yes 
+\i (00:02:42) generaledit 
+\i (00:02:42) zoom in 1 
+\i (00:02:42) setwindow pcb
+\i (00:02:42) zoom in -1759.22 -376.38
+\t (00:02:42) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:02:42) trapsize 1307
+\i (00:02:43) zoom in 1 
+\i (00:02:43) setwindow pcb
+\i (00:02:43) zoom in -982.92 -156.82
+\i (00:02:43) trapsize 653
+\i (00:02:43) zoom in 1 
+\i (00:02:43) setwindow pcb
+\i (00:02:43) zoom in -818.25 -184.26
+\t (00:02:43) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:02:43) trapsize 327
+\i (00:02:44) prepopup -786.23 -202.55
+\i (00:02:45) pop dyn_option_select @:@Delete 
+\i (00:02:45) delete 
+\i (00:02:45) generaledit 
+\i (00:02:45) prepopup -761.40 -204.51
+\i (00:02:46) pop dyn_option_select @:@Delete 
+\i (00:02:46) delete 
+\i (00:02:46) generaledit 
+\i (00:02:47) prepopup -681.68 -222.81
+\i (00:02:48) pop dyn_option_select @:@Delete 
+\i (00:02:48) delete 
+\i (00:02:48) generaledit 
+\i (00:02:49) prepopup -583.66 -243.06
+\i (00:02:50) pop dyn_option_select @:@Delete 
+\i (00:02:50) delete 
+\i (00:02:50) generaledit 
+\i (00:02:50) prepopup -549.03 -229.34
+\i (00:02:51) pop dyn_option_select @:@Delete 
+\i (00:02:51) delete 
+\i (00:02:51) generaledit 
+\i (00:02:52) prepopup -492.18 -236.53
+\i (00:02:53) pop dyn_option_select @:@Delete 
+\i (00:02:53) delete 
+\i (00:02:53) generaledit 
+\i (00:02:54) prepopup -425.53 -236.53
+\i (00:02:54) pop dyn_option_select @:@Delete 
+\i (00:02:54) delete 
+\i (00:02:55) generaledit 
+\i (00:02:55) zoom out 1 
+\i (00:02:55) setwindow pcb
+\i (00:02:55) zoom out -550.99 -182.29
+\t (00:02:55) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:02:55) trapsize 653
+\i (00:02:55) zoom out 1 
+\i (00:02:55) setwindow pcb
+\i (00:02:55) zoom out -550.98 -182.30
+\i (00:02:55) trapsize 1307
+\i (00:02:58) zoom out 1 
+\i (00:02:58) setwindow pcb
+\i (00:02:58) zoom out -992.71 -145.70
+\t (00:02:58) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:02:58) trapsize 2614
+\i (00:02:59) zoom in 1 
+\i (00:02:59) setwindow pcb
+\i (00:02:59) zoom in 331.80 680.25
+\t (00:02:59) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:02:59) trapsize 1307
+\i (00:02:59) zoom in 1 
+\i (00:02:59) setwindow pcb
+\i (00:02:59) zoom in 305.66 635.82
+\i (00:02:59) trapsize 653
+\i (00:02:59) zoom in 1 
+\i (00:02:59) setwindow pcb
+\i (00:02:59) zoom in 95.25 617.52
+\t (00:02:59) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:02:59) trapsize 327
+\i (00:03:00) prepopup 129.23 564.59
+\i (00:03:01) pop dyn_option_select @:@Delete 
+\i (00:03:01) delete 
+\i (00:03:01) generaledit 
+\i (00:03:02) prepopup 172.36 633.20
+\i (00:03:03) pop dyn_option_select @:@Delete 
+\i (00:03:03) delete 
+\i (00:03:03) generaledit 
+\i (00:03:04) prepopup 182.16 596.61
+\i (00:03:05) pop dyn_option_select @:@Delete 
+\i (00:03:05) delete 
+\i (00:03:05) generaledit 
+\i (00:03:05) prepopup 193.92 561.98
+\i (00:03:07) pop dyn_option_select @:@Delete 
+\i (00:03:07) delete 
+\i (00:03:07) generaledit 
+\i (00:03:08) prepopup 211.57 534.53
+\i (00:03:09) pop dyn_option_select @:@Delete 
+\i (00:03:09) delete 
+\i (00:03:09) generaledit 
+\i (00:03:10) prepopup 328.53 451.55
+\i (00:03:11) pop dyn_option_select @:@Delete 
+\i (00:03:11) delete 
+\i (00:03:11) generaledit 
+\i (00:03:11) zoom out 1 
+\i (00:03:11) setwindow pcb
+\i (00:03:11) zoom out 319.38 535.84
+\t (00:03:11) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:03:11) trapsize 653
+\i (00:03:12) zoom out 1 
+\i (00:03:12) setwindow pcb
+\i (00:03:12) zoom out -4.71 480.95
+\i (00:03:12) trapsize 1307
+\i (00:03:15) zoom out 1 
+\i (00:03:15) setwindow pcb
+\i (00:03:15) zoom out -62.22 611.65
+\t (00:03:15) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:03:15) trapsize 2614
+\i (00:03:17) save 
+\i (00:03:19) fillin yes 
+\i (00:03:19) generaledit 
+\i (00:03:21) artwork 
+\i (00:03:26) setwindow form.film_control
+\i (00:03:26) FORM film_control filmtree popup Add TOP 
+\i (00:03:33) fillin "SILK_TOP"
+\i (00:03:59) setwindow cvf.dialog
+\i (00:03:59) cvf global_invisible
+\i (00:04:00) cvf apply
+\i (00:04:02) cvf layer_tree_item 'Board Geometry'
+\i (00:04:04) cvf layers_visible board_geometry/outline TRUE
+\i (00:04:05) cvf apply
+\i (00:04:09) setwindow form.film_control
+\i (00:04:09) FORM film_control filmtree popup Add SILK_TOP 
+\i (00:04:14) fillin "OUTLINE"
+\i (00:04:25) FORM film_control select_all  
+\i (00:04:27) FORM film_control filmtree popup 'Save All Checked' OUTLINE 
+\i (00:04:34) FORM film_control load  
+\i (00:04:35) fillin "menu_cancel"
+\i (00:04:44) setwindow cvf.dialog
+\i (00:04:44) cvf layers_visible board_geometry/outline FALSE
+\i (00:04:46) cvf layers_visible board_geometry/silkscreen_bottom TRUE
+\i (00:04:47) cvf layer_tree_item 'Package Geometry'
+\i (00:04:49) cvf layers_visible package_geometry/silkscreen_bottom TRUE
+\i (00:04:50) cvf layer_tree_item 'Components'
+\i (00:04:52) cvf layers_visible components ref_des/silkscreen_bottom TRUE
+\i (00:04:56) cvf apply
+\i (00:04:58) setwindow pcb
+\i (00:04:58) zoom out 1 
+\i (00:04:58) setwindow pcb
+\i (00:04:58) zoom out -1541.62 271.85
+\i (00:04:58) trapsize 5228
+\i (00:05:03) setwindow form.film_control
+\i (00:05:03) FORM film_control filmtree popup Add OUTLINE 
+\i (00:05:09) fillin "SILK_BOTTOM"
+\i (00:05:11) FORM film_control select_all  
+\i (00:05:13) FORM film_control filmtree popup 'Save All Checked' OUTLINE 
+\i (00:05:20) setwindow cvf.dialog
+\i (00:05:20) cvf layer_tree_item 'Embedded Geomerty'
+\i (00:05:21) cvf layer_tree_item 'Package Geometry'
+\i (00:05:23) cvf layer_tree_item 'Board Geometry'
+\i (00:05:24) cvf layer_tree_item 'Embedded Geomerty'
+\i (00:05:33) cvf global_invisible
+\i (00:05:34) cvf apply
+\i (00:05:35) cvf layer_tree_item 'Package Geometry'
+\i (00:05:37) cvf layers_visible package_geometry/pastemask_top TRUE
+\i (00:05:39) cvf apply
+\i (00:05:49) cvf layers_visible package_geometry/pastemask_top FALSE
+\i (00:05:51) cvf layers_visible package_geometry/soldermask_top TRUE
+\i (00:05:52) cvf apply
+\i (00:05:53) setwindow pcb
+\i (00:05:53) zoom out 1 
+\i (00:05:53) setwindow pcb
+\i (00:05:53) zoom out 870.23 318.88
+\i (00:05:53) trapsize 5228
+\i (00:05:55) zoom out 1 
+\i (00:05:55) setwindow pcb
+\i (00:05:55) zoom out 5595.94 -47.05
+\i (00:05:55) trapsize 5228
+\i (00:05:55) zoom out 1 
+\i (00:05:55) setwindow pcb
+\i (00:05:55) zoom out 5449.57 -120.23
+\i (00:05:55) trapsize 5228
+\i (00:05:55) zoom in 1 
+\i (00:05:55) setwindow pcb
+\i (00:05:55) zoom in 3766.30 -454.80
+\i (00:05:55) trapsize 2614
+\i (00:05:55) zoom in 1 
+\i (00:05:55) setwindow pcb
+\i (00:05:55) zoom in 2016.30 -454.80
+\t (00:05:55) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:05:55) trapsize 1307
+\i (00:05:55) zoom out 1 
+\i (00:05:55) setwindow pcb
+\i (00:05:55) zoom out 1266.15 -263.99
+\t (00:05:55) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:05:55) trapsize 2614
+\i (00:05:55) zoom out 1 
+\i (00:05:55) setwindow pcb
+\i (00:05:55) zoom out 625.76 -243.09
+\i (00:05:55) trapsize 5228
+\i (00:05:55) zoom out 1 
+\i (00:05:55) setwindow pcb
+\i (00:05:55) zoom out 65.19 277.06
+\i (00:05:55) trapsize 5228
+\i (00:05:58) setwindow cvf.dialog
+\i (00:05:58) cvf layer_tree_item 'Board Geometry'
+\i (00:06:01) cvf layers_visible board_geometry/soldermask_top TRUE
+\i (00:06:02) cvf apply
+\i (00:06:06) cvf layer_tree_item 'Package Geometry'
+\i (00:06:09) cvf layer_tree_item 'Embedded Geomerty'
+\i (00:06:12) cvf layer_tree_item 'Components'
+\i (00:06:20) cvf layer_tree_item 'Manufacturing'
+\i (00:06:22) cvf layer_tree_item 'Drawing Format'
+\i (00:06:23) cvf layer_tree_item 'Analysis'
+\i (00:06:27) setwindow pcb
+\i (00:06:27) zoom out 1 
+\i (00:06:27) setwindow pcb
+\i (00:06:27) zoom out -185.73 -57.50
+\i (00:06:27) trapsize 5228
+\i (00:06:29) zoom in 1 
+\i (00:06:29) setwindow pcb
+\i (00:06:29) zoom in -551.66 -47.05
+\i (00:06:29) trapsize 2614
+\i (00:06:29) zoom in 1 
+\i (00:06:29) setwindow pcb
+\i (00:06:29) zoom in -551.66 -31.36
+\t (00:06:29) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:06:29) trapsize 1307
+\i (00:06:30) zoom in 1 
+\i (00:06:30) setwindow pcb
+\i (00:06:30) zoom in -551.65 15.69
+\i (00:06:30) trapsize 653
+\i (00:06:30) zoom in 1 
+\i (00:06:30) setwindow pcb
+\i (00:06:30) zoom in -551.65 15.69
+\t (00:06:30) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:06:30) trapsize 327
+\i (00:06:34) setwindow form.vf_vis
+\i (00:06:34) FORM vf_vis 1 etch_colorvisible 1 
+\i (00:06:36) setwindow pcb
+\i (00:06:36) zoom out 1 
+\i (00:06:36) setwindow pcb
+\i (00:06:36) zoom out -320.98 70.58
+\t (00:06:36) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:06:36) trapsize 653
+\i (00:06:37) zoom in 1 
+\i (00:06:37) setwindow pcb
+\i (00:06:37) zoom in -663.39 -16.97
+\t (00:06:37) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:06:37) trapsize 327
+\i (00:06:48) setwindow form.film_control
+\i (00:06:48) FORM film_control ok  
+\i (00:06:48) setwindow pcb
+\i (00:06:48) generaledit 
+\i (00:06:51) pick grid -567.33 -114.98
+\t (00:06:51) last pick:  -567.00  -115.00
+\i (00:06:56) zoom out 1 
+\i (00:06:56) setwindow pcb
+\i (00:06:56) zoom out -460.17 -79.04
+\t (00:06:56) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:06:56) trapsize 653
+\i (00:06:56) zoom out 1 
+\i (00:06:56) setwindow pcb
+\i (00:06:56) zoom out -460.16 -69.90
+\i (00:06:56) trapsize 1307
+\i (00:07:03) setwindow cvf.dialog
+\i (00:07:03) cvf layer_tree_item 'Conductor' 'Stack-Up'
+\i (00:07:05) cvf layer_tree_item 'Non-Conductor' 'Stack-Up'
+\i (00:07:10) cvf global_invisible
+\i (00:07:12) cvf apply
+\i (00:07:14) setwindow pcb
+\i (00:07:14) artwork 
+\i (00:07:20) setwindow cvf.dialog
+\i (00:07:20) cvf layers_visible stack-up stack-up/pastemask_top TRUE
+\i (00:07:21) cvf apply
+\i (00:07:23) setwindow pcb
+\i (00:07:23) zoom in 1 
+\i (00:07:23) setwindow pcb
+\i (00:07:23) zoom in -703.24 536.51
+\i (00:07:23) trapsize 653
+\i (00:07:23) zoom in 1 
+\i (00:07:23) setwindow pcb
+\i (00:07:23) zoom in -703.24 536.51
+\t (00:07:23) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:07:23) trapsize 327
+\i (00:07:24) zoom in 1 
+\i (00:07:24) setwindow pcb
+\i (00:07:24) zoom in -696.70 516.25
+\i (00:07:24) trapsize 163
+\i (00:07:24) zoom in 1 
+\i (00:07:24) setwindow pcb
+\i (00:07:24) zoom in -696.70 516.26
+\i (00:07:24) trapsize 82
+\i (00:07:24) zoom out 1 
+\i (00:07:24) setwindow pcb
+\i (00:07:24) zoom out -696.70 516.26
+\i (00:07:24) trapsize 163
+\i (00:07:24) zoom out 1 
+\i (00:07:24) setwindow pcb
+\i (00:07:24) zoom out -696.70 516.26
+\i (00:07:24) trapsize 327
+\i (00:07:25) zoom out 1 
+\i (00:07:25) setwindow pcb
+\i (00:07:25) zoom out -698.66 488.81
+\t (00:07:25) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:07:25) trapsize 653
+\i (00:07:25) zoom out 1 
+\i (00:07:25) setwindow pcb
+\i (00:07:25) zoom out -694.74 492.73
+\i (00:07:25) trapsize 1307
+\i (00:07:25) zoom out 1 
+\i (00:07:25) setwindow pcb
+\i (00:07:25) zoom out -694.74 492.73
+\t (00:07:25) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:07:25) trapsize 2614
+\i (00:07:25) zoom out 1 
+\i (00:07:25) setwindow pcb
+\i (00:07:25) zoom out -358.24 492.73
+\i (00:07:25) trapsize 5228
+\i (00:07:26) zoom in 1 
+\i (00:07:26) setwindow pcb
+\i (00:07:26) zoom in -1053.51 392.07
+\i (00:07:26) trapsize 2614
+\i (00:07:26) zoom in 1 
+\i (00:07:26) setwindow pcb
+\i (00:07:26) zoom in -781.67 392.07
+\t (00:07:26) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:07:26) trapsize 1307
+\i (00:07:30) setwindow form.vf_vis
+\i (00:07:30) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:31) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:32) setwindow pcb
+\i (00:07:32) zoom out 1 
+\i (00:07:32) setwindow pcb
+\i (00:07:32) zoom out -251.07 575.04
+\t (00:07:32) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:07:32) trapsize 2614
+\i (00:07:33) zoom in 1 
+\i (00:07:33) setwindow pcb
+\i (00:07:33) zoom in -193.57 -135.90
+\t (00:07:33) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:07:33) trapsize 1307
+\i (00:07:35) setwindow form.vf_vis
+\i (00:07:35) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:36) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:36) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:36) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:37) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:40) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:40) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:40) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:40) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:41) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:41) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:41) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:41) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:42) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:42) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:42) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:42) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:43) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:43) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:43) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:44) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:44) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:44) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:44) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:44) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:45) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:45) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:45) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:45) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:45) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:46) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:46) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:46) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:46) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:46) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:07:47) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:07:52) setwindow cvf.dialog
+\i (00:07:52) cvf layers_visible stack-up drc/pastemask_top FALSE
+\i (00:07:58) setwindow form.film_control
+\i (00:07:58) FORM film_control filmtree popup Add TOP 
+\i (00:08:04) fillin "PASTE_TOP"
+\i (00:08:06) setwindow cvf.dialog
+\i (00:08:06) cvf layers_visible stack-up stack-up/pastemask_top TRUE
+\i (00:08:07) cvf layers_visible stack-up stack-up/pastemask_top FALSE
+\i (00:08:08) cvf layers_visible stack-up stack-up/pastemask_bottom TRUE
+\i (00:08:09) cvf layers_visible stack-up drc/pastemask_bottom FALSE
+\i (00:08:11) cvf apply
+\i (00:08:15) setwindow form.film_control
+\i (00:08:15) FORM film_control filmtree popup Add TOP 
+\i (00:08:20) FORM film_control filmtree  BOTTOM 
+\i (00:08:20) fillin "PASTE_BOTTOM"
+\i (00:08:24) setwindow cvf.dialog
+\i (00:08:24) cvf layers_visible stack-up stack-up/pastemask_bottom TRUE
+\i (00:08:25) cvf layers_visible stack-up stack-up/pastemask_bottom FALSE
+\i (00:08:27) cvf layers_visible stack-up stack-up/soldermask_top TRUE
+\i (00:08:29) cvf layers_visible stack-up drc/soldermask_top FALSE
+\i (00:08:30) cvf apply
+\i (00:08:35) setwindow pcb
+\i (00:08:35) zoom out 1 
+\i (00:08:35) setwindow pcb
+\i (00:08:35) zoom out 825.80 -420.80
+\t (00:08:35) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:08:35) trapsize 2614
+\i (00:08:35) zoom in 1 
+\i (00:08:35) setwindow pcb
+\i (00:08:35) zoom in -143.91 311.05
+\t (00:08:35) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:08:35) trapsize 1307
+\i (00:08:36) zoom out 1 
+\i (00:08:36) setwindow pcb
+\i (00:08:36) zoom out -117.77 292.76
+\t (00:08:36) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:08:36) trapsize 2614
+\i (00:08:36) zoom in 1 
+\i (00:08:36) setwindow pcb
+\i (00:08:36) zoom in -128.23 109.79
+\t (00:08:36) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:08:36) trapsize 1307
+\i (00:08:37) zoom out 1 
+\i (00:08:37) setwindow pcb
+\i (00:08:37) zoom out -81.18 83.66
+\t (00:08:37) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:08:37) trapsize 2614
+\i (00:08:38) zoom in 1 
+\i (00:08:38) setwindow pcb
+\i (00:08:38) zoom in -143.91 -156.81
+\t (00:08:38) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:08:38) trapsize 1307
+\i (00:08:44) setwindow form.vf_vis
+\i (00:08:44) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:08:44) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:08:44) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:08:45) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:08:45) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:08:47) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:08:48) FORM vf_vis 1 via_colorvisible 1 
+\i (00:08:48) FORM vf_vis 1 via_colorvisible 0 
+\i (00:08:49) FORM vf_vis 1 via_colorvisible 1 
+\i (00:08:49) FORM vf_vis 1 via_colorvisible 0 
+\i (00:08:49) FORM vf_vis 1 via_colorvisible 1 
+\i (00:08:51) FORM vf_vis 1 via_colorvisible 0 
+\i (00:09:08) setwindow cvf.dialog
+\i (00:09:08) cvf layers_visible stack-up stack-up/soldermask_top TRUE
+\i (00:09:08) cvf layers_visible stack-up stack-up/soldermask_top FALSE
+\i (00:09:10) cvf apply
+\i (00:09:13) setwindow form.vf_vis
+\i (00:09:13) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:16) setwindow cvf.dialog
+\i (00:09:16) cvf layers_visible stack-up stack-up/soldermask_top TRUE
+\i (00:09:19) cvf apply
+\i (00:09:22) cvf layers_visible stack-up drc/soldermask_top FALSE
+\i (00:09:23) cvf apply
+\i (00:09:28) setwindow form.vf_vis
+\i (00:09:28) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:29) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:36) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:36) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:37) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:37) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:37) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:38) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:38) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:38) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:39) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:39) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:40) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:40) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:40) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:42) FORM vf_vis 1 pin_colorvisible 1 
+\i (00:09:42) FORM vf_vis 1 pin_colorvisible 0 
+\i (00:09:45) FORM vf_vis 1 via_colorvisible 1 
+\i (00:11:25) setwindow cvf.dialog
+\i (00:11:25) cvf global_invisible
+\i (00:11:26) cvf apply
+\i (00:11:28) cvf layers_visible stack-up pin/soldermask_top TRUE
+\i (00:11:31) cvf layers_visible stack-up via/soldermask_top TRUE
+\i (00:11:33) cvf apply
+\i (00:11:37) setwindow form.film_control
+\i (00:11:37) FORM film_control filmtree popup Add PASTE_TOP 
+\i (00:11:42) fillin "SOLDERMASK_TOP"
+\i (00:11:44) FORM film_control select_all  
+\i (00:11:47) FORM film_control filmtree popup 'Save All Checked' SOLDERMASK_TOP 
+\i (00:11:52) setwindow cvf.dialog
+\i (00:11:52) cvf layers_visible stack-up pin/soldermask_bottom TRUE
+\i (00:11:53) cvf layers_visible stack-up via/soldermask_bottom TRUE
+\i (00:11:53) cvf layers_visible stack-up pin/soldermask_top FALSE
+\i (00:11:54) cvf layers_visible stack-up via/soldermask_top FALSE
+\i (00:11:55) cvf apply
+\i (00:12:01) setwindow pcb
+\i (00:12:01) zoom out 1 
+\i (00:12:01) setwindow pcb
+\i (00:12:01) zoom out -274.59 611.65
+\t (00:12:01) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:12:01) trapsize 2614
+\i (00:12:14) setwindow form.film_control
+\i (00:12:14) FORM film_control filmtree popup Add SOLDERMASK_TOP 
+\i (00:12:21) fillin "SOLDERMASK_BOTTOM"
+\i (00:12:40) FORM film_control select_all  
+\i (00:12:45) FORM film_control filmtree popup 'Save All Checked' PASTE_TOP 
+\i (00:12:51) FORM film_control filmtree 'MULTISEL NO' PASTE_BOTTOM 
+\i (00:12:51) FORM film_control filmtree  PASTE_BOTTOM 
+\i (00:13:10) FORM film_control create  
+\t (00:13:10) Checking db records
+\t (00:13:10)     checking for orphans...
+\t (00:13:10)     Checked  50 percent
+\t (00:13:10)     Checked 100 percent
+\w (00:13:10) Run batch DRC to correctly regenerate DRC errs.
+
+\t (00:13:10) Done dbdoctor.
+\t (00:13:10) Starting Create artwork films...
+\w (00:13:11) WARNING(SPMHGE-269): artwork had warnings, use Viewlog to review the log file.
+\w (00:13:12) Artwork generated with warnings.
+\i (00:14:18) setwindow text
+\i (00:14:18) close 
+\i (00:14:21) setwindow pcb
+\i (00:14:21) status 
+\i (00:14:23) setwindow form.status
+\i (00:14:23) FORM status drc_update  
+\w (00:14:23) DRC Update can not be run while command active.
+\i (00:14:28) setwindow cvf.dialog
+\i (00:14:28) cvf layers_visible stack-up drc/all_row TRUE
+\i (00:14:31) cvf layer_tree_item 'Stack-Up'
+\i (00:14:32) cvf layers_visible stack-up drc/all_row TRUE
+\i (00:14:34) cvf apply
+\i (00:14:38) setwindow pcb
+\i (00:14:38) zoom in 1 
+\i (00:14:38) setwindow pcb
+\i (00:14:38) zoom in -1048.28 721.42
+\t (00:14:38) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:14:38) trapsize 1307
+\i (00:14:38) zoom in 1 
+\i (00:14:38) setwindow pcb
+\i (00:14:38) zoom in -1048.27 721.43
+\i (00:14:38) trapsize 653
+\i (00:14:39) zoom out 1 
+\i (00:14:39) setwindow pcb
+\i (00:14:39) zoom out -1016.91 767.17
+\i (00:14:39) trapsize 1307
+\i (00:14:42) zoom in 1 
+\i (00:14:42) setwindow pcb
+\i (00:14:42) zoom in -933.26 866.50
+\i (00:14:42) trapsize 653
+\i (00:14:42) zoom in 1 
+\i (00:14:42) setwindow pcb
+\i (00:14:42) zoom in -929.33 866.51
+\t (00:14:42) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:14:42) trapsize 327
+\i (00:14:44) setwindow form.vf_vis
+\i (00:14:44) FORM vf_vis 1 all_colorvisible YES 
+\i (00:14:46) setwindow pcb
+\i (00:14:46) zoom out 1 
+\i (00:14:46) setwindow pcb
+\i (00:14:46) zoom out -728.07 793.32
+\t (00:14:46) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:14:46) trapsize 653
+\i (00:14:46) zoom in 1 
+\i (00:14:46) setwindow pcb
+\i (00:14:46) zoom in -731.98 784.18
+\t (00:14:46) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:14:46) trapsize 327
+\i (00:14:46) zoom in 1 
+\i (00:14:46) setwindow pcb
+\i (00:14:46) zoom in -731.98 784.18
+\i (00:14:46) trapsize 163
+\i (00:14:49) save 
+\i (00:14:51) fillin yes 
+\i (00:14:51) generaledit 
+\i (00:14:51) zoom out 1 
+\i (00:14:51) setwindow pcb
+\i (00:14:51) zoom out -726.43 736.15
+\i (00:14:51) trapsize 327
+\i (00:14:52) zoom in 1 
+\i (00:14:52) setwindow pcb
+\i (00:14:52) zoom in -748.64 827.63
+\i (00:14:52) trapsize 163
+\i (00:14:52) zoom in 1 
+\i (00:14:52) setwindow pcb
+\i (00:14:52) zoom in -748.63 827.63
+\i (00:14:52) trapsize 82
+\i (00:14:52) zoom out 1 
+\i (00:14:52) setwindow pcb
+\i (00:14:52) zoom out -766.93 823.06
+\i (00:14:52) trapsize 163
+\i (00:14:52) zoom out 1 
+\i (00:14:52) setwindow pcb
+\i (00:14:52) zoom out -761.37 828.62
+\i (00:14:52) trapsize 327
+\i (00:14:57) etchedit 
+\i (00:14:59) setwindow form.vf_vis
+\i (00:14:59) FORM vf_vis 4 all_colorvisible YES 
+\i (00:15:00) FORM vf_vis 4 all_colorvisible NO 
+\i (00:15:03) setwindow form.find
+\i (00:15:03) FORM find shapes NO 
+\i (00:15:08) setwindow pcb
+\i (00:15:08) zoom in 1 
+\i (00:15:08) setwindow pcb
+\i (00:15:08) zoom in -809.73 773.72
+\i (00:15:08) trapsize 163
+\i (00:15:10) setwindow form.vf_vis
+\i (00:15:10) FORM vf_vis 4 all_colorvisible YES 
+\i (00:15:12) setwindow pcb
+\i (00:15:12) trapsize 236
+\i (00:15:12) trapsize 163
+\i (00:15:13) prepopup -708.77 778.30
+\i (00:15:16) setwindow form.find
+\i (00:15:16) FORM find vias YES 
+\i (00:15:17) setwindow pcb
+\i (00:15:17) prepopup -710.08 777.32
+\i (00:15:17) pop dyn_option_select @:@Slide 
+\i (00:15:17) slide 
+\t (00:15:18) Waiting for the destination pick.
+\i (00:15:19) pick grid -716.94 783.85
+\t (00:15:19) last pick:  -717.00  784.00
+\t (00:15:19) No DRC errors detected.
+\i (00:15:19) etchedit 
+\i (00:15:20) save 
+\i (00:15:22) fillin yes 
+\i (00:15:22) etchedit 
+\i (00:15:23) setwindow form.status
+\i (00:15:23) FORM status refresh  
+\i (00:15:27) setwindow pcb
+\i (00:15:27) shape global param 
+\i (00:15:27) etchedit 
+\i (00:15:31) setwindow form.dyn_xshape
+\i (00:15:31) FORM dyn_xshape force_update  
+\t (00:15:31) Updating dynamic shape (1 of 15) Gnd, Boundary/Top @ (-979.99 -979.99) ...
+\t (00:15:31) Updating dynamic shape (2 of 15) Gnd, Boundary/Bottom @ (-979.99 -979.99) ...
+\t (00:15:32) Updating dynamic shape (3 of 15) Vcc, Boundary/Pwr @ (-979.99 -979.99) ...
+\t (00:15:32) Updating dynamic shape (4 of 15) Gnd, Boundary/Gnd @ (-979.99 -979.99) ...
+\t (00:15:32) Updating dynamic shape (5 of 15) Chg_Out, Boundary/Pwr @ (-979.99 575.00) ...
+\t (00:15:32) Updating dynamic shape (6 of 15) Vbat, Boundary/Pwr @ (-979.99 568.98) ...
+\t (00:15:32) Updating dynamic shape (7 of 15) Pgnd, Boundary/Top @ (-692.00 493.00) ...
+\t (00:15:32) Updating dynamic shape (8 of 15) Vbat, Boundary/Top @ (-880.00 572.00) ...
+\t (00:15:32) Updating dynamic shape (9 of 15) N00355, Boundary/Top @ (-621.00 496.00) ...
+\t (00:15:32) Updating dynamic shape (10 of 15) Pgnd, Boundary/Top @ (-687.00 256.00) ...
+\t (00:15:32) Updating dynamic shape (11 of 15) Vbat, Boundary/Top @ (-620.00 524.00) ...
+\t (00:15:32) Updating dynamic shape (12 of 15) Chg_Out, Boundary/Top @ (-884.00 682.00) ...
+\t (00:15:32) Updating dynamic shape (13 of 15) N08912, Boundary/Top @ (-961.00 827.00) ...
+\t (00:15:32) Updating dynamic shape (14 of 15) Vcc, Boundary/Top @ (-614.00 266.00) ...
+\t (00:15:32) Updating dynamic shape (15 of 15) Chg_Out, Boundary/Top @ (-608.00 755.00) ...
+\i (00:15:34) FORM dyn_xshape done  
+\i (00:15:34) setwindow pcb
+\i (00:15:34) zoom out 1 
+\i (00:15:34) setwindow pcb
+\i (00:15:34) zoom out -863.31 753.14
+\i (00:15:34) trapsize 327
+\i (00:15:36) setwindow form.find
+\i (00:15:36) FORM find drc_errors YES 
+\i (00:15:39) FORM find vias NO 
+\i (00:15:40) setwindow pcb
+\i (00:15:40) pick grid -1016.22 748.56
+\t (00:15:40) last pick:  -1016.00  749.00
+\i (00:15:40) prepopup -981.59 748.56
+\i (00:15:42) pop dyn_option_select '@:@Waive DRC' 
+\i (00:15:42) waive drc 
+\i (00:15:49) setwindow form.waivedrc_comment
+\i (00:15:49) FORM waivedrc_comment comment_field 'connector overhang' 
+\i (00:15:49) setwindow pcb
+\i (00:15:49) etchedit 
+\i (00:15:52) setwindow cvf.dialog
+\i (00:15:52) cvf layer_tree_item 'Embedded Geomerty'
+\i (00:15:53) cvf layer_tree_item 'Package Geometry'
+\i (00:15:55) cvf layers_visible package_geometry/place_bound_bottom TRUE
+\i (00:15:57) cvf layers_visible package_geometry/place_bound_bottom FALSE
+\i (00:16:00) cvf layers_visible package_geometry/place_bound_top TRUE
+\i (00:16:01) cvf apply
+\i (00:16:08) cvf layer_tree_item 'Stack-Up'
+\i (00:16:12) setwindow form.status
+\i (00:16:12) FORM status drc_update  
+\t (00:16:12) Running DRC, please wait...
+\t (00:16:12) Performing DRC...
+\t (00:16:12) Multithreaded DRC update (8 threads).
+\t (00:16:12) DRC done; 5 errors detected.
+\t (00:16:12) DRC done.
+\i (00:16:13) setwindow pcb
+\i (00:16:13) zoom out 1 
+\i (00:16:13) setwindow pcb
+\i (00:16:13) zoom out -674.47 817.83
+\t (00:16:13) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:16:13) trapsize 653
+\i (00:16:14) zoom in 1 
+\i (00:16:14) setwindow pcb
+\i (00:16:14) zoom in -592.13 1000.80
+\t (00:16:14) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:16:14) trapsize 327
+\i (00:16:15) zoom in 1 
+\i (00:16:15) setwindow pcb
+\i (00:16:15) zoom in -583.64 1000.80
+\i (00:16:15) trapsize 163
+\i (00:16:15) pick grid -564.04 992.96
+\t (00:16:15) last pick:  -564.00  993.00
+\i (00:16:19) setwindow form.status
+\i (00:16:19) FORM status waived_drc_color 1 
+\i (00:16:19) setwindow pcb
+\i (00:16:19) reports waived_drc 
+\i (00:16:19) reports "waived_drc"
+\i (00:16:19) etchedit 
+\i (00:16:21) zoom center 
+\t (00:16:21) Pick center for the new display.
+\i (00:16:21) pick -975.00 748.50 
+\t (00:16:21) last pick:  -975.00  748.50
+\i (00:16:21) trapsize 163
+\i (00:16:21) etchedit 
+\i (00:16:24) zoom center 
+\t (00:16:24) Pick center for the new display.
+\i (00:16:24) pick 798.00 934.00 
+\t (00:16:24) last pick:  798.00  934.00
+\i (00:16:24) trapsize 163
+\i (00:16:24) etchedit 
+\i (00:16:26) zoom center 
+\t (00:16:26) Pick center for the new display.
+\i (00:16:26) pick -975.00 748.50 
+\t (00:16:26) last pick:  -975.00  748.50
+\i (00:16:26) trapsize 163
+\i (00:16:26) etchedit 
+\i (00:16:34) zoom out 1 
+\i (00:16:34) setwindow pcb
+\i (00:16:34) zoom out -999.83 745.72
+\i (00:16:34) trapsize 327
+\i (00:16:34) zoom out 1 
+\i (00:16:34) setwindow pcb
+\i (00:16:34) zoom out -999.83 745.73
+\t (00:16:34) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:16:34) trapsize 653
+\i (00:16:36) pick grid -569.86 1025.41
+\t (00:16:36) last pick:  -570.00  1025.00
+\i (00:16:38) pick grid -543.72 979.66
+\t (00:16:38) last pick:  -544.00  980.00
+\i (00:16:38) prepopup -543.72 979.66
+\i (00:16:39) pop dyn_option_select '@:@Waive DRC' 
+\i (00:16:39) waive drc 
+\i (00:16:41) setwindow form.waivedrc_comment
+\i (00:16:41) FORM waivedrc_comment done  
+\i (00:16:41) setwindow pcb
+\i (00:16:41) etchedit 
+\i (00:16:42) zoom out 1 
+\i (00:16:42) setwindow pcb
+\i (00:16:42) zoom out -832.55 961.37
+\i (00:16:42) trapsize 1307
+\i (00:16:42) zoom out 1 
+\i (00:16:42) setwindow pcb
+\i (00:16:42) zoom out -832.54 961.37
+\t (00:16:42) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:16:42) trapsize 2614
+\i (00:16:42) zoom in 1 
+\i (00:16:42) setwindow pcb
+\i (00:16:42) zoom in 964.33 961.36
+\t (00:16:42) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:16:42) trapsize 1307
+\i (00:16:42) zoom out 1 
+\i (00:16:42) setwindow pcb
+\i (00:16:42) zoom out 1228.33 822.84
+\t (00:16:42) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:16:42) trapsize 2614
+\i (00:16:42) zoom out 1 
+\i (00:16:42) setwindow pcb
+\i (00:16:42) zoom out 1513.23 880.34
+\i (00:16:42) trapsize 5228
+\i (00:16:43) zoom in 1 
+\i (00:16:43) setwindow pcb
+\i (00:16:43) zoom in -1450.80 -2054.43
+\i (00:16:43) trapsize 2614
+\i (00:16:43) zoom in 1 
+\i (00:16:43) setwindow pcb
+\i (00:16:43) zoom in -1466.48 -2054.42
+\t (00:16:43) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:16:43) trapsize 1307
+\i (00:16:45) setwindow form.vf_vis
+\i (00:16:45) FORM vf_vis 2 all_colorvisible YES 
+\i (00:16:46) FORM vf_vis 3 all_colorvisible YES 
+\i (00:16:47) setwindow pcb
+\i (00:16:47) drag_start grid -617.00 -1955.09
+\i (00:16:47) drag_stop -23.68 -1735.54
+\i (00:16:49) prepopup -873.15 -1753.83
+\i (00:16:50) pop dyn_option_select '@:@Waive DRC' 
+\i (00:16:50) waive drc 
+\i (00:16:56) setwindow form.waivedrc_comment
+\i (00:16:56) FORM waivedrc_comment comment_field 'layer name.' 
+\i (00:16:56) setwindow pcb
+\i (00:16:56) etchedit 
+\i (00:16:57) prepopup -799.97 -1615.30
+\i (00:16:58) pop dyn_option_select '@:@Waive DRC' 
+\i (00:16:58) waive drc 
+\i (00:16:59) setwindow form.waivedrc_comment
+\i (00:16:59) FORM waivedrc_comment done  
+\i (00:16:59) setwindow pcb
+\i (00:16:59) etchedit 
+\i (00:17:00) prepopup -818.26 -1489.84
+\i (00:17:01) pop dyn_option_select '@:@Waive DRC' 
+\i (00:17:01) waive drc 
+\i (00:17:03) setwindow form.waivedrc_comment
+\i (00:17:03) FORM waivedrc_comment done  
+\i (00:17:03) setwindow pcb
+\i (00:17:03) etchedit 
+\i (00:17:05) prepopup -1063.96 -1369.61
+\i (00:17:06) pop dyn_option_select '@:@Waive DRC' 
+\i (00:17:06) waive drc 
+\i (00:17:07) setwindow form.waivedrc_comment
+\i (00:17:07) FORM waivedrc_comment done  
+\i (00:17:07) setwindow pcb
+\i (00:17:07) etchedit 
+\i (00:17:07) pick grid 88.72 -1811.34
+\t (00:17:07) last pick:  89.00  -1811.00
+\i (00:17:09) save 
+\i (00:17:10) fillin yes 
+\i (00:17:11) etchedit 
+\i (00:17:12) setwindow form.status
+\i (00:17:12) FORM status drc_update  
+\t (00:17:12) Running DRC, please wait...
+\t (00:17:12) Performing DRC...
+\t (00:17:12) Multithreaded DRC update (8 threads).
+\t (00:17:12) No DRC errors detected.
+\t (00:17:12) DRC done.
+\i (00:17:18) setwindow pcb
+\i (00:17:18) drag_start grid 517.38 -1343.47
+\i (00:17:18) drag_stop 316.12 -1197.10
+\i (00:17:25) nctape_full 
+\i (00:17:27) setwindow form.nc_drill
+\i (00:17:27) FORM nc_drill execute  
+\t (00:17:27) Starting NC Drill...
+\i (00:17:32) FORM nc_drill cancel  
+\i (00:17:32) setwindow pcb
+\i (00:17:32) etchedit 
+\i (00:17:34) artwork 
+\i (00:17:37) setwindow form.film_control
+\i (00:17:37) FORM film_control select_all  
+\i (00:17:40) FORM film_control filmtree  PASTE_TOP 
+\i (00:17:41) FORM film_control filmtree 'MULTISEL NO' PASTE_BOTTOM 
+\i (00:17:41) FORM film_control filmtree  PASTE_BOTTOM 
+\i (00:17:46) FORM film_control filmtree  BOTTOM 
+\i (00:17:49) FORM film_control filmtree  GND 
+\i (00:17:52) FORM film_control filmtree  BOTTOM 
+\i (00:17:53) FORM film_control filmtree  GND 
+\i (00:17:54) FORM film_control filmtree  OUTLINE 
+\i (00:17:54) FORM film_control filmtree  PASTE_BOTTOM 
+\i (00:17:57) FORM film_control filmtree  OUTLINE 
+\i (00:17:58) FORM film_control filmtree  GND 
+\i (00:17:58) FORM film_control filmtree  OUTLINE 
+\i (00:17:58) FORM film_control filmtree  PASTE_BOTTOM 
+\i (00:17:58) FORM film_control filmtree  PASTE_TOP 
+\i (00:17:58) FORM film_control filmtree  PWR 
+\i (00:17:59) FORM film_control filmtree  SILK_BOTTOM 
+\i (00:17:59) FORM film_control filmtree  SILK_TOP 
+\i (00:17:59) FORM film_control filmtree  SOLDERMASK_BOTTOM 
+\i (00:18:00) FORM film_control filmtree  SOLDERMASK_TOP 
+\i (00:18:01) FORM film_control filmtree  TOP 
+\i (00:18:06) FORM film_control create  
+\t (00:18:06) Checking db records
+\t (00:18:06)     checking for orphans...
+\t (00:18:06)     Checked  49 percent
+\t (00:18:06)     Checked  99 percent
+\t (00:18:06)     Checked 100 percent
+\t (00:18:06) Done dbdoctor.
+\t (00:18:06) Starting Create artwork films...
+\t (00:18:08) Plot generated.
+\i (00:18:11) setwindow pcb
+\i (00:18:11) save 
+\i (00:18:14) fillin yes 
+\i (00:18:14) etchedit 
+\i (00:31:41) exit 
+\i (00:31:42) setwindow text
+\i (00:31:42) close 
+\t (00:31:42)     Journal end - Sun Dec 13 23:20:03 2015

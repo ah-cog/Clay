@@ -13,46 +13,13 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources"
-         "e:\git\clay\cadence\cis_database\symbollibraries\symlib.olb"))
+      (Path "Design Resources" ".\symlib.olb")
+      (Select "Design Resources" ".\symlib.olb"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
       (Frame
-        (Placement "44 2 3 -1 -1 -8 -31 0 200 0 707"))
-      (Tab 0))
-    (Doc
-      (Type "COrPartDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 208 1844 208 678")
-        (PackageScroll "0 0")
-        (PackageZoom "1")
-        (PartPackage "Part")
-        (Scroll "6726 1701")
-        (Zoom "950"))
-      (Path "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
-      (Package "INDUCTOR"))
-    (Doc
-      (Type "COrPartDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 130 1474 130 603")
-        (PackageScroll "0 0")
-        (PackageZoom "1")
-        (PartPackage "Part")
-        (Scroll "3499 1360")
-        (Zoom "502"))
-      (Path "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
-      (Package "SPST_NO"))
-    (Doc
-      (Type "COrPartDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 156 1500 156 629")
-        (PackageScroll "0 0")
-        (PackageZoom "1")
-        (PartPackage "Part")
-        (Scroll "3559 1104")
-        (Zoom "653"))
-      (Path "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
-      (Package "SWITCH_SPDT")))
+        (Placement "44 0 1 -1 -1 -8 -31 0 200 0 707"))
+      (Tab 0)))
   (MPSSessionName "thebh_000")
   (ISPCBBASICLICENSE "false"))
