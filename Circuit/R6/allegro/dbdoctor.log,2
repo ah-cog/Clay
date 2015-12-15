@@ -4,12 +4,10 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sat Dec 12 22:55:54 2015                      )
+(    Date/Time        : Mon Dec 14 02:47:18 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
 
 
-WARNING   WARNING(SPMHDB-42): Run batch DRC to correctly regenerate DRC errs.
-
-1 warnings, 0 errors detected, 0 errors could be fixed.
+0 warnings, 0 errors detected, 0 errors could be fixed.
