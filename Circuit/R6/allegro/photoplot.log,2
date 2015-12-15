@@ -4,7 +4,7 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Mon Dec 14 04:52:40 2015                      )
+(    Date/Time        : Mon Dec 14 04:45:31 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -210,40 +210,13 @@ Results from parameter file ...
 
 
 ================================================================
-     PROCESSING FILM < OUTLINE >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/OUTLINE.art > ...
-================================================================
-
-  FILM PARAMETERS :
-  ---------------------------------------------------------
-  Undefined line width                10.00
-  Mirror code                         NONE
-  Rotate angle                        NONE
-  Offset x:                           0.00
-  Offset y:                           0.00
-  Plot negative                       NO
-  Suppress unconnected internal pads  NO
-  Draw holes only                     NO
-
-
-
-  APERTURES USED:
-  ---------------------------------------------------------
-  TYPE       SIZE/NAME                   ROT   MIRROR MODE 
-  ---------------------------------------------------------
-  CIRCLE     0.01000                                  DARK 
-
-     OUTLINE created.
-
-
-================================================================
      PROCESSING FILM < SILK_BOTTOM >
      TO FILE < E:/git/clay/Circuit/R6/allegro/SILK_BOTTOM.art > ...
 ================================================================
 
   FILM PARAMETERS :
   ---------------------------------------------------------
-  Undefined line width                10.00
+  Undefined line width                0.00
   Mirror code                         NONE
   Rotate angle                        NONE
   Offset x:                           0.00
@@ -433,51 +406,14 @@ Results from parameter file ...
      SOLDERMASK_BOTTOM created.
 
 
-================================================================
-     PROCESSING FILM < SILK_TOP >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/SILK_TOP.art > ...
-================================================================
-
-  FILM PARAMETERS :
-  ---------------------------------------------------------
-  Undefined line width                10.00
-  Mirror code                         NONE
-  Rotate angle                        NONE
-  Offset x:                           0.00
-  Offset y:                           0.00
-  Plot negative                       NO
-  Suppress unconnected internal pads  NO
-  Draw holes only                     NO
-
-    WARNING: 0 width line found at (-151.79 -458.06)
-           ... using undefined line width of 10.00
-
-    WARNING: Multiple 0 width lines; all will be treated the same as the first.
-           ... using undefined line width of 10.00
-
-
-
-  APERTURES USED:
-  ---------------------------------------------------------
-  TYPE       SIZE/NAME                   ROT   MIRROR MODE 
-  ---------------------------------------------------------
-  CIRCLE     0.00500                                  DARK 
-  CIRCLE     0.00600                                  DARK 
-  CIRCLE     0.01000                                  DARK 
-
-     SILK_TOP created with warnings
-
-
 ------------------------------------------------------
  SUMMARY:
         GND created.
         PWR created.
         BOTTOM created.
-        OUTLINE created.
         SILK_BOTTOM created.
         PASTE_TOP created.
         SOLDERMASK_TOP created.
         SOLDERMASK_BOTTOM created.
-        SILK_TOP created with warnings
 
  ARTWORK finished

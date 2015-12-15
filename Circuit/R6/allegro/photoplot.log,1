@@ -4,15 +4,10 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sun Dec 13 23:01:32 2015                      )
+(    Date/Time        : Mon Dec 14 04:43:29 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
-
-
- ******************************************
- WARNING: DRC OUT OF DATE on this layout.
- ******************************************
 
  ---- Photoplot outline rectangle not found ... using drawing extents
 
@@ -21,7 +16,7 @@
 Results from parameter file ...
     DEVICE-TYPE           GERBER_RS274X
     OUTPUT-UNITS          INCHES
-    FILM-SIZE             2400000 1600000
+    FILM-SIZE             1400000 1600000
     FORMAT                2.5
     ABORT-ON-ERROR        NO
     SCALE                 1
@@ -47,7 +42,6 @@ Results from parameter file ...
   Suppress unconnected internal pads  NO
   Draw holes only                     NO
 
-    WARNING: Film contains DRC error(s).
     WARNING: Null REGULAR-PAD specified for padstack MH_C36 at (-917.00 519.94).
     WARNING: Null REGULAR-PAD specified for padstack MH_C36 at (-917.00 638.06).
 
@@ -113,7 +107,6 @@ Results from parameter file ...
   RECTANGLE  0.06300     x 0.07900      90.000 NO     DARK 
   PAD SHAPE  TPS612_LAND                90.000 NO     DARK 
 
-     TOP created with warnings
 
 
 ================================================================
@@ -132,7 +125,6 @@ Results from parameter file ...
   Suppress unconnected internal pads  NO
   Draw holes only                     NO
 
-    WARNING: Film contains DRC error(s).
 
 
   APERTURES USED:
@@ -147,7 +139,7 @@ Results from parameter file ...
   CIRCLE     0.05000                                  DARK 
   CIRCLE     0.07000                                  DARK 
 
-     GND created with warnings
+     GND created.
 
 
 ================================================================
@@ -166,7 +158,6 @@ Results from parameter file ...
   Suppress unconnected internal pads  NO
   Draw holes only                     NO
 
-    WARNING: Film contains DRC error(s).
 
 
   APERTURES USED:
@@ -181,7 +172,7 @@ Results from parameter file ...
   CIRCLE     0.05000                                  DARK 
   CIRCLE     0.07000                                  DARK 
 
-     PWR created with warnings
+     PWR created.
 
 
 ================================================================
@@ -200,7 +191,6 @@ Results from parameter file ...
   Suppress unconnected internal pads  NO
   Draw holes only                     NO
 
-    WARNING: Film contains DRC error(s).
 
 
   APERTURES USED:
@@ -216,7 +206,7 @@ Results from parameter file ...
   CIRCLE     0.05000                                  DARK 
   CIRCLE     0.07000                                  DARK 
 
-     BOTTOM created with warnings
+     BOTTOM created.
 
 
 ================================================================
@@ -254,31 +244,6 @@ Results from parameter file ...
 
 
 ================================================================
-     PROCESSING FILM < OUTLINE >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/OUTLINE.art > ...
-================================================================
-
-  FILM PARAMETERS :
-  ---------------------------------------------------------
-  Undefined line width                0.00
-  Mirror code                         NONE
-  Rotate angle                        NONE
-  Offset x:                           0.00
-  Offset y:                           0.00
-  Plot negative                       NO
-  Suppress unconnected internal pads  NO
-  Draw holes only                     NO
-
-    WARNING: rectangle or unfilled shape composed 0 width line found at (-1000.00 -1000.00)
-           ... ignored.
-
-
-
-  APERTURES USED:  NONE
-     OUTLINE created with warnings
-
-
-================================================================
      PROCESSING FILM < SILK_BOTTOM >
      TO FILE < E:/git/clay/Circuit/R6/allegro/SILK_BOTTOM.art > ...
 ================================================================
@@ -302,7 +267,7 @@ Results from parameter file ...
   ---------------------------------------------------------
   CIRCLE     0.00800                                  DARK 
 
-     SILK_BOTTOM created with warnings
+     SILK_BOTTOM created.
 
 
 ================================================================
@@ -367,7 +332,7 @@ Results from parameter file ...
   RECTANGLE  0.06000     x 0.07500      90.000 NO     DARK 
   PAD SHAPE  TPS612_SOLDER_PASTE        90.000 NO     DARK 
 
-     PASTE_TOP created with warnings
+     PASTE_TOP created.
 
 
 ================================================================
@@ -442,7 +407,7 @@ Results from parameter file ...
   RECTANGLE  0.06300     x 0.07900      90.000 NO     DARK 
   PAD SHAPE  TPS612_LAND                90.000 NO     DARK 
 
-     SOLDERMASK_TOP created with warnings
+     SOLDERMASK_TOP created.
 
 
 ================================================================
@@ -472,20 +437,18 @@ Results from parameter file ...
   CIRCLE     0.05000                                  DARK 
   CIRCLE     0.07000                                  DARK 
 
-     SOLDERMASK_BOTTOM created with warnings
+     SOLDERMASK_BOTTOM created.
 
 
 ------------------------------------------------------
  SUMMARY:
-        TOP created with warnings
-        GND created with warnings
-        PWR created with warnings
-        BOTTOM created with warnings
+        GND created.
+        PWR created.
+        BOTTOM created.
         SILK_TOP created with warnings
-        OUTLINE created with warnings
-        SILK_BOTTOM created with warnings
-        PASTE_TOP created with warnings
-        SOLDERMASK_TOP created with warnings
-        SOLDERMASK_BOTTOM created with warnings
+        SILK_BOTTOM created.
+        PASTE_TOP created.
+        SOLDERMASK_TOP created.
+        SOLDERMASK_BOTTOM created.
 
- ARTWORK had warnings
+ ARTWORK finished
