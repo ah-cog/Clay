@@ -22,6 +22,6 @@ extern bool nvm_init();
 extern bool nvm_busy();
 
 //call this to write data to a variable defined in nvm_data.h
-extern bool write_data(void * memory_location, uint32_t length, void * data);
+extern bool write_data(void * nvm_location, uint32_t length, void * data);
 
 #endif /* NVM_H_ */

@@ -584,9 +584,7 @@
       </group>
       <list name="Shared CPU interrupts/resets" v="1">
         <group name="CPU interrupts/resets">
-          <boolgroup name="NMI interrupt" v="Enabled">
-            <Interrupt v="INT_NMI" />
-          </boolgroup>
+          <boolgroup name="NMI interrupt" v="Disabled" />
           <boolgroup name="Hard Fault" v="Disabled" />
           <boolgroup name="Bus Fault" v="Disabled" />
           <boolgroup name="Usage Fault" v="Disabled" />
@@ -665,9 +663,7 @@
       <Event_module_name v="Events" />
       <list name="EvntsShrdGrp" v="1">
         <event name="OnReset" v="don&amp;apos;t generate code" />
-        <event name="OnNMIINT" v="generate code">
-          <Event_procedure_name v="Cpu_OnNMIINT" />
-        </event>
+        <event name="OnNMIINT" v="don&amp;apos;t generate code" />
         <event name="OnHardFault" v="don&amp;apos;t generate code" />
         <event name="OnBusFault" v="don&amp;apos;t generate code" />
         <event name="OnUsageFault" v="don&amp;apos;t generate code" />
