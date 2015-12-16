@@ -1,6 +1,8 @@
 #include "Application.h"
 
 // Clay's print, debug, and error messages.
+
+
 //#define ENABLE_DEBUG_OUTPUT TRUE
 //#if ENABLE_DEBUG_OUTPUT == TRUE
 //	#define print(fmt, ...) printf("print: " fmt, __VA_ARGS__);
@@ -20,12 +22,12 @@ void Application (void) {
 	int n = 0;
 	uint8_t status = 0;
 	Message *message = NULL;
-//	uint16_t messageCount = 0;
-//	char buffer2[32] = { 0 };
 	
 	/* Start Clay */
 	
 //	printf ("Clay\r\n")/;
+	
+	Initialize_Unit_UUID ();
 	
 //	D(printf ("\r\n"));
 	
@@ -53,6 +55,9 @@ void Application (void) {
 	Wait (50);
 	Set_LED_State (LED1, OFF_CHANNEL);
 	Set_LED_State (LED2, OFF_CHANNEL);
+	
+	Enable_Channels ();
+	Initialize_Channels ();
 	
 //	D(printf ("\r\n"));
 	
@@ -108,20 +113,24 @@ void Application (void) {
 //	D(printf ("\r\n"));
 	
 //	D(printf ("Enabling MPU-9250. "));
-	mpu_9250_init ();
+	
+	// TODO: Enable_MPU9250 ();
+	Start_MPU9250 ();
 //	D(printf ("Done.\r\n"));
 
 	// TODO: Start_Spatial_Sensing ()
 	
-//	D(printf ("\r\n"));
-	
 	// TODO: Enable_GPIO ()
 	
 //	D(printf ("Initializing message queue. "));
-	if ((status = Initialize_Incoming_Message_Queue ()) == TRUE) {
+	if ((status = Initialize_Message_Queue (&incomingMessageQueue)) == TRUE) {
 //		D(printf ("Done.\r\n"));
 	} else {
 //		D(printf ("Failed.\r\n"));
+	}
+	
+	if ((status = Initialize_Message_Queue (&outgoingMessageQueue)) == TRUE) {
+		
 	}
 	
 //	D(printf ("\r\n"));
@@ -188,13 +197,24 @@ void Application (void) {
 		Wait (10);
 		Monitor_Network_Communications ();
 		
+		// TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
+		
 		// Monitor communication message queues.
-		if (Has_Incoming_Message () == TRUE) {
-			message = Dequeue_Incoming_Message ();
+		if (Has_Messages (&incomingMessageQueue) == TRUE) {
+			message = Dequeue_Message (&incomingMessageQueue);
 			status = Process_Incoming_Message (message);
 //			if (status == TRUE) {
 //				Delete_Message (message);
 //			}
+		}
+		
+		// Send the next message on the outgoing message queue.
+		if (Has_Messages (&outgoingMessageQueue) == TRUE) {
+			Message *message = Dequeue_Message (&outgoingMessageQueue);
+			if ((status = Process_Outgoing_Message (message)) == TRUE) {
+				// Delete_Message (message);
+			}
+			Delete_Message (message);
 		}
 		
 		// Perform behavior

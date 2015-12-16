@@ -1,3 +1,7 @@
+/**
+ * Implements FIFO queues for incoming and outgoing messages.
+ */
+
 #ifndef MESSENGER_H
 #define MESSENGER_H
 
@@ -18,38 +22,36 @@
 
 #include "Behavior.h"
 
-#define MAXIMUM_MESSAGE_LENGTH 128
+#define MAXIMUM_MESSAGE_LENGTH 140
 #define MAXIMUM_GRAMMAR_SYMBOL_LENGTH 64
-
-// TODO: Implement FIFO queue of messages.
 
 typedef struct Message {
 	// TODO: char *uuid;
+	char *source;
+	char *destination;
 	char *content;
 	
 	struct Message *previous;
 	struct Message *next;
 } Message;
 
-Message* Create_Message (const char *content);
-int8_t Delete_Message (Message *message);
+extern Message *incomingMessageQueue;
+extern Message *outgoingMessageQueue;
 
-Message *incomingMessageQueue;
-//Message *outgoingMessageQueue;
+extern Message* Create_Message (const char *content);
+extern int8_t Delete_Message (Message *message);
 
-uint8_t Initialize_Incoming_Message_Queue ();
-int16_t Queue_Incoming_Message (Message *message); // Circular queue of incoming messages.
-Message* Dequeue_Incoming_Message (); // Get the message on the front of the incoming message queue.
-int8_t Has_Incoming_Message ();
-int8_t Process_Incoming_Message (Message *message);
+// Message Queue
+extern uint8_t Initialize_Message_Queue (Message **messageQueue);
+extern int16_t Queue_Message (Message **messageQueue, Message *message); // Circular queue of incoming messages.
+extern Message* Dequeue_Message (Message **messageQueue); // Get the message on the front of the incoming message queue.
+extern int8_t Has_Messages (Message **messageQueue);
 
-//uint8_t Initialize_Outgoing_Message_Queue ();
-//int16_t Queue_Outgoing_Message (Message *message); // Circular queue of incoming messages.
-//Message* Dequeue_Outgoing_Message (); // Get the message on the front of the incoming message queue.
-//int8_t Has_Outgoing_Message ();
-//int8_t Process_Outgoing_Message (Message *message);
+// Incoming Message Queue
+extern int8_t Process_Incoming_Message (Message *message);
 
-//int8_t Queue_Outgoing_Message (const char *message); // Circular queue of outgoing messages.
-//int8_t Dequeue_Outgoing_Message (const char *message); // Get the message on the front of the outgoing message queue.
+// Outgoing Message Queue
+extern int16_t Queue_Outgoing_Message (char *address, Message *message);
+extern int8_t Process_Outgoing_Message (Message *message);
 
 #endif /* MESSENGER_H */

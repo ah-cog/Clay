@@ -130,7 +130,7 @@
       <File Name="Generated_Code/Cpu.h" FileDate="2015-11-14, 19:33:31" FileAge="1447551211000" FileType="45637" CompNumb="9" />
       <File Name="Generated_Code/Cpu.c" FileDate="2015-12-08, 18:36:54" FileAge="1449621414000" FileType="45637" CompNumb="9" />
       <File Name="Generated_Code/I2C0.h" FileDate="2015-09-19, 14:23:32" FileAge="1442694212000" FileType="45637" CompNumb="35" />
-      <File Name="Documentation/Clay_5G_Firmware_SIGNALS.txt" FileDate="2015-12-12, 14:58:08" FileAge="1449953888000" FileType="3072" />
+      <File Name="Documentation/Clay_5G_Firmware_SIGNALS.txt" FileDate="2015-12-15, 17:04:52" FileAge="1450220692000" FileType="3072" />
       <File Name="Static_Code/PDD/FTFL_PDD.h" FileDate="2015-09-19, 14:23:34" FileAge="1442694214000" FileType="1048576" />
       <File Name="Generated_Code/I2C0.c" FileDate="2015-09-19, 14:23:32" FileAge="1442694212000" FileType="45637" CompNumb="35" />
       <File Name="Generated_Code/TU1.h" FileDate="2015-09-19, 14:23:32" FileAge="1442694212000" FileType="45637" CompNumb="21" />
@@ -150,5 +150,5 @@
       <File Name="Static_Code/PDD/DAC_PDD.h" FileDate="2015-09-19, 14:23:34" FileAge="1442694214000" FileType="1048576" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>55</CodeGenReference>
+  <CodeGenReference>57</CodeGenReference>
 </CodeGenerationInfo>

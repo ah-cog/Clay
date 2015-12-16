@@ -7,8 +7,8 @@
 
 #include "Messenger.h"
 
-//Message *incomingMessageQueue = NULL;
-//Message *outgoingMessageQueue = NULL;
+Message *incomingMessageQueue = NULL;
+Message *outgoingMessageQueue = NULL;
 
 char messageUuidBuffer[DEFAULT_UUID_LENGTH] = { 0 };
 char grammarSymbolBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
@@ -16,15 +16,13 @@ char uuidBuffer[DEFAULT_UUID_LENGTH] = { 0 };
 char uuidBuffer2[DEFAULT_UUID_LENGTH] = { 0 };
 char behaviorDescriptionBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
 
-uint8_t Initialize_Incoming_Message_Queue () {
-	incomingMessageQueue = NULL;
-	return TRUE;
-}
-
 Message* Create_Message (const char *content) {
 	
 	// Allocate memory for message structure.
 	Message *message = (Message *) malloc (sizeof (Message));
+	
+	(*message).source = NULL;
+	(*message).destination = NULL;
 	
 	// Allocate memory for the message's content.
 	(*message).content = (char *) malloc (strlen (content));
@@ -49,22 +47,44 @@ int8_t Delete_Message (Message *message) {
 		free ((*message).content);
 		(*message).content = NULL;
 		
+		// Free the message's source address from memory
+		if ((*message).source != NULL) {
+			free ((*message).source);
+			(*message).source = NULL;
+		}
+		
+		// Free the message's destination address from memory
+		if ((*message).destination != NULL) {
+			free ((*message).destination);
+			(*message).destination = NULL;
+		}
+		
 		// Free the message from memory
 		free (message);
 		message = NULL;
+		
+		return TRUE;
 	}
+	
+	return FALSE;
 }
 
-int16_t Queue_Incoming_Message (Message *message) {
+uint8_t Initialize_Message_Queue (Message **messageQueue) {
+	
+	(*messageQueue) = NULL;
+	return TRUE;
+}
+
+int16_t Queue_Message (Message **messageQueue, Message *message) {
 	
 	Message *lastMessage = NULL;
 	uint16_t messageCount = 0;
 	
-	if (incomingMessageQueue == NULL) {
+	if ((*messageQueue) == NULL) {
 		
 		// The queue is empty, so add it to the queue as the only element.
 		
-		incomingMessageQueue = message;
+		(*messageQueue) = message;
 		
 		(*message).previous = NULL;
 		(*message).next = NULL;
@@ -74,7 +94,7 @@ int16_t Queue_Incoming_Message (Message *message) {
 	} else {
 		
 		// Search for the last element in the queue.
-		lastMessage = incomingMessageQueue; // Get the front of the queue.
+		lastMessage = (*messageQueue); // Get the front of the queue.
 		messageCount++;
 		while ((*lastMessage).previous != NULL) {
 			lastMessage = (*lastMessage).previous;
@@ -92,23 +112,23 @@ int16_t Queue_Incoming_Message (Message *message) {
 	return messageCount;
 }
 
-Message* Dequeue_Incoming_Message () {
+Message* Dequeue_Message (Message **messageQueue) {
 	
 	Message *message = NULL;
 	
-	if (incomingMessageQueue != NULL) {
+	if ((*messageQueue) != NULL) {
 		
 		// Reference the message at the front of the queue.
-		message = incomingMessageQueue;
+		message = (*messageQueue);
 		
 		// Update the linked list to remove the message from the front of the queue.
 		if ((*message).previous != NULL) {
 			
 			// There are additional messages on the queue. Set the previous element to the front of the queue.
 			
-			incomingMessageQueue = (*message).previous;
+			(*messageQueue) = (*message).previous;
 			// incomingMessageQueue = (*message).next; // NOTE: This should already be NULL at this point, so this is redundant, but adds some degree of robustness.
-			(*incomingMessageQueue).next = NULL; // Set as the first element in the queue.
+			(*(*messageQueue)).next = NULL; // Set as the first element in the queue.
 			
 			// Unlink the message from linked list to finish dequeuing process.
 			(*message).previous = NULL;
@@ -118,7 +138,7 @@ Message* Dequeue_Incoming_Message () {
 			
 			// There are no more messages in the queue, so remove links.
 			
-			incomingMessageQueue = NULL; // Remove the link to any message at the front of the queue.
+			(*messageQueue) = NULL; // Remove the link to any message at the front of the queue.
 			
 			// Unlink the message from linked list to finish dequeuing process.
 			(*message).previous = NULL;
@@ -130,10 +150,10 @@ Message* Dequeue_Incoming_Message () {
 	return message;
 }
 
-int8_t Has_Incoming_Message () {
+int8_t Has_Messages (Message **messageQueue) {
 	
-	if (incomingMessageQueue != NULL) {
-		if ((*incomingMessageQueue).content != NULL) {
+	if ((*messageQueue) != NULL) {
+		if ((*(*messageQueue)).content != NULL) {
 			return TRUE;
 		}
 	}
@@ -147,8 +167,8 @@ int8_t Process_Incoming_Message (Message *message) {
 	int8_t result = NULL;
 	char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int tokenCount = 0;
-	int tokenInt = 0;
-	int i;
+//	int tokenInt = 0;
+//	int i;
 	
 	char *messageContent = NULL;
 	messageContent = (*message).content;
@@ -412,6 +432,7 @@ int8_t Process_Incoming_Message (Message *message) {
 			// Delete behaviors
 			// Remove behavior constructs from cache
 			// Set cache to null
+			Reset_Unit ();
 			
 			// Delete the message
 			if (message != NULL) {
@@ -436,153 +457,32 @@ int8_t Process_Incoming_Message (Message *message) {
 	
 	// TODO: Store message UUID for use in message acknowledgment protocol. If it has been received, then don't apply it again, just send the acknowledgment packet.
 	
-	/*
-	if ((status = getToken (messageContent, token, 0)) != NULL) { // status = getToken (message, token, 0);
+	return result;
+}
 
-		if (strncmp (token, "turn", strlen ("turn")) == 0) {
-			
-			if ((status = getToken (messageContent, token, 1)) != NULL) {
-			
-				// turn lights on
-				//      ^
-				if (strncmp (token, "lights", strlen ("lights")) == 0) {
-					
-					if ((status = getToken (messageContent, token, 2)) != NULL) { // TODO: Remove this! The parameter is used later.
-						
-						// turn lights on
-						//             ^
-						if (strncmp (token, "on", strlen ("on")) == 0) {
-							
-							// Turn all LEDs on
-							for (i = 0; i < 12; i++) {
-								Set_Channel_State (i, ON_CHANNEL);
-							}
-							
-							result = TRUE;
-							
-						} else if (strncmp (token, "off", strlen ("off")) == 0) {
-							
-							// Turn all LEDs off
-							for (i = 0; i < 12; i++) {
-								Set_Channel_State (i, OFF_CHANNEL);
-							}
-							
-							result = TRUE;
-							
-						}
-					}
-				
-				// turn light 1 on
-				//      ^
-				} else if (strncmp (token, "light", strlen ("light")) == 0) {
-					
-					if ((status = getToken (messageContent, token, 2)) != NULL) { // TODO: Remove this! The parameter is used later.
-						
-						if ((status = getToken (messageContent, token, 3)) != NULL) {
-							
-							// turn light 1 on
-							//              ^
-							if (strncmp (token, "on", strlen ("on")) == 0) {
-								
-								// Turn the specified LED off
-								status = getToken (messageContent, token, 2);
-								tokenInt = atoi (token);
-								Set_LED_Output ((RGB_LED) tokenInt,  &onColor);
-								
-								result = TRUE;
-								
-							} else if (strncmp (token, "off", strlen ("off")) == 0) {
-								
-								// Turn the specified LED off
-								status = getToken (messageContent, token, 2);
-								tokenInt = atoi (token);
-								Set_LED_Output ((RGB_LED) tokenInt,  &offColor);
-								
-								result = TRUE;
-								
-							}
-						}
-					}
-					
-				// turn channel 1 on
-				//      ^
-				} else if (strncmp (token, "channel", strlen ("channel")) == 0) {
-					
-					if ((status = getToken (messageContent, token, 2)) != NULL) { // TODO: Remove this! The parameter is used later.
-						
-						// turn channel 1 on
-						//              ^
-						
-						if ((status = getToken (messageContent, token, 3)) != NULL) {
-							
-							// turn channel 1 on
-							//                ^
-							if (strncmp (token, "on", strlen ("on")) == 0) {
-								
-								// Turn the specified LED off
-								status = getToken (messageContent, token, 2);
-								tokenInt = atoi (token);
-								Set_Channel_State (tokenInt, ON_CHANNEL);
-								
-								result = TRUE;
-								
-							} else if (strncmp (token, "off", strlen ("off")) == 0) {
-								
-								// Turn the specified LED off
-								status = getToken (messageContent, token, 2);
-								tokenInt = atoi (token);
-								Set_Channel_State (tokenInt, OFF_CHANNEL);
-								
-								result = TRUE;
-								
-							}
-						}
-					}
-					
-				}
-				
-			}
-			
-		} else if (strncmp (token, "wait", strlen ("wait")) == 0) {
-			
-			Wait (1000);
-					
-//			if ((status = getToken (behaviorContent, token, 1)) != NULL) {
-//			
-//				// turn lights on
-//				//      ^
-//				if (strncmp (token, "lights", strlen ("lights")) == 0) {
-//					
-//				}
-//			}
-			
-		} else if (strncmp (token, "ping", strlen ("ping")) == 0) {
-			
-			if ((status = getToken (messageContent, token, 1)) != NULL) {
-			
-				// turn lights on
-				//      ^
-				if (strncmp (token, "lights", strlen ("lights")) == 0) {
-				
-					// Queue_Outgoing_Message ("pong <ip>"); // TODO: Send this via UDP datagram.
-					// Send_UDP_Message()
-//					printf("got ping\r\n");
-					Broadcast_UDP_Message ("pong <ip>");
-					
-					result = TRUE;
-					
-				}
-				
-			}
-			
-		} else {
-//			D(printf ("WTFping\r\n"));
-		}
+int16_t Queue_Outgoing_Message (char *address, Message *message) {
+	// Allocate memory for the UUID for this behavior.
+	(*message).destination = (char *) malloc (strlen (address));
+	strcpy ((*message).destination, address); // Copy the message destination address
+	
+	// Queue the message.
+	return Queue_Message (&outgoingMessageQueue, message);
+	
+}
+
+int8_t Process_Outgoing_Message (Message *message) {
+	
+	int8_t result = NULL;
+	
+	if (message != NULL) {
 		
-	} else {
-//		D(printf ("status = %d\r\n", status));
+		// Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT);
+		Send_UDP_Message ((*message).destination, DISCOVERY_BROADCAST_PORT, (*message).content);
+		
+		result = TRUE;
+		
 	}
-	*/
 	
 	return result;
 }
+

@@ -900,6 +900,69 @@ void Start_UDP_Server (uint16_t port) {
 	return response;
 }
 
+void Send_UDP_Message (const char* address, uint16_t port, const char *message) {
+	
+	int8_t response = NULL;
+	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+	int n;
+	
+	// The following variables correspond to parameters in the following AT command:
+	// i.e., AT+CIPSTART=<channel index>,<protocol>,<remote address>,<remote port>[,(<local port>),(<mode>)]
+	// e.g., AT+CIPSTART=1,"UDP","255.255.255.255",4445,1002,2
+	
+	uint8_t     channel    = 1; // i.e., the <channel> parameter
+	const char *protocol   = "UDP";
+	uint16_t    remotePort = port;
+	uint16_t    localPort  = 1002; // TODO: Randomize this!? Could that enable multiple outgoing messages to the same destination port?
+	uint8_t     mode       = 2;
+	
+	// Create the AT command string to connect to the device with the specified address and prepare for UDP communication. Then, send the string to the ESP8266.
+	// e.g., AT+CIPSTART=0,"UDP","0.0.0.0",4445,1002,2
+	n = sprintf (buffer, "AT+CIPSTART=%d,\"%s\",\"%s\",%d,%d,%d\r\n", channel, protocol, address, remotePort, localPort, mode);
+	if (ESP8266_Send_Block (buffer) == TRUE) {
+		response = ESP8266_Wait_For_Response (RESPONSE_SIGNATURE_OK_VARIANT, DEFAULT_RESPONSE_TIMEOUT);
+	}
+	
+	// TODO: Put this into a separate command?
+	
+	// Prepare the ESP8266 to send data. To do so, create the AT command to initiate sending the message.
+	// e.g., AT+CIPSEND=1,7,"255.255.255.255",4445
+	n = sprintf (buffer, "AT+CIPSEND=%d,%d\r\n", channel, strlen (message));
+	if (ESP8266_Send_Block (buffer) == TRUE) {
+		// Wait for ">" before sending data.
+		response = ESP8266_Wait_For_Response (">", DEFAULT_RESPONSE_TIMEOUT);
+	}
+	
+	// Communicate data to send to the ESP8266.
+	n = sprintf (buffer, "%s", message);
+	if (ESP8266_Send_Block (buffer) == TRUE) {
+		response = ESP8266_Wait_For_Response ("SEND OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // Wait for "\r\r\nSEND OK\r\n".
+	}
+	
+	// TODO: Wait for a response (optionally), looking for "+IPD,..." for a time (with timeout).
+	// +IPD,0,18:1443563177.377612
+	//
+	//	OK
+	
+	// Brief pause here before closing the connection.
+	Wait (50); // Wait (200); // TODO: Make a preprocessor directive for this timeout!
+	
+	// TODO: Put this into a separate command?
+	
+	// Close the TCP connection.
+	n = sprintf (buffer, "AT+CIPCLOSE=%d\r\n", channel);
+	if (ESP8266_Send_Block (buffer) == TRUE) {
+		// Wait for "OK\r\n".
+		Wait (200); // Wait (500);
+		response = ESP8266_Wait_For_Response ("OK\r\n", DEFAULT_RESPONSE_TIMEOUT); // "AT+CIPCLOSE=0\r\n0,CLOSED\r\n\r\nOK\r\n"
+	}
+	
+	// Wait for a short period of time before allowing additional AT commands.
+	Wait (100); // Wait (300);
+	
+	return response;
+}
+
 void Broadcast_UDP_Message (const char *message, uint16_t port) {
 	int8_t response = NULL;
 	char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };
@@ -1162,8 +1225,11 @@ void Start_HTTP_Server (uint16_t port) {
 //			D(printf ("Configuring as TCP server. "));
 			if ((status = ESP8266_Send_Command_AT_CIPSERVER (TRUE, port)) > 0) {
 //				D(printf ("ESP8266 server listening on port 80.\r\n"));
+				// TODO: Set status here.
 			} else {
 //				D(printf ("ESP8266 could not start server.\r\n"));
+				// TODO: Write error to memory.
+				// TODO: Throw interrupt to stop debugger (when in debug mode) so the error message can be inspected. Otherwise, when not in debug mode, reset device or send error to remote database.
 			}
 			step++;
 //		} else if (step == 7) {
@@ -1553,7 +1619,7 @@ void Process_HTTP_Request (int connection, const char *httpMethod, const char *h
 //			printf ("Creating message. ");
 			message = Create_Message (messageContent);
 //			printf ("Queueing message \"%s\". ", (*message).content);
-			messageCount = Queue_Incoming_Message (message);
+			messageCount = Queue_Message (&incomingMessageQueue, message);
 //			printf ("Size: %d.\r\n", messageCount);
 			
 			status = TRUE;
@@ -1731,7 +1797,7 @@ void Monitor_Network_Communications () { // void Monitor_Network_Communications 
 //				printf ("Creating message. ");
 				message = Create_Message (messageContent);
 	//			printf ("Queueing message \"%s\". ", (*message).content);
-				messageCount = Queue_Incoming_Message (message);
+				messageCount = Queue_Message (&incomingMessageQueue, message);
 	//			printf ("Size: %d.\r\n", messageCount);
 				
 				status = TRUE;

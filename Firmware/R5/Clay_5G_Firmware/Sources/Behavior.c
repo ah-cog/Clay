@@ -1,8 +1,44 @@
 #include "Behavior.h"
 
-uint8_t Initialize_Behavior () {
+// Remove behaviors constructs from loop
+// Delete behaviors
+// Set loop to null
+// Delete behaviors
+// Remove behavior constructs from cache
+// Set cache to null
+uint8_t Reset_Unit () {
 	
+	Behavior_Construct *behaviorConstruct = NULL;
+	Behavior *behavior = NULL;
 	
+	// Remove all behavior constructs from the loop.
+	behaviorConstruct = loop; // Point the behavior contruct to the first element in the the loop.
+	while (behaviorConstruct != NULL) {
+		
+		// Remove the behavior from the loop.
+		// This function:
+		// (1) Removes the behavior construct associated with the specified behavior from the loop, 
+		// (2) Updates the linked list of behavior constructs representing the loop to reflect the removal, and
+		// (3) Deletes the behavior construct from memory.
+		behavior = Remove_Behavior ((*behaviorConstruct).behavior);
+		// NOTE: The behavior construct associated with the behavior is deleted in Remove_Behavior ((*behaviorConstruct).behavior), which calls Delete_Behavior_Construct (behaviorConstruct).
+		
+		// NOTE: The actual behavior associated with the behavior construct is deleted below, when deleting the cache.
+		
+		// Continue to the next behavior.
+		behaviorConstruct = loop; // NOTE: This is similar to "behaviorConstruct = (*behaviorConstruct).next;" when removing behaviors.
+	}
+	
+	behaviorConstruct = behaviorCache;
+	while (behaviorConstruct != NULL) {
+		
+		behavior = Remove_Behavior_From_Cache ((*behaviorConstruct).behavior);
+		
+		Delete_Behavior (behavior);
+		
+		behaviorConstruct = behaviorCache; // NOTE: This is similar to "behaviorConstruct = (*behaviorConstruct).next;" when removing behaviors.
+		
+	}
 }
 
 Behavior_Construct* Create_Behavior_Construct (const char *behaviorUuid, const Behavior *behavior) {
@@ -146,7 +182,103 @@ uint8_t Has_Cached_Behavior_By_UUID (char *behaviorUuid) {
 	return FALSE;
 }
 
-uint8_t Initialize_Loop () {
+Behavior_Construct* Get_Cached_Behavior_Construct_By_UUID (char *behaviorUuid) {
+	
+	Behavior_Construct *behaviorConstruct = NULL; 
+	
+	if (behaviorCache != NULL) {
+		
+		// Search for the behavior construct associated with the behavior that has the specified UUID.
+		behaviorConstruct = behaviorCache; // Get the first behavior construct in the cache list.
+		while (behaviorConstruct != NULL) {
+			if (strncmp (behaviorUuid, (*behaviorConstruct).behaviorUuid, strlen ((*behaviorConstruct).behaviorUuid)) == 0) {
+				return behaviorConstruct; // Return the behavior associated with the specified behavior construct.
+			}
+			behaviorConstruct = (*behaviorConstruct).next;
+		}
+	}
+	
+	return NULL;
+}
+
+Behavior* Remove_Behavior_From_Cache (Behavior *behavior) {
+	
+	Behavior_Construct *behaviorConstruct = NULL;
+	
+	// Get the behavior construct associated with the specified behavior.
+	if (behavior != NULL && (*behavior).uuid != NULL) {
+		behaviorConstruct = Get_Cached_Behavior_Construct_By_UUID ((*behavior).uuid);
+	}
+	
+	if (behaviorConstruct != NULL && behaviorCache != NULL) {
+		
+		// Reference the behavior at the front of the queue.
+		// behaviorConstruct = loop;
+		
+		// Update the linked list to remove the behavior from the front of the queue.
+		if ((*behaviorConstruct).previous == NULL && (*behaviorConstruct).next != NULL) {
+			
+			// The behavior in the first in the loop.
+			
+			behaviorCache = (*behaviorConstruct).next; // Update the loop's first behavior to be the next one.
+			
+			// TODO: Check the state of the loop pointer, and update it if it points to the behavior being removed!
+			
+			(*behaviorCache).next = NULL; // Update the the new first behavior in the loop so it doesn't link to a "previous" behavior.
+			
+			// Unlink the behavior from linked list to finish dequeuing process.
+			(*behaviorConstruct).previous = NULL;
+			(*behaviorConstruct).next = NULL;
+			
+		} else if ((*behaviorConstruct).previous != NULL && (*behaviorConstruct).next != NULL) {
+			
+			// The behavior is within the loop. It has previous and next behaviors.
+			
+			(*(*behaviorConstruct).previous).next = (*behaviorConstruct).next; // Update the previous behavior to skip this behavior and point to the next behavior.
+			
+			(*(*behaviorConstruct).next).previous = (*behaviorConstruct).previous; // Update the next behavior skip this behavior and point to the previous behavior.
+			
+			// TODO: Check the state of the loop pointer, and update it if it points to the behavior being removed!
+			
+			// Unlink the behavior from linked list to finish dequeuing process.
+			(*behaviorConstruct).previous = NULL;
+			(*behaviorConstruct).next = NULL;
+			
+		} else if ((*behaviorConstruct).previous != NULL && (*behaviorConstruct).next == NULL) {
+			
+			// The behavior is the last in the loop. It has previous behaviors only.
+			
+			(*(*behaviorConstruct).previous).next = NULL; // Update the previous behavior be the new last behavior in the loop. That is, make it point to no other behavior (and point to NULL).
+			
+			// TODO: Check the state of the loop pointer, and update it if it points to the behavior being removed!
+			
+			// Unlink the behavior from linked list to finish dequeuing process.
+			(*behaviorConstruct).previous = NULL;
+			(*behaviorConstruct).next = NULL;
+			
+		} else {
+			
+			// There are no more behaviors in the loop, so remove all links and reset the loop to its "empty" state.
+			
+			behaviorCache = NULL; // Remove the link to any behaviors at the front of the loop.
+			
+			currentBehaviorConstruct = NULL; // Reset the current behavior to NULL, so no behavior will be performed.
+			
+			// Unlink the behaviors from linked list to finish dequeuing process.
+			(*behaviorConstruct).previous = NULL;
+			(*behaviorConstruct).next = NULL;
+			
+		}
+		
+		// Free the behavior construct from memory.
+		// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+		Delete_Behavior_Construct (behaviorConstruct);
+	}
+	
+	return NULL;
+}
+
+uint8_t Initialize_Behavior () {
 	loop = NULL;
 	currentBehaviorConstruct = NULL;
 	return TRUE;
@@ -187,6 +319,8 @@ int8_t Delete_Behavior (Behavior *behavior) {
 		// Free the message from memory
 		free (behavior);
 		behavior = NULL;
+		
+		// TODO: Look for references to the behavior in behaviorCache and loop.
 	}
 	
 	return TRUE;
@@ -313,7 +447,7 @@ Behavior* Remove_Behavior (Behavior *behavior) {
 		behaviorConstruct = Get_Behavior_Construct_By_UUID ((*behavior).uuid);
 	}
 	
-	if (loop != NULL) {
+	if (behaviorConstruct != NULL && loop != NULL) {
 		
 		// Reference the behavior at the front of the queue.
 		// behaviorConstruct = loop;
@@ -333,10 +467,6 @@ Behavior* Remove_Behavior (Behavior *behavior) {
 			(*behaviorConstruct).previous = NULL;
 			(*behaviorConstruct).next = NULL;
 			
-			// Free the behavior construct from memory.
-			// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
-			Delete_Behavior_Construct (behaviorConstruct);
-			
 		} else if ((*behaviorConstruct).previous != NULL && (*behaviorConstruct).next != NULL) {
 			
 			// The behavior is within the loop. It has previous and next behaviors.
@@ -351,10 +481,6 @@ Behavior* Remove_Behavior (Behavior *behavior) {
 			(*behaviorConstruct).previous = NULL;
 			(*behaviorConstruct).next = NULL;
 			
-			// Free the behavior construct from memory.
-			// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
-			Delete_Behavior_Construct (behaviorConstruct);
-			
 		} else if ((*behaviorConstruct).previous != NULL && (*behaviorConstruct).next == NULL) {
 			
 			// The behavior is the last in the loop. It has previous behaviors only.
@@ -366,10 +492,6 @@ Behavior* Remove_Behavior (Behavior *behavior) {
 			// Unlink the behavior from linked list to finish dequeuing process.
 			(*behaviorConstruct).previous = NULL;
 			(*behaviorConstruct).next = NULL;
-			
-			// Free the behavior construct from memory.
-			// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
-			Delete_Behavior_Construct (behaviorConstruct);
 			
 		} else {
 			
@@ -383,11 +505,11 @@ Behavior* Remove_Behavior (Behavior *behavior) {
 			(*behaviorConstruct).previous = NULL;
 			(*behaviorConstruct).next = NULL;
 			
-			// Free the behavior construct from memory.
-			// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
-			Delete_Behavior_Construct (behaviorConstruct);
-			
 		}
+		
+		// Free the behavior construct from memory.
+		// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+		Delete_Behavior_Construct (behaviorConstruct);
 	}
 	
 	return NULL;
@@ -488,8 +610,283 @@ int8_t Perform_Behavior (Behavior *behavior) {
 	// turn light 1 on
 	// ^
 	if ((status = getToken (behaviorContent, token, 0)) != NULL) { // status = getToken (message, token, 0);
+			
+		if (strncmp (token, "cause", strlen ("cause")) == 0) {
+						
+			// switch 1 4
+			// ^
+			// TODO: Something like: switch TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT
+			
+			// Update the channels
+			// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
+//			status = getToken (behaviorContent, token, 1); // Cause
+//			status = getToken (behaviorContent, token, 2); // Effect
+			// TODO: Consider updating the cause conditions?: Update_Channel_State ()
+			status = getToken (behaviorContent, token, 1); // Cause
+			tokenInt = atoi (token) - 1;
+			
+			// TODO: Consider NOT automatically changing the I/O state of the cause. Maybe rely on setting the pin mode first!
+			// TODO: Update all the input states and then update all the output states.
 
-		if (strncmp (token, "turn", strlen ("turn")) == 0) {
+			channelProfile[tokenInt].enabled = CHANNEL_ENABLED;
+			channelProfile[tokenInt].direction = CHANNEL_DIRECTION_INPUT;
+			channelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+			channelProfile[tokenInt].value = Get_Channel_Value (channelProfile[tokenInt].number);
+			
+//			if (strncmp (token, "switch", strlen ("switch")) == 0) { 
+			if (channelProfile[tokenInt].value == CHANNEL_VALUE_TOGGLE_ON) {
+				
+				// TODO: Look for "effect"
+				
+				status = getToken (behaviorContent, token, 3); // Effect
+				tokenInt = atoi (token) - 1;
+				channelProfile[tokenInt].enabled = CHANNEL_ENABLED;
+				channelProfile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
+				channelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+				channelProfile[tokenInt].value = CHANNEL_VALUE_TOGGLE_ON;
+				
+			} else if (channelProfile[tokenInt].value == CHANNEL_VALUE_TOGGLE_OFF) {
+				
+				// TODO: Look for "effect"
+				
+				status = getToken (behaviorContent, token, 3); // Effect
+				tokenInt = atoi (token) - 1;
+				channelProfile[tokenInt].enabled = CHANNEL_ENABLED;
+				channelProfile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
+				channelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+				channelProfile[tokenInt].value = CHANNEL_VALUE_TOGGLE_OFF;
+				
+			}
+			// TODO: Get the (cause, effect) condition.
+			
+			// TODO: Create (cause, effect) behavior.
+			
+			// Apply channel
+			// TODO: Move this to a common place, maybe in Application in the loop logic.
+//			if (effect is local) { // TODO: Get UUID of cause and effect units.
+				Apply_Channels ();
+//			} else if (effect is remote) {
+//				Request_Remote_Apply_Channels ();
+//			}
+			
+			result = TRUE;
+			
+		} else if (strncmp (token, "apply", strlen ("apply")) == 0) { 
+			
+			// apply TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT
+			// ^
+			
+			// Update the channels
+			// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
+			for (i = 0; i < 12; i++) {
+				status = getToken (behaviorContent, token, 1 + i);
+				
+				// Set LED state
+				if (token[0] == 'T') {
+					Set_LED_Output ((RGB_LED) (i + 1),  &onColor);
+				} else {
+					Set_LED_Output ((RGB_LED) (i + 1),  &offColor);
+				}
+				
+				// Update the GPIO states
+				// TODO: Update the intermediate data structure and only update the actual GPIO when the state changes.
+				// TODO: Make 0-indexing (or not) consident with LEDs
+//				Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
+//				Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_ON);
+				
+				// Enable. Is the channel enabled?
+				// TODO: Add an additional state to handle "no change" for channel
+				channelProfile[i].enabled = (token[1] == 'T' ? TRUE : FALSE); // HACK
+				
+				// Direction. Set channel direction. Is the channel an input or output?
+				if (token[2] == 'I') {
+					channelProfile[i].direction = CHANNEL_DIRECTION_INPUT;
+				} else if (token[2] == 'O') {
+					channelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+				} else if (token[2] == '-') {
+					// NOTE: Don't change!
+				}
+				
+				// Mode. Set channel mode. Is it a toggle (discrete switch), waveform (continuous analog signal), or pulse (e.g., PWM).
+				if (token[3] == 'T') {
+					channelProfile[i].mode = CHANNEL_MODE_TOGGLE; // TODO: Rename this to MODE_TOGGLE
+				} else if (token[3] == 'W') {
+					channelProfile[i].mode = CHANNEL_MODE_WAVEFORM;
+				} else if (token[3] == 'P') {
+					channelProfile[i].mode = CHANNEL_MODE_PULSE;
+				} else if (token[3] == '-') {
+					// NOTE: Don't change!
+				}
+				
+				// Value. Set channel value. This depends on the direction and mode of the channel.
+				if (channelProfile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
+					if (channelProfile[i].mode == CHANNEL_MODE_TOGGLE) {
+						// Assign the channel's value based on the received data.
+						if (token[4] == 'H') {
+							channelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
+						} else if (token[4] == 'L') {
+							channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+						} else {
+							// ERROR: Error. An unrecognized toggle value was specified.
+						}
+					} else if (channelProfile[i].mode == CHANNEL_MODE_WAVEFORM) {
+						// TODO: Assign the value differently, depending on the specified channel direction and mode.
+						// TODO: Assign this based on the received data.
+					} else if (channelProfile[i].mode == CHANNEL_MODE_PULSE) {
+						// TODO: Assign the value differently, depending on the specified channel direction and mode.
+						// TODO: Assign this based on the received data.
+					} else {
+						// ERROR: Error. An invalid mode was specified.
+					}
+				} else if (channelProfile[i].direction == CHANNEL_DIRECTION_INPUT) {
+					// NOTE: The channel direction is input, so its value is set by the pin's voltage state.
+					if (channelProfile[i].mode == CHANNEL_MODE_TOGGLE) {
+						// Assign the channel value based on the physical pin state.
+						channelProfile[i].value = Get_Channel_Value (channelProfile[i].number);
+						
+//						if (token[4] == 'H') {
+//							channelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
+//						} else if (token[4] == 'L') {
+//							channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+//						} else {
+//							// ERROR: Error. An unrecognized toggle value was specified.
+//						}
+					} else if (channelProfile[i].mode == CHANNEL_MODE_WAVEFORM) {
+						// TODO: Assign the value differently, depending on the specified channel direction and mode.
+						// TODO: Assign this based on the received data.
+					} else if (channelProfile[i].mode == CHANNEL_MODE_PULSE) {
+						// TODO: Assign the value differently, depending on the specified channel direction and mode.
+						// TODO: Assign this based on the received data.
+					} else {
+						// ERROR: Error. An invalid mode was specified.
+					}
+				} else {
+					// ERROR: Error. An unrecognized channel direction was specified.
+				}
+				// TODO: Apply individual channel here! Only the changed ones!
+				
+//				// Set GPIO state
+//				// TODO: Add an additional state to handle "no change" for channel
+//				if (token[1] == 'T') {
+//					Enable_Channel ((i + 1), TRUE);
+//				} else {
+//					Enable_Channel ((i + 1), FALSE);
+//				}
+//				
+//				// Set channel direction. Is the channel an input or output?
+//				if (token[2] == 'O') {
+//					Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
+//				} else if (token[2] == 'I') {
+//					Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
+//				}
+				
+//				if (tokenInt == 1) {
+//					Set_LED_Output ((RGB_LED) (i + 1),  &onColor);
+//				} else {
+//					Set_LED_Output ((RGB_LED) (i + 1),  &offColor);
+//				}
+			}
+			
+			// Apply channel
+			// TODO: Move this to a common place, maybe in Application in the loop logic.
+			Apply_Channels ();
+			
+			result = TRUE;
+		
+		} else if (strncmp (token, "change", strlen ("change")) == 0) { 
+			
+			// change lights to 1 0 1 1 0 1 0 1 0 0 1 1
+			// ^
+			
+			if ((status = getToken (behaviorContent, token, 1)) != NULL) {
+			
+				// change lights to 1 0 1 1 0 1 0 1 0 0 1 1
+				//        ^
+				if (strncmp (token, "channel", strlen ("channel")) == 0) {
+					
+					if ((status = getToken (behaviorContent, token, 2)) != NULL) { // TODO: Remove this! The parameter is used later.
+						
+						// change channel to 1 0 1 1 0 1 0 1 0 0 1 1 1 0 1 1 0 1 0 1 0 0 1 1
+						//                   ^                       ^
+						
+						/*
+						// Update the LED states
+						// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
+						for (i = 0; i < 12; i++) {
+							status = getToken (behaviorContent, token, 3 + i);
+							tokenInt = atoi (token);
+							if (tokenInt == 1) {
+								Set_LED_Output ((RGB_LED) (i + 1),  &onColor);
+							} else {
+								Set_LED_Output ((RGB_LED) (i + 1),  &offColor);
+							}
+						}
+						
+						// Update the GPIO states
+						// TODO: Update the intermediate data structure and only update the actual GPIO when the state changes.
+						for (i = 0; i < 12; i++) {
+							status = getToken (behaviorContent, token, 3 + 12 + i);
+							tokenInt = atoi (token);
+							if (tokenInt == 1) {
+								// TODO: Make 0-indexing (or not) consident with LEDs
+//								Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
+//								Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_ON);
+								// Update channel
+								channelProfile[i].enabled = TRUE; // HACK
+								channelProfile[i].direction = OUTPUT_CHANNEL;
+								channelProfile[i].mode = MODE_DIGITAL;
+								channelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
+								// TODO: Apply individual channel here! Only the changed ones!
+							} else {
+								// TODO: Make 0-indexing (or not) consident with LEDs
+//								Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
+//								Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_OFF);
+								// Update channel
+								channelProfile[i].enabled = TRUE; // HACK
+								channelProfile[i].direction = OUTPUT_CHANNEL;
+								channelProfile[i].mode = MODE_DIGITAL;
+								channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+								// TODO: Apply individual channel here! Only the changed ones!
+							}
+						}
+						// Apply channel
+						Apply_Channels ();
+						
+						// Update the wait
+						// TODO: Add this as a separate behavior!
+						status = getToken (behaviorContent, token, 3 + 24);
+						tokenInt = atoi (token);
+//						Wait (tokenInt);
+						
+						result = TRUE;
+						
+//						if (strncmp (token, "on", strlen ("on")) == 0) {
+//							
+//							// Turn all LEDs on
+//							for (i = 0; i < 12; i++) {
+//								Set_Channel_State (i, CHANNEL_VALUE_TOGGLE_ON);
+//							}
+//							
+//							result = TRUE;
+//							
+//						} else if (strncmp (token, "off", strlen ("off")) == 0) {
+//							
+//							// Turn all LEDs off
+//							for (i = 0; i < 12; i++) {
+//								Set_Channel_State (i, CHANNEL_VALUE_TOGGLE_OFF);
+//							}
+//							
+//							result = TRUE;
+//							
+//						}
+						*/
+					}
+					
+				}
+			
+			}
+			
+		} else if (strncmp (token, "turn", strlen ("turn")) == 0) { 
 			
 			if ((status = getToken (behaviorContent, token, 1)) != NULL) {
 			
@@ -505,7 +902,7 @@ int8_t Perform_Behavior (Behavior *behavior) {
 							
 							// Turn all LEDs on
 							for (i = 0; i < 12; i++) {
-								Set_Channel_State (i, ON_CHANNEL);
+								Set_Channel_Value (i, CHANNEL_VALUE_TOGGLE_ON);
 							}
 							
 							result = TRUE;
@@ -514,7 +911,7 @@ int8_t Perform_Behavior (Behavior *behavior) {
 							
 							// Turn all LEDs off
 							for (i = 0; i < 12; i++) {
-								Set_Channel_State (i, OFF_CHANNEL);
+								Set_Channel_Value (i, CHANNEL_VALUE_TOGGLE_OFF);
 							}
 							
 							result = TRUE;
@@ -572,7 +969,7 @@ int8_t Perform_Behavior (Behavior *behavior) {
 								// Turn the specified LED off
 								status = getToken (behaviorContent, token, 2);
 								tokenInt = atoi (token);
-								Set_Channel_State (tokenInt, ON_CHANNEL);
+								Set_Channel_Value (tokenInt, CHANNEL_VALUE_TOGGLE_ON);
 								
 								result = TRUE;
 								
@@ -581,7 +978,7 @@ int8_t Perform_Behavior (Behavior *behavior) {
 								// Turn the specified LED off
 								status = getToken (behaviorContent, token, 2);
 								tokenInt = atoi (token);
-								Set_Channel_State (tokenInt, OFF_CHANNEL);
+								Set_Channel_Value (tokenInt, CHANNEL_VALUE_TOGGLE_OFF);
 								
 								result = TRUE;
 								
@@ -633,7 +1030,8 @@ int8_t Perform_Behavior (Behavior *behavior) {
 				// TODO: Add parameter for "say" to specify maximum frequency of phrase
 				// TODO: Add parameters for alternative phrases
 				//Broadcast_UDP_Message ("say i should say something");
-				Broadcast_UDP_Message ("say hey", 4445);
+				Broadcast_UDP_Message (behaviorContent, 4445);
+				// TODO: Queue_Outgoing_Message()
 				
 				result = TRUE;
 				

@@ -13,6 +13,7 @@
 #include "Drivers/MPU9250.h"
 #include "Drivers/PCA9552.h"
 #include "Drivers/ESP8266.h"
+#include "Messenger.h"
 
 extern uint32_t power_on_time_msec;
 extern bool tick_1msec;
