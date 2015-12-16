@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include "Utilities/Debug.h"
+#include "Utilities/UUID.h"
 
 #include "Drivers/LEDs.h"
 #include "Drivers/PCA9552.h"

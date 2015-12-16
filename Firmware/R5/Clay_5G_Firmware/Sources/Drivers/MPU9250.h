@@ -424,7 +424,7 @@ typedef struct
 // local vars ////////////////
 
 // prototypes ////////////////
-extern void mpu_9250_init();
+extern void Start_MPU9250();
 
 extern void get_mpu_readings(mpu_values * data);
 

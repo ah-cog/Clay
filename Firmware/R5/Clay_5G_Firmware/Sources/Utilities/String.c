@@ -8,11 +8,31 @@
 #include "String.h"
 
 int getTokenCount (const char *string) {
+	// TODO: Don't count the delimiters between tokens enclosed by the secondary delimiter (i.e., the " character).
 	
+	int i = 0;
+	int tokenCount = 0;
+	uint8_t escape = FALSE; // Is the current character within an "escaped" token, delimited by the secondary delimiter (i.e., the " character)?
+	
+	for (i = 0; i < strlen (string); i++) {
+		
+		// Check if the character is the secondary token delimiter, which escapes counting the primary delimiter.
+		if (string[i] == DEFAULT_TOKEN_SECONDARY_DELIMIETER) {
+			escape = (escape == FALSE ? TRUE : FALSE);
+		}
+		
+		// Count the non-escaped primary delimiters.
+		if (string[i] == DEFAULT_TOKEN_DELIMIETER) {
+			if (escape == FALSE) {
+				tokenCount++;
+			}
+		}
+	}
+	tokenCount++;
+	
+	return tokenCount;
 	
 }
-
-#define DEFAULT_TOKEN_SECONDARY_DELIMIETER '"'
 
 int8_t getToken (const char *string, char *tokenBuffer, int tokenIndex) {
 	

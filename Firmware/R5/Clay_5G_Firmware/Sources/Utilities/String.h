@@ -13,6 +13,7 @@
 #endif
 
 #define DEFAULT_TOKEN_DELIMIETER ' '
+#define DEFAULT_TOKEN_SECONDARY_DELIMIETER '"'
 
 int getTokenCount (const char *string);
 

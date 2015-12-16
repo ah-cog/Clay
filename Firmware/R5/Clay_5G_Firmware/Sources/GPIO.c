@@ -7,6 +7,83 @@
 
 #include "GPIO.h"
 
+uint8_t Initialize_Channels () {
+	int i;
+	
+	for (i = 0; i < CHANNEL_COUNT; i++) {
+		channelProfile[i].number = (i + 1);
+		channelProfile[i].enabled = FALSE;
+		channelProfile[i].direction = NULL;
+		channelProfile[i].mode = NULL;
+		channelProfile[i].value = NULL;
+	}
+	
+	return TRUE;
+}
+
+uint8_t Update_Channels () {
+	// Copy the updated state into the internal state
+	// Save the current state in the cloud history
+	// Set the internal state as updated so it won't be updated again
+}
+
+// TODO: Apply only changes! Compare current state to previous state or to actual hardware state. The former might be faster, but it's less "ground truth."
+uint8_t Apply_Channels () {
+	int i;
+	
+	for (i = 0; i < CHANNEL_COUNT; i++) {
+		
+//		Enable_Channel (channelProfile[i].number, channelProfile[i].enabled);
+		
+		if (channelProfile[i].enabled == TRUE) {
+			Set_Channel (channelProfile[i].number, channelProfile[i].direction, channelProfile[i].mode);
+			if (channelProfile[i].direction == CHANNEL_DIRECTION_INPUT) {
+//				channelProfile[i].value = IO_1_GetVal (NULL);
+//				channelProfile[i].value = (uint16_t) Get_Channel_Value (channelProfile[i].number);
+			} else {
+				Set_Channel_Value (channelProfile[i].number, channelProfile[i].value);
+			}
+		}
+	}
+	
+	return TRUE;
+}
+
+uint8_t Enable_Channel (uint8_t number, uint8_t enabled) {
+	
+//	channelProfile[(number - 1)].enabled = enabled;
+	
+	// TODO: Allow disabling!
+	if (number == 1) {
+		(void) IO_1_Init (NULL);
+	} else if (number == 2) {
+		(void) IO_2_Init (NULL);
+	} else if (number == 3) {
+		(void) IO_3_Init (NULL);
+	} else if (number == 4) {
+		(void) IO_4_Init (NULL);
+	} else if (number == 5) {
+		(void) IO_5_Init (NULL);
+	} else if (number == 6) {
+		(void) IO_6_Init (NULL);
+	} else if (number == 7) {
+		(void) IO_7_Init (NULL);
+	} else if (number == 8) {
+		(void) IO_8_Init (NULL);
+	} else if (number == 9) {
+		(void) IO_9_Init (NULL);
+	} else if (number == 10) {
+		(void) IO_10_Init (NULL);
+	} else if (number == 11) {
+		(void) IO_11_Init (NULL);
+	} else if (number == 12) {
+		(void) IO_12_Init (NULL);
+	}
+	
+	return TRUE;
+}
+
+// TODO: Remove this? Just use the above one that does per-channel enabling?
 uint8_t Enable_Channels () {
 	(void) IO_1_Init (NULL);
 	(void) IO_2_Init (NULL);
@@ -29,9 +106,9 @@ void Set_Channel (uint8_t number, uint8_t direction, uint8_t mode) {
 	uint8_t directionValue = 0;
 	
 	// Prepare to set direction as input or output.
-	if (direction == INPUT_CHANNEL) {
+	if (direction == CHANNEL_DIRECTION_OUTPUT) {
 		directionValue = TRUE; // Set as output.
-	} else if (direction == OUTPUT_CHANNEL) {
+	} else if (direction == CHANNEL_DIRECTION_INPUT) {
 		directionValue = FALSE; // Set as input.
 	}
 	
@@ -75,16 +152,16 @@ void Set_Channel (uint8_t number, uint8_t direction, uint8_t mode) {
 	}
 }
 
-void Set_Channel_State (uint8_t number, uint8_t state) { // i.e., set discrete state of the channel (on or off)
+void Set_Channel_Value (uint8_t number, uint8_t value) { // i.e., set discrete state of the channel (on or off)
 	
 	uint8_t stateValue = 0;
 	
 	// TODO: Set the specified channel to be an output if it is not configured as such (and save state if it was an input so it can resume that behavior later).
 	
 	// Prepare to set direction as input or output.
-	if (state == ON_CHANNEL) {
+	if (value == CHANNEL_VALUE_TOGGLE_ON) {
 		stateValue = TRUE; // Set as output.
-	} else if (state == OFF_CHANNEL) {
+	} else if (value == CHANNEL_VALUE_TOGGLE_OFF) {
 		stateValue = FALSE; // Set as input.
 	}
 	
@@ -116,32 +193,36 @@ void Set_Channel_State (uint8_t number, uint8_t state) { // i.e., set discrete s
 	}
 }
 
-uint8_t Get_Channel_State (uint8_t number) { // i.e., get discrete input state
+uint8_t Get_Channel_Value (uint8_t number) { // i.e., Get discrete input state
+	
+	uint8_t value = NULL;
 	
 	// Actually set the channel based on preparations above.
 	if (number == 1) {
-		return (uint8_t) IO_1_GetVal (NULL);
+		value = (uint8_t) IO_1_GetVal (NULL);
 	} else if (number == 2) {
-		return (uint8_t) IO_2_GetVal (NULL);
+		value = (uint8_t) IO_2_GetVal (NULL);
 	} else if (number == 3) {
-		return (uint8_t) IO_3_GetVal (NULL);
+		value = (uint8_t) IO_3_GetVal (NULL);
 	} else if (number == 4) {
-		return (uint8_t) IO_4_GetVal (NULL);
+		value = (uint8_t) IO_4_GetVal (NULL);
 	} else if (number == 5) {
-		return (uint8_t) IO_5_GetVal (NULL);
+		value = (uint8_t) IO_5_GetVal (NULL);
 	} else if (number == 6) {
-		return (uint8_t) IO_6_GetVal (NULL);
+		value = (uint8_t) IO_6_GetVal (NULL);
 	} else if (number == 7) {
-		return (uint8_t) IO_7_GetVal (NULL);
+		value = (uint8_t) IO_7_GetVal (NULL);
 	} else if (number == 8) {
-		return (uint8_t) IO_8_GetVal (NULL);
+		value = (uint8_t) IO_8_GetVal (NULL);
 	} else if (number == 9) {
-		return (uint8_t) IO_9_GetVal (NULL);
+		value = (uint8_t) IO_9_GetVal (NULL);
 	} else if (number == 10) {
-		return (uint8_t) IO_10_GetVal (NULL);
+		value = (uint8_t) IO_10_GetVal (NULL);
 	} else if (number == 11) {
-		return (uint8_t) IO_11_GetVal (NULL);
+		value = (uint8_t) IO_11_GetVal (NULL);
 	} else if (number == 12) {
-		return (uint8_t) IO_12_GetVal (NULL);
+		value = (uint8_t) IO_12_GetVal (NULL);
 	}
+	
+	return value;
 }

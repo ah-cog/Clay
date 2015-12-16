@@ -23,7 +23,7 @@
 
 #define BEHAVIOR_UUID_LENGTH DEFAULT_UUID_LENGTH // i.e., 36 bytes plus one more for NULL terminating character.
 
-// TODO: Behavior performance speed (in Hz)
+// TODO: Define behavior performance speed (in Hz)
 
 typedef struct Behavior {
 	char *uuid;
@@ -51,25 +51,36 @@ typedef struct Behavior_Construct {
 Behavior_Construct* Create_Behavior_Construct (const char *behaviorUuid, const Behavior *behavior);
 int8_t Delete_Behavior_Construct (Behavior_Construct *behaviorConstruct);
 
-Behavior_Construct* behaviorCache; // The local behavior cache!
+// Behavior Cache
+// The local behavior cache.
+
+Behavior_Construct* behaviorCache;
 
 uint8_t Initialize_Behavior_Cache ();
 int16_t Cache_Behavior (Behavior *behavior);
 Behavior* Get_Cached_Behavior_By_UUID (char *behaviorUuid);
+Behavior_Construct* Get_Cached_Behavior_Construct_By_UUID (char *behaviorUuid);
 uint8_t Has_Cached_Behaviors ();
 uint8_t Has_Cached_Behavior_By_UUID (char *uuid);
-// Behavior* Remove_Behavior_From_Cache (Behavior *behavior);
+Behavior* Remove_Behavior_From_Cache (Behavior *behavior);
 
 Behavior_Construct* loop; // TODO: Create a separate Loop data structure.
 Behavior_Construct* currentBehaviorConstruct; // Pointer to the loop's current behavior.
 
-uint8_t Initialize_Loop ();
+uint8_t Initialize_Behavior ();
 
 int16_t Add_Behavior (Behavior *behavior); // TODO: int16_t Add_Behavior (Behavior *loop, Behavior *behavior);
+int16_t Add_Before_Behavior (Behavior *behavior, Behavior *otherBehavior);
 Behavior* Remove_Behavior (Behavior *behavior); // TODO: Behavior* Remove_Behavior (Behavior *loop, Behavior *behavior);
 uint8_t Has_Behaviors ();
+uint8_t Has_Behavior_By_UUID (char *behaviorUuid);
 Behavior_Construct* Get_Behavior_Construct_By_UUID (char *behaviorUuid);
+Behavior* Get_Behavior_By_UUID (char *behaviorUuid);
 
 int8_t Perform_Behavior (Behavior *behavior);
+
+// Unit
+
+uint8_t Reset_Unit ();
 
 #endif /* BEHAVIOR_H_ */
