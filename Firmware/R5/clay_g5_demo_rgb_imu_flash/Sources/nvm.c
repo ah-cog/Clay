@@ -35,7 +35,7 @@ bool nvm_init()
 //call this before attempting to read data stored in the flash. reads can't happen while a write is in progress.
 bool nvm_busy()
 {
-    return (FTFL_FCNFG & FTFL_FCNFG_EEERDY_MASK);
+    return !(FTFL_FCNFG & FTFL_FCNFG_EEERDY_MASK);
 }
 
 //call this to write data to a variable defined in nvm_data.h
@@ -52,4 +52,25 @@ bool write_data(void * nvm_location, uint32_t length, void * data)
     }
 
     return TRUE;
+}
+
+uint8_t read_byte(uint8_t * byte_addr)
+{
+    while (nvm_busy())
+        ;
+    return *byte_addr;
+}
+
+uint16_t read_word(uint16_t * word_addr)
+{
+    while (nvm_busy())
+        ;
+    return *word_addr;
+}
+
+uint32_t read_dword(uint32_t * dword_addr)
+{
+    while (nvm_busy())
+        ;
+    return *dword_addr;
 }
