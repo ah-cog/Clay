@@ -1,132 +1,59 @@
-\t (00:00:50) allegro 16.6 P004 (v16-6-112G) Windows 32
-\t (00:00:50)     Journal start - Fri Dec 11 16:05:18 2015
-\t (00:00:50)         Host=STEELGIANT User=thebh_000 Pid=9144 CPUs=8
-\t (00:00:50) 
-\d (00:00:50) Database opened: E:/git/clay/Cadence/CIS_Database/Footprints/SMT/FTSH-1XX.dra
-\i (00:00:50) generaledit 
-\i (00:00:52) zoom in 1 
-\i (00:00:52) setwindow pcb
-\i (00:00:52) zoom in -0.904 -0.373
-\i (00:00:52) trapsize 36
-\i (00:00:52) zoom out 1 
-\i (00:00:52) setwindow pcb
-\i (00:00:52) zoom out -0.933 -0.394
-\i (00:00:52) trapsize 72
-\i (00:00:52) zoom out 1 
-\i (00:00:52) setwindow pcb
-\i (00:00:52) zoom out -0.962 -0.395
-\i (00:00:52) trapsize 123
-\i (00:00:53) zoom in 1 
-\i (00:00:53) setwindow pcb
-\i (00:00:53) zoom in -1.218 1.759
-\i (00:00:53) trapsize 61
-\i (00:00:56) save_as 
-\i (00:01:01) fillin "FTSH_10.dra"
-\t (00:01:01) Symbol 'ftsh_10.psm' created.
-\i (00:01:01) generaledit 
-\i (00:01:38) zoom in 1 
+\t (00:00:54) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:54)     Journal start - Sun Dec 13 22:03:29 2015
+\t (00:00:54)         Host=STEELGIANT User=thebh_000 Pid=7456 CPUs=8
+\t (00:00:54) 
+\d (00:00:54) Database opened: E:/git/clay/Cadence/CIS_Database/Footprints/SMT/QFN20_4x4.dra
+\i (00:00:54) generaledit 
+\i (00:01:09) pick grid 100.123 127.183
+\t (00:01:09) last pick:  100.000  127.000
+\i (00:01:11) color192 
+\i (00:01:11) setwindow cvf.dialog
+\i (00:01:11) cvf layer_mode
+\i (00:01:11) setwindow pcb
+\i (00:01:11) generaledit 
+\i (00:01:15) setwindow cvf.dialog
+\i (00:01:15) cvf global_invisible
+\i (00:01:22) cvf layers_visible components components/silkscreen_bottom TRUE
+\i (00:01:24) cvf apply
+\i (00:01:25) cvf okay
+\i (00:01:28) setwindow pcb
+\i (00:01:28) color192 
+\i (00:01:28) setwindow cvf.dialog
+\i (00:01:28) cvf layer_mode
+\i (00:01:28) setwindow pcb
+\i (00:01:28) generaledit 
+\i (00:01:30) setwindow cvf.dialog
+\i (00:01:30) cvf layer_tree_item 'Package Geometry'
+\i (00:01:34) cvf layers_visible package_geometry/silkscreen_bottom TRUE
+\i (00:01:35) cvf apply
 \i (00:01:38) setwindow pcb
-\i (00:01:38) zoom in -3.714 -0.061
-\i (00:01:38) trapsize 31
-\i (00:01:39) zoom out 1 
-\i (00:01:39) setwindow pcb
-\i (00:01:39) zoom out -3.301 0.389
-\i (00:01:39) trapsize 62
-\i (00:01:42) save_as 
-\i (00:01:46) fillin "FTSH_10.dra"
-\t (00:01:47) Symbol 'ftsh_10.psm' created.
-\i (00:01:47) generaledit 
-\e (00:03:06) Command not found: xhilite
-\i (00:03:06) xname_flush 
-\i (00:03:06) done 
-\i (00:03:06) generaledit 
-\e (00:03:34) Command not found: xhilite
-\i (00:03:34) xname_flush 
-\i (00:03:34) done 
-\i (00:03:35) generaledit 
-\i (00:04:32) zoom in 1 
-\i (00:04:32) setwindow pcb
-\i (00:04:32) zoom in -0.184 0.191
-\i (00:04:32) trapsize 31
-\i (00:04:33) zoom out 1 
-\i (00:04:33) setwindow pcb
-\i (00:04:33) zoom out -0.184 0.191
-\i (00:04:33) trapsize 62
-\i (00:04:37) zoom in 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom in -3.210 0.228
-\i (00:04:37) trapsize 31
-\i (00:04:37) zoom in 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom in -3.210 0.229
-\i (00:04:37) trapsize 15
-\i (00:04:37) zoom in 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom in -3.210 0.229
-\i (00:04:37) trapsize 8
-\i (00:04:37) zoom in 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom in -3.209 0.230
-\i (00:04:37) trapsize 4
-\i (00:04:37) zoom out 1 
-\i (00:04:37) setwindow pcb
-\i (00:04:37) zoom out -3.209 0.230
-\i (00:04:37) trapsize 8
-\i (00:04:42) grid toggle 
-\i (00:04:42) generaledit 
-\i (00:04:43) color192 
-\i (00:04:43) setwindow cvf.dialog
-\i (00:04:43) cvf layer_mode
-\i (00:04:43) setwindow pcb
-\i (00:04:43) generaledit 
-\i (00:04:47) setwindow cvf.dialog
-\i (00:04:47) cvf global_visible
-\i (00:04:48) cvf okay
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out 1 
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out -3.079 0.057
-\i (00:04:49) trapsize 15
-\i (00:04:49) zoom out 1 
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out -3.079 0.058
-\i (00:04:49) trapsize 31
-\i (00:04:49) zoom out 1 
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out -3.079 0.058
-\i (00:04:49) trapsize 62
-\i (00:04:49) zoom out 1 
-\i (00:04:49) setwindow pcb
-\i (00:04:49) zoom out -2.177 0.144
-\i (00:04:49) trapsize 123
-\i (00:04:50) zoom in 1 
-\i (00:04:50) setwindow pcb
-\i (00:04:50) zoom in -0.283 -0.332
-\i (00:04:50) trapsize 61
-\i (00:04:51) zoom in 1 
-\i (00:04:51) setwindow pcb
-\i (00:04:51) zoom in -1.771 0.320
-\i (00:04:51) trapsize 31
-\i (00:04:52) zoom out 1 
-\i (00:04:52) setwindow pcb
-\i (00:04:52) zoom out -1.789 0.338
-\i (00:04:52) trapsize 62
-\i (00:05:34) roam y 96 
-\i (00:05:34) roam y 96
-\i (00:05:34) roam y -96 
-\i (00:05:34) roam y -96
-\i (00:05:42) drag_start grid -5.597 3.665
-\i (00:05:43) drag_stop 4.981 -4.121
-\i (00:05:43) prepopup 0.258 -0.812
-\i (00:05:45) pick grid -6.643 3.112
-\t (00:05:45) last pick:  -6.600  3.200
-\i (00:05:47) new 
-\e (00:05:47) Do you want to save the changes you made to E:/git/clay/Cadence/CIS_Database/Footprints/SMT/FTSH_10.dra?
-\i (00:05:49) fillin no 
-\i (00:05:56) newdrawfillin "FTSH_10.dra" "Package Symbol"
-\t (00:05:56) Starting new design...
-\i (00:05:56) trapsize 123
-\i (00:05:56) trapsize 123
-\i (00:05:56) generaledit 
-\i (00:05:57) zoom in 1 
-\i (00:05:57
+\i (00:01:38) drag_start grid -107.995 3.198
+\i (00:01:39) drag_stop -61.747 -12.546
+\i (00:01:40) drag_start grid -130.627 161.624
+\i (00:01:40) drag_stop 95.203 -108.979
+\i (00:01:41) prepopup 71.095 -76.507
+\i (00:01:42) pick grid -30.258 -112.423
+\t (00:01:42) last pick:  -30.000  -112.000
+\i (00:01:43) drag_start grid 122.755 -102.091
+\i (00:01:43) drag_stop -102.583 101.107
+\i (00:01:44) prepopup -40.590 81.919
+\i (00:01:45) pop dyn_option_select @:@Delete 
+\i (00:01:45) delete 
+\i (00:01:45) generaledit 
+\i (00:01:48) setwindow cvf.dialog
+\i (00:01:48) cvf global_visible
+\i (00:01:50) cvf apply
+\i (00:01:52) setwindow pcb
+\i (00:01:52) zoom in 1 
+\i (00:01:52) setwindow pcb
+\i (00:01:52) zoom in -132.103 40.098
+\i (00:01:52) trapsize 1230
+\i (00:01:54) setwindow cvf.dialog
+\i (00:01:54) cvf cancel
+\i (00:01:56) setwindow pcb
+\i (00:01:56) save 
+\i (00:01:57) fillin yes 
+\t (00:01:57) Symbol 'qfn20_4x4.psm' created.
+\i (00:01:57) generaledit 
+\i (00:01:59) exit 
+\t (00:02:00)     Journal end - Sun Dec 13 22:04:35 2015

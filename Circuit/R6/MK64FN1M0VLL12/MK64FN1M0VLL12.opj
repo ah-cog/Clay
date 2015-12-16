@@ -37,6 +37,11 @@
       (DisplayName "pstchip.dat")))
   (Folder "Referenced Projects")
   (PartMRUSelector
+    (RESISTOR
+      (FullPartName "RESISTOR.Normal")
+      (LibraryName
+         "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (DeviceIndex "0"))
     (FERRITE
       (FullPartName "FERRITE.Normal")
       (LibraryName
@@ -86,15 +91,8 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources"
-         "E:\GIT\CLAY\CIRCUIT\R6\MK64FN1M0VLL12\mk64fn1m0vll12.dsn")
-      (Path "Design Resources"
-         "E:\GIT\CLAY\CIRCUIT\R6\MK64FN1M0VLL12\mk64fn1m0vll12.dsn"
-         "Design Cache")
       (Path "Outputs")
-      (Select "Design Resources"
-         "E:\GIT\CLAY\CIRCUIT\R6\MK64FN1M0VLL12\mk64fn1m0vll12.dsn"
-         "Design Cache" "MK64FN1M0VLL12"))
+      (Select "Design Resources"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -105,9 +103,10 @@
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 0 1 -1 -1 -8 -31 130 1769 130 644")
-        (Scroll "155 0")
-        (Zoom "70")
+        (Scroll "-237 64")
+        (Zoom "35")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6\MK64FN1M0VLL12\MK64FN1M0VLL12.DSN")
       (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))))
+      (Page "PAGE1")))
+  (MPSSessionName "thebh_000"))

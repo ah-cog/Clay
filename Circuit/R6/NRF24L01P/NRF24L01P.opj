@@ -14,11 +14,12 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources" "E:\GIT\CLAY\CIRCUIT\R6\NRF24L01P\nrf24l01p.dsn")
-      (Path "Design Resources" "E:\GIT\CLAY\CIRCUIT\R6\NRF24L01P\nrf24l01p.dsn"
-         "SCHEMATIC1")
+      (Path "Design Resources" "E:\git\clay\Circuit\R6\NRF24L01P\nrf24l01p.dsn")
+      (Path "Design Resources" "E:\git\clay\Circuit\R6\NRF24L01P\nrf24l01p.dsn"
+         "Design Cache")
       (Select "Design Resources"
-         "E:\GIT\CLAY\CIRCUIT\R6\NRF24L01P\nrf24l01p.dsn" "SCHEMATIC1" "PAGE1"))
+         "E:\git\clay\Circuit\R6\NRF24L01P\nrf24l01p.dsn" "Design Cache"
+         "TESTPOINT"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -34,4 +35,5 @@
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6\NRF24L01P\NRF24L01P.DSN")
       (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))))
+      (Page "PAGE1")))
+  (MPSSessionName "thebh_000"))

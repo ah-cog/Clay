@@ -1,1 +1,1 @@
-CLAY_R6_Board_2x2.dra
+QFN20_4x4.dra

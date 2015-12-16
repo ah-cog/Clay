@@ -1,0 +1,9 @@
+{ Using PSTWRITER 16.6.0 d001Dec-12-2015 at 15:29:01 }
+
+#1 ERROR(ORCAP-36032): Duplicate Reference Designator C2: SCHEMATIC1, PAGE1 (5.50, 2.40).
+#2 ERROR(ORCAP-36032): Duplicate Reference Designator C3: SCHEMATIC1, PAGE1 (5.90, 2.40).
+#3 ERROR(ORCAP-36035): Multiple pin 1's which have different nets connected for C2: SCHEMATIC1, PAGE1 (5.50, 2.40).
+#4 ERROR(ORCAP-36035): Multiple pin 2's which have different nets connected for C2: SCHEMATIC1, PAGE1 (5.50, 2.40).
+#5 ERROR(ORCAP-36035): Multiple pin 1's which have different nets connected for C3: SCHEMATIC1, PAGE1 (5.90, 2.40).
+#6 ERROR(ORCAP-36035): Multiple pin 2's which have different nets connected for C3: SCHEMATIC1, PAGE1 (5.90, 2.40).
+#7 ERROR(ORCAP-36018): Aborting Netlisting... Please correct the above errors and retry.

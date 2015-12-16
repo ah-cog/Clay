@@ -12,9 +12,10 @@
   (GlobalState
     (FileView
       (Path "Design Resources")
-      (Path "Design Resources" ".\piezo.dsn")
-      (Path "Design Resources" ".\piezo.dsn" "SCHEMATIC1")
-      (Select "Design Resources" ".\piezo.dsn" "SCHEMATIC1" "PAGE1"))
+      (Path "Design Resources" "E:\git\clay\Circuit\R6\BUZZER\piezo.dsn")
+      (Path "Design Resources" "E:\git\clay\Circuit\R6\BUZZER\piezo.dsn"
+         "SCHEMATIC1")
+      (Select "Design Resources"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
