@@ -57,8 +57,8 @@
 - \subpage IMU_INT
 - \subpage SM1
 - \subpage MESH_CE
-- \subpage MESH_IRQ
 - \subpage MESH_CS
+- \subpage MESH_IRQ
 
 
 */

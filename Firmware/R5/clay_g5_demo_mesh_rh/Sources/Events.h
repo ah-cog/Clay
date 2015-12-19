@@ -231,6 +231,26 @@ void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
 /* ===================================================================*/
 void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
+/*
+** ===================================================================
+**     Event       :  MESH_IRQ_OnPortEvent (module Events)
+**
+**     Component   :  MESH_IRQ [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void MESH_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr);
+
 /* END Events */
 
 #ifdef __cplusplus

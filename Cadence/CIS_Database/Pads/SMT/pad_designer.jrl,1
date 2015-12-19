@@ -1,0 +1,145 @@
+\t (00:00:00) pad_designer 16.6 P001 (v16-6-112A) Windows 32
+\t (00:00:00)     Journal start - Sat Dec 12 19:07:05 2015
+\t (00:00:00)         Host=STEELGIANT User=thebh_000 Pid=4072 CPUs=8
+\t (00:00:00) 
+\i (00:00:12) setwindow form.padedit
+\i (00:00:12) pse_open E:/git/clay/Cadence/CIS_Database/Pads/SMT/m018_012.pad 
+\i (00:00:13) FORM padedit layers  
+\i (00:00:16) FORM padedit geometry_ant Circle 
+\i (00:00:20) FORM padedit width_ant 24 
+\i (00:00:24) pse_save_as 
+\i (00:00:27) setwindow text
+\i (00:00:27) close 
+\i (00:00:32) fillin no 
+\i (00:00:33) setwindow form.padedit
+\i (00:00:33) FORM padedit geometry_th Circle 
+\i (00:00:36) FORM padedit width_th 24 
+\i (00:00:39) pse_save 
+\i (00:00:40) fillin yes 
+\i (00:02:53) FORM padedit single NO 
+\i (00:02:54) FORM padedit grid row end_layer 
+\i (00:02:57) FORM padedit geometry Circle 
+\i (00:03:02) FORM padedit width 18 
+\i (00:03:04) FORM padedit grid row default_internal 
+\i (00:03:07) FORM padedit geometry Circle 
+\i (00:03:11) FORM padedit width 18 
+\i (00:03:13) FORM padedit geometry_th Circle 
+\i (00:03:15) FORM padedit width_th 24 
+\i (00:03:18) FORM padedit geometry_ant Circle 
+\i (00:03:20) FORM padedit width_ant 24 
+\i (00:03:21) FORM padedit grid row end_layer 
+\i (00:03:23) FORM padedit geometry_th Circle 
+\i (00:03:28) FORM padedit width_th 24 
+\i (00:03:29) FORM padedit geometry_ant Circle 
+\i (00:03:32) FORM padedit width_ant 24 
+\i (00:03:35) pse_save 
+\i (00:03:45) setwindow text
+\i (00:03:45) close 
+\i (00:03:46) fillin no 
+\i (00:03:47) setwindow form.padedit
+\i (00:03:47) FORM padedit parameters  
+\i (00:03:55) FORM padedit drill_fig Circle 
+\i (00:03:59) FORM padedit drill_width 12 
+\i (00:04:03) FORM padedit drill_height 12 
+\i (00:04:03) pse_save 
+\i (00:04:07) fillin yes 
+\i (00:04:55) FORM padedit layers  
+\i (00:04:57) FORM padedit grid row soldermask_top 
+\i (00:04:59) FORM padedit grid row default_internal 
+\i (00:05:04) pse_save_as 
+\i (00:05:09) fillin "mv018_012.pad"
+\i (00:05:15) FORM padedit grid row soldermask_top 
+\i (00:05:17) FORM padedit geometry Circle 
+\i (00:05:20) FORM padedit width 24 
+\i (00:05:22) FORM padedit grid row soldermask_bottom 
+\i (00:05:25) FORM padedit geometry Circle 
+\i (00:05:26) FORM padedit width 24 
+\i (00:05:38) FORM padedit parameters  
+\i (00:05:41) pse_save_as 
+\i (00:05:47) fillin "c018_012.pad"
+\i (00:06:22) pse_open E:/git/clay/Cadence/CIS_Database/Pads/SMT/mv018_012.pad 
+\i (00:06:23) FORM padedit layers  
+\i (00:18:35) FORM padedit grid row begin_layer 
+\i (00:18:41) FORM padedit width 24.000 
+\i (00:18:45) FORM padedit grid row default_internal 
+\i (00:18:48) FORM padedit width 24.000 
+\i (00:18:50) FORM padedit grid row soldermask_top 
+\i (00:18:51) FORM padedit grid row end_layer 
+\i (00:18:53) FORM padedit width 24.000 
+\i (00:19:00) FORM padedit width_th 36.000 
+\i (00:19:00) FORM padedit grid row begin_layer 
+\i (00:19:00) FORM padedit grid row default_internal 
+\i (00:19:02) FORM padedit grid row end_layer 
+\i (00:19:08) FORM padedit width_ant 36.000 
+\i (00:19:08) FORM padedit grid row begin_layer 
+\i (00:19:12) FORM padedit width_th 36.000 
+\i (00:19:14) FORM padedit width_ant 36 
+\i (00:19:18) FORM padedit grid row default_internal 
+\i (00:19:21) FORM padedit width_th 36.000 
+\i (00:19:23) FORM padedit width_ant 36 
+\i (00:19:27) pse_save_as 
+\i (00:19:31) fillin "mv024_012.pad"
+\i (00:19:35) pse_save 
+\i (00:19:36) fillin no 
+\i (01:00:59) pse_open 
+\i (01:01:02) fillin "c048_040.pad"
+\i (01:01:04) FORM padedit single NO 
+\i (01:01:06) FORM padedit grid row end_layer 
+\i (01:01:08) FORM padedit geometry Circle 
+\i (01:01:12) FORM padedit width 48 
+\i (01:01:16) FORM padedit geometry_th Circle 
+\i (01:01:19) FORM padedit width_th 56 
+\i (01:01:22) FORM padedit geometry_ant Circle 
+\i (01:01:24) FORM padedit width_ant 56 
+\i (01:01:35) FORM padedit width_th 60 
+\i (01:01:37) FORM padedit width_ant 60 
+\i (01:01:39) FORM padedit grid row begin_layer 
+\i (01:01:41) FORM padedit width_th 60 
+\i (01:01:43) FORM padedit width_ant 60 
+\i (01:01:47) FORM padedit grid row default_internal 
+\i (01:01:50) FORM padedit grid row begin_layer 
+\i (01:01:52) FORM padedit grid rpopup begin_layer 'Copy to all' 
+\i (01:01:57) setwindow form.padcopy
+\i (01:01:57) FORM padcopy pse_copy_done  
+\i (01:02:02) setwindow form.padedit
+\i (01:02:02) FORM padedit parameters  
+\i (01:02:06) FORM padedit drill_fig Circle 
+\i (01:02:08) FORM padedit drill_width 40 
+\i (01:02:12) FORM padedit drill_height 40 
+\i (01:02:18) pse_save 
+\i (01:02:22) fillin yes 
+\i (01:02:24) FORM padedit layers  
+\i (01:02:27) FORM padedit grid row soldermask_top 
+\i (01:02:33) FORM padedit geometry Circle 
+\i (01:02:36) FORM padedit width 48 
+\i (01:02:42) FORM padedit grid rpopup soldermask_top 'Copy to all' 
+\i (01:02:44) setwindow form.padcopy
+\i (01:02:44) FORM padcopy pse_copy_reg_layers NO 
+\i (01:02:45) FORM padcopy pse_copy_soldermask YES 
+\i (01:02:46) FORM padcopy pse_copy_done  
+\i (01:02:50) setwindow form.padedit
+\i (01:02:50) pse_save 
+\i (01:02:51) fillin yes 
+\i (01:03:34) pse_open 
+\i (01:03:38) fillin "c032_016.pad"
+\i (01:03:39) FORM padedit single NO 
+\i (01:03:43) FORM padedit grid row begin_layer 
+\i (01:03:54) FORM padedit width_th 48 
+\i (01:03:57) FORM padedit width_ant 48 
+\i (01:04:01) FORM padedit grid rpopup begin_layer 'Copy to all' 
+\i (01:04:02) setwindow form.padcopy
+\i (01:04:02) FORM padcopy pse_copy_soldermask YES 
+\i (01:04:03) FORM padcopy pse_copy_done  
+\i (01:04:09) setwindow form.padedit
+\i (01:04:09) FORM padedit parameters  
+\i (01:04:12) FORM padedit drill_fig Circle 
+\i (01:04:15) FORM padedit drill_width 16 
+\i (01:04:15) FORM padedit drill_height 16 
+\i (01:04:40) pse_save 
+\i (01:04:42) fillin yes 
+\i (01:06:30) FORM padedit layers  
+\i (03:32:23) FORM padedit grid rpopup default_internal  
+\i (03:32:27) pse_open 
+\i (03:32:54) fillin "c008m008.pad"
+\i (03:32:58) pse_exit
+\t (03:32:58)     Journal end - Sat Dec 12 22:40:04 2015

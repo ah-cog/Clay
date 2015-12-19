@@ -1,0 +1,111 @@
+\t (00:00:38) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:38)     Journal start - Mon Dec 14 04:47:30 2015
+\t (00:00:38)         Host=STEELGIANT User=thebh_000 Pid=4720 CPUs=8
+\t (00:00:38) 
+\d (00:00:38) Database opened: E:/git/clay/Cadence/CIS_Database/Footprints/SMT/CLAY_R6_Board_2x2.dra
+\i (00:00:39) etchedit 
+\i (00:00:39) zoom in 1 
+\i (00:00:39) setwindow pcb
+\i (00:00:39) zoom in 820.111 1117.159
+\t (00:00:39) Grids are drawn 16.000, 16.000 apart for enhanced viewability.
+\i (00:00:39) trapsize 10763
+\i (00:00:39) zoom in 1 
+\i (00:00:39) setwindow pcb
+\i (00:00:39) zoom in -469.250 1095.634
+\i (00:00:39) trapsize 5381
+\i (00:00:39) zoom in 1 
+\i (00:00:39) setwindow pcb
+\i (00:00:39) zoom in -518.758 1076.261
+\t (00:00:39) Grids are drawn 4.000, 4.000 apart for enhanced viewability.
+\i (00:00:39) trapsize 2691
+\i (00:00:41) prepopup -528.444 1000.923
+\i (00:00:42) pick grid -609.163 1049.893
+\t (00:00:42) last pick:  -609.000  1050.000
+\i (00:00:44) spin 
+\t (00:00:44) Select element(s) to spin.
+\i (00:00:44) pick grid -768.988 1139.222
+\t (00:00:44) last pick:  -769.000  1139.000
+\i (00:00:45) prepopup -718.404 1069.804
+\i (00:00:46) cancel 
+\i (00:00:46) etchedit 
+\i (00:00:48) change 
+\i (00:00:50) pick grid -626.383 997.694
+\t (00:00:50) last pick:  -626.000  998.000
+\e (00:00:50) ERROR(SPMHGE-545): Rectangle already matches option panel settings.
+\i (00:00:51) setwindow form.mini
+\i (00:00:51) FORM mini apply_size YES 
+\i (00:00:52) FORM mini apply_size NO 
+\i (00:00:52) FORM mini apply_width YES 
+\i (00:00:58) FORM mini line_width 10.000 
+\i (00:01:00) setwindow pcb
+\i (00:01:00) pick grid -546.740 999.847
+\t (00:01:00) last pick:  -547.000  1000.000
+\e (00:01:00) ERROR(SPMHGE-544): Rectangle line width cannot be changed.
+\i (00:01:02) zoom out 1 
+\i (00:01:02) setwindow pcb
+\i (00:01:02) zoom out -552.660 1011.147
+\t (00:01:02) Grids are drawn 16.000, 16.000 apart for enhanced viewability.
+\i (00:01:02) trapsize 5381
+\i (00:01:05) prepopup -733.471 1249.001
+\i (00:01:07) done 
+\i (00:01:07) etchedit 
+\i (00:01:14) decompose shape 
+\t (00:01:14) Created Class/Subclass BOARD GEOMETRY/CONSTRUCTION
+   (00:01:14) Loading cmds.cxt 
+   (00:01:14) Loading apt.cxt 
+   (00:01:14) Loading axlcore.cxt 
+\i (00:01:16) prepopup -820.648 1000.385
+\i (00:01:17) pick -835.716 996.080
+\t (00:01:17) last pick:  -835.716  996.080
+\i (00:01:18) pick -838.944 1003.614
+\t (00:01:18) last pick:  -838.944  1003.614
+\i (00:01:19) prepopup -838.944 1003.614
+\i (00:01:20) pop Done 
+\i (00:01:20) etchedit 
+\i (00:01:20) prepopup -936.884 1010.071
+\i (00:01:22) prepopup -956.257 999.309
+\i (00:01:27) decompose shape 
+\i (00:01:29) pick -873.385 1003.614
+\t (00:01:29) last pick:  -873.385  1003.614
+\i (00:01:30) pick -873.385 1003.614
+\t (00:01:30) last pick:  -873.385  1003.614
+\i (00:01:32) pick -873.385 1003.614
+\t (00:01:32) last pick:  -873.385  1003.614
+\i (00:01:34) pick -922.893 999.309
+\t (00:01:34) last pick:  -922.893  999.309
+\i (00:01:34) prepopup -922.893 999.309
+\i (00:01:36) pop Done 
+\i (00:01:36) etchedit 
+\i (00:01:36) pick grid -885.224 1108.011
+\t (00:01:36) last pick:  -885.000  1108.000
+\i (00:01:37) drag_start grid -911.054 1040.207
+\i (00:01:37) drag_stop -900.291 998.233
+\i (00:01:38) zoom out 1 
+\i (00:01:38) setwindow pcb
+\i (00:01:38) zoom out -840.021 1103.706
+\i (00:01:38) trapsize 10763
+\i (00:01:38) zoom out 1 
+\i (00:01:38) setwindow pcb
+\i (00:01:38) zoom out -1278.598 1103.707
+\t (00:01:38) Grids are drawn 64.000, 64.000 apart for enhanced viewability.
+\i (00:01:38) trapsize 21525
+\i (00:01:38) zoom out 1 
+\i (00:01:38) setwindow pcb
+\i (00:01:38) zoom out -901.907 863.161
+\i (00:01:38) trapsize 21525
+\i (00:01:39) zoom in 1 
+\i (00:01:39) setwindow pcb
+\i (00:01:39) zoom in -1155.904 983.702
+\t (00:01:39) Grids are drawn 16.000, 16.000 apart for enhanced viewability.
+\i (00:01:39) trapsize 10763
+\i (00:01:42) add rect 
+\i (15:09:25) copy 
+\t (15:09:25) Pick user-pick origin.
+\i (15:09:27) status 
+\i (15:09:31) setwindow form.status
+\i (15:09:31) FORM status done  
+\i (15:09:32) setwindow pcb
+\i (15:09:32) exit 
+\e (15:09:32) Do you want to save the changes you made to CLAY_R6_Board_2x2.dra?
+\i (15:09:36) fillin no 
+\t (15:09:36)     Journal end - Mon Dec 14 19:56:28 2015

@@ -81,7 +81,7 @@
 #include "Mesh.h"
 #endif
 
-#include "../RadioHead/RHRouter.h"
+#include "RHRouter.h"
 
 #ifndef SYSTEM_TICK_H_
 #include "system_tick.h"
@@ -95,13 +95,11 @@
 #include "mpu_9250_driver.h"
 #endif
 
-#define MESH_TX_MAX_TIME_MSEC   5
-#define MESH_RX_MAX_TIME_MSEC   800
-#define MESH_MODE_RX_TX         0
-#define MESH_MODE_BROADCAST     1
-#define MESH_MODE_RX_ONLY       2
+#ifndef MESH_STATISTICS_H_
+#include "mesh_stastistics.h"
+#endif
 
-#if(ADDRESS_3 )
+#if(ADDRESS_3 || ADDRESS_2 || ADDRESS_1)
 #define TRANSMIT                1
 #else
 #define TRANSMIT                0
@@ -124,23 +122,24 @@ typedef struct
 static led_time_segment_values LED_IMU_Levels[LED_TIME_SEGMENT_COUNT];
 static uint32_t LED_time_segment = 0;
 
-static uint8_t transmit = 0;
 static uint32_t mode_start_time = 0;
 static uint8_t mesh_mode = 0;
 
 static uint8_t hb_led_count = 0;
 
+uint8_t last_tx_return_value;
+
 static uint32_t size = sizeof(mpu_values) - 2;
 static mpu_values local_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static mpu_values remote_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-        { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg
-        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED },        //rb
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //r
-        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //g
-        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED },        //b
+static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off 0
+        { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg 1
+        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb 2
+        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED },        //rb 3
+        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //r 4 
+        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //g 5 
+        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED },        //b 6
         };
 
 ///
@@ -149,6 +148,7 @@ static void upcount_hb_leds();
 static void update_mesh_mode(uint8_t * data, uint8_t len);
 static void mesh_update_imu_leds(uint8_t * data, uint8_t len);
 static void update_3LED_imu();
+static void complete_experiment_and_send();
 ///
 
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
@@ -164,9 +164,6 @@ int main(void)
     init_tick();
     upcount_hb_leds();
 
-    delay_n_msec(100);
-    upcount_hb_leds();
-
     init_led_drivers();
     upcount_hb_leds();
 
@@ -180,109 +177,174 @@ int main(void)
     uint32_t tx_time;
 
     //mesh diagnostic LEDs.
-    //TX
-    //rgb 4 is whether the packet is being sent to 1 or 2
-    //rgb 5 is green/blue when successful, red otherwise
-
-    //RX
-    //rgb 7 is green when the NRF driver is receiving a message in the 'available' method.
-    //rgb 8 is blue when no message received, green when message received
-    //rgb 9 is blue when last received message was address broadcast, green when it was application message.    
-    //rgb 11 is green when last node search message was direct, blue when indirect, and is only updated when this board was the target of the search
-    //rgb 12 is whether the received node search message was for this node or for another node. green means for this node, blue means another    
+    // TX
+    //     rgb 4 is green when last tx was successful, red if not.
+    //     rgb 5 shows last address sent to. red when last sent to address 1, green when last sent to 2, blue when last sent to 3
+    // RX
+    //     led 1 is toggled when an IMU update message is received
+    //     rgb 1 is red when address 1 sent the last message, green when address 2, blue when address 3
+    //     rgb 7 is green when the NRF driver is receiving a message in the 'available' method.
+    //     rgb 8 is blue when no message received, green when message received
+    //     rgb 9 is blue when last received message was address broadcast, green when it was application message.    
+    //     rgb 11 is green when last node search message was direct, blue when indirect, and is only updated when this board was the target of the search
+    //     rgb 12 is whether the received node search message was for this node or for another node. green means for this node, blue means another
 
     int target_address = 2;
 
+    //used to make sure these variables get initialized. they'll never be accessed otherwise.
+
+    start_time = power_on_time_msec;
+    setup_next_experiment();
+
     for (;;)
     {
+        //todo: collect until time is up or number of samples is reached.
+
+        if ((experiment_data.settings.message_transmission_count
+                && transmissions_sent_for_this_experiment >= experiment_data.settings.message_transmission_count)
+                || (experiment_data.settings.experiment_duration_ms
+                        && (power_on_time_msec - start_time) >= experiment_data.settings.experiment_duration_ms))
+        {
+            send_data_and_setup_next_experiment();
+        }
+
         mesh_process_commands();
 
-        uint8_t source;
-        if ((power_on_time_msec - mode_start_time) > MESH_RX_MAX_TIME_MSEC)
+#if TRANSMIT
+        if ((power_on_time_msec - mode_start_time)
+                > (experiment_data.settings.mesh_tx_period_max_ms ?
+                        random(experiment_data.settings.mesh_tx_period_min_ms, experiment_data.settings.mesh_tx_period_max_ms) :
+                        experiment_data.settings.mesh_tx_period_min_ms))
         {
-            transmit = 1;
-            mode_start_time = 0;
-        }
-        if (transmit)
-        {
+            mode_start_time = power_on_time_msec;
+
+            //update the target address
+#if ADDRESS_3 || ADDRESS_1              //address 3 or address 1 will send to 2 occasionally
+            if (target_address == 2)
+            #elif ADDRESS_2             //address 2 will send to address 1 (so will address 3, but that's covered in the 'else' below)
+            if (target_address == 1)
+#endif
+            {
+#if ADDRESS_3                           //address 3 needs to switch up and send to 2 instead of 1 at this point.
+                target_address = 1;
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_5, colors + 4);
+#endif
+#elif ADDRESS_2 || ADDRESS_1            //on module with address 2 at this point, we're sending to 1. on module with address 1, we're sending to 2. in either case, we need to send to 3 on the next iteration.
+                target_address = 3;
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_5, colors + 6);
+#endif
+#endif
+            }
+            else
+            {
+#if ADDRESS_3 || ADDRESS_1              //on module with address 3, we last sent to 1, on module with address 1, we last sent to 3. in both cases, the next address we need to send to is address 2
+                target_address = 2;
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_5, colors + 5);
+#endif
+#elif ADDRESS_2                         //on module with address 2, we last sent to 3, so we need to send to 1 next.
+                target_address = 1;
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_5, colors + 4);
+#endif
+#endif
+            }
+
+            //read the mpu and prepare the command to be sent
             get_mpu_readings(&local_imu_data);
 
             uint8_t tx_buf[sizeof(local_imu_data) - 2];
             tx_buf[0] = MESH_CMD_UPDATE_IMU_DATA;
 
-            for (int i = 0; i < sizeof(local_imu_data) - 4; ++i)
+            for (uint32_t i = 0; i < sizeof(local_imu_data) - 4; ++i)
             {
                 tx_buf[i + 1] = local_imu_data.bytes[i];
             }
 
             tx_buf[sizeof(local_imu_data) + 1] = MESH_CMD_TERMINATION;
 
-//            if (mesh_tx_command(tx_buf, sizeof(local_imu_data) + 2, get_next_node(0xFF))
-//            if (mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, get_next_node(0xFF))           
-            if (get_first_node())
+            //send the message
+            tx_start = power_on_time_msec;
+            last_tx_return_value = mesh_tx(tx_buf, sizeof(local_imu_data) - 2, target_address);
+            tx_time = power_on_time_msec - tx_start;
+
+            //update return value accumulators
+            switch (last_tx_return_value)
             {
-                tx_start = power_on_time_msec;
-//                if (TRANSMIT && mesh_tx(local_imu_data.bytes, sizeof(local_imu_data) - 2, target_address) == RH_ROUTER_ERROR_NO_ROUTE)
-                if (TRANSMIT && mesh_tx(tx_buf, sizeof(local_imu_data) - 2, target_address) == RH_ROUTER_ERROR_NO_ROUTE)
-                {
-                    set_led_output(RGB_2, colors + 2);
-                }
-                else
-                {
-                    set_led_output(RGB_2, colors + 4);
-                }
-                tx_time = power_on_time_msec - tx_start;
-
-#if TRANSMIT
-#if ADDRESS_3
-                if (target_address == 2)
-#elif ADDRESS_2
-                if (target_address == 1)
+                case RH_ROUTER_ERROR_NONE:
+                    {
+#if ENABLE_DIAGNOSTIC_LED
+                    set_led_output(RGB_4, colors + 5);
 #endif
-                {
-                    set_led_output(RGB_3, colors + 5);
-#if ADDRESS_3
-                    target_address = 1;
-#elif ADDRESS_2
-                    target_address = 3;
-#endif
+                    experiment_data.transmit_time_success_total_ms += tx_time;
+                    ++experiment_data.ERROR_NONE_count;
+                    break;
                 }
-                else
-                {
-                    set_led_output(RGB_3, colors + 6);
-#if ADDRESS_3
-                    target_address = 2;
-#elif ADDRESS_2
-                    target_address = 1;
-
-#endif
+                case RH_ROUTER_ERROR_INVALID_LENGTH:
+                    {
+                    ++experiment_data.ERROR_INVALID_LENGTH_count;
+                    break;
                 }
-#endif
+                case RH_ROUTER_ERROR_NO_ROUTE:
+                    {
+                    ++experiment_data.ERROR_NO_ROUTE_count;
+                    break;
+                }
+                case RH_ROUTER_ERROR_TIMEOUT:
+                    {
+                    ++experiment_data.ERROR_TIMEOUT_count;
+                    break;
+                }
+                case RH_ROUTER_ERROR_NO_REPLY:
+                    {
+                    ++experiment_data.ERROR_NO_REPLY_count;
+                    break;
+                }
+                case RH_ROUTER_ERROR_UNABLE_TO_DELIVER:
+                    {
+                    ++experiment_data.ERROR_UNABLE_TO_DELIVER_count;
+                    break;
+                }
+                default:
+                    {
+                    break;
+                }
             }
-            transmit = 0;
-            mode_start_time = power_on_time_msec;
 
+            //increment transmit counter
+            ++experiment_data.tx_messages_sent[target_address - 1];
+            ++transmissions_sent_for_this_experiment;
+
+            //increment fail counter if necessary
+            if (last_tx_return_value > 0)
+            {
+#if ENABLE_DIAGNOSTIC_LED
+                set_led_output(RGB_4, colors + 4);
+#endif
+
+                ++(experiment_data.tx_messages_failed[target_address - 1]);
+                experiment_data.transmit_time_fail_total_ms += tx_time;
+            }
+
+            mode_start_time = power_on_time_msec;
         }
+#endif
 
         if (tick_1msec)
         {
             tick_1msec = FALSE;
-            if (!(power_on_time_msec % LED_UPDATE_PERIOD_MS))
-            {
-                update_3LED_imu();
-            }
         }
 
         if (tick_250msec)
         {
-            mesh_update_imu_leds(NULL, 7);
             tick_250msec = FALSE;
         }
 
         if (tick_500msec)
         {
             tick_500msec = FALSE;
-//                mesh_discover_nodes();
             upcount_hb_leds();
         }
     }
@@ -395,8 +457,13 @@ static void update_mesh_mode(uint8_t * data, uint8_t len)
     mesh_mode = data[1];
 }
 
+uint8_t derp = 0;
+
 static void mesh_update_imu_leds(uint8_t * data, uint8_t len)
 {
+    LED1_PutVal(LED1_DeviceData, derp);
+    derp = !derp;
+
     if (data != NULL) return;
     mpu_values * imu_data = &local_imu_data;
 
@@ -447,7 +514,7 @@ static void mesh_update_imu_leds(uint8_t * data, uint8_t len)
 static void update_3LED_imu()
 {
     led_time_segment_values v = LED_IMU_Levels[LED_time_segment];
-    LED_time_segment = (LED_time_segment + 1)% LED_TIME_SEGMENT_COUNT; 
+    LED_time_segment = (LED_time_segment + 1) % LED_TIME_SEGMENT_COUNT;
     if (v.x_on)
     {
         if (1 || v.x_sign)

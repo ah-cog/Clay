@@ -1,0 +1,96 @@
+\t (01:22:15) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (01:22:15)     Journal start - Sun Dec 13 16:40:23 2015
+\t (01:22:15)         Host=STEELGIANT User=thebh_000 Pid=16556 CPUs=8
+\t (01:22:15) 
+\d (01:22:15) Database opened: E:/git/clay/Cadence/CIS_Database/Footprints/PTH/JST2_SIDE_PTH.dra
+\i (01:22:16) generaledit 
+\i (01:22:16) zoom in 1 
+\i (01:22:16) setwindow pcb
+\i (01:22:16) zoom in -72.790 -158.303
+\i (01:22:16) trapsize 1845
+\i (01:22:20) zoom out 1 
+\i (01:22:20) setwindow pcb
+\i (01:22:20) zoom out -67.624 -97.786
+\i (01:22:20) trapsize 3690
+\i (01:22:20) zoom in 1 
+\i (01:22:20) setwindow pcb
+\i (01:22:20) zoom in -7.845 -114.022
+\i (01:22:20) trapsize 1845
+\i (01:22:25) text edit 
+\i (01:22:27) pick grid -43.269 -106.273
+\t (01:22:27) last pick:  -43.000  -106.000
+\i (01:22:27) setwindow pcb
+\i (01:22:27) pick grid -43.269 -106.273
+\t (01:22:27) last pick:  -43.000  -106.000
+\i (01:22:27) setwindow pcb
+\i (01:22:27) pick -43.269 -106.273
+\i (01:22:30) setwindow pcb
+\i (01:22:30) pick grid 19.092 -107.749
+\t (01:22:30) last pick:  19.000  -108.000
+\i (01:22:30) setwindow pcb
+\i (01:22:30) pick -43.269 -106.273
+\t (01:22:30) Pick text to edit.
+\e (01:22:30) ERROR(SPMHA1-441): Text not found.
+\i (01:22:30) setwindow pcb
+\i (01:22:30) pick grid 41.970 -111.439
+\t (01:22:30) last pick:  42.000  -111.000
+\i (01:22:32) setwindow pcb
+\i (01:22:32) pick grid -51.018 -106.642
+\t (01:22:32) last pick:  -51.000  -107.000
+\i (01:22:32) setwindow pcb
+\i (01:22:32) pick 41.970 -111.439
+\t (01:22:32) Pick text to edit.
+\i (01:22:35) setwindow pcb
+\i (01:22:35) save_as 
+\i (01:22:35) setwindow pcb
+\i (01:22:35) pick -51.018 -106.642
+\t (01:22:35) Pick text to edit.
+\i (01:22:37) fillin "JST2_SIDE_PTH.dra"
+\t (01:22:37) Symbol 'jst2_side_pth.psm' created.
+\i (01:22:37) setwindow pcb
+\i (01:22:37) generaledit 
+\i (01:28:43) zoom in 1 
+\i (01:28:43) setwindow pcb
+\i (01:28:43) zoom in -35.520 -106.642
+\i (01:28:43) trapsize 923
+\i (01:28:43) zoom in 1 
+\i (01:28:43) setwindow pcb
+\i (01:28:43) zoom in -35.520 -106.641
+\i (01:28:43) trapsize 461
+\i (01:28:44) zoom out 1 
+\i (01:28:44) setwindow pcb
+\i (01:28:44) zoom out -35.520 -106.641
+\i (01:28:44) trapsize 923
+\i (01:28:44) zoom out 1 
+\i (01:28:44) setwindow pcb
+\i (01:28:44) zoom out -35.519 -106.640
+\i (01:28:44) trapsize 1845
+\i (01:28:44) zoom out 1 
+\i (01:28:44) setwindow pcb
+\i (01:28:44) zoom out 3.225 -100.368
+\i (01:28:44) trapsize 3690
+\i (01:28:44) zoom out 1 
+\i (01:28:44) setwindow pcb
+\i (01:28:44) zoom out 296.214 -86.716
+\i (01:28:44) trapsize 3690
+\i (01:28:44) zoom in 1 
+\i (01:28:44) setwindow pcb
+\i (01:28:44) zoom in 296.214 -86.716
+\i (01:28:44) trapsize 1845
+\i (01:28:46) zoom out 1 
+\i (01:28:46) setwindow pcb
+\i (01:28:46) zoom out -21.129 -117.712
+\i (01:28:46) trapsize 3690
+\i (01:28:46) zoom out 1 
+\i (01:28:46) setwindow pcb
+\i (01:28:46) zoom out 247.506 -148.708
+\i (01:28:46) trapsize 3690
+\i (01:28:46) zoom out 1 
+\i (01:28:46) setwindow pcb
+\i (01:28:46) zoom out 249.720 -145.756
+\i (01:28:46) trapsize 3690
+\i (01:34:13) opencd E:/git/clay/Cadence/CIS_Database/Footprints/SMT/TAC_SW_B3U_1000P.dra 
+\t (01:34:13) Opening existing design...
+\t (01:34:13) Grids are drawn 4.000, 4.000 apart for enhanced viewability.
+\i (01:34:13) trapsize 1845
+\t (01:34:13)     Journal end - Sun Dec 13 16:52:21 2015

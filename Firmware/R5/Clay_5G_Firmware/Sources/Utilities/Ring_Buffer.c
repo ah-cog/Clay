@@ -69,6 +69,7 @@ byte Ring_Buffer_Get (byte *elemP)
     if (Ring_Buffer_outIdx==Ring_Buffer_BUF_SIZE) {
       Ring_Buffer_outIdx = 0;
     }
+//    Monitor_Network_Communications ();
   }
   ExitCritical();
   return res;

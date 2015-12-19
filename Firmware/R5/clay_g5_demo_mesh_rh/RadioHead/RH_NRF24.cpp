@@ -6,15 +6,19 @@
 #include <RH_NRF24.h>
 #define NRF_TIMEOUT_MS 1
 
+#if ENABLE_DIAGNOSTIC_LED
 #ifndef LED_DRIVER_PCA9552_H_
 #include "led_driver_pca9552.h"
 #endif
 
-static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //red
-        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //green
-        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED }         //blue
+static color_rgb colors[] =
+{
+    {   LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF},        //off
+    {   LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF},        //red
+    {   LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF},        //green
+    {   LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED}         //blue
 };
+#endif 
 
 #define RED_OUTPUT  (colors + 1)
 #define GREEN_OUTPUT  (colors + 2)
@@ -46,7 +50,7 @@ bool RH_NRF24::init()
     // Enable dynamic payload length on all pipes
     spiWriteRegister(RH_NRF24_REG_1C_DYNPD, RH_NRF24_DPL_ALL);
     // Enable dynamic payload length, disable payload-with-ack, enable noack
-    spiWriteRegister(RH_NRF24_REG_1D_FEATURE, RH_NRF24_EN_DPL | RH_NRF24_EN_DYN_ACK);
+    spiWriteRegister(RH_NRF24_REG_1D_FEATURE, RH_NRF24_EN_DPL | RH_NRF24_EN_ACK_PAY | RH_NRF24_EN_DYN_ACK);
 
     //setup retry stuff
 //    spiWriteRegister(RH_NRF24_REG_04_SETUP_RETR, 0x1F);
@@ -306,39 +310,57 @@ bool RH_NRF24::available()
     {
         if (_mode == RHModeTx)
         {
+#if ENABLE_DIAGNOSTIC_LED
             set_led_output(RGB_7, BLUE_OUTPUT);
+#endif
             return false;
         }
 
         setModeRx();
         if (spiReadRegister(RH_NRF24_REG_17_FIFO_STATUS) & RH_NRF24_RX_EMPTY)
         {
+#if ENABLE_DIAGNOSTIC_LED
             set_led_output(RGB_7, BLUE_OUTPUT);
+#endif
             return false;
         }
 
+#if ENABLE_DIAGNOSTIC_LED
         set_led_output(RGB_7, GREEN_OUTPUT);
+#endif
         // Manual says that messages > 32 octets should be discarded
         uint8_t
         len = spiRead(RH_NRF24_COMMAND_R_RX_PL_WID);
         if (len > 32)
         {
+#if ENABLE_DIAGNOSTIC_LED
             set_led_output(RGB_7, BLUE_OUTPUT);
+#endif
             flushRx();
             clearRxBuf();
             setModeIdle();
             return false;
         }
         // Clear read interrupt
+        setModeIdle();
         spiWriteRegister(RH_NRF24_REG_07_STATUS, RH_NRF24_RX_DR);
+        uint8_t statreg = statusRead();
         // Get the message into the RX buffer, so we can inspect the headers
         spiBurstRead(RH_NRF24_COMMAND_R_RX_PAYLOAD, _buf, len);
         _bufLen = len;
         // 140 microsecs (32 octet payload)
         validateRxBuf();
-        if (_rxBufValid)
-            setModeIdle();        // Got one
+        //NOTE set mode idle regardless. We're using interrupts now, and we can't handle the 
+        //     second interrupt in time if it is generated.
+        //TODO: is the operation below necessary for some other modes?
+//        if (_rxBufValid)
+//            setModeIdle();        // Got one
     }
+#if ENABLE_DIAGNOSTIC_LED
+    set_led_output(RGB_7, BLUE_OUTPUT);
+#endif
+    
+    uint8_t statusReg = statusRead();
     return _rxBufValid;
 }
 

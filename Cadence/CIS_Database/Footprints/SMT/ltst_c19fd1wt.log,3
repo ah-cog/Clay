@@ -1,0 +1,23 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    CREATE SYMBOL                                                    )
+(                                                                     )
+(    Drawing          : LTST_C19FD1WT.dra                             )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Thu Dec 10 08:55:00 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Create Symbol of type: PACKAGE
+    Directory = E:/git/clay/Cadence/CIS_Database/Footprints/SMT
+    Name      = ltst_c19fd1wt.psm
+    User      = thebh_000
+    Machine   = STEELGIANT
+
+
+Create symbol started.
+ 
+
+Create symbol completed.
+

@@ -53,7 +53,6 @@
 #include "tick_1ms_timer.h"
 #include "TU1.h"
 
-
 /* Including shared modules, which are used for whole project */
 #ifndef __PE_Types_H
 #include "PE_Types.h"
@@ -120,7 +119,6 @@ int main(void)
                     { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
                     { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }        //rb
             };
-
 
     for (;;)
     {

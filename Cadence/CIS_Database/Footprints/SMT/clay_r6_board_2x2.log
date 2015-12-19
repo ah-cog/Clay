@@ -1,0 +1,23 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    CREATE SYMBOL                                                    )
+(                                                                     )
+(    Drawing          : CLAY_R6_Board_2x2.dra                         )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sat Dec 12 14:20:27 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Create Symbol of type: MECHANICAL
+    Directory = E:/git/clay/Cadence/CIS_Database/Footprints/SMT
+    Name      = clay_r6_board_2x2.bsm
+    User      = thebh_000
+    Machine   = STEELGIANT
+
+
+Create symbol started.
+ 
+
+Create symbol completed.
+

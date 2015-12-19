@@ -1,0 +1,97 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Allegro Netrev Import Logic                                      )
+(                                                                     )
+(    Drawing          : CLAYR6.brd                                    )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sat Dec 12 14:07:58 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+------ Directives ------
+
+RIPUP_ETCH FALSE;
+RIPUP_DELETE_FIRST_SEGMENT FALSE;
+RIPUP_RETAIN_BONDWIRE FALSE;
+RIPUP_SYMBOLS ALWAYS;
+Missing symbol has error FALSE;
+SCHEMATIC_DIRECTORY 'E:\GIT\CLAY\CIRCUIT\R6\allegro';
+BOARD_DIRECTORY '';
+OLD_BOARD_NAME 'CLAYR6.brd';
+NEW_BOARD_NAME 'CLAYR6.brd';
+
+CmdLine: netrev.exe -y 1 -n -i E:\GIT\CLAY\CIRCUIT\R6\allegro E:\GIT\CLAY\CIRCUIT\R6\allegro\CLAYR6.brd E:\GIT\CLAY\CIRCUIT\R6\allegro\CLAYR6.brd
+
+------ Preparing to read pst files ------
+
+Starting to read E:/GIT/CLAY/CIRCUIT/R6/allegro/pstchip.dat 
+   Finished reading E:/GIT/CLAY/CIRCUIT/R6/allegro/pstchip.dat (00:00:00.02)
+Starting to read E:/GIT/CLAY/CIRCUIT/R6/allegro/pstxprt.dat 
+   Finished reading E:/GIT/CLAY/CIRCUIT/R6/allegro/pstxprt.dat (00:00:00.00)
+Starting to read E:/GIT/CLAY/CIRCUIT/R6/allegro/pstxnet.dat 
+   Finished reading E:/GIT/CLAY/CIRCUIT/R6/allegro/pstxnet.dat (00:00:00.00)
+
+------ Oversights/Warnings/Errors ------
+
+
+#1   WARNING(SPMHNI-192): Device/Symbol check warning detected. [help]
+
+WARNING(SPMHNI-194): Symbol 'DO_221AC' for device 'DIODE_DO_221AC_SE20AFJ-M3/6A' not found in PSMPATH or must be "dbdoctor"ed.
+
+------ Library Paths ------
+MODULEPATH =  . 
+           C:/Cadence/SPB_16.6/share/local/pcb/modules 
+
+PSMPATH =  E:/git/clay/Cadence/CIS_Database/Footprints/SMT/ 
+           E:/git/clay/Cadence/CIS_Database/Footprints/PTH/ 
+           . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.6/share/local/pcb/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols 
+
+PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/ 
+           E:/git/clay/Cadence/CIS_Database/Pads/PTH/ 
+           . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.6/share/local/pcb/padstacks 
+           C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols 
+
+
+------ Summary Statistics ------
+
+
+netrev run on Dec 12 14:07:58 2015
+   DESIGN NAME : 'CLAYR6'
+   PACKAGING ON Sep 10 2012 04:46:09
+
+   COMPILE 'logic'
+   CHECK_PIN_NAMES OFF
+   CROSS_REFERENCE OFF
+   FEEDBACK OFF
+   INCREMENTAL OFF
+   INTERFACE_TYPE PHYSICAL
+   MAX_ERRORS 500
+   MERGE_MINIMUM 5
+   NET_NAME_CHARS '#%&()*+-./:=>?@[]^_`|'
+   NET_NAME_LENGTH 24
+   OVERSIGHTS ON
+   REPLACE_CHECK OFF
+   SINGLE_NODE_NETS ON
+   SPLIT_MINIMUM 0
+   SUPPRESS   20
+   WARNINGS ON
+
+ No error detected
+ No oversight detected
+  1 warnings detected
+
+cpu time      0:01:36
+elapsed time  0:00:01
+

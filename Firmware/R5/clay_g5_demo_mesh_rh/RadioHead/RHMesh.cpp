@@ -13,15 +13,24 @@
 
 #include <RHMesh.h>
 
+
+#ifndef MESH_STASTISTICS_H_
+#include "mesh_stastistics.h"
+#endif
+
+#if ENABLE_DIAGNOSTIC_LED
 #ifndef LED_DRIVER_PCA9552_H_
 #include "led_driver_pca9552.h"
 #endif
 
-static color_rgb colors[] = { { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-        { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //red
-        { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //green
-        { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED }         //blue
+static color_rgb colors[] =
+{
+    {   LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF},        //off
+    {   LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF},        //red
+    {   LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF},        //green
+    {   LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED}         //blue
 };
+#endif
 
 #define RED_OUTPUT  (colors + 1)
 #define GREEN_OUTPUT  (colors + 2)
@@ -38,7 +47,7 @@ RHMesh::RHMesh(RHGenericDriver& driver, uint8_t thisAddress)
 
 ////////////////////////////////////////////////////////////////////
 // Public methods
-
+uint32_t doArpTime;
 ////////////////////////////////////////////////////////////////////
 // Discovers a route to the destination (if necessary), sends and 
 // waits for delivery to the next hop (but not for delivery to the final destination)
@@ -50,8 +59,13 @@ uint8_t RHMesh::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address, uint8_t f
     if (address != RH_BROADCAST_ADDRESS)
     {
         RoutingTableEntry* route = getRouteTo(address);
+        doArpTime = millis();
         if (!route && !doArp(address))
+        {
             return RH_ROUTER_ERROR_NO_ROUTE;
+        }
+        experiment_data.do_arp_time_total_ms += millis() - doArpTime;
+        ++experiment_data.do_arp_success_count;
     }
 
     // Now have a route. Contruct an application layer message and send it via that route
@@ -64,6 +78,7 @@ uint8_t RHMesh::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address, uint8_t f
 ////////////////////////////////////////////////////////////////////
 bool RHMesh::doArp(uint8_t address)
 {
+    ++experiment_data.route_table_miss;
     // Need to discover a route
     // Broadcast a route discovery message with nothing in it
     MeshRouteDiscoveryMessage* p = (MeshRouteDiscoveryMessage*) &_tmpMessage;
@@ -204,7 +219,7 @@ bool RHMesh::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t* d
             // If it originally came from us, ignore it
             if (_source == _thisAddress)
                 return false;
-           
+
             uint8_t numRoutes = tmpMessageLen - sizeof(MeshMessageHeader) - 2;
             uint8_t i;
             // Are we already mentioned?
@@ -218,8 +233,9 @@ bool RHMesh::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t* d
                 addRouteTo(d->route[i], headerFrom());
             if (isPhysicalAddress(&d->dest, d->destlen))
             {
+#if ENABLE_DIAGNOSTIC_LED
                 set_led_output(RGB_12, GREEN_OUTPUT);
-                
+
                 if(numRoutes > 0)
                 {
                     set_led_output(RGB_11, BLUE_OUTPUT);
@@ -228,8 +244,8 @@ bool RHMesh::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t* d
                 {
                     set_led_output(RGB_11, GREEN_OUTPUT);
                 }
-                    
-                
+#endif
+
                 // NOTE: this is where the response for the route discovery is sent. gbh
                 // This route discovery is for us. Unicast the whole route back to the originator
                 // as a RH_MESH_MESSAGE_TYPE_ROUTE_DISCOVERY_RESPONSE
@@ -239,7 +255,9 @@ bool RHMesh::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t* d
             }
             else if (i < _max_hops)
             {
+#if ENABLE_DIAGNOSTIC_LED
                 set_led_output(RGB_12, BLUE_OUTPUT);
+#endif
                 // Its for someone else, rebroadcast it, after adding ourselves to the list
                 d->route[numRoutes] = _thisAddress;
                 tmpMessageLen++;

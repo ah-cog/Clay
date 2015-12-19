@@ -1,0 +1,23 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    CREATE SYMBOL                                                    )
+(                                                                     )
+(    Drawing          : TAC_SWITCH_PWR.dra                            )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sun Dec 13 15:28:01 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Create Symbol of type: PACKAGE
+    Directory = E:/git/clay/Cadence/CIS_Database/Footprints/SMT
+    Name      = tac_switch_pwr.psm
+    User      = thebh_000
+    Machine   = STEELGIANT
+
+
+Create symbol started.
+ 
+
+Create symbol completed.
+

@@ -1,0 +1,23 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    CREATE SYMBOL                                                    )
+(                                                                     )
+(    Drawing          : ASCO.dra                                      )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sun Dec 13 20:39:12 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Create Symbol of type: PACKAGE
+    Directory = E:/git/clay/Cadence/CIS_Database/Footprints/SMT
+    Name      = asco.psm
+    User      = thebh_000
+    Machine   = STEELGIANT
+
+
+Create symbol started.
+ 
+
+Create symbol completed.
+

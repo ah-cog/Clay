@@ -13,10 +13,14 @@
 
 #include <RHReliableDatagram.h>
 
+#ifndef MESH_STATISTICS_H_
+#include "mesh_stastistics.h"
+#endif
+
 ////////////////////////////////////////////////////////////////////
 // Constructors
-RHReliableDatagram::RHReliableDatagram(RHGenericDriver& driver, uint8_t thisAddress) 
-    : RHDatagram(driver, thisAddress)
+RHReliableDatagram::RHReliableDatagram(RHGenericDriver& driver, uint8_t thisAddress)
+        : RHDatagram(driver, thisAddress)
 {
     _retransmissions = 0;
     _lastSequenceNumber = 0;
@@ -29,6 +33,12 @@ RHReliableDatagram::RHReliableDatagram(RHGenericDriver& driver, uint8_t thisAddr
 void RHReliableDatagram::setTimeout(uint16_t timeout)
 {
     _timeout = timeout;
+}
+
+////////////////////////////////////////////////////////////////////
+uint16_t RHReliableDatagram::timeout()
+{
+    return _timeout;
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -51,66 +61,70 @@ bool RHReliableDatagram::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address)
     uint8_t retries = 0;
     while (retries++ <= _retries)
     {
-	setHeaderId(thisSequenceNumber);
-	setHeaderFlags(RH_FLAGS_NONE, RH_FLAGS_ACK); // Clear the ACK flag
-	sendto(buf, len, address);
-	bool derp = waitPacketSent();
+        ++experiment_data.RH_total_send_count;
 
-	// Never wait for ACKS to broadcasts:
-	if (address == RH_BROADCAST_ADDRESS)
-	    return true;
+        setHeaderId(thisSequenceNumber);
+        setHeaderFlags(RH_FLAGS_NONE, RH_FLAGS_ACK);        // Clear the ACK flag
+        sendto(buf, len, address);
+        waitPacketSent();
 
-	if (retries > 1)
-	    _retransmissions++;
-	unsigned long thisSendTime = millis(); // Timeout does not include original transmit time
+        // Never wait for ACKS to broadcasts:
+        if (address == RH_BROADCAST_ADDRESS)
+            return true;
 
-	// Compute a new timeout, random between _timeout and _timeout*2
-	// This is to prevent collisions on every retransmit
-	// if 2 nodes try to transmit at the same time
+        if (retries > 1)
+            _retransmissions++;
+        unsigned long thisSendTime = millis();        // Timeout does not include original transmit time
+
+        // Compute a new timeout, random between _timeout and _timeout*2
+        // This is to prevent collisions on every retransmit
+        // if 2 nodes try to transmit at the same time
 #if (RH_PLATFORM == RH_PLATFORM_RASPI) // use standard library random(), bugs in random(min, max)
-	uint16_t timeout = _timeout + (_timeout * (random() & 0xFF) / 256);
+        uint16_t timeout = _timeout + (_timeout * (random() & 0xFF) / 256);
 #else
-	uint16_t timeout = _timeout + (_timeout * random(0, 256) / 256);
+        uint16_t timeout = _timeout + (_timeout * random(0, 256) / 256);
 #endif
-	int32_t timeLeft;
+        int32_t timeLeft;
         while ((timeLeft = timeout - (millis() - thisSendTime)) > 0)
-	{
-	    if (waitAvailableTimeout(timeLeft))
-	    {
-		uint8_t from, to, id, flags;
-		if (recvfrom(0, 0, &from, &to, &id, &flags)) // Discards the message
-		{
-		    // Now have a message: is it our ACK?
-		    if (   from == address 
-			   && to == _thisAddress 
-			   && (flags & RH_FLAGS_ACK) 
-			   && (id == thisSequenceNumber))
-		    {
-			// Its the ACK we are waiting for
-			return true;
-		    }
-		    else if (   !(flags & RH_FLAGS_ACK)
-				&& (id == _seenIds[from]))
-		    {
-			// This is a request we have already received. ACK it again
-			acknowledge(id, from);
-		    }
-		    // Else discard it
-		}
-	    }
-	    // Not the one we are waiting for, maybe keep waiting until timeout exhausted
-	    YIELD;
-	}
-	// Timeout exhausted, maybe retry
-	YIELD;
+        {
+            if (waitAvailableTimeout(timeLeft))
+            {
+                uint8_t from, to, id, flags;
+                if (recvfrom(0, 0, &from, &to, &id, &flags))        // Discards the message
+                {
+                    // Now have a message: is it our ACK?
+                    if (from == address
+                            && to == _thisAddress
+                            && (flags & RH_FLAGS_ACK)
+                            && (id == thisSequenceNumber))
+                    {
+                        // Its the ACK we are waiting for
+                        return true;
+                    }
+                    else if (!(flags & RH_FLAGS_ACK)
+                            && (id == _seenIds[from]))
+                    {
+                        // This is a request we have already received. ACK it again
+                        acknowledge(id, from);
+                    }
+                    // Else discard it
+                }
+            }
+            // Not the one we are waiting for, maybe keep waiting until timeout exhausted
+            YIELD;
+        }
+        // Timeout exhausted, maybe retry
+        YIELD;
     }
+    experiment_data.RH_retry_count += retries;
+
     // Retries exhausted
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////
 bool RHReliableDatagram::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* from, uint8_t* to, uint8_t* id, uint8_t* flags)
-{  
+{
     uint8_t _from;
     uint8_t _to;
     uint8_t _id;
@@ -118,28 +132,28 @@ bool RHReliableDatagram::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* from, 
     // Get the message before its clobbered by the ACK (shared rx and tx buffer in some drivers
     if (available() && recvfrom(buf, len, &_from, &_to, &_id, &_flags))
     {
-	// Never ACK an ACK
-	if (!(_flags & RH_FLAGS_ACK))
-	{
-	    // Its a normal message for this node, not an ACK
-	    if (_to != RH_BROADCAST_ADDRESS)
-	    {
-		// Its not a broadcast, so ACK it
-		// Acknowledge message with ACK set in flags and ID set to received ID
-		acknowledge(_id, _from);
-	    }
-	    // If we have not seen this message before, then we are interested in it
-	    if (_id != _seenIds[_from])
-	    {
-		if (from)  *from =  _from;
-		if (to)    *to =    _to;
-		if (id)    *id =    _id;
-		if (flags) *flags = _flags;
-		_seenIds[_from] = _id;
-		return true;
-	    }
-	    // Else just re-ack it and wait for a new one
-	}
+        // Never ACK an ACK
+        if (!(_flags & RH_FLAGS_ACK))
+        {
+            // Its a normal message for this node, not an ACK
+            if (_to != RH_BROADCAST_ADDRESS)
+            {
+                // Its not a broadcast, so ACK it
+                // Acknowledge message with ACK set in flags and ID set to received ID
+                acknowledge(_id, _from);
+            }
+            // If we have not seen this message before, then we are interested in it
+            if (_id != _seenIds[_from])
+            {
+                if (from) *from = _from;
+                if (to) *to = _to;
+                if (id) *id = _id;
+                if (flags) *flags = _flags;
+                _seenIds[_from] = _id;
+                return true;
+            }
+            // Else just re-ack it and wait for a new one
+        }
     }
     // No message for us available
     return false;
@@ -151,12 +165,12 @@ bool RHReliableDatagram::recvfromAckTimeout(uint8_t* buf, uint8_t* len, uint16_t
     int32_t timeLeft;
     while ((timeLeft = timeout - (millis() - starttime)) > 0)
     {
-	if (waitAvailableTimeout(timeLeft))
-	{
-	    if (recvfromAck(buf, len, from, to, id, flags))
-		return true;
-	}
-	YIELD;
+        if (waitAvailableTimeout(timeLeft))
+        {
+            if (recvfromAck(buf, len, from, to, id, flags))
+                return true;
+        }
+        YIELD;
     }
     return false;
 }
@@ -170,7 +184,7 @@ void RHReliableDatagram::resetRetransmissions()
 {
     _retransmissions = 0;
 }
- 
+
 void RHReliableDatagram::acknowledge(uint8_t id, uint8_t from)
 {
     setHeaderId(id);
@@ -181,7 +195,7 @@ void RHReliableDatagram::acknowledge(uint8_t id, uint8_t from)
     // So we send an ACK of 1 octet
     // REVISIT: should we send the RSSI for the information of the sender?
     uint8_t ack = '!';
-    sendto(&ack, sizeof(ack), from); 
+    sendto(&ack, sizeof(ack), from);
     waitPacketSent();
 }
 

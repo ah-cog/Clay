@@ -8,6 +8,10 @@
 
 #include <system_tick.h>
 
+#ifndef MESH_H_
+#include "mesh.h"
+#endif
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -20,12 +24,6 @@ extern "C"
 }
 #endif
 
-//SerialUSBClass SerialUSB;
-
-void (*mesh_irq_handler)(void);
-
-#define NUM_IRQ_LINES (sizeof(irqlines) / sizeof(IRQLine))
-
 // Functions we expect to find in the sketch
 volatile unsigned long systick_count = 0;
 
@@ -35,7 +33,6 @@ void SysTickConfig()
     //tick implemented in system_tick.c
 }
 
-//TODO: Interrupt handlers for GPIOs
 // These interrupt handlers have to be extern C else they dont get linked in to the interrupt vectors
 void pinMode(uint8_t pin, WiringPinMode mode)
 {
@@ -44,8 +41,8 @@ void pinMode(uint8_t pin, WiringPinMode mode)
 // This takes about 150ns on STM32F4 Discovery
 void digitalWrite(uint8_t pin, uint8_t val)
 {
-    bool val_bool = (bool)val;
-    if (pin == 0)
+    bool val_bool = (bool) val;
+    if (pin == MESH_IRQ_PIN_INDEX)
     {
         //irq is input only
         return;
@@ -66,7 +63,11 @@ uint8_t digitalRead(uint8_t pin)
 
     uint8_t rval;
 
-    if (pin == 1)
+    if (pin == MESH_IRQ_PIN_INDEX)
+    {
+        rval = MESH_IRQ_GetFieldValue(MESH_IRQ_DeviceData, MESH_IRQ_BITFIELD );
+    }
+    else if (pin == MESH_CE_PIN_INDEX)
     {
         rval = MESH_CE_GetVal(MESH_CE_DeviceData );
     }
@@ -76,7 +77,7 @@ uint8_t digitalRead(uint8_t pin)
 
 void attachInterrupt(uint8_t pin, void (*handler)(void), int mode)
 {
-    mesh_irq_handler = handler;
+    //don't anything
 }
 
 void delay(unsigned long ms)
@@ -95,7 +96,7 @@ void update_random_seed(int32_t seed)
 }
 
 long random(long from, long to)
-{    
+{
     return from + (rand() % (to - from));
 }
 

@@ -1,0 +1,62 @@
+\t (00:06:09) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:06:09)     Journal start - Sun Dec 13 19:22:23 2015
+\t (00:06:09)         Host=STEELGIANT User=thebh_000 Pid=3796 CPUs=8
+\t (00:06:09) 
+\d (00:06:09) Database opened: E:/git/clay/Cadence/CIS_Database/Footprints/PTH/JST2_SIDE_PTH.dra
+\i (00:06:09) generaledit 
+\i (00:06:10) zoom out 1 
+\i (00:06:10) setwindow pcb
+\i (00:06:10) zoom out 6.546 -61.255
+\i (00:06:10) trapsize 3690
+\i (00:06:10) zoom out 1 
+\i (00:06:10) setwindow pcb
+\i (00:06:10) zoom out 302.856 -8.487
+\i (00:06:10) trapsize 3690
+\i (00:06:11) zoom in 1 
+\i (00:06:11) setwindow pcb
+\i (00:06:11) zoom in -27.033 -65.314
+\i (00:06:11) trapsize 1845
+\i (00:06:12) zoom out 1 
+\i (00:06:12) setwindow pcb
+\i (00:06:12) zoom out -52.864 -62.731
+\i (00:06:12) trapsize 3690
+\i (00:06:20) setwindow form.mini
+\i (00:06:20) FORM mini class PACKAGE GEOMETRY 
+\i (00:06:33) setwindow pcb
+\i (00:06:33) add text 
+\t (00:06:33) Pick text location.
+\i (00:06:37) pick grid 76.288 -116.974
+\t (00:06:37) last pick:  76.000  -117.000
+\t (00:06:37) Enter text string.
+\i (00:06:39) setwindow pcb
+\i (00:06:39) prepopup 437.174 -57.196
+\i (00:06:41) done 
+\i (00:06:41) setwindow pcb
+\i (00:06:41) pick 76.000 -117.000
+\i (00:06:41) setwindow pcb
+\i (00:06:41) generaledit 
+\i (00:06:42) save 
+\i (00:06:43) fillin yes 
+\t (00:06:44) Symbol 'jst2_side_pth.psm' created.
+\i (00:06:44) generaledit 
+\i (00:06:47) open 
+\i (00:06:50) fillin "PAD64A.dra"
+\t (00:06:50) Opening existing design...
+\i (00:06:50) trapsize 246
+\d (00:06:50) Database opened: E:/git/clay/Cadence/CIS_Database/Footprints/PTH/PAD64A.dra
+\i (00:06:50) generaledit 
+\i (00:06:50) zoom out 1 
+\i (00:06:50) setwindow pcb
+\i (00:06:50) zoom out 0.6814 0.1845
+\i (00:06:50) trapsize 246
+\i (00:06:51) zoom out 1 
+\i (00:06:51) setwindow pcb
+\i (00:06:51) zoom out 0.6814 0.1845
+\i (00:06:51) trapsize 246
+\i (00:06:53) open 
+\i (00:07:47) fillin "E:\git\clay\Cadence\CIS_Database\Footprints\SMT\2x1_HEADER_100.dra"
+\i (00:07:47) cd "E:\git\clay\Cadence\CIS_Database\Footprints\SMT"
+\t (00:07:47) Opening existing design...
+\t (00:07:47) Grids are drawn 4.000, 4.000 apart for enhanced viewability.
+\i (00:07:47) trapsize 1845
+\t (00:07:47)     Journal end - Sun Dec 13 19:24:00 2015

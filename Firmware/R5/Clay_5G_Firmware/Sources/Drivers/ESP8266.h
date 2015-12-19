@@ -20,17 +20,19 @@
 #define ESP8266_H_
 
 #include <stdio.h>
+#include <math.h>
 #include <string.h>
 
 #include "PE_Types.h"
 #include "PE_LDD.h"
 
+#include "Utilities/Debug.h"
 #include "Utilities/Ring_Buffer.h"
 
 #include "Messenger.h"
 
-#define SSID_DEFAULT "clay-2.4ghz" // "joopal" // "clay-2.4ghz" // "AWS"
-#define PASSWORD_DEFAULT "goldenbrown" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
+#define SSID_DEFAULT "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz" // "AWS"
+#define PASSWORD_DEFAULT "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
 
 typedef struct {
 	LDD_TDeviceData *handle;
@@ -42,6 +44,8 @@ typedef struct {
 ESP8266_UART_Device deviceData;
 
 typedef struct {
+	char wifi_ssid[32];
+	char wifi_password[32];
 	char apIPBuffer[16];
 	char apMACBuffer[18];
 	char stationIPBuffer[16];
@@ -49,6 +53,22 @@ typedef struct {
 } ESP8266_Profile;
 
 ESP8266_Profile esp8266_profile;
+// TODO: Has_Internet_Address ()
+// TODO: Get_Internet_Address ()
+// TODO: Set_Internet_Address ()
+// TODO: Has_Hardware_Address () // i.e., MAC address
+// TODO: Has_Unit_Address ()
+// TODO: (elsewhere) Has_Mesh_Address ()
+
+// TODO: typedef struct { ... } WiFi_Network_Profile;
+
+void Set_WiFi_Network (char *ssid, char *password);
+// TODO: Connect_WiFi_Network ()
+// TODO: Disconnect_WiFi_Network ()
+
+uint8_t Has_Internet_Address ();
+char* Get_Internet_Address ();
+void Set_Internet_Address (char *address);
 
 #define REMOTE_CONNECTION_LIMIT      5
 #define REMOTE_CONNECTION_COUNT      REMOTE_CONNECTION_LIMIT
@@ -101,12 +121,14 @@ int8_t ESP8266_Receive_Incoming_Request (uint32_t milliseconds);
 #define RESPONSE_NOT_FOUND -1
 #define RESPONSE_TIMEOUT   -2
 
-#define DEFAULT_RESPONSE_TIMEOUT 10000
+#define DEFAULT_RESPONSE_TIMEOUT 5000 // 10000
 
 #define HTTP_RESPONSE_BUFFER_SIZE 2048 // Store this many of the most recent chars in AT command response buffer
 
 char incomingDataQueue[HTTP_RESPONSE_BUFFER_SIZE];
 int incomingDataQueueSize;
+
+char discoveryMessage[32];
 
 void ESP8266_Reset_Data_Buffer ();
 
@@ -141,11 +163,14 @@ int8_t ESP8266_Send_Command_AT_CIPSERVER (uint8_t mode, uint8_t port);
 
 void Monitor_Network_Communications ();
 
-#define UDP_SERVER_PORT 4445
+#define DISCOVERY_BROADCAST_PORT 4445
+#define MESSAGE_PORT 4446
 
 void Start_UDP_Server (uint16_t port);
 void Send_UDP_Message (const char* address, const char *message);
-void Broadcast_UDP_Message (const char *message);
+void Broadcast_UDP_Message (const char *message, uint16_t port);
+
+void Generate_Discovery_Message (); 
 
 void Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // TODO: check for any incoming data on serial
@@ -158,6 +183,8 @@ void Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // int8_t HTTP_Server_Process_Request (); // or HTTP_Server_Handle_Request (); // Performs the request handler function defined for the received request.
 // Stop_HTTP_Server (HTTP_Server *http_server);
 
+void Send_HTTP_Request  (const char *address, uint16_t port, const char *message);
+
 // uint8_t Start_UDP_Server (unit16 port);
 // uint8_t Send_UDP_Message (const char *ip_address, const char *message);
 // uint8_t Broadcast_UDP_Message (const char *message);
@@ -169,7 +196,7 @@ void Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // uint8_t Slow_MPU (); // Puts the device into sleep.
 // uint8_t Disable_MPU ();
 
-// uint8_t Enable_WiFi ();
+uint8_t Enable_WiFi (const char* ssid, const char *password);
 // WiFi_Get_Orientation
 // uint8_t Slow_WiFi (); // Puts the device into sleep.
 // uint8_t Disable_WiFi ();

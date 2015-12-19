@@ -422,7 +422,7 @@ typedef struct
 typedef union
 {
     mpu_values_struct values;
-    uint8_t bytes[24];
+    uint8_t bytes[18];
 }mpu_values;
 
 // global vars ///////////////

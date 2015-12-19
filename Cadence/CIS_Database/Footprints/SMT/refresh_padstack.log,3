@@ -1,0 +1,50 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Refresh Padstack                                                 )
+(                                                                     )
+(    Drawing          : LTST_C19FD1WT.dra                             )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Thu Dec 10 08:42:34 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Thu Dec 10 08:42:34 2015				Page     1
+
+
+------ Pad Stack Refresh Options ------
+
+Input design = 'LTST_C19FD1WT.dra'
+Output design = ''
+Reset symbol text and size locations = 'NO'
+
+
+------ Library Paths ------
+PSMPATH =  E:/git/clay/Cadence/CIS_Database/Footprints/SMT/ 
+           E:/git/clay/Cadence/CIS_Database/Footprints/PTH/ 
+           . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.6/share/local/pcb/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols 
+
+PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/ 
+           E:/git/clay/Cadence/CIS_Database/Pads/PTH/ 
+           . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.6/share/local/pcb/padstacks 
+           C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols 
+
+
+------ Pad Stack Refresh Messages ------
+
+'R025_045'  pad stack refresh starting.
+
+     'R025_045'  pad stack refreshed successfully.
+     
+Completed refreshing all pad stacks successfully.

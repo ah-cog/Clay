@@ -72,6 +72,8 @@ typedef struct {
 
 extern Color_RGB onColor;
 extern Color_RGB offColor;
+extern Color_RGB colorA;
+extern Color_RGB colorB;
 
 extern uint8 driver_addresses[];
 
