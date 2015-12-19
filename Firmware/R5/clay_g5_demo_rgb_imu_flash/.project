@@ -28,18 +28,6 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>External_Modules</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>External_Modules/pex.css</name>
-			<type>1</type>
-			<location>E:/Projects/Clay_CW_Workspace/clay_g5_demo_rgb_imu_flash/Documentation/doxygen/pex.css</location>
-		</link>
-	</linkedResources>
 	<variableList>
 		<variable>
 			<name>PREVIOUS_PROJECT_LOC</name>

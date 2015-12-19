@@ -142,6 +142,21 @@ void tick_1ms_timer_OnInterrupt(LDD_TUserData *UserDataPtr);
 void I2C0_OnMasterByteReceived(LDD_TUserData *UserDataPtr);
 
 
+/*
+** ===================================================================
+**     Event       :  Cpu_OnNMIINT (module Events)
+**
+**     Component   :  Cpu [MK20DX256LH7]
+*/
+/*!
+**     @brief
+**         This event is called when the Non maskable interrupt had
+**         occurred. This event is automatically enabled when the [NMI
+**         interrupt] property is set to 'Enabled'.
+*/
+/* ===================================================================*/
+void Cpu_OnNMIINT(void);
+
 /* END Events */
 
 #ifdef __cplusplus

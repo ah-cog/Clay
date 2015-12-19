@@ -27,6 +27,20 @@ extern uint8_t read_byte(uint8_t * byte_addr);
 extern uint16_t read_word(uint16_t * word_addr);
 extern uint32_t read_dword(uint32_t * dword_addr);
 
+extern bool write_byte(uint8_t * byte_addr, uint8_t value);
+extern bool write_word(uint16_t * word_addr, uint16_t value);
+extern bool write_dword(uint32_t * dword_addr, uint32_t value);
+
+//use to copy data into and out of nvm locations.
+extern bool copy_to_nvm(void * nvm_location, void * source, uint32_t length);
+extern bool copy_from_nvm(void * nvm_location, void * destination, uint32_t length);
+
+//call start function before performing actions that 
+//   require access to multiple memory locations, but 
+//   which don't require making a copy of the data.
+extern bool start_multibyte_read();
+extern bool end_multibyte_read();
+
 //call this to write data to a variable defined in nvm_data.h
 extern bool write_data(void * nvm_location, uint32_t length, void * data);
 
