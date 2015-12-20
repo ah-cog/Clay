@@ -1,6 +1,6 @@
 <Analysispoints>
 	<Name>AnalysispointsManager</Name>
-	<ProjectPath>E:/git/clay/Firmware/R5/clay_g5_demo_rgb_imu/SaAnalysispointsManager.apconfig</ProjectPath>
+	<ProjectPath>C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_rgb_imu/SaAnalysispointsManager.apconfig</ProjectPath>
 	<MaxNumberOfCores>1</MaxNumberOfCores>
 	<Comments>Analysispoints Manager</Comments>
 	<IgnoreAll>false</IgnoreAll>
