@@ -2,9 +2,9 @@
 <PEproject>
   <Header>
     <Name>clay_g5_demo_rgb_imu</Name>
-    <SavedBy>thebh_000</SavedBy>
-    <ModificationStamp>78</ModificationStamp>
-    <Date>2015-12-16</Date>
+    <SavedBy>Ben</SavedBy>
+    <ModificationStamp>80</ModificationStamp>
+    <Date>2015-12-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>103</ProjectCompNumb>
+    <ProjectCompNumb>106</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>

@@ -2,9 +2,9 @@
 <PEproject>
   <Header>
     <Name>clay_g5_demo_gpio</Name>
-    <SavedBy>thebh_000</SavedBy>
-    <ModificationStamp>17</ModificationStamp>
-    <Date>2015-09-10</Date>
+    <SavedBy>Ben</SavedBy>
+    <ModificationStamp>18</ModificationStamp>
+    <Date>2015-12-19</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -8792,9 +8792,9 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <EnumSymbVal>-1</EnumSymbVal>
+        <EnumSymbVal>8</EnumSymbVal>
+        <Index>0</Index>
       </ItemState>
       <ItemState>
         <ItemSymbol>DflashSettingsGrp</ItemSymbol>
