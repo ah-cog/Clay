@@ -45,7 +45,7 @@ static void mpu9250_write_mag_bit(uint8_t regAddr, uint8_t bitNum, uint8_t data)
 static void mpu9250_write_mag_bitfield(uint8_t reg_addr, uint8_t lsb_index, uint8_t field_length, uint8_t data);
 
 // implementations ///////////
-void mpu_9250_init()
+void Start_MPU9250 ()
 {
     set_clock_source(MPU9250_CLOCK_PLL_XGYRO);
     set_full_scale_gyro_range(MPU9250_GYRO_FS_250);
@@ -55,7 +55,7 @@ void mpu_9250_init()
     set_magnetometer_mode(MPU9250_RA_MAG_MODE_CONTINUOUS_1);
 }
 
-void get_mpu_readings(mpu_values * data)
+void get_mpu_readings (mpu_values * data)
 {
     outgoing_msg_buf[0] = MPU9250_RA_ACCEL_XOUT_H;
     receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 6, MPU9250_ACCEL_ADDRESS);

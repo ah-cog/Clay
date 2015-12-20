@@ -19,6 +19,9 @@ uint8_t  tick_250msec;
 uint8_t  tick_500msec;
 uint8_t  tick_3000msec;
 
+Message *outMessage = NULL;
+int status;
+
 // function prototypes ///////
 
 void Enable_Clock () {
@@ -82,6 +85,8 @@ Color_RGB
 
 
 void Monitor_Periodic_Events () {
+	
+	// TODO: Add dynamic list of timers with custom timeouts to check periodically.
 	
 	mpu_values v = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	
@@ -180,7 +185,26 @@ void Monitor_Periodic_Events () {
 //			// TODO: Queue a (periodic) UDP broadcast announcing the unit's presence on the network.
 //		}
 		
-		Broadcast_UDP_Message (discoveryMessage, DISCOVERY_BROADCAST_PORT);
+		// TODO: Do this elsewhere! Broadcast_UDP_Message (discoveryMessage, DISCOVERY_BROADCAST_PORT);
+//		Broadcast_UDP_Message (discoveryMessage, DISCOVERY_BROADCAST_PORT);
+//		message = Create_Message (discoveryMessage);
+//		Queue_Outgoing_Message ("255.255.255.255", message);
+		
+		outMessage = Create_Message (discoveryMessage);
+		Queue_Outgoing_Message ("255.255.255.255", outMessage);
+//		Queue_Message (&outgoingMessageQueue, outMessage);
+//		Delete_Message (outMessage);
+
+		/*
+		// Send the next message on the outgoing message queue.
+		if (Has_Messages (&outgoingMessageQueue) == TRUE) {
+			Message *message = Dequeue_Message (&outgoingMessageQueue);
+			if ((status = Process_Outgoing_Message (message)) == TRUE) {
+				// Delete_Message (message);
+			}
+			Delete_Message (message);
+		}
+		*/
 		
 //		Wait (200);
 		

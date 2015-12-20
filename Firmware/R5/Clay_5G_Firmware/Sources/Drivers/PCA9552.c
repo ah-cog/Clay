@@ -131,11 +131,12 @@ void Reset_PCA9552 (LED_Driver driver) {
     }
 }
 
+// TODO: Make the indexing (0 or 1) consistent with LEDs!
 void Set_LED_Output (RGB_LED led, Color_RGB *output_color) {
 	
     if (led >= RGB_INVALID) { return; }
 
-    RGB_Channel *channel = channels + (int) led;
+    RGB_Channel *channel = channels + (int) (led - 1);
 
     Set_LED_Output_Mode (channel, output_color);
 
