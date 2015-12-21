@@ -10,7 +10,7 @@
 
 #include "PE_Types.h"
 
-#define APP_START_ADDR                0x0000B800U
+#define APP_START_ADDR                0x0000C000U
 #define APP_END_ADDR                  0x00040000U 
 #define FLASH_MEMORY_PAGE_SIZE        0x00000800U
 
@@ -24,6 +24,9 @@ extern uint16_t erase_program_flash_page(uint32_t addr);
 
 //writes data to the program flash
 extern uint16_t write_program_block(uint32_t destination, uint8_t * data, uint32_t length);
+
+//sets up the hardware checksum module.
+extern void init_checksum();
 
 //computes the checksum of the application binary.
 extern uint16_t compute_checksum();
