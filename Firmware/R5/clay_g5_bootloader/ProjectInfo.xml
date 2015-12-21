@@ -61,6 +61,7 @@
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Project_Settings\Startup_Code\__arm_end.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Project_Settings\Startup_Code\__arm_start.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\Events.c</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\crc.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\main.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\program_flash.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\system_tick.c</PathName>
@@ -79,6 +80,7 @@
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Generated_Code\tick_1ms_timer.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Project_Settings\Startup_Code\runtime_configuration.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\Events.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\crc.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\program_flash.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Sources\system_tick.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_g5_bootloader\Static_Code\IO_Map\MK20D7.h</PathName>

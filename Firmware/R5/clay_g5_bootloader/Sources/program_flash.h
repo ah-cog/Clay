@@ -10,9 +10,9 @@
 
 #include "PE_Types.h"
 
-#define APP_START_ADDR                0x00001800U
+#define APP_START_ADDR                0x00002000U
 #define APP_END_ADDR                  0x00040000U 
-#define FLASH_MEMORY_PAGE_SIZE       0x00000800U
+#define FLASH_MEMORY_PAGE_SIZE        0x00000800U
 
 extern volatile bool flash_operation_completed;
 
