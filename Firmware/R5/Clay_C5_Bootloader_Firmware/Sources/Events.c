@@ -40,6 +40,8 @@ extern "C" {
 #include "Application.h"
 #include "Drivers/ESP8266.h"
 #include "Clock.h"
+#include "Drivers/program_flash.h"
+
 
 /*
 ** ===================================================================
@@ -124,6 +126,28 @@ void I2C0_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
 */
 /* ===================================================================*/
 void I2C0_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  FLASH1_OnOperationComplete (module Events)
+**
+**     Component   :  FLASH1 [FLASH_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of the whole write / erase operation. if
+**         the event is enabled. See SetEventMask() and GetEventMask()
+**         methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr)
 {
   /* Write your code here ... */
 }

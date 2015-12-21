@@ -52,6 +52,7 @@
 #include "IMU_INT.h"
 #include "LED2.h"
 #include "LED1.h"
+#include "FLASH1.h"
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"

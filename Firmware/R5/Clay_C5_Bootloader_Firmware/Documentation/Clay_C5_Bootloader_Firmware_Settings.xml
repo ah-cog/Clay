@@ -49,7 +49,7 @@
                   <EmptySection_DummyValue />
                 </enumgroup>
                 <MCG_output_clock v="FLL clock" />
-                <MCG_output__MHz_ v="20.971520000000" />
+                <MCG_output__MHz_ v="71.991296000000" />
                 <MCG_external_ref__clock_source v="System oscillator 0" />
                 <MCG_external_ref__clock__MHz_ v="8" />
                 <Clock_monitor v="Disabled" />
@@ -66,7 +66,7 @@
                 <group name="PLL 0 settings">
                   <PLL_module v="Disabled" />
                   <PLL_module_in_Stop v="Disabled" />
-                  <PLL_output__MHz_ v="100" />
+                  <PLL_output__MHz_ v="0" />
                   <Reference_clock_divider v="Auto select" />
                   <PLL_reference_clock__MHz_ v="1" />
                   <Multiplication_factor v="Auto select" />
@@ -113,7 +113,13 @@
         <list name="Shared Flash memory organization" v="1">
           <group name="Flash memory organization">
             <list name="Shared FLASH settings" v="1">
-              <EmptySection_DummyValue />
+              <group name="FlexNVM settings">
+                <FlexNVM_size v="32 KB" />
+                <DFlash_size v="32 KB" />
+                <enumgroup name="EEPROM size" v="0 bytes">
+                  <boolgroup name="FlexRAM" v="Disabled" />
+                </enumgroup>
+              </group>
             </list>
             <list name="Flash blocks" v="2">
               <group name="Flash block 0">
@@ -163,6 +169,8 @@
             <Bandgap_buffer_in_VLPx v="Disabled" />
             <group name="LVD interrupt">
               <Interrupt v="INT_LVD_LVW" />
+              <Interrupt_request v="Disabled" />
+              <Interrupt_priority v="0 (Highest)" />
               <LVD_interrupt v="Disabled" />
               <LVW_interrupt v="Disabled" />
             </group>
@@ -245,6 +253,9 @@
         <DisableInt v="don&amp;apos;t generate code" />
         <GetLLSWakeUpFlags v="don&amp;apos;t generate code" />
         <OpenBackDoor v="don&amp;apos;t generate code" />
+        <GetFlexNVMPartitionCode v="don&amp;apos;t generate code" />
+        <SetFlexNVMPartition v="don&amp;apos;t generate code" />
+        <SetFlexRAMFunction v="don&amp;apos;t generate code" />
         <MCGAutoTrim v="don&amp;apos;t generate code" />
         <VLPModeEnable v="don&amp;apos;t generate code" />
         <VLPModeDisable v="don&amp;apos;t generate code" />
@@ -271,9 +282,30 @@
     <Compiler v="GNU C Compiler" />
     <CompilerProperties>
       <Compiler v="GNU C Compiler" />
+      <enumgroup name="Unhandled vectors" v="One handler for all">
+        <Unhandled_int_code>
+          <StrgList><![CDATA[/* This code can be changed using the CPU component property "Build Options / Unhandled int code" */
+PE_DEBUGHALT();
+]]></StrgList>
+        </Unhandled_int_code>
+      </enumgroup>
+      <group name="User initialization">
+        <User_data_declarations>
+          <StrgList></StrgList>
+        </User_data_declarations>
+        <User_code_before_PE_initialization>
+          <StrgList></StrgList>
+        </User_code_before_PE_initialization>
+        <User_code_after_PE_initialization>
+          <StrgList></StrgList>
+        </User_code_after_PE_initialization>
+      </group>
       <boolgroup name="Generate debugger files" v="yes">
         <Generate_mem_file v="yes" />
       </boolgroup>
+      <group name="Startup">
+        <Add_startup_file v="no" />
+      </group>
       <boolgroup name="Generate linker file" v="yes">
         <Stack_size v="1024" />
         <Heap_size v="0" />
@@ -726,7 +758,7 @@ PE_DEBUGHALT();
               <Name v="m_text" />
               <Qualifier v="RX" />
               <Address v="1040" />
-              <Size v="261104" />
+              <Size v="46064" />
             </boolgroup>
           </group>
           <group name="MemoryArea3">
@@ -1910,6 +1942,109 @@ PE_DEBUGHALT();
     </Methods>
     <Events>
       <EmptySection_DummyValue />
+    </Events>
+  </Bean>
+  <Bean name="FLASH1" type="FLASH_LDD">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="FLASH1" />
+      <Device v="FTFL" />
+      <group name="Flash memory organization">
+        <list name="Shared FLASH settings" v="1">
+          <group name="FlexNVM settings">
+            <FlexNVM_size v="32 KB" />
+            <DFlash_size v="32 KB" />
+            <enumgroup name="EEPROM size" v="0 bytes">
+              <boolgroup name="FlexRAM" v="Disabled" />
+            </enumgroup>
+          </group>
+        </list>
+        <list name="Flash blocks" v="2">
+          <group name="Flash block 0">
+            <Address v="0" />
+            <Size v="262144" />
+            <Write_unit_size v="4" />
+            <Erase_unit_size v="2048" />
+            <Protection_unit_size v="8192" />
+          </group>
+          <group name="Flash block 1">
+            <Address v="268435456" />
+            <Size v="32768" />
+            <Write_unit_size v="4" />
+            <Erase_unit_size v="1024" />
+            <Protection_unit_size v="4096" />
+          </group>
+        </list>
+      </group>
+      <boolgroup name="Use user memory areas" v="no" />
+      <enumgroup name="Interrupt service" v="Disabled">
+        <enumgroup name="Write batch size" v="Minimal">
+          <EmptySection_DummyValue />
+        </enumgroup>
+        <enumgroup name="Erase batch size" v="Minimal">
+          <EmptySection_DummyValue />
+        </enumgroup>
+        <enumgroup name="Read batch size" v="Unlimited">
+          <EmptySection_DummyValue />
+        </enumgroup>
+      </enumgroup>
+      <boolgroup name="Safe launch and wait" v="yes">
+        <enumgroup name="Safe routine location" v="On stack">
+          <EmptySection_DummyValue />
+        </enumgroup>
+        <Interruptable_wait_loop v="no" />
+      </boolgroup>
+      <group name="Initialization">
+        <Enabled_in_init__code v="yes" />
+        <list name="Auto Initialization" v="1">
+          <Auto_initialization v="yes" />
+        </list>
+        <group name="Event mask">
+          <OnOperationComplete v="Enabled" />
+          <OnError v="Disabled" />
+        </group>
+        <list name="CPU clock/configuration selection (included)" v="1">
+          <group name="CPU clock/configuration selection">
+            <Clock_configuration_0 v="This component enabled" />
+            <Clock_configuration_1 v="This component disabled" />
+            <Clock_configuration_2 v="This component disabled" />
+            <Clock_configuration_3 v="This component disabled" />
+            <Clock_configuration_4 v="This component disabled" />
+            <Clock_configuration_5 v="This component disabled" />
+            <Clock_configuration_6 v="This component disabled" />
+            <Clock_configuration_7 v="This component disabled" />
+          </group>
+        </list>
+      </group>
+    </Properties>
+    <Methods>
+      <Init v="generate code" />
+      <Deinit v="don&amp;apos;t generate code" />
+      <Enable v="don&amp;apos;t generate code" />
+      <Disable v="don&amp;apos;t generate code" />
+      <GetEventMask v="don&amp;apos;t generate code" />
+      <SetEventMask v="don&amp;apos;t generate code" />
+      <Read v="generate code" />
+      <Write v="generate code" />
+      <Erase v="generate code" />
+      <EraseBlock v="don&amp;apos;t generate code" />
+      <VerifyErasedBlock v="don&amp;apos;t generate code" />
+      <SetProtection v="don&amp;apos;t generate code" />
+      <GetErasableUnitSize v="don&amp;apos;t generate code" />
+      <GetOperationStatus v="don&amp;apos;t generate code" />
+      <GetError v="don&amp;apos;t generate code" />
+      <StopOperation v="don&amp;apos;t generate code" />
+      <SetSafeRoutineLocation v="don&amp;apos;t generate code" />
+      <Main v="generate code" />
+      <SetOperationMode v="don&amp;apos;t generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+    </Methods>
+    <Events>
+      <Event_module_name v="Events" />
+      <event name="OnOperationComplete" v="generate code">
+        <Event_procedure_name v="FLASH1_OnOperationComplete" />
+      </event>
+      <event name="OnError" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
 </PE_PROJECT_SETTINGS_DOCUMENTATION>
