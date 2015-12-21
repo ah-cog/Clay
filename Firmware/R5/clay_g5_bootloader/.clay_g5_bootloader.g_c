@@ -376,7 +376,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_g5_bootloader_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>15</ProjectModificationStamp>
+    <ProjectModificationStamp>17</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>

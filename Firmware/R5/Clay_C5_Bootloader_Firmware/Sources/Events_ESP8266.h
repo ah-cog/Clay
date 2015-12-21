@@ -62,6 +62,7 @@
 #include "IMU_INT.h"
 #include "LED2.h"
 #include "LED1.h"
+#include "FLASH1.h"
 
 #ifdef __cplusplus
 extern "C" {
