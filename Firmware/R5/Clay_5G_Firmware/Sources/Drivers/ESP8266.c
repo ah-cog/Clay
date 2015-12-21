@@ -200,11 +200,11 @@ int8_t ESP8266_Wait_For_Response (const char* response, uint32_t milliseconds) {
 	while (commandResponse < 0) {
 		// TODO: Check timer in while condition and break if timeout period expires.
 		
-		currentTime = Millis ();
-		if ((currentTime - startTime) > milliseconds) {
-//			printf ("TIMEOUT!!!\r\n");
-			return RESPONSE_TIMEOUT;
-		}
+//		currentTime = Millis ();
+//		if ((currentTime - startTime) > milliseconds) {
+////			printf ("TIMEOUT!!!\r\n");
+//			return RESPONSE_TIMEOUT;
+//		}
 		
 		// Buffer all incoming characters
 		incomingBufferSize = ESP8266_Get_Incoming_Buffer_Size ();
@@ -269,9 +269,10 @@ void Generate_Discovery_Message () {
 	// TODO: Only broadcast UDP message if an address has been received!
 	if (Has_Internet_Address () == TRUE) {
 		char *address = Get_Internet_Address ();
+		char *uuid = Get_Unit_UUID ();
 		// TODO: Create and buffer the command to broadcast the unit's address.
 //		n = 
-		sprintf (discoveryMessage, "connect to %s", address); // Create message to send.
+		sprintf (discoveryMessage, "set unit %s address to %s", uuid, address); // Create message to send.
 //			printf("buffer = %s\r\n", buffer2);
 //		Broadcast_UDP_Message (buffer2, 4445);
 		// TODO: Queue a (periodic) UDP broadcast announcing the unit's presence on the network.
