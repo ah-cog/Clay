@@ -31,8 +31,8 @@
 
 #include "Messenger.h"
 
-#define SSID_DEFAULT "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz" // "AWS"
-#define PASSWORD_DEFAULT "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
+#define SSID_DEFAULT "The Dungeon" // "WhiteGiraffe" // "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz" // "AWS"
+#define PASSWORD_DEFAULT "" // "6AzjFtdDFD" // "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
 
 typedef struct {
 	LDD_TDeviceData *handle;
@@ -128,7 +128,7 @@ int8_t ESP8266_Receive_Incoming_Request (uint32_t milliseconds);
 char incomingDataQueue[HTTP_RESPONSE_BUFFER_SIZE];
 int incomingDataQueueSize;
 
-char discoveryMessage[32];
+char discoveryMessage[128];
 
 void ESP8266_Reset_Data_Buffer ();
 
