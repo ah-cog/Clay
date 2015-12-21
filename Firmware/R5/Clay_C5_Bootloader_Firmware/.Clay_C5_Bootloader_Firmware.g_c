@@ -476,7 +476,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_C5_Bootloader_Firmware_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>47</ProjectModificationStamp>
+    <ProjectModificationStamp>51</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>
@@ -533,8 +533,6 @@
     <OnLLSWakeUpINT_Selected>0</OnLLSWakeUpINT_Selected>
     <OnLLSWakeUpINT_Name>Cpu_OnLLSWakeUpINT</OnLLSWakeUpINT_Name>
     <OnLLSWakeUpINT_Priority>interrupts disabled</OnLLSWakeUpINT_Priority>
-    <ISR_ISRDefaultName>isr_default</ISR_ISRDefaultName>
-    <ISR_ISRnameINITPC>_startup</ISR_ISRnameINITPC>
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
     <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>

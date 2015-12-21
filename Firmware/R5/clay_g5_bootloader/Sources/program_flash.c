@@ -12,6 +12,7 @@
 
 #define CRC16_POLY 0x8005U
 
+bool checksum_initialized = FALSE;
 volatile bool flash_operation_completed;
 
 //erases the entire program flash
@@ -65,12 +66,20 @@ uint16_t write_program_block(uint32_t destination, uint8_t * data, uint32_t leng
     return rval;
 }
 
+void init_checksum()
+{
+    SIM_SCGC6 |= SIM_SCGC6_CRC_MASK;
+    CRC_Config(CRC16_POLY, 0, 0, 0, 0);        //use polynomial given above, don't transpose on read or write, don't read bits xor'd, do 16-bit crc.
+    checksum_initialized = TRUE;
+}
+
 //computes the checksum of the application binary.
 uint16_t compute_checksum()
 {
-    SIM_SCGC6 |= SIM_SCGC6_CRC_MASK;
-    CRC_Config(CRC16_POLY, 0, 0, 0, 0);        //use seed given above, don't transpose on read or write, don't read bits xor'd, do 16-bit crc.
-
+    if (!checksum_initialized)
+    {
+        init_checksum();
+    }
     //use seed vlue of 0
-    return (uint16_t) CRC_Cal_16(0, (uint8_t *) APP_START_ADDR, APP_END_ADDR - APP_START_ADDR);
+    return (uint16_t) CRC_Cal_16(0, (uint8_t *) APP_START_ADDR, APP_END_ADDR - APP_START_ADDR - 2);
 }
