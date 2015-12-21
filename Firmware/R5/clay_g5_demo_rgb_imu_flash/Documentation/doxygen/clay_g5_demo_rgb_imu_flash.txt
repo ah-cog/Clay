@@ -24,8 +24,7 @@
   <tr><td>0x21FFFFFF<br>0x20100000</td><td class="memtypeRAM">RESERVED</td>
   <tr><td>0x20007FFF<br>0x20000000</td><td class="memtypeRAM">RAM</td>
   <tr><td>0x1FFFFFFF<br>0x1FFF8000</td><td class="memtypeRAM">RAM</td>
-  <tr><td>0x140003FF<br>0x14000000</td><td class="memtypeFLASH">EEPROM</td>
-  <tr><td>0x10007FFF<br>0x10000000</td><td class="memtypeRAM">RESERVED</td>
+  <tr><td>0x10007FFF<br>0x10000000</td><td class="memtypeFLASH">FLASH</td>
   <tr><td>0x0003FFFF<br>0x00000410</td><td class="memtypeFLASH">FLASH</td>
   <tr><td>0x0000040F<br>0x00000400</td><td class="memtypeRAM">FLASH_CONFIG</td>
   <tr><td>0x000003FF<br>0x00000000</td><td class="memtypeFLASH">FLASH</td>

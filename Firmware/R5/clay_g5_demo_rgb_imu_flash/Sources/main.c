@@ -113,7 +113,7 @@ int main(void)
 
     /* Write your code here */
     init_tick();
-    
+
     nvm_init();
 
     init_led_drivers();
@@ -122,10 +122,12 @@ int main(void)
 
     delay_n_msec(5);
 
-    while(nvm_busy());
-    if (!check_led_storage(nvm.rgb_states[0]))
+    while (nvm_busy())
+        ;
+    if (!check_led_storage((color_rgb *) read_dword((uint32_t *) nvm.rgb_states)))
     {
         state_recall_success = FALSE;
+//        color_rgb * set_states[LED_STATE_COUNT] = {0};
         color_rgb * set_states[LED_STATE_COUNT] =
                 {
                         colors + 1,
@@ -142,7 +144,7 @@ int main(void)
                         colors + 6
                 };
 
-        write_data(nvm.rgb_states, sizeof(color_rgb *) * LED_STATE_COUNT, set_states);
+        copy_to_nvm(nvm.rgb_states, set_states, sizeof(color_rgb *) * LED_STATE_COUNT);
     }
     else
     {

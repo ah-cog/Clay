@@ -10,6 +10,8 @@
 #include "nvm.h"
 #include "nvm_data.h"
 
+volatile uint8_t active_readers;
+
 //sets up the NVM with the size given.
 bool nvm_init()
 {
@@ -29,27 +31,114 @@ bool nvm_init()
     while (!(FTFL_FCNFG & FTFL_FCNFG_EEERDY_MASK))
         ;        //wait for struct to get loaded.
 
+    active_readers = 0;
+
     return TRUE;
 }
 
 //call this before attempting to read data stored in the flash. reads can't happen while a write is in progress.
 bool nvm_busy()
 {
-    return (FTFL_FCNFG & FTFL_FCNFG_EEERDY_MASK);
+    return !(FTFL_FCNFG & FTFL_FCNFG_EEERDY_MASK);
 }
 
-//call this to write data to a variable defined in nvm_data.h
-bool write_data(void * nvm_location, uint32_t length, void * data)
+uint8_t read_byte(uint8_t * byte_addr)
 {
-    if (nvm_busy() || (uint32_t) nvm_location < NVM_START_ADDR || (uint32_t) nvm_location > NVM_END_ADDR
+    start_multibyte_read();
+    uint8_t rval = *byte_addr;
+    end_multibyte_read();
+
+    return rval;
+}
+
+uint16_t read_word(uint16_t * word_addr)
+{
+    start_multibyte_read();
+    uint16_t rval = *word_addr;
+    end_multibyte_read();
+
+    return rval;
+}
+
+uint32_t read_dword(uint32_t * dword_addr)
+{
+    start_multibyte_read();
+    uint32_t rval = *dword_addr;
+    end_multibyte_read();
+
+    return rval;
+}
+
+bool write_byte(uint8_t * byte_addr, uint8_t value)
+{
+    if (active_readers || nvm_busy()) return FALSE;
+
+    *byte_addr = value;
+    return TRUE;
+}
+
+bool write_word(uint16_t * word_addr, uint16_t value)
+{
+    if (active_readers || nvm_busy()) return FALSE;
+
+    *word_addr = value;
+    return TRUE;
+}
+
+bool write_dword(uint32_t * dword_addr, uint32_t value)
+{
+    if (active_readers || nvm_busy()) return FALSE;
+
+    *dword_addr = value;
+    return TRUE;
+}
+
+//use to copy data into nvm locations.
+bool copy_to_nvm(void * nvm_location, void * source, uint32_t length)
+{
+    if (active_readers || nvm_busy() || (uint32_t) nvm_location < NVM_START_ADDR || (uint32_t) nvm_location > NVM_END_ADDR
             || (uint32_t) nvm_location > NVM_START_ADDR + sizeof(nvm)) return FALSE;
 
     for (int i = 0; i < length; ++i)
     {
         while (!(FTFL_FSTAT & FTFL_FSTAT_CCIF_MASK))
             ;
-        ((uint8_t*) nvm_location)[i] = ((uint8_t*) data)[i];
+        ((uint8_t*) nvm_location)[i] = ((uint8_t*) source)[i];
     }
 
+    return TRUE;
+}
+
+//use to copy data out of nvm locations.
+bool copy_from_nvm(void * nvm_location, void * destination, uint32_t length)
+{
+    if (nvm_busy() || (uint32_t) nvm_location < NVM_START_ADDR || (uint32_t) nvm_location > NVM_END_ADDR
+            || (uint32_t) nvm_location > NVM_START_ADDR + sizeof(nvm)) return FALSE;
+
+    start_multibyte_read();
+
+    for (int i = 0; i < length; ++i)
+    {
+        while (!(FTFL_FSTAT & FTFL_FSTAT_CCIF_MASK))
+            ;
+        ((uint8_t*) destination)[i] = ((uint8_t*) nvm_location)[i];
+    }
+
+    end_multibyte_read();
+
+    return TRUE;
+}
+
+bool start_multibyte_read()
+{
+    while (nvm_busy())
+        ;
+    ++active_readers;
+    return TRUE;
+}
+
+bool end_multibyte_read()
+{
+    --active_readers;
     return TRUE;
 }

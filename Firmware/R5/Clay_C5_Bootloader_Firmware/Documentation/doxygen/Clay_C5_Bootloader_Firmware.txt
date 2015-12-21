@@ -60,6 +60,8 @@
 - \subpage IMU_INT
 - \subpage LED2
 - \subpage LED1
+- \subpage FLASH1
+- \subpage FLASH1
 
 
 */
