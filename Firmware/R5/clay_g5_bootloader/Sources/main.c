@@ -63,7 +63,9 @@ int main(void)
 
     bool erase = 0;
     bool write = 0;
+    bool get_crc = 0;
     uint8_t last_rval = 0;
+    uint16_t last_checksum;
     bool led_state = FALSE;
 
     for (;;)
@@ -79,6 +81,12 @@ int main(void)
         {
             write = 0;
             last_rval = write_program_block(APP_START_ADDR, derp, DERP_LENGTH);
+        }
+        
+        if(get_crc)
+        {
+            get_crc = 0;
+            last_checksum = compute_checksum();
         }
         
         if(tick_250msec)

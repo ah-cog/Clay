@@ -376,7 +376,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_g5_bootloader_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>17</ProjectModificationStamp>
+    <ProjectModificationStamp>22</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -387,7 +387,7 @@
     <HeaderAge>1200843373</HeaderAge>
     <CodeAge>1200898339</CodeAge>
     <AsemblAge>-1</AsemblAge>
-    <GenNumMethods>11</GenNumMethods>
+    <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
     <GetClockConfiguration>false</GetClockConfiguration>
     <SetOperationMode>false</SetOperationMode>
@@ -395,6 +395,9 @@
     <DisableInt>false</DisableInt>
     <GetLLSWakeUpFlags>false</GetLLSWakeUpFlags>
     <OpenBackDoor>false</OpenBackDoor>
+    <GetFlexNVMPartitionCode>false</GetFlexNVMPartitionCode>
+    <SetFlexNVMPartition>false</SetFlexNVMPartition>
+    <SetFlexRAMFunction>false</SetFlexRAMFunction>
     <MCGAutoTrim>false</MCGAutoTrim>
     <VLPModeEnable>false</VLPModeEnable>
     <VLPModeDisable>false</VLPModeDisable>
