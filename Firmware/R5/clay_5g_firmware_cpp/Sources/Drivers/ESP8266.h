@@ -41,7 +41,7 @@ typedef struct {
 	uint8_t (*rxPutFct)(uint8_t);
 } ESP8266_UART_Device; // NOTE: This was named "UART_Desc" previously.
 
-ESP8266_UART_Device deviceData;
+extern ESP8266_UART_Device deviceData;
 
 typedef struct {
 	char wifi_ssid[32];
@@ -52,7 +52,7 @@ typedef struct {
 	char stationMACBuffer[18];
 } Internet_Profile;
 
-Internet_Profile internetProfile;
+extern Internet_Profile internetProfile;
 // TODO: Has_Internet_Address ()
 // TODO: Get_Internet_Address ()
 // TODO: Set_Internet_Address ()
@@ -84,10 +84,12 @@ typedef struct {
 	// TODO: Include any buffer info, incoming byte size info, etc.
 } ESP8266_Connection;
 
-ESP8266_Connection remoteConnections[REMOTE_CONNECTION_COUNT];
+extern ESP8266_Connection remoteConnections[];
+
 #define CONNECTION_BUFFER_SIZE 512 // The size of per-channel buffers
-char connectionDataQueue[REMOTE_CONNECTION_LIMIT][CONNECTION_BUFFER_SIZE];
-int connectionDataQueueSize[REMOTE_CONNECTION_LIMIT];
+
+extern char connectionDataQueue[][CONNECTION_BUFFER_SIZE];
+extern int connectionDataQueueSize[];
 
 void Initialize_Remote_Connections ();
 void Reset_Connection (int id);
@@ -125,10 +127,10 @@ int8_t ESP8266_Receive_Incoming_Request (uint32_t milliseconds);
 
 #define HTTP_RESPONSE_BUFFER_SIZE 2048 // Store this many of the most recent chars in AT command response buffer
 
-char incomingDataQueue[HTTP_RESPONSE_BUFFER_SIZE];
-int incomingDataQueueSize;
+extern char incomingDataQueue[];
+extern int incomingDataQueueSize;
 
-char discoveryMessage[128];
+extern char discoveryMessage[];
 
 void ESP8266_Reset_Data_Buffer ();
 

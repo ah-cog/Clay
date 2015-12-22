@@ -7,6 +7,9 @@
 
 #include "GPIO.h"
 
+Channel updateChannelProfile[CHANNEL_COUNT];
+Channel channelProfile[CHANNEL_COUNT];
+
 uint8_t Initialize_Channels () {
 	int i;
 	

@@ -2,6 +2,10 @@
 #include "Drivers/ESP8266.h"
 #include "Clock.h"
 
+Behavior_Construct* behaviorCache;
+Behavior_Construct* loop; // TODO: Create a separate Loop data structure.               
+Behavior_Construct* currentBehaviorConstruct; // Pointer to the loop's current behavior.
+
 uint8_t Reset_Unit () {
 	
 	Reset_Behavior ();
