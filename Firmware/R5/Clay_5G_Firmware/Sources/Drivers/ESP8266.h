@@ -50,9 +50,9 @@ typedef struct {
 	char apMACBuffer[18];
 	char stationIPBuffer[16];
 	char stationMACBuffer[18];
-} ESP8266_Profile;
+} Internet_Profile;
 
-ESP8266_Profile esp8266_profile;
+Internet_Profile internetProfile;
 // TODO: Has_Internet_Address ()
 // TODO: Get_Internet_Address ()
 // TODO: Set_Internet_Address ()

@@ -20,9 +20,9 @@ extern bool tick_1msec;
 extern bool tick_250msec;
 extern bool tick_500msec;
 
-extern void Enable_Clock ();
+extern uint8_t Enable_Clock ();
 
-extern void Start_Clock ();
+extern uint8_t Start_Clock ();
 
 extern void Tick ();
 

@@ -24,19 +24,22 @@ int status;
 
 // function prototypes ///////
 
-void Enable_Clock () {
+uint8_t Enable_Clock () {
 	// Initialize the timer component
 	(void) Timer_1ms_Init (NULL);
+	return TRUE;
 }
 
 //reset all of the flags to false and the power on time to 0.
-void Start_Clock () {
+uint8_t Start_Clock () {
 	
     power_on_time_msec = 0;
     tick_1msec = FALSE;
     tick_250msec = FALSE;
     tick_500msec = FALSE;
     tick_3000msec = FALSE;
+    
+	return TRUE;
 }
 
 //call this every 1msec to increment the power on time and set the flags.

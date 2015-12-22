@@ -3,7 +3,11 @@
   <Header>
     <Name>Clay_C5_Bootloader_Firmware</Name>
     <SavedBy>Ben</SavedBy>
+<<<<<<< HEAD
+    <ModificationStamp>52</ModificationStamp>
+=======
     <ModificationStamp>51</ModificationStamp>
+>>>>>>> computercamp/master
     <Date>2015-12-21</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
@@ -2007,7 +2011,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
-        <Index>1</Index>
+        <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
       </ItemState>
       <ItemState>
