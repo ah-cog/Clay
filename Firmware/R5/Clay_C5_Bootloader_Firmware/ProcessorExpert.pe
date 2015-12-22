@@ -2,12 +2,8 @@
 <PEproject>
   <Header>
     <Name>Clay_C5_Bootloader_Firmware</Name>
-    <SavedBy>Ben</SavedBy>
-<<<<<<< HEAD
+    <SavedBy>mokogobo</SavedBy>
     <ModificationStamp>52</ModificationStamp>
-=======
-    <ModificationStamp>51</ModificationStamp>
->>>>>>> computercamp/master
     <Date>2015-12-21</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>

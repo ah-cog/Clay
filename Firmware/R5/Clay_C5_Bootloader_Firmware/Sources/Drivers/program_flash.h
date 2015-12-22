@@ -1,18 +1,12 @@
-/*
- * flash.h
- *
- *  Created on: Dec 19, 2015
- *      Author: Ben
- */
-
-#ifndef PROGRAM_FLASH_H_
-#define PROGRAM_FLASH_H_
+#ifndef PROGRAM_FLASH_H
+#define PROGRAM_FLASH_H
 
 #include "PE_Types.h"
 
 #define APP_START_ADDR                0x0000C000U
-#define APP_END_ADDR                  0x00040000U 
+#define APP_END_ADDR                  0x00040000U
 #define FLASH_MEMORY_PAGE_SIZE        0x00000800U
+#define APP_CHECKSUM_ADDRESS          0x0003FFFDU
 
 extern volatile bool flash_operation_completed;
 
@@ -31,4 +25,4 @@ extern void init_checksum();
 //computes the checksum of the application binary.
 extern uint16_t compute_checksum();
 
-#endif /* PROGRAM_FLASH_H_ */
+#endif /* PROGRAM_FLASH_H */

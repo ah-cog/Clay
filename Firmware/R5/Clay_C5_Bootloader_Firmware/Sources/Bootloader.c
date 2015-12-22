@@ -43,6 +43,8 @@ uint32_t Calculate_Checksum_On_Bytes(const uint8_t *bytes, uint32_t length)
  */
 uint8_t Verify_Firmware_Bytes(const uint8_t *bytes, uint32_t length)
 {
+	return TRUE;
+	
     uint16_t received_checksum = bytes[0] | (bytes[1] << 8);
 
     init_checksum();
@@ -58,12 +60,14 @@ uint8_t Verify_Firmware_Bytes(const uint8_t *bytes, uint32_t length)
  */
 uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t length)
 {
-    return write_program_block(address, bytes, length) == 0;
+    return write_program_block (APP_START_ADDR + address, bytes, length) == 0;
 }
+
+
+uint8_t test[1024]={0};
 
 void Update_Firmware()
 {
-
     uint8_t result = NULL;
     uint32_t blockIndex = 0;        // The current block index to receive, verify, and write to flash.
     uint32_t blockSize = 512;        // The number of bytes to receive.
@@ -82,7 +86,7 @@ void Update_Firmware()
     uint32_t bytesWritten = 0;        // Total number of bytes written to flash.
 
     //erase application from flash before getting data.
-    erase_program_flash();
+    erase_program_flash ();
 
     // Check firmware version
 //	hasLatestFirmware = FALSE; // HACK
@@ -97,24 +101,24 @@ void Update_Firmware()
         // Get the new firmware in chunks, perform checksum on each one (retry if fail, continue to next chunk if success), write the verified chunk into flash
         startByte = blockIndex * blockSize;        // Determine the first byte to receive in the block based on the current block index.
         sprintf(uriParameters, "/firmware?start=%d&size=%d", startByte, blockSize);
-        Send_HTTP_GET_Request(address, port, uriParameters);        // HTTP GET /firmware/version
+        Send_HTTP_GET_Request (address, port, uriParameters);        // HTTP GET /firmware/version
         // TODO: Inside the Send_HTTP_GET_Request (...) function, block on ESP8266_Wait_For_Response (...), but only after disabling the other communications (namely, UDP broadcasts, since that will add to the ESP8266 buffer, causing the ESP8266_Wait_For_Response (...) function to erroneously proceed, and get stuck in a timer reset loop, since it always gets some data from the UDP broadcast).
 
-        strncpy(firmwareBuffer, connectionDataQueue[connection], connectionDataQueueSize[connection]);        // Copy the received data into a response buffer.
+//        strncpy(firmwareBuffer, connectionDataQueue[connection], connectionDataQueueSize[connection]);        // Copy the received data into a response buffer.
 
         // Verify the received data.
-        if ((result = Verify_Firmware_Bytes(firmwareBuffer, firmwareBufferSize)) != NULL)
+        if ((result = Verify_Firmware_Bytes (httpResponseBuffer, httpResponseBufferSize)) != NULL)
         {
 
             // Update the number of received bytes.
-            bytesReceived = bytesReceived + firmwareBufferSize;
+            bytesReceived = bytesReceived + httpResponseBufferSize;
 
             // Write the received bytes to application memory in flash.
-            if ((result = Write_Firmware_Bytes(startByte, firmwareBuffer, firmwareBufferSize)) != NULL)
+            if ((result = Write_Firmware_Bytes (startByte, httpResponseBuffer, httpResponseBufferSize)) != NULL)
             {
 
                 // The byte was successfully written.
-                bytesWritten = bytesWritten + firmwareBufferSize;
+                bytesWritten = bytesWritten + httpResponseBufferSize;
 
                 // Advance to the next byte.
                 blockIndex = blockIndex + 1;
