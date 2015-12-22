@@ -663,7 +663,7 @@ int8_t ESP8266_Send_Command_AT_CIFSR () { // ESP8266_Send_Command_AT_CIFSR
 					stationIP = stationIP + strlen ("STAIP,\""); // Go to start of IP address substring
 					length = strchr (stationIP, '"') - stationIP;
 					stationIP[length] = '\0';
-					strncpy (esp8266_profile.stationIPBuffer, stationIP, length);
+					strncpy (internetProfile.stationIPBuffer, stationIP, length);
 //					D(printf ("IP: %s\r\n", esp8266_profile.stationIPBuffer));
 				}
 				
@@ -675,7 +675,7 @@ int8_t ESP8266_Send_Command_AT_CIFSR () { // ESP8266_Send_Command_AT_CIFSR
 					stationMAC = stationMAC + strlen ("STAMAC,\""); // Go to start of MAC address substring
 					length = strchr (stationMAC, '"') - stationMAC; // Measure the length of the MAC address substring
 					stationMAC[length] = '\0'; // Terminate the stored MAC address string.
-					strncpy (esp8266_profile.stationMACBuffer, stationMAC, length);
+					strncpy (internetProfile.stationMACBuffer, stationMAC, length);
 //					D(printf ("MAC: %s\r\n", esp8266_profile.stationMACBuffer));
 				}
 			}
@@ -852,8 +852,8 @@ int8_t ESP8266_Send_Command_AT_CIPSERVER (uint8_t mode, uint8_t port) {
 //}
 
 void Set_WiFi_Network (char *ssid, char *password) {
-	strncpy (esp8266_profile.wifi_ssid, ssid, strlen (ssid));
-	strncpy (esp8266_profile.wifi_password, password, strlen (password));
+	strncpy (internetProfile.wifi_ssid, ssid, strlen (ssid));
+	strncpy (internetProfile.wifi_password, password, strlen (password));
 }
 
 uint8_t Has_Internet_Address () {
@@ -861,7 +861,7 @@ uint8_t Has_Internet_Address () {
 }
 
 char* Get_Internet_Address () {
-	return esp8266_profile.stationIPBuffer;
+	return internetProfile.stationIPBuffer;
 }
 
 void Set_Internet_Address (char *address) { // TODO: Set_Internet_Address (ESP8266_Profile *hardwareProfile)
@@ -869,7 +869,7 @@ void Set_Internet_Address (char *address) { // TODO: Set_Internet_Address (ESP82
 	//stationIP = stationIP + strlen ("STAIP,\""); // Go to start of IP address substring
 	//length = strchr (stationIP, '"') - stationIP;
 	//stationIP[length] = '\0';
-	strncpy (esp8266_profile.stationIPBuffer, address, strlen (address));
+	strncpy (internetProfile.stationIPBuffer, address, strlen (address));
 //	D(printf ("IP: %s\r\n", esp8266_profile.stationIPBuffer));
 }
 
@@ -1100,7 +1100,7 @@ uint8_t Enable_WiFi (const char* ssid, const char *password) {
 //			D(printf ("Joining access point. "));
 			// TODO: Get list of APs and see if the specified one exists.
 			Set_WiFi_Network (ssid, password); // Set the Wi-Fi network.
-			if ((status = ESP8266_Send_Command_AT_CWJAP (esp8266_profile.wifi_ssid, esp8266_profile.wifi_password)) > 0) { // if ((status = ESP8266_Send_Command_AT_CWJAP (esp8266_profile.wifi_ssid, esp8266_profile.wifi_password)) > 0) { // if ((status = ESP8266_Send_Command_AT_CWJAP (SSID_DEFAULT, PASSWORD_DEFAULT)) > 0) {
+			if ((status = ESP8266_Send_Command_AT_CWJAP (internetProfile.wifi_ssid, internetProfile.wifi_password)) > 0) { // if ((status = ESP8266_Send_Command_AT_CWJAP (esp8266_profile.wifi_ssid, esp8266_profile.wifi_password)) > 0) { // if ((status = ESP8266_Send_Command_AT_CWJAP (SSID_DEFAULT, PASSWORD_DEFAULT)) > 0) {
 //				D(printf ("ESP8266 joined access point.\r\n"));
 			} else {
 //				D(printf ("ESP8266 could NOT join access point.\r\n"));
@@ -1511,7 +1511,7 @@ void Start_HTTP_Server (uint16_t port) {
 //}
 
 // TODO: void Process_HTTP_Request (Connection *connection, HTTP_Request httpRequest)
-void Process_HTTP_Request (int connection, const char *httpMethod, const char *httpUri) {
+void Process_Incoming_HTTP_Request (int connection, const char *httpMethod, const char *httpUri) {
 	
 	int8_t status = NULL;
 	int n;
@@ -1763,7 +1763,7 @@ void Monitor_Network_Communications () { // void Monitor_Network_Communications 
 				ESP8266_Reset_Data_Buffer ();
 				
 				// TODO: Handle request that matches httpUri
-				Process_HTTP_Request (connection, httpMethod, httpUri);
+				Process_Incoming_HTTP_Request (connection, httpMethod, httpUri);
 				
 				
 				
