@@ -1574,6 +1574,9 @@ uint8_t Send_HTTP_POST_Request (const char *address, uint16_t port, const char *
 	return response;
 }
 
+char httpResponseBuffer[HTTP_RESPONSE_BUFFER_SIZE] = { 0 };
+uint16_t httpResponseBufferSize = 0;
+
 //AT+CIPSTART=0,"TCP","192.168.1.105",8080
 //AT+CIPSEND=0,104
 //POST /experiment HTTP/1.1
@@ -1598,8 +1601,6 @@ uint8_t Send_HTTP_GET_Request (const char *address, uint16_t port, const char *u
 	uint8_t hasResponseHeaders = FALSE;
 	uint16_t contentLength = 0;
 	uint8_t hasResponseMessage = FALSE;
-	char httpResponseBuffer[HTTP_RESPONSE_BUFFER_SIZE] = { 0 };
-	uint16_t httpResponseBufferSize = 0;
 	
 	// The following variables correspond to parameters in the following AT command:
 	//     AT+CIPSTART=<channel index>,<protocol>,<remote address>,<remote port>[,(<local port>),(<mode>)]

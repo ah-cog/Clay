@@ -150,6 +150,7 @@ void I2C0_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
 void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr)
 {
   /* Write your code here ... */
+  flash_operation_completed = TRUE;
 }
 
 /* END Events */

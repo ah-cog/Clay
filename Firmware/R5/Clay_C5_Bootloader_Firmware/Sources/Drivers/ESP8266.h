@@ -93,6 +93,9 @@ uint8_t ESP8266_Has_Incoming_Request ();
 
 #define HTTP_RESPONSE_BUFFER_SIZE 2048 // Store this many of the most recent chars in AT command response buffer
 
+extern char httpResponseBuffer[HTTP_RESPONSE_BUFFER_SIZE];
+extern uint16_t httpResponseBufferSize;
+
 char incomingDataQueue[HTTP_RESPONSE_BUFFER_SIZE];
 int incomingDataQueueSize;
 

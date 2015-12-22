@@ -3,9 +3,6 @@
 
 #include "Drivers/ESP8266.h"
 
-char firmwareBuffer[1024] = { 0 };
-uint16_t firmwareBufferSize = 0;
-
 uint8_t Verify_Firmware ();
 
 uint8_t Has_Latest_Firmware ();
