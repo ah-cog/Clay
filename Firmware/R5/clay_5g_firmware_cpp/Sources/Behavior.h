@@ -54,7 +54,7 @@ int8_t Delete_Behavior_Construct (Behavior_Construct *behaviorConstruct);
 // Behavior Cache
 // The local behavior cache.
 
-Behavior_Construct* behaviorCache;
+extern Behavior_Construct* behaviorCache;
 
 uint8_t Reset_Unit ();
 
@@ -66,8 +66,8 @@ uint8_t Has_Cached_Behaviors ();
 uint8_t Has_Cached_Behavior_By_UUID (char *uuid);
 Behavior* Remove_Behavior_From_Cache (Behavior *behavior);
 
-Behavior_Construct* loop; // TODO: Create a separate Loop data structure.
-Behavior_Construct* currentBehaviorConstruct; // Pointer to the loop's current behavior.
+extern Behavior_Construct* loop; // TODO: Create a separate Loop data structure.
+extern Behavior_Construct* currentBehaviorConstruct; // Pointer to the loop's current behavior.
 
 uint8_t Initialize_Behavior ();
 

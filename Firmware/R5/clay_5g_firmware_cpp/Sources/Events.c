@@ -31,15 +31,17 @@
 #include "Events.h"
 #include "Events_ESP8266.h"
 
+#include "Application.h"
+#include "Drivers/ESP8266.h"
+#include "Clock.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "Application.h"
-#include "Drivers/ESP8266.h"
-#include "Clock.h"
+
 
 /*
 ** ===================================================================

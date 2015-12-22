@@ -21,6 +21,15 @@
 #include "UUID.h"
 //#include "ESP8266_RxBuf.h"
 
+Internet_Profile internetProfile;
+char incomingDataQueue[HTTP_RESPONSE_BUFFER_SIZE];
+int incomingDataQueueSize;
+char discoveryMessage[128];
+ESP8266_UART_Device deviceData;
+ESP8266_Connection remoteConnections[REMOTE_CONNECTION_COUNT];
+char connectionDataQueue[REMOTE_CONNECTION_LIMIT][CONNECTION_BUFFER_SIZE];
+int connectionDataQueueSize[REMOTE_CONNECTION_LIMIT];
+
 void Enable_ESP8266()
 {
 
@@ -61,14 +70,13 @@ void ESP8266_Send_Bytes(const unsigned char *str)
     }
 }
 
-//int8_t ESP8266_Send_Block(const char *str)
-int8_t ESP8266_Send_Block(char *str)
+int8_t ESP8266_Send_Block(const char *str)
 {
     // DEBUG: printf ("ESP8266_Send_Block\r\n");
 
     int8_t success = TRUE;
 
-    if (ESP8266_Serial_SendBlock(deviceData.handle, str, (uint16_t) strlen(str)) != ERR_OK)
+    if (ESP8266_Serial_SendBlock(deviceData.handle, (LDD_TData*)str, (uint16_t) strlen(str)) != ERR_OK)
     {
         success = FALSE;        // return ERR_FAILED;
     }
