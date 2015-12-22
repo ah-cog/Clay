@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-12-21, 21:01, # CodeGen: 0
+**     Date/Time   : 2015-12-22, 14:35, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -87,6 +87,10 @@
 #include "IMU_INT.h"
 #include "LED2.h"
 #include "LED1.h"
+#include "SM1.h"
+#include "MESH_CE.h"
+#include "MESH_CS.h"
+#include "MESH_IRQ.h"
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
@@ -320,6 +324,14 @@ void PE_low_level_init(void)
   (void)IMU_CS_Init(NULL);
   /* ### BitIO_LDD "IMU_INT" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)IMU_INT_Init(NULL);
+  /* ### SPIMaster_LDD "SM1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)SM1_Init(NULL);
+  /* ### BitIO_LDD "MESH_CE" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)MESH_CE_Init(NULL);
+  /* ### BitIO_LDD "MESH_CS" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)MESH_CS_Init(NULL);
+  /* ### GPIO_LDD "MESH_IRQ" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)MESH_IRQ_Init(NULL);
   /* Enable interrupts of the given priority level */
   Cpu_SetBASEPRI(0U);
 }

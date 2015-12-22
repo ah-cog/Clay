@@ -6,7 +6,7 @@
 **     Component   : PE_Types
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-12-21, 21:01, # CodeGen: 0
+**     Date/Time   : 2015-12-22, 14:35, # CodeGen: 1
 **     Abstract    :
 **         PE_Types.h - contains definitions of basic types,
 **         register access macros and hardware specific macros
@@ -230,6 +230,10 @@ typedef unsigned long int       uint32;
 #define PE_LDD_COMPONENT_IMU_INT_ID              0x18U
 #define PE_LDD_COMPONENT_LED2_ID                 0x19U
 #define PE_LDD_COMPONENT_LED1_ID                 0x1AU
+#define PE_LDD_COMPONENT_SM1_ID                  0x1BU
+#define PE_LDD_COMPONENT_MESH_CE_ID              0x1CU
+#define PE_LDD_COMPONENT_MESH_CS_ID              0x1DU
+#define PE_LDD_COMPONENT_MESH_IRQ_ID             0x1EU
 
 /*
 ** ===================================================================
@@ -260,10 +264,10 @@ typedef void (* LDD_TCallback)(LDD_TCallbackParam *CallbackParam); /*!< Callback
 
 extern LDD_TDeviceData *PE_LDD_DeviceDataList[]; /*!< Array of LDD component device structures */
 
-extern "C"{
+
 /* Fills a memory area block by a specified value. Function defined in PE_LDD.c */
-extern void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
-}
+//extern void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
+
 
 /*
 ** ===================================================================

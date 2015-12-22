@@ -78,7 +78,11 @@
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\LED2.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\LED_DRIVER_0_RESET.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\LED_DRIVER_1_RESET.c</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\MESH_CE.c</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\MESH_CS.c</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\MESH_IRQ.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\PE_LDD.c</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\SM1.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\TU1.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\Timer_1ms.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\Vectors.c</PathName>
@@ -94,12 +98,14 @@
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Events.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Events_ESP8266.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\GPIO.c</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Mesh.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Messenger.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Utilities\Debug.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Utilities\Ring_Buffer.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Utilities\String.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Utilities\UUID.c</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\main.c</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\mesh_statistics.c</PathName>
     </GeneratedCs>
     <GeneratedHs>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\Cpu.h</PathName>
@@ -129,10 +135,14 @@
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\LED2.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\LED_DRIVER_0_RESET.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\LED_DRIVER_1_RESET.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\MESH_CE.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\MESH_CS.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\MESH_IRQ.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\PE_Const.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\PE_Error.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\PE_LDD.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\PE_Types.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\SM1.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\TU1.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Generated_Code\Timer_1ms.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Project_Settings\Startup_Code\runtime_configuration.h</PathName>
@@ -146,11 +156,32 @@
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Events.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Events_ESP8266.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\GPIO.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Mesh.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Messenger.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\HardwareSPI.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\HardwareSerial.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHCRC.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHDatagram.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHGenericDriver.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHGenericSPI.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHHardwareSPI.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHMesh.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHNRFSPIDriver.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHReliableDatagram.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHRouter.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHSPIDriver.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHSoftwareSPI.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RHTcpProtocol.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RH_NRF24.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RH_Serial.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RH_TCP.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\RadioHead.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\RadioHead\wirish.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Utilities\Debug.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Utilities\Ring_Buffer.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Utilities\String.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\Utilities\UUID.h</PathName>
+      <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Sources\mesh_stastistics.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Static_Code\IO_Map\MK20D7.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Static_Code\PDD\ADC_PDD.h</PathName>
       <PathName>C:\Users\Ben\Desktop\dtf\git\clay\Firmware\R5\clay_5g_firmware_cpp\Static_Code\PDD\CAN_PDD.h</PathName>

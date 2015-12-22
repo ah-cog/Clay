@@ -2,9 +2,9 @@
 <PEproject>
   <Header>
     <Name>clay_g5_demo_mesh_rh</Name>
-    <SavedBy>thebh_000</SavedBy>
-    <ModificationStamp>150</ModificationStamp>
-    <Date>2015-12-02</Date>
+    <SavedBy>Ben</SavedBy>
+    <ModificationStamp>151</ModificationStamp>
+    <Date>2015-12-22</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -52,7 +52,7 @@
     <BeanType>MK20DX256LH7</BeanType>
     <Name>Cpu</Name>
     <CompNumb>20</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
     <UserFolderName />
@@ -2007,7 +2007,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
-        <Index>0</Index>
+        <Index>1</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
       </ItemState>
       <ItemState>
@@ -8085,7 +8085,7 @@
     <BeanType>MK20DX256LH7</BeanType>
     <Name>Cpu</Name>
     <CompNumb>24</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
     <UserFolderName />
@@ -16117,7 +16117,7 @@
   <Configuration>
     <CompNumb>1</CompNumb>
     <NodeName>RAM</NodeName>
-    <CnfgEnabled>false</CnfgEnabled>
+    <CnfgEnabled>true</CnfgEnabled>
     <TargetCPU>20</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
@@ -16250,7 +16250,7 @@
   <Configuration>
     <CompNumb>3</CompNumb>
     <NodeName>FLASH</NodeName>
-    <CnfgEnabled>true</CnfgEnabled>
+    <CnfgEnabled>false</CnfgEnabled>
     <TargetCPU>24</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
@@ -16311,7 +16311,7 @@
       <ItemId25>123</ItemId25>
       <Value25>true</Value25>
       <ItemId26>125</ItemId26>
-      <Value26>true</Value26>
+      <Value26>false</Value26>
       <ItemId27>129</ItemId27>
       <Value27>true</Value27>
       <ItemId28>137</ItemId28>
@@ -26635,7 +26635,7 @@
     <BeanType>ExtInt_LDD</BeanType>
     <Name>MESH_IRQ</Name>
     <CompNumb>125</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>ExtInt_LDD</IconName>
     <UserFolderName />
@@ -27245,7 +27245,7 @@
       <ItemState>
         <ItemSymbol>AllocatedPinsMaskProp</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>256</Value>
+        <Value>0</Value>
         <Base>HEX</Base>
         <Index>-1</Index>
       </ItemState>
@@ -27322,7 +27322,7 @@
       <ItemState>
         <ItemSymbol>FieldMaskProp0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>256</Value>
+        <Value>0</Value>
         <Base>HEX</Base>
         <Index>-1</Index>
       </ItemState>
@@ -27743,13 +27743,13 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>ConnectPin</ItemSymbol>
-        <ReadOnly>false</ReadOnly>
+        <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>1</Index>
         <Value>false</Value>
         <LastSelection>false</LastSelection>
-        <LastUserSel>no</LastUserSel>
+        <LastUserSel>never</LastUserSel>
         <UsrMethodName>ConnectPin</UsrMethodName>
       </ItemState>
     </Methods>

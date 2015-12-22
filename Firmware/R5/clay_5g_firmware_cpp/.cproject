@@ -174,6 +174,7 @@
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/drivers&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/utilities&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/RadioHead&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProcessorExpertPath}/lib/Kinetis/iofiles&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProcessorExpertPath}/lib/Kinetis/pdd/inc&quot;"/>
@@ -304,6 +305,29 @@
 									<listOptionValue builtIn="false" value="Sources/Utilities/String.c"/>
 									<listOptionValue builtIn="false" value="Sources/Utilities/UUID.c"/>
 									<listOptionValue builtIn="false" value="Sources/main.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/MESH_CE.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/MESH_CS.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/MESH_IRQ.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/SM1.c"/>
+									<listOptionValue builtIn="false" value="Sources/Mesh.c"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/HardwareSPI.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/HardwareSerial.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHCRC.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHDatagram.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHGenericDriver.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHGenericSPI.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHHardwareSPI.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHMesh.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHNRFSPIDriver.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHReliableDatagram.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHRouter.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHSPIDriver.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RHSoftwareSPI.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RH_NRF24.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RH_Serial.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/RH_TCP.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/RadioHead/wirish.cpp"/>
+									<listOptionValue builtIn="false" value="Sources/mesh_statistics.c"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.ldflags.2022141357" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.cpp.link.option.ldflags" valueType="stringList">
 									<listOptionValue builtIn="false" value="--undefined=__pformatter_"/>
@@ -336,6 +360,7 @@
 							<tool id="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.preprocessor.debug.413478920" name="ARM Ltd Windows GCC C++ Preprocessor" superClass="com.freescale.cdt.cross.arm.gnu.sourcery.windows.elf.cpp.preprocessor.debug">
 								<option id="com.freescale.cdt.cross.arm.gnu.preprocessor.dirs.include.paths.976444474" name="Include paths (-I)" superClass="com.freescale.cdt.cross.arm.gnu.preprocessor.dirs.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/Drivers&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/RadioHead&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/utilities&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Generated_Code&quot;"/>

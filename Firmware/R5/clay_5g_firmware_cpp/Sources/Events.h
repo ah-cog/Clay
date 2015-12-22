@@ -55,6 +55,10 @@
 #include "IMU_INT.h"
 #include "LED2.h"
 #include "LED1.h"
+#include "SM1.h"
+#include "MESH_CE.h"
+#include "MESH_CS.h"
+#include "MESH_IRQ.h"
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"
@@ -142,6 +146,64 @@ void I2C0_OnMasterBlockSent(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void I2C0_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  MESH_IRQ_OnPortEvent (module Events)
+**
+**     Component   :  MESH_IRQ [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void MESH_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockSent (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. This event is
+**         available only if the SendBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  SM1_OnBlockReceived (module Events)
+**
+**     Component   :  SM1 [SPIMaster_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when the requested number of data is
+**         moved to the input buffer. This method is available only if
+**         the ReceiveBlock method is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. The pointer is passed
+**                           as the parameter of Init method. 
+*/
+/* ===================================================================*/
+void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 
