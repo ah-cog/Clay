@@ -2,6 +2,9 @@
 
 uint8_t bootloaderMode = TRUE; // Flag indicating if the unit is in bootloader mode.
 
+char firmwareBuffer[1024] = { 0 };
+uint16_t firmwareBufferSize = 0;
+
 /**
  * Verifies the current firmware in flash. Computes the checksum of the 
  * current flash and compares it to the expected value stored at the end 
