@@ -5,7 +5,7 @@
 **     Processor   : MK20DX256VLH7
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-12-21, 21:01, # CodeGen: 0
+**     Date/Time   : 2015-12-22, 14:35, # CodeGen: 1
 **     Abstract    :
 **
 **     Settings    :
@@ -87,6 +87,10 @@
 #include "IMU_INT.h"
 #include "LED2.h"
 #include "LED1.h"
+#include "SM1.h"
+#include "MESH_CE.h"
+#include "MESH_CS.h"
+#include "MESH_IRQ.h"
 
 
 /*
@@ -110,9 +114,8 @@
 **       len - Length of a memory block to fill.
 */
 /* ===================================================================*/
-extern "C"{
 void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
-}
+
 /*
 ** ===================================================================
 **     Method      :  Cpu_PE_PeripheralUsed (component MK20DX256LH7)

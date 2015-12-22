@@ -62,6 +62,10 @@
 #include "IMU_INT.h"
 #include "LED2.h"
 #include "LED1.h"
+#include "SM1.h"
+#include "MESH_CE.h"
+#include "MESH_CS.h"
+#include "MESH_IRQ.h"
 
 #ifdef __cplusplus
 extern "C" {
