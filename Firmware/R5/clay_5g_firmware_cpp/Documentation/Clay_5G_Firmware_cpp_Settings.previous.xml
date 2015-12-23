@@ -1998,7 +1998,7 @@ PE_DEBUGHALT();
       <GetSentDataNum v="don&amp;apos;t generate code" />
       <GetReceivedDataNum v="don&amp;apos;t generate code" />
       <GetBlockSentStatus v="don&amp;apos;t generate code" />
-      <GetBlockReceivedStatus v="don&amp;apos;t generate code" />
+      <GetBlockReceivedStatus v="generate code" />
       <CancelBlockTransmission v="don&amp;apos;t generate code" />
       <CancelBlockReception v="don&amp;apos;t generate code" />
       <GetError v="don&amp;apos;t generate code" />

@@ -18,7 +18,7 @@
         <Line>PE_Const</Line>
         <Line>IO_Map</Line>
       </GenSharedModules>
-      <ShrdHeaderAge0>1201042560</ShrdHeaderAge0>
+      <ShrdHeaderAge0>1201060137</ShrdHeaderAge0>
       <ShrdCodeAge0>-1</ShrdCodeAge0>
       <ShrdAsemblAge0>-1</ShrdAsemblAge0>
       <ShrdHeaderAge1>1200990263</ShrdHeaderAge1>
@@ -73,7 +73,7 @@
       </GenExtraFiles>
       <GenExtraFileSrcDir34>lib\doxygen\</GenExtraFileSrcDir34>
       <XtraAge35>1201042560</XtraAge35>
-      <XtraAge36>1201042560</XtraAge36>
+      <XtraAge36>1201061335</XtraAge36>
       <XtraAge38>1201042560</XtraAge38>
       <GenExtraFileType38>4</GenExtraFileType38>
       <GenExtraFileType37>4</GenExtraFileType37>
@@ -488,7 +488,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_5G_Firmware_cpp_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>45</ProjectModificationStamp>
+    <ProjectModificationStamp>47</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>
@@ -626,7 +626,7 @@
     <GenDriverVersion>01.02</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1200990263</HeaderAge>
-    <CodeAge>1201042560</CodeAge>
+    <CodeAge>1201061335</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>17</GenNumMethods>
     <Init>true</Init>

@@ -61,24 +61,24 @@ void get_mpu_readings (mpu_values * data)
     receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 6, MPU9250_ACCEL_ADDRESS);
 
     //I2Cdev::readBytes(devAddr, MPU6050_RA_ACCEL_XOUT_H, 6, buffer);
-    data->x_accel = (((int16_t) incoming_msg_buf[0]) << 8) | incoming_msg_buf[1];
-    data->y_accel = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
-    data->z_accel = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
+    data->values.x_accel = (((int16_t) incoming_msg_buf[0]) << 8) | incoming_msg_buf[1];
+    data->values.y_accel = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
+    data->values.z_accel = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
 
     outgoing_msg_buf[0] = MPU9250_RA_GYRO_XOUT_H;
     receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 6, MPU9250_ACCEL_ADDRESS);
 
-    data->x_gyro = (((int16_t) incoming_msg_buf[0]) << 8) | incoming_msg_buf[1];
-    data->y_gyro = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
-    data->z_gyro = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
+    data->values.x_gyro = (((int16_t) incoming_msg_buf[0]) << 8) | incoming_msg_buf[1];
+    data->values.y_gyro = (((int16_t) incoming_msg_buf[2]) << 8) | incoming_msg_buf[3];
+    data->values.z_gyro = (((int16_t) incoming_msg_buf[4]) << 8) | incoming_msg_buf[5];
 
     outgoing_msg_buf[0] = MPU9250_RA_MAG_XOUT_L;
     receive_message(outgoing_msg_buf, 1, incoming_msg_buf, 6, MPU9250_MAG_ADDRESS);
 
     //Note: magnetometer buffers are little endian.
-    data->x_mag = (((int16_t) incoming_msg_buf[1]) << 8) | incoming_msg_buf[0];
-    data->y_mag = (((int16_t) incoming_msg_buf[3]) << 8) | incoming_msg_buf[2];
-    data->z_mag = (((int16_t) incoming_msg_buf[5]) << 8) | incoming_msg_buf[4];
+    data->values.x_mag = (((int16_t) incoming_msg_buf[1]) << 8) | incoming_msg_buf[0];
+    data->values.y_mag = (((int16_t) incoming_msg_buf[3]) << 8) | incoming_msg_buf[2];
+    data->values.z_mag = (((int16_t) incoming_msg_buf[5]) << 8) | incoming_msg_buf[4];
 }
 
 static void send_message(uint8_t * message, int32 size, uint8_t address)
