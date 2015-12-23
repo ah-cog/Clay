@@ -67,7 +67,7 @@ uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t le
 uint8_t test[1024]={0};
 
 void Update_Firmware()
-{
+{    
     uint8_t result = NULL;
     uint32_t blockIndex = 0;        // The current block index to receive, verify, and write to flash.
     uint32_t blockSize = 512;        // The number of bytes to receive.

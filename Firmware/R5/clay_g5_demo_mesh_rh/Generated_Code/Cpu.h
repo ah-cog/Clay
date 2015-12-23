@@ -7,7 +7,7 @@
 **     Version     : Component 01.001, Driver 01.04, CPU db: 3.00.000
 **     Datasheet   : K20P144M72SF1RM Rev. 0, Nov 2011
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-11-30, 13:13, # CodeGen: 35
+**     Date/Time   : 2015-12-22, 19:59, # CodeGen: 41
 **     Abstract    :
 **
 **     Settings    :
@@ -75,7 +75,7 @@ extern "C" {
 #endif
 
 /* Active configuration define symbol */
-#define PEcfg_FLASH 1U
+#define PEcfg_RAM 1U
 
 /* Methods configuration constants - generated for all enabled component's methods */
 
@@ -92,7 +92,6 @@ extern "C" {
 
 
 #define CPU_XTAL_CLK_HZ                 8000000U /* Value of the external crystal or oscillator clock frequency in Hz */
-#define CPU_XTAL32k_CLK_HZ              32768U /* Value of the external 32k crystal or oscillator clock frequency in Hz */
 #define CPU_INT_SLOW_CLK_HZ             32768U /* Value of the slow internal oscillator clock frequency in Hz  */
 #define CPU_INT_FAST_CLK_HZ             4000000U /* Value of the fast internal oscillator clock frequency in Hz  */
 
@@ -111,7 +110,7 @@ extern "C" {
 #define CPU_PLL_FLL_CLK_HZ_CONFIG_0     71991296UL /* PLL/FLL clock frequency in clock configuration 0 */
 #define CPU_MCGIR_CLK_HZ_CONFIG_0       32768UL /* MCG internal reference clock frequency in clock configuration 0 */
 #define CPU_OSCER_CLK_HZ_CONFIG_0       8000000UL /* System OSC external reference clock frequency in clock configuration 0 */
-#define CPU_ERCLK32K_CLK_HZ_CONFIG_0    32768UL /* External reference clock 32k frequency in clock configuration 0 */
+#define CPU_ERCLK32K_CLK_HZ_CONFIG_0    1000UL /* External reference clock 32k frequency in clock configuration 0 */
 #define CPU_MCGFF_CLK_HZ_CONFIG_0       32768UL /* MCG fixed frequency clock */
 
 

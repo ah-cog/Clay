@@ -417,7 +417,13 @@ typedef struct
     int16_t x_mag;
     int16_t y_mag;
     int16_t z_mag;
-} mpu_values;
+} mpu_values_struct;
+
+typedef union
+{
+    mpu_values_struct values;
+    uint8_t bytes[18];
+}mpu_values;
 
 // global vars ///////////////
 
