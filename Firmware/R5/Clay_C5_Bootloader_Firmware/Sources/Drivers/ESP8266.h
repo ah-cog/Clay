@@ -39,7 +39,7 @@ ESP8266_UART_Device deviceData;
 
 #define REMOTE_CONNECTION_LIMIT      5
 #define REMOTE_CONNECTION_COUNT      REMOTE_CONNECTION_LIMIT
-#define CONNECTION_BUFFER_SIZE 512 // The size of per-channel buffers
+#define CONNECTION_BUFFER_SIZE 1024 // The size of per-channel buffers
 
 #define DISCONNECTED_CONNECTION_ID  -1
 #define DISCONNECTED_CONNECTION_TYPE 0
