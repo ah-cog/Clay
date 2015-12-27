@@ -168,9 +168,9 @@ void Monitor_Network_Communications ();
 #define DISCOVERY_BROADCAST_PORT 4445
 #define MESSAGE_PORT 4446
 
-void Start_UDP_Server (uint16_t port);
-void Send_UDP_Message (const char* address, uint16_t port, const char *message);
-void Broadcast_UDP_Message (const char *message, uint16_t port);
+int8_t Start_UDP_Server (uint16_t port);
+int8_t Send_UDP_Message (const char* address, uint16_t port, const char *message);
+int8_t Broadcast_UDP_Message (const char *message, uint16_t port);
 
 void Generate_Discovery_Message (); 
 

@@ -175,6 +175,7 @@ Module "IO_1"      (component BitIO_LDD)
                 interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
                 then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
                 is not necessary and needn't to be generated.
+   - IO_1_GetDir -Returns the selected direction.
    - IO_1_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
    - IO_1_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
    - IO_1_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
@@ -189,6 +190,9 @@ Module "IO_1"      (component BitIO_LDD)
                 if the direction = _[output]_ or _[input/output]_.
    - IO_1_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
                 direction = _[output]_ or _[input/output]_.
+   - IO_1_GetRawVal -Method returns the input value of the pin. The method uses raw data input register, i.e., a register that 
+                always reads back the status of the pin regardless of the pin’s direction. The method is available only if raw 
+                data input is supported on the pin.
 
 Module "IO_2"      (component BitIO_LDD)
    - IO_2_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 

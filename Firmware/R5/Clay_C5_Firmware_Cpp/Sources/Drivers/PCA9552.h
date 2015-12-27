@@ -1,12 +1,5 @@
-/*
- * led_driver_pca9552.h
- *
- *  Created on: Sep 10, 2015
- *      Author: thebh_000
- */
-
-#ifndef LED_DRIVER_PCA9552_H_
-#define LED_DRIVER_PCA9552_H_
+#ifndef LED_DRIVER_PCA9552_H
+#define LED_DRIVER_PCA9552_H
 
 #ifndef __PE_Types_H
 #include "PE_Types.h"
@@ -84,4 +77,4 @@ extern void Set_LED_Output_Mode (RGB_Channel * led, Color_RGB * output_color);
 
 extern int8_t Start_Light_Behavior ();
 
-#endif /* LED_DRIVER_PCA9552_H_ */
+#endif /* LED_DRIVER_PCA9552_H */

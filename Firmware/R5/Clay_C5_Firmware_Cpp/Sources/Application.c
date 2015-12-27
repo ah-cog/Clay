@@ -66,6 +66,8 @@ void Application (void) {
 	Wait (5);
 //	D(printf ("Done.\r\n"));
 	
+	Initialize_Channel_Lights ();
+	
 //	D(printf ("Starting LEDs. "));
 	Start_Light_Behavior (); // previously Start_Light_Feedback ()
 //	D(printf ("Done.\r\n"));
@@ -231,6 +233,18 @@ void Application (void) {
 					currentBehaviorConstruct = loop;
 				}
 			}
+		} else {
+			
+			// Reset the channel states...
+			Reset_Channels ();
+			Apply_Channels ();
+			
+			// ...the channel light states...
+			Reset_Channel_Lights ();
+			Apply_Channel_Lights ();
+			
+			// ...and the device states.
+			// TODO: Reset any other device states.
 		}
 		
 		// TODO: Monitor_Orientation ();

@@ -972,7 +972,7 @@ void Set_Internet_Address(char *address)
 //	D(printf ("IP: %s\r\n", esp8266_profile.stationIPBuffer));
 }
 
-void Start_UDP_Server(uint16_t port)
+int8_t Start_UDP_Server(uint16_t port)
 {
     // DEBUG: printf ("ESP8266_Send_Command_AT_CIPSERVER\r\n");
 
@@ -1002,7 +1002,7 @@ void Start_UDP_Server(uint16_t port)
     //return response;
 }
 
-void Send_UDP_Message(const char* address, uint16_t port, const char *message)
+int8_t Send_UDP_Message(const char* address, uint16_t port, const char *message)
 {
 
     int8_t response = NULL;
@@ -1070,7 +1070,7 @@ void Send_UDP_Message(const char* address, uint16_t port, const char *message)
     //return response;
 }
 
-void Broadcast_UDP_Message(const char *message, uint16_t port)
+int8_t Broadcast_UDP_Message(const char *message, uint16_t port)
 {
     int8_t response = NULL;
     char buffer[MAXIMUM_MESSAGE_LENGTH] = { 0 };

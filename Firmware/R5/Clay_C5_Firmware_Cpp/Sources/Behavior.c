@@ -618,9 +618,6 @@ int8_t Perform_Behavior (Behavior *behavior) {
 	
 	// TODO: Queue the message rather than executing it immediately (unless specified)
 	// TODO: Parse the message rather than brute force like this.
-	
-//	D(printf("messageContent = %s\r\n", messageContent));
-	
 	// TODO: Decompose the behavior into atomic behaviors and perform them!
 	
 	// turn light 1 on
@@ -629,9 +626,9 @@ int8_t Perform_Behavior (Behavior *behavior) {
 			
 		if (strncmp (token, "cause", strlen ("cause")) == 0) {
 						
-			// switch 1 4
+			// cause 1 effect 4
 			// ^
-			// TODO: Something like: switch TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT
+			// TODO: Something like: cause TTOT TTOT effect TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT
 			
 			// Update the channels
 			// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
@@ -644,33 +641,33 @@ int8_t Perform_Behavior (Behavior *behavior) {
 			// TODO: Consider NOT automatically changing the I/O state of the cause. Maybe rely on setting the pin mode first!
 			// TODO: Update all the input states and then update all the output states.
 
-			channelProfile[tokenInt].enabled = CHANNEL_ENABLED;
-			channelProfile[tokenInt].direction = CHANNEL_DIRECTION_INPUT;
-			channelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
-			channelProfile[tokenInt].value = Get_Channel_Value (channelProfile[tokenInt].number);
+			updateChannelProfile[tokenInt].enabled = CHANNEL_ENABLED;
+			updateChannelProfile[tokenInt].direction = CHANNEL_DIRECTION_INPUT;
+			updateChannelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+			updateChannelProfile[tokenInt].value = Get_Channel_Value (updateChannelProfile[tokenInt].number);
 			
 //			if (strncmp (token, "switch", strlen ("switch")) == 0) { 
-			if (channelProfile[tokenInt].value == CHANNEL_VALUE_TOGGLE_ON) {
+			if (updateChannelProfile[tokenInt].value == CHANNEL_VALUE_TOGGLE_ON) {
 				
 				// TODO: Look for "effect"
 				
 				status = getToken (behaviorContent, token, 3); // Effect
 				tokenInt = atoi (token) - 1;
-				channelProfile[tokenInt].enabled = CHANNEL_ENABLED;
-				channelProfile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
-				channelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
-				channelProfile[tokenInt].value = CHANNEL_VALUE_TOGGLE_ON;
+				updateChannelProfile[tokenInt].enabled = CHANNEL_ENABLED;
+				updateChannelProfile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
+				updateChannelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+				updateChannelProfile[tokenInt].value = CHANNEL_VALUE_TOGGLE_ON;
 				
-			} else if (channelProfile[tokenInt].value == CHANNEL_VALUE_TOGGLE_OFF) {
+			} else if (updateChannelProfile[tokenInt].value == CHANNEL_VALUE_TOGGLE_OFF) {
 				
 				// TODO: Look for "effect"
 				
 				status = getToken (behaviorContent, token, 3); // Effect
 				tokenInt = atoi (token) - 1;
-				channelProfile[tokenInt].enabled = CHANNEL_ENABLED;
-				channelProfile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
-				channelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
-				channelProfile[tokenInt].value = CHANNEL_VALUE_TOGGLE_OFF;
+				updateChannelProfile[tokenInt].enabled = CHANNEL_ENABLED;
+				updateChannelProfile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
+				updateChannelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+				updateChannelProfile[tokenInt].value = CHANNEL_VALUE_TOGGLE_OFF;
 				
 			}
 			// TODO: Get the (cause, effect) condition.
@@ -687,7 +684,7 @@ int8_t Perform_Behavior (Behavior *behavior) {
 			
 			result = TRUE;
 			
-		} else if (strncmp (token, "apply", strlen ("apply")) == 0) { 
+		} else if (strncmp (token, "apply", strlen ("apply")) == 0) {
 			
 			// apply TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT
 			// ^
@@ -699,78 +696,82 @@ int8_t Perform_Behavior (Behavior *behavior) {
 				
 				// Set LED state
 				if (token[0] == 'T') {
-					Set_LED_Output ((RGB_LED) (i + 1),  &onColor);
+					updateChannelLightProfiles[i].enabled = TRUE;
+					updateChannelLightProfiles[i].color = &onColor;
+//					Set_LED_Output ((RGB_LED) (i + 1),  &onColor);
 				} else {
-					Set_LED_Output ((RGB_LED) (i + 1),  &offColor);
+					updateChannelLightProfiles[i].enabled = TRUE;
+					updateChannelLightProfiles[i].color = &offColor;
+//					Set_LED_Output ((RGB_LED) (i + 1),  &offColor);
 				}
 				
 				// Update the GPIO states
 				// TODO: Update the intermediate data structure and only update the actual GPIO when the state changes.
-				// TODO: Make 0-indexing (or not) consident with LEDs
+				// TODO: Make 0-indexing (or not) consistent with LEDs
 //				Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
 //				Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_ON);
 				
 				// Enable. Is the channel enabled?
 				// TODO: Add an additional state to handle "no change" for channel
-				channelProfile[i].enabled = (token[1] == 'T' ? TRUE : FALSE); // HACK
+				updateChannelProfile[i].enabled = (token[1] == 'T' ? TRUE : FALSE); // HACK
 				
 				// Direction. Set channel direction. Is the channel an input or output?
 				if (token[2] == 'I') {
-					channelProfile[i].direction = CHANNEL_DIRECTION_INPUT;
+					updateChannelProfile[i].direction = CHANNEL_DIRECTION_INPUT;
 				} else if (token[2] == 'O') {
-					channelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+					updateChannelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
 				} else if (token[2] == '-') {
 					// NOTE: Don't change!
 				}
 				
 				// Mode. Set channel mode. Is it a toggle (discrete switch), waveform (continuous analog signal), or pulse (e.g., PWM).
 				if (token[3] == 'T') {
-					channelProfile[i].mode = CHANNEL_MODE_TOGGLE; // TODO: Rename this to MODE_TOGGLE
+					updateChannelProfile[i].mode = CHANNEL_MODE_TOGGLE; // TODO: Rename this to MODE_TOGGLE
 				} else if (token[3] == 'W') {
-					channelProfile[i].mode = CHANNEL_MODE_WAVEFORM;
+					updateChannelProfile[i].mode = CHANNEL_MODE_WAVEFORM;
 				} else if (token[3] == 'P') {
-					channelProfile[i].mode = CHANNEL_MODE_PULSE;
+					updateChannelProfile[i].mode = CHANNEL_MODE_PULSE;
 				} else if (token[3] == '-') {
 					// NOTE: Don't change!
 				}
 				
 				// Value. Set channel value. This depends on the direction and mode of the channel.
-				if (channelProfile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
-					if (channelProfile[i].mode == CHANNEL_MODE_TOGGLE) {
+				if (updateChannelProfile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
+					if (updateChannelProfile[i].mode == CHANNEL_MODE_TOGGLE) {
 						// Assign the channel's value based on the received data.
 						if (token[4] == 'H') {
-							channelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
+							updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
 						} else if (token[4] == 'L') {
-							channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+							updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 						} else {
 							// ERROR: Error. An unrecognized toggle value was specified.
 						}
-					} else if (channelProfile[i].mode == CHANNEL_MODE_WAVEFORM) {
+					} else if (updateChannelProfile[i].mode == CHANNEL_MODE_WAVEFORM) {
 						// TODO: Assign the value differently, depending on the specified channel direction and mode.
 						// TODO: Assign this based on the received data.
-					} else if (channelProfile[i].mode == CHANNEL_MODE_PULSE) {
+					} else if (updateChannelProfile[i].mode == CHANNEL_MODE_PULSE) {
 						// TODO: Assign the value differently, depending on the specified channel direction and mode.
 						// TODO: Assign this based on the received data.
 					} else {
 						// ERROR: Error. An invalid mode was specified.
 					}
-				} else if (channelProfile[i].direction == CHANNEL_DIRECTION_INPUT) {
+				} else if (updateChannelProfile[i].direction == CHANNEL_DIRECTION_INPUT) {
 					// NOTE: The channel direction is input, so its value is set by the pin's voltage state.
-					if (channelProfile[i].mode == CHANNEL_MODE_TOGGLE) {
+					if (updateChannelProfile[i].mode == CHANNEL_MODE_TOGGLE) {
 						// Assign the channel value based on the physical pin state.
-						channelProfile[i].value = Get_Channel_Value (channelProfile[i].number);
+						updateChannelProfile[i].value = Get_Channel_Value (updateChannelProfile[i].number);
 						
 //						if (token[4] == 'H') {
-//							channelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
+//							updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
 //						} else if (token[4] == 'L') {
-//							channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+//							updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 //						} else {
 //							// ERROR: Error. An unrecognized toggle value was specified.
 //						}
-					} else if (channelProfile[i].mode == CHANNEL_MODE_WAVEFORM) {
+					} else if (updateChannelProfile[i].mode == CHANNEL_MODE_WAVEFORM) {
 						// TODO: Assign the value differently, depending on the specified channel direction and mode.
 						// TODO: Assign this based on the received data.
-					} else if (channelProfile[i].mode == CHANNEL_MODE_PULSE) {
+					} else if (updateChannelProfile[i].mode == CHANNEL_MODE_PULSE) {
 						// TODO: Assign the value differently, depending on the specified channel direction and mode.
 						// TODO: Assign this based on the received data.
 					} else {
@@ -806,6 +807,7 @@ int8_t Perform_Behavior (Behavior *behavior) {
 			// Apply channel
 			// TODO: Move this to a common place, maybe in Application in the loop logic.
 			Apply_Channels ();
+			Apply_Channel_Lights ();
 			
 			result = TRUE;
 		
@@ -848,20 +850,20 @@ int8_t Perform_Behavior (Behavior *behavior) {
 //								Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
 //								Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_ON);
 								// Update channel
-								channelProfile[i].enabled = TRUE; // HACK
-								channelProfile[i].direction = OUTPUT_CHANNEL;
-								channelProfile[i].mode = MODE_DIGITAL;
-								channelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
+								updateChannelProfile[i].enabled = TRUE; // HACK
+								updateChannelProfile[i].direction = OUTPUT_CHANNEL;
+								updateChannelProfile[i].mode = MODE_DIGITAL;
+								updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
 								// TODO: Apply individual channel here! Only the changed ones!
 							} else {
 								// TODO: Make 0-indexing (or not) consident with LEDs
 //								Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
 //								Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_OFF);
 								// Update channel
-								channelProfile[i].enabled = TRUE; // HACK
-								channelProfile[i].direction = OUTPUT_CHANNEL;
-								channelProfile[i].mode = MODE_DIGITAL;
-								channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+								updateChannelProfile[i].enabled = TRUE; // HACK
+								updateChannelProfile[i].direction = OUTPUT_CHANNEL;
+								updateChannelProfile[i].mode = MODE_DIGITAL;
+								updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 								// TODO: Apply individual channel here! Only the changed ones!
 							}
 						}

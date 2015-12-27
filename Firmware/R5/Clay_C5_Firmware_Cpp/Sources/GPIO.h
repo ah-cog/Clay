@@ -1,15 +1,10 @@
-/*
- * GPIO.h
- *
- *  Created on: Sep 17, 2015
- *      Author: mokogobo
- */
-
-#ifndef GPIO_H_
-#define GPIO_H_
+#ifndef GPIO_H
+#define GPIO_H
 
 #include "PE_Types.h"
 #include "PE_LDD.h"
+
+#include "Drivers/PCA9552.h"
 
 #define CHANNEL_COUNT 12
 
@@ -29,6 +24,12 @@
 typedef struct {
 	uint8_t number;
 	uint8_t enabled; // Specifies whether or not the channel being used.
+	Color_RGB *color;
+} Channel_Light;
+
+typedef struct {
+	uint8_t number;
+	uint8_t enabled; // Specifies whether or not the channel being used.
 	uint8_t direction; // input or output
 	uint8_t mode; // (output) digital, pwm, (input) digital, analog, pwm
 	uint16_t value; // The raw value of the channel.
@@ -42,22 +43,30 @@ typedef struct {
 	// TODO: UUID for transform.
 } Channel;
 
-extern Channel updateChannelProfile[];
-extern Channel channelProfile[];
+extern Channel updateChannelProfile[CHANNEL_COUNT];
+extern Channel channelProfile[CHANNEL_COUNT];
 
-uint8_t Initialize_Channels ();
-uint8_t Update_Channels ();
-uint8_t Apply_Channels ();
+int8_t Initialize_Channels ();
+int8_t Reset_Channels ();
+//int8_t Update_Channels ();
 
-uint8_t Enable_Channel (uint8_t number, uint8_t enabled);
+int8_t Enable_Channels ();
+int8_t Enable_Channel (uint8_t number, uint8_t enabled);
+int8_t Apply_Channels ();
 
-uint8_t Enable_Channels ();
 //uint8_t Enable_Channel (uint8_t number);
 void Set_Channel (uint8_t number, uint8_t direction, uint8_t mode);
 void Set_Channel_Value (uint8_t number, uint8_t state); // i.e., set discrete state of the channel (on or off)
 //void Set_Channel_Signal (); // i.e., analog signal to generate on the channel
-uint8_t Get_Channel_Value (uint8_t number); // i.e., get discrete input state
+int8_t Get_Channel_Value (uint8_t number); // i.e., get discrete input state
 //void Get_Channel_Signal (); // i.e., read the analog signal on the channel
 // void Disable_Channels ();
 
-#endif /* GPIO_H_ */
+extern Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
+extern Channel_Light channelLightProfiles[CHANNEL_COUNT];
+
+void Initialize_Channel_Lights ();
+void Reset_Channel_Lights ();
+int8_t Apply_Channel_Lights ();
+
+#endif /* GPIO_H */

@@ -1,16 +1,9 @@
-/*
- * GPIO.c
- *
- *  Created on: Sep 17, 2015
- *      Author: mokogobo
- */
-
 #include "GPIO.h"
 
 Channel updateChannelProfile[CHANNEL_COUNT];
 Channel channelProfile[CHANNEL_COUNT];
 
-uint8_t Initialize_Channels () {
+int8_t Initialize_Channels () {
 	int i;
 	
 	for (i = 0; i < CHANNEL_COUNT; i++) {
@@ -18,22 +11,45 @@ uint8_t Initialize_Channels () {
 		// Initialize update channel profile
 		updateChannelProfile[i].number = (i + 1);
 		updateChannelProfile[i].enabled = FALSE;
-		updateChannelProfile[i].direction = NULL;
-		updateChannelProfile[i].mode = NULL;
-		updateChannelProfile[i].value = NULL;
+		updateChannelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+		updateChannelProfile[i].mode = CHANNEL_MODE_TOGGLE;
+		updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 
 		// Initialize channel profile
 		channelProfile[i].number = (i + 1);
 		channelProfile[i].enabled = FALSE;
-		channelProfile[i].direction = NULL;
-		channelProfile[i].mode = NULL;
-		channelProfile[i].value = NULL;
+		channelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+		channelProfile[i].mode = CHANNEL_MODE_TOGGLE;
+		channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 	}
 	
 	return TRUE;
 }
 
-//uint8_t Update_Channels () {
+int8_t Reset_Channels () {
+	int i;
+	
+	for (i = 0; i < CHANNEL_COUNT; i++) {
+		
+		// Initialize update channel profile
+		updateChannelProfile[i].number = (i + 1);
+		updateChannelProfile[i].enabled = FALSE;
+		updateChannelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+		updateChannelProfile[i].mode = CHANNEL_MODE_TOGGLE;
+		updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+
+//		// Initialize channel profile
+//		channelProfile[i].number = (i + 1);
+//		channelProfile[i].enabled = FALSE;
+//		channelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+//		channelProfile[i].mode = CHANNEL_MODE_TOGGLE;
+//		channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+	}
+	
+	return TRUE;
+}
+
+//int8_t Update_Channels () {
 //	int i;
 //	
 //	// Copy the updated state into the internal state
@@ -44,22 +60,22 @@ uint8_t Initialize_Channels () {
 //
 //		// Check if the enable state changed. Apply the corresponding transform.
 //		if (updateChannelProfile[i].enabled != channelProfile[i].enabled) {
-//			
+//			channelProfile[i] = updateChannelProfile[i];
 //		}
 //		
 //		// Check if the direction change. Apply the corresponding transform.
 //		if (updateChannelProfile[i].direction != channelProfile[i].direction) {
-//			
+//			channelProfile[i].direction = updateChannelProfile[i];
 //		}
 //		
 //		// Check if the mode change. Apply the corresponding transform.
 //		if (updateChannelProfile[i].mode != channelProfile[i].mode) {
-//			
+//			channelProfile[i].mode = updateChannelProfile[i].mode;
 //		}
 //		
 //		// Check if the value change. Apply the corresponding transform.
 //		if (updateChannelProfile[i].value != channelProfile[i].value) {
-//			
+//			channelProfile[i].value = updateChannelProfile[i].value;
 //		}
 //		
 //	}
@@ -68,45 +84,93 @@ uint8_t Initialize_Channels () {
 //}
 
 // TODO: Apply only changes! Compare current state to previous state or to actual hardware state. The former might be faster, but it's less "ground truth."
-uint8_t Apply_Channels () {
+int8_t Apply_Channels () {
 	int i;
 	
 	for (i = 0; i < CHANNEL_COUNT; i++) {
 		
-//		Enable_Channel (channelProfile[i].number, channelProfile[i].enabled);
-		
-		if (channelProfile[i].enabled == TRUE) {
+		// Check if the enable state changed. Apply the corresponding transform.
+		if (updateChannelProfile[i].enabled != channelProfile[i].enabled) {
 			
-			Set_Channel (channelProfile[i].number, channelProfile[i].direction, channelProfile[i].mode);
-			if (channelProfile[i].direction == CHANNEL_DIRECTION_INPUT) {
-//				channelProfile[i].value = IO_1_GetVal (NULL);
-//				channelProfile[i].value = (uint16_t) Get_Channel_Value (channelProfile[i].number);
-			} else {
-				Set_Channel_Value (channelProfile[i].number, channelProfile[i].value);
+			// Update state.
+			channelProfile[i].enabled = updateChannelProfile[i].enabled;
+			
+			if (channelProfile[i].enabled == TRUE) {
+				
+				// Apply state.
+				Enable_Channel (channelProfile[i].number, channelProfile[i].enabled);
+				
+				// Check if the direction change. Apply the corresponding transform if it changed.
+				if (updateChannelProfile[i].direction != channelProfile[i].direction) {
+					
+					// Update direction.
+					channelProfile[i].direction = updateChannelProfile[i].direction;
+					
+					// Apply direction.
+					Set_Channel (channelProfile[i].number, channelProfile[i].direction, channelProfile[i].mode);
+				}
+				
+				// Check if the mode change. Apply the corresponding transform if it changed.
+				if (updateChannelProfile[i].mode != channelProfile[i].mode) {
+					
+					// Update mode.
+					channelProfile[i].mode = updateChannelProfile[i].mode;
+					
+					// Apply mode.
+					Set_Channel (channelProfile[i].number, channelProfile[i].direction, channelProfile[i].mode);
+				}
+				
+				// Check if the value change. Apply the corresponding transform if it changed.
+				if (updateChannelProfile[i].value != channelProfile[i].value) {
+					
+					// Update value.
+					channelProfile[i].value = updateChannelProfile[i].value;
+					
+					// Apply value.
+					if (channelProfile[i].direction == CHANNEL_DIRECTION_INPUT) {
+	//					channelProfile[i].value = IO_1_GetVal (NULL);
+	//					channelProfile[i].value = (uint16_t) Get_Channel_Value (channelProfile[i].number);
+					} else if (channelProfile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
+						Set_Channel_Value (channelProfile[i].number, channelProfile[i].value);
+					}
+				}
+				
+			} else if (channelProfile[i].enabled == FALSE) {
+				
+				// Apply direction and mode.
+				Set_Channel (channelProfile[i].number, CHANNEL_DIRECTION_OUTPUT, CHANNEL_MODE_TOGGLE);
+				
+				// Apply value.
+				Set_Channel_Value (channelProfile[i].number, CHANNEL_VALUE_TOGGLE_OFF);
+				
 			}
-			
-		} 
-		
-//		else if (channelProfile[i].enabled == FALSE) {
-//			
-//			// TODO: Add candidateChannelProfile
-//			
-//			Set_Channel (channelProfile[i].number, channelProfile[i].direction, channelProfile[i].mode);
-//			if (channelProfile[i].direction == CHANNEL_DIRECTION_INPUT) {
-//				// TODO: Disable the channel when it's set up as an input.
-//			} else {
-//				Set_Channel_Value (channelProfile[i].number, CHANNEL_VALUE_TOGGLE_OFF);
-//			}
-//			
-//		}
+		}
 	}
 	
 	return TRUE;
 }
 
-uint8_t Enable_Channel (uint8_t number, uint8_t enabled) {
+// TODO: Remove this? Just use the above one that does per-channel enabling?
+int8_t Enable_Channels () {
+	(void) IO_1_Init (NULL);
+	(void) IO_2_Init (NULL);
+	(void) IO_3_Init (NULL);
+	(void) IO_4_Init (NULL);
+	(void) IO_5_Init (NULL);
+	(void) IO_6_Init (NULL);
+	(void) IO_7_Init (NULL);
+	(void) IO_8_Init (NULL);
+	(void) IO_9_Init (NULL);
+	(void) IO_10_Init (NULL);
+	(void) IO_11_Init (NULL);
+	(void) IO_12_Init (NULL);
 	
-//	channelProfile[(number - 1)].enabled = enabled;
+	return TRUE;
+}
+
+int8_t Enable_Channel (uint8_t number, uint8_t enabled) {
+	
+	channelProfile[(number - 1)].enabled = enabled;
 	
 	// TODO: Allow disabling!
 	if (number == 1) {
@@ -134,24 +198,6 @@ uint8_t Enable_Channel (uint8_t number, uint8_t enabled) {
 	} else if (number == 12) {
 		(void) IO_12_Init (NULL);
 	}
-	
-	return TRUE;
-}
-
-// TODO: Remove this? Just use the above one that does per-channel enabling?
-uint8_t Enable_Channels () {
-	(void) IO_1_Init (NULL);
-	(void) IO_2_Init (NULL);
-	(void) IO_3_Init (NULL);
-	(void) IO_4_Init (NULL);
-	(void) IO_5_Init (NULL);
-	(void) IO_6_Init (NULL);
-	(void) IO_7_Init (NULL);
-	(void) IO_8_Init (NULL);
-	(void) IO_9_Init (NULL);
-	(void) IO_10_Init (NULL);
-	(void) IO_11_Init (NULL);
-	(void) IO_12_Init (NULL);
 	
 	return TRUE;
 }
@@ -248,7 +294,7 @@ void Set_Channel_Value (uint8_t number, uint8_t value) { // i.e., set discrete s
 	}
 }
 
-uint8_t Get_Channel_Value (uint8_t number) { // i.e., Get discrete input state
+int8_t Get_Channel_Value (uint8_t number) { // i.e., Get discrete input state
 	
 	uint8_t value = NULL;
 	
@@ -280,4 +326,78 @@ uint8_t Get_Channel_Value (uint8_t number) { // i.e., Get discrete input state
 	}
 	
 	return value;
+}
+
+Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
+Channel_Light channelLightProfiles[CHANNEL_COUNT];
+
+void Initialize_Channel_Lights () {
+	int i;
+	
+	for (i = 0; i < CHANNEL_COUNT; i++) {
+		
+		// Initialize update channel profile
+		updateChannelLightProfiles[i].number = (i + 1);
+		updateChannelLightProfiles[i].enabled = TRUE;
+		updateChannelLightProfiles[i].color = &offColor;
+
+		// Initialize channel profile
+		channelLightProfiles[i].number = (i + 1);
+		channelLightProfiles[i].enabled = TRUE;
+		channelLightProfiles[i].color = &offColor;
+	}
+	
+//	return TRUE;
+}
+
+void Reset_Channel_Lights () {
+	int i;
+	
+	for (i = 0; i < CHANNEL_COUNT; i++) {
+		
+		// Initialize update channel profile
+		updateChannelLightProfiles[i].number = (i + 1);
+		updateChannelLightProfiles[i].enabled = TRUE;
+		updateChannelLightProfiles[i].color = &offColor;
+	}
+	
+//	return TRUE;
+}
+
+int8_t Apply_Channel_Lights () {
+	int i;
+	
+	for (i = 0; i < CHANNEL_COUNT; i++) {
+		
+		// Check if the enable state changed. Apply the corresponding transform.
+		if (updateChannelLightProfiles[i].enabled != channelProfile[i].enabled) {
+			
+			// Update state.
+			channelLightProfiles[i].enabled = updateChannelLightProfiles[i].enabled;
+			
+			if (channelLightProfiles[i].enabled == TRUE) {
+				
+				// Apply state.
+				Enable_Channel (channelLightProfiles[i].number, channelLightProfiles[i].enabled);
+				
+				// Check if the direction change. Apply the corresponding transform if it changed.
+				if (updateChannelLightProfiles[i].color != channelLightProfiles[i].color) {
+					
+					// Update color.
+					channelLightProfiles[i].color = updateChannelLightProfiles[i].color;
+					
+					// Apply color.
+					Set_LED_Output ((RGB_LED) (channelLightProfiles[i].number - 1),  channelLightProfiles[i].color);
+				}
+				
+			} else if (channelLightProfiles[i].enabled == FALSE) {
+				
+				// Apply color.
+				Set_LED_Output ((RGB_LED) (channelLightProfiles[i].number - 1),  &offColor);
+				
+			}
+		}
+	}
+	
+	return TRUE;
 }

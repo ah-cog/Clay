@@ -1,10 +1,3 @@
-/*
- * led_driver_pca9552.c
- *
- *  Created on: Sep 1LED_DRIVER_0, 2LED_DRIVER_015
- *      Author: thebh_LED_DRIVER_0LED_DRIVER_0LED_DRIVER_0
- */
-
 #include "LED_DRIVER_0_RESET.h"
 #include "LED_DRIVER_1_RESET.h"
 
