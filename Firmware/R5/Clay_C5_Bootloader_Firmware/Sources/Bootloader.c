@@ -64,10 +64,10 @@ uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t le
 }
 
 
-uint8_t test[1024]={0};
+//uint8_t test[1024] = {0};
 
-void Update_Firmware()
-{    
+void Update_Firmware ()
+{
     uint8_t result = NULL;
     uint32_t blockIndex = 0;        // The current block index to receive, verify, and write to flash.
     uint32_t blockSize = 512;        // The number of bytes to receive.
@@ -88,10 +88,6 @@ void Update_Firmware()
     //erase application from flash before getting data.
     erase_program_flash ();
 
-    // Check firmware version
-//	hasLatestFirmware = FALSE; // HACK
-//	if (!hasLatestFirmware) {
-
     // Retrieve firmware if is hasn't yet been received in its entirety.
     while (bytesReceived < firmwareSize)
     {
@@ -100,7 +96,7 @@ void Update_Firmware()
 
         // Get the new firmware in chunks, perform checksum on each one (retry if fail, continue to next chunk if success), write the verified chunk into flash
         startByte = blockIndex * blockSize;        // Determine the first byte to receive in the block based on the current block index.
-        sprintf(uriParameters, "/firmware?start=%d&size=%d", startByte, blockSize);
+        sprintf (uriParameters, "/firmware?start=%d&size=%d", startByte, blockSize);
         Send_HTTP_GET_Request (address, port, uriParameters);        // HTTP GET /firmware/version
         // TODO: Inside the Send_HTTP_GET_Request (...) function, block on ESP8266_Wait_For_Response (...), but only after disabling the other communications (namely, UDP broadcasts, since that will add to the ESP8266 buffer, causing the ESP8266_Wait_For_Response (...) function to erroneously proceed, and get stuck in a timer reset loop, since it always gets some data from the UDP broadcast).
 
