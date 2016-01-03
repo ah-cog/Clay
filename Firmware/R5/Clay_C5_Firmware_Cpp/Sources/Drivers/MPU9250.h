@@ -430,7 +430,7 @@ typedef union
 // local vars ////////////////
 
 // prototypes ////////////////
-extern void Start_MPU9250();
+extern int8_t Start_MPU9250 ();
 
 extern void get_mpu_readings(mpu_values * data);
 

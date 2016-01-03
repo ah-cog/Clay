@@ -21,9 +21,9 @@ extern bool tick_250msec;
 extern bool tick_500msec;
 extern bool tick_3000msec;
 
-extern void Enable_Clock ();
+extern int8_t Enable_Clock ();
 
-extern void Start_Clock ();
+extern int8_t Start_Clock ();
 
 extern void Tick ();
 

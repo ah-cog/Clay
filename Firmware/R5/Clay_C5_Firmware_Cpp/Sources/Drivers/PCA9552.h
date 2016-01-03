@@ -70,11 +70,13 @@ extern Color_RGB colorB;
 
 extern uint8 driver_addresses[];
 
-extern void Enable_PCA9552 ();
+extern int8_t Enable_PCA9552 ();
 extern void Reset_PCA9552 (LED_Driver Driver);
 extern void Set_LED_Output (RGB_LED led, Color_RGB * output_color);
 extern void Set_LED_Output_Mode (RGB_Channel * led, Color_RGB * output_color);
 
 extern int8_t Start_Light_Behavior ();
+
+extern int8_t Perform_Channel_Light_Effect ();
 
 #endif /* LED_DRIVER_PCA9552_H */

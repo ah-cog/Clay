@@ -331,7 +331,7 @@ int8_t Get_Channel_Value (uint8_t number) { // i.e., Get discrete input state
 Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
 Channel_Light channelLightProfiles[CHANNEL_COUNT];
 
-void Initialize_Channel_Lights () {
+int8_t Initialize_Channel_Lights () {
 	int i;
 	
 	for (i = 0; i < CHANNEL_COUNT; i++) {
@@ -347,7 +347,7 @@ void Initialize_Channel_Lights () {
 		channelLightProfiles[i].color = &offColor;
 	}
 	
-//	return TRUE;
+	return TRUE;
 }
 
 void Reset_Channel_Lights () {

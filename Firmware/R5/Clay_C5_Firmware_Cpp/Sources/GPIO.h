@@ -65,7 +65,7 @@ int8_t Get_Channel_Value (uint8_t number); // i.e., get discrete input state
 extern Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
 extern Channel_Light channelLightProfiles[CHANNEL_COUNT];
 
-void Initialize_Channel_Lights ();
+int8_t Initialize_Channel_Lights ();
 void Reset_Channel_Lights ();
 int8_t Apply_Channel_Lights ();
 

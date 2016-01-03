@@ -93,7 +93,7 @@ Color_RGB offColor = { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF };
 /**
  * Enables both PCA9552 LED drivers.
  */
-void Enable_PCA9552 () {
+int8_t Enable_PCA9552 () {
 	
 	int i;
 	
@@ -107,6 +107,10 @@ void Enable_PCA9552 () {
         I2C0_MasterSendBlock (I2C0_DeviceData, (LDD_TData*) pwm_settings, (LDD_I2C_TSize) 5, LDD_I2C_SEND_STOP);
         Wait (1);
     }
+    
+    Wait (5);
+    
+    return TRUE;
 }
 
 void Reset_PCA9552 (LED_Driver driver) {
@@ -210,4 +214,51 @@ int8_t Start_Light_Behavior () {
 	Set_LED_Output ((RGB_LED) 9,  &offColor);
 	Set_LED_Output ((RGB_LED) 10, &offColor);
 	Set_LED_Output ((RGB_LED) 11, &offColor);
+	
+	return TRUE;
+}
+
+int8_t Perform_Channel_Light_Effect () {
+	int i;
+	for (i = 1; i <= 12; i++) {
+		Set_LED_Output ((RGB_LED) i,  &onColor);
+		Wait (20);
+		Set_LED_Output ((RGB_LED) i,  &offColor);
+		Wait (20);
+		Set_LED_Output ((RGB_LED) i,  &colorA);
+		Wait (20);
+		Set_LED_Output ((RGB_LED) i,  &offColor);
+		Wait (20);
+		Set_LED_Output ((RGB_LED) i,  &colorB);
+		Wait (20);
+		Set_LED_Output ((RGB_LED) i,  &offColor);
+		Wait (20);
+	}
+
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &onColor); }
+	Wait (20);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+	Wait (20);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorA); }
+	Wait (20);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+	Wait (20);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorB); }
+	Wait (20);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+	Wait (20);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &onColor); }
+	Wait (20);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+	Wait (20);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorA); }
+	Wait (50);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+	Wait (80);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorB); }
+	Wait (100);
+	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+	Wait (20);
+	
+	return TRUE;
 }

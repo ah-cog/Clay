@@ -83,6 +83,6 @@ int8_t Perform_Behavior (Behavior *behavior);
 
 // Unit
 
-uint8_t Reset_Behavior ();
+void Reset_Behavior ();
 
 #endif /* BEHAVIOR_H_ */

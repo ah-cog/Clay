@@ -18,185 +18,101 @@
 
 void Application (void) {
 	
-	int i = 0;
-	int n = 0;
 	uint8_t status = 0;
 	Message *message = NULL;
 	
-	/* Start Clay */
-	
-//	printf ("Clay\r\n")/;
+	// Initialize Clay
 	
 	Initialize_Unit_UUID ();
 	
-//	D(printf ("\r\n"));
+	// Clock.
 	
-//	D(printf ("Enabling clock. "));
-	Enable_Clock ();
-//	D(printf ("Done.\r\n")); // printf ("I'm keeping time. ");
-	
-//	D(printf ("Starting clock. "));
-	Start_Clock ();
-//	D(printf ("Done.\r\n"));
-	
-	Enable_LEDs ();
-
-	Set_LED_State (LED1, ON_CHANNEL);
-	Set_LED_State (LED2, OFF_CHANNEL);
-	Wait (50);
-	Set_LED_State (LED1, OFF_CHANNEL);
-	Set_LED_State (LED2, ON_CHANNEL);
-	Wait (50);
-	Set_LED_State (LED1, ON_CHANNEL);
-	Set_LED_State (LED2, OFF_CHANNEL);
-	Wait (50);
-	Set_LED_State (LED1, OFF_CHANNEL);
-	Set_LED_State (LED2, ON_CHANNEL);
-	Wait (50);
-	Set_LED_State (LED1, OFF_CHANNEL);
-	Set_LED_State (LED2, OFF_CHANNEL);
-	
-	Enable_Channels ();
-	Initialize_Channels ();
-	
-//	D(printf ("\r\n"));
-	
-//	D(printf ("Enabling LED controls. ")); // printf ("Starting lights. ");
-	Enable_PCA9552();
-	Wait (5);
-//	D(printf ("Done.\r\n"));
-	
-	Initialize_Channel_Lights ();
-	
-//	D(printf ("Starting LEDs. "));
-	Start_Light_Behavior (); // previously Start_Light_Feedback ()
-//	D(printf ("Done.\r\n"));
-
-	for (i = 1; i <= 12; i++) {
-		Set_LED_Output ((RGB_LED) i,  &onColor);
-		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &offColor);
-		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &colorA);
-		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &offColor);
-		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &colorB);
-		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &offColor);
-		Wait (20);
-	}
-
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &onColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorA); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorB); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &onColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorA); }
-	Wait (50);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (80);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorB); }
-	Wait (100);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	
-//	D(printf ("\r\n"));
-	
-//	D(printf ("Enabling MPU-9250. "));
-	
-	// TODO: Enable_MPU9250 ();
-	Start_MPU9250 ();
-//	D(printf ("Done.\r\n"));
-
-	// TODO: Start_Spatial_Sensing ()
-	
-	// TODO: Enable_GPIO ()
-	
-//	D(printf ("Initializing message queue. "));
-	if ((status = Initialize_Message_Queue (&incomingMessageQueue)) == TRUE) {
-//		D(printf ("Done.\r\n"));
-	} else {
-//		D(printf ("Failed.\r\n"));
+	if ((status = Enable_Clock ()) != TRUE) {
+		// Failure
 	}
 	
-	if ((status = Initialize_Message_Queue (&outgoingMessageQueue)) == TRUE) {
-		
+	if ((status = Start_Clock ()) != TRUE) {
+		// Failure
 	}
 	
-//	D(printf ("\r\n"));
+	// Status LEDs.
 	
-//	D(printf ("Enabling ESP8266. "));
-	Enable_ESP8266 ();
-//	D(printf ("Done.\r\n"));
+	if ((status = Enable_LEDs ()) != TRUE) {
+		// Failure
+	}
 	
-//	Wait (200);
+	Perform_Status_LED_Effect ();
 	
-	//	D(printf ("Setting Wi-Fi Network. "));
-	//	Set_WiFi_Network (SSID_DEFAULT, PASSWORD_DEFAULT);
-	//	D(printf ("Done.\r\n"));
+	// Channels.
 	
-	// TODO: Generate SSID according to regular expression and set up access point to facilitate discovery.
+	if ((status = Enable_Channels ()) != TRUE) {
+		// Failure
+	}
 	
-//	D(printf ("Enabling Wi-Fi. "));
-	Enable_WiFi (SSID_DEFAULT, PASSWORD_DEFAULT);
-//	D(printf ("Done.\r\n"));
+	if ((Initialize_Channels ()) != TRUE) {
+		// Failure
+	}
 	
-//	D(printf ("Starting HTTP Server. "));
-	Start_HTTP_Server (HTTP_SERVER_PORT);
-//	D(printf ("Done.\r\n"));
+	if ((status = Enable_PCA9552 ()) != TRUE) {
+		// Failure
+	}
 	
-	// TODO: Eanble_UDP_Communications
+	if ((status = Start_Light_Behavior ()) != TRUE) {
+		// Failure
+	}
 	
-//	D(printf ("Starting UDP Server. "));
-	Start_UDP_Server (MESSAGE_PORT);
-//	D(printf ("Done.\r\n"));
+	if ((status = Perform_Channel_Light_Effect ()) != TRUE) {
+		// Failure
+	}
 	
-	// TODO: Enable_UDP_Broadcast
-	// TODO: Start_Discovery_Broadcast
-	Generate_Discovery_Message ();
+	if ((Initialize_Channel_Lights ()) != TRUE) {
+		// Failure
+	}
+
+	if ((status = Start_MPU9250 ()) != TRUE) {
+		// Failure
+	}
 	
-//	// Periodically send a datagram announcing the presence of this device.
-//	// TODO: Only broadcast UDP message if an address has been received!
-//	if (Has_Internet_Address () == TRUE) {
-//		char *address = Get_Internet_Address ();
-//		// TODO: Create and buffer the command to broadcast the unit's address.
-//		n = sprintf (buffer2, "connect to %s", address); // Create message to send.
-////			printf("buffer = %s\r\n", buffer2);
-////		Broadcast_UDP_Message (buffer2, 4445);
-//		// TODO: Queue a (periodic) UDP broadcast announcing the unit's presence on the network.
-//	}
+	// Message queue.
+	
+	if ((status = Initialize_Message_Queue (&incomingMessageQueue)) != TRUE) {
+		// Failure
+	}
+	
+	if ((status = Initialize_Message_Queue (&outgoingMessageQueue)) != TRUE) {
+		// Failure
+	}
+	
+	// ESP8266, WiFi, HTTP, UDP.
+	
+	if ((status = Enable_ESP8266 ()) != TRUE) {
+		// Failure
+	}
+	
+	// TODO: Generate SSID for AP according to regular expression and set up access point to facilitate discovery.
+	
+	if ((status = Enable_WiFi (SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
+		// Failure
+	}
+	
+	if ((status = Start_HTTP_Server (HTTP_SERVER_PORT)) != TRUE) {
+		// Failure
+	}
+	
+	if ((Start_UDP_Server (MESSAGE_PORT)) != TRUE) {
+		// Failure
+	}
+	
+	if ((Start_Discovery_Broadcast ()) != TRUE) {
+		// Failure
+	}
 	
 	for (;;) {
 		
 //		Send_HTTP_Request ("192.168.1.105", 8080, "test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test");
 		
-		// Periodically send a datagram announcing the presence of this device.
-		// TODO: Only broadcast UDP message if an address has been received!
-//		if (Has_Internet_Address () == TRUE) {
-//			char *address = Get_Internet_Address ();
-			// TODO: Create and buffer the command to broadcast the unit's address.
-//			n = sprintf (buffer2, "connect to %s", address); // Create message to send.
-//			printf("buffer = %s\r\n", buffer2);
-//			Broadcast_UDP_Message (buffer2, 4445);
-			// TODO: Queue a (periodic) UDP broadcast announcing the unit's presence on the network.
-//		}
-		
 		// Check and process any incoming requests
-		//Monitor_HTTP_Server ();
-//		Wait (100);
-		Wait (10);
+		Wait (10); // Wait (100);
 		Monitor_Network_Communications ();
 		
 		// TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
@@ -219,7 +135,7 @@ void Application (void) {
 			Delete_Message (message);
 		}
 		
-		// Perform behavior
+		// Perform behavior.
 		if (currentBehaviorConstruct != NULL) {
 			if (Perform_Behavior ((*currentBehaviorConstruct).behavior) != NULL) {
 				// NOTE: Behavior was performed successfully.
@@ -233,6 +149,7 @@ void Application (void) {
 					currentBehaviorConstruct = loop;
 				}
 			}
+			
 		} else {
 			
 			// Reset the channel states...

@@ -73,7 +73,7 @@
       </GenExtraFiles>
       <GenExtraFileSrcDir34>lib\doxygen\</GenExtraFileSrcDir34>
       <XtraAge35>1201086033</XtraAge35>
-      <XtraAge36>1201086033</XtraAge36>
+      <XtraAge36>1201550733</XtraAge36>
       <XtraAge38>1201086033</XtraAge38>
       <GenExtraFileType38>4</GenExtraFileType38>
       <GenExtraFileType37>4</GenExtraFileType37>
@@ -488,7 +488,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_C5_Firmware_Cpp_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>50</ProjectModificationStamp>
+    <ProjectModificationStamp>51</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>
@@ -636,7 +636,7 @@
     <GenDriverVersion>01.02</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1201085969</HeaderAge>
-    <CodeAge>1201310615</CodeAge>
+    <CodeAge>1201310657</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>17</GenNumMethods>
     <Init>true</Init>
