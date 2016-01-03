@@ -22,7 +22,7 @@ uint8_t Reset_Unit () {
 // Delete behaviors
 // Remove behavior constructs from cache
 // Set cache to null
-uint8_t Reset_Behavior () {
+void Reset_Behavior () {
 	
 	Behavior_Construct *behaviorConstruct = NULL;
 	Behavior *behavior = NULL;

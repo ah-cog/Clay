@@ -26,10 +26,10 @@
 #include "PE_Types.h"
 #include "PE_LDD.h"
 
-#include "Utilities/Debug.h"
-#include "Utilities/Ring_Buffer.h"
+#include "../Utilities/Debug.h"
+#include "../Utilities/Ring_Buffer.h"
 
-#include "Messenger.h"
+#include "../Messenger.h"
 
 #define SSID_DEFAULT "The Dungeon" // "WhiteGiraffe" // "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz" // "AWS"
 #define PASSWORD_DEFAULT "" // "6AzjFtdDFD" // "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
@@ -96,7 +96,7 @@ void Reset_Connection (int id);
 void Set_Connection_Type (int id, int type);
 // Get_Channel_Type (None or UDP or TCP)
 
-void Enable_ESP8266 (); // Formerly ESP8266_Initialize ()
+int8_t Enable_ESP8266 (); // Formerly ESP8266_Initialize ()
 void ESP8266_Send_Byte (unsigned char ch); // Formerly ESP8266_Send_Char (unsigned char ch, ESP8266_UART_Device *desc)
 void ESP8266_Send_Bytes (const unsigned char *str); // Formerly ESP8266_Send_String (const unsigned char *str, ESP8266_UART_Device *desc)
 int8_t ESP8266_Send_Block (const char *str);
@@ -107,7 +107,6 @@ byte ESP8266_Get_Incoming_Character (byte *elemP);
 uint8_t ESP8266_Has_Incoming_Data ();
 void ESP8266_Buffer_Incoming_Data ();
 void ESP8266_Reset_Data_Buffer ();
-uint8_t ESP8266_Has_Incoming_Request ();
 int8_t ESP8266_Receive_Incoming_Request (uint32_t milliseconds);
 
 #define HTTP_SERVER_PORT 80
@@ -143,7 +142,7 @@ void ESP8266_Reset_Data_Buffer ();
 //#define CLIENT_CONNECTION_LIMIT 5
 //Client_Connection connections[CLIENT_CONNECTION_LIMIT];
 
-int8_t ESP8266_Search_For_Response (const char *response, const char *buffer, int bufferSize); // TODO: Make general system function for use with strings!
+int8_t ESP8266_Search_For_Response (const char *response, const char *buffer, unsigned int bufferSize); // TODO: Make general system function for use with strings!
 int8_t ESP8266_Wait_For_Response (const char *response, uint32_t milliseconds); // TODO: Block until the specified response in received (in a yet to be specified buffer) or the specified duration of time in milliseconds has passed since blocking.
 // TODO: ESP8266_Wait_For_Responses (...) and return the index for the parameter from the argument list that was returned
 
@@ -165,6 +164,8 @@ int8_t ESP8266_Send_Command_AT_CIPSERVER (uint8_t mode, uint8_t port);
 
 void Monitor_Network_Communications ();
 
+//void Receive_HTTP_Request ();
+
 #define DISCOVERY_BROADCAST_PORT 4445
 #define MESSAGE_PORT 4446
 
@@ -172,9 +173,10 @@ int8_t Start_UDP_Server (uint16_t port);
 int8_t Send_UDP_Message (const char* address, uint16_t port, const char *message);
 int8_t Broadcast_UDP_Message (const char *message, uint16_t port);
 
-void Generate_Discovery_Message (); 
+int8_t Start_Discovery_Broadcast ();
+void Generate_Discovery_Message ();
 
-void Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
+int8_t Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // TODO: check for any incoming data on serial
 // TODO: Put the available data into the local buffer
 // TODO: monitor the buffer for complete requests, timeouts, errors, or malformed requests (such as may occur when overwriting two of them unwittingly due to client-server sync mishaps).

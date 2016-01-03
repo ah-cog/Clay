@@ -1,6 +1,6 @@
 #include "LEDs.h"
 
-uint8_t Enable_LEDs () {
+int8_t Enable_LEDs () {
 	(void) LED1_Init (NULL);
 	(void) LED2_Init (NULL);
 	
@@ -41,4 +41,24 @@ uint8_t Get_LED_State (uint8_t number) { // i.e., get discrete input state
 	} else if (number == LED2) {
 		return (uint8_t) LED2_GetVal (NULL);
 	}
+}
+
+int8_t Perform_Status_LED_Effect () {
+	
+	Set_LED_State (LED1, ON_CHANNEL);
+	Set_LED_State (LED2, OFF_CHANNEL);
+	Wait (50);
+	Set_LED_State (LED1, OFF_CHANNEL);
+	Set_LED_State (LED2, ON_CHANNEL);
+	Wait (50);
+	Set_LED_State (LED1, ON_CHANNEL);
+	Set_LED_State (LED2, OFF_CHANNEL);
+	Wait (50);
+	Set_LED_State (LED1, OFF_CHANNEL);
+	Set_LED_State (LED2, ON_CHANNEL);
+	Wait (50);
+	Set_LED_State (LED1, OFF_CHANNEL);
+	Set_LED_State (LED2, OFF_CHANNEL);
+	
+	return TRUE;
 }
