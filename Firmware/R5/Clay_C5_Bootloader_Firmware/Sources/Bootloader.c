@@ -73,7 +73,7 @@ void Update_Firmware ()
     uint32_t blockSize = 512;        // The number of bytes to receive.
     uint32_t startByte = 0;        // The first byte to receive in the firmware. This will be the first byte in the received block.
 
-    char *address = "192.168.2.132";
+    char *address = "http://clay.computer/firmware"; // "192.168.2.132";
     uint16_t port = 8080;
 
     char uriParameters[32] = { 0 };
@@ -96,7 +96,7 @@ void Update_Firmware ()
 
         // Get the new firmware in chunks, perform checksum on each one (retry if fail, continue to next chunk if success), write the verified chunk into flash
         startByte = blockIndex * blockSize;        // Determine the first byte to receive in the block based on the current block index.
-        sprintf (uriParameters, "/firmware?start=%d&size=%d", startByte, blockSize);
+        sprintf (uriParameters, "/firmware?startByte=%d&byteCount=%d", startByte, blockSize);
         Send_HTTP_GET_Request (address, port, uriParameters);        // HTTP GET /firmware/version
         // TODO: Inside the Send_HTTP_GET_Request (...) function, block on ESP8266_Wait_For_Response (...), but only after disabling the other communications (namely, UDP broadcasts, since that will add to the ESP8266 buffer, causing the ESP8266_Wait_For_Response (...) function to erroneously proceed, and get stuck in a timer reset loop, since it always gets some data from the UDP broadcast).
 
