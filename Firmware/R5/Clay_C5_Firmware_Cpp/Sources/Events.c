@@ -36,6 +36,7 @@
 #include "Clock.h"
 #include "wirish.h"
 #include "Mesh.h"
+#include "Drivers/MPU9250.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -106,6 +107,7 @@ extern "C"
     void I2C0_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
     {
         /* Write your code here ... */
+        i2c_tx_complete = TRUE;
     }
 
     /*
@@ -129,6 +131,7 @@ extern "C"
     void I2C0_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
     {
         /* Write your code here ... */
+        i2c_rx_complete = TRUE;
     }
 
     /*
@@ -201,6 +204,30 @@ extern "C"
     {
         /* Write your code here ... */
     }
+
+/*
+** ===================================================================
+**     Event       :  IMU_IRQ_OnPortEvent (module Events)
+**
+**     Component   :  IMU_IRQ [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void IMU_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
+{
+  /* Write your code here ... */
+    data_ready = 1;
+}
 
     /* END Events */
 

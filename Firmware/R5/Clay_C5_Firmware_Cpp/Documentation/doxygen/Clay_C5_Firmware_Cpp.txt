@@ -57,7 +57,7 @@
 - \subpage IO_12
 - \subpage IMU_FSYNC
 - \subpage IMU_CS
-- \subpage IMU_INT
+- \subpage IMU_IRQ
 - \subpage LED2
 - \subpage LED1
 - \subpage SM1

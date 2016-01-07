@@ -1,6 +1,6 @@
 <Analysispoints>
 	<Name>AnalysispointsManager</Name>
-	<ProjectPath>Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Bootloader_Firmware/SaAnalysispointsManager.apconfig</ProjectPath>
+	<ProjectPath>C:/Users/thebh/Desktop/dtf/git/clay/Firmware/R5/Clay_C5_Bootloader_Firmware/SaAnalysispointsManager.apconfig</ProjectPath>
 	<MaxNumberOfCores>1</MaxNumberOfCores>
 	<Comments>Analysispoints Manager</Comments>
 	<IgnoreAll>false</IgnoreAll>

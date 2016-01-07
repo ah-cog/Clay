@@ -59,7 +59,7 @@
 #include "IO_12.h"
 #include "IMU_FSYNC.h"
 #include "IMU_CS.h"
-#include "IMU_INT.h"
+#include "IMU_IRQ.h"
 #include "LED2.h"
 #include "LED1.h"
 #include "SM1.h"

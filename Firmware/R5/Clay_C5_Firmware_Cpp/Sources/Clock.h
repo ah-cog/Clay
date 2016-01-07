@@ -8,6 +8,8 @@
 #ifndef CLOCK_H_
 #define CLOCK_H_
 
+#define DONT_DO_WIFI_STUFF
+
 #include "PE_Types.h"
 
 #include "Drivers/MPU9250.h"
@@ -20,6 +22,7 @@ extern bool tick_1msec;
 extern bool tick_250msec;
 extern bool tick_500msec;
 extern bool tick_3000msec;
+extern uint8_t data_ready;
 
 extern int8_t Enable_Clock ();
 
