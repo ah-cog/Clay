@@ -1520,7 +1520,7 @@ PE_DEBUGHALT();
       <Main v="don&amp;apos;t generate code" />
       <ConnectPin v="don&amp;apos;t generate code" />
       <SetOperationMode v="don&amp;apos;t generate code" />
-      <GetDriverState v="don&amp;apos;t generate code" />
+      <GetDriverState v="generate code" />
     </Methods>
     <Events>
       <Event_module_name v="Events" />

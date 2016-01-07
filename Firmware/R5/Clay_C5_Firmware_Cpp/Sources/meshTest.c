@@ -63,6 +63,7 @@ void MeshTestLoop()
     Enable_PCA9552();
     upcount_hb_leds();
 
+    
     Start_MPU9250();
     upcount_hb_leds();
 
@@ -248,36 +249,36 @@ void MeshTestLoop()
 
 static void update_imu_leds(const mpu_values* remote_imu_data, Color_RGB colors[])
 {
-    if (remote_imu_data->values.x_accel < 50)
+    if (remote_imu_data->values.accel.val.x < 50)
     {
         Set_LED_Output(RGB_12, colors + 1);        //-x
         Set_LED_Output(RGB_4, colors + 0);        //+x
     }
-    else if (remote_imu_data->values.x_accel > 50)
+    else if (remote_imu_data->values.accel.val.x > 50)
     {
         Set_LED_Output(RGB_12, colors + 0);        //-x
         Set_LED_Output(RGB_4, colors + 1);        //+x
     }
 
-    if (remote_imu_data->values.y_accel < 50)
+    if (remote_imu_data->values.accel.val.y < 50)
     {
         Set_LED_Output(RGB_1, colors + 1);        //-y
         Set_LED_Output(RGB_9, colors + 0);        //+y
     }
-    else if (remote_imu_data->values.y_accel > 50)
+    else if (remote_imu_data->values.accel.val.y > 50)
     {
         Set_LED_Output(RGB_1, colors + 0);        //-y
         Set_LED_Output(RGB_9, colors + 1);        //+y
     }
 
-    if (remote_imu_data->values.z_accel > 0)        //+z
+    if (remote_imu_data->values.accel.val.z > 0)        //+z
     {
         Set_LED_Output(RGB_10, colors + 1);
         Set_LED_Output(RGB_7, colors + 1);
         Set_LED_Output(RGB_6, colors + 1);
         Set_LED_Output(RGB_3, colors + 1);
     }
-    else if (remote_imu_data->values.z_accel < 0)        //-z
+    else if (remote_imu_data->values.accel.val.z < 0)        //-z
     {
         Set_LED_Output(RGB_10, colors + 3);
         Set_LED_Output(RGB_7, colors + 3);
@@ -285,10 +286,10 @@ static void update_imu_leds(const mpu_values* remote_imu_data, Color_RGB colors[
         Set_LED_Output(RGB_3, colors + 3);
     }
 
-    if (std::abs(remote_imu_data->values.y_mag)
-    >= std::abs(remote_imu_data->values.x_mag))
+    if (std::abs(remote_imu_data->values.mag.val.y)
+    >= std::abs(remote_imu_data->values.mag.val.x))
     {
-        if (remote_imu_data->values.y_mag > 0)
+        if (remote_imu_data->values.mag.val.y > 0)
         {
             //strongest magnetic field towards y+
             Set_LED_Output(RGB_11, colors);        //y-
@@ -307,7 +308,7 @@ static void update_imu_leds(const mpu_values* remote_imu_data, Color_RGB colors[
     }
     else
     {
-        if (remote_imu_data->values.x_mag > 0)
+        if (remote_imu_data->values.mag.val.x > 0)
         {
             //strongest magnetic field towards x+
             Set_LED_Output(RGB_11, colors);        //y-

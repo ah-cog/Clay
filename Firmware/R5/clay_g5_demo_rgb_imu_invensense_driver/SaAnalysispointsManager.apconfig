@@ -1,6 +1,6 @@
 <Analysispoints>
 	<Name>AnalysispointsManager</Name>
-	<ProjectPath>C:/Users/Ben/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_rgb_imu_invensense_driver/SaAnalysispointsManager.apconfig</ProjectPath>
+	<ProjectPath>C:/Users/thebh/Desktop/dtf/git/clay/Firmware/R5/clay_g5_demo_rgb_imu_invensense_driver/SaAnalysispointsManager.apconfig</ProjectPath>
 	<MaxNumberOfCores>1</MaxNumberOfCores>
 	<Comments>Analysispoints Manager</Comments>
 	<IgnoreAll>false</IgnoreAll>
