@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "meshTest.h"
 
 // Clay's print, debug, and error messages.
 
@@ -82,6 +83,10 @@ void Application(void)
     {
         // Failure
     }
+
+#if 0
+    MeshTestLoop();
+#endif
 
     // Message queue.
 

@@ -259,6 +259,8 @@ void mesh_process_commands(void)
     }
 #endif
 
+    bool MeshIrqStatus = digitalRead(MESH_IRQ_PIN_INDEX);
+
     if (!mesh_rx_enabled)
     {
         start_mesh_rx();
@@ -450,8 +452,12 @@ uint32_t irq_handler_time;
 ///handles routing and message reception. messages are stored into a local buffer.
 void mesh_irq_handler(void)
 {
+    bool MeshIrqStatus = digitalRead(MESH_IRQ_PIN_INDEX);
+
     ++experiment_data.rx_interrupt_count;
     irq_handler_time = power_on_time_msec;
+    
+    uint8_t MeshStatus = meshRadio->statusRead();
 
     mesh_rx_enabled = false;
     rx_buf_size = 0xFF;        //0xFF is max value, that way entire message is returned.
@@ -460,6 +466,9 @@ void mesh_irq_handler(void)
     {
         stop_mesh_rx();
     }
+
+    MeshStatus = meshRadio->statusRead();
+    MeshIrqStatus = digitalRead(MESH_IRQ_PIN_INDEX);
 
     if (rx_buf_size > 0 && rx_buf_size != 0xFF)        //actual return of rx_buf_size shouldn't ever exceed 0d30. 0xFF is a default value.
     {

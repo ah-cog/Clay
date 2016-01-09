@@ -81,12 +81,7 @@ int main(void)
     PE_low_level_init();
     /*** End of Processor Expert internal initialization.                    ***/
 
-    /* Write your code here */   
-    
-#if 0
-    MeshTestLoop();
-#endif
-
+    /* Write your code here */      
     Application();
 
     /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

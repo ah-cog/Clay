@@ -25,8 +25,8 @@
 #define MESH_CMD_TERMINATION            0xEE
 //
 #define ADDRESS_1                       0
-#define ADDRESS_2                       0
-#define ADDRESS_3                       1
+#define ADDRESS_2                       1
+#define ADDRESS_3                       0
 #if !(ADDRESS_1 || ADDRESS_2 || ADDRESS_3)
 #error must define address
 #endif
