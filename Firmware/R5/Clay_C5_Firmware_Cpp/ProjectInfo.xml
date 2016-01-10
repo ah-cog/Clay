@@ -35,7 +35,6 @@
     <FLASHsize>256k</FLASHsize>
   </PROCESSOR>
   <PATHS>
-    <LinkerCommandFile>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Project_Settings\Linker_Files\ProcessorExpert.ld</LinkerCommandFile>
     <IncludePaths>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Static_Code\PDD\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Static_Code\IO_Map\</Path>
@@ -93,6 +92,7 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Project_Settings\Startup_Code\__arm_start.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Application.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Behavior.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Bootloader.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Clock.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Drivers\ESP8266.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Drivers\LEDs.c</PathName>
@@ -166,6 +166,7 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Project_Settings\Startup_Code\runtime_configuration.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Application.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Behavior.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Bootloader.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Clock.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Drivers\ESP8266.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Firmware_Cpp\Sources\Drivers\LEDs.h</PathName>

@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "meshTest.h"
+#include "Bootloader.h"
 
 // Clay's print, debug, and error messages.
 
@@ -18,7 +19,9 @@
 
 void Application(void)
 {
-
+    //todo: check this somewhere where it makes sense.
+    (void)UpdateAvailable();
+    
     uint8_t status = 0;
     Message *message = NULL;
 

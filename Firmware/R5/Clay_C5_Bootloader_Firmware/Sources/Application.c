@@ -1,8 +1,8 @@
 #include "Application.h"
+#include "Bootloader.h"
 
 void Application(void)
 {
-
     int i = 0;
     int n = 0;
     uint8_t status = 0;
@@ -18,19 +18,16 @@ void Application(void)
     status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT);
 //	Start_HTTP_Server (HTTP_SERVER_PORT);
 
-
-    //TODO: share this var with main app so that it can set it after checking with the user. It should be in a struct with another 
-    //      var that is used to tell the application that there's an update available. The struct should be noinit in both places, 
-    //      and each application should write a key to show that it has been run, so that we can keep track of state between the 
-    //      bootloader and the application. 
-    bool UserApprovedUpdate = TRUE;
-    
     //verify the firmware and check to see if an update is available. If the app is invalid or an update is available and the User OK'd it, do the update.
-    if (Verify_Firmware() == FALSE || (Has_Latest_Firmware() == FALSE && UserApprovedUpdate))
+    if (Verify_Firmware() == FALSE || (Has_Latest_Firmware() == FALSE && UserApprovedUpdate()))
     {
         Update_Firmware();
     }
 
+    //clear the application key and update vars.
+    SharedData.ApplicationKey = 0;
+    SharedData.UpdateApplication = FALSE;
+    
     //we're up to date or the user declined, jump to the main app.
     Jump_To_Application();
 

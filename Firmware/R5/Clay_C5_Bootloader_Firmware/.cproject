@@ -208,8 +208,18 @@
 									<listOptionValue builtIn="false" value="Sources/Utilities/Ring_Buffer.c"/>
 									<listOptionValue builtIn="false" value="Sources/Utilities/String.c"/>
 									<listOptionValue builtIn="false" value="Sources/main.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/FLASH1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED1.c"/>
+									<listOptionValue builtIn="false" value="Generated_Code/LED2.c"/>
+									<listOptionValue builtIn="false" value="Sources/Behavior.c"/>
+									<listOptionValue builtIn="false" value="Sources/Bootloader.c"/>
+									<listOptionValue builtIn="false" value="Sources/Drivers/LEDs.c"/>
+									<listOptionValue builtIn="false" value="Sources/Drivers/program_flash.c"/>
+									<listOptionValue builtIn="false" value="Sources/Utilities/UUID.c"/>
+									<listOptionValue builtIn="false" value="Sources/crc.c"/>
 								</option>
 								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags.85164757" name="Linker flags (-Xlinker [option])" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.ldflags"/>
+								<option id="org.eclipse.cdt.cross.arm.gnu.c.link.option.other.printmap.231521113" superClass="org.eclipse.cdt.cross.arm.gnu.c.link.option.other.printmap" value="true" valueType="boolean"/>
 								<inputType id="org.eclipse.cdt.cross.arm.gnu.c.linker.input.1831356331" superClass="org.eclipse.cdt.cross.arm.gnu.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
