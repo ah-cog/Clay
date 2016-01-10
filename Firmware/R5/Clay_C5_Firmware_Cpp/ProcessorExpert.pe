@@ -3,7 +3,7 @@
   <Header>
     <Name>Clay_C5_Firmware_Cpp</Name>
     <SavedBy>thebh</SavedBy>
-    <ModificationStamp>52</ModificationStamp>
+    <ModificationStamp>53</ModificationStamp>
     <Date>2016-01-09</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
@@ -15454,7 +15454,7 @@
           <ItemSymbol>C_RomRamAddr0</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>0</Value>
+          <Value>49152</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
           <Area />
@@ -15570,7 +15570,7 @@
           <ItemSymbol>C_RomRamAddr2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>1040</Value>
+          <Value>50191</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
           <Area />
@@ -15960,7 +15960,7 @@
       <ItemId3>13</ItemId3>
       <Value3>true</Value3>
       <ItemId4>14</ItemId4>
-      <Value4>true</Value4>
+      <Value4>false</Value4>
       <ItemId5>8</ItemId5>
       <Value5>false</Value5>
       <ItemId6>9</ItemId6>
