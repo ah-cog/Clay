@@ -35,7 +35,6 @@
     <FLASHsize>256k</FLASHsize>
   </PROCESSOR>
   <PATHS>
-    <LinkerCommandFile>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Bootloader_Firmware\Project_Settings\Linker_Files\ProcessorExpert.ld</LinkerCommandFile>
     <IncludePaths>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Bootloader_Firmware\Static_Code\PDD\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R5\Clay_C5_Bootloader_Firmware\Static_Code\IO_Map\</Path>
