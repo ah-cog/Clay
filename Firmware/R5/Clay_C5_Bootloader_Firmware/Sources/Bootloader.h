@@ -2,17 +2,6 @@
 #define BOOTLOADER_H
 
 #include "Drivers/ESP8266.h"
-#include "PE_Types.h"
-
-typedef struct shared_bootloader_data
-{
-    uint32_t ApplicationKey;
-    bool UpdateApplication;
-    bool ApplicationUpdateAvailable;
-    uint16_t pad;
-}shared_bootloader_data;
-
-extern shared_bootloader_data SharedData;
 
 uint8_t Verify_Firmware ();
 
