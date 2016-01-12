@@ -28,7 +28,7 @@ by the component.
     0x00000100
  </td><td>PORTA_PCR5 register, peripheral IO_4.</td></tr>
 <tr><td>0x40049010</td><td>PORTA_PCR4</td><td>
-    0x00000700
+    0x00000100
  </td><td>PORTA_PCR4 register, peripheral IO_4.</td></tr>
 </table>
 <br/>
@@ -166,7 +166,7 @@ registers of the peripheral(s) configured by the component.
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40049014</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000100</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000043</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
 <tr><td>24</td><td>ISF</td><td>0x00</td><td>Interrupt Status Flag</td>
 <tr><td>16 - 19</td><td>IRQC</td><td>0x00</td><td>Interrupt Configuration</td>
@@ -224,13 +224,13 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x40049010</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000700</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000743</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000100</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
 <tr><td>24</td><td>ISF</td><td>0x00</td><td>Interrupt Status Flag</td>
 <tr><td>16 - 19</td><td>IRQC</td><td>0x00</td><td>Interrupt Configuration</td>
 <tr><td>15</td><td>LK</td><td>0x00</td><td>Lock Register</td>
-<tr><td>8 - 10</td><td>MUX</td><td>0x04</td><td>Pin Mux Control</td>
+<tr><td>8 - 10</td><td>MUX</td><td>0x00</td><td>Pin Mux Control</td>
 <tr><td>6</td><td>DSE</td><td>0x00</td><td>Drive Strength Enable</td>
 <tr><td>5</td><td>ODE</td><td>0x00</td><td>Open Drain Enable</td>
 <tr><td>4</td><td>PFE</td><td>0x00</td><td>Passive Filter Enable</td>

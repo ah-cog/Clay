@@ -19,7 +19,7 @@
 
 void Application(void)
 {
-    //todo: check this somewhere where it makes sense.
+    //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
     (void)UpdateAvailable();
     
     uint8_t status = 0;

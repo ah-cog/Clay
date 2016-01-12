@@ -707,7 +707,7 @@ PE_DEBUGHALT();
             <boolgroup name="ROM/RAM Area" v="Enabled">
               <Name v="m_interrupts" />
               <Qualifier v="RX" />
-              <Address v="50176" />
+              <Address v="49152" />
               <Size v="444" />
             </boolgroup>
           </group>
@@ -718,8 +718,8 @@ PE_DEBUGHALT();
             <boolgroup name="ROM/RAM Area" v="Enabled">
               <Name v="m_text" />
               <Qualifier v="RX" />
-              <Address v="51200" />
-              <Size v="210928" />
+              <Address v="50176" />
+              <Size v="211968" />
             </boolgroup>
           </group>
           <group name="MemoryArea3">

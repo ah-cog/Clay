@@ -43,6 +43,8 @@ bool UpdateAvailable()
 //Call to jump to the bootloader and update the application.
 void Jump_To_Bootloader_And_Update_Application()
 {
+    SharedData.UpdateApplication = TRUE;
+    
     //change vector table offset register to application vector table
     SCB_VTOR = BOOT_START_ADDR & 0x1FFFFF80;
 

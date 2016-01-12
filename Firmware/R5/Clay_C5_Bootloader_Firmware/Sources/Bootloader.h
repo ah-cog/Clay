@@ -3,18 +3,30 @@
 
 #include "Drivers/ESP8266.h"
 
-uint8_t Verify_Firmware ();
+typedef struct shared_bootloader_data
+{
+    uint32_t ApplicationKey;
+    bool UpdateApplication;
+    bool ApplicationUpdateAvailable;
+    uint16_t pad;
+}shared_bootloader_data;
 
-uint8_t Has_Latest_Firmware ();
+extern shared_bootloader_data SharedData;
 
-uint32_t Calculate_Checksum_On_Bytes (const uint8_t *bytes, uint32_t length);
+extern bool UserApprovedUpdate();
 
-uint8_t Verify_Firmware_Bytes (const uint8_t *bytes, uint32_t length);
+extern uint8_t Verify_Firmware ();
 
-uint8_t Write_Firmware_Bytes (uint32_t address, const uint8_t *bytes, uint32_t length);
+extern uint8_t Has_Latest_Firmware ();
 
-void Update_Firmware ();
+extern uint32_t Calculate_Checksum_On_Bytes (const uint8_t *bytes, uint32_t length);
 
-void Jump_To_Application();
+extern uint8_t Verify_Firmware_Bytes (const uint8_t *bytes, uint32_t length);
+
+extern uint8_t Write_Firmware_Bytes (uint32_t address, const uint8_t *bytes, uint32_t length);
+
+extern void Update_Firmware ();
+
+extern void Jump_To_Application();
 
 #endif /* BOOTLOADER_H_ */
