@@ -2,13 +2,7 @@
 #include "Drivers/program_flash.h"
 #include "crc.h"
 
-#define APPLICATION_KEY_VALUE  0xA5A5A5A5U
-
-shared_bootloader_data __attribute__((section(".BootloaderSharedData"))) SharedData;
-
 uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootloader mode.
-
-
 
 /**
  * Verifies the current firmware in flash. Computes the checksum of the 
@@ -16,19 +10,8 @@ uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootl
  * of the flash memory.
  */
 uint8_t Verify_Firmware()
-{    
-    SharedData.pad = 0x1101;
-    return TRUE;
-}
-
-/**
- * Returns true if the UpdateApplication bool is true and the ApplicationKey is written with the 
- * correct value. This indicates that we entered the bootloader from the main application and the 
- * user has OK'd the firmware update.
- */
-bool UserApprovedUpdate()
 {
-    return SharedData.ApplicationKey == APPLICATION_KEY_VALUE && SharedData.UpdateApplication;
+    return TRUE;
 }
 
 /**
@@ -40,7 +23,7 @@ bool UserApprovedUpdate()
  * Returns TRUE if the checksums are the same. False if they are different.
  */
 uint8_t Has_Latest_Firmware()
-{    
+{
     return FALSE;
 }
 
@@ -90,17 +73,17 @@ void Update_Firmware ()
     uint32_t blockSize = 512;        // The number of bytes to receive.
     uint32_t startByte = 0;        // The first byte to receive in the firmware. This will be the first byte in the received block.
 
-    char *address = "192.168.2.132";
-    uint16_t port = 8080;
-
-    char uriParameters[32] = { 0 };
+    char *address = "107.170.180.158"; // 192.168.43.127"; // "107.170.180.158";
+    uint16_t port = 3000;
 
     int connection = 4;        // HACK: Get the connection used from Send_HTTP_GET_Request (...).
 
     // TODO: Get total size of firmware (from firmware description).
-    uint32_t firmwareSize = 45108;        // Total size (in bytes) of the firmware being received. // TODO: Receive this from preliminary HTTP request.
-    uint32_t bytesReceived = 0;        // Total number of verified bytes received so far.
-    uint32_t bytesWritten = 0;        // Total number of bytes written to flash.
+    int firmwareSize = 5916;     // Total size (in bytes) of the firmware being received. // TODO: Receive this from preliminary HTTP request.
+    int bytesReceived = 0;       // Total number of verified bytes received so far.
+    int bytesWritten = 0;        // Total number of bytes written to flash.
+
+    char uriParameters[64] = { 0 };
 
     //erase application from flash before getting data.
     erase_program_flash ();
@@ -108,12 +91,11 @@ void Update_Firmware ()
     // Retrieve firmware if is hasn't yet been received in its entirety.
     while (bytesReceived < firmwareSize)
     {
-
         // TODO: Download the latest firmware via HTTP request
 
         // Get the new firmware in chunks, perform checksum on each one (retry if fail, continue to next chunk if success), write the verified chunk into flash
         startByte = blockIndex * blockSize;        // Determine the first byte to receive in the block based on the current block index.
-        sprintf (uriParameters, "/firmware?start=%d&size=%d", startByte, blockSize);
+        sprintf (uriParameters, "/firmware/?startByte=%d&byteCount=%d", startByte, blockSize);
         Send_HTTP_GET_Request (address, port, uriParameters);        // HTTP GET /firmware/version
         // TODO: Inside the Send_HTTP_GET_Request (...) function, block on ESP8266_Wait_For_Response (...), but only after disabling the other communications (namely, UDP broadcasts, since that will add to the ESP8266 buffer, causing the ESP8266_Wait_For_Response (...) function to erroneously proceed, and get stuck in a timer reset loop, since it always gets some data from the UDP broadcast).
 
@@ -155,7 +137,7 @@ void Update_Firmware ()
     }
 
     // TODO: Upon successfully downloading, verifying, and writing flash to program memory, jump to program memory and start executing the new firmware.
-    Jump_To_Application();
+//    Jump_To_Application();
 }
 
 void Jump_To_Application()

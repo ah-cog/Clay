@@ -77,6 +77,7 @@ int main(void)
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
+//  Jump_To_Application();
   /* Write your code here */
   Application ();
 
