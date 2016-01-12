@@ -75,7 +75,7 @@
       <File Name="Generated_Code/IO1.c" FileDate="2016-01-09, 23:52:53" FileAge="1452412373036" FileType="45637" CompNumb="10" />
       <File Name="Static_Code/PDD/GPIO_PDD.h" FileDate="2016-01-03, 13:09:33" FileAge="1451855373717" FileType="1048576" />
       <File Name="Documentation/doxygen/clay_g5_demo_gpio.txt" FileDate="2016-01-03, 13:09:33" FileAge="1451855373479" FileType="45637" CompNumb="24" />
-      <File Name="Documentation/clay_g5_demo_gpio_SIGNALS.txt" FileDate="2016-01-11, 21:13:22" FileAge="1452575602644" FileType="3072" />
+      <File Name="Documentation/clay_g5_demo_gpio_SIGNALS.txt" FileDate="2016-01-11, 23:37:00" FileAge="1452584220154" FileType="3072" />
       <File Name="Generated_Code/Cpu.c" FileDate="2016-01-09, 23:52:52" FileAge="1452412372871" FileType="45637" CompNumb="24" />
       <File Name="Static_Code/IO_Map/MK20D7.h" FileDate="2016-01-03, 13:09:33" FileAge="1451855373661" FileType="1048576" CompNumb="24" />
       <File Name="Static_Code/PDD/PIT_PDD.h" FileDate="2016-01-03, 13:09:33" FileAge="1451855373735" FileType="1048576" />
@@ -83,7 +83,7 @@
       <File Name="Static_Code/PDD/MCM_PDD.h" FileDate="2016-01-03, 13:09:33" FileAge="1451855373726" FileType="1048576" />
       <File Name="Static_Code/PDD/WDOG_PDD.h" FileDate="2016-01-03, 13:09:33" FileAge="1451855373779" FileType="1048576" />
       <File Name="Documentation/doxygen/IO2.txt" FileDate="2016-01-03, 13:09:33" FileAge="1451855373432" FileType="45637" CompNumb="9" />
-      <File Name="Documentation/clay_g5_demo_gpio_Settings.xml" FileDate="2016-01-11, 21:13:22" FileAge="1452575602754" FileType="3072" />
+      <File Name="Documentation/clay_g5_demo_gpio_Settings.xml" FileDate="2016-01-11, 23:37:00" FileAge="1452584220293" FileType="3072" />
       <File Name="Generated_Code/LED2.h" FileDate="2016-01-09, 23:52:52" FileAge="1452412372933" FileType="45637" CompNumb="27" />
       <File Name="Generated_Code/LED_DRIVER_0_RESET.h" FileDate="2016-01-09, 23:52:52" FileAge="1452412372913" FileType="45637" CompNumb="29" />
       <File Name="Static_Code/PDD/USBDCD_PDD.h" FileDate="2016-01-03, 13:09:33" FileAge="1451855373768" FileType="1048576" />
@@ -115,5 +115,5 @@
       <File Name="Generated_Code/IO12.h" FileDate="2016-01-09, 23:52:52" FileAge="1452412372965" FileType="45637" CompNumb="17" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>26</CodeGenReference>
+  <CodeGenReference>27</CodeGenReference>
 </CodeGenerationInfo>

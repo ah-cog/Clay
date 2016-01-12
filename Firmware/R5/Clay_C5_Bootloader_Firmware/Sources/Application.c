@@ -17,13 +17,8 @@ void Application (void) {
 	status = Enable_WiFi (SSID_DEFAULT, PASSWORD_DEFAULT);
 //	Start_HTTP_Server (HTTP_SERVER_PORT);
 	
-	// Verifies that the current firmware is correct.
-	if (Verify_Firmware () == FALSE) {
-		// NOTE: The device's firmware is invalid.
-	}
-	
-	// Updates the current firmware
-	if (Has_Latest_Firmware () == FALSE) {
+	// Updates the current firmware if the current application doesn't verify or if the user has approved a pending update.
+	if (Verify_Firmware () == FALSE || Has_Latest_Firmware () == FALSE && UserApprovedUpdate() ) {
 		Update_Firmware ();
 	}
 	

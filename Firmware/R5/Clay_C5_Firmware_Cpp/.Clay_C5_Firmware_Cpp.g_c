@@ -487,7 +487,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_C5_Firmware_Cpp_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>55</ProjectModificationStamp>
+    <ProjectModificationStamp>57</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>
@@ -498,7 +498,7 @@
     <HeaderAge>1210491101</HeaderAge>
     <CodeAge>1210491101</CodeAge>
     <AsemblAge>-1</AsemblAge>
-    <GenNumMethods>11</GenNumMethods>
+    <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
     <GetClockConfiguration>false</GetClockConfiguration>
     <SetOperationMode>false</SetOperationMode>
@@ -506,6 +506,9 @@
     <DisableInt>false</DisableInt>
     <GetLLSWakeUpFlags>false</GetLLSWakeUpFlags>
     <OpenBackDoor>false</OpenBackDoor>
+    <GetFlexNVMPartitionCode>false</GetFlexNVMPartitionCode>
+    <SetFlexNVMPartition>false</SetFlexNVMPartition>
+    <SetFlexRAMFunction>false</SetFlexRAMFunction>
     <MCGAutoTrim>false</MCGAutoTrim>
     <VLPModeEnable>false</VLPModeEnable>
     <VLPModeDisable>false</VLPModeDisable>

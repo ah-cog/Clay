@@ -47,6 +47,12 @@ MEMORY {
 /* Define output sections */
 SECTIONS
 {
+  /*data shared between application and bootloader. The NOLOAD parameter is used to prevent jumps between applications from causing re-initialization of the data.*/
+  .BootloaderSharedData 0x20007FF8 (NOLOAD):
+  {
+    KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
+  } > m_data_20000000
+
   /* The startup code goes first into INTERNAL_FLASH */
   .interrupts :
   {

@@ -418,7 +418,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_g5_demo_gpio_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>26</ProjectModificationStamp>
+    <ProjectModificationStamp>27</ProjectModificationStamp>
   </Options>
   <CpuID_20>
     <Generated>false</Generated>
@@ -429,7 +429,7 @@
     <HeaderAge>1210695322</HeaderAge>
     <CodeAge>1210695322</CodeAge>
     <AsemblAge>-1</AsemblAge>
-    <GenNumMethods>11</GenNumMethods>
+    <GenNumMethods>14</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
     <GetClockConfiguration>false</GetClockConfiguration>
     <SetOperationMode>false</SetOperationMode>
@@ -437,6 +437,9 @@
     <DisableInt>false</DisableInt>
     <GetLLSWakeUpFlags>false</GetLLSWakeUpFlags>
     <OpenBackDoor>false</OpenBackDoor>
+    <GetFlexNVMPartitionCode>false</GetFlexNVMPartitionCode>
+    <SetFlexNVMPartition>false</SetFlexNVMPartition>
+    <SetFlexRAMFunction>false</SetFlexRAMFunction>
     <MCGAutoTrim>false</MCGAutoTrim>
     <VLPModeEnable>false</VLPModeEnable>
     <VLPModeDisable>false</VLPModeDisable>

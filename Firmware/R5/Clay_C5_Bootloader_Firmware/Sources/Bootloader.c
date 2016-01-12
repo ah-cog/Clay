@@ -2,7 +2,31 @@
 #include "Drivers/program_flash.h"
 #include "crc.h"
 
+
+//defines
+#define APPLICATION_KEY_VALUE  0xA5A5A5A5U
+#define BOOT_START_ADDR        0x00000000U
+
+//data types
+
+//global vars -- this guy is placed at the end of RAM, 0x20007FF8. This is 8 bytes from the end, which is the size of the struct.
+shared_bootloader_data __attribute__((section(".BootloaderSharedData"))) SharedData;
+
 uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootloader mode.
+
+bool UserApprovedUpdate()
+{
+    bool rval = FALSE;
+    
+    if(SharedData.ApplicationKey == APPLICATION_KEY_VALUE && SharedData.UpdateApplication)
+    {
+        rval = TRUE;
+    }
+    
+    SharedData.ApplicationKey = 0;
+    
+    return rval;
+}
 
 /**
  * Verifies the current firmware in flash. Computes the checksum of the 
@@ -24,6 +48,7 @@ uint8_t Verify_Firmware()
  */
 uint8_t Has_Latest_Firmware()
 {
+    //TODO: implement this. If the firmware IS out of date, set the value in the SharedData struct.
     return FALSE;
 }
 
