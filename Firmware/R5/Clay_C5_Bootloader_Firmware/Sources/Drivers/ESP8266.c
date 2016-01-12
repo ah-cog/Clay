@@ -1744,8 +1744,6 @@ static int8_t Receive_HTTP_GET_Response (int connection, uint32_t milliseconds) 
 	httpResponseBuffer[0] = NULL;
 	httpResponseBufferSize = 0;
 	
-	int i;
-	
 	// TODO: while receive not timed out
 	while (!hasReceivedResponse) {
 		
@@ -1908,92 +1906,6 @@ static int8_t Receive_HTTP_GET_Response (int connection, uint32_t milliseconds) 
 			hasReceivedResponse = TRUE;
 //			break;
 		}
-		
-//		if (hasReceivedResponse) {
-//			
-//			// Update the endianness of the received data for storage.
-//			// i.e., Move [0] to [3]
-//			//            [1] to [2]
-//			//            [2] to [1]
-//			//            [3] to [0]
-//			
-//			for (i = 0; i < httpResponseBufferSize; i += 4) { // when i = 256 what happens when size is 258? i+=4 => 260
-//				char updatedBytes[4] = { 0 };
-//				
-//				// Create the new byte ordering.
-//				if (httpResponseBufferSize == 258 && i == 256) {
-//					updatedBytes[0] = ((i + 3) < httpResponseBufferSize ? httpResponseBuffer[i + 3] : 0xFF); // httpResponseBuffer[i + 3];
-//					updatedBytes[1] = ((i + 2) < httpResponseBufferSize ? httpResponseBuffer[i + 2] : 0xFF); // httpResponseBuffer[i + 2];
-//					updatedBytes[2] = ((i + 1) < httpResponseBufferSize ? httpResponseBuffer[i + 1] : 0xFF); // httpResponseBuffer[i + 1];
-//					updatedBytes[3] = ((i + 0) < httpResponseBufferSize ? httpResponseBuffer[i + 0] : 0xFF); // httpResponseBuffer[i + 0];
-//				} else {
-//					updatedBytes[0] = ((i + 3) < httpResponseBufferSize ? httpResponseBuffer[i + 3] : 0xFF); // httpResponseBuffer[i + 3];
-//					updatedBytes[1] = ((i + 2) < httpResponseBufferSize ? httpResponseBuffer[i + 2] : 0xFF); // httpResponseBuffer[i + 2];
-//					updatedBytes[2] = ((i + 1) < httpResponseBufferSize ? httpResponseBuffer[i + 1] : 0xFF); // httpResponseBuffer[i + 1];
-//					updatedBytes[3] = ((i + 0) < httpResponseBufferSize ? httpResponseBuffer[i + 0] : 0xFF); // httpResponseBuffer[i + 0];
-//				}
-//				
-//				// Copy the new byte ordering into memory. The conditionals prevent a buffer overflow.
-////				httpResponseBuffer[i + 0] = updatedBytes[0];
-////				httpResponseBuffer[i + 1] = updatedBytes[1];
-////				httpResponseBuffer[i + 2] = updatedBytes[2];
-////				httpResponseBuffer[i + 3] = updatedBytes[3];
-//				
-//				if ((i + 0) < httpResponseBufferSize) {
-//					httpResponseBuffer[i + 0] = updatedBytes[0];
-//				}
-//				
-//				if ((i + 1) < httpResponseBufferSize) {
-//					httpResponseBuffer[i + 1] = updatedBytes[1];
-//				}
-//				
-//				if ((i + 2) < httpResponseBufferSize) {
-//					httpResponseBuffer[i + 2] = updatedBytes[2];
-//				}
-//				
-//				if ((i + 3) < httpResponseBufferSize) {
-//					httpResponseBuffer[i + 3] = updatedBytes[3];
-//				}
-//				
-//				// Handle edge case that occurs when incrementing the index by 4 will skip some of the remaining bytes.
-//				// e.g., When httpResponseBufferSize is 258 and the iterator has been increased to i = 256 over the course of looping.
-//				//       Incrementing i += 4 will produce i = 260, which will cause the loop to break, and the final 2 bytes will be ignored.
-//				/*
-//				if (httpResponseBufferSize > 0 && ((httpResponseBufferSize - i) < 4)) {
-//					
-//					// Create the new byte ordering.
-//					updatedBytes[0] = (((i + 4) + 3) < httpResponseBufferSize ? httpResponseBuffer[(i + 4) + 3] : 0); // httpResponseBuffer[i + 3];
-//					updatedBytes[1] = (((i + 4) + 2) < httpResponseBufferSize ? httpResponseBuffer[(i + 4) + 2] : 0); // httpResponseBuffer[i + 2];
-//					updatedBytes[2] = (((i + 4) + 1) < httpResponseBufferSize ? httpResponseBuffer[(i + 4) + 1] : 0); // httpResponseBuffer[i + 1];
-//					updatedBytes[3] = (((i + 4) + 0) < httpResponseBufferSize ? httpResponseBuffer[(i + 4) + 0] : 0); // httpResponseBuffer[i + 0];
-//					
-//					// Copy the new byte ordering into memory.
-//					httpResponseBuffer[(i + 4) + 0] = updatedBytes[0];
-//					httpResponseBuffer[(i + 4) + 1] = updatedBytes[1];
-//					httpResponseBuffer[(i + 4) + 2] = updatedBytes[2];
-//					httpResponseBuffer[(i + 4) + 3] = updatedBytes[3];
-//					
-////					if ((i + 3 + 1) < httpResponseBufferSize) {
-////						
-////					}
-////					
-////					if ((i + 3 + 2) < httpResponseBufferSize) {
-////						
-////					}
-////					
-////					if ((i + 3 + 3) < httpResponseBufferSize) {
-////						
-////					}
-//					
-////					if ((i + 4) >= httpResponseBufferSize) {
-////						
-////					}
-//					
-//				}
-//				*/
-//			}
-//			
-//		}
 	}
 	
 	return response;
@@ -2163,8 +2075,7 @@ uint8_t Send_HTTP_GET_Request (const char *address, uint16_t port, const char *u
 	
 	// Get the status the TCP connection.
 	
-	// TODO: Before closing the conneciton, make sure it's connected!
-	status = ESP8266_Close_Connection (channel);
+//	status = ESP8266_Close_Connection (channel);
 	
 	return TRUE; // TODO: Replace with success code.
 }

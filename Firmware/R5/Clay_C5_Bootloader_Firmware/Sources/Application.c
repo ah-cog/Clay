@@ -27,15 +27,6 @@ void Application (void) {
 		Update_Firmware ();
 	}
 	
-	// Disable interrupts
-	NVICICER0 = 0xFFFFFFFF;
-	NVICICER1 = 0xFFFFFFFF;
-	NVICICER2 = 0xFFFFFFFF;
-	NVICICER3 = 0xFFFFFFFF;
-	
-	// Jump to application
-	Jump_To_Application ();
-	
 	// TODO: Jump to the updated program memory.
 	
 	for (;;);
