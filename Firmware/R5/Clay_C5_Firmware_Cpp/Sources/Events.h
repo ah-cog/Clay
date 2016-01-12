@@ -52,7 +52,7 @@
 #include "IO_12.h"
 #include "IMU_FSYNC.h"
 #include "IMU_CS.h"
-#include "IMU_INT.h"
+#include "IMU_IRQ.h"
 #include "LED2.h"
 #include "LED1.h"
 #include "SM1.h"
@@ -204,6 +204,26 @@ void SM1_OnBlockSent(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  IMU_IRQ_OnPortEvent (module Events)
+**
+**     Component   :  IMU_IRQ [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void IMU_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

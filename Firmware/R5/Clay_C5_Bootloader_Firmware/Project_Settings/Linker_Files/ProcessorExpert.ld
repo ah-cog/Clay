@@ -10,7 +10,7 @@
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2015-12-21, 15:59, # CodeGen: 7 */
+/*##     Date/Time : 2016-01-09, 16:57, # CodeGen: 14 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -38,7 +38,7 @@ __stack_size = 0x0400;                 /* required amount of stack */
 
 MEMORY {
   m_interrupts (RX) : ORIGIN = 0x00000000, LENGTH = 0x000001BC
-  m_text      (RX) : ORIGIN = 0x00000410, LENGTH = 0x0000BBF0
+  m_text      (RX) : ORIGIN = 0x00000410, LENGTH = 0x0000BBEF
   m_data      (RW) : ORIGIN = 0x1FFF8000, LENGTH = 0x00008000
   m_data_20000000 (RW) : ORIGIN = 0x20000000, LENGTH = 0x00008000
   m_cfmprotrom  (RX) : ORIGIN = 0x00000400, LENGTH = 0x00000010
@@ -47,6 +47,12 @@ MEMORY {
 /* Define output sections */
 SECTIONS
 {
+  /*data shared between application and bootloader. The NOLOAD parameter is used to prevent jumps between applications from causing re-initialization of the data.*/
+  .BootloaderSharedData 0x20007FF8 (NOLOAD):
+  {
+    KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
+  } > m_data_20000000
+
   /* The startup code goes first into INTERNAL_FLASH */
   .interrupts :
   {

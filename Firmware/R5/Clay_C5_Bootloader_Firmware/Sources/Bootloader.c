@@ -2,7 +2,13 @@
 #include "Drivers/program_flash.h"
 #include "crc.h"
 
+#define APPLICATION_KEY_VALUE  0xA5A5A5A5U
+
+shared_bootloader_data __attribute__((section(".BootloaderSharedData"))) SharedData;
+
 uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootloader mode.
+
+
 
 /**
  * Verifies the current firmware in flash. Computes the checksum of the 
@@ -10,8 +16,19 @@ uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootl
  * of the flash memory.
  */
 uint8_t Verify_Firmware()
-{
+{    
+    SharedData.pad = 0x1101;
     return TRUE;
+}
+
+/**
+ * Returns true if the UpdateApplication bool is true and the ApplicationKey is written with the 
+ * correct value. This indicates that we entered the bootloader from the main application and the 
+ * user has OK'd the firmware update.
+ */
+bool UserApprovedUpdate()
+{
+    return SharedData.ApplicationKey == APPLICATION_KEY_VALUE && SharedData.UpdateApplication;
 }
 
 /**
@@ -23,7 +40,7 @@ uint8_t Verify_Firmware()
  * Returns TRUE if the checksums are the same. False if they are different.
  */
 uint8_t Has_Latest_Firmware()
-{
+{    
     return FALSE;
 }
 
