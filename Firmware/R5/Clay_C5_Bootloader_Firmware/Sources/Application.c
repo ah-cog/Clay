@@ -1,39 +1,45 @@
 #include "Application.h"
-#include "Bootloader.h"
 
-void Application(void)
-{
-    int i = 0;
-    int n = 0;
-    uint8_t status = 0;
-
-    Initialize_Unit_UUID();
-
-    status = Enable_Clock();
-    status = Start_Clock();
-
+void Application (void) {
+	
+	int i = 0;
+	int n = 0;
+	uint8_t status = 0;
+	
+	Initialize_Unit_UUID ();
+	
+	status = Enable_Clock ();
+	status = Start_Clock ();
+	
 //	Wait (1000); // Wait for ESP8266 to turn on.
-    status = Enable_ESP8266();
-    Wait(500);
-    status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT);
+	status = Enable_ESP8266 ();
+	Wait (500);
+	status = Enable_WiFi (SSID_DEFAULT, PASSWORD_DEFAULT);
 //	Start_HTTP_Server (HTTP_SERVER_PORT);
-
-    //verify the firmware and check to see if an update is available. If the app is invalid or an update is available and the User OK'd it, do the update.
-    if (Verify_Firmware() == FALSE || (Has_Latest_Firmware() == FALSE && UserApprovedUpdate()))
-    {
-        Update_Firmware();
-    }
-
-    //clear the application key and update vars.
-    SharedData.ApplicationKey = 0;
-    SharedData.UpdateApplication = FALSE;
-    
-    //we're up to date or the user declined, jump to the main app.
-    Jump_To_Application();
-
-    for (;;)
-        ;
-
+	
+	// Verifies that the current firmware is correct.
+	if (Verify_Firmware () == FALSE) {
+		// NOTE: The device's firmware is invalid.
+	}
+	
+	// Updates the current firmware
+	if (Has_Latest_Firmware () == FALSE) {
+		Update_Firmware ();
+	}
+	
+	// Disable interrupts
+	NVICICER0 = 0xFFFFFFFF;
+	NVICICER1 = 0xFFFFFFFF;
+	NVICICER2 = 0xFFFFFFFF;
+	NVICICER3 = 0xFFFFFFFF;
+	
+	// Jump to application
+	Jump_To_Application ();
+	
+	// TODO: Jump to the updated program memory.
+	
+	for (;;);
+	
 //	for (;;) {
 //		
 ////		Send_HTTP_Request ("192.168.1.105", 8080, "test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test");

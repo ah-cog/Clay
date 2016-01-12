@@ -4,7 +4,7 @@
 #include "PE_Types.h"
 
 #define APP_START_ADDR                0x0000C000U
-#define APP_END_ADDR                  0x0003FFFFU
+#define APP_END_ADDR                  0x00040000U
 #define FLASH_MEMORY_PAGE_SIZE        0x00000800U
 #define APP_CHECKSUM_ADDRESS          0x0003FFFDU
 
