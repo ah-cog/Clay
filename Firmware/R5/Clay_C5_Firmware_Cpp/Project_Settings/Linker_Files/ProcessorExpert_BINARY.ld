@@ -4,13 +4,13 @@
 /*##                                   */
 /*##     Filename  : ProcessorExpert.ld */
 /*##                                   */
-/*##     Project   : clay_g5_demo_gpio */
+/*##     Project   : Clay_C5_Firmware_Cpp */
 /*##                                   */
 /*##     Processor : MK20DX256VLH7     */
 /*##                                   */
 /*##     Compiler  : GNU C Compiler    */
 /*##                                   */
-/*##     Date/Time : 2016-01-11, 21:13, # CodeGen: 25 */
+/*##     Date/Time : 2016-01-09, 16:58, # CodeGen: 11 */
 /*##                                   */
 /*##     Abstract  :                   */
 /*##                                   */
@@ -41,12 +41,18 @@ MEMORY {
   m_text      (RX) : ORIGIN = 0x0000C400, LENGTH = 0x00033C00
   m_data      (RW) : ORIGIN = 0x1FFF8000, LENGTH = 0x00008000
   m_data_20000000 (RW) : ORIGIN = 0x20000000, LENGTH = 0x00008000
-  m_cfmprotrom  (RX) : ORIGIN = 0x00000400, LENGTH = 0x00000010
 }
 
 /* Define output sections */
 SECTIONS
 {
+  /*data shared between application and bootloader. The NOLOAD parameter is used to prevent jumps between applications from causing re-initialization of the data.*/
+  .BootloaderSharedData 0x20007FF8 (NOLOAD):
+  {
+    KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
+  } > m_data_20000000
+  
+  
   /* The startup code goes first into INTERNAL_FLASH */
   .interrupts :
   {
@@ -55,13 +61,6 @@ SECTIONS
     KEEP(*(.vectortable)) /* Startup code */
     . = ALIGN(4);
   } > m_interrupts
-
-  .cfmprotect :
-  {
-    . = ALIGN(4);
-	KEEP(*(.cfmconfig))	/* Flash Configuration Field (FCF) */
-	. = ALIGN(4);
-  } > m_cfmprotrom
 
   /* The program code and other data goes into INTERNAL_FLASH */
   .text :
