@@ -14,7 +14,7 @@
       <File Name="Documentation/doxygen/ESP8266_CHIP_EN.txt" FileDate="2016-01-03, 13:10:36" FileAge="1451855436766" FileType="45637" CompNumb="13" />
       <File Name="Sources/main.c" FileDate="2016-01-06, 22:14:17" FileAge="1452147257099" FileType="128" />
       <File Name="Generated_Code/Timer_1ms.c" FileDate="2016-01-03, 19:18:19" FileAge="1451877499110" FileType="45637" CompNumb="20" />
-      <File Name="Documentation/Clay_C5_Firmware_Cpp_SIGNALS.txt" FileDate="2016-01-11, 23:46:13" FileAge="1452584773437" FileType="3072" />
+      <File Name="Documentation/Clay_C5_Firmware_Cpp_SIGNALS.txt" FileDate="2016-01-11, 23:56:56" FileAge="1452585416818" FileType="3072" />
       <File Name="Generated_Code/IO_8.h" FileDate="2016-01-03, 19:09:53" FileAge="1451876993855" FileType="45637" CompNumb="43" />
       <File Name="Generated_Code/IO_8.c" FileDate="2016-01-03, 19:09:53" FileAge="1451876993847" FileType="45637" CompNumb="43" />
       <File Name="Generated_Code/ESP8266_CHIP_EN.h" FileDate="2016-01-03, 19:09:54" FileAge="1451876994289" FileType="45637" CompNumb="13" />
@@ -151,5 +151,5 @@
       <File Name="Static_Code/PDD/ADC_PDD.h" FileDate="2016-01-03, 13:10:36" FileAge="1451855436206" FileType="1048576" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>19</CodeGenReference>
+  <CodeGenReference>20</CodeGenReference>
 </CodeGenerationInfo>
