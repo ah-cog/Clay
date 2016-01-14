@@ -487,7 +487,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_C5_Firmware_Cpp_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>57</ProjectModificationStamp>
+    <ProjectModificationStamp>58</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>

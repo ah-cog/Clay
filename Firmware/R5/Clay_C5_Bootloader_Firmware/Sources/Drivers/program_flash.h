@@ -20,7 +20,7 @@ extern uint16_t erase_program_flash_page(uint32_t addr);
 extern uint16_t write_program_block(uint32_t destination, uint8_t * data, uint32_t length);
 
 //sets up the hardware checksum module.
-extern void init_checksum();
+extern void init_checksum(uint32_t tot, uint32_t totr, uint32_t fxor, uint32_t tcrc);
 
 //computes the checksum of the application binary.
 extern uint16_t compute_checksum();
