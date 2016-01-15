@@ -17,12 +17,16 @@ void Application(void)
     Wait(500);
     status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT);
 //	Start_HTTP_Server (HTTP_SERVER_PORT);
+    
+    if ((status = Update_Firmware ()) == TRUE) {
+    	// TODO: Post successful download operations (i.e., update shared variables, store checksum, jump to program).
+    }
 
 // Updates the current firmware if the current application doesn't verify or if the user has approved a pending update.
-    if (Verify_Firmware() == FALSE || (Has_Latest_Firmware() == FALSE && UserApprovedUpdate()))
-    {
-        Update_Firmware();
-    }
+//    if (Verify_Firmware() == FALSE || (Has_Latest_Firmware() == FALSE && UserApprovedUpdate()))
+//    {
+//        Update_Firmware();
+//    }
 
     // Disable interrupts
     NVICICER0 = 0xFFFFFFFF;

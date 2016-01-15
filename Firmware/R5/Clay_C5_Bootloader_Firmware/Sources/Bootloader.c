@@ -116,7 +116,8 @@ uint16_t Calculate_Checksum_On_Bytes(const uint8_t *data, uint32_t size)
 uint8_t Verify_Firmware_Bytes(const uint8_t *bytes, uint32_t length)
 {
     uint16_t received_checksum = bytes[0] | (bytes[1] << 8);
-    uint32_t computed_checksum = Calculate_Checksum_On_Bytes(bytes + 2, length - 2);
+//    uint32_t computed_checksum = Calculate_Checksum_On_Bytes(bytes + 2, length - 2);
+    uint32_t computed_checksum = Calculate_Checksum_On_Bytes(bytes, length);
     return received_checksum == computed_checksum;
 }
 
@@ -132,27 +133,33 @@ uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t le
 
 //uint8_t test[1024] = {0};
 
-void Update_Firmware()
+uint8_t Update_Firmware()
 {
-    uint8_t result = NULL;
-    uint32_t blockIndex = 0;        // The current block index to receive, verify, and write to flash.
-    uint32_t blockSize = 512;        // The number of bytes to receive.
-    uint32_t startByte = 0;        // The first byte to receive in the firmware. This will be the first byte in the received block.
+	uint8_t result = NULL;
+	uint32_t blockIndex = 0;        // The current block index to receive, verify, and write to flash.
+	uint32_t blockSize = FIRMWARE_BLOCK_SIZE;        // The number of bytes to receive.
+	uint32_t startByte = 0;        // The first byte to receive in the firmware. This will be the first byte in the received block.
 
-    char *address = "107.170.180.158";        // 192.168.43.127"; // "107.170.180.158";
-    uint16_t port = 3000;
+	char *address = FIRMWARE_SERVER_ADDRESS;
+	uint16_t port = FIRMWARE_SERVER_PORT;
 
-    int connection = 4;        // HACK: Get the connection used from Send_HTTP_GET_Request (...).
+	int connection = 4;        // HACK: Get the connection used from Send_HTTP_GET_Request (...).
 
-// TODO: Get total size of firmware (from firmware description).
-    int firmwareSize = 5916;        // Total size (in bytes) of the firmware being received. // TODO: Receive this from preliminary HTTP request.
-    int bytesReceived = 0;        // Total number of verified bytes received so far.
-    int bytesWritten = 0;        // Total number of bytes written to flash.
+	// TODO: Get total size of firmware (from firmware description).
+	int firmwareSize = DEFAULT_FIRMWARE_SIZE; // Total size (in bytes) of the firmware being received.
+	int firmwareChecksum = DEFAULT_FIRMWARE_CHECKSUM;
+	int bytesReceived = 0; // Total number of verified bytes received so far.
+	int bytesWritten = 0; // Total number of bytes written to flash.
 
     char uriParameters[64] = { 0 };
 
 //erase application from flash before getting data.
     erase_program_flash();
+    
+    // Retrieve firmware size from the server.
+    sprintf (uriParameters, "/firmware/size/");
+	Send_HTTP_GET_Request (address, port, uriParameters);        // HTTP GET /firmware/version
+	firmwareSize = atoi (httpResponseBuffer);
 
 // Retrieve firmware if is hasn't yet been received in its entirety.
     while (bytesReceived < firmwareSize)
@@ -168,8 +175,13 @@ void Update_Firmware()
 //        strncpy(firmwareBuffer, connectionDataQueue[connection], connectionDataQueueSize[connection]);        // Copy the received data into a response buffer.
 
         // Verify the received data.
-        if ((result = Verify_Firmware_Bytes(httpResponseBuffer, httpResponseBufferSize)) != NULL)
-        {
+//        if ((result = Verify_Firmware_Bytes(httpResponseBuffer, httpResponseBufferSize)) != NULL)
+//        {
+        
+        	// TODO: Implement per-block checksum!
+//        	if ((result = Verify_Firmware_Bytes (httpResponseBuffer, httpResponseBufferSize)) != NULL)
+//        	{
+//        	}
 
             // Update the number of received bytes.
             bytesReceived = bytesReceived + httpResponseBufferSize;
@@ -192,15 +204,30 @@ void Update_Firmware()
 
             }
 
-        }
-        else
-        {
-
-            // TODO: Retry receiving the segment.
-        }
+//        }
+//        else
+//        {
+//
+//            // TODO: Retry receiving the segment.
+//        }
 
         // 
     }
+    
+    // Retrieve firmware checksum from the server.
+	sprintf (uriParameters, "/firmware/checksum/");
+	Send_HTTP_GET_Request (address, port, uriParameters);
+	firmwareChecksum = atoi (httpResponseBuffer);
+    
+    // TODO: Verify the entire program in flash. Compare the computed CRC-16 checksum to the received CRC-16 checksum.
+    if ((result = Verify_Firmware_Bytes (APP_START_ADDR, bytesWritten)) != NULL)
+	{
+    	if (firmwareChecksum == result) {
+    		return TRUE;
+    	}
+	}
+    
+    return FALSE;
 
 // TODO: Upon successfully downloading, verifying, and writing flash to program memory, jump to program memory and start executing the new firmware.
 //    Jump_To_Application();
