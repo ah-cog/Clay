@@ -6,23 +6,27 @@
 #define APP_START_ADDR                0x0000C000U
 #define APP_END_ADDR                  0x00040000U
 #define FLASH_MEMORY_PAGE_SIZE        0x00000800U
-#define APP_CHECKSUM_ADDRESS          0x0003FFFDU
+
+// The checksum of the application firmware is stored in flash memory 
+// at locations 0x3FFFE and 0x3FFFF.
+#define APP_CHECKSUM_ADDRESS          0x0003FFFEU
+#define APP_CHECKSUM_SIZE             2
 
 extern volatile bool flash_operation_completed;
 
-//erases the entire program flash
-extern uint16_t erase_program_flash();
+// Erases the entire program flash
+extern uint16_t Erase_Program_Flash ();
 
-//erases the page of program flash containing the address
-extern uint16_t erase_program_flash_page(uint32_t addr);
+// Erases the page of program flash containing the address
+extern uint16_t Erase_Program_Flash_Page (uint32_t addr);
 
-//writes data to the program flash
-extern uint16_t write_program_block(uint32_t destination, uint8_t * data, uint32_t length);
+// Writes data to the program flash
+extern uint16_t Write_Program_Block (uint32_t destination, uint8_t *data, uint32_t length);
 
-//sets up the hardware checksum module.
-extern void init_checksum(uint32_t tot, uint32_t totr, uint32_t fxor, uint32_t tcrc);
+// Writes the specified data to flash memory.
+extern uint16_t Write_Program_Checksum (uint16_t checksum);
 
-//computes the checksum of the application binary.
-extern uint16_t compute_checksum();
+// Reads the checksum of the application firmware.
+extern uint16_t Read_Program_Checksum ();
 
 #endif /* PROGRAM_FLASH_H */

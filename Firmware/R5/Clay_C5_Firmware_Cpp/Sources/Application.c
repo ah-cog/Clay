@@ -112,7 +112,7 @@ void Application(void)
 
     // TODO: Generate SSID for AP according to regular expression and set up access point to facilitate discovery.
 
-#if !defined DONT_DO_WIFI_STUFF
+//#if !defined DONT_DO_WIFI_STUFF
     if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE)
     {
         // Failure
@@ -120,7 +120,7 @@ void Application(void)
 
     if ((status = Start_HTTP_Server(HTTP_SERVER_PORT)) != TRUE)
     {
-        // Failure
+        // Failure 
     }
 
     if ((Start_UDP_Server(MESSAGE_PORT)) != TRUE)
@@ -132,7 +132,7 @@ void Application(void)
     {
         // Failure
     }
-#endif
+//#endif
 
     for (;;)
     {

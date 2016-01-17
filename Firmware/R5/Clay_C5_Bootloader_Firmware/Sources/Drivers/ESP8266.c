@@ -19,6 +19,9 @@
 
 uint8_t Enable_ESP8266 () {
 	
+	// Wait for a short time to give the ESP8266 hardware to receive power and initialize
+	Wait (500);
+	
 	// Initialize the ESP8266 device data structure
 	deviceData.handle   = ESP8266_Serial_Init (&deviceData);
 	deviceData.isSent   = FALSE;
@@ -1870,7 +1873,7 @@ static int8_t Receive_HTTP_GET_Response (int connection, uint32_t milliseconds) 
 //					bytesToReceiveThisTime = bytesToReceiveThisTime + 0;
 //				}
 				
-				if (connectionDataQueueSize[connection] < 512) {
+				if (connectionDataQueueSize[connection] < 512 /* FIRMWARE_BLOCK_SIZE */ ) {
 					httpResponseBufferSize = httpResponseBufferSize + 1;
 					httpResponseBufferSize = httpResponseBufferSize + 1;
 					httpResponseBufferSize = httpResponseBufferSize + 1;
