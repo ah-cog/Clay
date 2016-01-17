@@ -30,7 +30,7 @@ static void boot_jump(uint32_t address);
 
 //Returns true if an update is available and writes the ApplicationKey value so 
 //        the bootloader will know that the application has run.
-bool UpdateAvailable()
+bool Update_Available()
 {
     if(SharedData.ApplicationKey != APPLICATION_KEY_VALUE)
     {

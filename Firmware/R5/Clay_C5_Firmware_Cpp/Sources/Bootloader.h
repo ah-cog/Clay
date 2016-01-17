@@ -5,8 +5,8 @@
  *      Author: thebh
  */
 
-#ifndef BOOTLOADER_H_
-#define BOOTLOADER_H_
+#ifndef BOOTLOADER_H
+#define BOOTLOADER_H
 
 //includes
 #include "PE_Types.h"
@@ -29,10 +29,10 @@ extern shared_bootloader_data SharedData;
 
 //Returns true if an update is available and writes the ApplicationKey value so 
 //        the bootloader will know that the application has run.
-extern bool UpdateAvailable();
+extern bool Update_Available ();
 
 //Call to jump to the bootloader and update the application.
 extern void Jump_To_Bootloader_And_Update_Application();
 
 
-#endif /* BOOTLOADER_H_ */
+#endif /* BOOTLOADER_H */
