@@ -2,9 +2,9 @@
 <PEproject>
   <Header>
     <Name>Clay_C5_Bootloader_Firmware</Name>
-    <SavedBy>thebh</SavedBy>
-    <ModificationStamp>57</ModificationStamp>
-    <Date>2016-01-11</Date>
+    <SavedBy>mokogobo</SavedBy>
+    <ModificationStamp>58</ModificationStamp>
+    <Date>2016-01-14</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>84</ProjectCompNumb>
+    <ProjectCompNumb>87</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>

@@ -3,6 +3,13 @@
 
 #include "Drivers/ESP8266.h"
 
+#define FIRMWARE_SERVER_ADDRESS "192.168.16.180" // "107.170.180.158"
+#define FIRMWARE_SERVER_PORT 3000
+
+#define DEFAULT_FIRMWARE_CHECKSUM 0x0000
+#define DEFAULT_FIRMWARE_SIZE 0 // The total size of the firmware to retrieve from the server.
+#define FIRMWARE_BLOCK_SIZE 512 // The number of bytes to request from the firmware server in a single request.
+
 typedef struct shared_bootloader_data
 {
     uint32_t ApplicationKey;
@@ -25,7 +32,7 @@ extern uint8_t Verify_Firmware_Bytes(const uint8_t *bytes, uint32_t length);
 
 extern uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t length);
 
-extern void Update_Firmware();
+extern uint8_t Update_Firmware();
 
 extern void Jump_To_Application();
 
