@@ -89,9 +89,29 @@
 #include "nrf24L01plus.h"
 #endif
 
+#define LED_COUNT       12
+static uint8_t led_index = 0;
+static uint8_t color_index = 0;
+
+static color_rgb colors[] =
+        {
+                { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
+                { LED_MODE_MED, LED_MODE_OFF, LED_MODE_OFF },        //r
+                { LED_MODE_OFF, LED_MODE_MED, LED_MODE_OFF },        //g
+                { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_MED },        //b
+                { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg
+                { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
+                { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }        //rb
+        };
+
+static bool CycleAllLeds = TRUE;
+
+static void increment_rgb_led(void);
+
 /*lint -save  -e97LED_DRIVER_0 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
+
 {
     /* Write your local variable definition here */
     bool led_state = FALSE;
@@ -111,98 +131,96 @@ int main(void)
 
     delay_n_msec(5);
 
-    color_rgb
-    colors[] =
-            {
-                    { LED_MODE_OFF, LED_MODE_OFF, LED_MODE_OFF },        //off
-                    { LED_MODE_MED, LED_MODE_MED, LED_MODE_OFF },        //rg
-                    { LED_MODE_OFF, LED_MODE_MED, LED_MODE_MED },        //gb
-                    { LED_MODE_MED, LED_MODE_OFF, LED_MODE_MED }        //rb
-            };
-
     for (;;)
     {
         if (tick_1msec)
         {
             tick_1msec = FALSE;
+            if (!(power_on_time_msec % 5000))
+            {
+                CycleAllLeds = !CycleAllLeds;
+            }
 
             if (!(power_on_time_msec % 30))
             {
-                get_mpu_readings(&v);
+                if (!CycleAllLeds)
+                {
+                    get_mpu_readings(&v);
 
-                if (v.x_accel < 50)
-                {
-                    set_led_output(RGB_12, colors + 1);        //-x
-                    set_led_output(RGB_4, colors + 0);        //+x
-                }
-                else if (v.x_accel > 50)
-                {
-                    set_led_output(RGB_12, colors + 0);        //-x
-                    set_led_output(RGB_4, colors + 1);        //+x
-                }
-
-                if (v.y_accel < 50)
-                {
-                    set_led_output(RGB_1, colors + 1);        //-y
-                    set_led_output(RGB_9, colors + 0);        //+y
-                }
-                else if (v.y_accel > 50)
-                {
-                    set_led_output(RGB_1, colors + 0);        //-y
-                    set_led_output(RGB_9, colors + 1);        //+y
-                }
-
-                if (v.z_accel > 0)        //+z
-                {
-                    set_led_output(RGB_10, colors + 1);
-                    set_led_output(RGB_7, colors + 1);
-                    set_led_output(RGB_6, colors + 1);
-                    set_led_output(RGB_3, colors + 1);
-                }
-                else if (v.z_accel < 0)        //-z
-                {
-                    set_led_output(RGB_10, colors + 3);
-                    set_led_output(RGB_7, colors + 3);
-                    set_led_output(RGB_6, colors + 3);
-                    set_led_output(RGB_3, colors + 3);
-                }
-
-                if (abs(v.y_mag) >= abs(v.x_mag))
-                {
-                    if (v.y_mag > 0)
+                    if (v.x_accel < 50)
                     {
-                        //strongest magnetic field towards y+
-                        set_led_output(RGB_11, colors);              //y-
-                        set_led_output(RGB_8, colors);              //x+
-                        set_led_output(RGB_5, colors + 1);          //y+
-                        set_led_output(RGB_2, colors);             //x-
+                        set_led_output(RGB_12, colors + 4);        //-x
+                        set_led_output(RGB_4, colors + 0);        //+x
+                    }
+                    else if (v.x_accel > 50)
+                    {
+                        set_led_output(RGB_12, colors + 0);        //-x
+                        set_led_output(RGB_4, colors + 4);        //+x
+                    }
+
+                    if (v.y_accel < 50)
+                    {
+                        set_led_output(RGB_1, colors + 4);        //-y
+                        set_led_output(RGB_9, colors + 0);        //+y
+                    }
+                    else if (v.y_accel > 50)
+                    {
+                        set_led_output(RGB_1, colors + 0);        //-y
+                        set_led_output(RGB_9, colors + 4);        //+y
+                    }
+
+                    if (v.z_accel > 0)        //+z
+                    {
+                        set_led_output(RGB_10, colors + 4);
+                        set_led_output(RGB_7, colors + 4);
+                        set_led_output(RGB_6, colors + 4);
+                        set_led_output(RGB_3, colors + 4);
+                    }
+                    else if (v.z_accel < 0)        //-z
+                    {
+                        set_led_output(RGB_10, colors + 7);
+                        set_led_output(RGB_7, colors + 7);
+                        set_led_output(RGB_6, colors + 7);
+                        set_led_output(RGB_3, colors + 7);
+                    }
+
+                    if (abs(v.y_mag) >= abs(v.x_mag))
+                    {
+                        if (v.y_mag > 0)
+                        {
+                            //strongest magnetic field towards y+
+                            set_led_output(RGB_11, colors);              //y-
+                            set_led_output(RGB_8, colors);              //x+
+                            set_led_output(RGB_5, colors + 1);          //y+
+                            set_led_output(RGB_2, colors);             //x-
+                        }
+                        else
+                        {
+                            //strongest magnetic field towards y-
+                            set_led_output(RGB_11, colors + 1);          //y-
+                            set_led_output(RGB_8, colors);              //x+
+                            set_led_output(RGB_5, colors);              //y+
+                            set_led_output(RGB_2, colors);             //x-
+                        }
                     }
                     else
                     {
-                        //strongest magnetic field towards y-
-                        set_led_output(RGB_11, colors + 1);          //y-
-                        set_led_output(RGB_8, colors);              //x+
-                        set_led_output(RGB_5, colors);              //y+
-                        set_led_output(RGB_2, colors);             //x-
-                    }
-                }
-                else
-                {
-                    if (v.x_mag > 0)
-                    {
-                        //strongest magnetic field towards x+
-                        set_led_output(RGB_11, colors);              //y-
-                        set_led_output(RGB_8, colors + 1);          //x+
-                        set_led_output(RGB_5, colors);              //y+
-                        set_led_output(RGB_2, colors);             //x-
-                    }
-                    else
-                    {
-                        //strongest magnetic field towards x-
-                        set_led_output(RGB_11, colors);              //y-
-                        set_led_output(RGB_8, colors);              //x+
-                        set_led_output(RGB_5, colors);              //y+
-                        set_led_output(RGB_2, colors + 1);         //x-
+                        if (v.x_mag > 0)
+                        {
+                            //strongest magnetic field towards x+
+                            set_led_output(RGB_11, colors);              //y-
+                            set_led_output(RGB_8, colors + 1);          //x+
+                            set_led_output(RGB_5, colors);              //y+
+                            set_led_output(RGB_2, colors);             //x-
+                        }
+                        else
+                        {
+                            //strongest magnetic field towards x-
+                            set_led_output(RGB_11, colors);              //y-
+                            set_led_output(RGB_8, colors);              //x+
+                            set_led_output(RGB_5, colors);              //y+
+                            set_led_output(RGB_2, colors + 1);         //x-
+                        }
                     }
                 }
             }
@@ -218,24 +236,52 @@ int main(void)
         {
             tick_500msec = FALSE;
 
+            if (CycleAllLeds)
+            {
+                increment_rgb_led();
+            }
             //toggle LEDs
             LED1_PutVal(LED1_DeviceData, !led_state);
             LED2_PutVal(LED2_DeviceData, led_state);
+            IO1_PutVal(NULL, led_state);
+            IO2_PutVal(NULL, led_state);
+            IO3_PutVal(NULL, led_state);
+            IO4_PutVal(NULL, led_state);
+            IO5_PutVal(NULL, led_state);
+            IO6_PutVal(NULL, led_state);
+            IO7_PutVal(NULL, led_state);
+            IO8_PutVal(NULL, led_state);
+            IO9_PutVal(NULL, led_state);
+            IO10_PutVal(NULL, led_state);
+            IO11_PutVal(NULL, led_state);
+            IO12_PutVal(NULL, led_state);
             led_state = !led_state;
         }
 
     }
 
     /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-  #ifdef PEX_RTOS_START
-    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-  #endif
-  /*** End of RTOS startup code.  ***/
-  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-  for(;;){}
-  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+    /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+#ifdef PEX_RTOS_START
+    PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
+    /*** End of RTOS startup code.  ***/
+    /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+    for (;;
+            )
+    {
+    }
+    /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
+
+static void increment_rgb_led(void)
+{
+    for (led_index = 0; led_index < LED_COUNT; ++led_index)
+    {
+        set_led_output((rgb_led) led_index, colors + color_index);
+    }
+    color_index = ((color_index + 1) % 3) + 1;
+}
 
 /* END main */
 /*!
