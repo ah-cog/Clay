@@ -1,10 +1,6 @@
 #include "Bootloader.h"
 #include "Drivers/program_flash.h"
 
-//defines
-#define APPLICATION_KEY_VALUE  0xA5A5A5A5U
-#define BOOT_START_ADDR        0x00000000U
-
 //data types
 
 //global vars -- this guy is placed at the end of RAM, 0x20007FF8. This is 8 bytes from the end, which is the size of the struct.
@@ -12,15 +8,55 @@ shared_bootloader_data __attribute__((section(".BootloaderSharedData"))) SharedD
 
 uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootloader mode.
 
-bool UserApprovedUpdate()
+uint8_t Initialize_Bootloader () {
+	uint8_t result = FALSE;
+	
+	// Reset the status of the availability of a new update.
+	// The bootloader checks with the firmware server to see if there's an update available.
+	SharedData.ApplicationUpdateAvailable = FALSE;
+	
+	// Reset the request to update firmware if the bootloader was not invoked from the application
+	if (SharedData.ApplicationKey != APPLICATION_KEY_VALUE) {
+		SharedData.UpdateApplication = FALSE;
+	}
+	
+	result = TRUE;
+	
+	return result;
+}
+
+/**
+ * Returns true if the user requests a firmware update. In essence, this 
+ * determines whether or not the update was acknowledged and explicitly 
+ * approved by the user.
+ * 
+ * This is called every time the bootloader is executed (i.e., every time the 
+ * device receives power).
+ * 
+ * This function checks if the "application key" (ApplicationKey) is set to 
+ * the particular "signature" value that is only written when the main 
+ * application firmware is executed. If the "application key" is equal to this 
+ * value, the main application firmware must have been executed prior to 
+ * the bootloader, indicating that the main application jumped back into 
+ * the bootloader. This is usually done to start the firmware update process.
+ * 
+ * Before returning, this function will always reset the "application key" 
+ * (ApplicationKey) to 0.
+ */
+bool Has_User_Requested_Update ()
 {
     bool rval = FALSE;
 
+    // Check if the value of the "application key" is equal to the value 
+    // written by the main application firmware. If so, the bootloader was 
+    // jumped into from the main application. To indicate this, set the
+    // return value to true.
     if (SharedData.ApplicationKey == APPLICATION_KEY_VALUE && SharedData.UpdateApplication)
     {
         rval = TRUE;
     }
 
+    // Reset the "application key".
     SharedData.ApplicationKey = 0;
 
     return rval;
@@ -31,9 +67,9 @@ bool UserApprovedUpdate()
  * current flash and compares it to the expected value stored at the end 
  * of the flash memory.
  */
-uint8_t Verify_Firmware()
+uint8_t Verify_Firmware ()
 {
-    return TRUE;
+	return TRUE;
 }
 
 /**
@@ -44,17 +80,41 @@ uint8_t Verify_Firmware()
  * 
  * Returns TRUE if the checksums are the same. False if they are different.
  */
-uint8_t Has_Latest_Firmware()
+uint8_t Has_Latest_Firmware ()
 {
+	uint8_t result = TRUE; // Return value. Default to true.
+	uint16_t firmwareChecksum = NULL; // The stored checksum value.
+	uint16_t latestFirmwareChecksum = NULL; // The checksum of the latest firmware.
+	
+	char *address = FIRMWARE_SERVER_ADDRESS;
+	uint16_t port = FIRMWARE_SERVER_PORT;
+	char uriParameters[64] = { 0 };
+	
+	// Retrieve firmware checksum from the server.
+	sprintf (uriParameters, "/clay/firmware/checksum/");
+	Send_HTTP_GET_Request (address, port, uriParameters);
+	latestFirmwareChecksum = atoi (httpResponseBuffer);
+	
+	// Get the stored checksum
+	firmwareChecksum = Read_Program_Checksum ();
+	
+	// Check if the checksum of the application firmware matches the checksum 
+	// of the latest firmware received from the server.
+	if (firmwareChecksum != latestFirmwareChecksum) {
+		result = FALSE;
+	}
+	
     //TODO: implement this. If the firmware IS out of date, set the value in the SharedData struct.
-    return FALSE;
+    return result;
 }
 
-////////////////////////////////////////////////////////
-///CRC16 implementation from https://stackoverflow.com/questions/10564491/function-to-calculate-a-crc16-checksum
-////////////////////////////////////////////////////////
-#define CRC16 0x8005
-uint16_t Calculate_Checksum_On_Bytes(const uint8_t *data, uint32_t size)
+/**
+ * Performs a cyclic redundancy check (CRC) according to the CRC-16 algorithm.
+ * 
+ * This implementation is based on an implementation on StackOverflow 
+ * (https://stackoverflow.com/questions/10564491/function-to-calculate-a-crc16-checksum).
+ */
+uint16_t Calculate_Checksum_On_Bytes (const uint8_t *data, uint32_t size)
 {
     uint16_t out = 0;
     int bits_read = 0, bit_flag;
@@ -111,31 +171,34 @@ uint16_t Calculate_Checksum_On_Bytes(const uint8_t *data, uint32_t size)
 /**
  * Verifies that the received block was successfully received.
  * 
- * Returns TRUE if the bytes are valid, and FALSE otherwise.
+ * Returns true if the bytes are valid, and false otherwise.
  */
-uint8_t Verify_Firmware_Bytes(const uint8_t *bytes, uint32_t length)
+uint8_t Verify_Firmware_Bytes(const uint8_t *bytes, uint32_t length, uint16_t expected_checksum)
 {
-    uint16_t received_checksum = bytes[0] | (bytes[1] << 8);
+//    uint16_t received_checksum = bytes[0] | (bytes[1] << 8);
 //    uint32_t computed_checksum = Calculate_Checksum_On_Bytes(bytes + 2, length - 2);
-    uint32_t computed_checksum = Calculate_Checksum_On_Bytes(bytes, length);
-    return received_checksum == computed_checksum;
+    uint32_t computed_checksum = Calculate_Checksum_On_Bytes (bytes, length);
+    return expected_checksum == computed_checksum;
 }
 
 /**
  * Writes the received block to flash and verifies that the correct data was written.
  * 
- * Returns TRUE if the bytes are valid, and FALSE otherwise.
+ * Returns true if the bytes are valid, and false otherwise.
  */
-uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t length)
+uint8_t Write_Firmware_Bytes (uint32_t address, const uint8_t *bytes, uint32_t length)
 {
-    return write_program_block(APP_START_ADDR + address, bytes, length) == 0;
+    return Write_Program_Block (APP_START_ADDR + address, bytes, length) == 0;
 }
 
-//uint8_t test[1024] = {0};
-
+/**
+ * Retrieves the latest firmware from the firmware server and writes it to 
+ * flash memory.
+ */
 uint8_t Update_Firmware()
 {
-	uint8_t result = NULL;
+	uint8_t status = NULL; // Stores the result of called functions, indicating the status of the operation of this function.
+	uint8_t result = FALSE; // Return value. Default to false, indicating failure to update the firmware.
 	uint32_t blockIndex = 0;        // The current block index to receive, verify, and write to flash.
 	uint32_t blockSize = FIRMWARE_BLOCK_SIZE;        // The number of bytes to receive.
 	uint32_t startByte = 0;        // The first byte to receive in the firmware. This will be the first byte in the received block.
@@ -147,39 +210,39 @@ uint8_t Update_Firmware()
 
 	// TODO: Get total size of firmware (from firmware description).
 	int firmwareSize = DEFAULT_FIRMWARE_SIZE; // Total size (in bytes) of the firmware being received.
-	int firmwareChecksum = DEFAULT_FIRMWARE_CHECKSUM;
+	uint16_t firmwareChecksum = DEFAULT_FIRMWARE_CHECKSUM;
 	int bytesReceived = 0; // Total number of verified bytes received so far.
 	int bytesWritten = 0; // Total number of bytes written to flash.
 
     char uriParameters[64] = { 0 };
 
-//erase application from flash before getting data.
-    erase_program_flash();
+    // Erase application from flash before getting data.
+    Erase_Program_Flash ();
     
     // Retrieve firmware size from the server.
-    sprintf (uriParameters, "/firmware/size/");
+    sprintf (uriParameters, "/clay/firmware/size/");
 	Send_HTTP_GET_Request (address, port, uriParameters);        // HTTP GET /firmware/version
 	firmwareSize = atoi (httpResponseBuffer);
 
-// Retrieve firmware if is hasn't yet been received in its entirety.
+	// Retrieve firmware if is hasn't yet been received in its entirety.
     while (bytesReceived < firmwareSize)
     {
         // TODO: Download the latest firmware via HTTP request
 
         // Get the new firmware in chunks, perform checksum on each one (retry if fail, continue to next chunk if success), write the verified chunk into flash
         startByte = blockIndex * blockSize;        // Determine the first byte to receive in the block based on the current block index.
-        sprintf(uriParameters, "/firmware/?startByte=%d&byteCount=%d", startByte, blockSize);
+        sprintf(uriParameters, "/clay/firmware/?startByte=%d&byteCount=%d", startByte, blockSize);
         Send_HTTP_GET_Request(address, port, uriParameters);        // HTTP GET /firmware/version
         // TODO: Inside the Send_HTTP_GET_Request (...) function, block on ESP8266_Wait_For_Response (...), but only after disabling the other communications (namely, UDP broadcasts, since that will add to the ESP8266 buffer, causing the ESP8266_Wait_For_Response (...) function to erroneously proceed, and get stuck in a timer reset loop, since it always gets some data from the UDP broadcast).
 
 //        strncpy(firmwareBuffer, connectionDataQueue[connection], connectionDataQueueSize[connection]);        // Copy the received data into a response buffer.
 
         // Verify the received data.
-//        if ((result = Verify_Firmware_Bytes(httpResponseBuffer, httpResponseBufferSize)) != NULL)
+//        if ((status = Verify_Firmware_Bytes(httpResponseBuffer, httpResponseBufferSize)) != NULL)
 //        {
         
         	// TODO: Implement per-block checksum!
-//        	if ((result = Verify_Firmware_Bytes (httpResponseBuffer, httpResponseBufferSize)) != NULL)
+//        	if ((status = Verify_Firmware_Bytes (httpResponseBuffer, httpResponseBufferSize)) != NULL)
 //        	{
 //        	}
 
@@ -187,7 +250,7 @@ uint8_t Update_Firmware()
             bytesReceived = bytesReceived + httpResponseBufferSize;
 
             // Write the received bytes to application memory in flash.
-            if ((result = Write_Firmware_Bytes(startByte, httpResponseBuffer, httpResponseBufferSize)) != NULL)
+            if ((status = Write_Firmware_Bytes(startByte, httpResponseBuffer, httpResponseBufferSize)) != NULL)
             {
 
                 // The byte was successfully written.
@@ -215,40 +278,70 @@ uint8_t Update_Firmware()
     }
     
     // Retrieve firmware checksum from the server.
-	sprintf (uriParameters, "/firmware/checksum/");
+	sprintf (uriParameters, "/clay/firmware/checksum/");
 	Send_HTTP_GET_Request (address, port, uriParameters);
 	firmwareChecksum = atoi (httpResponseBuffer);
     
-    // TODO: Verify the entire program in flash. Compare the computed CRC-16 checksum to the received CRC-16 checksum.
-    if ((result = Verify_Firmware_Bytes (APP_START_ADDR, bytesWritten)) != NULL)
+    // Verify the correctness of the entire program that has been written to flash memory.
+	// To do so, compare the computed CRC-16 checksum to the received CRC-16 checksum.
+	if ((status = Verify_Firmware_Bytes (APP_START_ADDR, bytesWritten, firmwareChecksum)) != NULL)
 	{
-    	if (firmwareChecksum == result) {
-    		return TRUE;
+    	// Write checksum to flash and (TODO) verify it.
+    	if ((status = Write_Program_Checksum (firmwareChecksum)) == 0) {
+			// TODO: store result of above function and only return TRUE if it's been written successfully!
+    		
+    		// The firmware updated successfully, so reset the flag indicating a new firmware update is available.
+    		SharedData.ApplicationUpdateAvailable = FALSE;
+    		SharedData.UpdateApplication = FALSE;
+						
+			// Compare the computed checksum of the received data to the expected checksum.
+			// If they're equal, return true, indicating that the firmware was successfully 
+			// written to flash and verified.
+			return result = TRUE;
+			
+    	} else {
+    		
+    		// The write to memory failed!
+    		
     	}
 	}
     
-    return FALSE;
+    return result;
 
 // TODO: Upon successfully downloading, verifying, and writing flash to program memory, jump to program memory and start executing the new firmware.
 //    Jump_To_Application();
 }
 
-
-void boot_jump(uint32_t address)
+/**
+ * Writes the start address of the main application firmware to the program 
+ * counter.
+ */
+void Update_Program_Counter (uint32_t address)
 {
-//Load new stack pointer address
+	// Load new stack pointer address
     asm("LDR SP, [R0]");
-//Load new program counter address
+    // Load new program counter address
     asm("LDR PC, [R0,#4]");
 }
 
-void Jump_To_Application()
+/**
+ * Disables all interrupts.
+ */
+void Disable_Interrupts ()
 {
-//change vector table offset register to application vector table
+	NVICICER0 = 0xFFFFFFFF;
+	NVICICER1 = 0xFFFFFFFF;
+	NVICICER2 = 0xFFFFFFFF;
+	NVICICER3 = 0xFFFFFFFF;
+}
+
+void Jump_To_Application ()
+{
+	//change vector table offset register to application vector table
     SCB_VTOR = APP_START_ADDR & 0x1FFFFF80;
 
-//set stack pointer/pc to the reset interrupt.
-    boot_jump(APP_START_ADDR);
+    //set stack pointer/pc to the reset interrupt.
+    Update_Program_Counter (APP_START_ADDR);
 }
 
 

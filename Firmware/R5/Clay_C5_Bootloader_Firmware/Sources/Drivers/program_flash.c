@@ -13,16 +13,20 @@
 
 bool checksum_initialized = FALSE;
 volatile bool flash_operation_completed;
-
-//erases the entire program flash
-uint16_t erase_program_flash()
+/**
+ * Erases the entire program flash.
+ * 
+ * Erases the entire segment of flash memory dedicated to the main application 
+ * firmware.
+ */
+uint16_t Erase_Program_Flash ()
 {
     uint32_t address = APP_START_ADDR;
     uint16_t rval = 0;
 
     while (!rval && address < APP_END_ADDR)
     {
-        rval = erase_program_flash_page(address);
+        rval = Erase_Program_Flash_Page (address);
 
         if (rval > 0) break;
 
@@ -32,60 +36,76 @@ uint16_t erase_program_flash()
     return rval;
 }
 
-//erases the page of program flash containing the address
-uint16_t erase_program_flash_page(uint32_t addr)
+/**
+ * Erases the page of program flash containing the address.
+ */
+uint16_t Erase_Program_Flash_Page (uint32_t address)
 {
-    //set up erase block operation
-    uint16_t rval = FLASH1_Erase(FLASH1_DeviceData, addr, FLASH_MEMORY_PAGE_SIZE);
+    // Set up erase block operation
+    uint16_t rval = FLASH1_Erase(FLASH1_DeviceData, address, FLASH_MEMORY_PAGE_SIZE);
 
     flash_operation_completed = FALSE;
 
     while (!rval && !flash_operation_completed)
     {
-        //run operation by calling flash1_main
-        FLASH1_Main(FLASH1_DeviceData );
+        // Run operation by calling flash1_main
+        FLASH1_Main (FLASH1_DeviceData);
     }
 
     return rval;
 }
 
-//writes data to the program flash
-uint16_t write_program_block(uint32_t destination, uint8_t * data, uint32_t length)
+/**
+ * Writes data to the program flash.
+ */
+uint16_t Write_Program_Block (uint32_t destination, uint8_t *data, uint32_t length)
 {
-    //set up flash operation
-    uint16_t rval = FLASH1_Write(FLASH1_DeviceData, data, destination, length);
+    // Set up flash operation
+    uint16_t rval = FLASH1_Write (FLASH1_DeviceData, data, destination, length);
 
     flash_operation_completed = FALSE;
     while (!rval && !flash_operation_completed)
     {
-        //run operation by calling flash1_main
-        FLASH1_Main(FLASH1_DeviceData );
+        // Run operation by calling flash1_main
+        FLASH1_Main (FLASH1_DeviceData);
     }
 
     return rval;
 }
 
-static uint32_t poly = CRC16_POLY;
-//static uint32_t tot = 0;
-//static uint32_t totr = 0;
-//static uint32_t fxor = 0;
-//static uint32_t tcrc = 0;
-
-void init_checksum(uint32_t tot, uint32_t totr, uint32_t fxor, uint32_t tcrc)
+/**
+ * Writes the specified data to flash memory. Since the checksum only requires 
+ * two bytes, only the first two bytes of the specified data will be coped to 
+ * flash.
+ */
+uint16_t Write_Program_Checksum (uint16_t checksum)
 {
-//    if (checksum_initialized) return;
-    SIM_SCGC6 |= SIM_SCGC6_CRC_MASK;
-    CRC_Config(poly, tot, totr, fxor, tcrc);        //use polynomial given above, don't transpose on read or write, don't read bits xor'd, do 16-bit crc.
-    checksum_initialized = TRUE;
+	// Get pointer to the checksum data
+	uint8_t *data = (uint8_t *) &checksum;
+	
+	// Set up flash operation
+	uint16_t rval = FLASH1_Write (FLASH1_DeviceData, data, APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE);
+
+	flash_operation_completed = FALSE;
+	while (!rval && !flash_operation_completed)
+	{
+		// Run operation by calling flash1_main
+		FLASH1_Main (FLASH1_DeviceData);
+	}
+
+	return rval;
 }
 
-//computes the checksum of the application binary.
-uint16_t compute_checksum()
+uint16_t Read_Program_Checksum ()
 {
-    if (!checksum_initialized)
-    {
-//        init_checksum();
-    }
-    //use seed vlue of 0
-    return (uint16_t) CRC_Cal_16(0, (uint8_t *) APP_START_ADDR, APP_END_ADDR - APP_START_ADDR - 2);
+	uint16_t result = NULL; // Return value. Default to NULL.
+	uint16_t *checksum = NULL; // Pointer to the checksum address in the flash memory.
+	
+	// Point to the checksum memory location.
+	checksum = (uint16_t *) APP_CHECKSUM_ADDRESS;
+	
+	// Copy the stored checksum into the return value.
+	result = *checksum;
+	
+	return result;
 }

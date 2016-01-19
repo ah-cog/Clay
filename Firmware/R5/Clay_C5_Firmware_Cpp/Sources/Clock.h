@@ -8,7 +8,7 @@
 #ifndef CLOCK_H_
 #define CLOCK_H_
 
-#define DONT_DO_WIFI_STUFF
+#define DONT_DO_WIFI_STUFF 1
 
 #include "PE_Types.h"
 

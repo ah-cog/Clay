@@ -191,10 +191,10 @@ void Monitor_Periodic_Events()
 //		message = Create_Message (discoveryMessage);
 //		Queue_Outgoing_Message ("255.255.255.255", message);
 
-#if !defined DONT_DO_WIFI_STUFF
+//#if !defined DONT_DO_WIFI_STUFF
         outMessage = Create_Message(discoveryMessage);
         Queue_Outgoing_Message("255.255.255.255", outMessage);
-#endif
+//#endif
 //		Queue_Message (&outgoingMessageQueue, outMessage);
 //		Delete_Message (outMessage);
 
