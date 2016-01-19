@@ -218,47 +218,94 @@ int8_t Start_Light_Behavior () {
 	return TRUE;
 }
 
-int8_t Perform_Channel_Light_Effect () {
+int8_t Perform_Channel_Light_Effect (uint8_t reverse) {
+	
 	int i;
-	for (i = 1; i <= 12; i++) {
-		Set_LED_Output ((RGB_LED) i,  &onColor);
+	
+	if (!reverse) {
+		
+		for (i = 1; i <= 12; i++) {
+			Set_LED_Output ((RGB_LED) i,  &onColor);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &offColor);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &colorA);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &offColor);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &colorB);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &offColor);
+			Wait (20);
+		}
+	
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &onColor); }
 		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &offColor);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
 		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &colorA);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorA); }
 		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &offColor);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
 		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &colorB);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorB); }
 		Wait (20);
-		Set_LED_Output ((RGB_LED) i,  &offColor);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (20);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &onColor); }
+		Wait (20);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (20);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorA); }
+		Wait (50);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (80);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorB); }
+		Wait (100);
+		for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (20);
+		
+	} else {
+		
+		for (i = 12; i >= 1; i--) {
+			Set_LED_Output ((RGB_LED) i,  &onColor);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &offColor);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &colorA);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &offColor);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &colorB);
+			Wait (20);
+			Set_LED_Output ((RGB_LED) i,  &offColor);
+			Wait (20);
+		}
+	
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &onColor); }
+		Wait (20);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (20);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &colorA); }
+		Wait (20);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (20);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &colorB); }
+		Wait (20);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (20);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &onColor); }
+		Wait (20);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (20);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &colorA); }
+		Wait (50);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &offColor); }
+		Wait (80);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &colorB); }
+		Wait (100);
+		for (i = 12; i >= 1; i--) { Set_LED_Output ((RGB_LED) i,  &offColor); }
 		Wait (20);
 	}
-
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &onColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorA); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorB); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &onColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorA); }
-	Wait (50);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (80);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &colorB); }
-	Wait (100);
-	for (i = 1; i <= 12; i++) { Set_LED_Output ((RGB_LED) i,  &offColor); }
-	Wait (20);
 	
 	return TRUE;
 }

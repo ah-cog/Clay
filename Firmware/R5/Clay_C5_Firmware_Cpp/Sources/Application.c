@@ -19,15 +19,17 @@
 
 void Application(void)
 {
-    //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
-    (void)UpdateAvailable();
-    
     uint8_t status = 0;
     Message *message = NULL;
 
     // Initialize Clay
 
     Initialize_Unit_UUID();
+    
+    // Initialize bootloader.
+    //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
+//	bool is_update_available = FALSE;
+	Initialize_Bootloader ();
 
     // Clock.
 
@@ -72,7 +74,7 @@ void Application(void)
         // Failure
     }
 
-    if ((status = Perform_Channel_Light_Effect()) != TRUE)
+    if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE)
     {
         // Failure
     }
@@ -165,6 +167,18 @@ void Application(void)
             }
             Delete_Message(message);
         }
+        
+        // Perform operating system operations.
+        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
+		is_update_available = Update_Available ();
+		//if (is_update_available) {
+		if (SharedData.UpdateApplication) {
+			
+			// TODO: Disable all interrupts!
+			
+			// Jump to the bootloader.
+			Jump_To_Bootloader_And_Update_Application ();
+		}
 
         // Perform behavior.
         if (currentBehaviorConstruct != NULL)

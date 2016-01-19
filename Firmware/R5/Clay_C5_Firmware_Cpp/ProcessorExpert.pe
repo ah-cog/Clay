@@ -3,8 +3,8 @@
   <Header>
     <Name>Clay_C5_Firmware_Cpp</Name>
     <SavedBy>mokogobo</SavedBy>
-    <ModificationStamp>58</ModificationStamp>
-    <Date>2016-01-16</Date>
+    <ModificationStamp>61</ModificationStamp>
+    <Date>2016-01-18</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>94</ProjectCompNumb>
+    <ProjectCompNumb>103</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>

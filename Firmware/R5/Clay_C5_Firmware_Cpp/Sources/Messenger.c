@@ -451,6 +451,40 @@ int8_t Process_Incoming_Message (Message *message) {
 			
 			result = TRUE;
 			
+		} else if (strncmp (token, "update", strlen ("update")) == 0) {
+			
+			// Write to the flag in the flash memory shared with the bootloader.
+			// This indicates to the bootloader that an update has been requested.
+//			SharedData.ApplicationUpdateAvailable = TRUE;
+			
+			// Perform operating system operations.
+			//todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
+			is_update_available = Update_Available ();
+			if (is_update_available) {
+				SharedData.UpdateApplication = TRUE;
+			}
+			
+			if (SharedData.UpdateApplication) {
+				
+			    // Disable all interrupts before jumping to the application.
+			    Disable_Interrupts ();
+			    
+			    // TODO: Reset the "application key" to indicate the bootloader.
+			    // Reset the "application key".
+//				SharedData.ApplicationKey = BOOTLOADER_KEY_VALUE;
+			    SharedData.ApplicationKey = APPLICATION_KEY_VALUE;
+				
+//				if(SharedData.ApplicationKey != APPLICATION_KEY_VALUE)
+//				{
+//					SharedData.ApplicationKey = APPLICATION_KEY_VALUE;
+//				}
+				
+				// Jump to the bootloader.
+				Jump_To_Bootloader_And_Update_Application ();
+			}
+			
+			result = TRUE;
+			
 		}
 			
 	}

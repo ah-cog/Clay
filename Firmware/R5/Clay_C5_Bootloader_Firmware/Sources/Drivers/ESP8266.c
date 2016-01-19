@@ -2078,7 +2078,7 @@ uint8_t ESP8266_Close_Connection (uint8_t connection) {
 	}
 	
 	// Wait for a short period of time before allowing additional AT commands.
-	Wait (300);
+	Wait (100);
 	
 }
 

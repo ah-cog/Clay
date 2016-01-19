@@ -12,6 +12,9 @@
 #include "PE_Types.h"
 
 //defines
+#define APPLICATION_KEY_VALUE  0xA5A5A5A5U // The value that gets written into the shared variable.
+#define BOOTLOADER_KEY_VALUE   0x00000000U
+#define BOOT_START_ADDR        0x00000000U
 
 //data types
 typedef struct shared_bootloader_data
@@ -24,12 +27,17 @@ typedef struct shared_bootloader_data
 
 //global vars
 extern shared_bootloader_data SharedData;
+extern bool is_update_available;
 
 //prototypes
+
+extern uint8_t Initialize_Bootloader ();
 
 //Returns true if an update is available and writes the ApplicationKey value so 
 //        the bootloader will know that the application has run.
 extern bool Update_Available ();
+
+void Disable_Interrupts ();
 
 //Call to jump to the bootloader and update the application.
 extern void Jump_To_Bootloader_And_Update_Application();

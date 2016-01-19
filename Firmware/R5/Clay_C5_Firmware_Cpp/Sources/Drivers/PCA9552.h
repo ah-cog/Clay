@@ -77,6 +77,6 @@ extern void Set_LED_Output_Mode (RGB_Channel * led, Color_RGB * output_color);
 
 extern int8_t Start_Light_Behavior ();
 
-extern int8_t Perform_Channel_Light_Effect ();
+extern int8_t Perform_Channel_Light_Effect (uint8_t reverse);
 
 #endif /* LED_DRIVER_PCA9552_H */

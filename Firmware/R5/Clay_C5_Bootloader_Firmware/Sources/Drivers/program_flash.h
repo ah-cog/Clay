@@ -12,6 +12,11 @@
 #define APP_CHECKSUM_ADDRESS          0x0003FFFEU
 #define APP_CHECKSUM_SIZE             2
 
+// The size of the firmware is stored in flash memory as an integer (4 bytes) 
+// at locations 0x3FFFA through 0x3FFFD.
+#define APP_CHECKSUM_ADDRESS          0x0003FFFEU
+#define APP_CHECKSUM_SIZE             2
+
 extern volatile bool flash_operation_completed;
 
 // Erases the entire program flash

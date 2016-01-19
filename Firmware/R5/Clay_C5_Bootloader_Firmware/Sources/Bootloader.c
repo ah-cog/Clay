@@ -1,16 +1,29 @@
 #include "Bootloader.h"
 #include "Drivers/program_flash.h"
 
-//defines
-#define APPLICATION_KEY_VALUE  0xA5A5A5A5U // The value that gets written into the shared variable.
-#define BOOT_START_ADDR        0x00000000U
-
 //data types
 
 //global vars -- this guy is placed at the end of RAM, 0x20007FF8. This is 8 bytes from the end, which is the size of the struct.
 shared_bootloader_data __attribute__((section(".BootloaderSharedData"))) SharedData;
 
 uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootloader mode.
+
+uint8_t Initialize_Bootloader () {
+	uint8_t result = FALSE;
+	
+	// Reset the status of the availability of a new update.
+	// The bootloader checks with the firmware server to see if there's an update available.
+	SharedData.ApplicationUpdateAvailable = FALSE;
+	
+	// Reset the request to update firmware if the bootloader was not invoked from the application
+	if (SharedData.ApplicationKey != APPLICATION_KEY_VALUE) {
+		SharedData.UpdateApplication = FALSE;
+	}
+	
+	result = TRUE;
+	
+	return result;
+}
 
 /**
  * Returns true if the user requests a firmware update. In essence, this 
@@ -276,6 +289,10 @@ uint8_t Update_Firmware()
     	// Write checksum to flash and (TODO) verify it.
     	if ((status = Write_Program_Checksum (firmwareChecksum)) == 0) {
 			// TODO: store result of above function and only return TRUE if it's been written successfully!
+    		
+    		// The firmware updated successfully, so reset the flag indicating a new firmware update is available.
+    		SharedData.ApplicationUpdateAvailable = FALSE;
+    		SharedData.UpdateApplication = FALSE;
 						
 			// Compare the computed checksum of the received data to the expected checksum.
 			// If they're equal, return true, indicating that the firmware was successfully 

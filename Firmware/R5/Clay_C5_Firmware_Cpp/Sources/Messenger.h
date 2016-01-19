@@ -22,6 +22,8 @@
 
 #include "Behavior.h"
 
+#include "Bootloader.h"
+
 #define MAXIMUM_MESSAGE_LENGTH 140
 #define MAXIMUM_GRAMMAR_SYMBOL_LENGTH 64
 

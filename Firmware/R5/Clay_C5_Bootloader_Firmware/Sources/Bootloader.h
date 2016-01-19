@@ -3,6 +3,11 @@
 
 #include "Drivers/ESP8266.h"
 
+//defines
+#define APPLICATION_KEY_VALUE  0xA5A5A5A5U // The value that gets written into the shared variable.
+#define BOOTLOADER_KEY_VALUE   0x00000000U
+#define BOOT_START_ADDR        0x00000000U
+
 #define FIRMWARE_SERVER_ADDRESS "107.170.180.158"
 #define FIRMWARE_SERVER_PORT 3000
 
@@ -14,13 +19,15 @@
 
 typedef struct shared_bootloader_data
 {
-    uint32_t ApplicationKey;
-    bool UpdateApplication;
-    bool ApplicationUpdateAvailable;
+    uint32_t ApplicationKey; // Set in bootloader and application. Indicates whether the bootloader was started automatically on boot, or jumped to from the main application firmware.
+    bool UpdateApplication; // Set in application. Indicates to the bootloader to perform an update.
+    bool ApplicationUpdateAvailable; // Set in bootloader. Set to true if remote server contains different firmware.
     uint16_t pad;
 } shared_bootloader_data;
 
 extern shared_bootloader_data SharedData;
+
+extern uint8_t Initialize_Bootloader ();
 
 extern bool Has_User_Requested_Update ();
 
