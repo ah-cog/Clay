@@ -31,8 +31,8 @@
 
 #include "../Messenger.h"
 
-#define SSID_DEFAULT "hefnetm" // "The Dungeon" // "WhiteGiraffe" // "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz" // "AWS"
-#define PASSWORD_DEFAULT "dips00BOYNEdo$!&" // "6AzjFtdDFD" // "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
+#define SSID_DEFAULT "PARISOMA" // "hefnetm" // "The Dungeon" // "WhiteGiraffe" // "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz" // "AWS"
+#define PASSWORD_DEFAULT "Innovate@now" // "dips00BOYNEdo$!&" // "6AzjFtdDFD" // "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown" // "Codehappy123"
 
 typedef struct {
 	LDD_TDeviceData *handle;

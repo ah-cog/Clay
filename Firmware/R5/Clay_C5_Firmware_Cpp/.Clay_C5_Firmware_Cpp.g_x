@@ -22,7 +22,7 @@
       <File Name="Documentation/doxygen/MESH_IRQ.txt" FileDate="2016-01-11, 23:00:31" FileAge="1452582031000" FileType="45637" CompNumb="74" />
       <File Name="Static_Code/PDD/WDOG_PDD.h" FileDate="2015-12-23, 01:48:34" FileAge="1450864114000" FileType="1048576" />
       <File Name="Generated_Code/MESH_CS.h" FileDate="2016-01-16, 13:49:01" FileAge="1452980941000" FileType="45637" CompNumb="73" />
-      <File Name="Documentation/Clay_C5_Firmware_Cpp_SIGNALS.txt" FileDate="2016-01-18, 18:08:13" FileAge="1453169293000" FileType="3072" />
+      <File Name="Documentation/Clay_C5_Firmware_Cpp_SIGNALS.txt" FileDate="2016-01-19, 21:58:44" FileAge="1453269524000" FileType="3072" />
       <File Name="Generated_Code/IO_9.h" FileDate="2016-01-16, 13:49:02" FileAge="1452980942000" FileType="45637" CompNumb="44" />
       <File Name="Generated_Code/MESH_CS.c" FileDate="2016-01-16, 13:49:01" FileAge="1452980941000" FileType="45637" CompNumb="73" />
       <File Name="Generated_Code/IO_9.c" FileDate="2016-01-16, 13:49:02" FileAge="1452980942000" FileType="45637" CompNumb="44" />
@@ -151,5 +151,5 @@
       <File Name="Generated_Code/PE_LDD.c" FileDate="2016-01-16, 13:49:01" FileAge="1452980941000" FileType="45637" CompNumb="9" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>32</CodeGenReference>
+  <CodeGenReference>34</CodeGenReference>
 </CodeGenerationInfo>

@@ -3,3 +3,18 @@ Circuit/Board Layout/.DS_Store
 Circuit/.DS_Store
 Circuit/P1R5/P1R5.zip
 Firmware/R5/*/Generated_Code
+
+# Files being edited
+*~
+
+# Make and build files
+*.lst
+*.o
+*.eep
+*.lss
+*.map
+*.sym
+
+# Keep these if preferred for a reference of the final build.
+# *.elf
+# *.hex

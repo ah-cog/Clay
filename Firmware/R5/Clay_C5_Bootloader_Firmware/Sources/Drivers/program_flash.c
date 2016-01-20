@@ -109,3 +109,40 @@ uint16_t Read_Program_Checksum ()
 	
 	return result;
 }
+
+/**
+ * Writes the specified data to flash memory. Since the application size requires  
+ * four bytes, only the first four bytes of the specified data will be coped to 
+ * flash.
+ */
+uint16_t Write_Program_Size (uint32_t size)
+{
+	// Get pointer to the application size bytes
+	uint8_t *data = (uint8_t *) &size;
+	
+	// Set up flash operation
+	uint16_t rval = FLASH1_Write (FLASH1_DeviceData, data, APP_SIZE_ADDRESS, APP_SIZE_SIZE);
+
+	flash_operation_completed = FALSE;
+	while (!rval && !flash_operation_completed)
+	{
+		// Run operation by calling flash1_main
+		FLASH1_Main (FLASH1_DeviceData);
+	}
+
+	return rval;
+}
+
+uint32_t Read_Program_Size ()
+{
+	uint32_t result = NULL; // Return value. Default to NULL.
+	uint32_t *size = NULL; // Pointer to the checksum address in the flash memory.
+	
+	// Point to the checksum memory location.
+	size = (uint32_t *) APP_SIZE_ADDRESS;
+	
+	// Copy the stored checksum into the return value.
+	result = *size;
+	
+	return result;
+}

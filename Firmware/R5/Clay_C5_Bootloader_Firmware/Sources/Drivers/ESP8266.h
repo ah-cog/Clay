@@ -138,8 +138,8 @@ void Monitor_Network_Communications ();
  * Wi-Fi
  */
 
-#define SSID_DEFAULT "hefnetm" // "AWS" // "SpecialtysFreePublicWiFi" // "The Dungeon" // "WhiteGiraffe" // "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz"
-#define PASSWORD_DEFAULT "dips00BOYNEdo$!&" // "Codehappy123" // "" // "" // "6AzjFtdDFD" // "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown"
+#define SSID_DEFAULT "PARISOMA" // "hefnetm" // "AWS" // "SpecialtysFreePublicWiFi" // "The Dungeon" // "WhiteGiraffe" // "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz"
+#define PASSWORD_DEFAULT "Innovate@now" // "dips00BOYNEdo$!&" // "Codehappy123" // "" // "" // "6AzjFtdDFD" // "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown"
 
 typedef struct {
 	char wifi_ssid[32];
