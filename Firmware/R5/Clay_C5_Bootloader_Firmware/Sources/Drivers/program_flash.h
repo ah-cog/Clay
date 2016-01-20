@@ -14,8 +14,8 @@
 
 // The size of the firmware is stored in flash memory as an integer (4 bytes) 
 // at locations 0x3FFFA through 0x3FFFD.
-#define APP_CHECKSUM_ADDRESS          0x0003FFFEU
-#define APP_CHECKSUM_SIZE             2
+#define APP_SIZE_ADDRESS          0x0003FFFAU
+#define APP_SIZE_SIZE             4
 
 extern volatile bool flash_operation_completed;
 
@@ -33,5 +33,11 @@ extern uint16_t Write_Program_Checksum (uint16_t checksum);
 
 // Reads the checksum of the application firmware.
 extern uint16_t Read_Program_Checksum ();
+
+// Writes the specified data to flash memory.
+extern uint16_t Write_Program_Size (uint32_t checksum);
+
+// Reads the checksum of the application firmware.
+extern uint32_t Read_Program_Size ();
 
 #endif /* PROGRAM_FLASH_H */

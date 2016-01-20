@@ -74,7 +74,7 @@ void Application(void)
         // Failure
     }
 
-    if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE)
+    if ((status = Perform_Channel_Light_Effect(FALSE)) != TRUE)
     {
         // Failure
     }

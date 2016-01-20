@@ -9,9 +9,15 @@ void Application(void)
     status = Enable_Clock ();
     status = Start_Clock ();
     
+//    // Status LEDs.
+//	if ((status = Enable_LEDs()) != TRUE)
+//	{
+//		// Failure
+//	}
+    
     // TODO: Check shared memory for "factory reset" TRUE. If so, reset "application key".
     
-    Initialize_Bootloader ();
+	Initialize_Bootloader ();
     
     Set_WiFi_Network (SSID_DEFAULT, PASSWORD_DEFAULT);
     status = Enable_ESP8266 ();
