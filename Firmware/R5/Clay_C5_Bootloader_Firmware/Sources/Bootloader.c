@@ -11,12 +11,18 @@ uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootl
 uint8_t Initialize_Bootloader () {
 	uint8_t result = FALSE;
 	
-	// Reset the status of the availability of a new update.
-	// The bootloader checks with the firmware server to see if there's an update available.
-	SharedData.ApplicationUpdateAvailable = FALSE;
+//	// Reset the status of the availability of a new update.
+//	// The bootloader checks with the firmware server to see if there's an update available.
+//	SharedData.ApplicationUpdateAvailable = FALSE;
 	
-	// Reset the request to update firmware if the bootloader was not invoked from the application
+	// Initialize the bootloader if it was not invoked from the application
 	if (SharedData.ApplicationKey != APPLICATION_KEY_VALUE) {
+		
+		// Reset the status of the availability of a new update.
+		// The bootloader checks with the firmware server to see if there's an update available.
+		SharedData.ApplicationUpdateAvailable = FALSE;
+		
+		// Reset the request to update firmware
 		SharedData.UpdateApplication = FALSE;
 	}
 	

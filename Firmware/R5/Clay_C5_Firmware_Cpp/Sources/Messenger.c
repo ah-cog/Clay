@@ -459,10 +459,11 @@ int8_t Process_Incoming_Message (Message *message) {
 			
 			// Perform operating system operations.
 			//todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
-			is_update_available = Update_Available ();
-			if (is_update_available) {
+//			is_update_available = Update_Available ();
+			SharedData.ApplicationUpdateAvailable = TRUE; // HACK
+//			if (is_update_available) { // HACK
 				SharedData.UpdateApplication = TRUE;
-			}
+//			} // HACK
 			
 			if (SharedData.UpdateApplication) {
 				

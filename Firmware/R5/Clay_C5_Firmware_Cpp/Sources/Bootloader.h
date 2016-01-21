@@ -8,6 +8,9 @@
 #ifndef BOOTLOADER_H
 #define BOOTLOADER_H
 
+#include "Drivers/ESP8266.h"
+#include "Drivers/program_flash.h"
+
 //includes
 #include "PE_Types.h"
 
@@ -15,6 +18,9 @@
 #define APPLICATION_KEY_VALUE  0xA5A5A5A5U // The value that gets written into the shared variable.
 #define BOOTLOADER_KEY_VALUE   0x00000000U
 #define BOOT_START_ADDR        0x00000000U
+
+#define FIRMWARE_SERVER_ADDRESS "107.170.180.158"
+#define FIRMWARE_SERVER_PORT 3000
 
 //data types
 typedef struct shared_bootloader_data
@@ -33,11 +39,13 @@ extern bool is_update_available;
 
 extern uint8_t Initialize_Bootloader ();
 
+extern uint8_t Has_Latest_Firmware ();
+
 //Returns true if an update is available and writes the ApplicationKey value so 
 //        the bootloader will know that the application has run.
 extern bool Update_Available ();
 
-void Disable_Interrupts ();
+extern void Disable_Interrupts ();
 
 //Call to jump to the bootloader and update the application.
 extern void Jump_To_Bootloader_And_Update_Application();

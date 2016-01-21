@@ -74,7 +74,7 @@ void Application(void)
         // Failure
     }
 
-    if ((status = Perform_Channel_Light_Effect(FALSE)) != TRUE)
+    if ((status = Perform_Channel_Light_Effect (TRUE)) != TRUE)
     {
         // Failure
     }
@@ -168,17 +168,17 @@ void Application(void)
             Delete_Message(message);
         }
         
-        // Perform operating system operations.
-        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
-		is_update_available = Update_Available ();
-		//if (is_update_available) {
-		if (SharedData.UpdateApplication) {
-			
-			// TODO: Disable all interrupts!
-			
-			// Jump to the bootloader.
-			Jump_To_Bootloader_And_Update_Application ();
-		}
+//        // Perform operating system operations.
+//        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
+//		is_update_available = Update_Available ();
+//		//if (is_update_available) {
+//		if (SharedData.UpdateApplication) {
+//			
+//			// TODO: Disable all interrupts!
+//			
+//			// Jump to the bootloader.
+//			Jump_To_Bootloader_And_Update_Application ();
+//		}
 
         // Perform behavior.
         if (currentBehaviorConstruct != NULL)
