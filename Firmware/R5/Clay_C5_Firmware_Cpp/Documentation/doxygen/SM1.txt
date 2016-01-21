@@ -18,7 +18,7 @@ by the component.
     0x01001000
  </td><td>SIM_SCGC6 register, peripheral SM1.</td></tr>
 <tr><td>0xE000E41A</td><td>NVICIP26</td><td>
-    0x00000080
+    0x00000050
  </td><td>NVICIP26 register, peripheral SM1.</td></tr>
 <tr><td>0xE000E100</td><td>NVICISER0</td><td>
     0x05000000
@@ -134,10 +134,10 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0xE000E41A</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000080</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000050</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
-<tr><td>0 - 7</td><td>PRI26</td><td>0x80</td><td>Priority of interrupt 26</td>
+<tr><td>0 - 7</td><td>PRI26</td><td>0x00</td><td>Priority of interrupt 26</td>
 </tr></table>
 <div class="reghdr1">NVICISER0</div>
 <div class="regdiag">
@@ -607,9 +607,9 @@ registers of the peripheral(s) configured by the component.
 **          Device                                         : SPI0
 **          Interrupt service/event                        : Enabled
 **            Input interrupt                              : INT_SPI0
-**            Input interrupt priority                     : medium priority
+**            Input interrupt priority                     : 5
 **            Output interrupt                             : INT_SPI0
-**            Output interrupt priority                    : medium priority
+**            Output interrupt priority                    : 5
 **          Settings                                       : 
 **            Input pin                                    : Enabled
 **              Pin                                        : PTD3/SPI0_SIN/UART2_TX

@@ -713,7 +713,7 @@ PE_DEBUGHALT();
       <Counter v="FTM0_CNT" />
       <boolgroup name="Interrupt service/event" v="Enabled">
         <Interrupt v="INT_FTM0" />
-        <Interrupt_priority v="medium priority" />
+        <Interrupt_priority v="maximal priority" />
       </boolgroup>
       <Interrupt_period v="1 ms" />
       <group name="Initialization">
@@ -1057,7 +1057,7 @@ PE_DEBUGHALT();
         <Period v="1 ms" />
         <boolgroup name="Interrupt" v="Enabled">
           <Interrupt v="INT_FTM0" />
-          <Interrupt_priority v="medium priority" />
+          <Interrupt_priority v="maximal priority" />
         </boolgroup>
       </enumgroup>
       <list name="Channel list" v="0">
@@ -1905,9 +1905,9 @@ PE_DEBUGHALT();
       <Device v="SPI0" />
       <boolgroup name="Interrupt service/event" v="Enabled">
         <Input_interrupt v="INT_SPI0" />
-        <Input_interrupt_priority v="medium priority" />
+        <Input_interrupt_priority v="5" />
         <Output_interrupt v="INT_SPI0" />
-        <Output_interrupt_priority v="medium priority" />
+        <Output_interrupt_priority v="5" />
       </boolgroup>
       <group name="Settings">
         <boolgroup name="Input pin" v="Enabled">

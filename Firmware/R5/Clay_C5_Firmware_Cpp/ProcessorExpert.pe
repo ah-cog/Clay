@@ -2,8 +2,8 @@
 <PEproject>
   <Header>
     <Name>Clay_C5_Firmware_Cpp</Name>
-    <SavedBy>mokogobo</SavedBy>
-    <ModificationStamp>63</ModificationStamp>
+    <SavedBy>thebh</SavedBy>
+    <ModificationStamp>64</ModificationStamp>
     <Date>2016-01-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
@@ -16280,7 +16280,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>maximal priority</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>DSPgrp2</ItemSymbol>
@@ -28073,7 +28073,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>5</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>HasInterruptServiceRoutineGrp0</ItemSymbol>
@@ -28108,7 +28108,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>5</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>HasInterruptServiceRoutineGrp1</ItemSymbol>
