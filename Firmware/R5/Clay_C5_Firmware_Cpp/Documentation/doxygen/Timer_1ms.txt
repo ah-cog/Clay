@@ -62,7 +62,7 @@ by the component.
     0x00008C9B
  </td><td>FTM0_MOD register, peripheral Timer_1ms.</td></tr>
 <tr><td>0xE000E43E</td><td>NVICIP62</td><td>
-    0x00000080
+    0x00000000
  </td><td>NVICIP62 register, peripheral Timer_1ms.</td></tr>
 <tr><td>0xE000E104</td><td>NVICISER1</td><td>
     0x40000000
@@ -883,10 +883,10 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0xE000E43E</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000080</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000000</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
-<tr><td>0 - 7</td><td>PRI62</td><td>0x80</td><td>Priority of interrupt 62</td>
+<tr><td>0 - 7</td><td>PRI62</td><td>0x00</td><td>Priority of interrupt 62</td>
 </tr></table>
 <div class="reghdr1">NVICISER1</div>
 <div class="regdiag">
@@ -939,7 +939,7 @@ registers of the peripheral(s) configured by the component.
 **          Counter                                        : FTM0_CNT
 **          Interrupt service/event                        : Enabled
 **            Interrupt                                    : INT_FTM0
-**            Interrupt priority                           : medium priority
+**            Interrupt priority                           : maximal priority
 **          Interrupt period                               : 1 ms
 **          Initialization                                 : 
 **            Enabled in init. code                        : yes
