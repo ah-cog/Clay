@@ -122,9 +122,12 @@ int8_t ESP8266_Receive_Incoming_Request (uint32_t milliseconds);
 #define RESPONSE_NOT_FOUND -1
 #define RESPONSE_TIMEOUT   -2
 
-#define DEFAULT_RESPONSE_TIMEOUT 5000 // 10000
+#define ESP8266_DEFAULT_RESPONSE_TIMEOUT 10000 // also try 5000
 
 #define HTTP_RESPONSE_BUFFER_SIZE 2048 // Store this many of the most recent chars in AT command response buffer
+
+extern char httpResponseBuffer[HTTP_RESPONSE_BUFFER_SIZE];
+extern uint16_t httpResponseBufferSize;
 
 extern char incomingDataQueue[];
 extern int incomingDataQueueSize;
@@ -187,7 +190,15 @@ int8_t Start_HTTP_Server (uint16_t port); // ESP8266_Start_HTTP_Server
 // int8_t HTTP_Server_Process_Request (); // or HTTP_Server_Handle_Request (); // Performs the request handler function defined for the received request.
 // Stop_HTTP_Server (HTTP_Server *http_server);
 
+uint8_t ESP8266_Close_Connection (uint8_t connection);
+
+/**
+ * HTTP Client
+ */
+
 void Send_HTTP_Request  (const char *address, uint16_t port, const char *message);
+uint8_t Send_HTTP_GET_Request  (const char *address, uint16_t port, const char *uri);
+uint8_t Send_HTTP_POST_Request  (const char *address, uint16_t port, const char *uri, const char *message);
 
 // uint8_t Start_UDP_Server (unit16 port);
 // uint8_t Send_UDP_Message (const char *ip_address, const char *message);

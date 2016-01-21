@@ -59,6 +59,7 @@
 #include "MESH_CE.h"
 #include "MESH_CS.h"
 #include "MESH_IRQ.h"
+#include "FLASH1.h"
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"
@@ -224,6 +225,25 @@ void SM1_OnBlockReceived(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void IMU_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  FLASH1_OnOperationComplete (module Events)
+**
+**     Component   :  FLASH1 [FLASH_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of the whole write / erase operation. if
+**         the event is enabled. See SetEventMask() and GetEventMask()
+**         methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

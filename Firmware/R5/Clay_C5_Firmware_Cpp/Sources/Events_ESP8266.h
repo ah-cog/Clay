@@ -66,6 +66,7 @@
 #include "MESH_CE.h"
 #include "MESH_CS.h"
 #include "MESH_IRQ.h"
+#include "FLASH1.h"
 
 #ifdef __cplusplus
 extern "C" {
