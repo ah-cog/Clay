@@ -559,6 +559,28 @@ Module "MESH_IRQ"  (component GPIO_LDD)
    - MESH_IRQ_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
    - MESH_IRQ_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
 
+Module "FLASH1"    (component FLASH_LDD)
+   - FLASH1_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" property is set to "yes" 
+                (<Enabled in init. code>) value then the device is also enabled(see the description of the Enable() method). In 
+                this case the Enable() method is not necessary and needn't to be generated. This method can be called only once.
+                Before the second call of Init() the Deinit() must be called first.
+   - FLASH1_Read -This method sets up a flash memory read operation. The operation itself is performing by defined batches 
+                (property <Read batch size>) by periodical calling the component’s Main method in the user application (higher 
+                level OS service).
+   - FLASH1_Write -This method sets up a flash memory write operation. The operation itself is performing by defined batches 
+                (property <Write batch size>) by periodical calling the component’s Main method in the user application (higher 
+                level OS service) or by the component’s ISR, if an component’s interrupt service is enabled.
+   - FLASH1_Erase -This method sets up a flash memory erase operation. The operation itself is performing by defined batches 
+                (property <Erase batch size>) by periodical calling the component’s Main method in the user application (higher 
+                level OS service) or by the component’s ISR, if an component’s interrupt service is enabled.
+   - FLASH1_Main -This method is used to perform one batch of a flash memory operation. This method is used to perform batches 
+                of all flash memory operations (Write, Read, Erase, EraseBlock, VerifyErasedBlock) when the component works in 
+                the polled mode (interrupt service is disabled - property <Interrupt service>). This method performs batches of 
+                the read flash memory operation, when the component works in the interrupt triggered mode (interrupt service is 
+                enabled). This method is enabled only if the component works in the polled mode or if the Read method is 
+                enabled.
+
 Module "Cpu"       (component MK20DX256LH7)
 
 ===================================================================================

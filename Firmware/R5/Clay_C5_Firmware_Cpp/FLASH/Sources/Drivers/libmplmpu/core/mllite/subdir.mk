@@ -86,7 +86,7 @@ OBJS_OS_FORMAT += \
 # Each subdirectory must supply rules for building sources it contributes
 Sources/Drivers/libmplmpu/core/mllite/data_builder.o: ../Sources/Drivers/libmplmpu/core/mllite/data_builder.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #39 $<'
+	@echo 'Executing target #40 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/data_builder.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/data_builder.o"
 	@echo 'Finished building: $<'
@@ -94,7 +94,7 @@ Sources/Drivers/libmplmpu/core/mllite/data_builder.o: ../Sources/Drivers/libmplm
 
 Sources/Drivers/libmplmpu/core/mllite/hal_outputs.o: ../Sources/Drivers/libmplmpu/core/mllite/hal_outputs.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #40 $<'
+	@echo 'Executing target #41 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/hal_outputs.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/hal_outputs.o"
 	@echo 'Finished building: $<'
@@ -102,7 +102,7 @@ Sources/Drivers/libmplmpu/core/mllite/hal_outputs.o: ../Sources/Drivers/libmplmp
 
 Sources/Drivers/libmplmpu/core/mllite/message_layer.o: ../Sources/Drivers/libmplmpu/core/mllite/message_layer.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #41 $<'
+	@echo 'Executing target #42 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/message_layer.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/message_layer.o"
 	@echo 'Finished building: $<'
@@ -110,7 +110,7 @@ Sources/Drivers/libmplmpu/core/mllite/message_layer.o: ../Sources/Drivers/libmpl
 
 Sources/Drivers/libmplmpu/core/mllite/ml_math_func.o: ../Sources/Drivers/libmplmpu/core/mllite/ml_math_func.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #42 $<'
+	@echo 'Executing target #43 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/ml_math_func.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/ml_math_func.o"
 	@echo 'Finished building: $<'
@@ -118,7 +118,7 @@ Sources/Drivers/libmplmpu/core/mllite/ml_math_func.o: ../Sources/Drivers/libmplm
 
 Sources/Drivers/libmplmpu/core/mllite/mlmath.o: ../Sources/Drivers/libmplmpu/core/mllite/mlmath.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #43 $<'
+	@echo 'Executing target #44 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/mlmath.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/mlmath.o"
 	@echo 'Finished building: $<'
@@ -126,7 +126,7 @@ Sources/Drivers/libmplmpu/core/mllite/mlmath.o: ../Sources/Drivers/libmplmpu/cor
 
 Sources/Drivers/libmplmpu/core/mllite/mpl.o: ../Sources/Drivers/libmplmpu/core/mllite/mpl.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #44 $<'
+	@echo 'Executing target #45 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/mpl.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/mpl.o"
 	@echo 'Finished building: $<'
@@ -134,7 +134,7 @@ Sources/Drivers/libmplmpu/core/mllite/mpl.o: ../Sources/Drivers/libmplmpu/core/m
 
 Sources/Drivers/libmplmpu/core/mllite/results_holder.o: ../Sources/Drivers/libmplmpu/core/mllite/results_holder.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #45 $<'
+	@echo 'Executing target #46 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/results_holder.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/results_holder.o"
 	@echo 'Finished building: $<'
@@ -142,7 +142,7 @@ Sources/Drivers/libmplmpu/core/mllite/results_holder.o: ../Sources/Drivers/libmp
 
 Sources/Drivers/libmplmpu/core/mllite/start_manager.o: ../Sources/Drivers/libmplmpu/core/mllite/start_manager.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #46 $<'
+	@echo 'Executing target #47 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/start_manager.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/start_manager.o"
 	@echo 'Finished building: $<'
@@ -150,7 +150,7 @@ Sources/Drivers/libmplmpu/core/mllite/start_manager.o: ../Sources/Drivers/libmpl
 
 Sources/Drivers/libmplmpu/core/mllite/storage_manager.o: ../Sources/Drivers/libmplmpu/core/mllite/storage_manager.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #47 $<'
+	@echo 'Executing target #48 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/mllite/storage_manager.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/mllite/storage_manager.o"
 	@echo 'Finished building: $<'

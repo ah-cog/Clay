@@ -11,6 +11,7 @@ C_SRCS_QUOTED += \
 "../Sources/Drivers/MPU9250.c" \
 "../Sources/Drivers/PCA9552.c" \
 "../Sources/Drivers/mpu_9250_driver.c" \
+"../Sources/Drivers/program_flash.c" \
 
 C_SRCS += \
 ../Sources/Drivers/ESP8266.c \
@@ -18,6 +19,7 @@ C_SRCS += \
 ../Sources/Drivers/MPU9250.c \
 ../Sources/Drivers/PCA9552.c \
 ../Sources/Drivers/mpu_9250_driver.c \
+../Sources/Drivers/program_flash.c \
 
 OBJS += \
 ./Sources/Drivers/ESP8266.o \
@@ -25,6 +27,7 @@ OBJS += \
 ./Sources/Drivers/MPU9250.o \
 ./Sources/Drivers/PCA9552.o \
 ./Sources/Drivers/mpu_9250_driver.o \
+./Sources/Drivers/program_flash.o \
 
 OBJS_QUOTED += \
 "./Sources/Drivers/ESP8266.o" \
@@ -32,6 +35,7 @@ OBJS_QUOTED += \
 "./Sources/Drivers/MPU9250.o" \
 "./Sources/Drivers/PCA9552.o" \
 "./Sources/Drivers/mpu_9250_driver.o" \
+"./Sources/Drivers/program_flash.o" \
 
 C_DEPS += \
 ./Sources/Drivers/ESP8266.d \
@@ -39,6 +43,7 @@ C_DEPS += \
 ./Sources/Drivers/MPU9250.d \
 ./Sources/Drivers/PCA9552.d \
 ./Sources/Drivers/mpu_9250_driver.d \
+./Sources/Drivers/program_flash.d \
 
 C_DEPS_QUOTED += \
 "./Sources/Drivers/ESP8266.d" \
@@ -46,6 +51,7 @@ C_DEPS_QUOTED += \
 "./Sources/Drivers/MPU9250.d" \
 "./Sources/Drivers/PCA9552.d" \
 "./Sources/Drivers/mpu_9250_driver.d" \
+"./Sources/Drivers/program_flash.d" \
 
 OBJS_OS_FORMAT += \
 ./Sources/Drivers/ESP8266.o \
@@ -53,6 +59,7 @@ OBJS_OS_FORMAT += \
 ./Sources/Drivers/MPU9250.o \
 ./Sources/Drivers/PCA9552.o \
 ./Sources/Drivers/mpu_9250_driver.o \
+./Sources/Drivers/program_flash.o \
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -93,6 +100,14 @@ Sources/Drivers/mpu_9250_driver.o: ../Sources/Drivers/mpu_9250_driver.c
 	@echo 'Executing target #38 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/mpu_9250_driver.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/mpu_9250_driver.o"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/Drivers/program_flash.o: ../Sources/Drivers/program_flash.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #39 $<'
+	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
+	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/program_flash.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/program_flash.o"
 	@echo 'Finished building: $<'
 	@echo ' '
 

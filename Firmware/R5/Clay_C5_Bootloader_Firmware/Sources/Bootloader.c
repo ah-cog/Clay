@@ -11,12 +11,18 @@ uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootl
 uint8_t Initialize_Bootloader () {
 	uint8_t result = FALSE;
 	
-	// Reset the status of the availability of a new update.
-	// The bootloader checks with the firmware server to see if there's an update available.
-	SharedData.ApplicationUpdateAvailable = FALSE;
+//	// Reset the status of the availability of a new update.
+//	// The bootloader checks with the firmware server to see if there's an update available.
+//	SharedData.ApplicationUpdateAvailable = FALSE;
 	
-	// Reset the request to update firmware if the bootloader was not invoked from the application
+	// Initialize the bootloader if it was not invoked from the application
 	if (SharedData.ApplicationKey != APPLICATION_KEY_VALUE) {
+		
+		// Reset the status of the availability of a new update.
+		// The bootloader checks with the firmware server to see if there's an update available.
+		SharedData.ApplicationUpdateAvailable = FALSE;
+		
+		// Reset the request to update firmware
 		SharedData.UpdateApplication = FALSE;
 	}
 	
@@ -69,7 +75,37 @@ bool Has_User_Requested_Update ()
  */
 uint8_t Verify_Firmware ()
 {
-	return TRUE;
+	uint8_t status = NULL;
+	uint8_t result = FALSE;
+	uint16_t applicationChecksum = 0;
+	uint32_t applicationSize = 0;
+	
+	// Read size of application firmware from flash memory.
+	applicationSize = Read_Program_Size ();
+	
+	// Read the checksum of the application firmware from flash memory.
+	applicationChecksum = Read_Program_Checksum ();
+	
+	// Check if the values are uninitialized (i.e., check if they haven't yet 
+	// been written.
+	if (applicationSize == 0xFFFFFFFF || applicationChecksum == 0xFFFF) {
+		
+		result = FALSE;
+		
+	} else {
+	
+		// Compute the checksum of the application firmware stored in flash.
+		// i.e., Verify the correctness of the entire program that has been written to flash memory.
+		//       To do so, compare the computed CRC-16 checksum to the stored CRC-16 checksum.
+		if ((status = Verify_Firmware_Bytes (APP_START_ADDR, applicationSize, applicationChecksum)) != NULL)
+		{
+			// The computed checksum is the same as the stored checksum, so set the return value to true.
+			result = TRUE;
+		}
+		
+	}
+	
+	return result;
 }
 
 /**
@@ -209,7 +245,7 @@ uint8_t Update_Firmware()
 	int connection = 4;        // HACK: Get the connection used from Send_HTTP_GET_Request (...).
 
 	// TODO: Get total size of firmware (from firmware description).
-	int firmwareSize = DEFAULT_FIRMWARE_SIZE; // Total size (in bytes) of the firmware being received.
+	uint32_t firmwareSize = DEFAULT_FIRMWARE_SIZE; // Total size (in bytes) of the firmware being received.
 	uint16_t firmwareChecksum = DEFAULT_FIRMWARE_CHECKSUM;
 	int bytesReceived = 0; // Total number of verified bytes received so far.
 	int bytesWritten = 0; // Total number of bytes written to flash.
@@ -222,7 +258,51 @@ uint8_t Update_Firmware()
     // Retrieve firmware size from the server.
     sprintf (uriParameters, "/clay/firmware/size/");
 	Send_HTTP_GET_Request (address, port, uriParameters);        // HTTP GET /firmware/version
+	httpResponseBuffer[httpResponseBufferSize] = NULL; // Terminate the buffer contents
 	firmwareSize = atoi (httpResponseBuffer);
+	
+	/* Update the stored application firmware size and checksum.
+	 * These are used to indicate what should be on the device. */
+	
+	// Write the size of the application firmware to flash.
+	// The stored size is used in CRC-16 checksum computations.
+	if ((status = Write_Program_Size (firmwareSize)) == 0) {
+		// TODO: store result of above function and only return TRUE if it's been written successfully!
+		
+		// The firmware updated successfully, so read it back from flash and use it in 
+		// the computation of the checksum below as a test of its correctness.
+//		firmwareSize = Read_Program_Size ();
+		
+	} else {
+		
+		// The write to memory failed!
+		
+	}
+	
+	// Retrieve firmware checksum from the server.
+	sprintf (uriParameters, "/clay/firmware/checksum/");
+	Send_HTTP_GET_Request (address, port, uriParameters);
+	httpResponseBuffer[httpResponseBufferSize] = NULL; // Terminate the buffer contents
+	firmwareChecksum = (uint32_t) atoi (httpResponseBuffer);
+	
+	// Write checksum to flash and (TODO) verify it.
+	if ((status = Write_Program_Checksum (firmwareChecksum)) == 0) {
+		// TODO: store result of above function and only return TRUE if it's been written successfully!
+		
+//		// The firmware updated successfully, so reset the flag indicating a new firmware update is available.
+//		SharedData.ApplicationUpdateAvailable = FALSE;
+//		SharedData.UpdateApplication = FALSE;
+					
+		// Compare the computed checksum of the received data to the expected checksum.
+		// If they're equal, return true, indicating that the firmware was successfully 
+		// written to flash and verified.
+//		return result = TRUE;
+		
+	} else {
+		
+		// The write to memory failed!
+		
+	}
 
 	// Retrieve firmware if is hasn't yet been received in its entirety.
     while (bytesReceived < firmwareSize)
@@ -250,7 +330,7 @@ uint8_t Update_Firmware()
             bytesReceived = bytesReceived + httpResponseBufferSize;
 
             // Write the received bytes to application memory in flash.
-            if ((status = Write_Firmware_Bytes(startByte, httpResponseBuffer, httpResponseBufferSize)) != NULL)
+            if ((status = Write_Firmware_Bytes (startByte, httpResponseBuffer, httpResponseBufferSize)) != NULL)
             {
 
                 // The byte was successfully written.
@@ -277,33 +357,66 @@ uint8_t Update_Firmware()
         // 
     }
     
-    // Retrieve firmware checksum from the server.
-	sprintf (uriParameters, "/clay/firmware/checksum/");
-	Send_HTTP_GET_Request (address, port, uriParameters);
-	firmwareChecksum = atoi (httpResponseBuffer);
+//    // Retrieve firmware checksum from the server.
+//	sprintf (uriParameters, "/clay/firmware/checksum/");
+//	Send_HTTP_GET_Request (address, port, uriParameters);
+//	firmwareChecksum = atoi (httpResponseBuffer);
+	
+	// At this point, the number of bytes written (bytesWritten) should be 
+	// equal to the size of the application firmware that was stored prior to 
+	// downloading the firmware (retrievable with Read_Program_Size ()).
+	
+	// To test that the correct application firmware checksum and size were 
+	// stored in flash, read those stored values and use them in the 
+	// computation of the checksum.
+	
+	firmwareSize = Read_Program_Size (); // Read the application firmware size from flash memory.
+	firmwareChecksum = Read_Program_Checksum (); // Read the application firmware checksum from flash memory.
     
     // Verify the correctness of the entire program that has been written to flash memory.
-	// To do so, compare the computed CRC-16 checksum to the received CRC-16 checksum.
-	if ((status = Verify_Firmware_Bytes (APP_START_ADDR, bytesWritten, firmwareChecksum)) != NULL)
+	// To do so, compare the computed CRC-16 checksum to the received (from the firmware 
+	// server) then stored (to flash) then loaded (from flash) CRC-16 checksum.
+	if ((status = Verify_Firmware_Bytes (APP_START_ADDR, firmwareSize, firmwareChecksum)) != NULL)
 	{
-    	// Write checksum to flash and (TODO) verify it.
-    	if ((status = Write_Program_Checksum (firmwareChecksum)) == 0) {
-			// TODO: store result of above function and only return TRUE if it's been written successfully!
-    		
-    		// The firmware updated successfully, so reset the flag indicating a new firmware update is available.
-    		SharedData.ApplicationUpdateAvailable = FALSE;
-    		SharedData.UpdateApplication = FALSE;
-						
-			// Compare the computed checksum of the received data to the expected checksum.
-			// If they're equal, return true, indicating that the firmware was successfully 
-			// written to flash and verified.
-			return result = TRUE;
-			
-    	} else {
-    		
-    		// The write to memory failed!
-    		
-    	}
+//		// Write the size of the application firmware to flash.
+//		// The stored size is used in CRC-16 checksum computations.
+//		if ((status = Write_Program_Size (bytesWritten)) == 0) {
+//			// TODO: store result of above function and only return TRUE if it's been written successfully!
+//			
+//			// The firmware updated successfully, so read it back from flash and use it in 
+//			// the computation of the checksum below as a test of its correctness.
+//			firmwareSize = Read_Program_Size ();
+//			
+//		} else {
+//			
+//			// The write to memory failed!
+//			
+//		}
+//		
+//    	// Write checksum to flash and (TODO) verify it.
+//    	if ((status = Write_Program_Checksum (firmwareChecksum)) == 0) {
+//			// TODO: store result of above function and only return TRUE if it's been written successfully!
+//    		
+//    		// The firmware updated successfully, so reset the flag indicating a new firmware update is available.
+//    		SharedData.ApplicationUpdateAvailable = FALSE;
+//    		SharedData.UpdateApplication = FALSE;
+//						
+//			// Compare the computed checksum of the received data to the expected checksum.
+//			// If they're equal, return true, indicating that the firmware was successfully 
+//			// written to flash and verified.
+//			return result = TRUE;
+//			
+//    	} else {
+//    		
+//    		// The write to memory failed!
+//    		
+//    	}
+		
+		// The firmware updated successfully, so reset the flag indicating a new firmware update is available.
+		SharedData.ApplicationUpdateAvailable = FALSE;
+		SharedData.UpdateApplication = FALSE;
+		
+		result = TRUE;
 	}
     
     return result;

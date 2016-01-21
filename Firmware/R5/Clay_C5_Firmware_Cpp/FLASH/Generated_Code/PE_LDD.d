@@ -37,7 +37,9 @@ Generated_Code/PE_LDD.o: ../Generated_Code/PE_LDD.c \
  ../Generated_Code/SM1.h \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/SPI_PDD.h \
  ../Generated_Code/MESH_CE.h ../Generated_Code/MESH_CS.h \
- ../Generated_Code/MESH_IRQ.h
+ ../Generated_Code/MESH_IRQ.h ../Generated_Code/FLASH1.h \
+ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/FTFL_PDD.h \
+ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/FMC_PDD.h
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C++/include/lib_ewl_c++.prefix:
 
@@ -148,3 +150,9 @@ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/SPI_PDD.h:
 ../Generated_Code/MESH_CS.h:
 
 ../Generated_Code/MESH_IRQ.h:
+
+../Generated_Code/FLASH1.h:
+
+C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/FTFL_PDD.h:
+
+C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/FMC_PDD.h:

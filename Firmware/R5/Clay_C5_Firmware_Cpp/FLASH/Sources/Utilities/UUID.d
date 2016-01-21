@@ -70,7 +70,10 @@ Sources/Utilities/UUID.o: ../Sources/Utilities/UUID.c \
  C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/SPI_PDD.h \
  Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/MESH_CE.h \
  Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/MESH_CS.h \
- Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/MESH_IRQ.h
+ Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/MESH_IRQ.h \
+ Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/FLASH1.h \
+ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/FTFL_PDD.h \
+ C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/FMC_PDD.h
 
 C:/Freescale/CW\ MCU\ v10.6.4/MCU/ARM_GCC_Support/ewl/EWL_C++/include/lib_ewl_c++.prefix:
 
@@ -215,3 +218,9 @@ Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/MESH
 Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/MESH_CS.h:
 
 Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/MESH_IRQ.h:
+
+Z:/Workspace/Checkouts/Clay/Firmware/R5/Clay_C5_Firmware_Cpp/Generated_Code/FLASH1.h:
+
+C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/FTFL_PDD.h:
+
+C:/Freescale/CW\ MCU\ v10.6.4/MCU/ProcessorExpert/lib/Kinetis/pdd/inc/FMC_PDD.h:

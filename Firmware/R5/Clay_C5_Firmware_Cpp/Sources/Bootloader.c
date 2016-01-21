@@ -34,17 +34,60 @@ uint8_t Initialize_Bootloader () {
 	SharedData.UpdateApplication = FALSE;
 }
 
+/**
+ * Gets the checksum of the most recent firmware from the server and compares 
+ * it to the computed checksum of the device's current firmware. This function 
+ * is used to decide whether or not to update the firmware by calling 
+ * Update_Firmware (...).
+ * 
+ * Returns TRUE if the checksums are the same. False if they are different.
+ */
+uint8_t Has_Latest_Firmware ()
+{
+	uint8_t result = TRUE; // Return value. Default to true.
+	uint16_t firmwareChecksum = NULL; // The stored checksum value.
+	uint16_t latestFirmwareChecksum = NULL; // The checksum of the latest firmware.
+	
+	char *address = FIRMWARE_SERVER_ADDRESS;
+	uint16_t port = FIRMWARE_SERVER_PORT;
+	char uriParameters[64] = { 0 };
+	
+	// Retrieve firmware checksum from the server.
+	sprintf (uriParameters, "/clay/firmware/checksum/");
+	Send_HTTP_GET_Request (address, port, uriParameters);
+	latestFirmwareChecksum = atoi (httpResponseBuffer);
+	
+	// Get the stored checksum
+	firmwareChecksum = Read_Program_Checksum ();
+	
+	// Check if the checksum of the application firmware matches the checksum 
+	// of the latest firmware received from the server.
+	if (firmwareChecksum != latestFirmwareChecksum) {
+		result = FALSE;
+	}
+	
+    //TODO: implement this. If the firmware IS out of date, set the value in the SharedData struct.
+    return result;
+}
 
 //Returns true if an update is available and writes the ApplicationKey value so 
 //        the bootloader will know that the application has run.
 bool Update_Available ()
 {
-//    if(SharedData.ApplicationKey != APPLICATION_KEY_VALUE)
-//    {
-//        SharedData.ApplicationKey = APPLICATION_KEY_VALUE;
-//    }
+	int8_t status = NULL;
+	uint8_t result = FALSE;
+	
+	// Check remote server to see if an update is available.
+	// If so, indicate it by writing to the shared flash memory so the bootloader can read it.
+	if ((status = Has_Latest_Firmware ()) == TRUE) {
+		SharedData.ApplicationUpdateAvailable = TRUE;
+	}
+	
+	// Return the value stored in the shared memory application indicating 
+	// whether or not there's an update available.
+	result = SharedData.ApplicationUpdateAvailable;
     
-    return SharedData.ApplicationUpdateAvailable;
+    return result;
 }
 
 /**

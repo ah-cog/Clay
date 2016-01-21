@@ -55,6 +55,7 @@
 #include "MESH_CE.h"
 #include "MESH_CS.h"
 #include "MESH_IRQ.h"
+#include "FLASH1.h"
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"

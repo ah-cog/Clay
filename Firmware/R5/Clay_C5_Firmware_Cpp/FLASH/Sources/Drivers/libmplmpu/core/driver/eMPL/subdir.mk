@@ -37,7 +37,7 @@ OBJS_OS_FORMAT += \
 # Each subdirectory must supply rules for building sources it contributes
 Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu.o: ../Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #49 $<'
+	@echo 'Executing target #50 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu.o"
 	@echo 'Finished building: $<'
@@ -45,7 +45,7 @@ Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu.o: ../Sources/Drivers/libmplm
 
 Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu_dmp_motion_driver.o: ../Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu_dmp_motion_driver.c
 	@echo 'Building file: $<'
-	@echo 'Executing target #50 $<'
+	@echo 'Executing target #51 $<'
 	@echo 'Invoking: ARM Ltd Windows GCC C++ Compiler'
 	"$(ARMSourceryDirEnv)/arm-none-eabi-g++" "$<" @"Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu_dmp_motion_driver.args" -MMD -MP -MF"$(@:%.o=%.d)" -o"Sources/Drivers/libmplmpu/core/driver/eMPL/inv_mpu_dmp_motion_driver.o"
 	@echo 'Finished building: $<'

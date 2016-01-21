@@ -229,6 +229,28 @@ void IMU_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
     data_ready = 1;
 }
 
+/*
+** ===================================================================
+**     Event       :  FLASH1_OnOperationComplete (module Events)
+**
+**     Component   :  FLASH1 [FLASH_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of the whole write / erase operation. if
+**         the event is enabled. See SetEventMask() and GetEventMask()
+**         methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr)
+{
+  /* Write your code here ... */
+}
+
     /* END Events */
 
 #ifdef __cplusplus
