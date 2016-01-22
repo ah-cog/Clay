@@ -1,31 +1,30 @@
 /* ###################################################################
-**     Filename    : main.c
-**     Project     : clay_g5_scratch_signals
-**     Processor   : MK20DX256VLH7
-**     Version     : Driver 01.01
-**     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-09-12, 16:17, # CodeGen: 0
-**     Abstract    :
-**         Main module.
-**         This module contains user's application code.
-**     Settings    :
-**     Contents    :
-**         No public methods
-**
-** ###################################################################*/
+ **     Filename    : main.c
+ **     Project     : clay_g5_scratch_signals
+ **     Processor   : MK20DX256VLH7
+ **     Version     : Driver 01.01
+ **     Compiler    : GNU C Compiler
+ **     Date/Time   : 2015-09-12, 16:17, # CodeGen: 0
+ **     Abstract    :
+ **         Main module.
+ **         This module contains user's application code.
+ **     Settings    :
+ **     Contents    :
+ **         No public methods
+ **
+ ** ###################################################################*/
 /*!
-** @file main.c
-** @version 01.01
-** @brief
-**         Main module.
-**         This module contains user's application code.
-*/         
+ ** @file main.c
+ ** @version 01.01
+ ** @brief
+ **         Main module.
+ **         This module contains user's application code.
+ */
 /*!
-**  @addtogroup main_module main module documentation
-**  @{
-*/         
+ **  @addtogroup main_module main module documentation
+ **  @{
+ */
 /* MODULE main */
-
 
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
@@ -34,6 +33,8 @@
 #include "ESP8266_GPIO0.h"
 #include "ESP8266_RST.h"
 #include "ESP8266_CHIP_EN.h"
+#include "LED1.h"
+#include "LED2.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -42,21 +43,36 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 //#include "Application.h"
-
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
-  /* Write your local variable definition here */
+    /* Write your local variable definition here */
 
-  /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
-  PE_low_level_init();
-  /*** End of Processor Expert internal initialization.                    ***/
+    /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+    PE_low_level_init();
+    /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
-  for (;;) { }
+    int i;
+    bool Led1State = FALSE;
+    bool Led2State = TRUE;
 
-  /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+    /* Write your code here */
+    for (;;)
+    {
+        for (i = 0; i < 1000000; ++i)
+            ;
+        LED1_PutVal(NULL, Led1State);
+        LED2_PutVal(NULL, Led2State);
+        Led1State = !Led1State;
+        Led2State = !Led2State;
+        for (i = 0; i < 1000000; ++i)
+            ;
+        LED2_PutVal(NULL, Led2State);
+        Led2State = !Led2State;
+    }
+
+    /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
   #ifdef PEX_RTOS_START
     PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
@@ -69,13 +85,13 @@ int main(void)
 
 /* END main */
 /*!
-** @}
-*/
+ ** @}
+ */
 /*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.3 [05.09]
-**     for the Freescale Kinetis series of microcontrollers.
-**
-** ###################################################################
-*/
+ ** ###################################################################
+ **
+ **     This file was created by Processor Expert 10.3 [05.09]
+ **     for the Freescale Kinetis series of microcontrollers.
+ **
+ ** ###################################################################
+ */

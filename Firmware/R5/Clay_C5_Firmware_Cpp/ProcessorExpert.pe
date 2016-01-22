@@ -3,7 +3,7 @@
   <Header>
     <Name>Clay_C5_Firmware_Cpp</Name>
     <SavedBy>thebh</SavedBy>
-    <ModificationStamp>64</ModificationStamp>
+    <ModificationStamp>65</ModificationStamp>
     <Date>2016-01-20</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>107</ProjectCompNumb>
+    <ProjectCompNumb>110</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -2007,7 +2007,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
-        <Index>0</Index>
+        <Index>1</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
       </ItemState>
       <ItemState>
