@@ -37,6 +37,8 @@
 - \subpage ESP8266_GPIO0
 - \subpage ESP8266_RST
 - \subpage ESP8266_CHIP_EN
+- \subpage LED1
+- \subpage LED2
 
 
 */
