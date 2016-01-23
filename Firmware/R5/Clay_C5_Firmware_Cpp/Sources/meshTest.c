@@ -17,7 +17,7 @@
 #include "RHRouter.h"
 
 ///defines /////////////////////////////////////////////////////////
-#if(ADDRESS_3)
+#if(ADDRESS_2 || ADDRESS_1)
 #define TRANSMIT                1
 #else
 #define TRANSMIT                0
@@ -63,7 +63,6 @@ void MeshTestLoop()
     Enable_PCA9552();
     upcount_hb_leds();
 
-    
     Start_MPU9250();
     upcount_hb_leds();
 
@@ -120,7 +119,7 @@ void MeshTestLoop()
             if (target_address == 2)
 #elif ADDRESS_2             //address 2 will send to address 1 (so will address 3, but that's covered in the 'else' below)
             if (target_address == 1)
-#endif
+            #endif
             {
 #if ADDRESS_3                           //address 3 needs to switch up and send to 2 instead of 1 at this point.
                 target_address = 1;
@@ -160,7 +159,7 @@ void MeshTestLoop()
                 tx_buf[i + 1] = local_imu_data.bytes[i];
             }
 
-            tx_buf[sizeof(local_imu_data) + 1] = MESH_CMD_TERMINATION;
+            tx_buf[sizeof(local_imu_data) - 3] = MESH_CMD_TERMINATION;
 
             //send the message
             tx_start = power_on_time_msec;
@@ -171,7 +170,7 @@ void MeshTestLoop()
             switch (last_tx_return_value)
             {
                 case RH_ROUTER_ERROR_NONE:
-                {
+                    {
 #if ENABLE_DIAGNOSTIC_LED
                     Set_LED_Output(RGB_4, colors + 5);
 #endif
@@ -180,32 +179,32 @@ void MeshTestLoop()
                     break;
                 }
                 case RH_ROUTER_ERROR_INVALID_LENGTH:
-                {
+                    {
                     ++experiment_data.ERROR_INVALID_LENGTH_count;
                     break;
                 }
                 case RH_ROUTER_ERROR_NO_ROUTE:
-                {
+                    {
                     ++experiment_data.ERROR_NO_ROUTE_count;
                     break;
                 }
                 case RH_ROUTER_ERROR_TIMEOUT:
-                {
+                    {
                     ++experiment_data.ERROR_TIMEOUT_count;
                     break;
                 }
                 case RH_ROUTER_ERROR_NO_REPLY:
-                {
+                    {
                     ++experiment_data.ERROR_NO_REPLY_count;
                     break;
                 }
                 case RH_ROUTER_ERROR_UNABLE_TO_DELIVER:
-                {
+                    {
                     ++experiment_data.ERROR_UNABLE_TO_DELIVER_count;
                     break;
                 }
                 default:
-                {
+                    {
                     break;
                 }
             }

@@ -73,8 +73,8 @@
       </GenExtraFiles>
       <GenExtraFileSrcDir35>lib\doxygen\</GenExtraFileSrcDir35>
       <XtraAge36>1211412609</XtraAge36>
-      <XtraAge37>1211413156</XtraAge37>
-      <XtraAge38>1211412609</XtraAge38>
+      <XtraAge37>1211481228</XtraAge37>
+      <XtraAge38>1211586586</XtraAge38>
       <GenExtraFileType38>4</GenExtraFileType38>
       <GenExtraFileType37>4</GenExtraFileType37>
       <GenExtraFileType36>4</GenExtraFileType36>
@@ -492,7 +492,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_C5_Firmware_Cpp_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>65</ProjectModificationStamp>
+    <ProjectModificationStamp>67</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>
@@ -503,7 +503,7 @@
     <HeaderAge>1211412609</HeaderAge>
     <CodeAge>1211412609</CodeAge>
     <AsemblAge>-1</AsemblAge>
-    <GenNumMethods>14</GenNumMethods>
+    <GenNumMethods>11</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
     <GetClockConfiguration>false</GetClockConfiguration>
     <SetOperationMode>false</SetOperationMode>
@@ -511,9 +511,6 @@
     <DisableInt>false</DisableInt>
     <GetLLSWakeUpFlags>false</GetLLSWakeUpFlags>
     <OpenBackDoor>false</OpenBackDoor>
-    <GetFlexNVMPartitionCode>false</GetFlexNVMPartitionCode>
-    <SetFlexNVMPartition>false</SetFlexNVMPartition>
-    <SetFlexRAMFunction>false</SetFlexRAMFunction>
     <MCGAutoTrim>false</MCGAutoTrim>
     <VLPModeEnable>false</VLPModeEnable>
     <VLPModeDisable>false</VLPModeDisable>
@@ -642,7 +639,7 @@
     <GenDriverVersion>01.02</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1211412609</HeaderAge>
-    <CodeAge>1211413156</CodeAge>
+    <CodeAge>1211481250</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>17</GenNumMethods>
     <Init>true</Init>
@@ -1690,8 +1687,8 @@
     <GenComponentVersion>01.016</GenComponentVersion>
     <GenDriverVersion>01.07</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1211412609</HeaderAge>
-    <CodeAge>1211412609</CodeAge>
+    <HeaderAge>1211586586</HeaderAge>
+    <CodeAge>1211586586</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>33</GenNumMethods>
     <Init>true</Init>
@@ -3625,8 +3622,8 @@
     <GenComponentVersion>01.128</GenComponentVersion>
     <GenDriverVersion>01.08</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1211412609</HeaderAge>
-    <CodeAge>1211412609</CodeAge>
+    <HeaderAge>1211586586</HeaderAge>
+    <CodeAge>1211586586</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>27</GenNumMethods>
     <Init>true</Init>

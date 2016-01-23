@@ -55,7 +55,7 @@ by the component.
     0x010A0100
  </td><td>PORTC_PCR9 register, peripheral IMU_IRQ.</td></tr>
 <tr><td>0xE000E459</td><td>NVICIP89</td><td>
-    0x00000080
+    0x00000090
  </td><td>NVICIP89 register, peripheral IMU_IRQ.</td></tr>
 <tr><td>0xE000E108</td><td>NVICISER2</td><td>
     0x02000000
@@ -759,7 +759,7 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0xE000E459</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000080</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000090</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
 <tr><td>0 - 7</td><td>PRI89</td><td>0x80</td><td>Priority of interrupt 89</td>
@@ -816,7 +816,7 @@ registers of the peripheral(s) configured by the component.
 **          Mask of allocated pins                         : 200
 **          Interrupt service/event                        : Enabled
 **            Interrupt                                    : INT_PORTC
-**            Interrupt priority                           : medium priority
+**            Interrupt priority                           : 9
 **          Bit fields                                     : 1
 **            Bit field                                    : 
 **              Field name                                 : IRQ
