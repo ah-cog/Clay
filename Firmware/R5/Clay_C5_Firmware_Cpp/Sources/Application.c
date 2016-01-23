@@ -25,11 +25,11 @@ void Application(void)
     // Initialize Clay
 
     Initialize_Unit_UUID();
-    
+
     // Initialize bootloader.
     //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //	bool is_update_available = FALSE;
-	Initialize_Bootloader ();
+    Initialize_Bootloader();
 
     // Clock.
 
@@ -74,7 +74,7 @@ void Application(void)
         // Failure
     }
 
-    if ((status = Perform_Channel_Light_Effect (TRUE)) != TRUE)
+    if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE)
     {
         // Failure
     }
@@ -89,12 +89,7 @@ void Application(void)
         // Failure
     }
 
-#if 0
-    MeshTestLoop();
-#endif
-
     // Message queue.
-
     if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE)
     {
         // Failure
@@ -135,6 +130,8 @@ void Application(void)
         // Failure
     }
 //#endif
+    
+    MeshTestLoop();
 
     for (;;)
     {
@@ -167,7 +164,7 @@ void Application(void)
             }
             Delete_Message(message);
         }
-        
+
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //		is_update_available = Update_Available ();

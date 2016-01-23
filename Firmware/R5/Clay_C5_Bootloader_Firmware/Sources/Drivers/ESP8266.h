@@ -138,8 +138,32 @@ void Monitor_Network_Communications ();
  * Wi-Fi
  */
 
-#define SSID_DEFAULT "PARISOMA" // "hefnetm" // "AWS" // "SpecialtysFreePublicWiFi" // "The Dungeon" // "WhiteGiraffe" // "hefnet_2_4" // "hefnetm" // "MoJavaFree" // "joopal" // "clay-2.4ghz"
-#define PASSWORD_DEFAULT "Innovate@now" // "dips00BOYNEdo$!&" // "Codehappy123" // "" // "" // "6AzjFtdDFD" // "h3fn3risbetterthanme" // "crowCHUR4*Erikaset" // "morningview" // "Cassandra2048" // "goldenbrown"
+//#define SSID_DEFAULT "PARISOMA" 
+//#define PASSWORD_DEFAULT "Innovate@now" 
+
+#define SSID_DEFAULT "hefnetm" 
+#define PASSWORD_DEFAULT "dips00BOYNEdo$!&" 
+
+//#define SSID_DEFAULT   "The Dungeon" 
+//#define PASSWORD_DEFAULT ""
+
+//#define SSID_DEFAULT   "WhiteGiraffe"
+//#define PASSWORD_DEFAULT "6AzjFtdDFD"
+
+//#define SSID_DEFAULT  "hefnet_2_4" 
+//#define PASSWORD_DEFAULT "h3fn3risbetterthanme"
+
+//#define SSID_DEFAULT  "MoJavaFree" 
+//#define PASSWORD_DEFAULT "morningview"
+
+//#define SSID_DEFAULT  "joopal" 
+//#define PASSWORD_DEFAULT "Cassandra2048"
+
+//#define SSID_DEFAULT  "clay-2.4ghz" 
+//#define PASSWORD_DEFAULT "goldenbrown"  
+
+//#define SSID_DEFAULT  "AWS"
+//#define PASSWORD_DEFAULT "Codehappy123"
 
 typedef struct {
 	char wifi_ssid[32];

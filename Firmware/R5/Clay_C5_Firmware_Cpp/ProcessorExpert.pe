@@ -3,8 +3,8 @@
   <Header>
     <Name>Clay_C5_Firmware_Cpp</Name>
     <SavedBy>thebh</SavedBy>
-    <ModificationStamp>65</ModificationStamp>
-    <Date>2016-01-20</Date>
+    <ModificationStamp>67</ModificationStamp>
+    <Date>2016-01-23</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>110</ProjectCompNumb>
+    <ProjectCompNumb>113</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -2007,7 +2007,7 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typeKinetisFTFL_FlashConfigNmiFunction</TypeSpecNameState>
-        <Index>1</Index>
+        <Index>0</Index>
         <EnumSymbVal>enabled</EnumSymbVal>
       </ItemState>
       <ItemState>
@@ -21073,7 +21073,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>10</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>HasInterruptServiceRoutineGrp</ItemSymbol>
@@ -26872,7 +26872,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>9</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>HasInterruptServiceRoutineGrp</ItemSymbol>

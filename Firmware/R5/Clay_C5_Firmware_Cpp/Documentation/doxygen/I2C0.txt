@@ -44,7 +44,7 @@ by the component.
     0x00000200
  </td><td>PORTB_PCR2 register, peripheral I2C0.</td></tr>
 <tr><td>0xE000E418</td><td>NVICIP24</td><td>
-    0x00000080
+    0x000000A0
  </td><td>NVICIP24 register, peripheral I2C0.</td></tr>
 <tr><td>0xE000E100</td><td>NVICISER0</td><td>
     0x01000000
@@ -333,7 +333,7 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0xE000E418</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000080</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x000000A0</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
 <tr><td>0 - 7</td><td>PRI24</td><td>0x80</td><td>Priority of interrupt 24</td>
@@ -503,7 +503,7 @@ registers of the peripheral(s) configured by the component.
 **          I2C channel                                    : I2C0
 **          Interrupt service                              : Enabled
 **            Interrupt                                    : INT_I2C0
-**            Interrupt priority                           : medium priority
+**            Interrupt priority                           : 10
 **          Settings                                       : 
 **            Mode selection                               : MASTER
 **            MASTER mode                                  : Enabled
