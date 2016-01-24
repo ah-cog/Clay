@@ -934,9 +934,9 @@ PE_DEBUGHALT();
       <Device v="UART0" />
       <boolgroup name="Interrupt service/event" v="Enabled">
         <Interrupt_RxD v="INT_UART0_RX_TX" />
-        <Interrupt_RxD_priority v="medium priority" />
+        <Interrupt_RxD_priority v="5" />
         <Interrupt_TxD v="INT_UART0_RX_TX" />
-        <Interrupt_TxD_priority v="medium priority" />
+        <Interrupt_TxD_priority v="5" />
         <Interrupt_Error v="INT_UART0_ERR" />
         <Interrupt_Error_priority v="medium priority" />
       </boolgroup>
@@ -1203,7 +1203,7 @@ PE_DEBUGHALT();
       <I2C_channel v="I2C0" />
       <boolgroup name="Interrupt service" v="Enabled">
         <Interrupt v="INT_I2C0" />
-        <Interrupt_priority v="medium priority" />
+        <Interrupt_priority v="10" />
       </boolgroup>
       <group name="Settings">
         <Mode_selection v="MASTER" />
@@ -1778,7 +1778,7 @@ PE_DEBUGHALT();
       <Mask_of_allocated_pins v="512" />
       <boolgroup name="Interrupt service/event" v="Enabled">
         <Interrupt v="INT_PORTC" />
-        <Interrupt_priority v="medium priority" />
+        <Interrupt_priority v="9" />
       </boolgroup>
       <list name="Bit fields" v="1">
         <group name="Bit field">

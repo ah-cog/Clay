@@ -2,9 +2,9 @@
 <PEproject>
   <Header>
     <Name>clay_g5_demo_rgb_imu_flash</Name>
-    <SavedBy>Ben</SavedBy>
-    <ModificationStamp>92</ModificationStamp>
-    <Date>2015-12-19</Date>
+    <SavedBy>thebh</SavedBy>
+    <ModificationStamp>93</ModificationStamp>
+    <Date>2016-01-23</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
   </Header>
@@ -52,7 +52,7 @@
     <BeanType>MK20DX256LH7</BeanType>
     <Name>Cpu</Name>
     <CompNumb>20</CompNumb>
-    <CompEnabled>true</CompEnabled>
+    <CompEnabled>false</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
     <UserFolderName />
@@ -7911,7 +7911,7 @@
     <BeanType>MK20DX256LH7</BeanType>
     <Name>Cpu</Name>
     <CompNumb>24</CompNumb>
-    <CompEnabled>false</CompEnabled>
+    <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
     <UserFolderName />
@@ -15940,7 +15940,7 @@
   <Configuration>
     <CompNumb>1</CompNumb>
     <NodeName>RAM</NodeName>
-    <CnfgEnabled>true</CnfgEnabled>
+    <CnfgEnabled>false</CnfgEnabled>
     <TargetCPU>20</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
@@ -16063,7 +16063,7 @@
   <Configuration>
     <CompNumb>3</CompNumb>
     <NodeName>FLASH</NodeName>
-    <CnfgEnabled>false</CnfgEnabled>
+    <CnfgEnabled>true</CnfgEnabled>
     <TargetCPU>24</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>

@@ -6,55 +6,18 @@
  */
 
 #include "Mesh.h"
-
-#ifndef RHMesh_h
 #include "RHMesh.h"
-#endif
-
-#ifndef RH_NRF24_h
 #include "RH_NRF24.h"
-#endif
-
-#ifndef RHGenericDriver_h
 #include "RHGenericDriver.h"
-#endif
-
-#ifndef _wirish_h
 #include "wirish.h"
-#endif
-
-#ifndef _HardwareSPI_h
 #include "HardwareSPI.h"
-#endif
-
-#ifndef RHGenericSPI_h
 #include "RHGenericSPI.h"
-#endif
-
-#ifndef RHHardwareSPI_h
 #include "RHHardwareSPI.h"
-#endif
-
-#ifndef RHRouter_h
 #include "RHRouter.h"
-#endif
+#include "SM1.h"
 
-#ifndef SYSTEM_TICK_H_
 #include "Clock.h"
-#endif
-
-#ifndef LED_DRIVER_PCA9552_H
-//#include "led_driver_pca9552.h"
-#include "Drivers/PCA9552.h"
-#endif
-
-#ifndef _wirish_h
-#include "wirish.h"
-#endif
-
-#ifndef MESH_STATISTICS_H_
 #include "mesh_stastistics.h"
-#endif
 
 #if ENABLE_DIAGNOSTIC_LED
 static color_rgb colors[] =
@@ -92,13 +55,7 @@ typedef struct
 } found_mesh_node;
 
 ///global vars 
-mesh_command commands[] =
-        {
-                { MESH_CMD_CHANGE_MESH_MODE, NULL },        //change mesh mode: transmit/receive, transmit only, receive only
-                { MESH_CMD_UPDATE_IMU_DATA, NULL },         //update IMU LED data.
-                { MESH_CMD_ADDRESS_CLAIM_MSG, NULL }        //address claim message.
-        };
-uint32_t command_count = sizeof(commands) / sizeof(mesh_command);
+mesh_command commands[MESH_CMD_MAX];
 
 bool mesh_rx_enabled;
 bool mesh_messages_available;
@@ -113,6 +70,13 @@ static uint8_t rx_buf_source;
 static uint32_t time_last_alive_sent_ms;
 
 static found_mesh_node mesh_nodes[MAX_MESH_NODE_COUNT];
+static bool MeshStarted = FALSE;
+static bool MeshPaused = FALSE;
+static LDD_TEventMask SPI_EventMask;
+LDD_TDeviceData* SPI_DeviceData;
+LDD_TDeviceData* MESH_CE_DeviceData;
+LDD_TDeviceData* MESH_CS_DeviceData;
+LDD_TDeviceData* MESH_IRQ_DeviceData;
 
 ///prototypes
 static bool findUnusedAddressInRoutingTable();
@@ -122,17 +86,66 @@ static void start_mesh_rx();
 static void stop_mesh_rx();
 
 ///functions
+bool Enable_Mesh()
+{
+    return TRUE;
+}
+
+bool Start_Mesh()
+{
+    mesh_init();
+    MeshStarted = TRUE;
+    MeshPaused = FALSE;
+    return TRUE;
+}
+
+void Stop_Mesh()
+{
+    if (MeshStarted)
+    {
+        Pause_Mesh();
+        MeshStarted = FALSE;
+    }
+}
+
+void Pause_Mesh()
+{
+    if (!MeshPaused)
+    {
+        stop_mesh_rx();
+        SPI_EventMask = SM1_GetEventMask(SPI_DeviceData);
+        SM1_SetEventMask(SPI_DeviceData, 0);
+        MeshPaused = TRUE;
+    }
+}
+
+void Resume_Mesh()
+{
+    if (MeshPaused)
+    {
+        SM1_SetEventMask(SPI_DeviceData, SPI_EventMask);
+        MeshPaused = FALSE;
+    }
+}
+
+void Reset_Mesh()
+{
+    Stop_Mesh();
+    Start_Mesh();
+}
 
 //initialize the mesh objects.
-void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
+void mesh_init()
 {
-    commands[0].function = changeMeshModeCallback;
-    commands[1].function = updateImuLedsCallback;
+    MESH_CE_DeviceData = MESH_CE_Init(MESH_CE_DeviceData);
+    MESH_IRQ_DeviceData = MESH_IRQ_Init(MESH_IRQ_DeviceData);
+    MESH_CS_DeviceData = MESH_CS_Init(MESH_CS_DeviceData);
+    SPI_DeviceData = SM1_Init(SPI_DeviceData);
 
     meshRadio = new
     RH_NRF24(MESH_CE_PIN_INDEX, MESH_SELECT_PIN_INDEX);
 
-    //enable auto-ack on all pipes.
+//enable auto-ack on all pipes.
     meshRadio->spiWriteRegister(RH_NRF24_REG_01_EN_AA, 0x3F);
 
     meshManager = new
@@ -140,10 +153,10 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
 
     meshManager->init();
 
-    //set address and seed RNG.
+//set address and seed RNG.
     mesh_discover_nodes_and_get_address();
 
-    //enable hw ack.
+//enable hw ack.
     set_hw_retry_delay(experiment_data.settings.randomize_hw_retry_count ? experiment_data.settings.retry_interval : _500uS);        //default: no retries
     set_hw_retry_count(experiment_data.settings.randomize_hw_retry_count ? experiment_data.settings.max_rh_retry_count : 15);
 
@@ -165,12 +178,20 @@ void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback)
 
 }
 
+extern void mesh_register_callback(MeshCommandIndex command, cmd_func function)
+{
+    if (command < MESH_CMD_MAX)
+    {
+        commands[command].function = function;
+    }
+}
+
 //call periodically to parse received messages and to enable the radio to receive.
 void mesh_process_commands(void)
 {
     uint8_t available_spot = MESH_MAX_NODES;
 
-    meshManager->printRoutingTable();
+//    meshManager->printRoutingTable();
 
     if (power_on_time_msec - time_last_alive_sent_ms >= MESH_ALIVE_PERIOD_MS)
     {
@@ -245,7 +266,7 @@ void mesh_process_commands(void)
 #endif
 
             ++experiment_data.messages_received[rx_buf_source > MAX_NODE_COUNT ? MAX_NODE_COUNT + 1 : rx_buf_source - 1];
-            if (rx_buf[0] < command_count && commands[rx_buf[0]].function != NULL)
+            if (rx_buf[0] < MESH_CMD_MAX && commands[rx_buf[0]].function != NULL)
             {
                 commands[rx_buf[0]].function(rx_buf, rx_buf_size);
             }
@@ -270,13 +291,13 @@ void mesh_process_commands(void)
 //send message to one node. Stops the radio if it's in receive mode and starts it again once the TX is complete.
 uint8_t mesh_tx(void * data, uint32_t dataLength, uint8_t destination)
 {
-    //store state of rx enable.
+//store state of rx enable.
     bool rx_enable_push = mesh_rx_enabled;
     stop_mesh_rx();
 
     uint8_t rval = meshManager->sendtoWait((uint8_t*) data, dataLength, destination, 0);
 
-    //resume rx, if it was in progress
+//resume rx, if it was in progress
     if (rx_enable_push)
     {
         start_mesh_rx();
@@ -456,11 +477,11 @@ void mesh_irq_handler(void)
 
     ++experiment_data.rx_interrupt_count;
     irq_handler_time = power_on_time_msec;
-    
+
     uint8_t MeshStatus = meshRadio->statusRead();
 
     mesh_rx_enabled = false;
-    rx_buf_size = 0xFF;        //0xFF is max value, that way entire message is returned.
+    rx_buf_size = 0xFF;        //mesh_rx will put the size it receives in here, or 0xFF if no value 
 
     if (mesh_rx(rx_buf, &rx_buf_size, &rx_buf_source))
     {
@@ -519,7 +540,7 @@ bool set_hw_retry_delay(mesh_HW_retry_interval retransmitDelay)
 
 void re_init_mesh_retries()
 {
-    //enable hw ack.
+//enable hw ack.
     set_hw_retry_delay(experiment_data.settings.randomize_hw_retry_count ? experiment_data.settings.retry_interval : _500uS);        //default: no retries
     set_hw_retry_count(experiment_data.settings.randomize_hw_retry_count ? experiment_data.settings.max_rh_retry_count : 15);
 

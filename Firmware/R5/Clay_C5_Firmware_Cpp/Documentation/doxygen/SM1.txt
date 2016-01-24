@@ -646,7 +646,7 @@ registers of the peripheral(s) configured by the component.
 **            Initial chip select                          : 0
 **            Initial attribute set                        : 0
 **            Enabled in init. code                        : yes
-**            Auto initialization                          : yes
+**            Auto initialization                          : no
 **            Event mask                                   : 
 **              OnBlockSent                                : Enabled
 **              OnBlockReceived                            : Enabled

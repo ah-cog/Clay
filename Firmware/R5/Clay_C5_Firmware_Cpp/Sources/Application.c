@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "meshTest.h"
 #include "Bootloader.h"
+#include "Mesh.h"
 
 // Clay's print, debug, and error messages.
 
@@ -51,6 +52,16 @@ void Application(void)
     }
 
     Perform_Status_LED_Effect();
+
+    if (!(status = Enable_Mesh()))
+    {
+        //failure
+    }
+
+    if (!(status = Start_Mesh()))
+    {
+        //failure
+    }
 
     // Channels.
 
@@ -106,7 +117,6 @@ void Application(void)
     {
         // Failure
     }
-
     // TODO: Generate SSID for AP according to regular expression and set up access point to facilitate discovery.
 
 //#if !defined DONT_DO_WIFI_STUFF
@@ -129,9 +139,7 @@ void Application(void)
     {
         // Failure
     }
-//#endif
-    
-    MeshTestLoop();
+//#endif      
 
     for (;;)
     {
@@ -139,8 +147,11 @@ void Application(void)
 //		Send_HTTP_Request ("192.168.1.105", 8080, "test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test");
 
 // Check and process any incoming requests
-        Wait(10);        // Wait (100);
+//        Wait(10);        // Wait (100);
         Monitor_Network_Communications();
+        MeshTestLoopStep();
+
+//        mesh_process_commands();
 
         // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 

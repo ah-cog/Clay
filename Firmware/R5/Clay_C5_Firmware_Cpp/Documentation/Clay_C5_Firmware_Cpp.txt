@@ -505,6 +505,12 @@ Module "SM1"       (component SPIMaster_LDD)
                 then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
                 is not necessary and needn't to be generated.    This method can be called only once. Before the second call of 
                 Init() the Deinit() must be called first.
+   - SM1_SetEventMask -Enables/disables event(s). The events contained within the mask are enabled. Events not contained within 
+                the mask are disabled. The component event masks are defined in the PE_Types.h file. Note: Event that are not 
+                generated (See the "Method" tab in the Component inspector) are not handled by this method. In this case the 
+                method returns ERR_PARAM_MASK error code. See also method <GetEventMask>.
+   - SM1_GetEventMask -Returns current events mask. Note: Event that are not generated (See the "Method" tab in the Component 
+                inspector) are not handled by this method. See also method <SetEventMask>.
    - SM1_SendBlock -This method sends a block of characters. The method returns ERR_BUSY when the previous block transmission 
                 is not completed. The method <CancelBlockTransmission> can be used to cancel a transmit operation.
    - SM1_ReceiveBlock -This method specifies the number of data to receive. The method returns ERR_BUSY until the specified 

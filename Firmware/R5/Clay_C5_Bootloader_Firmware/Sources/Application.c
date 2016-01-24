@@ -12,7 +12,7 @@ void Application(void)
     Initialize_Bootloader();
 
     //if (!Verify_Firmware () || (/*!Has_Latest_Firmware()*/ SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update ())) {
-    if (!Verify_Firmware() || (SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update()))
+    if (0&&!Verify_Firmware() || (SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update()))
     {
 
         Set_WiFi_Network(SSID_DEFAULT, PASSWORD_DEFAULT);
