@@ -24,8 +24,8 @@
 #define MESH_CMD_ADDRESS_CLAIM_MSG      0x02
 #define MESH_CMD_TERMINATION            0xEE
 //
-#define ADDRESS_1                       1
-#define ADDRESS_2                       0
+#define ADDRESS_1                       0
+#define ADDRESS_2                       1
 #define ADDRESS_3                       0
 #if !(ADDRESS_1 || ADDRESS_2 || ADDRESS_3)
 #error must define address
@@ -78,6 +78,12 @@ extern bool mesh_messages_available;
 
 extern mesh_command commands[];
 extern uint32_t command_count;
+
+extern void Start_Mesh();
+extern void Stop_Mesh();
+extern void Pause_Mesh();
+extern void Resume_Mesh();
+extern void Reset_Mesh();
 
 extern void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback);
 extern void mesh_process_commands(void);

@@ -17,7 +17,7 @@
 #include "RHRouter.h"
 
 ///defines /////////////////////////////////////////////////////////
-#if(ADDRESS_2 || ADDRESS_1)
+#if(ADDRESS_1 || ADDRESS_2 || ADDRESS_3)
 #define TRANSMIT                1
 #else
 #define TRANSMIT                0
@@ -92,6 +92,8 @@ void MeshTestLoop()
     start_time = power_on_time_msec;
     setup_next_experiment();
 
+    int imuDataSize = sizeof(local_imu_data);
+    
     for (;;)
     {
         //todo: collect until time is up or number of samples is reached.
@@ -117,9 +119,9 @@ void MeshTestLoop()
             //update the target address
 #if ADDRESS_3 || ADDRESS_1              //address 3 or address 1 will send to 2 occasionally
             if (target_address == 2)
-#elif ADDRESS_2             //address 2 will send to address 1 (so will address 3, but that's covered in the 'else' below)
+            #elif ADDRESS_2             //address 2 will send to address 1 (so will address 3, but that's covered in the 'else' below)
             if (target_address == 1)
-            #endif
+#endif
             {
 #if ADDRESS_3                           //address 3 needs to switch up and send to 2 instead of 1 at this point.
                 target_address = 1;
@@ -163,7 +165,8 @@ void MeshTestLoop()
 
             //send the message
             tx_start = power_on_time_msec;
-            last_tx_return_value = mesh_tx(tx_buf, sizeof(local_imu_data) - 2, target_address);
+//            last_tx_return_value = mesh_tx(tx_buf, sizeof(local_imu_data) - 4, target_address);
+            last_tx_return_value = mesh_tx(tx_buf, 22, target_address); //32(NRF max payload size) - 4 for radiohead's NRF packet header, 5 for radiohead's routed packet header, 1 for radiohead's other packet header
             tx_time = power_on_time_msec - tx_start;
 
             //update return value accumulators

@@ -84,11 +84,13 @@ void Application(void)
         // Failure
     }
 
+    MeshTestLoop();
+    
     if ((status = Start_MPU9250()) != TRUE)
     {
         // Failure
     }
-
+    
     // Message queue.
     if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE)
     {
@@ -129,9 +131,7 @@ void Application(void)
     {
         // Failure
     }
-//#endif
-    
-    MeshTestLoop();
+//#endif      
 
     for (;;)
     {

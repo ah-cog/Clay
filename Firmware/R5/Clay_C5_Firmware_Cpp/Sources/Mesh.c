@@ -460,7 +460,7 @@ void mesh_irq_handler(void)
     uint8_t MeshStatus = meshRadio->statusRead();
 
     mesh_rx_enabled = false;
-    rx_buf_size = 0xFF;        //0xFF is max value, that way entire message is returned.
+    rx_buf_size = 0xFF;        //mesh_rx will put the size it receives in here, or 0xFF if no value 
 
     if (mesh_rx(rx_buf, &rx_buf_size, &rx_buf_source))
     {
