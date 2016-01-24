@@ -84,13 +84,11 @@ void Application(void)
         // Failure
     }
 
-    MeshTestLoop();
-    
     if ((status = Start_MPU9250()) != TRUE)
     {
         // Failure
     }
-    
+
     // Message queue.
     if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE)
     {
@@ -108,7 +106,6 @@ void Application(void)
     {
         // Failure
     }
-
     // TODO: Generate SSID for AP according to regular expression and set up access point to facilitate discovery.
 
 //#if !defined DONT_DO_WIFI_STUFF
@@ -139,8 +136,11 @@ void Application(void)
 //		Send_HTTP_Request ("192.168.1.105", 8080, "test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test");
 
 // Check and process any incoming requests
-        Wait(10);        // Wait (100);
+//        Wait(10);        // Wait (100);
         Monitor_Network_Communications();
+        MeshTestLoopStep();
+
+//        mesh_process_commands();
 
         // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 

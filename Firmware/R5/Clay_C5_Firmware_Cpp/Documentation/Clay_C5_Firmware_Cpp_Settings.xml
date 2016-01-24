@@ -934,9 +934,9 @@ PE_DEBUGHALT();
       <Device v="UART0" />
       <boolgroup name="Interrupt service/event" v="Enabled">
         <Interrupt_RxD v="INT_UART0_RX_TX" />
-        <Interrupt_RxD_priority v="medium priority" />
+        <Interrupt_RxD_priority v="5" />
         <Interrupt_TxD v="INT_UART0_RX_TX" />
-        <Interrupt_TxD_priority v="medium priority" />
+        <Interrupt_TxD_priority v="5" />
         <Interrupt_Error v="INT_UART0_ERR" />
         <Interrupt_Error_priority v="medium priority" />
       </boolgroup>

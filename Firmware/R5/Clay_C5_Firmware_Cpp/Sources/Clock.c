@@ -122,8 +122,8 @@ void Monitor_Periodic_Events()
 
     if (data_ready)
     {
-        LED1_PutVal(NULL, led_1_state);
-        led_1_state = !led_1_state;
+//        LED1_PutVal(NULL, led_1_state);
+//        led_1_state = !led_1_state;
 
         imu_periodic_callback();
     }
@@ -152,7 +152,7 @@ void Monitor_Periodic_Events()
         led_2_state = !led_2_state;
 
         // TODO: Perform any periodic actions (1 ms).
-
+        
         /*
          //toggle LEDs
          LED1_PutVal(LED1_DeviceData, !led_state);

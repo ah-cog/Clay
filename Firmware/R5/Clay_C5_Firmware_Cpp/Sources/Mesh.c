@@ -170,7 +170,7 @@ void mesh_process_commands(void)
 {
     uint8_t available_spot = MESH_MAX_NODES;
 
-    meshManager->printRoutingTable();
+//    meshManager->printRoutingTable();
 
     if (power_on_time_msec - time_last_alive_sent_ms >= MESH_ALIVE_PERIOD_MS)
     {

@@ -74,7 +74,7 @@
       <GenExtraFileSrcDir35>lib\doxygen\</GenExtraFileSrcDir35>
       <XtraAge36>1211412609</XtraAge36>
       <XtraAge37>1211481228</XtraAge37>
-      <XtraAge38>1211592865</XtraAge38>
+      <XtraAge38>1211603211</XtraAge38>
       <GenExtraFileType38>4</GenExtraFileType38>
       <GenExtraFileType37>4</GenExtraFileType37>
       <GenExtraFileType36>4</GenExtraFileType36>
@@ -492,7 +492,7 @@
     </GenFiles>
     <SignalListFile>Documentation\Clay_C5_Firmware_Cpp_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>68</ProjectModificationStamp>
+    <ProjectModificationStamp>69</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>
@@ -1237,8 +1237,8 @@
     <GenComponentVersion>01.187</GenComponentVersion>
     <GenDriverVersion>01.12</GenDriverVersion>
     <GenEventModule>Events_ESP8266</GenEventModule>
-    <HeaderAge>1211412609</HeaderAge>
-    <CodeAge>1211412609</CodeAge>
+    <HeaderAge>1211603211</HeaderAge>
+    <CodeAge>1211603211</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>36</GenNumMethods>
     <Init>true</Init>

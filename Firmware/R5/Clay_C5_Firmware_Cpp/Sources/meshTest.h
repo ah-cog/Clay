@@ -10,5 +10,6 @@
 
 
 extern void MeshTestLoop();
+extern void MeshTestLoopStep();
 
 #endif /* MESHTEST_H_ */

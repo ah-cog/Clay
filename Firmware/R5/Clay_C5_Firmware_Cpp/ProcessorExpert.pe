@@ -3,7 +3,7 @@
   <Header>
     <Name>Clay_C5_Firmware_Cpp</Name>
     <SavedBy>thebh</SavedBy>
-    <ModificationStamp>67</ModificationStamp>
+    <ModificationStamp>69</ModificationStamp>
     <Date>2016-01-23</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.9.2.RT6_b1446-0504</PEversion>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>113</ProjectCompNumb>
+    <ProjectCompNumb>116</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -18326,7 +18326,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>5</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>HasInterruptServiceRoutineGrp0</ItemSymbol>
@@ -18361,7 +18361,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>medium priority</Value>
+        <Value>5</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>HasInterruptServiceRoutineGrp1</ItemSymbol>
