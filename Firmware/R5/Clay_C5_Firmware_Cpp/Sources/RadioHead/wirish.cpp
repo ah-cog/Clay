@@ -49,11 +49,11 @@ void digitalWrite(uint8_t pin, uint8_t val)
     }
     else if (pin == MESH_CE_PIN_INDEX)
     {
-        MESH_CE_PutVal(MESH_CE_DeviceData, val_bool);
+        MESH_CE_PutVal(NULL, val_bool);
     }
     else if (pin == MESH_SELECT_PIN_INDEX)
     {
-        MESH_CS_PutVal(MESH_CS_DeviceData, val_bool);
+        MESH_CS_PutVal(NULL, val_bool);
     }
 }
 
@@ -65,11 +65,11 @@ uint8_t digitalRead(uint8_t pin)
 
     if (pin == MESH_IRQ_PIN_INDEX)
     {
-        rval = MESH_IRQ_GetFieldValue(MESH_IRQ_DeviceData, MESH_IRQ_BITFIELD );
+        rval = MESH_IRQ_GetFieldValue(NULL, MESH_IRQ_BITFIELD );
     }
     else if (pin == MESH_CE_PIN_INDEX)
     {
-        rval = MESH_CE_GetVal(MESH_CE_DeviceData );
+        rval = MESH_CE_GetVal(NULL);
     }
 
     return rval;

@@ -9,6 +9,7 @@
 #define MESH_H_
 
 #include <stdint.h>
+#include "PE_Types.h"
 
 #define MESH_MAX_NODES 10
 //
@@ -19,10 +20,17 @@
 #define MESH_ALIVE_PERIOD_MS            5000
 #define MESH_NODE_DISCONNECT_TIMEOUT_MS (3 * MESH_ALIVE_PERIOD_MS)
 //
-#define MESH_CMD_CHANGE_MESH_MODE       0x00
-#define MESH_CMD_UPDATE_IMU_DATA        0x01
-#define MESH_CMD_ADDRESS_CLAIM_MSG      0x02
+//enum for now
+typedef enum
+{
+    MESH_CMD_CHANGE_MESH_MODE = 0x00,
+    MESH_CMD_UPDATE_IMU_DATA = 0x01,
+    MESH_CMD_ADDRESS_CLAIM_MSG = 0x02,
+    MESH_CMD_MAX = 0x03   //max mesh command value.
+} MeshCommandIndex;
+
 #define MESH_CMD_TERMINATION            0xEE
+
 //
 #define ADDRESS_1                       1
 #define ADDRESS_2                       0
@@ -75,17 +83,20 @@ typedef struct
 
 extern bool mesh_rx_enabled;
 extern bool mesh_messages_available;
+extern LDD_TDeviceData *SPI_DeviceData;
 
 extern mesh_command commands[];
 extern uint32_t command_count;
 
-extern void Start_Mesh();
+extern bool Enable_Mesh();
+extern bool Start_Mesh();
 extern void Stop_Mesh();
 extern void Pause_Mesh();
 extern void Resume_Mesh();
 extern void Reset_Mesh();
 
-extern void mesh_init(cmd_func changeMeshModeCallback, cmd_func updateImuLedsCallback);
+extern void mesh_init();
+extern void mesh_register_callback(MeshCommandIndex command, cmd_func function);
 extern void mesh_process_commands(void);
 extern uint8_t mesh_rx(void * data, uint8_t * dataLength, uint8_t * source);
 extern uint8_t mesh_tx(void * data, uint32_t dataLength, uint8_t destination);

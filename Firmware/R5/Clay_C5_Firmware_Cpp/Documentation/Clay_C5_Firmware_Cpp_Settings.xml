@@ -1951,7 +1951,7 @@ PE_DEBUGHALT();
         <Initial_attribute_set v="0" />
         <Enabled_in_init__code v="yes" />
         <list name="Auto Initialization" v="1">
-          <Auto_initialization v="yes" />
+          <Auto_initialization v="no" />
         </list>
         <group name="Event mask">
           <OnBlockSent v="Enabled" />
@@ -1977,8 +1977,8 @@ PE_DEBUGHALT();
       <Deinit v="don&amp;apos;t generate code" />
       <Enable v="don&amp;apos;t generate code" />
       <Disable v="don&amp;apos;t generate code" />
-      <SetEventMask v="don&amp;apos;t generate code" />
-      <GetEventMask v="don&amp;apos;t generate code" />
+      <SetEventMask v="generate code" />
+      <GetEventMask v="generate code" />
       <SendBlock v="generate code" />
       <ReceiveBlock v="generate code" />
       <GetSentDataNum v="don&amp;apos;t generate code" />
@@ -2017,7 +2017,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -2049,7 +2049,7 @@ PE_DEBUGHALT();
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="1" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -2091,14 +2091,14 @@ PE_DEBUGHALT();
               <Pin v="ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK" />
               <boolgroup name="Initial pin direction" v="Input" />
               <Initial_pin_event v="Falling edge" />
-              <Lock_initialization_function v="yes" />
+              <Lock_initialization_function v="no" />
             </group>
           </list>
         </group>
       </list>
       <group name="Initialization">
         <list name="Auto Initialization" v="1">
-          <Auto_initialization v="yes" />
+          <Auto_initialization v="no" />
         </list>
         <group name="Event mask">
           <OnPortEvent v="Enabled" />

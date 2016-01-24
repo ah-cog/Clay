@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "meshTest.h"
 #include "Bootloader.h"
+#include "Mesh.h"
 
 // Clay's print, debug, and error messages.
 
@@ -51,6 +52,16 @@ void Application(void)
     }
 
     Perform_Status_LED_Effect();
+
+    if (!(status = Enable_Mesh()))
+    {
+        //failure
+    }
+
+    if (!(status = Start_Mesh()))
+    {
+        //failure
+    }
 
     // Channels.
 

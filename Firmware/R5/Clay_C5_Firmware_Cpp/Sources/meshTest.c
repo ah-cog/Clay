@@ -71,7 +71,10 @@ void MeshTestLoop()
     Start_MPU9250();
     upcount_hb_leds();
 
-    mesh_init(update_mesh_mode, mesh_update_imu_leds);
+    mesh_init();
+    mesh_register_callback(MESH_CMD_UPDATE_IMU_DATA, mesh_update_imu_leds);
+    mesh_register_callback(MESH_CMD_CHANGE_MESH_MODE, update_mesh_mode);
+
     upcount_hb_leds();
 
     //mesh diagnostic LEDs.
@@ -117,7 +120,9 @@ void MeshTestLoopStep()
 {
     if (!Initialized)
     {
-        mesh_init(update_mesh_mode, mesh_update_imu_leds);
+        Start_Mesh();
+        mesh_register_callback(MESH_CMD_UPDATE_IMU_DATA, mesh_update_imu_leds);
+        mesh_register_callback(MESH_CMD_CHANGE_MESH_MODE, update_mesh_mode);
         Initialized = TRUE;
     }
 
