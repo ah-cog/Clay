@@ -63,15 +63,16 @@ void Tick()
 
 	tick_50us = TRUE;
 
-	if (++tick_count >= 19)
+	if (++tick_count >= 20)
 	{
 		tick_count = 0;
 		tick_1ms = TRUE;
 		++PowerOnTime_ms;
+
+		tick_50ms = !(PowerOnTime_ms % 50);
+		tick_250ms = !(PowerOnTime_ms % 250);
 	}
 
-	tick_50ms = !(PowerOnTime_ms % 50);
-	tick_250ms = !(PowerOnTime_ms % 250);
 
 }
 
