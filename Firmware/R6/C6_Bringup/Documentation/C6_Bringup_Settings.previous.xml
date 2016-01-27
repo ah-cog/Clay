@@ -374,7 +374,7 @@
         <boolgroup name="MASTER mode" v="Enabled">
           <group name="Initialization">
             <Address_mode v="7-bit addressing" />
-            <Target_slave_address_init v="0" />
+            <Target_slave_address_init v="60" />
           </group>
         </boolgroup>
         <boolgroup name="SLAVE mode" v="Disabled" />

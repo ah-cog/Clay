@@ -246,7 +246,7 @@
         <Interrupt v="INT_FTM0" />
         <Interrupt_priority v="medium priority" />
       </boolgroup>
-      <Interrupt_period v="100 &amp;#181;s" />
+      <Interrupt_period v="50 &amp;#181;s" />
       <group name="Initialization">
         <Enabled_in_init__code v="yes" />
         <group name="Event mask">
@@ -297,7 +297,7 @@
       </enumgroup>
       <enumgroup name="Counter restart" v="On-match">
         <Period_device v="FTM0_MOD" />
-        <Period v="100 &amp;#181;s" />
+        <Period v="50 &amp;#181;s" />
         <boolgroup name="Interrupt" v="Enabled">
           <Interrupt v="INT_FTM0" />
           <Interrupt_priority v="medium priority" />
