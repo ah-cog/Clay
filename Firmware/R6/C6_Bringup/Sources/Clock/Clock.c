@@ -6,6 +6,7 @@
  */
 ////includes
 #include "PE_Types.h"
+#include "Clock.h"
 
 ////global vars
 bool tick_50us;
@@ -72,7 +73,6 @@ void Tick()
 		tick_50ms = !(PowerOnTime_ms % 50);
 		tick_250ms = !(PowerOnTime_ms % 250);
 	}
-
 
 }
 

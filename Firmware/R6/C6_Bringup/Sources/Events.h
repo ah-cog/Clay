@@ -40,10 +40,17 @@
 #include "TU1.h"
 #include "I2C2.h"
 #include "LED_SDB.h"
+#include "BuzzerOut.h"
+#include "BuzzerLine.h"
+#include "ButtonIn.h"
+
+#include "Clay_Core_Hardware.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
+
+extern FREQ_OUT SelectedFreq;
 
 /*
 ** ===================================================================
@@ -120,6 +127,26 @@ void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  ButtonIn_OnPortEvent (module Events)
+**
+**     Component   :  ButtonIn [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

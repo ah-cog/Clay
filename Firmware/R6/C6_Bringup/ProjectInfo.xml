@@ -55,6 +55,9 @@
   </PATHS>
   <FILES>
     <GeneratedCs>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\ButtonIn.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\BuzzerLine.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\BuzzerOut.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\Cpu.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\I2C2.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\LED1.c</PathName>
@@ -75,6 +78,9 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\System\Vectors.c</PathName>
     </GeneratedCs>
     <GeneratedHs>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\ButtonIn.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\BuzzerLine.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\BuzzerOut.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\CPU_Config.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\Cpu.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\I2C2.h</PathName>

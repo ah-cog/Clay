@@ -36,6 +36,9 @@
 #include "TU1.h"
 #include "I2C2.h"
 #include "LED_SDB.h"
+#include "BuzzerOut.h"
+#include "BuzzerLine.h"
+#include "ButtonIn.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"

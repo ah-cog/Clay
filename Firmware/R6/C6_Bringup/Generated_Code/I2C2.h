@@ -7,7 +7,7 @@
 **     Version     : Component 01.016, Driver 01.07, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-27, 01:30, # CodeGen: 6
+**     Date/Time   : 2016-01-27, 23:24, # CodeGen: 12
 **     Abstract    :
 **          This component encapsulates the internal I2C communication
 **          interface. The implementation of the interface is based
@@ -42,7 +42,7 @@
 **              SDA pin                                    : 
 **                SDA pin                                  : CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB
 **              SCL pin                                    : 
-**                SCL pin                                  : PTA14/SPI0_PCS0/UART0_TX/RMII0_CRS_DV/MII0_RXDV/I2C2_SCL/I2S0_RX_BCLK/I2S0_TXD1
+**                SCL pin                                  : CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA
 **              High drive select                          : Disabled
 **              Input Glitch filter                        : 0
 **            Internal frequency (multiplier factor)       : 15 MHz

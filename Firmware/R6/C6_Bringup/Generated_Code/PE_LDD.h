@@ -6,7 +6,7 @@
 **     Version     : Component 01.046, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-26, 23:31, # CodeGen: 4
+**     Date/Time   : 2016-01-27, 21:56, # CodeGen: 11
 **
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -62,6 +62,9 @@
 #include "TU1.h"
 #include "I2C2.h"
 #include "LED_SDB.h"
+#include "BuzzerOut.h"
+#include "BuzzerLine.h"
+#include "ButtonIn.h"
 
 
 /*
