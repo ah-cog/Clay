@@ -32,6 +32,9 @@
 - \subpage TI1
 - \subpage I2C2
 - \subpage LED_SDB
+- \subpage BuzzerOut
+- \subpage BuzzerLine
+- \subpage ButtonIn
 
 */
 
@@ -70,6 +73,9 @@
 - \subpage TI1
 - \subpage I2C2
 - \subpage LED_SDB
+- \subpage BuzzerOut
+- \subpage BuzzerLine
+- \subpage ButtonIn
 
 */
 

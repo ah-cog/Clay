@@ -33,6 +33,8 @@
 
 #include "Clock.h"
 
+FREQ_OUT SelectedFreq = f_Off;
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -84,49 +86,73 @@ void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
 }
 
 /*
-** ===================================================================
-**     Event       :  I2C2_OnMasterBlockSent (module Events)
-**
-**     Component   :  I2C2 [I2C_LDD]
-*/
+ ** ===================================================================
+ **     Event       :  I2C2_OnMasterBlockSent (module Events)
+ **
+ **     Component   :  I2C2 [I2C_LDD]
+ */
 /*!
-**     @brief
-**         This event is called when I2C in master mode finishes the
-**         transmission of the data successfully. This event is not
-**         available for the SLAVE mode and if MasterSendBlock is
-**         disabled. 
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
+ **     @brief
+ **         This event is called when I2C in master mode finishes the
+ **         transmission of the data successfully. This event is not
+ **         available for the SLAVE mode and if MasterSendBlock is
+ **         disabled.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. This pointer is passed
+ **                           as the parameter of Init method.
+ */
 /* ===================================================================*/
 void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
 {
-  /* Write your code here ... */
+	/* Write your code here ... */
 }
 
 /*
-** ===================================================================
-**     Event       :  I2C2_OnMasterBlockReceived (module Events)
-**
-**     Component   :  I2C2 [I2C_LDD]
-*/
+ ** ===================================================================
+ **     Event       :  I2C2_OnMasterBlockReceived (module Events)
+ **
+ **     Component   :  I2C2 [I2C_LDD]
+ */
 /*!
-**     @brief
-**         This event is called when I2C is in master mode and finishes
-**         the reception of the data successfully. This event is not
-**         available for the SLAVE mode and if MasterReceiveBlock is
-**         disabled.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
+ **     @brief
+ **         This event is called when I2C is in master mode and finishes
+ **         the reception of the data successfully. This event is not
+ **         available for the SLAVE mode and if MasterReceiveBlock is
+ **         disabled.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. This pointer is passed
+ **                           as the parameter of Init method.
+ */
 /* ===================================================================*/
 void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
 {
-  /* Write your code here ... */
+	/* Write your code here ... */
+}
+
+/*
+ ** ===================================================================
+ **     Event       :  ButtonIn_OnPortEvent (module Events)
+ **
+ **     Component   :  ButtonIn [GPIO_LDD]
+ */
+/*!
+ **     @brief
+ **         Called if defined event on any pin of the port occured.
+ **         OnPortEvent event and GPIO interrupt must be enabled. See
+ **         SetEventMask() and GetEventMask() methods. This event is
+ **         enabled if [Interrupt service/event] is Enabled and disabled
+ **         if [Interrupt service/event] is Disabled.
+ **     @param
+ **         UserDataPtr     - Pointer to RTOS device
+ **                           data structure pointer.
+ */
+/* ===================================================================*/
+void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
+{
+	/* Write your code here ... */
+	SelectedFreq = (SelectedFreq + 1) % (f_Off + 1);
 }
 
 /* END Events */

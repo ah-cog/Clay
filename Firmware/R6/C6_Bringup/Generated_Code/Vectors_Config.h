@@ -56,6 +56,9 @@
 #include "TU1.h"
 #include "I2C2.h"
 #include "LED_SDB.h"
+#include "BuzzerOut.h"
+#include "BuzzerLine.h"
+#include "ButtonIn.h"
 #include "Events.h"
 
 #ifdef __cplusplus
@@ -141,7 +144,7 @@ extern "C" {
 #define VECTOR_73         (tIsrFunc)&UnhandledInterrupt         /* 0x49 -    ivINT_MCG                      unused by PE */
 #define VECTOR_74         (tIsrFunc)&UnhandledInterrupt         /* 0x4A -    ivINT_LPTMR0                   unused by PE */
 #define VECTOR_75         (tIsrFunc)&UnhandledInterrupt         /* 0x4B -    ivINT_PORTA                    unused by PE */
-#define VECTOR_76         (tIsrFunc)&UnhandledInterrupt         /* 0x4C -    ivINT_PORTB                    unused by PE */
+#define VECTOR_76         (tIsrFunc)&ButtonIn_Interrupt         /* 0x4C 112  ivINT_PORTB                    used by PE */
 #define VECTOR_77         (tIsrFunc)&UnhandledInterrupt         /* 0x4D -    ivINT_PORTC                    unused by PE */
 #define VECTOR_78         (tIsrFunc)&UnhandledInterrupt         /* 0x4E -    ivINT_PORTD                    unused by PE */
 #define VECTOR_79         (tIsrFunc)&UnhandledInterrupt         /* 0x4F -    ivINT_PORTE                    unused by PE */

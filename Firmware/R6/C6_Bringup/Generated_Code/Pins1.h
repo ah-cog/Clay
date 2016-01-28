@@ -7,7 +7,7 @@
 **     Version     : Component 01.100, Driver 1.1, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-26, 23:02, # CodeGen: 3
+**     Date/Time   : 2016-01-27, 23:24, # CodeGen: 12
 **     Abstract    :
 **
 **     Settings    :
@@ -402,7 +402,7 @@
 **                  Direction                              : <Automatic>
 **                  Pin 3                                  : <Automatic>
 **                  Direction                              : <Automatic>
-**                  Pin 9                                  : <Automatic>
+**                  Pin 9                                  : PTB9/SPI1_PCS1/UART3_CTS_b/FB_AD20
 **                  Direction                              : <Automatic>
 **                  Pin 10                                 : <Automatic>
 **                  Direction                              : <Automatic>
@@ -515,7 +515,7 @@
 **                  SDA - Serial data                      : <Automatic>
 **                Custom name                              : I2C2
 **                I2C2                                     : 
-**                  SCL - Serial clock                     : PTA14/SPI0_PCS0/UART0_TX/RMII0_CRS_DV/MII0_RXDV/I2C2_SCL/I2S0_RX_BCLK/I2S0_TXD1
+**                  SCL - Serial clock                     : CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA
 **                  SDA - Serial data                      : CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB
 **              Peripheral Type I2S                        : 
 **                Custom name                              : I2S0

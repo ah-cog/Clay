@@ -246,7 +246,7 @@
         <Interrupt v="INT_FTM0" />
         <Interrupt_priority v="medium priority" />
       </boolgroup>
-      <Interrupt_period v="100 &amp;#181;s" />
+      <Interrupt_period v="50 &amp;#181;s" />
       <group name="Initialization">
         <Enabled_in_init__code v="yes" />
         <group name="Event mask">
@@ -297,7 +297,7 @@
       </enumgroup>
       <enumgroup name="Counter restart" v="On-match">
         <Period_device v="FTM0_MOD" />
-        <Period v="100 &amp;#181;s" />
+        <Period v="50 &amp;#181;s" />
         <boolgroup name="Interrupt" v="Enabled">
           <Interrupt v="INT_FTM0" />
           <Interrupt_priority v="medium priority" />
@@ -504,6 +504,186 @@
     </Methods>
     <Events>
       <EmptySection_DummyValue />
+    </Events>
+  </Bean>
+  <Bean name="BuzzerOut" type="BitIO_LDD">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="BuzzerOut" />
+      <Pin_for_I_O v="PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FB_AD2/EWM_IN/SPI1_PCS0" />
+      <Direction v="Output" />
+      <group name="Initialization">
+        <Init__direction v="Output" />
+        <Init__value v="1" />
+        <Auto_initialization v="yes" />
+      </group>
+      <Safe_mode v="no" />
+    </Properties>
+    <Methods>
+      <Init v="generate code" />
+      <Deinit v="don&amp;apos;t generate code" />
+      <GetDir v="don&amp;apos;t generate code" />
+      <SetDir v="don&amp;apos;t generate code" />
+      <SetInput v="don&amp;apos;t generate code" />
+      <SetOutput v="don&amp;apos;t generate code" />
+      <GetVal v="generate code" />
+      <PutVal v="generate code" />
+      <ClrVal v="generate code" />
+      <SetVal v="generate code" />
+      <NegVal v="don&amp;apos;t generate code" />
+      <ConnectPin v="don&amp;apos;t generate code" />
+      <GetRawVal v="don&amp;apos;t generate code" />
+    </Methods>
+    <Events>
+      <EmptySection_DummyValue />
+    </Events>
+  </Bean>
+  <Bean name="BuzzerLine" type="ADC_LDD">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="BuzzerLine" />
+      <A_D_converter v="ADC0" />
+      <Discontinuous_mode v="no" />
+      <boolgroup name="Interrupt service/event" v="Disabled" />
+      <boolgroup name="DMA" v="Disabled" />
+      <list name="A/D channel list" v="1">
+        <group name="Channel 0">
+          <enumgroup name="Channel mode" v="Single Ended">
+            <group name="Input">
+              <A_D_channel__pin_ v="ADC1_DP0/ADC0_DP3" />
+            </group>
+          </enumgroup>
+        </group>
+      </list>
+      <boolgroup name="Static sample groups" v="Disabled" />
+      <A_D_resolution sel_value="16 bits">
+        
+Autoselect
+
+        <EmptySection_DummyValue />
+      </A_D_resolution>
+      <Low_power_mode v="Disabled" />
+      <High_speed_conversion_mode v="Disabled" />
+      <Asynchro_clock_output v="Disabled" />
+      <Sample_time v="16 clock periods" />
+      <Number_of_conversions v="32" />
+      <Conversion_time v="296 &amp;#181;s" />
+      <ADC_clock v="4 MHz (250 ns)" />
+      <Single_conversion_time___Single_ended v="296.833 us" />
+      <Single_conversion_time___Differential v="368.833 us" />
+      <Additional_conversion_time___Single_ended v="296 us" />
+      <Additional_conversion_time___Differential v="368 us" />
+      <Result_type v="unsigned 16 bits, right justified" />
+      <boolgroup name="Trigger" v="Disabled" />
+      <group name="Voltage reference">
+        <group name="High voltage reference">
+          <Volt__ref__pin v="VREFH" />
+        </group>
+        <group name="Low voltage reference">
+          <Volt__ref__pin v="VREFL" />
+        </group>
+      </group>
+      <group name="Initialization">
+        <Enabled_in_init__code v="yes" />
+        <group name="Event mask">
+          <OnMeasurementComplete v="Disabled" />
+          <OnError v="Disabled" />
+        </group>
+      </group>
+    </Properties>
+    <Methods>
+      <Init v="generate code" />
+      <Deinit v="don&amp;apos;t generate code" />
+      <Enable v="don&amp;apos;t generate code" />
+      <Disable v="don&amp;apos;t generate code" />
+      <GetEventMask v="don&amp;apos;t generate code" />
+      <SetEventMask v="don&amp;apos;t generate code" />
+      <StartSingleMeasurement v="generate code" />
+      <StartLoopMeasurement v="don&amp;apos;t generate code" />
+      <StartSingleTriggeredMeasurement v="don&amp;apos;t generate code" />
+      <StartLoopTriggeredMeasurement v="don&amp;apos;t generate code" />
+      <CancelMeasurement v="don&amp;apos;t generate code" />
+      <GetMeasuredValues v="generate code" />
+      <SelectSampleGroup v="don&amp;apos;t generate code" />
+      <CreateSampleGroup v="generate code" />
+      <GetMeasurementCompleteStatus v="don&amp;apos;t generate code" />
+      <EnableAutoCompare v="don&amp;apos;t generate code" />
+      <DisableAutoCompare v="don&amp;apos;t generate code" />
+      <StartCalibration v="don&amp;apos;t generate code" />
+      <GetCalibrationResultStatus v="don&amp;apos;t generate code" />
+      <SetOperationMode v="don&amp;apos;t generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+      <ConnectPin v="don&amp;apos;t generate code" />
+      <SetBuffer v="don&amp;apos;t generate code" />
+      <GetError v="don&amp;apos;t generate code" />
+      <GetMeasuredSamplesCount v="don&amp;apos;t generate code" />
+    </Methods>
+    <Events>
+      <Event_module_name v="Events" />
+      <event name="OnMeasurementComplete" v="don&amp;apos;t generate code" />
+      <event name="OnError" v="don&amp;apos;t generate code" />
+    </Events>
+  </Bean>
+  <Bean name="ButtonIn" type="GPIO_LDD">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="ButtonIn" />
+      <Port v="PTB" />
+      <Port_width v="32 bits" />
+      <Mask_of_allocated_pins v="512" />
+      <boolgroup name="Interrupt service/event" v="Enabled">
+        <Interrupt v="INT_PORTB" />
+        <Interrupt_priority v="medium priority" />
+      </boolgroup>
+      <list name="Bit fields" v="1">
+        <group name="Bit field">
+          <Field_name v="Button" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="PTB9/SPI1_PCS1/UART3_CTS_b/FB_AD20" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Falling edge" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+      </list>
+      <group name="Initialization">
+        <group name="Event mask">
+          <OnPortEvent v="Enabled" />
+        </group>
+      </group>
+    </Properties>
+    <Methods>
+      <Init v="generate code" />
+      <Deinit v="don&amp;apos;t generate code" />
+      <SetEventMask v="don&amp;apos;t generate code" />
+      <GetEventMask v="don&amp;apos;t generate code" />
+      <SetPortEventCondition v="don&amp;apos;t generate code" />
+      <GetPortEventStatus v="don&amp;apos;t generate code" />
+      <SetPortValue v="don&amp;apos;t generate code" />
+      <GetPortValue v="don&amp;apos;t generate code" />
+      <ClearPortBits v="don&amp;apos;t generate code" />
+      <SetPortBits v="don&amp;apos;t generate code" />
+      <TogglePortBits v="don&amp;apos;t generate code" />
+      <SetPortInputDirection v="don&amp;apos;t generate code" />
+      <SetPortOutputDirection v="don&amp;apos;t generate code" />
+      <SetFieldValue v="generate code" />
+      <GetFieldValue v="generate code" />
+      <ClearFieldBits v="generate code" />
+      <SetFieldBits v="generate code" />
+      <ToggleFieldBits v="generate code" />
+      <SetFieldInputDirection v="don&amp;apos;t generate code" />
+      <SetFieldOutputDirection v="don&amp;apos;t generate code" />
+      <SetOperationMode v="don&amp;apos;t generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+      <ConnectPin v="don&amp;apos;t generate code" />
+    </Methods>
+    <Events>
+      <Event_module_name v="Events" />
+      <event name="OnPortEvent" v="generate code">
+        <Event_procedure_name v="ButtonIn_OnPortEvent" />
+      </event>
     </Events>
   </Bean>
 </PE_PROJECT_SETTINGS_DOCUMENTATION>
