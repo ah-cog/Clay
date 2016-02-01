@@ -378,7 +378,7 @@
     </GenFiles>
     <SignalListFile>Documentation\clay_5g_utility_esp8266_flasher_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>45</ProjectModificationStamp>
+    <ProjectModificationStamp>46</ProjectModificationStamp>
   </Options>
   <CpuID_8>
     <Generated>false</Generated>

@@ -59,6 +59,17 @@
 #include "BuzzerOut.h"
 #include "BuzzerLine.h"
 #include "ButtonIn.h"
+#include "MESH_SPI.h"
+#include "MESH_CE.h"
+#include "MESH_CS.h"
+#include "PTC_IRQ.h"
+#include "WIFI_UART.h"
+#include "WIFI_GPIO0.h"
+#include "WIFI_GPIO2.h"
+#include "WIFI_RESET.h"
+#include "WIFI_CHIP_EN.h"
+#include "WIFI_XPD_DCDC.h"
+#include "IMU_FSYNC.h"
 #include "Events.h"
 
 #ifdef __cplusplus
@@ -110,13 +121,13 @@ extern "C" {
 #define VECTOR_39         (tIsrFunc)&UnhandledInterrupt         /* 0x27 -    ivINT_RNG                      unused by PE */
 #define VECTOR_40         (tIsrFunc)&UnhandledInterrupt         /* 0x28 -    ivINT_I2C0                     unused by PE */
 #define VECTOR_41         (tIsrFunc)&UnhandledInterrupt         /* 0x29 -    ivINT_I2C1                     unused by PE */
-#define VECTOR_42         (tIsrFunc)&UnhandledInterrupt         /* 0x2A -    ivINT_SPI0                     unused by PE */
+#define VECTOR_42         (tIsrFunc)&MESH_SPI_Interrupt         /* 0x2A 96   ivINT_SPI0                     used by PE */
 #define VECTOR_43         (tIsrFunc)&UnhandledInterrupt         /* 0x2B -    ivINT_SPI1                     unused by PE */
 #define VECTOR_44         (tIsrFunc)&UnhandledInterrupt         /* 0x2C -    ivINT_I2S0_Tx                  unused by PE */
 #define VECTOR_45         (tIsrFunc)&UnhandledInterrupt         /* 0x2D -    ivINT_I2S0_Rx                  unused by PE */
 #define VECTOR_46         (tIsrFunc)&UnhandledInterrupt         /* 0x2E -    ivINT_UART0_LON                unused by PE */
-#define VECTOR_47         (tIsrFunc)&UnhandledInterrupt         /* 0x2F -    ivINT_UART0_RX_TX              unused by PE */
-#define VECTOR_48         (tIsrFunc)&UnhandledInterrupt         /* 0x30 -    ivINT_UART0_ERR                unused by PE */
+#define VECTOR_47         (tIsrFunc)&WIFI_UART_Interrupt        /* 0x2F 112  ivINT_UART0_RX_TX              used by PE */
+#define VECTOR_48         (tIsrFunc)&WIFI_UART_Interrupt        /* 0x30 112  ivINT_UART0_ERR                used by PE */
 #define VECTOR_49         (tIsrFunc)&UnhandledInterrupt         /* 0x31 -    ivINT_UART1_RX_TX              unused by PE */
 #define VECTOR_50         (tIsrFunc)&UnhandledInterrupt         /* 0x32 -    ivINT_UART1_ERR                unused by PE */
 #define VECTOR_51         (tIsrFunc)&UnhandledInterrupt         /* 0x33 -    ivINT_UART2_RX_TX              unused by PE */
@@ -145,7 +156,7 @@ extern "C" {
 #define VECTOR_74         (tIsrFunc)&UnhandledInterrupt         /* 0x4A -    ivINT_LPTMR0                   unused by PE */
 #define VECTOR_75         (tIsrFunc)&UnhandledInterrupt         /* 0x4B -    ivINT_PORTA                    unused by PE */
 #define VECTOR_76         (tIsrFunc)&ButtonIn_Interrupt         /* 0x4C 112  ivINT_PORTB                    used by PE */
-#define VECTOR_77         (tIsrFunc)&UnhandledInterrupt         /* 0x4D -    ivINT_PORTC                    unused by PE */
+#define VECTOR_77         (tIsrFunc)&PTC_IRQ_Interrupt          /* 0x4D 112  ivINT_PORTC                    used by PE */
 #define VECTOR_78         (tIsrFunc)&UnhandledInterrupt         /* 0x4E -    ivINT_PORTD                    unused by PE */
 #define VECTOR_79         (tIsrFunc)&UnhandledInterrupt         /* 0x4F -    ivINT_PORTE                    unused by PE */
 #define VECTOR_80         (tIsrFunc)&UnhandledInterrupt         /* 0x50 -    ivINT_SWI                      unused by PE */

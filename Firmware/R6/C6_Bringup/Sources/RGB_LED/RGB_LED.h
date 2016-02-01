@@ -10,6 +10,22 @@
 
 #include "PE_Types.h"
 
+//TODO: update for new RGB driver
+typedef enum {
+    LED_MODE_MAX,       //full on
+    LED_MODE_OFF,       //high-z
+    LED_MODE_MED,       //pwm0
+    LED_MODE_LOW        //pwm1
+} LED_Mode;
+
+
+// RGB color type. LED drivers support 16 bit color.
+typedef struct {
+    LED_Mode R;
+    LED_Mode G;
+    LED_Mode B;
+} Color_RGB;
+
 typedef struct
 {
 	uint32_t R;
