@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-27, 23:24, # CodeGen: 12
+**     Date/Time   : 2016-01-31, 18:50, # CodeGen: 28
 **     Abstract    :
 **
 **     Settings    :
@@ -96,8 +96,10 @@ void Common_Init(void)
      Optimizations\Utilize after reset values property or enabled processor 
      component Common settings\Utilize after reset values property) */
   /* Enable clock gate of peripherals initialized in Common_Init() */
-  /* SIM_SCGC5: PORTB=1,PORTA=1 */
-  SIM_SCGC5 |= (SIM_SCGC5_PORTB_MASK | SIM_SCGC5_PORTA_MASK);
+  /* SIM_SCGC5: PORTC=1,PORTB=1,PORTA=1 */
+  SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK |
+               SIM_SCGC5_PORTB_MASK |
+               SIM_SCGC5_PORTA_MASK;
 
   /* PORTA_PCR12: ISF=0,MUX=5 */
   PORTA_PCR12 = (uint32_t)((PORTA_PCR12 & (uint32_t)~(uint32_t)(
@@ -113,6 +115,13 @@ void Common_Init(void)
                 )) | (uint32_t)(
                  PORT_PCR_MUX(0x05)
                 ));
+  /* PORTA_PCR5: ISF=0,MUX=1 */
+  PORTA_PCR5 = (uint32_t)((PORTA_PCR5 & (uint32_t)~(uint32_t)(
+                PORT_PCR_ISF_MASK |
+                PORT_PCR_MUX(0x06)
+               )) | (uint32_t)(
+                PORT_PCR_MUX(0x01)
+               ));
   /* PORTB_PCR9: ISF=0,MUX=1 */
   PORTB_PCR9 = (uint32_t)((PORTB_PCR9 & (uint32_t)~(uint32_t)(
                 PORT_PCR_ISF_MASK |
@@ -120,10 +129,19 @@ void Common_Init(void)
                )) | (uint32_t)(
                 PORT_PCR_MUX(0x01)
                ));
+  /* PORTC_PCR1: ISF=0,PFE=0,PE=1,PS=1 */
+  PORTC_PCR1 = (uint32_t)((PORTC_PCR1 & (uint32_t)~(uint32_t)(
+                PORT_PCR_ISF_MASK |
+                PORT_PCR_PFE_MASK
+               )) | (uint32_t)(
+                PORT_PCR_PE_MASK |
+                PORT_PCR_PS_MASK
+               ));
 
   /* Disable clock gate of peripherals initialized in Common_Init() */
-  /* SIM_SCGC5: PORTB=0,PORTA=0 */
+  /* SIM_SCGC5: PORTC=0,PORTB=0,PORTA=0 */
   SIM_SCGC5 &= (uint32_t)~(uint32_t)(
+                SIM_SCGC5_PORTC_MASK |
                 SIM_SCGC5_PORTB_MASK |
                 SIM_SCGC5_PORTA_MASK
                );
@@ -162,6 +180,28 @@ void Components_Init(void)
   (void)BuzzerOut_Init(NULL);
   /* ### GPIO_LDD "ButtonIn" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)ButtonIn_Init(NULL);
+  /* ### SPIMaster_LDD "MESH_SPI" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)MESH_SPI_Init(NULL);
+  /* ### BitIO_LDD "MESH_CE" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)MESH_CE_Init(NULL);
+  /* ### BitIO_LDD "MESH_CS" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)MESH_CS_Init(NULL);
+  /* ### GPIO_LDD "PTC_IRQ" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)PTC_IRQ_Init(NULL);
+  /* ### Serial_LDD "WIFI_UART" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)WIFI_UART_Init(NULL);
+  /* ### BitIO_LDD "WIFI_GPIO0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)WIFI_GPIO0_Init(NULL);
+  /* ### BitIO_LDD "WIFI_GPIO2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)WIFI_GPIO2_Init(NULL);
+  /* ### BitIO_LDD "WIFI_RESET" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)WIFI_RESET_Init(NULL);
+  /* ### BitIO_LDD "WIFI_CHIP_EN" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)WIFI_CHIP_EN_Init(NULL);
+  /* ### BitIO_LDD "WIFI_XPD_DCDC" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)WIFI_XPD_DCDC_Init(NULL);
+  /* ### BitIO_LDD "IMU_FSYNC" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)IMU_FSYNC_Init(NULL);
 }
 #endif /* CPU_COMPONENTS_INIT */
 

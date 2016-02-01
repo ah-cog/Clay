@@ -6,7 +6,7 @@
 **     Component   : PE_Types
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-27, 21:56, # CodeGen: 11
+**     Date/Time   : 2016-01-31, 00:09, # CodeGen: 23
 **     Abstract    :
 **         PE_Types.h - contains definitions of basic types,
 **         register access macros and hardware specific macros
@@ -213,6 +213,17 @@ typedef unsigned long int       uint32;
 #define PE_LDD_COMPONENT_BuzzerOut_ID            0x06U
 #define PE_LDD_COMPONENT_BuzzerLine_ID           0x07U
 #define PE_LDD_COMPONENT_ButtonIn_ID             0x08U
+#define PE_LDD_COMPONENT_MESH_SPI_ID             0x09U
+#define PE_LDD_COMPONENT_MESH_CE_ID              0x0AU
+#define PE_LDD_COMPONENT_MESH_CS_ID              0x0BU
+#define PE_LDD_COMPONENT_PTC_IRQ_ID              0x0CU
+#define PE_LDD_COMPONENT_WIFI_UART_ID            0x0DU
+#define PE_LDD_COMPONENT_WIFI_GPIO0_ID           0x0EU
+#define PE_LDD_COMPONENT_WIFI_GPIO2_ID           0x0FU
+#define PE_LDD_COMPONENT_WIFI_RESET_ID           0x10U
+#define PE_LDD_COMPONENT_WIFI_CHIP_EN_ID         0x11U
+#define PE_LDD_COMPONENT_WIFI_XPD_DCDC_ID        0x12U
+#define PE_LDD_COMPONENT_IMU_FSYNC_ID            0x13U
 
 /*
 ** ===================================================================

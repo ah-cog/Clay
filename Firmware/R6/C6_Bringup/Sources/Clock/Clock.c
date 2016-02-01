@@ -13,6 +13,7 @@ bool tick_50us;
 bool tick_1ms;
 bool tick_50ms;
 bool tick_250ms;
+bool tick_500ms;
 
 ////local vars
 uint32_t PowerOnTime_ms;
@@ -72,6 +73,7 @@ void Tick()
 
 		tick_50ms = !(PowerOnTime_ms % 50);
 		tick_250ms = !(PowerOnTime_ms % 250);
+		tick_500ms = !(PowerOnTime_ms % 500);
 	}
 
 }

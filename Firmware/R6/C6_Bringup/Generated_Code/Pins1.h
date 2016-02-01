@@ -7,7 +7,7 @@
 **     Version     : Component 01.100, Driver 1.1, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-27, 23:24, # CodeGen: 12
+**     Date/Time   : 2016-01-31, 01:04, # CodeGen: 25
 **     Abstract    :
 **
 **     Settings    :
@@ -374,7 +374,7 @@
 **                  Direction                              : <Automatic>
 **                  Pin 4                                  : <Automatic>
 **                  Direction                              : <Automatic>
-**                  Pin 5                                  : <Automatic>
+**                  Pin 5                                  : PTA5/USB_CLKIN/FTM0_CH2/RMII0_RXER/MII0_RXER/CMP2_OUT/I2S0_TX_BCLK/JTAG_TRST_b
 **                  Direction                              : <Automatic>
 **                  Pin 12                                 : <Automatic>
 **                  Direction                              : <Automatic>
@@ -1120,9 +1120,9 @@
 **                Slew rate                                : <Automatic>
 **                Open drain                               : <Automatic>
 **                Drive strength                           : <Automatic>
-**                Passive filter                           : <Automatic>
-**                Pull select                              : <Automatic>
-**                Pull enable                              : <Automatic>
+**                Passive filter                           : Disable
+**                Pull select                              : Up
+**                Pull enable                              : Enabled
 **              Pin 72: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS: 
 **                Custom name, Signal name                 : ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS
 **                Slew rate                                : <Automatic>

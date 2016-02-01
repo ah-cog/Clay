@@ -35,6 +35,17 @@
 - \subpage BuzzerOut
 - \subpage BuzzerLine
 - \subpage ButtonIn
+- \subpage MESH_SPI
+- \subpage MESH_CE
+- \subpage MESH_CS
+- \subpage PTC_IRQ
+- \subpage WIFI_UART
+- \subpage WIFI_GPIO0
+- \subpage WIFI_GPIO2
+- \subpage WIFI_RESET
+- \subpage WIFI_CHIP_EN
+- \subpage WIFI_XPD_DCDC
+- \subpage IMU_FSYNC
 
 */
 
@@ -76,6 +87,17 @@
 - \subpage BuzzerOut
 - \subpage BuzzerLine
 - \subpage ButtonIn
+- \subpage MESH_SPI
+- \subpage MESH_CE
+- \subpage MESH_CS
+- \subpage PTC_IRQ
+- \subpage WIFI_UART
+- \subpage WIFI_GPIO0
+- \subpage WIFI_GPIO2
+- \subpage WIFI_RESET
+- \subpage WIFI_CHIP_EN
+- \subpage WIFI_XPD_DCDC
+- \subpage IMU_FSYNC
 
 */
 

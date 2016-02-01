@@ -12,6 +12,9 @@
 #include "RGB_LED.h"
 #include "BuzzerOut.h"
 #include "Events.h"
+#include "WIFI_RESET.h"
+#include "mpu_9250_driver.h"
+#include "MeshTest.h"
 ////defines
 
 ////typedefs
@@ -22,7 +25,10 @@
 static bool LED1_State;
 static bool LED2_State;
 static bool BuzzerOutState;
-static uint32_t TickCount; //todo: expose this
+static uint32_t TickCount; //todo: expose this?
+
+static mpu_values v =
+{ 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 ////local function prototypes
 
@@ -33,7 +39,16 @@ extern void Clay_Core_Init()
 	LED2_State = TRUE;
 	BuzzerOutState = TRUE;
 	Clock_Start();
-	RGB_LED_Enable();
+//	RGB_LED_Enable();
+
+//	mpu_9250_init();
+
+//	WIFI_RESET_PutVal(NULL, 0);
+//	for (int i = 0; i < 10000; ++i)
+//		;
+//	WIFI_RESET_PutVal(NULL, 1);
+
+	MeshTestLoop();
 }
 
 void Clay_Core_Update()
@@ -129,6 +144,7 @@ void Clay_Core_Update()
 	if (tick_250ms)
 	{
 		tick_250ms = FALSE;
+		get_mpu_readings(&v);
 
 		LED1_PutVal(NULL, LED1_State);
 		LED2_PutVal(NULL, LED2_State);
