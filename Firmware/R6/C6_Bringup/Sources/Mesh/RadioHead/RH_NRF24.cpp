@@ -4,6 +4,8 @@
 // $Id: RH_NRF24.cpp,v 1.21 2015/03/29 03:53:47 mikem Exp $
 
 #include <RH_NRF24.h>
+#include <cstring>
+
 #define NRF_TIMEOUT_MS 1
 
 #if ENABLE_DIAGNOSTIC_LED
@@ -214,7 +216,7 @@ bool RH_NRF24::send(const uint8_t* data, uint8_t len)
     _buf[1] = _txHeaderFrom;
     _buf[2] = _txHeaderId;
     _buf[3] = _txHeaderFlags;
-    memcpy(_buf + RH_NRF24_HEADER_LEN, data, len);
+    std::memcpy(_buf + RH_NRF24_HEADER_LEN, data, len);
 //NOTE: changed ACK here
     spiBurstWrite(RH_NRF24_COMMAND_W_TX_PAYLOAD_NOACK, _buf, len + RH_NRF24_HEADER_LEN);        //original RH value had noack.
 //    spiBurstWrite(RH_NRF24_COMMAND_W_TX_PAYLOAD, _buf, len + RH_NRF24_HEADER_LEN);
@@ -379,7 +381,7 @@ bool RH_NRF24::recv(uint8_t* buf, uint8_t* len)
         // Skip the 4 headers that are at the beginning of the rxBuf
         if (*len > _bufLen - RH_NRF24_HEADER_LEN)
             *len = _bufLen - RH_NRF24_HEADER_LEN;
-        memcpy(buf, _buf + RH_NRF24_HEADER_LEN, *len);
+        std::memcpy(buf, _buf + RH_NRF24_HEADER_LEN, *len);
     }
     clearRxBuf();        // This message accepted and cleared
     return true;

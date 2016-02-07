@@ -15,15 +15,16 @@ extern bool tick_1ms;
 extern bool tick_50ms;
 extern bool tick_250ms;
 extern bool tick_500ms;
+extern bool tick_3000ms;
 
 //todo: configurable ticks
 
 extern uint32_t Millis();
 extern void Wait(uint32_t wait_ms);
-extern void Clock_Enable();
-extern void Clock_Start();
-extern void Clock_Stop();
-extern void Clock_Pause();
+extern bool Clock_Enable();
+extern bool Clock_Start();
+extern bool Clock_Stop();
+extern bool Clock_Pause();
 
 extern void Tick();
 

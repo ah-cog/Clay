@@ -28,6 +28,7 @@
 
 #include "Cpu.h"
 #include "Events.h"
+#include "Events_ESP8266.h"
 #include "Init_Config.h"
 #include "PDD_Includes.h"
 
@@ -61,8 +62,7 @@ extern "C"
  **                           the parameter of Init method.
  */
 /* ===================================================================*/
-void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
-{
+void TI1_OnInterrupt(LDD_TUserData *UserDataPtr) {
 	/* Write your code here ... */
 
 	Tick();
@@ -86,8 +86,7 @@ void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
-{
+void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr) {
 	/* Write your code here ... */
 }
 
@@ -109,8 +108,7 @@ void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
-{
+void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr) {
 	/* Write your code here ... */
 }
 
@@ -132,52 +130,9 @@ void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
-{
+void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr) {
 	/* Write your code here ... */
 	SelectedFreq = (SelectedFreq + 1) % (f_Off + 1);
-}
-
-/*
- ** ===================================================================
- **     Event       :  WIFI_UART_OnBlockReceived (module Events)
- **
- **     Component   :  WIFI_UART [Serial_LDD]
- */
-/*!
- **     @brief
- **         This event is called when the requested number of data is
- **         moved to the input buffer.
- **     @param
- **         UserDataPtr     - Pointer to the user or
- **                           RTOS specific data. This pointer is passed
- **                           as the parameter of Init method.
- */
-/* ===================================================================*/
-void WIFI_UART_OnBlockReceived(LDD_TUserData *UserDataPtr)
-{
-	/* Write your code here ... */
-}
-
-/*
- ** ===================================================================
- **     Event       :  WIFI_UART_OnBlockSent (module Events)
- **
- **     Component   :  WIFI_UART [Serial_LDD]
- */
-/*!
- **     @brief
- **         This event is called after the last character from the
- **         output buffer is moved to the transmitter.
- **     @param
- **         UserDataPtr     - Pointer to the user or
- **                           RTOS specific data. This pointer is passed
- **                           as the parameter of Init method.
- */
-/* ===================================================================*/
-void WIFI_UART_OnBlockSent(LDD_TUserData *UserDataPtr)
-{
-	/* Write your code here ... */
 }
 
 /*
@@ -198,11 +153,9 @@ void WIFI_UART_OnBlockSent(LDD_TUserData *UserDataPtr)
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
-{
+void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr) {
 	/* Write your code here ... */
-	if (mesh_rx_enabled)
-	{
+	if (mesh_rx_enabled) {
 		mesh_irq_handler();
 	}
 }
@@ -224,8 +177,7 @@ void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr)
-{
+void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr) {
 	/* Write your code here ... */
 }
 
@@ -246,8 +198,7 @@ void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr)
-{
+void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr) {
 	/* Write your code here ... */
 }
 
@@ -264,8 +215,28 @@ void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr)
  **         interrupt] property is set to 'Enabled'.
  */
 /* ===================================================================*/
-void Cpu_OnNMI(void)
-{
+void Cpu_OnNMI(void) {
+	/* Write your code here ... */
+}
+
+/*
+ ** ===================================================================
+ **     Event       :  FLASH1_OnOperationComplete (module Events)
+ **
+ **     Component   :  FLASH1 [FLASH_LDD]
+ */
+/*!
+ **     @brief
+ **         Called at the end of the whole write / erase operation. if
+ **         the event is enabled. See SetEventMask() and GetEventMask()
+ **         methods.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. This pointer is passed
+ **                           as the parameter of Init method.
+ */
+/* ===================================================================*/
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
 	/* Write your code here ... */
 }
 

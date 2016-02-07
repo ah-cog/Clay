@@ -12,6 +12,7 @@
 // $Id: RHRouter.cpp,v 1.7 2015/08/13 02:45:47 mikem Exp $
 
 #include <RHRouter.h>
+#include <cstring>
 
 #if ENABLE_DIAGNOSTIC_LED
 #ifndef LED_DRIVER_PCA9552_H_
@@ -113,7 +114,7 @@ RHRouter::RoutingTableEntry* RHRouter::getRouteTo(uint8_t dest)
 void RHRouter::deleteRoute(uint8_t index)
 {
     // Delete a route by copying following routes on top of it
-    memcpy(&_routes[index], &_routes[index + 1],
+    std::memcpy(&_routes[index], &_routes[index + 1],
             sizeof(RoutingTableEntry) * (RH_ROUTING_TABLE_SIZE - index - 1));
     _routes[RH_ROUTING_TABLE_SIZE - 1].state = Invalid;
 }
@@ -192,7 +193,7 @@ uint8_t RHRouter::sendtoFromSourceWait(uint8_t* buf, uint8_t len, uint8_t dest, 
     _tmpMessage.header.hops = 0;
     _tmpMessage.header.id = _lastE2ESequenceNumber++;
     _tmpMessage.header.flags = flags;
-    memcpy(_tmpMessage.data, buf, len);
+    std::memcpy(_tmpMessage.data, buf, len);
 
     return route(&_tmpMessage, sizeof(RoutedMessageHeader) + len);
 }
@@ -294,7 +295,7 @@ bool RHRouter::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t*
             uint8_t msgLen = tmpMessageLen - sizeof(RoutedMessageHeader);
             if (*len > msgLen)
                 *len = msgLen;
-            memcpy(buf, _tmpMessage.data, *len);
+            std::memcpy(buf, _tmpMessage.data, *len);
             return true;        // Its for you!
         }
         else if (_tmpMessage.header.dest != RH_BROADCAST_ADDRESS

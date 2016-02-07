@@ -3,10 +3,10 @@
 #ifndef _wirish_h
 #define _wirish_h
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cstdint>
 
 #define PROGMEM
 #define memcpy_P memcpy

@@ -47,13 +47,26 @@
 #include "MESH_CE.h"
 #include "MESH_CS.h"
 #include "PTC_IRQ.h"
-#include "WIFI_UART.h"
+#include "ESP8266_Serial.h"
 #include "WIFI_GPIO0.h"
 #include "WIFI_GPIO2.h"
 #include "WIFI_RESET.h"
 #include "WIFI_CHIP_EN.h"
 #include "WIFI_XPD_DCDC.h"
 #include "IMU_FSYNC.h"
+#include "FLASH1.h"
+#include "IO_1.h"
+#include "IO_2.h"
+#include "IO_3.h"
+#include "IO_4.h"
+#include "IO_5.h"
+#include "IO_6.h"
+#include "IO_7.h"
+#include "IO_8.h"
+#include "IO_9.h"
+#include "IO_10.h"
+#include "IO_11.h"
+#include "IO_12.h"
 
 #include "Clay_Core_Hardware.h"
 
@@ -145,9 +158,9 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr);
 
 /*
 ** ===================================================================
-**     Event       :  WIFI_UART_OnBlockReceived (module Events)
+**     Event       :  ESP8266_Serial_OnBlockReceived (module Events)
 **
-**     Component   :  WIFI_UART [Serial_LDD]
+**     Component   :  ESP8266_Serial [Serial_LDD]
 */
 /*!
 **     @brief
@@ -159,13 +172,13 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr);
 **                           as the parameter of Init method.
 */
 /* ===================================================================*/
-void WIFI_UART_OnBlockReceived(LDD_TUserData *UserDataPtr);
+void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr);
 
 /*
 ** ===================================================================
-**     Event       :  WIFI_UART_OnBlockSent (module Events)
+**     Event       :  ESP8266_Serial_OnBlockSent (module Events)
 **
-**     Component   :  WIFI_UART [Serial_LDD]
+**     Component   :  ESP8266_Serial [Serial_LDD]
 */
 /*!
 **     @brief
@@ -177,7 +190,7 @@ void WIFI_UART_OnBlockReceived(LDD_TUserData *UserDataPtr);
 **                           as the parameter of Init method.
 */
 /* ===================================================================*/
-void WIFI_UART_OnBlockSent(LDD_TUserData *UserDataPtr);
+void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr);
 
 /*
 ** ===================================================================
@@ -251,6 +264,25 @@ void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void Cpu_OnNMI(void);
+
+/*
+** ===================================================================
+**     Event       :  FLASH1_OnOperationComplete (module Events)
+**
+**     Component   :  FLASH1 [FLASH_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of the whole write / erase operation. if
+**         the event is enabled. See SetEventMask() and GetEventMask()
+**         methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

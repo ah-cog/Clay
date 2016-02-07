@@ -39,13 +39,27 @@
 - \subpage MESH_CE
 - \subpage MESH_CS
 - \subpage PTC_IRQ
-- \subpage WIFI_UART
+- \subpage ESP8266_Serial
 - \subpage WIFI_GPIO0
 - \subpage WIFI_GPIO2
 - \subpage WIFI_RESET
 - \subpage WIFI_CHIP_EN
 - \subpage WIFI_XPD_DCDC
 - \subpage IMU_FSYNC
+- \subpage FLASH1
+- \subpage FLASH1
+- \subpage IO_1
+- \subpage IO_2
+- \subpage IO_3
+- \subpage IO_4
+- \subpage IO_5
+- \subpage IO_6
+- \subpage IO_7
+- \subpage IO_8
+- \subpage IO_9
+- \subpage IO_10
+- \subpage IO_11
+- \subpage IO_12
 
 */
 
@@ -91,13 +105,27 @@
 - \subpage MESH_CE
 - \subpage MESH_CS
 - \subpage PTC_IRQ
-- \subpage WIFI_UART
+- \subpage ESP8266_Serial
 - \subpage WIFI_GPIO0
 - \subpage WIFI_GPIO2
 - \subpage WIFI_RESET
 - \subpage WIFI_CHIP_EN
 - \subpage WIFI_XPD_DCDC
 - \subpage IMU_FSYNC
+- \subpage FLASH1
+- \subpage FLASH1
+- \subpage IO_1
+- \subpage IO_2
+- \subpage IO_3
+- \subpage IO_4
+- \subpage IO_5
+- \subpage IO_6
+- \subpage IO_7
+- \subpage IO_8
+- \subpage IO_9
+- \subpage IO_10
+- \subpage IO_11
+- \subpage IO_12
 
 */
 
