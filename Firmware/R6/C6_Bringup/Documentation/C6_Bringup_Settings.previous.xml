@@ -995,7 +995,7 @@ Autoselect
       <GetDriverState v="don&amp;apos;t generate code" />
     </Methods>
     <Events>
-      <Event_module_name v="ESP8266_Events" />
+      <Event_module_name v="Events_ESP8266" />
       <event name="OnBlockReceived" v="generate code">
         <Event_procedure_name v="ESP8266_Serial_OnBlockReceived" />
       </event>
@@ -1015,7 +1015,7 @@ Autoselect
       <Direction v="Output" />
       <group name="Initialization">
         <Init__direction v="Output" />
-        <Init__value v="1" />
+        <Init__value v="0" />
         <Auto_initialization v="yes" />
       </group>
       <Safe_mode v="no" />
