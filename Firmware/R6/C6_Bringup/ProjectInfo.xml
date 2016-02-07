@@ -107,7 +107,6 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Bootloader\program_flash.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clay_Core_Hardware.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clock\Clock.c</PathName>
-      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\ESP8266_Events.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events_ESP8266.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\GPIO.c</PathName>
@@ -132,7 +131,6 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\UUID.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\clayString.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Driver\ESP8266.c</PathName>
-      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Events_ESP8266.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Messenger.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\main.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\System\CPU_Init.c</PathName>
@@ -189,7 +187,6 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Bootloader\program_flash.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clay_Core_Hardware.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clock\Clock.h</PathName>
-      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\ESP8266_Events.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events_ESP8266.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\GPIO.h</PathName>
@@ -257,7 +254,6 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\UUID.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\clayString.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Driver\ESP8266.h</PathName>
-      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Events_ESP8266.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Messenger.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\IO_Map\MK64F12.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\PDD\ADC_PDD.h</PathName>
