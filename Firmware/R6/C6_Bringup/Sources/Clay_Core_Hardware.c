@@ -15,6 +15,8 @@
 #include "WIFI_RESET.h"
 #include "mpu_9250_driver.h"
 #include "MeshTest.h"
+#include "Messenger.h"
+#include "ESP8266.h"
 ////defines
 
 ////typedefs
@@ -25,6 +27,7 @@
 static bool LED1_State;
 static bool LED2_State;
 static bool BuzzerOutState;
+bool status;
 static uint32_t TickCount; //todo: expose this?
 
 static mpu_values v =
@@ -48,7 +51,47 @@ extern void Clay_Core_Init()
 //		;
 //	WIFI_RESET_PutVal(NULL, 1);
 
-	MeshTestLoop();
+    // Message queue.
+    if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE)
+    {
+        // Failure
+    }
+
+    if ((status = Initialize_Message_Queue(&outgoingMessageQueue)) != TRUE)
+    {
+        // Failure
+    }
+
+    // ESP8266, WiFi, HTTP, UDP.
+
+    if ((status = Enable_ESP8266()) != TRUE)
+    {
+        // Failure
+    }
+    // TODO: Generate SSID for AP according to regular expression and set up access point to facilitate discovery.
+
+//#if !defined DONT_DO_WIFI_STUFF
+    if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE)
+    {
+        // Failure
+    }
+
+    if ((status = Start_HTTP_Server(HTTP_SERVER_PORT)) != TRUE)
+    {
+        // Failure
+    }
+
+    if ((Start_UDP_Server(MESSAGE_PORT)) != TRUE)
+    {
+        // Failure
+    }
+
+    if ((Start_Discovery_Broadcast()) != TRUE)
+    {
+        // Failure
+    }
+
+//	MeshTestLoop();
 }
 
 void Clay_Core_Update()

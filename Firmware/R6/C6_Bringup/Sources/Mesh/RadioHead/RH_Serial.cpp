@@ -6,6 +6,7 @@
 #include <RH_Serial.h>
 #include <HardwareSerial.h>
 #include <RHCRC.h>
+#include <cstring>
 
 RH_Serial::RH_Serial(HardwareSerial& serial)
     :
@@ -188,7 +189,7 @@ bool RH_Serial::recv(uint8_t* buf, uint8_t* len)
 	// Skip the 4 headers that are at the beginning of the rxBuf
 	if (*len > _rxBufLen-RH_SERIAL_HEADER_LEN)
 	    *len = _rxBufLen-RH_SERIAL_HEADER_LEN;
-	memcpy(buf, _rxBuf+RH_SERIAL_HEADER_LEN, *len);
+	std::memcpy(buf, _rxBuf+RH_SERIAL_HEADER_LEN, *len);
     }
     clearRxBuf(); // This message accepted and cleared
     return true;

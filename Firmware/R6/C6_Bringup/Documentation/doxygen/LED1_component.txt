@@ -243,11 +243,11 @@ registers of the peripheral(s) configured by the component.
 \code
 **          Component name                                 : LED1
 **          Pin for I/O                                    : PTE5/SPI1_PCS2/UART3_RX/SDHC0_D2/FTM3_CH0
-**          Direction                                      : Output
+**          Direction                                      : Input/Output
 **          Initialization                                 : 
 **            Init. direction                              : Output
 **            Init. value                                  : 1
-**            Auto initialization                          : yes
+**            Auto initialization                          : no
 **          Safe mode                                      : no
 <h1>
 \endcode

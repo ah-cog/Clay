@@ -19,6 +19,8 @@
 #include "invensense.h"
 #include "invensense_adv.h"
 #include "data_builder.h"
+#include "fusion_9axis.h"
+#include "quaternion_supervisor.h"
 
 // defines ////////////////////////////////////////////////////////////////////
 #define MAX_HISTORY_COUNT       100 //MAX_HISTORY_COUNT * (1 / DEFAULT_MPU_HZ) = seconds worth of data stored in buffer 

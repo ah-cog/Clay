@@ -4,8 +4,8 @@
 #ifndef _HardwareSerial_h
 #define _HardwareSerial_h
 
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
+#include <cstdio>
 
 #ifndef ARDUINO_RINGBUFFER_SIZE
 #define ARDUINO_RINGBUFFER_SIZE 64

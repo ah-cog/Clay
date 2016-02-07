@@ -63,14 +63,28 @@
 #include "MESH_CE.h"
 #include "MESH_CS.h"
 #include "PTC_IRQ.h"
-#include "WIFI_UART.h"
+#include "ESP8266_Serial.h"
 #include "WIFI_GPIO0.h"
 #include "WIFI_GPIO2.h"
 #include "WIFI_RESET.h"
 #include "WIFI_CHIP_EN.h"
 #include "WIFI_XPD_DCDC.h"
 #include "IMU_FSYNC.h"
+#include "FLASH1.h"
+#include "IO_1.h"
+#include "IO_2.h"
+#include "IO_3.h"
+#include "IO_4.h"
+#include "IO_5.h"
+#include "IO_6.h"
+#include "IO_7.h"
+#include "IO_8.h"
+#include "IO_9.h"
+#include "IO_10.h"
+#include "IO_11.h"
+#include "IO_12.h"
 #include "Events.h"
+#include "Events_ESP8266.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -126,8 +140,8 @@ extern "C" {
 #define VECTOR_44         (tIsrFunc)&UnhandledInterrupt         /* 0x2C -    ivINT_I2S0_Tx                  unused by PE */
 #define VECTOR_45         (tIsrFunc)&UnhandledInterrupt         /* 0x2D -    ivINT_I2S0_Rx                  unused by PE */
 #define VECTOR_46         (tIsrFunc)&UnhandledInterrupt         /* 0x2E -    ivINT_UART0_LON                unused by PE */
-#define VECTOR_47         (tIsrFunc)&WIFI_UART_Interrupt        /* 0x2F 112  ivINT_UART0_RX_TX              used by PE */
-#define VECTOR_48         (tIsrFunc)&WIFI_UART_Interrupt        /* 0x30 112  ivINT_UART0_ERR                used by PE */
+#define VECTOR_47         (tIsrFunc)&ESP8266_Serial_Interrupt   /* 0x2F 112  ivINT_UART0_RX_TX              used by PE */
+#define VECTOR_48         (tIsrFunc)&ESP8266_Serial_Interrupt   /* 0x30 112  ivINT_UART0_ERR                used by PE */
 #define VECTOR_49         (tIsrFunc)&UnhandledInterrupt         /* 0x31 -    ivINT_UART1_RX_TX              unused by PE */
 #define VECTOR_50         (tIsrFunc)&UnhandledInterrupt         /* 0x32 -    ivINT_UART1_ERR                unused by PE */
 #define VECTOR_51         (tIsrFunc)&UnhandledInterrupt         /* 0x33 -    ivINT_UART2_RX_TX              unused by PE */

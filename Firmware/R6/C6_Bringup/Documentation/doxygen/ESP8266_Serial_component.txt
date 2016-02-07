@@ -1,5 +1,5 @@
 /*!
-  \page WIFI_UART WIFI_UART (Serial_LDD)
+  \page ESP8266_Serial ESP8266_Serial (Serial_LDD)
 **         This component "Serial_LDD" implements an asynchronous serial
 **         communication. The component supports different settings of
 **         parity, word width, stop-bit and communication speed,
@@ -8,59 +8,59 @@
 **         The component requires one on-chip asynchronous serial communication channel.
 **
 
-- \subpage WIFI_UART_settings
-- \subpage WIFI_UART_regs_overview  
-- \subpage WIFI_UART_regs_details
-- \ref WIFI_UART_module "Component documentation" 
-\page WIFI_UART_regs_overview Registers Initialization Overview
+- \subpage ESP8266_Serial_settings
+- \subpage ESP8266_Serial_regs_overview  
+- \subpage ESP8266_Serial_regs_details
+- \ref ESP8266_Serial_module "Component documentation" 
+\page ESP8266_Serial_regs_overview Registers Initialization Overview
 This page contains the initialization values for the registers of the peripheral(s) configured
 by the component. 
 <table>
-<tr><td colspan="4" class="ttitle1">WIFI_UART Initialization</td></tr>
+<tr><td colspan="4" class="ttitle1">ESP8266_Serial Initialization</td></tr>
 <tr><td class="ttitle2">Address</td><td class="ttitle2">Register</td><td class="ttitle2">Register Value</td><td class="ttitle2">Register Description</td></tr>
 <tr><td>0x40048034</td><td>SIM_SCGC4</td>
 <td class="regNotResetVal">0xF0100430</td>
- <td>SIM_SCGC4 register, peripheral WIFI_UART.</td></tr>
+ <td>SIM_SCGC4 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x40048038</td><td>SIM_SCGC5</td>
 <td class="regNotResetVal">0x00043F82</td>
- <td>SIM_SCGC5 register, peripheral WIFI_UART.</td></tr>
+ <td>SIM_SCGC5 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4004903C</td><td>PORTA_PCR15</td>
 <td class="regNotResetVal">0x00000304</td>
- <td>PORTA_PCR15 register, peripheral WIFI_UART.</td></tr>
+ <td>PORTA_PCR15 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x40049038</td><td>PORTA_PCR14</td>
 <td class="regNotResetVal">0x00000304</td>
- <td>PORTA_PCR14 register, peripheral WIFI_UART.</td></tr>
+ <td>PORTA_PCR14 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0xE000E41F</td><td>NVICIP31</td>
 <td class="regNotResetVal">0x00000070</td>
- <td>NVICIP31 register, peripheral WIFI_UART.</td></tr>
+ <td>NVICIP31 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0xE000E100</td><td>NVICISER0</td>
 <td class="regNotResetVal">0x84000000</td>
- <td>NVICISER0 register, peripheral WIFI_UART.</td></tr>
+ <td>NVICISER0 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0xE000E420</td><td>NVICIP32</td>
 <td class="regNotResetVal">0x00000070</td>
- <td>NVICIP32 register, peripheral WIFI_UART.</td></tr>
+ <td>NVICIP32 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0xE000E104</td><td>NVICISER1</td>
 <td class="regNotResetVal">0x30000401</td>
- <td>NVICISER1 register, peripheral WIFI_UART.</td></tr>
+ <td>NVICISER1 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A002</td><td>UART0_C1</td>
 <td class="regResetVal">0x00000000</td>
- <td>UART0_C1 register, peripheral WIFI_UART.</td></tr>
+ <td>UART0_C1 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A006</td><td>UART0_C3</td>
 <td class="regResetVal">0x00000000</td>
- <td>UART0_C3 register, peripheral WIFI_UART.</td></tr>
+ <td>UART0_C3 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A00A</td><td>UART0_C4</td>
 <td class="regResetVal">0x00000000</td>
- <td>UART0_C4 register, peripheral WIFI_UART.</td></tr>
+ <td>UART0_C4 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A005</td><td>UART0_S2</td>
 <td class="regResetVal">0x00000000</td>
- <td>UART0_S2 register, peripheral WIFI_UART.</td></tr>
+ <td>UART0_S2 register, peripheral ESP8266_Serial.</td></tr>
 <tr><td>0x4006A00D</td><td>UART0_MODEM</td>
 <td class="regResetVal">0x00000000</td>
- <td>UART0_MODEM register, peripheral WIFI_UART.</td></tr>
+ <td>UART0_MODEM register, peripheral ESP8266_Serial.</td></tr>
 </table>
 Color Denotes Reset Value
 <br/>
-\page WIFI_UART_regs_details Register Initialization Details
+\page ESP8266_Serial_regs_details Register Initialization Details
 This page contains detailed description of initialization values for the 
 registers of the peripheral(s) configured by the component. 
 
@@ -593,9 +593,9 @@ registers of the peripheral(s) configured by the component.
 </tr></table>
 */
 /*!
-\page WIFI_UART_settings Component Settings
+\page ESP8266_Serial_settings Component Settings
 \code
-**          Component name                                 : WIFI_UART
+**          Component name                                 : ESP8266_Serial
 **          Device                                         : UART0
 **          Interrupt service/event                        : Enabled
 **            Interrupt RxD                                : INT_UART0_RX_TX
@@ -625,7 +625,7 @@ registers of the peripheral(s) configured by the component.
 **              RTS                                        : Disabled
 **          Initialization                                 : 
 **            Enabled in init. code                        : yes
-**            Auto initialization                          : yes
+**            Auto initialization                          : no
 **            Event mask                                   : 
 **              OnBlockSent                                : Enabled
 **              OnBlockReceived                            : Enabled

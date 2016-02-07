@@ -29,6 +29,7 @@
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
 #include "Events.h"
+#include "Events_ESP8266.h"
 #include "Pins1.h"
 #include "LED1.h"
 #include "LED2.h"
@@ -43,13 +44,26 @@
 #include "MESH_CE.h"
 #include "MESH_CS.h"
 #include "PTC_IRQ.h"
-#include "WIFI_UART.h"
+#include "ESP8266_Serial.h"
 #include "WIFI_GPIO0.h"
 #include "WIFI_GPIO2.h"
 #include "WIFI_RESET.h"
 #include "WIFI_CHIP_EN.h"
 #include "WIFI_XPD_DCDC.h"
 #include "IMU_FSYNC.h"
+#include "FLASH1.h"
+#include "IO_1.h"
+#include "IO_2.h"
+#include "IO_3.h"
+#include "IO_4.h"
+#include "IO_5.h"
+#include "IO_6.h"
+#include "IO_7.h"
+#include "IO_8.h"
+#include "IO_9.h"
+#include "IO_10.h"
+#include "IO_11.h"
+#include "IO_12.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -59,6 +73,7 @@
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Clay_Core_Hardware.h"
+#include "Application.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -70,11 +85,10 @@ int main(void)
 	PE_low_level_init();
 	/*** End of Processor Expert internal initialization.                    ***/
 
-	Clay_Core_Init();
+	Application();
 
-	for (;;)
-	{
-		Clay_Core_Update();
+	for (;;) {
+
 	}
 
 	/*** Don't write any code pass this line, or it will be deleted during code generation. ***/

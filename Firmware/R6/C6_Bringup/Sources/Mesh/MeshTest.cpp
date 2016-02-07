@@ -62,7 +62,7 @@ static uint32_t tx_time;
 static bool Initialized = FALSE;
 
 ///prototypes //////////////////////////////////////////////////////
-static void update_imu_leds(const mpu_values * remote_imu_data, Color_RGB colors[]);
+static void update_imu_leds(const mpu_values * remote_imu_data, RGB_Color colors[]);
 static void upcount_hb_leds();
 static void update_mesh_mode(uint8_t * data, uint8_t len);
 static void mesh_update_imu_leds(uint8_t * data, uint8_t len);

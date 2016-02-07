@@ -305,11 +305,11 @@ registers of the peripheral(s) configured by the component.
 \code
 **          Component name                                 : LED2
 **          Pin for I/O                                    : PTE6/SPI1_PCS3/UART3_CTS_b/I2S0_MCLK/FTM3_CH1/USB_SOF_OUT
-**          Direction                                      : Output
+**          Direction                                      : Input/Output
 **          Initialization                                 : 
 **            Init. direction                              : Output
 **            Init. value                                  : 1
-**            Auto initialization                          : yes
+**            Auto initialization                          : no
 **          Safe mode                                      : no
 <h1>
 \endcode

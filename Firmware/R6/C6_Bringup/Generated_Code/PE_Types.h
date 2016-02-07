@@ -6,7 +6,7 @@
 **     Component   : PE_Types
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-31, 00:09, # CodeGen: 23
+**     Date/Time   : 2016-02-06, 19:19, # CodeGen: 42
 **     Abstract    :
 **         PE_Types.h - contains definitions of basic types,
 **         register access macros and hardware specific macros
@@ -217,13 +217,26 @@ typedef unsigned long int       uint32;
 #define PE_LDD_COMPONENT_MESH_CE_ID              0x0AU
 #define PE_LDD_COMPONENT_MESH_CS_ID              0x0BU
 #define PE_LDD_COMPONENT_PTC_IRQ_ID              0x0CU
-#define PE_LDD_COMPONENT_WIFI_UART_ID            0x0DU
+#define PE_LDD_COMPONENT_ESP8266_Serial_ID       0x0DU
 #define PE_LDD_COMPONENT_WIFI_GPIO0_ID           0x0EU
 #define PE_LDD_COMPONENT_WIFI_GPIO2_ID           0x0FU
 #define PE_LDD_COMPONENT_WIFI_RESET_ID           0x10U
 #define PE_LDD_COMPONENT_WIFI_CHIP_EN_ID         0x11U
 #define PE_LDD_COMPONENT_WIFI_XPD_DCDC_ID        0x12U
 #define PE_LDD_COMPONENT_IMU_FSYNC_ID            0x13U
+#define PE_LDD_COMPONENT_FLASH1_ID               0x14U
+#define PE_LDD_COMPONENT_IO_1_ID                 0x15U
+#define PE_LDD_COMPONENT_IO_2_ID                 0x16U
+#define PE_LDD_COMPONENT_IO_3_ID                 0x17U
+#define PE_LDD_COMPONENT_IO_4_ID                 0x18U
+#define PE_LDD_COMPONENT_IO_5_ID                 0x19U
+#define PE_LDD_COMPONENT_IO_6_ID                 0x1AU
+#define PE_LDD_COMPONENT_IO_7_ID                 0x1BU
+#define PE_LDD_COMPONENT_IO_8_ID                 0x1CU
+#define PE_LDD_COMPONENT_IO_9_ID                 0x1DU
+#define PE_LDD_COMPONENT_IO_10_ID                0x1EU
+#define PE_LDD_COMPONENT_IO_11_ID                0x1FU
+#define PE_LDD_COMPONENT_IO_12_ID                0x20U
 
 /*
 ** ===================================================================

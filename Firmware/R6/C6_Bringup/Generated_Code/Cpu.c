@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-31, 18:50, # CodeGen: 28
+**     Date/Time   : 2016-02-06, 19:20, # CodeGen: 43
 **     Abstract    :
 **
 **     Settings    :
@@ -66,6 +66,7 @@
 /* {Default RTOS Adapter} No RTOS includes */
 #include "Cpu.h"
 #include "Events.h"
+#include "Events_ESP8266.h"
 #include "Init_Config.h"
 
 #ifdef __cplusplus
@@ -166,10 +167,6 @@ void Common_Init(void)
 #if CPU_COMPONENTS_INIT
 void Components_Init(void)
 {
-  /* ### BitIO_LDD "LED1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)LED1_Init(NULL);
-  /* ### BitIO_LDD "LED2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)LED2_Init(NULL);
   /* ### TimerInt_LDD "TI1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)TI1_Init(NULL);
   /* ### I2C_LDD "I2C2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
@@ -188,8 +185,6 @@ void Components_Init(void)
   (void)MESH_CS_Init(NULL);
   /* ### GPIO_LDD "PTC_IRQ" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)PTC_IRQ_Init(NULL);
-  /* ### Serial_LDD "WIFI_UART" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)WIFI_UART_Init(NULL);
   /* ### BitIO_LDD "WIFI_GPIO0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)WIFI_GPIO0_Init(NULL);
   /* ### BitIO_LDD "WIFI_GPIO2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
@@ -202,6 +197,8 @@ void Components_Init(void)
   (void)WIFI_XPD_DCDC_Init(NULL);
   /* ### BitIO_LDD "IMU_FSYNC" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)IMU_FSYNC_Init(NULL);
+  /* ### FLASH_LDD "FLASH1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)FLASH1_Init(NULL);
 }
 #endif /* CPU_COMPONENTS_INIT */
 

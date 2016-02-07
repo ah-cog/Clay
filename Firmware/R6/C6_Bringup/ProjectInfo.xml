@@ -48,12 +48,17 @@
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Project_Settings\Startup_Code\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\</Path>
+      <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Bootloader\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clock\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\eMPL-hal\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\mllite\</Path>
+      <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\LEDs\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\RGB_LED\</Path>
+      <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\</Path>
+      <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Driver\</Path>
+      <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\System\</Path>
     </SourceCodePaths>
   </PATHS>
@@ -63,8 +68,22 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\BuzzerLine.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\BuzzerOut.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\Cpu.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\ESP8266_Serial.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\FLASH1.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\I2C2.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IMU_FSYNC.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_1.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_10.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_11.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_12.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_2.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_3.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_4.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_5.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_6.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_7.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_8.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_9.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\LED1.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\LED2.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\LED_SDB.c</PathName>
@@ -80,12 +99,18 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_GPIO0.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_GPIO2.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_RESET.c</PathName>
-      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_UART.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_XPD_DCDC.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Project_Settings\Startup_Code\startup.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Application.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Behavior.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Bootloader\Bootloader.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Bootloader\program_flash.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clay_Core_Hardware.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clock\Clock.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\ESP8266_Events.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events_ESP8266.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\GPIO.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\MPU9250.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\inv_mpu.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\inv_mpu_dmp_motion_driver.c</PathName>
@@ -100,7 +125,15 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\mllite\start_manager.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\mllite\storage_manager.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\mpu_9250_driver.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\LEDs\LEDs.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\RGB_LED\RGB_LED.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\Debug.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\Ring_Buffer.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\UUID.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\clayString.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Driver\ESP8266.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Events_ESP8266.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Messenger.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\main.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\System\CPU_Init.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\System\Peripherals_Init.c</PathName>
@@ -112,8 +145,22 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\BuzzerOut.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\CPU_Config.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\Cpu.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\ESP8266_Serial.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\FLASH1.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\I2C2.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IMU_FSYNC.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_1.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_10.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_11.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_12.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_2.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_3.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_4.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_5.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_6.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_7.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_8.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_9.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\IO_Map.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\Init_Config.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\LED1.h</PathName>
@@ -135,11 +182,17 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_GPIO0.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_GPIO2.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_RESET.h</PathName>
-      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_UART.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Generated_Code\WIFI_XPD_DCDC.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Application.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Behavior.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Bootloader\Bootloader.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Bootloader\program_flash.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clay_Core_Hardware.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clock\Clock.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\ESP8266_Events.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events_ESP8266.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\GPIO.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\MPU9250.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\dmpKey.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\dmpmap.h</PathName>
@@ -175,6 +228,7 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\mpl\no_gyro_fusion.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\mpl\quaternion_supervisor.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\mpu_9250_driver.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\LEDs\LEDs.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Mesh\Mesh.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Mesh\MeshTest.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Mesh\RadioHead\HardwareSPI.h</PathName>
@@ -198,6 +252,13 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Mesh\RadioHead\wirish.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Mesh\mesh_stastistics.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\RGB_LED\RGB_LED.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\Debug.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\Ring_Buffer.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\UUID.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\clayString.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Driver\ESP8266.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Events_ESP8266.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\WiFi\Messenger.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\IO_Map\MK64F12.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\PDD\ADC_PDD.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Static_Code\PDD\CAN_PDD.h</PathName>

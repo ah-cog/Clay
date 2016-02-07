@@ -12,6 +12,7 @@
 // $Id: RHMesh.cpp,v 1.9 2015/08/13 02:45:47 mikem Exp $
 
 #include <RHMesh.h>
+#include <cstring>
 
 
 #ifndef MESH_STASTISTICS_H_
@@ -71,7 +72,7 @@ uint8_t RHMesh::sendtoWait(uint8_t* buf, uint8_t len, uint8_t address, uint8_t f
     // Now have a route. Contruct an application layer message and send it via that route
     MeshApplicationMessage* a = (MeshApplicationMessage*) &_tmpMessage;
     a->header.msgType = RH_MESH_MESSAGE_TYPE_APPLICATION;
-    memcpy(a->data, buf, len);
+    std::memcpy(a->data, buf, len);
     return RHRouter::sendtoWait(_tmpMessage, sizeof(RHMesh::MeshMessageHeader) + len, address, flags);
 }
 
@@ -205,7 +206,7 @@ bool RHMesh::recvfromAck(uint8_t* buf, uint8_t* len, uint8_t* source, uint8_t* d
             uint8_t msgLen = tmpMessageLen - sizeof(MeshMessageHeader);
             if (*len > msgLen)
                 *len = msgLen;
-            memcpy(buf, a->data, *len);
+            std::memcpy(buf, a->data, *len);
 
             return true;
         }
