@@ -88,12 +88,13 @@ static void stop_mesh_rx();
 ///functions
 bool Enable_Mesh()
 {
+	mesh_init();
     return TRUE;
 }
 
 bool Start_Mesh()
 {
-    mesh_init();
+    MESH_IRQ_SetPortEventCondition(MESH_IRQ_DeviceData, (uint32_t)(1 << 8), LDD_GPIO_FALLING);
     MeshStarted = TRUE;
     MeshPaused = FALSE;
     return TRUE;
@@ -112,6 +113,7 @@ void Pause_Mesh()
 {
     if (!MeshPaused)
     {
+    	MESH_IRQ_SetPortEventCondition(MESH_IRQ_DeviceData, (uint32_t)(1 << 8), LDD_GPIO_DISABLED);
         stop_mesh_rx();
         SPI_EventMask = SM1_GetEventMask(SPI_DeviceData);
         SM1_SetEventMask(SPI_DeviceData, 0);
@@ -123,6 +125,7 @@ void Resume_Mesh()
 {
     if (MeshPaused)
     {
+    	MESH_IRQ_SetPortEventCondition(MESH_IRQ_DeviceData, (uint32_t)(1 << 8), LDD_GPIO_FALLING);
         SM1_SetEventMask(SPI_DeviceData, SPI_EventMask);
         MeshPaused = FALSE;
     }
@@ -141,7 +144,7 @@ void mesh_init()
     MESH_IRQ_DeviceData = MESH_IRQ_Init(MESH_IRQ_DeviceData);
     MESH_CS_DeviceData = MESH_CS_Init(MESH_CS_DeviceData);
     SPI_DeviceData = SM1_Init(SPI_DeviceData);
-
+    
     meshRadio = new
     RH_NRF24(MESH_CE_PIN_INDEX, MESH_SELECT_PIN_INDEX);
 
