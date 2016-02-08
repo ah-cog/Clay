@@ -1,0 +1,22 @@
+Circuit: * C:\Users\thebh\Desktop\dtf\git\clay\Circuit\R6_1\LTSpice\softpower_2asc.asc
+
+.OP point found by inspection.
+
+Date: Sun Feb 07 16:07:41 2016
+Total elapsed time: 0.101 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 1040
+traniter = 1040
+tranpoints = 392
+accept = 351
+rejected = 41
+matrix size = 17
+fillins = 0
+solver = Normal
+Matrix Compiler1: 918 bytes object code size  0.4/0.3/[0.1]
+Matrix Compiler2: 1.29 KB object code size  0.2/0.1/[0.1]
+
+

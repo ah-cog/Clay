@@ -1,0 +1,29 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Unplaced Symbol Availability Check                               )
+(                                                                     )
+(    Drawing          : CLAYR6.brd                                    )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sun Dec 13 00:49:58 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+Current PSMPATH consists of:
+	E:/git/clay/Cadence/CIS_Database/Footprints/SMT/
+	E:/git/clay/Cadence/CIS_Database/Footprints/PTH/
+	.
+	symbols
+	..
+	../symbols
+	C:/Cadence/SPB_16.6/share/local/pcb/symbols
+	C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols
+	C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols
+
+
+All Symbols Found
+
+Total symbols placed:      126 out of 127
+
+
+Symbol Found:  C2	- E:/git/clay/Cadence/CIS_Database/Footprints/SMT/c0402.psm

@@ -1,0 +1,103 @@
+\t (00:00:01) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:01)     Journal start - Mon Dec 14 02:46:35 2015
+\t (00:00:01)         Host=STEELGIANT User=thebh_000 Pid=6452 CPUs=8
+\t (00:00:01) 
+\t (00:00:02) Opening existing design...
+\d (00:00:02) Database opened: E:/git/clay/Circuit/R6/allegro/CLAYR6.brd
+\t (00:00:02) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:00:02) trapsize 1303
+\i (00:00:02) trapsize 1279
+\i (00:00:02) trapsize 1307
+\i (00:00:03) trapsize 1307
+\i (00:00:03) etchedit 
+\i (00:00:04) zoom out 1 
+\i (00:00:04) setwindow pcb
+\i (00:00:04) zoom out -611.78 -1482.00
+\t (00:00:04) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:00:04) trapsize 2614
+\i (00:00:04) zoom out 1 
+\i (00:00:04) setwindow pcb
+\i (00:00:04) zoom out -611.77 -1482.00
+\i (00:00:04) trapsize 5228
+\i (00:00:07) artwork 
+\i (00:00:09) setwindow form.film_control
+\i (00:00:09) FORM film_control filmtree  OUTLINE 
+\i (00:00:13) FORM film_control filmtree popup 'Display for Artwork Check' OUTLINE 
+\i (00:00:14) setwindow pcb
+\i (00:00:14) zoom in 1 
+\i (00:00:14) setwindow pcb
+\i (00:00:14) zoom in -3008.61 852.09
+\i (00:00:14) trapsize 2614
+\i (00:00:15) zoom in 1 
+\i (00:00:15) setwindow pcb
+\i (00:00:15) zoom in -2496.31 904.37
+\t (00:00:15) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:00:15) trapsize 1307
+\i (00:00:16) prepopup -831.33 1006.31
+\i (00:00:16) pick grid -1717.40 1361.78
+\t (00:00:16) last pick:  -1717.00  1362.00
+\i (00:00:19) zoom out 1 
+\i (00:00:19) setwindow pcb
+\i (00:00:19) zoom out -1027.36 1105.63
+\t (00:00:19) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:00:19) trapsize 2614
+\i (00:00:25) setwindow form.film_control
+\i (00:00:25) FORM film_control filmtree 'MULTISEL YES' OUTLINE 
+\i (00:00:38) FORM film_control filmtree  PASTE_BOTTOM 
+\i (00:00:40) FORM film_control filmtree  OUTLINE 
+\i (00:00:44) FORM film_control create  
+\t (00:00:44) Checking db records
+\t (00:00:44)     checking for orphans...
+\t (00:00:44)     Checked  50 percent
+\t (00:00:44)     Checked 100 percent
+\t (00:00:44) Done dbdoctor.
+\t (00:00:44) Starting Create artwork films...
+\t (00:00:46) Plot generated.
+\i (01:52:57) setwindow pcb
+\i (01:52:57) ncdrill customization 
+\i (01:52:58) setwindow form.nc_drillcustomization
+\i (01:52:58) FORM nc_drillcustomization cancel  
+\i (01:53:03) setwindow pcb
+\i (01:53:03) ncdrill param 
+\i (01:53:07) trapsize 3784
+\i (01:53:07) trapsize 2614
+\i (01:53:17) setwindow form.nc_parameters
+\i (01:53:17) FORM nc_parameters enhanced_format YES 
+\i (01:53:19) FORM nc_parameters done  
+\i (01:53:21) setwindow pcb
+\i (01:53:21) trapsize 3784
+\i (01:53:22) trapsize 2614
+\i (01:53:25) nctape_full 
+\i (01:53:27) trapsize 3784
+\i (01:53:43) setwindow form.nc_drill
+\i (01:53:43) FORM nc_drill decreasing_order YES 
+\i (01:53:43) FORM nc_drill execute  
+\t (01:53:43) Starting NC Drill...
+\i (01:54:44) setwindow pcb
+\i (01:54:44) trapsize 2614
+\i (01:54:48) artwork 
+\i (01:54:51) setwindow form.film_control
+\i (01:54:51) FORM film_control general_parameters  
+\i (01:55:38) FORM film_control film_max_x 14 
+\i (01:55:38) FORM film_control film_control  
+\i (01:55:44) FORM film_control select_all  
+\i (01:55:48) FORM film_control filmtree 'MULTISEL NO' PASTE_BOTTOM 
+\i (01:55:48) FORM film_control filmtree  PASTE_BOTTOM 
+\i (01:55:49) FORM film_control create  
+\t (01:55:49) Checking db records
+\t (01:55:49)     checking for orphans...
+\t (01:55:49)     Checked  50 percent
+\t (01:55:49)     Checked 100 percent
+\t (01:55:49) Done dbdoctor.
+\t (01:55:49) Starting Create artwork films...
+\t (01:55:51) Plot generated.
+\i (01:56:32) FORM film_control filmtree popup 'Display for Artwork Check' SILK_TOP 
+\i (01:56:35) FORM film_control filmtree popup 'Display for Visibility' SILK_TOP 
+\i (01:56:39) setwindow pcb
+\i (01:56:39) color192 
+\i (01:56:39) setwindow cvf.dialog
+\i (01:56:39) cvf layer_mode
+\i (01:56:47) cvf layer_tree_item 'Board Geometry'
+\i (01:56:49) cvf layers_visible board_geometry/outline TRUE
+\i (01:56:50) cvf apply
+\i (01
