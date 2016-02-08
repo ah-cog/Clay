@@ -1795,7 +1795,7 @@ PE_DEBUGHALT();
       </list>
       <group name="Initialization">
         <list name="Auto Initialization" v="1">
-          <Auto_initialization v="yes" />
+          <Auto_initialization v="no" />
         </list>
         <group name="Event mask">
           <OnPortEvent v="Enabled" />
@@ -1807,7 +1807,7 @@ PE_DEBUGHALT();
       <Deinit v="don&amp;apos;t generate code" />
       <SetEventMask v="don&amp;apos;t generate code" />
       <GetEventMask v="don&amp;apos;t generate code" />
-      <SetPortEventCondition v="don&amp;apos;t generate code" />
+      <SetPortEventCondition v="generate code" />
       <GetPortEventStatus v="don&amp;apos;t generate code" />
       <SetPortValue v="don&amp;apos;t generate code" />
       <GetPortValue v="don&amp;apos;t generate code" />
@@ -2090,7 +2090,7 @@ PE_DEBUGHALT();
             <group name="Pin">
               <Pin v="ADC1_SE4b/CMP0_IN2/PTC8/I2S0_MCLK" />
               <boolgroup name="Initial pin direction" v="Input" />
-              <Initial_pin_event v="Falling edge" />
+              <Initial_pin_event v="Disabled" />
               <Lock_initialization_function v="no" />
             </group>
           </list>
@@ -2110,7 +2110,7 @@ PE_DEBUGHALT();
       <Deinit v="don&amp;apos;t generate code" />
       <SetEventMask v="don&amp;apos;t generate code" />
       <GetEventMask v="don&amp;apos;t generate code" />
-      <SetPortEventCondition v="don&amp;apos;t generate code" />
+      <SetPortEventCondition v="generate code" />
       <GetPortEventStatus v="don&amp;apos;t generate code" />
       <SetPortValue v="don&amp;apos;t generate code" />
       <GetPortValue v="don&amp;apos;t generate code" />

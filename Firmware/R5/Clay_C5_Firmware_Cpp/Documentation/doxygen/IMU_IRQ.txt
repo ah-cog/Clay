@@ -828,7 +828,7 @@ registers of the peripheral(s) configured by the component.
 **                  Initial pin event                      : Falling edge
 **                  Lock initialization function           : no
 **          Initialization                                 : 
-**            Auto initialization                          : yes
+**            Auto initialization                          : no
 **            Event mask                                   : 
 **              OnPortEvent                                : Enabled
 \endcode
