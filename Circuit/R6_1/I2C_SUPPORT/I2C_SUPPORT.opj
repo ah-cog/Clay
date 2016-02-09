@@ -1,0 +1,46 @@
+(ExpressProject "I2C_SUPPORT"
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (NoModify)
+    (File ".\i2c_support.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x"))
+  (Folder "Outputs")
+  (Folder "Referenced Projects")
+  (PartMRUSelector
+    (TESTPOINT
+      (FullPartName "TESTPOINT.Normal")
+      (LibraryName
+         "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (DeviceIndex "0"))
+    (RESISTOR
+      (FullPartName "RESISTOR.Normal")
+      (LibraryName
+         "E:\GIT\CLAY\CADENCE\CIS_DATABASE\SYMBOLLIBRARIES\SYMLIB.OLB")
+      (DeviceIndex "0"))
+    (PORTNO-R
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (PORTBOTH-R
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (VCC
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0")))
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources"
+         "E:\git\clay\Circuit\R6\I2C_SUPPORT\i2c_support.dsn")
+      (Path "Design Resources"
+         "E:\git\clay\Circuit\R6\I2C_SUPPORT\i2c_support.dsn" "Design Cache"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -8 -31 0 200 0 475"))
+      (Tab 0)))
+  (MPSSessionName "thebh_000"))

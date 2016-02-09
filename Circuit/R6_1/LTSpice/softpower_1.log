@@ -1,0 +1,23 @@
+Circuit: * C:\Users\thebh\Desktop\dtf\git\clay\Circuit\R6_1\LTSpice\softpower_1.asc
+
+WARNING: Less than two connections to node UC_SWITCH.  This node is used by V2.
+.OP point found by inspection.
+
+Date: Sun Feb 07 17:26:31 2016
+Total elapsed time: 0.064 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 739
+traniter = 739
+tranpoints = 277
+accept = 254
+rejected = 23
+matrix size = 19
+fillins = 8
+solver = Normal
+Matrix Compiler1: 1.35 KB object code size  0.5/0.3/[0.2]
+Matrix Compiler2: 1.51 KB object code size  0.2/0.4/[0.1]
+
+

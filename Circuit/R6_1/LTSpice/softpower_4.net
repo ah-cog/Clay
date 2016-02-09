@@ -1,0 +1,18 @@
+* C:\Users\thebh\Desktop\dtf\git\clay\Circuit\R6_1\LTSpice\softpower_4.asc
+S1 N001 BTN_IN SW 0 MYSW
+V1 Vin 0 PWL(0 0 0.1 3.3)
+V2 uc_switch 0 PWL(0 0 1.499 0 1.501 3.3 4.999 3.3 5 0)
+V3 SW 0 PWL(0 0 .999 0 1 1 1.499 1 1.5 0 3 0 3.001 1 3.499 1 3.5 1)
+R1 Vin N001 10k
+R2 uc_switch UVLO 10k
+R3 N002 BTN_IN 10k
+C1 UVLO 0 10µ
+R4 BTN_IN 0 100k
+D1 N002 UVLO 1N4148
+.model D D
+.lib C:\Program Files (x86)\LTC\LTspiceIV\lib\cmp\standard.dio
+* poorly simulated load
+.tran 0 8 0 .1
+.model MYSW SW(Ron=1 Roff=10Meg Vt=.5 Vh=.-2)
+.backanno
+.end

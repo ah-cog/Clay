@@ -1,0 +1,30 @@
+(ExpressProject "SOFT_PWR_SW"
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (NoModify)
+    (File ".\soft_pwr_sw.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x"))
+  (Folder "Outputs")
+  (Folder "Referenced Projects")
+  (PartMRUSelector
+    (PORTLEFT-L
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0")))
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources"
+         "C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\SOFT_PWR_SW\soft_pwr_sw.dsn")
+      (Path "Design Resources"
+         "C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\SOFT_PWR_SW\soft_pwr_sw.dsn"
+         "SCHEMATIC1"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -8 -31 0 200 0 421"))
+      (Tab 0))))

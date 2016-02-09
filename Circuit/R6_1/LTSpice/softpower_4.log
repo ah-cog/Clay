@@ -1,0 +1,23 @@
+Circuit: * C:\Users\thebh\Desktop\dtf\git\clay\Circuit\R6_1\LTSpice\softpower_4.asc
+
+V3: Removing PWL point (3.499,1)
+.OP point found by inspection.
+
+Date: Sun Feb 07 18:57:32 2016
+Total elapsed time: 0.067 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 894
+traniter = 894
+tranpoints = 338
+accept = 299
+rejected = 39
+matrix size = 11
+fillins = 0
+solver = Normal
+Matrix Compiler1: 324 bytes object code size  0.2/0.1/[0.0]
+Matrix Compiler2: 677 bytes object code size  0.1/0.2/[0.1]
+
+

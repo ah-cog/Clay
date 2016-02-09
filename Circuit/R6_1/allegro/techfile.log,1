@@ -1,0 +1,146 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Technology File READ                                             )
+(                                                                     )
+(    Drawing          : CLAYR6.brd                                    )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sat Dec 12 15:36:19 2015                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+techfile name: E:/git/clay/Circuit/R6/allegro_settings/clay_tech.tcf
+  layout name: E:/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd
+
+Technology Difference Report
+============================
+
+Design        : CLAYR6
+Input File    : E:/git/clay/Circuit/R6/allegro_settings/clay_tech.tcf
+Update Mode   : Merge (no deletions will be done)
+Constraint Information : CrossSection, Electrical, Physical, Spacing, Same Net Spacing, Properties
+Notes:
+------
+  - Attribute updates are reported as additions, deletions, or changes.
+  - Association updates are reported as additions or deletions. Associations
+    are the members of a MatchGroup, Constraint Set references, the PinPairs
+    of a Net, the members of a Differential Pair, etc.
+  - Clearing an object implies that the object does not exist so all attributes
+    and associations for the object will be deleted. These attribute and association
+    deletions are not included in the Summary totals. Objects are Constraint Sets,
+    Buses, XNets, Nets, etc.
+
+
+---------------------------------------------------------
+Create Layer: GND
+	Adding: CDS_LAYER_IS_NAMED value "1"
+	Adding: CDS_LAYER_TYPE value "PLANE"
+	Adding: CDS_LAYER_MATERIAL value "COPPER"
+	Adding: CDS_LAYER_NEGATIVE_ARTWORK value "FALSE"
+	Adding: CDS_LAYER_IS_SHIELD value "TRUE"
+	Adding: CDS_LAYER_THICKNESS value "1.20"
+	Adding: CDS_LAYER_ELECTRICAL_CONDUCTIVITY value "595900"
+	Adding: CDS_LAYER_DIELECTRIC_CONSTANT value "4.500"
+	Adding: CDS_LAYER_LOSS_TANGENT value "0.03500"
+	Adding: CDS_LAYER_THERMAL_CONDUCTIVITY value "0.0000"
+	Adding: CDS_LAYER_ETCH_FACTOR value "90.00"
+	Adding: CDS_LAYER_EMBEDDED_STATUS value "NOT_EMBEDDED"
+---------------------------------------------------------
+Create Layer: DIELECTRIC_BELOW_GND
+	Adding: CDS_LAYER_TYPE value "DIELECTRIC"
+	Adding: CDS_LAYER_MATERIAL value "FR-4"
+	Adding: CDS_LAYER_NEGATIVE_ARTWORK value "FALSE"
+	Adding: CDS_LAYER_IS_SHIELD value "FALSE"
+	Adding: CDS_LAYER_THICKNESS value "8.00"
+	Adding: CDS_LAYER_ELECTRICAL_CONDUCTIVITY value "0.0000"
+	Adding: CDS_LAYER_DIELECTRIC_CONSTANT value "4.500"
+	Adding: CDS_LAYER_LOSS_TANGENT value "0.03500"
+	Adding: CDS_LAYER_THERMAL_CONDUCTIVITY value "0.0000"
+---------------------------------------------------------
+Create Layer: PWR
+	Adding: CDS_LAYER_IS_NAMED value "1"
+	Adding: CDS_LAYER_TYPE value "PLANE"
+	Adding: CDS_LAYER_MATERIAL value "COPPER"
+	Adding: CDS_LAYER_NEGATIVE_ARTWORK value "FALSE"
+	Adding: CDS_LAYER_IS_SHIELD value "TRUE"
+	Adding: CDS_LAYER_THICKNESS value "1.20"
+	Adding: CDS_LAYER_ELECTRICAL_CONDUCTIVITY value "595900"
+	Adding: CDS_LAYER_DIELECTRIC_CONSTANT value "4.500"
+	Adding: CDS_LAYER_LOSS_TANGENT value "0.03500"
+	Adding: CDS_LAYER_THERMAL_CONDUCTIVITY value "0.0000"
+	Adding: CDS_LAYER_ETCH_FACTOR value "90.00"
+	Adding: CDS_LAYER_EMBEDDED_STATUS value "NOT_EMBEDDED"
+---------------------------------------------------------
+Create Layer: DIELECTRIC_BELOW_PWR
+	Adding: CDS_LAYER_TYPE value "DIELECTRIC"
+	Adding: CDS_LAYER_MATERIAL value "FR-4"
+	Adding: CDS_LAYER_NEGATIVE_ARTWORK value "FALSE"
+	Adding: CDS_LAYER_IS_SHIELD value "FALSE"
+	Adding: CDS_LAYER_THICKNESS value "8.00"
+	Adding: CDS_LAYER_ELECTRICAL_CONDUCTIVITY value "0.0000"
+	Adding: CDS_LAYER_DIELECTRIC_CONSTANT value "4.500"
+	Adding: CDS_LAYER_LOSS_TANGENT value "0.03500"
+	Adding: CDS_LAYER_THERMAL_CONDUCTIVITY value "0.0000"
+---------------------------------------------------------
+Design: CLAYR6
+	Changing: DRAWING_EXTENTS to "11000.00,8500.00" from "34000.00,22000.00"
+	Changing: DRAWING_LOWER_LEFT to "-3500.00,-4250.00" from "0.00,0.00"
+---------------------------------------------------------
+SpacingCSet: DEFAULT
+	Changing: THRUPIN_TO_THRUPIN_SPACING to "6.00" from "5.00"
+	Changing: THRUPIN_TO_SMDPIN_SPACING to "6.00" from "5.00"
+	Changing: THRUPIN_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: LINE_TO_THRUPIN_SPACING to "6.00" from "5.00"
+	Changing: THRUPIN_TO_SHAPE_SPACING to "6.00" from "5.00"
+	Changing: SMDPIN_TO_SMDPIN_SPACING to "6.00" from "5.00"
+	Changing: SMDPIN_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: LINE_TO_SMDPIN_SPACING to "6.00" from "5.00"
+	Changing: SHAPE_TO_SMDPIN_SPACING to "6.00" from "5.00"
+	Changing: THRUVIA_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: LINE_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: SHAPE_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: LINE_TO_LINE_SPACING to "6.00" from "5.00"
+	Changing: LINE_TO_SHAPE_SPACING to "6.00" from "5.00"
+	Changing: SHAPE_TO_SHAPE_SPACING to "6.00" from "5.00"
+	Changing: BBV_TO_THRUPIN_SPACING to "6.00" from "5.00"
+	Changing: BBV_TO_SMDPIN_SPACING to "6.00" from "5.00"
+	Changing: BBV_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: BBV_TO_LINE_SPACING to "6.00" from "5.00"
+	Changing: BBV_TO_SHAPE_SPACING to "6.00" from "5.00"
+	Changing: BBV_TO_TESTPIN_SPACING to "6.00" from "5.00"
+	Changing: BBV_TO_TESTVIA_SPACING to "6.00" from "5.00"
+	Changing: TESTPIN_TO_TESTPIN_SPACING to "6.00" from "5.00"
+	Changing: TESTPIN_TO_THRUPIN_SPACING to "6.00" from "5.00"
+	Changing: SMDPIN_TO_TESTPIN_SPACING to "6.00" from "5.00"
+	Changing: TESTPIN_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: TESTPIN_TO_TESTVIA_SPACING to "6.00" from "5.00"
+	Changing: LINE_TO_TESTPIN_SPACING to "6.00" from "5.00"
+	Changing: SHAPE_TO_TESTPIN_SPACING to "6.00" from "5.00"
+	Changing: TESTVIA_TO_TESTVIA_SPACING to "6.00" from "5.00"
+	Changing: TESTVIA_TO_THRUPIN_SPACING to "6.00" from "5.00"
+	Changing: SMDPIN_TO_TESTVIA_SPACING to "6.00" from "5.00"
+	Changing: TESTVIA_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: LINE_TO_TESTVIA_SPACING to "6.00" from "5.00"
+	Changing: SHAPE_TO_TESTVIA_SPACING to "6.00" from "5.00"
+	Changing: BONDPAD_TO_BONDPAD_SPACING to "6.00" from "5.00"
+	Changing: THRUPIN_TO_BONDPAD_SPACING to "6.00" from "5.00"
+	Changing: SMDPIN_TO_BONDPAD_SPACING to "6.00" from "5.00"
+	Changing: BONDPAD_TO_THRUVIA_SPACING to "6.00" from "5.00"
+	Changing: BONDPAD_TO_LINE_SPACING to "6.00" from "5.00"
+	Changing: BONDPAD_TO_SHAPE_SPACING to "6.00" from "5.00"
+	Changing: BONDPAD_TO_BBV_SPACING to "6.00" from "5.00"
+	Changing: BONDPAD_TO_TESTPIN_SPACING to "6.00" from "5.00"
+	Changing: BONDPAD_TO_TESTVIA_SPACING to "6.00" from "5.00"
+	Changing: MIN_BVIA_GAP to "6.00" from "5.00"
+	Changing: HOLE_TO_HOLE_SPACING to "24.00" from "8.00"
+---------------------------------------------------------
+
+Summary:
+
+Constraint changes found: 42 additions, 0 deletions, 48 changes.
+
+No association changes done.
+
+
+
+
