@@ -34,7 +34,11 @@ typedef union quaternion
 
 extern uint8_t data_ready;
 
+extern uint8_t Enable_MPU9250();
 extern uint8_t Start_MPU9250();
+extern uint8_t Stop_MPU9250();
+extern uint8_t Pause_MPU9250();
+extern uint8_t Resume_MPU9250();
 extern void tap_callback();
 extern void imu_periodic_callback();
 extern const quaternion * get_quaternion_history(uint8_t * count, uint8_t * head);

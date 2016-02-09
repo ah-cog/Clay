@@ -95,6 +95,11 @@ void Application(void)
         // Failure
     }
 
+    //TODO: Finish implementing enable/start/stop/resume/pause for mesh and irq
+    //this must happen after mesh init, and mesh communication cannot be done until this has happened. 
+    //	The IRQ pins for these devices share a port. When that port event fires, it tries to call PE-generated 
+    //  interrupt handler for each pin, which references the LDD_DeviceData pointer for that respective pin. If 
+    //  that pointer is null (i.e. init has not happened for that pin) then a hard falt will occur, and that is not good eats. 2016-02-07
     if ((status = Start_MPU9250()) != TRUE)
     {
         // Failure
