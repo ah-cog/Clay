@@ -1,0 +1,20 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Shape Without Nets Report                                        )
+(                                                                     )
+(    Drawing          : CLAYR6.brd                                    )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Fri Feb 12 01:32:28 2016                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+  Total shapes not on a net: 1
+
+
+  <<<  ETCH  >>>
+
+    Layer = GND
+	Point on shape: (-886.00 500.00)  Net: Dummy Net
+
+    To suppress in report attach OK_UNASSIGNED_SHAPE property to shape.

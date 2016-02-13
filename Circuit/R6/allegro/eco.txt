@@ -2,16 +2,109 @@
 |                                 ECO   REPORT                                 |
 |                                                                    Page   1  |
 |------------------------------------------------------------------------------|
-|  E:/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd                                   |
-|                                                    Sun Dec 13 20:56:32 2015  |
+|  C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd           |
+|                                                    Mon Feb 08 23:44:32 2016  |
 |------------------------------------------------------------------------------|
 | NET CHANGES                                                                  |
 |- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
 |   net  name |  type of change |    pin_id     |   x   |   y   |   to  net    |
 |- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
-  VCC          pins MOVED FROM this net (to net name listed on right)
-                                 U7.5            -577.10 -631.60
-                                                                        VDD_RTC
+  CHG_OUT      pins MOVED FROM this net (to net name listed on right)
+                                 C1.1            -559.00  742.25
+                                                                           VBAT
+                                 J2.1            -329.63  731.64
+                                                                           VBAT
+                                 U1.10           -604.63  739.88
+                                                                           VBAT
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  N01037       pins MOVED FROM this net (to net name listed on right)
+                                 U6.7            -718.07  509.68
+                                                                           UVLO
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  PGND         pins MOVED FROM this net (to net name listed on right)
+                                 C29.2           -661.37  283.00
+                                                                      GND_EARTH
+                                 C30.2           -689.37  596.00
+                                                                      GND_EARTH
+                                 C31.2           -661.37  344.00
+                                                                      GND_EARTH
+                                 C32.2           -629.75  395.00
+                                                                      GND_EARTH
+                                 DS16.1          -887.00  335.00
+                                                                      GND_EARTH
+                                 U6.4            -601.93  509.68
+                                                                      GND_EARTH
+                                 U6.11           -660.00  490.00
+                                                                      GND_EARTH
+|------------------------------------------------------------------------------|
+|                                 ECO   REPORT                                 |
+|                                                                    Page   2  |
 |------------------------------------------------------------------------------|
-|   total ECO changes reported  1                                              |
+|  C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd           |
+|                                                    Mon Feb 08 23:44:32 2016  |
+|------------------------------------------------------------------------------|
+| COMPONENT DEFINITION added to board drawing                                  |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|    device type                                                               |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+ INDUCTOR_L0402_DNP
+|------------------------------------------------------------------------------|
+|                                 ECO   REPORT                                 |
+|                                                                    Page   3  |
+|------------------------------------------------------------------------------|
+|  C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd           |
+|                                                    Mon Feb 08 23:44:32 2016  |
+|------------------------------------------------------------------------------|
+| COMPONENTS DELETED from board drawing                                        |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|    ref des        |    device type      |   x   |   y                        |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+ R20                 RESISTOR_R0402_2.55M  -789.50  525.00
+ R22                 RESISTOR_R0402_220K   -789.50  465.00
+ SW1                 SWITCH_SPDT_CUS_12TB_CUS-12TB -917.00  579.00
+|------------------------------------------------------------------------------|
+|                                 ECO   REPORT                                 |
+|                                                                    Page   4  |
+|------------------------------------------------------------------------------|
+|  C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd           |
+|                                                    Mon Feb 08 23:44:32 2016  |
+|------------------------------------------------------------------------------|
+| COMPONENTS CHANGED from one device type to another in board drawing          |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|    ref des        | new device type     |   x   |   y   |  old  device type  |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+ L6                  INDUCTOR_L0402_DNP    -631.00 -683.00 INDUCTOR_L0402_3.9NH
+ L7                  INDUCTOR_L0402_DNP    -721.00 -735.00 INDUCTOR_L0402_3.9NH
+|------------------------------------------------------------------------------|
+|                                 ECO   REPORT                                 |
+|                                                                    Page   5  |
+|------------------------------------------------------------------------------|
+|  C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd           |
+|                                                    Mon Feb 08 23:44:32 2016  |
+|------------------------------------------------------------------------------|
+| SLOT PROPERTIES added to board drawing                                       |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|   slot_id    |   x   |   y   |   property   |             value              |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+ L6.2           -631.00 -683.00 PRIM_FILE      .\pstchip.dat
+ L7.2           -721.00 -735.00 PRIM_FILE      .\pstchip.dat
+|------------------------------------------------------------------------------|
+|                                 ECO   REPORT                                 |
+|                                                                    Page   6  |
+|------------------------------------------------------------------------------|
+|  C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CIRCUIT/R6/allegro/CLAYR6.brd           |
+|                                                    Mon Feb 08 23:44:32 2016  |
+|------------------------------------------------------------------------------|
+| SHAPE MOVED TO DUMMY NET                                                    |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|     net  name                  |   layer      |    first point on shape      |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+ CHG_OUT                          PWR            (-979.99 575.00)
+ CHG_OUT                          TOP            (-608.00 755.00)
+ CHG_OUT                          TOP            (-884.00 682.00)
+ PGND                             BOTTOM         (-688.00 473.00)
+ PGND                             TOP            (-687.00 256.00)
+ PGND                             TOP            (-692.00 493.00)
+|------------------------------------------------------------------------------|
+|   total ECO changes reported  25                                             |
 |------------------------------------------------------------------------------|

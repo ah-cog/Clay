@@ -16,7 +16,7 @@ ENHANCED_EXCELLON      YES
 HEADER                 none
 LEADER                 12
 CODE                   ASCII
-SEPARATE               NO
+SEPARATE               YES
 SEPARATE-ROUTING       NO
 DRILLING               LAYER-PAIR
 BACKDRILL              NO

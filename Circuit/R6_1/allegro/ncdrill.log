@@ -2,9 +2,9 @@
 (                                                                     )
 (    NC DRILL Log                                                     )
 (                                                                     )
-(    Drawing          : #Taaaaas06452.tmp                             )
+(    Drawing          : #Taaaacp02796.tmp                             )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Mon Dec 14 05:00:33 2015                      )
+(    Date/Time        : Sat Feb 13 00:20:39 2016                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -29,7 +29,7 @@
  HEADER			none
  LEADER			12
  CODE			ASCII
- SEPARATE		YES
+ SEPARATE		NO
  SEPARATE-ROUTING	NO
  OPTIMIZE_DRILLING	NO
  ENHANCED_EXCELLON	YES
@@ -49,38 +49,23 @@
           30.00  P        T02            0.000000     0.000000
           16.00  P        T03            0.000000     0.000000
           12.00  P        T04            0.000000     0.000000
-          36.00  N        T05            0.000000     0.000000
 
 
- Drill files being output to directory 'E:/git/clay/Circuit/R6/allegro' ...
+ Drill files being output to directory 'C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro' ...
 
 
 
-     'CLAYR6-1-4.drl' created for holes connecting TOP and BOTTOM ; Plating = PLATED
-     -------------------------------------------------------------------------------
+     'CLAYR6-1-4.drl' created for holes connecting TOP and BOTTOM
+     ------------------------------------------------------------
 
      Tool  Num     Size      +/- Tolerance     Plating   Quantity
 
      T01    1.  40.0000    0.0000/  0.0000      PLATED         38
      T02    2.  30.0000    0.0000/  0.0000      PLATED          2
      T03    3.  16.0000    0.0000/  0.0000      PLATED          3
-     T04    4.  12.0000    0.0000/  0.0000      PLATED        505
+     T04    4.  12.0000    0.0000/  0.0000      PLATED        539
 
-     ---- Total holes:                                        548
+     ---- Total holes:                                        582
 
-     ---- Total head travel:              18.35 feet (5.59 meters)
-
-
-
-
-     'CLAYR6-1-1-np.drl' created for holes connecting TOP and TOP ; Plating = NON_PLATED
-     -----------------------------------------------------------------------------------
-
-     Tool  Num     Size      +/- Tolerance     Plating   Quantity
-
-     T05    1.  36.0000    0.0000/  0.0000  NON_PLATED          2
-
-     ---- Total holes:                                          2
-
-     ---- Total head travel:              0.01 feet (0.00 meters)
+     ---- Total head travel:              17.87 feet (5.45 meters)
 

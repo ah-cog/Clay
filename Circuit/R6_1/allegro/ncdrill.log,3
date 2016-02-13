@@ -2,9 +2,9 @@
 (                                                                     )
 (    NC DRILL Log                                                     )
 (                                                                     )
-(    Drawing          : #Taaaaae06452.tmp                             )
+(    Drawing          : #Taaaaas06452.tmp                             )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Mon Dec 14 04:40:18 2015                      )
+(    Date/Time        : Mon Dec 14 05:00:33 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -29,7 +29,7 @@
  HEADER			none
  LEADER			12
  CODE			ASCII
- SEPARATE		NO
+ SEPARATE		YES
  SEPARATE-ROUTING	NO
  OPTIMIZE_DRILLING	NO
  ENHANCED_EXCELLON	YES
@@ -56,8 +56,8 @@
 
 
 
-     'CLAYR6-1-4.drl' created for holes connecting TOP and BOTTOM
-     ------------------------------------------------------------
+     'CLAYR6-1-4.drl' created for holes connecting TOP and BOTTOM ; Plating = PLATED
+     -------------------------------------------------------------------------------
 
      Tool  Num     Size      +/- Tolerance     Plating   Quantity
 
@@ -73,8 +73,8 @@
 
 
 
-     'CLAYR6-1-1-np.drl' created for holes connecting TOP and TOP
-     ------------------------------------------------------------
+     'CLAYR6-1-1-np.drl' created for holes connecting TOP and TOP ; Plating = NON_PLATED
+     -----------------------------------------------------------------------------------
 
      Tool  Num     Size      +/- Tolerance     Plating   Quantity
 

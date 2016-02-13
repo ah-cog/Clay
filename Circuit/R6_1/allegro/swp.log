@@ -1,0 +1,16 @@
+{ Using PSTWRITER 16.6.0 d001Feb-08-2016 at 23:21:19 }
+
+INFO(ORCAP-36108): Starting the Swp file dumping process ...
+Loading netlist files ...
+Loading... C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\allegro/pstchip.dat
+
+Loading... C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\allegro/pstxprt.dat
+
+Loading... C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\allegro/pstxnet.dat
+packaging the design view...Loading physical design view ...Loading... C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\allegro/funcview.dat
+#549 ERROR(SPCODD-549): No physical part found for COMP_DEVICE_TYPE=RESISTOR_R0402_2.55M, regenerate the netlist to sync with Allegro board.
+              ERROR(SPCODD-516): Line Number: 110
+#549 ERROR(SPCODD-549): No physical part found for COMP_DEVICE_TYPE=SWITCH_SPDT_CUS_12TB_CUS-12TB, regenerate the netlist to sync with Allegro board.
+              ERROR(SPCODD-516): Line Number: 124
+#1 ERROR(ORCAP-36027): Unable to read physical netlist data.
+#2 ERROR(ORCAP-36025): Aborting Swap file creation... Please correct the above errors and retry.

@@ -4,12 +4,12 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sat Dec 12 20:11:56 2015                      )
+(    Date/Time        : Sun Dec 13 04:00:37 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
 
-Sat Dec 12 20:11:56 2015				Page     1
+Sun Dec 13 04:00:37 2015				Page     1
 
 
 ------ Pad Stack Refresh Options ------
@@ -43,6 +43,18 @@ PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/
 
 ------ Pad Stack Refresh Messages ------
 
+'C050_030'  pad stack refresh starting.
+
+     'C050_030'  pad stack refreshed successfully.
+     
+'C030'  pad stack refresh starting.
+
+     'C030'  pad stack refreshed successfully.
+     
+'C032_016'  pad stack refresh starting.
+
+     'C032_016'  pad stack refreshed successfully.
+     
 'C048_040'  pad stack refresh starting.
 
      'C048_040'  pad stack refreshed successfully.
@@ -82,10 +94,6 @@ PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/
 'R048_079'  pad stack refresh starting.
 
      'R048_079'  pad stack refreshed successfully.
-     
-'C032_016'  pad stack refresh starting.
-
-     'C032_016'  pad stack refreshed successfully.
      
 'R022_055'  pad stack refresh starting.
 
@@ -134,6 +142,9 @@ PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/
 'R063_079'  pad stack refresh starting.
 
      'R063_079'  pad stack refreshed successfully.
+     Sun Dec 13 04:00:37 2015				Page     2
+
+
      
 'R024_010'  pad stack refresh starting.
 
@@ -142,9 +153,6 @@ PADPATH =  E:/git/clay/Cadence/CIS_Database/Pads/SMT/
 'C008M008'  pad stack refresh starting.
 
      'C008M008'  pad stack refreshed successfully.
-     Sat Dec 12 20:11:56 2015				Page     2
-
-
      
 'MNT040_032'  pad stack refresh starting.
 
