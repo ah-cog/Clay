@@ -1,5 +1,5 @@
 FILE_TYPE=LIBRARY_PARTS;
-{ Using PSTWRITER 16.6.0 d001Dec-13-2015 at 20:56:31}
+{ Using PSTWRITER 16.6.0 d001Feb-08-2016 at 23:44:31}
 primitive 'ANTENNA_ANT_1206_2450AT18A100E';
   pin
     'IN':
@@ -424,6 +424,21 @@ primitive 'INDUCTOR_L1210_2.2UH';
     VALUE='2.2uH';
   end_body;
 end_primitive;
+primitive 'INDUCTOR_L0402_DNP';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='INDUCTOR';
+    JEDEC_TYPE='L0402';
+    VALUE='DNP';
+  end_body;
+end_primitive;
 primitive 'BUZZER_PKMCS_PKMCS0909E4000-R1';
   pin
     '1':
@@ -547,36 +562,6 @@ primitive 'RESISTOR_R0402_7.68K';
     VALUE='7.68k';
   end_body;
 end_primitive;
-primitive 'RESISTOR_R0402_2.55M';
-  pin
-    '2':
-      PIN_NUMBER='(2)';
-      PINUSE='UNSPEC';
-    '1':
-      PIN_NUMBER='(1)';
-      PINUSE='UNSPEC';
-  end_pin;
-  body
-    PART_NAME='RESISTOR';
-    JEDEC_TYPE='R0402';
-    VALUE='2.55M';
-  end_body;
-end_primitive;
-primitive 'RESISTOR_R0402_220K';
-  pin
-    '2':
-      PIN_NUMBER='(2)';
-      PINUSE='UNSPEC';
-    '1':
-      PIN_NUMBER='(1)';
-      PINUSE='UNSPEC';
-  end_pin;
-  body
-    PART_NAME='RESISTOR';
-    JEDEC_TYPE='R0402';
-    VALUE='220k';
-  end_body;
-end_primitive;
 primitive 'RESISTOR_R0402_200';
   pin
     '2':
@@ -635,24 +620,6 @@ primitive 'RESISTOR_R0402_1.0K';
     PART_NAME='RESISTOR';
     JEDEC_TYPE='R0402';
     VALUE='1.0K';
-  end_body;
-end_primitive;
-primitive 'SWITCH_SPDT_CUS_12TB_CUS-12TB';
-  pin
-    '2':
-      PIN_NUMBER='(2)';
-      PINUSE='UNSPEC';
-    '1':
-      PIN_NUMBER='(1)';
-      PINUSE='UNSPEC';
-    '3':
-      PIN_NUMBER='(3)';
-      PINUSE='UNSPEC';
-  end_pin;
-  body
-    PART_NAME='SWITCH_SPDT';
-    JEDEC_TYPE='CUS_12TB';
-    VALUE='CUS-12TB';
   end_body;
 end_primitive;
 primitive 'SPST_NO_TAC_SWITCH_B3U_1000P_B3';

@@ -4,14 +4,12 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sun Dec 13 00:49:58 2015                      )
+(    Date/Time        : Thu Feb 11 00:09:45 2016                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
 
 Current PSMPATH consists of:
-	E:/git/clay/Cadence/CIS_Database/Footprints/SMT/
-	E:/git/clay/Cadence/CIS_Database/Footprints/PTH/
 	.
 	symbols
 	..
@@ -19,11 +17,13 @@ Current PSMPATH consists of:
 	C:/Cadence/SPB_16.6/share/local/pcb/symbols
 	C:/Cadence/SPB_16.6/share/pcb/pcb_lib/symbols
 	C:/Cadence/SPB_16.6/share/pcb/allegrolib/symbols
+	C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CADENCE/CIS_DATABASE/FOOTPRINTS/SMT
+	C:/Users/thebh/Desktop/dtf/git/clay/Cadence/CIS_Database/Footprints/PTH
 
 
 All Symbols Found
 
-Total symbols placed:      126 out of 127
+Total symbols placed:      146 out of 147
 
 
-Symbol Found:  C2	- E:/git/clay/Cadence/CIS_Database/Footprints/SMT/c0402.psm
+Symbol Found:  C2	- C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CADENCE/CIS_DATABASE/FOOTPRINTS/SMT/c0402.psm

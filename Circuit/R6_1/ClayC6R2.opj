@@ -10,7 +10,7 @@
     (CompileFileAddedOrDeleted "x")
     (ANNOTATE_Scope "0")
     (ANNOTATE_Mode "0")
-    (ANNOTATE_Action "1")
+    (ANNOTATE_Action "0")
     (Annotate_Page_Order "0")
     (ANNOTATE_Reset_References_to_1 "FALSE")
     (ANNOTATE_No_Page_Number_Change "FALSE")
@@ -41,8 +41,12 @@
     ("Allegro Netlist Ignore Fixed Property" "FALSE")
     ("Allegro Netlist User Defined Property" "FALSE")
     (Netlist_TAB "0")
+    (Board_sim_option "VHDL_flow")
     ("Allegro Netlist Input Board File" "allegro\CLAYR6.brd")
-    (Board_sim_option "VHDL_flow"))
+    (GATE_&_PIN_SWAP_Scope "0")
+    (GATE_&_PIN_SWAP_File_Name
+       "C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\CLAYR6.SWP")
+    (Backannotation_TAB "0"))
   (Folder "Outputs"
     (File ".\allegro\pstxnet.dat"
       (Type "Report")
@@ -52,9 +56,24 @@
       (DisplayName "pstxprt.dat"))
     (File ".\allegro\pstchip.dat"
       (Type "Report")
-      (DisplayName "pstchip.dat")))
+      (DisplayName "pstchip.dat"))
+    (File ".\allegro\pinview.dat"
+      (Type "Report")
+      (DisplayName "pinView.dat"))
+    (File ".\allegro\netview.dat"
+      (Type "Report")
+      (DisplayName "netView.dat"))
+    (File ".\allegro\funcview.dat"
+      (Type "Report")
+      (DisplayName "funcView.dat"))
+    (File ".\allegro\compview.dat"
+      (Type "Report")
+      (DisplayName "compView.dat")))
   (Folder "Referenced Projects")
   (PartMRUSelector
+    (GND_EARTH
+      (LibraryName "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
     (RESISTOR
       (FullPartName "RESISTOR.Normal")
       (LibraryName
@@ -104,9 +123,10 @@
     (FileView
       (Path "Design Resources")
       (Path "Design Resources" ".\clayr6.dsn")
+      (Path "Design Resources" ".\clayr6.dsn" "SCHEMATIC1")
       (Path "Design Resources" ".\clayr6.dsn" "Design Cache")
       (Path "Outputs")
-      (Select "Design Resources" ".\clayr6.dsn" "Design Cache" "ZENER"))
+      (Select "Design Resources" ".\clayr6.dsn"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -117,21 +137,10 @@
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 0 1 -1 -1 -8 -31 52 1688 52 512")
-        (Scroll "0 0")
+        (Scroll "0 102")
         (Zoom "164")
         (Occurrence "/"))
       (Path "C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\CLAYR6.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 156 1792 156 616")
-        (Scroll "-309 24")
-        (Zoom "100")
-        (Occurrence "/SOFT_PWR_SW"))
-      (Path
-         "C:\USERS\THEBH\DESKTOP\DTF\GIT\CLAY\CIRCUIT\R6_1\SOFT_PWR_SW\SOFT_PWR_SW.DSN")
       (Schematic "SCHEMATIC1")
       (Page "PAGE1")))
   (MPSSessionName "thebh")

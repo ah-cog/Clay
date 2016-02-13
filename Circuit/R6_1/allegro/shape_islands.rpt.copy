@@ -1,0 +1,80 @@
+<HTML><HEAD><STYLE TYPE="text/css">.errorMessage { color:darkred; font-weight:bold; font-style:italic; text-decoration:underline; }</STYLE></HEAD><BODY><PRE>
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Shape Island Report                                              )
+(                                                                     )
+(    Drawing          : CLAYR6.brd                                    )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Fri Feb 12 23:10:38 2016                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+  Total islands on design: 56
+
+
+  <<<  ETCH  >>>
+
+    Layer = TOP
+	Point on shape: <a href="xprobe:xy:739.59 -973.16">(739.59 -973.16)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:608.79 -962.53">(608.79 -962.53)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:869.98 -885.68">(869.98 -885.68)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-376.37 -681.60">(-376.37 -681.60)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-710.99 -253.58">(-710.99 -253.58)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-12.55 -21.46">(-12.55 -21.46)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:283.64 262.12">(283.64 262.12)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-191.84 364.59">(-191.84 364.59)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:115.01 521.26">(115.01 521.26)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-914.02 648.51">(-914.02 648.51)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:531.25 -914.12">(531.25 -914.12)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-103.98 -702.03">(-103.98 -702.03)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-3.98 -702.03">(-3.98 -702.03)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:96.02 -702.03">(96.02 -702.03)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:241.98 -590.64">(241.98 -590.64)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:78.80 -454.18">(78.80 -454.18)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:147.73 -435.98">(147.73 -435.98)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:686.02 -203.98">(686.02 -203.98)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-3.61 -137.60">(-3.61 -137.60)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-582.90 -106.97">(-582.90 -106.97)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:603.43 -103.98">(603.43 -103.98)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:604.43 -3.98">(604.43 -3.98)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-588.98 86.52">(-588.98 86.52)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:603.43 96.02">(603.43 96.02)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-129.27 354.02">(-129.27 354.02)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:525.52 360.52">(525.52 360.52)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-185.95 473.64">(-185.95 473.64)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-93.76 501.17">(-93.76 501.17)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:58.79 524.02">(58.79 524.02)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-354.98 527.52">(-354.98 527.52)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-101.50 570.25">(-101.50 570.25)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:3.98 603.43">(3.98 603.43)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:147.85 662.87">(147.85 662.87)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:47.85 677.10">(47.85 677.10)</a>  Net: GND
+
+    Layer = BOTTOM
+	Point on shape: <a href="xprobe:xy:-61.71 -653.04">(-61.71 -653.04)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:26.29 -641.03">(26.29 -641.03)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:711.57 -143.29">(711.57 -143.29)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-482.38 -53.02">(-482.38 -53.02)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-592.68 -40.98">(-592.68 -40.98)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-198.50 -115.75">(-198.50 -115.75)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:700.61 -90.98">(700.61 -90.98)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-630.59 84.16">(-630.59 84.16)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:15.43 254.02">(15.43 254.02)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-640.27 319.98">(-640.27 319.98)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:135.71 587.98">(135.71 587.98)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-45.90 739.55">(-45.90 739.55)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-223.98 738.49">(-223.98 738.49)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:750.17 -976.58">(750.17 -976.58)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-486.67 -502.38">(-486.67 -502.38)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-168.68 -346.57">(-168.68 -346.57)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:272.86 -115.99">(272.86 -115.99)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-548.41 -28.16">(-548.41 -28.16)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-190.02 422.38">(-190.02 422.38)</a>  Net: GND
+	Point on shape: <a href="xprobe:xy:-35.27 463.02">(-35.27 463.02)</a>  Net: GND
+
+    Layer = PWR
+	Point on shape: <a href="xprobe:xy:795.28 534.19">(795.28 534.19)</a>  Net: VCC
+	Point on shape: <a href="xprobe:xy:973.45 741.92">(973.45 741.92)</a>  Net: VCC
+</PRE>
+</BODY></HTML>

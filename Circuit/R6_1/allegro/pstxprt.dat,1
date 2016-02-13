@@ -1,5 +1,5 @@
 FILE_TYPE = EXPANDEDPARTLIST;
-{ Using PSTWRITER 16.6.0 d001Dec-13-2015 at 16:57:31 }
+{ Using PSTWRITER 16.6.0 d001Feb-12-2016 at 00:55:16 }
 DIRECTIVES
  PST_VERSION='PST_HDL_CENTRIC_VERSION_0';
  ROOT_DRAWING='CLAYR6';
@@ -23,7 +23,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS244@SYMLIB.ANTENNA.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins244@symlib.\antenna.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins244@symlib.\antenna.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins244@symlib.\antenna.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -133,7 +133,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS18842@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins18842@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins18842@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins18842@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -153,7 +153,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS18858@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins18858@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins18858@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins18858@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -163,7 +163,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS1403@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins1403@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins1403@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins1403@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -173,7 +173,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS13104@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins13104@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins13104@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins13104@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -183,7 +183,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS13120@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins13120@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins13120@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins13120@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -193,7 +193,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS13136@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins13136@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins13136@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins13136@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -203,7 +203,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS13152@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins13152@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins13152@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins13152@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -213,7 +213,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS13168@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins13168@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins13168@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins13168@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -223,7 +223,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS13715@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins13715@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins13715@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins13715@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -233,7 +233,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS13731@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins13731@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins13731@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins13731@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -243,7 +243,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS1862@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins1862@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins1862@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page10_ins1862@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -263,7 +263,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS2158@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins2158@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins2158@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page10_ins2158@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -273,7 +273,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS1907@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins1907@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins1907@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page10_ins1907@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -283,7 +283,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS188@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins188@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins188@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page10_ins188@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -293,7 +293,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS466@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins466@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins466@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins466@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -303,7 +303,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS482@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins482@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins482@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins482@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -313,7 +313,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS507@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins507@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins507@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins507@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -323,7 +323,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS523@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins523@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins523@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins523@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -333,7 +333,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5946@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5946@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5946@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5946@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -343,7 +343,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS2983@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins2983@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins2983@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins2983@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -353,7 +353,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS2999@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins2999@symlib.\cap_np.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins2999@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins2999@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -364,6 +364,16 @@ SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):IMU@CLAYR6.SCHEMATIC1(SCH_1):INS791@SYMLIB.CAP_NP.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):imu@clayr6.schematic1(sch_1):ins791@symlib.\cap_np.normal\(chips)',
  P_PATH='@clayr6.schematic1(sch_1):page1_imu@clayr6.schematic1(sch_1):page5_ins791@symlib.\cap_np.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ C40 'CAP_NP_C0603_10UF':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS58872@SYMLIB.CAP_NP.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins58872@symlib.\cap_np.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins58872@symlib.\cap_np.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -424,6 +434,16 @@ SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):INS8799@SYMLIB.DIODE.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):ins8799@symlib.\diode.normal\(chips)',
  P_PATH='@clayr6.schematic1(sch_1):page1_ins8799@symlib.\diode.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ D2 'DIODE_SOD323_4148':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS58897@SYMLIB.DIODE.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins58897@symlib.\diode.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins58897@symlib.\diode.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -503,7 +523,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS1134@SYMLIB.LED.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins1134@symlib.\led.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins1134@symlib.\led.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page10_ins1134@symlib.\led.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -653,7 +673,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS99@SYMLIB.CON_10PIN.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins99@symlib.\con_10pin.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins99@symlib.\con_10pin.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins99@symlib.\con_10pin.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -693,7 +713,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS16387@SYMLIB.FERRITE.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins16387@symlib.\ferrite.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins16387@symlib.\ferrite.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins16387@symlib.\ferrite.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -703,27 +723,27 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS91@SYMLIB.INDUCTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins91@symlib.\inductor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins91@symlib.\inductor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page10_ins91@symlib.\inductor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
 PART_NAME
- L6 'INDUCTOR_L0402_3.9NH':;
+ L6 'INDUCTOR_L0402_DNP':;
 
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5921@SYMLIB.INDUCTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5921@symlib.\inductor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5921@symlib.\inductor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5921@symlib.\inductor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
 PART_NAME
- L7 'INDUCTOR_L0402_3.9NH':;
+ L7 'INDUCTOR_L0402_DNP':;
 
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5905@SYMLIB.INDUCTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5905@symlib.\inductor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5905@symlib.\inductor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5905@symlib.\inductor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -823,7 +843,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS22168@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins22168@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins22168@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins22168@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -833,7 +853,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS22148@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins22148@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins22148@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins22148@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -843,7 +863,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS22188@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins22188@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins22188@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins22188@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -853,7 +873,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS22128@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins22128@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins22128@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins22128@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -868,32 +888,12 @@ SECTION_NUMBER 1
  SECTION='';
 
 PART_NAME
- R20 'RESISTOR_R0402_2.55M':;
-
-SECTION_NUMBER 1
- '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS1021@SYMLIB.RESISTOR.NORMAL(CHIPS)':
- C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins1021@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins1021@symlib.\resistor.normal\(chips)',
- PRIM_FILE='.\pstchip.dat',
- SECTION='';
-
-PART_NAME
  R21 'RESISTOR_R0402_30':;
 
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS1187@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins1187@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins1187@symlib.\resistor.normal\(chips)',
- PRIM_FILE='.\pstchip.dat',
- SECTION='';
-
-PART_NAME
- R22 'RESISTOR_R0402_220K':;
-
-SECTION_NUMBER 1
- '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS996@SYMLIB.RESISTOR.NORMAL(CHIPS)':
- C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins996@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins996@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page10_ins1187@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -903,7 +903,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS4079@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins4079@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins4079@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins4079@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -913,7 +913,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS1525@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins1525@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins1525@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins1525@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -923,7 +923,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS1541@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins1541@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins1541@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins1541@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -933,7 +933,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS1500@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins1500@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins1500@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins1500@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -943,7 +943,27 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS1234@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins1234@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins1234@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins1234@symlib.\resistor.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R28 'RESISTOR_R0402_100K':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):INS100311@SYMLIB.RESISTOR.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):ins100311@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_ins100311@symlib.\resistor.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R29 'RESISTOR_R0402_100K':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):INS100387@SYMLIB.RESISTOR.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):ins100387@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_ins100387@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -958,12 +978,52 @@ SECTION_NUMBER 1
  SECTION='';
 
 PART_NAME
- R4 'RESISTOR_R0402_10K':;
+ R30 'RESISTOR_R0402_220K':;
 
 SECTION_NUMBER 1
- '@CLAYR6.SCHEMATIC1(SCH_1):INS59283@SYMLIB.RESISTOR.NORMAL(CHIPS)':
- C_PATH='@clayr6.schematic1(sch_1):ins59283@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_ins59283@symlib.\resistor.normal\(chips)',
+ '@CLAYR6.SCHEMATIC1(SCH_1):INS100336@SYMLIB.RESISTOR.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):ins100336@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_ins100336@symlib.\resistor.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R31 'RESISTOR_R0402_10K':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS81@SYMLIB.RESISTOR.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins81@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins81@symlib.\resistor.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R32 'RESISTOR_R0402_100K':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS40@SYMLIB.RESISTOR.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins40@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins40@symlib.\resistor.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R33 'RESISTOR_R0402_10K':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS97@SYMLIB.RESISTOR.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins97@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins97@symlib.\resistor.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R34 'RESISTOR_R0402_100K':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS56@SYMLIB.RESISTOR.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins56@symlib.\resistor.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins56@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1018,22 +1078,12 @@ SECTION_NUMBER 1
  SECTION='';
 
 PART_NAME
- SW1 'SWITCH_SPDT_CUS_12TB_CUS-12TB':;
+ SW1 'SPST_NO_TAC_SWITCH_B3U_1000P_B3':;
 
 SECTION_NUMBER 1
- '@CLAYR6.SCHEMATIC1(SCH_1):INS378@SYMLIB.SWITCH_SPDT.NORMAL(CHIPS)':
- C_PATH='@clayr6.schematic1(sch_1):ins378@symlib.\switch_spdt.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_ins378@symlib.\switch_spdt.normal\(chips)',
- PRIM_FILE='.\pstchip.dat',
- SECTION='';
-
-PART_NAME
- SW2 'SPST_NO_TAC_SWITCH_B3U_1000P_B3':;
-
-SECTION_NUMBER 1
- '@CLAYR6.SCHEMATIC1(SCH_1):INS58824@SYMLIB.SPST_NO.NORMAL(CHIPS)':
- C_PATH='@clayr6.schematic1(sch_1):ins58824@symlib.\spst_no.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_ins58824@symlib.\spst_no.normal\(chips)',
+ '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS58848@SYMLIB.SPST_NO.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins58848@symlib.\spst_no.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins58848@symlib.\spst_no.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1073,7 +1123,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5374@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5374@symlib.\testpoint.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5374@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5374@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1083,7 +1133,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5388@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5388@symlib.\testpoint.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5388@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5388@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1093,7 +1143,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5402@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5402@symlib.\testpoint.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5402@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5402@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1103,7 +1153,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5416@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5416@symlib.\testpoint.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5416@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5416@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1113,7 +1163,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5430@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5430@symlib.\testpoint.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5430@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5430@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1123,7 +1173,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5444@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5444@symlib.\testpoint.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5444@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5444@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1133,7 +1183,17 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5553@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins5553@symlib.\testpoint.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins5553@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins5553@symlib.\testpoint.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ TP19 'TESTPOINT_TP_030_TP':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):BATTERY_CHARGER@CLAYR6.SCHEMATIC1(SCH_1):INS2088@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):battery_charger@clayr6.schematic1(sch_1):ins2088@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_battery_charger@clayr6.schematic1(sch_1):page2_ins2088@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1144,6 +1204,46 @@ SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):I2C_PULL_UP@CLAYR6.SCHEMATIC1(SCH_1):INS218@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):i2c_pull_up@clayr6.schematic1(sch_1):ins218@symlib.\testpoint.normal\(chips)',
  P_PATH='@clayr6.schematic1(sch_1):page1_i2c_pull_up@clayr6.schematic1(sch_1):page4_ins218@symlib.\testpoint.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ TP20 'TESTPOINT_TP_030_TP':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):BATTERY_CHARGER@CLAYR6.SCHEMATIC1(SCH_1):INS2076@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):battery_charger@clayr6.schematic1(sch_1):ins2076@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_battery_charger@clayr6.schematic1(sch_1):page2_ins2076@symlib.\testpoint.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ TP21 'TESTPOINT_TP_030_TP':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):BATTERY_CHARGER@CLAYR6.SCHEMATIC1(SCH_1):INS1887@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):battery_charger@clayr6.schematic1(sch_1):ins1887@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_battery_charger@clayr6.schematic1(sch_1):page2_ins1887@symlib.\testpoint.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ TP22 'TESTPOINT_TP_030_TP':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):BATTERY_CHARGER@CLAYR6.SCHEMATIC1(SCH_1):INS1875@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):battery_charger@clayr6.schematic1(sch_1):ins1875@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_battery_charger@clayr6.schematic1(sch_1):page2_ins1875@symlib.\testpoint.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ TP23 'TESTPOINT_TP_030_TP':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS59363@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins59363@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins59363@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1263,7 +1363,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS541@SYMLIB.MK64FN1M0VLL12.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins541@symlib.\mk64fn1m0vll12.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins541@symlib.\mk64fn1m0vll12.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins541@symlib.\mk64fn1m0vll12.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1273,7 +1373,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS44@SYMLIB.TPS61201.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins44@symlib.\tps61201.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins44@symlib.\tps61201.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page10_ins44@symlib.\tps61201.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1283,7 +1383,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS88@SYMLIB.ESP8266EX.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins88@symlib.\esp8266ex.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins88@symlib.\esp8266ex.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins88@symlib.\esp8266ex.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1293,7 +1393,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS199@SYMLIB.W25Q.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins199@symlib.\w25q.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins199@symlib.\w25q.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins199@symlib.\w25q.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1343,7 +1443,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS6640@SYMLIB.ASCO_OSC.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins6640@symlib.\asco_osc.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins6640@symlib.\asco_osc.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins6640@symlib.\asco_osc.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1353,7 +1453,7 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):UC@CLAYR6.SCHEMATIC1(SCH_1):INS6587@SYMLIB.CRYSTAL.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):uc@clayr6.schematic1(sch_1):ins6587@symlib.\crystal.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page8_ins6587@symlib.\crystal.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_uc@clayr6.schematic1(sch_1):page9_ins6587@symlib.\crystal.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1363,7 +1463,17 @@ PART_NAME
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS2204@SYMLIB.CRYSTAL_4.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins2204@symlib.\crystal_4.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page10_ins2204@symlib.\crystal_4.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins2204@symlib.\crystal_4.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ Z1 'ZENER_SOD323_MM3Z3VST1G':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):INS93827@SYMLIB.ZENER.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):ins93827@symlib.\zener.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_ins93827@symlib.\zener.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 

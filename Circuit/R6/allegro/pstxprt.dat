@@ -1,5 +1,5 @@
 FILE_TYPE = EXPANDEDPARTLIST;
-{ Using PSTWRITER 16.6.0 d001Dec-13-2015 at 20:56:31 }
+{ Using PSTWRITER 16.6.0 d001Feb-08-2016 at 23:44:31 }
 DIRECTIVES
  PST_VERSION='PST_HDL_CENTRIC_VERSION_0';
  ROOT_DRAWING='CLAYR6';
@@ -708,7 +708,7 @@ SECTION_NUMBER 1
  SECTION='';
 
 PART_NAME
- L6 'INDUCTOR_L0402_3.9NH':;
+ L6 'INDUCTOR_L0402_DNP':;
 
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5921@SYMLIB.INDUCTOR.NORMAL(CHIPS)':
@@ -718,7 +718,7 @@ SECTION_NUMBER 1
  SECTION='';
 
 PART_NAME
- L7 'INDUCTOR_L0402_3.9NH':;
+ L7 'INDUCTOR_L0402_DNP':;
 
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS5905@SYMLIB.INDUCTOR.NORMAL(CHIPS)':
@@ -868,32 +868,12 @@ SECTION_NUMBER 1
  SECTION='';
 
 PART_NAME
- R20 'RESISTOR_R0402_2.55M':;
-
-SECTION_NUMBER 1
- '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS1021@SYMLIB.RESISTOR.NORMAL(CHIPS)':
- C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins1021@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins1021@symlib.\resistor.normal\(chips)',
- PRIM_FILE='.\pstchip.dat',
- SECTION='';
-
-PART_NAME
  R21 'RESISTOR_R0402_30':;
 
 SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS1187@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins1187@symlib.\resistor.normal\(chips)',
  P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins1187@symlib.\resistor.normal\(chips)',
- PRIM_FILE='.\pstchip.dat',
- SECTION='';
-
-PART_NAME
- R22 'RESISTOR_R0402_220K':;
-
-SECTION_NUMBER 1
- '@CLAYR6.SCHEMATIC1(SCH_1):VREG@CLAYR6.SCHEMATIC1(SCH_1):INS996@SYMLIB.RESISTOR.NORMAL(CHIPS)':
- C_PATH='@clayr6.schematic1(sch_1):vreg@clayr6.schematic1(sch_1):ins996@symlib.\resistor.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_vreg@clayr6.schematic1(sch_1):page9_ins996@symlib.\resistor.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 
@@ -1014,16 +994,6 @@ SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):BUZZER@CLAYR6.SCHEMATIC1(SCH_1):INS164@SYMLIB.RESISTOR.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):buzzer@clayr6.schematic1(sch_1):ins164@symlib.\resistor.normal\(chips)',
  P_PATH='@clayr6.schematic1(sch_1):page1_buzzer@clayr6.schematic1(sch_1):page3_ins164@symlib.\resistor.normal\(chips)',
- PRIM_FILE='.\pstchip.dat',
- SECTION='';
-
-PART_NAME
- SW1 'SWITCH_SPDT_CUS_12TB_CUS-12TB':;
-
-SECTION_NUMBER 1
- '@CLAYR6.SCHEMATIC1(SCH_1):INS378@SYMLIB.SWITCH_SPDT.NORMAL(CHIPS)':
- C_PATH='@clayr6.schematic1(sch_1):ins378@symlib.\switch_spdt.normal\(chips)',
- P_PATH='@clayr6.schematic1(sch_1):page1_ins378@symlib.\switch_spdt.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 

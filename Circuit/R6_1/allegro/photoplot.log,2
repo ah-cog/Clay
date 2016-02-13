@@ -4,7 +4,7 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Mon Dec 14 04:45:31 2015                      )
+(    Date/Time        : Mon Dec 14 04:50:05 2015                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -182,7 +182,7 @@ Results from parameter file ...
 
   FILM PARAMETERS :
   ---------------------------------------------------------
-  Undefined line width                0.00
+  Undefined line width                10.00
   Mirror code                         NONE
   Rotate angle                        NONE
   Offset x:                           0.00
@@ -207,6 +207,31 @@ Results from parameter file ...
   CIRCLE     0.07000                                  DARK 
 
      BOTTOM created.
+
+
+================================================================
+     PROCESSING FILM < OUTLINE >
+     TO FILE < E:/git/clay/Circuit/R6/allegro/OUTLINE.art > ...
+================================================================
+
+  FILM PARAMETERS :
+  ---------------------------------------------------------
+  Undefined line width                0.00
+  Mirror code                         NONE
+  Rotate angle                        NONE
+  Offset x:                           0.00
+  Offset y:                           0.00
+  Plot negative                       NO
+  Suppress unconnected internal pads  NO
+  Draw holes only                     NO
+
+    WARNING: rectangle or unfilled shape composed 0 width line found at (-1000.00 -1000.00)
+           ... ignored.
+
+
+
+  APERTURES USED:  NONE
+     OUTLINE created with warnings
 
 
 ================================================================
@@ -299,6 +324,28 @@ Results from parameter file ...
   PAD SHAPE  TPS612_SOLDER_PASTE        90.000 NO     DARK 
 
      PASTE_TOP created.
+
+
+================================================================
+     PROCESSING FILM < PASTE_BOTTOM >
+     TO FILE < E:/git/clay/Circuit/R6/allegro/PASTE_BOTTOM.art > ...
+================================================================
+
+  FILM PARAMETERS :
+  ---------------------------------------------------------
+  Undefined line width                0.00
+  Mirror code                         NONE
+  Rotate angle                        NONE
+  Offset x:                           0.00
+  Offset y:                           0.00
+  Plot negative                       NO
+  Suppress unconnected internal pads  NO
+  Draw holes only                     NO
+
+
+
+  APERTURES USED:  NONE
+     PASTE_BOTTOM created.
 
 
 ================================================================
@@ -406,14 +453,51 @@ Results from parameter file ...
      SOLDERMASK_BOTTOM created.
 
 
+================================================================
+     PROCESSING FILM < SILK_TOP >
+     TO FILE < E:/git/clay/Circuit/R6/allegro/SILK_TOP.art > ...
+================================================================
+
+  FILM PARAMETERS :
+  ---------------------------------------------------------
+  Undefined line width                0.00
+  Mirror code                         NONE
+  Rotate angle                        NONE
+  Offset x:                           0.00
+  Offset y:                           0.00
+  Plot negative                       NO
+  Suppress unconnected internal pads  NO
+  Draw holes only                     NO
+
+    WARNING: 0 width line found at (-151.79 -458.06)
+           ... ignored.
+
+    WARNING: Multiple 0 width lines; all will be treated the same as the first.
+           ... ignored.
+
+
+
+  APERTURES USED:
+  ---------------------------------------------------------
+  TYPE       SIZE/NAME                   ROT   MIRROR MODE 
+  ---------------------------------------------------------
+  CIRCLE     0.00500                                  DARK 
+  CIRCLE     0.00600                                  DARK 
+
+     SILK_TOP created with warnings
+
+
 ------------------------------------------------------
  SUMMARY:
         GND created.
         PWR created.
         BOTTOM created.
+        OUTLINE created with warnings
         SILK_BOTTOM created.
         PASTE_TOP created.
+        PASTE_BOTTOM created.
         SOLDERMASK_TOP created.
         SOLDERMASK_BOTTOM created.
+        SILK_TOP created with warnings
 
  ARTWORK finished

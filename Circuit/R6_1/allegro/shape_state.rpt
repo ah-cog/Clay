@@ -4,16 +4,17 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sat Dec 12 20:51:26 2015                      )
+(    Date/Time        : Fri Feb 12 01:48:47 2016                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
 
-  Dynamic shapes out of date: 1 out of 7
+  Dynamic shapes out of date: 2 out of 14
   Current fill mode         : SMOOTH
 
 
   <<<  ETCH  >>>
 
     Layer = TOP
-       State: No Etch      Point on shape: (-751.00 477.00)  Net: GND
+       State: No Etch      Point on shape: (-807.00 541.00)  Net: N00478
+       State: No Etch      Point on shape: (-815.00 601.00)  Net: GND_EARTH

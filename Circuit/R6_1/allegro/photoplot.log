@@ -4,7 +4,7 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Mon Dec 14 04:52:40 2015                      )
+(    Date/Time        : Sat Feb 13 00:20:59 2016                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -28,7 +28,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < TOP >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/TOP.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/TOP.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -42,8 +42,6 @@ Results from parameter file ...
   Suppress unconnected internal pads  NO
   Draw holes only                     NO
 
-    WARNING: Null REGULAR-PAD specified for padstack MH_C36 at (-917.00 519.94).
-    WARNING: Null REGULAR-PAD specified for padstack MH_C36 at (-917.00 638.06).
 
 
   APERTURES USED:
@@ -52,6 +50,7 @@ Results from parameter file ...
   ---------------------------------------------------------
   CIRCLE     0.00600                                  DARK 
   CIRCLE     0.01000                                  DARK 
+  CIRCLE     0.01200                                  DARK 
   CIRCLE     0.01400                                  DARK 
   CIRCLE     0.01500                                  DARK 
   CIRCLE     0.01520                                  DARK 
@@ -87,16 +86,15 @@ Results from parameter file ...
   RECTANGLE  0.02400     x 0.02400       0.000 NO     DARK 
   RECTANGLE  0.02500     x 0.04500       0.000 NO     DARK 
   RECTANGLE  0.02500     x 0.04500      90.000 NO     DARK 
-  RECTANGLE  0.02800     x 0.06000      90.000 NO     DARK 
   RECTANGLE  0.03000     x 0.05500       0.000 NO     DARK 
   RECTANGLE  0.03000     x 0.11000      90.000 NO     DARK 
   RECTANGLE  0.03100     x 0.03500       0.000 NO     DARK 
-  RECTANGLE  0.03100     x 0.06600     135.000 NO     DARK 
+  RECTANGLE  0.03100     x 0.06600      90.000 NO     DARK 
   RECTANGLE  0.03200     x 0.06300       0.000 NO     DARK 
   RECTANGLE  0.03200     x 0.06300      90.000 NO     DARK 
+  RECTANGLE  0.03300     x 0.02500       0.000 NO     DARK 
   RECTANGLE  0.03800     x 0.04000       0.000 NO     DARK 
   RECTANGLE  0.03800     x 0.04000      90.000 NO     DARK 
-  RECTANGLE  0.04000     x 0.03200      90.000 NO     DARK 
   RECTANGLE  0.04000     x 0.04400       0.000 NO     DARK 
   RECTANGLE  0.04000     x 0.10600      90.000 NO     DARK 
   RECTANGLE  0.04800     x 0.07900       0.000 NO     DARK 
@@ -107,11 +105,12 @@ Results from parameter file ...
   RECTANGLE  0.06300     x 0.07900      90.000 NO     DARK 
   PAD SHAPE  TPS612_LAND                90.000 NO     DARK 
 
+     TOP created.
 
 
 ================================================================
      PROCESSING FILM < GND >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/GND.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/GND.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -144,7 +143,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < PWR >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/PWR.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/PWR.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -177,7 +176,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < BOTTOM >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/BOTTOM.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/BOTTOM.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -211,7 +210,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < OUTLINE >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/OUTLINE.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/OUTLINE.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -238,7 +237,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < SILK_BOTTOM >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/SILK_BOTTOM.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/SILK_BOTTOM.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -265,7 +264,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < PASTE_TOP >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/PASTE_TOP.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/PASTE_TOP.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -306,9 +305,9 @@ Results from parameter file ...
   RECTANGLE  0.02200     x 0.00900      90.000 NO     DARK 
   RECTANGLE  0.02300     x 0.04300       0.000 NO     DARK 
   RECTANGLE  0.02300     x 0.04300      90.000 NO     DARK 
-  RECTANGLE  0.02500     x 0.05500      90.000 NO     DARK 
+  RECTANGLE  0.02800     x 0.02200       0.000 NO     DARK 
   RECTANGLE  0.02800     x 0.05200       0.000 NO     DARK 
-  RECTANGLE  0.02800     x 0.06000     135.000 NO     DARK 
+  RECTANGLE  0.02800     x 0.06000      90.000 NO     DARK 
   RECTANGLE  0.02800     x 0.10500      90.000 NO     DARK 
   RECTANGLE  0.03000     x 0.03300       0.000 NO     DARK 
   RECTANGLE  0.03000     x 0.06000       0.000 NO     DARK 
@@ -330,7 +329,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < SOLDERMASK_TOP >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/SOLDERMASK_TOP.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/SOLDERMASK_TOP.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -352,7 +351,6 @@ Results from parameter file ...
   ---------------------------------------------------------
   CIRCLE     0.03000                                  DARK 
   CIRCLE     0.03200                                  DARK 
-  CIRCLE     0.03800                                  DARK 
   CIRCLE     0.04800                                  DARK 
   CIRCLE     0.05000                                  DARK 
   CIRCLE     0.07000                                  DARK 
@@ -380,16 +378,15 @@ Results from parameter file ...
   RECTANGLE  0.02400     x 0.02400       0.000 NO     DARK 
   RECTANGLE  0.02500     x 0.04500       0.000 NO     DARK 
   RECTANGLE  0.02500     x 0.04500      90.000 NO     DARK 
-  RECTANGLE  0.02800     x 0.06000      90.000 NO     DARK 
   RECTANGLE  0.03000     x 0.05500       0.000 NO     DARK 
   RECTANGLE  0.03000     x 0.11000      90.000 NO     DARK 
   RECTANGLE  0.03100     x 0.03500       0.000 NO     DARK 
-  RECTANGLE  0.03100     x 0.06600     135.000 NO     DARK 
+  RECTANGLE  0.03100     x 0.06600      90.000 NO     DARK 
   RECTANGLE  0.03200     x 0.06300       0.000 NO     DARK 
   RECTANGLE  0.03200     x 0.06300      90.000 NO     DARK 
+  RECTANGLE  0.03300     x 0.02500       0.000 NO     DARK 
   RECTANGLE  0.03800     x 0.04000       0.000 NO     DARK 
   RECTANGLE  0.03800     x 0.04000      90.000 NO     DARK 
-  RECTANGLE  0.04000     x 0.03200      90.000 NO     DARK 
   RECTANGLE  0.04000     x 0.04400       0.000 NO     DARK 
   RECTANGLE  0.04000     x 0.10600      90.000 NO     DARK 
   RECTANGLE  0.04800     x 0.07900       0.000 NO     DARK 
@@ -405,7 +402,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < SOLDERMASK_BOTTOM >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/SOLDERMASK_BOTTOM.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/SOLDERMASK_BOTTOM.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -435,7 +432,7 @@ Results from parameter file ...
 
 ================================================================
      PROCESSING FILM < SILK_TOP >
-     TO FILE < E:/git/clay/Circuit/R6/allegro/SILK_TOP.art > ...
+     TO FILE < C:/Users/thebh/Desktop/dtf/git/clay/Circuit/R6_1/allegro/SILK_TOP.art > ...
 ================================================================
 
   FILM PARAMETERS :
@@ -470,6 +467,7 @@ Results from parameter file ...
 
 ------------------------------------------------------
  SUMMARY:
+        TOP created.
         GND created.
         PWR created.
         BOTTOM created.
