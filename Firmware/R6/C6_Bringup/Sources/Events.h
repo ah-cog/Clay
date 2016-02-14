@@ -75,6 +75,7 @@ extern "C" {
 #endif 
 
 extern FREQ_OUT SelectedFreq;
+extern bool LedOn;
 
 /*
 ** ===================================================================

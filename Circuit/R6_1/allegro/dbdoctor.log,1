@@ -4,15 +4,25 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Fri Feb 12 01:16:42 2016                      )
+(    Date/Time        : Fri Feb 12 01:16:45 2016                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
 
 
+ERROR IN SHAPE (-367.00 715.49)
+  class = ETCH
+  subclass = TOP 
+  ERROR(SPMHDB-187): SHAPE boundary may not cross itself.
+   Error cannot be fixed.
+  Dynamic shape will try regenerating etch.
+
 Number of Xnets before update: 0        after update: 0
 Number of Diff Pairs before update: 0   after update: 0
 
-WARNING   WARNING(SPMHDB-42): Run batch DRC to correctly regenerate DRC errs.
+Regenerating DRC
+  Original DRC errors:   20
+  Updated DRC errors:    20
+  DRC elapsed time:      00:00:01
 
-1 warnings, 0 errors detected, 0 errors could be fixed.
+0 warnings, 1 errors detected, 0 errors  fixed.

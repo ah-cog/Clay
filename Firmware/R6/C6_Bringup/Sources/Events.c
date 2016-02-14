@@ -34,8 +34,9 @@
 
 #include "Clock.h"
 #include "Mesh.h"
-
+#include "I2C.h"
 FREQ_OUT SelectedFreq = f_Off;
+bool LedOn = FALSE;
 
 #ifdef __cplusplus
 extern "C"
@@ -62,10 +63,11 @@ extern "C"
  **                           the parameter of Init method.
  */
 /* ===================================================================*/
-void TI1_OnInterrupt(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
+void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
 
-	Tick();
+   Tick();
 }
 
 /*
@@ -86,8 +88,10 @@ void TI1_OnInterrupt(LDD_TUserData *UserDataPtr) {
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
+void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
+   i2c_tx_complete = TRUE;
 }
 
 /*
@@ -108,8 +112,10 @@ void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr) {
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
+void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
+   i2c_rx_complete = TRUE;
 }
 
 /*
@@ -130,9 +136,11 @@ void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr) {
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
-	SelectedFreq = (SelectedFreq + 1) % (f_Off + 1);
+void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
+   SelectedFreq = (SelectedFreq + 1) % (f_Off + 1);
+   LedOn = !LedOn;
 }
 
 /*
@@ -153,11 +161,13 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr) {
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
-	if (mesh_rx_enabled) {
-		mesh_irq_handler();
-	}
+void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
+   if (mesh_rx_enabled)
+   {
+      mesh_irq_handler();
+   }
 }
 
 /*
@@ -177,8 +187,9 @@ void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr) {
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
+void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
 }
 
 /*
@@ -198,8 +209,9 @@ void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr) {
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
+void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
 }
 
 /*
@@ -215,8 +227,9 @@ void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr) {
  **         interrupt] property is set to 'Enabled'.
  */
 /* ===================================================================*/
-void Cpu_OnNMI(void) {
-	/* Write your code here ... */
+void Cpu_OnNMI(void)
+{
+   /* Write your code here ... */
 }
 
 /*
@@ -236,8 +249,9 @@ void Cpu_OnNMI(void) {
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
-	/* Write your code here ... */
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
 }
 
 /* END Events */

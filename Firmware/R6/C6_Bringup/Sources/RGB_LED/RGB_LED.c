@@ -9,121 +9,144 @@
 #include "RGB_LED.h"
 #include "PE_Types.h"
 #include "I2C2.h"
+#include "I2C.h"
 #include "LED_SDB.h"
 #include "Clock.h"
 
 ////defines
 #define SHUTDOWN_REG_ADDR				0x00
+#define REG_CTRL(x)                     (x + 0x25)      //control regs start at 1, run to 0x24
 #define UPDATE_REGISTER					0x25
+#define REG_PWM(x)                      (x)             //PWM regs start at 0x26, run to 0x49
 #define GLOBAL_CONTROL_ADDR				0x4A
 #define RESET_REG_ADDR   				0x4F
 
 #define LED_CONTROL_OUT_MASK			0x01
 #define LED_CONTROL_SL_MASK				0x06
 
-#define I2C_SLAVE_ADDR					0x3C
+#define RGB_LED_ADDR					0x3C
 
 ////typedefs
-typedef struct {
-	RGB_LED index;
-	uint8_t R_Control_Addr;
-	uint8_t G_Control_Addr;
-	uint8_t B_Control_Addr;
-	uint8_t R_PWM_Addr;
-	uint8_t G_PWM_Addr;
-	uint8_t B_PWM_Addr;
+typedef struct
+{
+   RGB_LED RGB_Index;     //the LED's clay-specific port index
+   uint8_t R_Index;     //the LED driver output driving the red for this LED
+   uint8_t G_Index;     //the LED driver output driving the green for this LED
+   uint8_t B_Index;
+//the LED driver output driving the blue for this LED
 } RGB_LED_Channel;
 
 ////global vars
 
+//LED	C6R1	C6R2	R	G	B
+//DS4	7	    12	    2	3	1
+//DS5	8	    11	    5	6	4
+//DS6	9	    10	    8	9	7
+//DS7	10	    9	    11	12	10
+//DS8	11	    8	    14	15	13
+//DS9	12	    7	    17	18	16
+//DS10	3	    4	    20	21	19
+//DS11	2	    5	    23	24	22
+//DS12	1	    6	    26	27	25
+//DS13	4	    3	    35	36	34
+//DS14	5	    2	    32	33	31
+//DS15	6	    1	    29	30	28
+
+//PwmReg = CHANNEL_INDEX
+//CtrlReg= CHANNEL_INDEX + 0x25
+
 ////local vars
-static RGB_LED_Channel LED_Channels[RGB_MAX] = { { RGB1, 0x26, 0x27, 0x28, 0x01,
-		0x02, 0x03 }, { RGB2, 0x29, 0x2A, 0x2B, 0x04, 0x05, 0x06 }, { RGB3,
-		0x2C, 0x2D, 0x2E, 0x07, 0x08, 0x09 },
-
-{ RGB4, 0x2F, 0x30, 0x31, 0x0A, 0x0B, 0x0C }, { RGB5, 0x32, 0x33, 0x34, 0x0D,
-		0x0E, 0x0F }, { RGB6, 0x35, 0x36, 0x37, 0x10, 0x11, 0x12 },
-
-{ RGB7, 0x38, 0x39, 0x3A, 0x13, 0x14, 0x15 }, { RGB8, 0x3B, 0x3C, 0x3D, 0x16,
-		0x17, 0x18 }, { RGB9, 0x3E, 0x3F, 0x40, 0x19, 0x1A, 0x1B },
-
-{ RGB10, 0x41, 0x42, 0x43, 0x1C, 0x1D, 0x1E }, { RGB11, 0x44, 0x45, 0x46, 0x1F,
-		0x20, 0x21 }, { RGB12, 0x47, 0x48, 0x49, 0x22, 0x23, 0x24 } };
-
+#if defined C6R2
+static RGB_LED_Channel LED_Channels[RGB_MAX] =
+{
+   {  RGB1, 29, 30, 28},
+   {  RGB2, 32, 33, 31},
+   {  RGB3, 35, 36, 34},
+   {  RGB4, 20, 21, 19},
+   {  RGB5, 23, 24, 22},
+   {  RGB6, 26, 27, 25},
+   {  RGB7, 17, 18, 16},
+   {  RGB8, 14, 15, 13},
+   {  RGB9, 11, 12, 10},
+   {  RGB10, 8, 9, 7},
+   {  RGB11, 5, 6, 4},
+   {  RGB12, 2, 3, 1}};
+#else
+static RGB_LED_Channel LED_Channels[RGB_MAX] = { { RGB1, 26, 27, 25 },
+                                                 { RGB2, 23, 24, 22 },
+                                                 { RGB3, 20, 21, 19 },
+                                                 { RGB4, 35, 36, 34 },
+                                                 { RGB5, 32, 33, 31 },
+                                                 { RGB6, 29, 30, 28 },
+                                                 { RGB7, 2, 3, 1 },
+                                                 { RGB8, 5, 6, 4 },
+                                                 { RGB9, 8, 9, 7 },
+                                                 { RGB10, 11, 12, 10 },
+                                                 { RGB11, 14, 15, 13 },
+                                                 { RGB12, 17, 18, 16 } };
+#endif
 ////local function prototypes
 
 ////global function implementations
 
-void RGB_LED_Enable() {
-	LED_SDB_PutVal(NULL, 1);
+bool RGB_LED_Enable()
+{
+   LED_SDB_PutVal(NULL, 1);
 
-	uint8_t temp[] = { 0x00,
-			0x01, //shutdown register needs to be 1 to operate.
-			0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70,
-			0x70, //4.33mA
-			0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70,
-			0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70, 0x70,
-			0x70, 0x70, 0x70, 0x70, 0x70,
+//reset all LEDs to off.
 
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
+   uint8_t temp[] = { RESET_REG_ADDR, 0x00, SHUTDOWN_REG_ADDR, 0x01, GLOBAL_CONTROL_ADDR, 0x00 };     //shutdown register needs to be 1 to operate.
 
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK,
-			LED_CONTROL_OUT_MASK | LED_CONTROL_SL_MASK
-
-	};
-
-	I2C2_SelectSlaveDevice(I2C2_DeviceData, LDD_I2C_ADDRTYPE_7BITS,
-	I2C_SLAVE_ADDR);
-	Wait(1);
-	I2C2_MasterSendBlock(I2C2_DeviceData, temp, 74, LDD_I2C_SEND_STOP);
-	Wait(1);
+   I2C_Send_Message(temp, 2, RGB_LED_ADDR);
+   Wait(1);
+   I2C_Send_Message(temp + 2, 2, RGB_LED_ADDR);
+   Wait(1);
+   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
 }
 
-void RGB_LED_Start() {
+bool RGB_LED_Start()
+{
 }
 
-void RGB_LED_Stop() {
+bool RGB_LED_Stop()
+{
 }
 
-void RGB_LED_Pause() {
+bool RGB_LED_Pause()
+{
 }
 
-void RGB_LED_SetColor(RGB_LED LED, RGB_Color* Color) {
+void RGB_LED_SetState(RGB_LED LED, bool On, LED_Mode CurrentMax)
+{
+   uint8_t state = (On ? (1 & LED_CONTROL_OUT_MASK) | (CurrentMax & LED_CONTROL_SL_MASK) : 0);
+   RGB_LED_Channel * l = LED_Channels + LED;
+
+//keep track of last SL states locally? readback?
+
+   uint8_t temp[] = { REG_CTRL(l->B_Index), state, state, state, UPDATE_REGISTER, 0x00 };     //start at blue, they are the lowest index on all LEDs
+
+   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
+   I2C_Send_Message(temp, 4, RGB_LED_ADDR);
+   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
+
 }
 
-////local function implementations
+void RGB_LED_SetColor(RGB_LED LED, RGB_Color* Color)
+{
+   RGB_LED_Channel * l = LED_Channels + LED;
+
+//keep track of last SL states locally? readback is not supported.
+
+   uint8_t temp[] = { REG_PWM(l->B_Index), Color->B, Color->R, Color->G, UPDATE_REGISTER, 0x00 };     //start at blue, lowest index on all LEDs. green is highest
+
+   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
+   I2C_Send_Message(temp, 4, RGB_LED_ADDR);
+   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
+
+}
+
+void RGB_LED_UpdateOutput()
+{
+   uint8_t temp[] = { UPDATE_REGISTER, 0x00 };
+   I2C_Send_Message(temp, 2, RGB_LED_ADDR);
+}

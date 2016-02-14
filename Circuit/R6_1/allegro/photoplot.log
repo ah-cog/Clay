@@ -4,7 +4,7 @@
 (                                                                     )
 (    Drawing          : CLAYR6.brd                                    )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sat Feb 13 00:20:59 2016                      )
+(    Date/Time        : Sat Feb 13 14:58:58 2016                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
@@ -257,7 +257,7 @@ Results from parameter file ...
   ---------------------------------------------------------
   TYPE       SIZE/NAME                   ROT   MIRROR MODE 
   ---------------------------------------------------------
-  CIRCLE     0.00800                                  DARK 
+  CIRCLE     0.01700                                  DARK 
 
      SILK_BOTTOM created.
 
@@ -461,6 +461,7 @@ Results from parameter file ...
   CIRCLE     0.00500                                  DARK 
   CIRCLE     0.00600                                  DARK 
   CIRCLE     0.01000                                  DARK 
+  CIRCLE     0.01700                                  DARK 
 
      SILK_TOP created with warnings
 
