@@ -1,0 +1,20 @@
+\t (00:00:00) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:00)     Journal start - Sun Feb 14 00:44:58 2016
+\t (00:00:00)         Host=GREEN User=thebh Pid=11420 CPUs=4
+\t (00:00:00) 
+\t (00:00:00) Opening existing design...
+\e (00:00:00) ERROR(SPMHDB-238): The database is corrupted. It may have been copied from a different architecture using ASCII mode ... copy using binary mode.
+\e (00:00:00) ERROR(SPMHDB-238): The database is corrupted. It may have been copied from a different architecture using ASCII mode ... copy using binary mode.
+\i (00:00:02) fillin confirm
+\t (00:00:02) Starting new design...
+\i (00:00:02) trapsize 653
+\i (00:00:02) trapsize 641
+\i (00:00:03) trapsize 655
+\i (00:00:03) trapsize 660
+\i (00:00:03) trapsize 1051
+\i (00:00:03) generaledit 
+\i (00:00:08) setwindow form.vf_vis
+\i (00:00:08) FORM vf_vis colorview_list Last View 
+\i (00:00:09) setwindow pcb
+\i (00:00:09) exit 
+\t (00:00:09)     Journal end - Sun Feb 14 00:45:08 2016

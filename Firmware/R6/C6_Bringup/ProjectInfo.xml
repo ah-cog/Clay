@@ -50,6 +50,7 @@
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Bootloader\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Clock\</Path>
+      <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\I2C\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\</Path>
       <Path>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\eMPL-hal\</Path>
@@ -110,6 +111,7 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events_ESP8266.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\GPIO.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\I2C\I2C.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\MPU9250.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\inv_mpu.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\inv_mpu_dmp_motion_driver.c</PathName>
@@ -190,6 +192,7 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Events_ESP8266.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\GPIO.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\I2C\I2C.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\MPU9250.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\dmpKey.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\driver\eMPL\dmpmap.h</PathName>
