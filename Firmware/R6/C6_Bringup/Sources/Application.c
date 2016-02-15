@@ -7,6 +7,7 @@
 #include "MPU9250.h"
 #include "LEDs.h"
 #include "Events.h"
+#include "RGBDemo.h"
 
 // Clay's print, debug, and error messages.
 
@@ -33,9 +34,35 @@ int8_t Start_Light_Behavior()
    //stubbed.
 }
 
-int8_t Perform_Channel_Light_Effect(uint8_t reverse)
+bool Perform_Channel_Light_Effect(bool reverse)
 {
-   //stubbed
+   RGB_Color c = { 0, 0, 0 };
+
+   for (c.R = 0; c.R <= 200; c.R += 70)
+   {
+      for (c.G = 0; c.G <= 200; c.G += 70)
+      {
+         for (c.B = 0; c.B <= 200; c.B += 70)
+         {
+            for (int i = reverse ? RGB_MAX : 0; reverse ? i > 0 : i < RGB_MAX; i += (reverse ? -1 : 1))
+            {
+               RGB_LED_SetColor((RGB_LED) i, &c);
+               Wait(1);
+            }
+         }
+      }
+   }
+
+   c.R = 0;
+   c.G = 0;
+   c.B = 0;
+
+   for (int i = 0; i < RGB_MAX; ++i)
+   {
+      RGB_LED_SetColor((RGB_LED) i, &c);
+   }
+
+   return TRUE;
 }
 
 void Application(void)
@@ -100,153 +127,6 @@ void Application(void)
       // Failure
    }
 
-   int ledIndex = 0;
-   int colorIndex = 0;
-   RGB_Color currentColor = { 0, 0, 0 };
-
-   uint8_t rTime = 30;
-   uint8_t gTime = 30;
-   uint8_t bTime = 30;
-
-   uint8_t rMax = 0x90;
-   uint8_t gMax = 0x97;
-   uint8_t bMax = 0xAA;
-
-   uint8_t rMin = 0x01;
-   uint8_t gMin = 0x01;
-   uint8_t bMin = 0x01;
-
-   uint8_t rStep = 1;
-   uint8_t gStep = 1;
-   uint8_t bStep = 1;
-
-   uint8_t r = rMax;
-   uint8_t g = gMax;
-   uint8_t b = bMax;
-
-   bool rDescending = TRUE;
-   bool gDescending = TRUE;
-   bool bDescending = TRUE;
-
-   bool LastState = LedOn;
-   bool HbLedState = FALSE;
-   bool BuzzerState = FALSE;
-
-   for (int i = 0; i < RGB_MAX; ++i)
-   {
-      RGB_LED_SetState((RGB_LED) i, TRUE, LED_CURRENT_QUARTER);
-   }
-
-   for (;;)
-   {
-//      while (LastState == LedOn)
-//         ;
-//
-//      LastState = LedOn;
-
-      if (!(Millis() % 15))
-      {
-         currentColor.R = r;     // LedOn ? 0xFF : 0xAA;
-         currentColor.G = g;     // LedOn ? 0xFF : 0xAA;
-         currentColor.B = b;     // LedOn ? 0xFF : 0xAA;
-//         currentColor.R = LedOn ? 0xFF : 0xAA;
-//         currentColor.G = LedOn ? 0xFF : 0xAA;
-//         currentColor.B = LedOn ? 0xFF : 0xAA;
-//         currentColor.R = LedOn ? 0xFF : 0xAF;
-//         currentColor.G = LedOn ? 0xFF : 0xAF;
-//         currentColor.B = LedOn ? 0xFF : 0xAF;
-         for (int i = 0; i < RGB_MAX; ++i)
-//         for (;;)
-         {
-//            Wait(500);
-//            ++currentColor.R;
-//            ++currentColor.G;
-//            ++currentColor.B;
-//
-//            for (int i = 0; i < RGB_MAX; ++i)
-//            {
-//               RGB_LED_SetColor((RGB_LED) i, &currentColor);
-            RGB_LED_SetColor((RGB_LED) i, &currentColor);
-//            Wait(1);
-//            }
-         }
-
-         RGB_LED_SetColor((RGB_LED) ledIndex, &currentColor);
-
-         LED1_PutVal(NULL, HbLedState);
-
-         RGB_LED_UpdateOutput();
-         ledIndex = (ledIndex + 1) % RGB_MAX;
-      }
-
-      if (!(Millis() % gTime))
-      {
-         if (rDescending)
-         {
-            if (LastState != LedOn || (r -= rStep) <= rMin)
-            {
-               rDescending = FALSE;
-               if (!gDescending && !bDescending)
-               {
-                  LastState = LedOn;
-               }
-            }
-         }
-         else
-         {
-            if ((r += rStep) >= rMax)
-            {
-               rDescending = TRUE;
-            }
-         }
-      }
-
-      if (!(Millis() % gTime))
-      {
-         if (gDescending)
-         {
-            if (LastState != LedOn || (g -= gStep) <= gMin)
-            {
-               gDescending = FALSE;
-               if (!rDescending && !bDescending)
-               {
-                  LastState = LedOn;
-               }
-            }
-         }
-         else
-         {
-            if ((g += gStep) >= gMax)
-            {
-               gDescending = TRUE;
-            }
-         }
-      }
-
-      if (!(Millis() % bTime))
-      {
-         if (bDescending)
-         {
-            if (LastState != LedOn || (b -= bStep) <= bMin)
-            {
-               bDescending = FALSE;
-               if (!gDescending && !rDescending)
-               {
-                  LastState = LedOn;
-               }
-            }
-         }
-         else
-         {
-            if ((b += bStep) >= bMax)
-            {
-               bDescending = TRUE;
-            }
-         }
-      }
-
-   }
-
    if ((status = Start_Light_Behavior()) != TRUE)
    {
       // Failure
@@ -263,7 +143,7 @@ void Application(void)
    }
 
 //TODO: troubleshoot MPU start with invensense drivers.
-   if (0 && (status = Start_MPU9250()) != TRUE)
+   if ((status = Start_MPU9250()) != TRUE)
    {
       // Failure
    }

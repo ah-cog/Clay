@@ -37,7 +37,7 @@ by the component.
 <td class="regNotResetVal">0x010A0104</td>
  <td>PORTC_PCR3 register, peripheral IO_5.</td></tr>
 <tr><td>0x4004B004</td><td>PORTC_PCR1</td>
-<td class="regNotResetVal">0x00000104</td>
+<td class="regNotResetVal">0x010A0104</td>
  <td>PORTC_PCR1 register, peripheral IO_5.</td></tr>
 <tr><td>0xE000E43D</td><td>NVICIP61</td>
 <td class="regNotResetVal">0x00000070</td>
@@ -421,11 +421,11 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0x4004B004</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x00000104</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x010A0104</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000004</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
-<tr><td>24</td><td>ISF</td><td>0x00</td><td>Interrupt Status Flag</td>
-<tr><td>16 - 19</td><td>IRQC</td><td>0x00</td><td>Interrupt Configuration</td>
+<tr><td>24</td><td>ISF</td><td>0x01</td><td>Interrupt Status Flag</td>
+<tr><td>16 - 19</td><td>IRQC</td><td>0x08</td><td>Interrupt Configuration</td>
 <tr><td>15</td><td>LK</td><td>0x00</td><td>Lock Register</td>
 <tr><td>8 - 10</td><td>MUX</td><td>0x00</td><td>Pin Mux Control</td>
 <tr><td>6</td><td>DSE</td><td>0x00</td><td>Drive Strength Enable</td>

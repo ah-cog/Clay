@@ -95,7 +95,7 @@
     <Compiler v="GNU C Compiler" />
     <CompilerProperties>
       <Compiler v="GNU C Compiler" />
-      <enumgroup name="Unhandled vectors" v="One handler for all">
+      <enumgroup name="Unhandled vectors" v="Own handler for every">
         <EmptySection_DummyValue />
       </enumgroup>
       <boolgroup name="Generate debugger files" v="no" />
@@ -1015,7 +1015,7 @@ Autoselect
       <Direction v="Output" />
       <group name="Initialization">
         <Init__direction v="Output" />
-        <Init__value v="0" />
+        <Init__value v="1" />
         <Auto_initialization v="yes" />
       </group>
       <Safe_mode v="no" />

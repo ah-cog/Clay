@@ -127,6 +127,7 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\libmplmpu\core\mllite\storage_manager.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\IMU\mpu_9250_driver.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\LEDs\LEDs.c</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\RGB_LED\RGBDemo.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\RGB_LED\RGB_LED.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\Debug.c</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\Ring_Buffer.c</PathName>
@@ -251,6 +252,7 @@
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Mesh\RadioHead\RadioHead.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Mesh\RadioHead\wirish.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Mesh\mesh_stastistics.h</PathName>
+      <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\RGB_LED\RGBDemo.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\RGB_LED\RGB_LED.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\Debug.h</PathName>
       <PathName>C:\Users\thebh\Desktop\dtf\git\clay\Firmware\R6\C6_Bringup\Sources\Utilities\Ring_Buffer.h</PathName>

@@ -102,6 +102,11 @@ bool RGB_LED_Enable()
    I2C_Send_Message(temp + 2, 2, RGB_LED_ADDR);
    Wait(1);
    I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
+
+   for (int i = 0; i < RGB_MAX; ++i)
+   {
+      RGB_LED_SetState((RGB_LED) i, TRUE, LED_CURRENT_QUARTER);
+   }
 }
 
 bool RGB_LED_Start()
