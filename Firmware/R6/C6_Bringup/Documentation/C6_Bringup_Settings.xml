@@ -95,7 +95,7 @@
     <Compiler v="GNU C Compiler" />
     <CompilerProperties>
       <Compiler v="GNU C Compiler" />
-      <enumgroup name="Unhandled vectors" v="One handler for all">
+      <enumgroup name="Unhandled vectors" v="Own handler for every">
         <EmptySection_DummyValue />
       </enumgroup>
       <boolgroup name="Generate debugger files" v="no" />
@@ -865,7 +865,7 @@ Autoselect
             <group name="Pin">
               <Pin v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
               <boolgroup name="Initial pin direction" v="Input" />
-              <Initial_pin_event v="Disabled" />
+              <Initial_pin_event v="Falling edge" />
               <Lock_initialization_function v="no" />
             </group>
           </list>

@@ -7,7 +7,7 @@
 **     Version     : Component 01.128, Driver 01.08, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-01-31, 22:57, # CodeGen: 31
+**     Date/Time   : 2016-02-15, 02:45, # CodeGen: 49
 **     Abstract    :
 **         The HAL GPIO component will provide a low level API for unified
 **         access to general purpose digital input/output pins across
@@ -38,7 +38,7 @@
 **                Pin                                      : 
 **                  Pin                                    : ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0
 **                  Initial pin direction                  : Input
-**                  Initial pin event                      : Disabled
+**                  Initial pin event                      : Falling edge
 **                  Lock initialization function           : no
 **          Initialization                                 : 
 **            Auto initialization                          : yes

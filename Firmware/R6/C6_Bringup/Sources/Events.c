@@ -35,8 +35,9 @@
 #include "Clock.h"
 #include "Mesh.h"
 #include "I2C.h"
+#include "MPU9250.h"
 FREQ_OUT SelectedFreq = f_Off;
-bool LedOn = FALSE;
+bool ButtonPressToggler = FALSE;
 
 #ifdef __cplusplus
 extern "C"
@@ -140,7 +141,7 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
    SelectedFreq = (SelectedFreq + 1) % (f_Off + 1);
-   LedOn = !LedOn;
+   ButtonPressToggler = !ButtonPressToggler;
 }
 
 /*
@@ -164,9 +165,22 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
 void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
-   if (mesh_rx_enabled)
+
+   //The PTC_IRQ_TDeviceDataPtr is a uint32_t and a void *.
+   //   We can just cast the pointer to a uint32_t and
+   //   access the uint32_t.
+   //determine the source of the interrupt
+   if (*((uint32_t*) UserDataPtr) & 0x00000008) ///mesh is ptc3
    {
-      mesh_irq_handler();
+      if (mesh_rx_enabled)
+      {
+         mesh_irq_handler();
+      }
+   }
+
+   if (*((uint32_t*) UserDataPtr) & 0x00000002)  //IMU is ptc1
+   {
+      data_ready = 1;
    }
 }
 

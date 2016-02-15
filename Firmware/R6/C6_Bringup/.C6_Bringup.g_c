@@ -82,8 +82,8 @@
       <XtraAge33>1212656714</XtraAge33>
       <XtraAge34>1212656714</XtraAge34>
       <XtraAge36>1211828273</XtraAge36>
-      <XtraAge37>1212656714</XtraAge37>
-      <XtraAge38>1213053509</XtraAge38>
+      <XtraAge37>1213140379</XtraAge37>
+      <XtraAge38>1213143064</XtraAge38>
       <XtraAge39>1212071189</XtraAge39>
       <GenExtraFileType43>5</GenExtraFileType43>
       <GenExtraFileType42>4</GenExtraFileType42>
@@ -655,7 +655,7 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>42</ProjectModificationStamp>
+    <ProjectModificationStamp>44</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -2209,8 +2209,8 @@
     <GenComponentVersion>01.128</GenComponentVersion>
     <GenDriverVersion>01.08</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1212135250</HeaderAge>
-    <CodeAge>1212135250</CodeAge>
+    <HeaderAge>1213142466</HeaderAge>
+    <CodeAge>1213142663</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>27</GenNumMethods>
     <Init>true</Init>
@@ -2306,49 +2306,49 @@
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
       <LineBeg>116</LineBeg>
-      <LineEnd>187</LineEnd>
+      <LineEnd>194</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos8>SetFieldValue</MethodPos8>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>188</LineBeg>
-      <LineEnd>246</LineEnd>
+      <LineBeg>195</LineBeg>
+      <LineEnd>253</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos9>GetFieldValue</MethodPos9>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>247</LineBeg>
-      <LineEnd>300</LineEnd>
+      <LineBeg>254</LineBeg>
+      <LineEnd>307</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos10>ClearFieldBits</MethodPos10>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>301</LineBeg>
-      <LineEnd>350</LineEnd>
+      <LineBeg>308</LineBeg>
+      <LineEnd>357</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos11>SetFieldBits</MethodPos11>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>351</LineBeg>
-      <LineEnd>400</LineEnd>
+      <LineBeg>358</LineBeg>
+      <LineEnd>407</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos12>ToggleFieldBits</MethodPos12>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>401</LineBeg>
-      <LineEnd>450</LineEnd>
+      <LineBeg>408</LineBeg>
+      <LineEnd>457</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos13>Interrupt</MethodPos13>
       <MethodType>internal_method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>451</LineBeg>
-      <LineEnd>473</LineEnd>
+      <LineBeg>458</LineBeg>
+      <LineEnd>480</LineEnd>
     </MethodPos>
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\PTC_IRQ_component.txt</ExtraFile0>

@@ -82,6 +82,7 @@ typedef struct
 } mesh_command;
 
 extern bool mesh_rx_enabled;
+extern bool mesh_tx_enabled;
 extern bool mesh_messages_available;
 extern LDD_TDeviceData *SPI_DeviceData;
 
