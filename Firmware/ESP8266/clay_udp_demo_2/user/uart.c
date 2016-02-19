@@ -101,6 +101,7 @@ LOCAL void uart0_write_char(char c)
 
 LOCAL void uart_rx_intr_handler_ssc(void)
 {
+   //TODO: how do i this?
    /* uart0 and uart1 intr combine togther, when interrupt occur, see reg 0x3ff20020, bit2, bit0 represents
     * uart1 and uart0 respectively
     */
@@ -127,8 +128,7 @@ LOCAL void uart_rx_intr_handler_ssc(void)
 }
 
 #if 0
-LOCAL void
-uart_config(uint8 uart_no, UartDevice *uart)
+LOCAL void uart_config(uint8 uart_no, UART_ConfigTypeDef *uart)
 {
    if (uart_no == UART1)
    {
@@ -137,17 +137,16 @@ uart_config(uint8 uart_no, UartDevice *uart)
    else
    {
       /* rcv_buff size if 0x100 */
-      _xt_isr_attach(ETS_UART_INUM, uart_rx_intr_handler_ssc);
+      _xt_isr_attach(ETS_UART_INUM, (_xt_isr) uart_rx_intr_handler_ssc, NULL);
       PIN_PULLUP_DIS(PERIPHS_IO_MUX_U0TXD_U);
       PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);
    }
 
-   uart_div_modify(uart_no, UART_CLK_FREQ / (uart->baut_rate));
+   uart_div_modify(uart_no, UART_CLK_FREQ / (uart->baud_rate));
 
-   WRITE_PERI_REG(UART_CONF0(uart_no), uart->exist_parity
-         | uart->parity
-         | (uart->stop_bits << UART_STOP_BIT_NUM_S)
-         | (uart->data_bits << UART_BIT_NUM_S));
+   WRITE_PERI_REG(UART_CONF0(uart_no),
+//                  uart->exist_parity |
+                  uart->parity | (uart->stop_bits << UART_STOP_BIT_NUM_S) | (uart->data_bits << UART_BIT_NUM_S));
 
    //clear rx and tx fifo,not ready
    SET_PERI_REG_MASK(UART_CONF0(uart_no), UART_RXFIFO_RST | UART_TXFIFO_RST);
@@ -156,13 +155,11 @@ uart_config(uint8 uart_no, UartDevice *uart)
    if (uart_no == UART0)
    {
       //set rx fifo trigger
-      WRITE_PERI_REG(UART_CONF1(uart_no),
-            ((0x01 & UART_RXFIFO_FULL_THRHD) << UART_RXFIFO_FULL_THRHD_S));
+      WRITE_PERI_REG(UART_CONF1(uart_no), ((0x01 & UART_RXFIFO_FULL_THRHD) << UART_RXFIFO_FULL_THRHD_S));
    }
    else
    {
-      WRITE_PERI_REG(UART_CONF1(uart_no),
-            ((0x01 & UART_RXFIFO_FULL_THRHD) << UART_RXFIFO_FULL_THRHD_S));
+      WRITE_PERI_REG(UART_CONF1(uart_no), ((0x01 & UART_RXFIFO_FULL_THRHD) << UART_RXFIFO_FULL_THRHD_S));
    }
 
    //clear all interrupt
@@ -196,16 +193,17 @@ LOCAL void uart_task(void *pvParameters)
 }
 
 #if 0
-void
-uart_init(void)
+void uart_init(void)
 {
-   while (READ_PERI_REG(UART_STATUS(0)) & (UART_TXFIFO_CNT << UART_TXFIFO_CNT_S));
+   while (READ_PERI_REG(UART_STATUS(0)) & (UART_TXFIFO_CNT << UART_TXFIFO_CNT_S))
+      ;
 
-   while (READ_PERI_REG(UART_STATUS(1)) & (UART_TXFIFO_CNT << UART_TXFIFO_CNT_S));
+   while (READ_PERI_REG(UART_STATUS(1)) & (UART_TXFIFO_CNT << UART_TXFIFO_CNT_S))
+      ;
 
    UART_ConfigTypeDef uart;
 
-   uart.baut_rate = BIT_RATE_74880;
+   uart.baud_rate = BIT_RATE_74880;
    uart.data_bits = UART_WordLength_8b;
    uart.flow_ctrl = USART_HardwareFlowControl_None;
    // uart.exist_parity = PARITY_DIS;
@@ -221,7 +219,7 @@ uart_init(void)
 
    xQueueUart = xQueueCreate(32, sizeof(os_event_t));
 
-   xTaskCreate(uart_task, (uint8 const *)"uTask", 512, NULL, tskIDLE_PRIORITY + 2, &xUartTaskHandle);
+   xTaskCreate(uart_task, (uint8 const * )"uTask", 512, NULL, tskIDLE_PRIORITY + 2, &xUartTaskHandle);
 }
 #endif
 
@@ -395,35 +393,37 @@ LOCAL void uart0_rx_intr_handler(void *para)
       }
       else if (UART_RXFIFO_FULL_INT_ST == (uart_intr_status & UART_RXFIFO_FULL_INT_ST))
       {
-         printf("full\r\n");
+//         printf("full\r\n");
          fifo_len = (READ_PERI_REG(UART_STATUS(UART0)) >> UART_RXFIFO_CNT_S) & UART_RXFIFO_CNT;
          buf_idx = 0;
 
          while (buf_idx < fifo_len)
          {
-            uart_tx_one_char(UART0, READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
-            buf_idx++;
+            fifo_tmp[buf_idx++] = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
+//            uart_tx_one_char(UART0, READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
+//            buf_idx++;
          }
 
          WRITE_PERI_REG(UART_INT_CLR(UART0), UART_RXFIFO_FULL_INT_CLR);
       }
       else if (UART_RXFIFO_TOUT_INT_ST == (uart_intr_status & UART_RXFIFO_TOUT_INT_ST))
       {
-         printf("tout\r\n");
+//         printf("tout\r\n");
          fifo_len = (READ_PERI_REG(UART_STATUS(UART0)) >> UART_RXFIFO_CNT_S) & UART_RXFIFO_CNT;
          buf_idx = 0;
 
          while (buf_idx < fifo_len)
          {
-            uart_tx_one_char(UART0, READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
-            buf_idx++;
+            fifo_tmp[buf_idx++] = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
+//            uart_tx_one_char(UART0, READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
+//            buf_idx++;
          }
 
          WRITE_PERI_REG(UART_INT_CLR(UART0), UART_RXFIFO_TOUT_INT_CLR);
       }
       else if (UART_TXFIFO_EMPTY_INT_ST == (uart_intr_status & UART_TXFIFO_EMPTY_INT_ST))
       {
-         printf("empty\n\r");
+//         printf("empty\n\r");
          WRITE_PERI_REG(UART_INT_CLR(uart_no), UART_TXFIFO_EMPTY_INT_CLR);
          CLEAR_PERI_REG_MASK(UART_INT_ENA(UART0), UART_TXFIFO_EMPTY_INT_ENA);
       }
@@ -456,8 +456,8 @@ void uart_init_new(void)
                                | UART_FRM_ERR_INT_ENA
                                | UART_RXFIFO_FULL_INT_ENA
                                | UART_TXFIFO_EMPTY_INT_ENA;
-   uart_intr.UART_RX_FifoFullIntrThresh = 10;
-   uart_intr.UART_RX_TimeOutIntrThresh = 2;
+   uart_intr.UART_RX_FifoFullIntrThresh = 10;     //interrupt when we rx 10 bytes
+   uart_intr.UART_RX_TimeOutIntrThresh = 2;       //time out and call the interrupt when we haven't rx'd for 2 somethings.
    uart_intr.UART_TX_FifoEmptyIntrThresh = 20;
    UART_IntrConfig(UART0, &uart_intr);
 
