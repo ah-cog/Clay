@@ -114,6 +114,7 @@ void task2(void *pvParameters)
    size_t fromlen;
 
    struct sockaddr_in from;
+   struct sockaddr_in lastFrom;
    struct sockaddr_in server_addr;
 
    int nNetTimeout = 100;
@@ -163,6 +164,17 @@ void task2(void *pvParameters)
       {
 //         sendto(sock_fd, (uint8* )udp_msg, ret, 0, (struct sockaddr * )&from, fromlen);
          RxInvalid = TRUE;
+
+         lastFrom.sin_addr = from.sin_addr;
+         lastFrom.sin_family = from.sin_family;
+         lastFrom.sin_len = from.sin_len;
+         lastFrom.sin_port = from.sin_port;
+         int i = 0;
+         for (; i < SIN_ZERO_LEN; ++i)
+         {
+            lastFrom.sin_zero[i] = from.sin_zero[i];
+         }
+
          pendingRxBytes = ret > RX_BUF_SIZE ? RX_BUF_SIZE : ret;
          memcpy(rxBuf, udp_msg, ret);
          rxBuf[pendingRxBytes - 1] = '\0';
@@ -175,8 +187,8 @@ void task2(void *pvParameters)
 
       if (pendingTxBytes)
       {
-         printf("pending: %d - \"%s\"\r\n", pendingTxBytes, txBuf);
-         sendto(sock_fd, (uint8* )txBuf, pendingTxBytes, 0, (struct sockaddr * )&from, fromlen);
+//         printf("pending: %d - \"%s\"\r\n", pendingTxBytes, txBuf);
+         sendto(sock_fd, (uint8* )txBuf, pendingTxBytes, 0, (struct sockaddr * )&lastFrom, fromlen);
          pendingTxBytes = 0;
       }
    }
@@ -212,7 +224,7 @@ void task3(void *pvParameters)
             //TODO: watch out for there to be no null. For now we're just putting one in in case.
             RxInvalid = TRUE;
             rxBuf[RX_BUF_SIZE - 1] = 0x00;
-            printf("udprx:%s\r\n", rxBuf);
+            printf("%s\r\n", rxBuf);
             pendingRxBytes = 0;
             vTaskDelay(20 / portTICK_RATE_MS);
             RxInvalid = FALSE;
@@ -241,11 +253,6 @@ void task3(void *pvParameters)
       }
       vTaskDelay(100 / portTICK_RATE_MS);
    }
-}
-
-void rx_func(uint8* data, uint32 len)
-{
-   printf("rxinterrupt\r\n");
 }
 
 /******************************************************************************
