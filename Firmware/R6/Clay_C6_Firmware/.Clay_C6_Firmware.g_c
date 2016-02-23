@@ -80,10 +80,10 @@
       <GenExtraFileSrcDir43>Repositories\lib\doxygen\</GenExtraFileSrcDir43>
       <GenExtraFileSrcDir36>lib\Kinetis\startup\</GenExtraFileSrcDir36>
       <XtraAge33>1213181077</XtraAge33>
-      <XtraAge34>1213382114</XtraAge34>
+      <XtraAge34>1213664712</XtraAge34>
       <XtraAge36>1211828273</XtraAge36>
       <XtraAge37>1213316367</XtraAge37>
-      <XtraAge38>1213382113</XtraAge38>
+      <XtraAge38>1213664711</XtraAge38>
       <XtraAge39>1213181077</XtraAge39>
       <GenExtraFileType43>5</GenExtraFileType43>
       <GenExtraFileType42>4</GenExtraFileType42>
@@ -656,7 +656,7 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>52</ProjectModificationStamp>
+    <ProjectModificationStamp>53</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
