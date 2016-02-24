@@ -111,15 +111,16 @@ void GPIO_Init()
  *******************************************************************************/
 void user_init(void)
 {
-   GPIO_Init();
+//   GPIO_Init();
 
 #if 0
    printf("SDK version:%s\n", system_get_sdk_version());
 #endif
-
    /* need to set opmode before you set config */
    wifi_set_opmode(STATIONAP_MODE);
    uart_init_new();
+
+   Message_Conversion_Test();
 
    {
       struct station_config *config = (struct station_config *) zalloc(sizeof(struct station_config));
@@ -132,10 +133,16 @@ void user_init(void)
       free(config);
    }
 
-   xTaskCreate(UDP_Receiver_State_Step, "", 256, NULL, 2, NULL);
-   xTaskCreate(UDP_Transmitter_State_Step, "", 256, NULL, 2, NULL);
-   xTaskCreate(Serial_Receiver_State_Step, "", 256, NULL, 2, NULL);
-   xTaskCreate(Serial_Transmitter_State_Step, "", 256, NULL, 2, NULL);
-   xTaskCreate(String_Message_Parser_State_Step, "", 256, NULL, 2, NULL);
+   for (;;)
+   {
+      printf("ended\r\n");
+   }
+
+   //TODO: move these to init functions
+//   xTaskCreate(UDP_Receiver_State_Step, "", 256, NULL, 2, NULL);
+//   xTaskCreate(UDP_Transmitter_State_Step, "", 256, NULL, 2, NULL);
+//   xTaskCreate(Serial_Receiver_State_Step, "", 256, NULL, 2, NULL);
+//   xTaskCreate(Serial_Transmitter_State_Step, "", 256, NULL, 2, NULL);
+//   xTaskCreate(String_Message_Parser_State_Step, "", 256, NULL, 2, NULL);
 }
 
