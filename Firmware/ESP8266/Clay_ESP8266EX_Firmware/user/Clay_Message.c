@@ -79,24 +79,28 @@ uint32 CreateMessageFromBuffer(uint8 * Source, uint32 SourceLength, Clay_Message
    NewlineIndex = strtok(NewlineIndex, &Comma);
    printf("s_addr");
    printf(NewlineIndex);
+   printf("\n");
    sscanf(NewlineIndex, "%d", &(Destination->Address.sin_addr.s_addr));
 
    NewlineIndex = strtok(NewlineIndex, &Comma);
    sscanf(NewlineIndex, "%d", &temp);
    printf("family");
    printf(NewlineIndex);
+   printf("\n");
    Destination->Address.sin_family = temp & 0xFF;
 
    NewlineIndex = strtok(NewlineIndex, &Comma);
    sscanf(NewlineIndex, "%d", &temp);
    printf("len");
    printf(NewlineIndex);
+   printf("\n");
    Destination->Address.sin_len = temp & 0xFF;
 
    NewlineIndex = strtok(NewlineIndex, &Comma);
    sscanf(NewlineIndex, "%d", &temp);
    printf("port");
    printf(NewlineIndex);
+   printf("\n");
    Destination->Address.sin_port = temp & 0xFFFF;
 
    int i;
