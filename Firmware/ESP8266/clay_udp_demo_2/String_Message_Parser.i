@@ -3634,9 +3634,141 @@ uint32 pwm_get_period(void);
 
 
 # 1 "include/Clay_Config.h" 1
-# 13 "include/Clay_Config.h"
+# 14 "include/Clay_Config.h"
+# 1 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h" 1
+# 41 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h"
+# 1 "c:\\espressif\\xtensa-lx106-elf\\lib\\gcc\\xtensa-lx106-elf\\5.1.0\\include\\stddef.h" 1 3 4
+# 42 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h" 2
+
+
+# 1 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/ipv4/lwip/inet.h" 1
+# 46 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/ipv4/lwip/inet.h"
+typedef u32_t in_addr_t;
+
+
+struct in_addr {
+  in_addr_t s_addr;
+};
+# 45 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h" 2
+# 1 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/ipv6/lwip/inet6.h" 1
+# 56 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/ipv6/lwip/inet6.h"
+struct in6_addr {
+  union {
+    u8_t u8_addr[16];
+    u32_t u32_addr[4];
+  } un;
+
+};
+# 46 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h" 2
+# 54 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h"
+typedef u8_t sa_family_t;
+
+
+
+
+typedef u16_t in_port_t;
+
+
+
+struct sockaddr_in {
+  u8_t sin_len;
+  sa_family_t sin_family;
+  in_port_t sin_port;
+  struct in_addr sin_addr;
+
+  char sin_zero[8];
+};
+
+
+
+
+
+struct sockaddr_in6 {
+  u8_t sin6_len;
+  sa_family_t sin6_family;
+  in_port_t sin6_port;
+  u32_t sin6_flowinfo;
+  struct in6_addr sin6_addr;
+};
+
+
+struct sockaddr {
+  u8_t sa_len;
+  sa_family_t sa_family;
+
+  char sa_data[22];
+
+
+
+};
+
+struct sockaddr_storage {
+  u8_t s2_len;
+  sa_family_t ss_family;
+  char s2_data1[2];
+  u32_t s2_data2[3];
+
+  u32_t s2_data3[2];
+
+};
+
+
+
+
+typedef u32_t socklen_t;
+# 150 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h"
+struct linger {
+       int l_onoff;
+       int l_linger;
+};
+# 369 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h"
+struct timeval {
+  long tv_sec;
+  long tv_usec;
+};
+
+
+void lwip_socket_init(void);
+
+int lwip_accept(int s, struct sockaddr *addr, socklen_t *addrlen);
+int lwip_bind(int s, const struct sockaddr *name, socklen_t namelen);
+int lwip_shutdown(int s, int how);
+int lwip_getpeername (int s, struct sockaddr *name, socklen_t *namelen);
+int lwip_getsockname (int s, struct sockaddr *name, socklen_t *namelen);
+int lwip_getsockopt (int s, int level, int optname, void *optval, socklen_t *optlen);
+int lwip_setsockopt (int s, int level, int optname, const void *optval, socklen_t optlen);
+int lwip_close(int s);
+int lwip_connect(int s, const struct sockaddr *name, socklen_t namelen);
+int lwip_listen(int s, int backlog);
+int lwip_recv(int s, void *mem, size_t len, int flags);
+int lwip_read(int s, void *mem, size_t len);
+int lwip_recvfrom(int s, void *mem, size_t len, int flags,
+      struct sockaddr *from, socklen_t *fromlen);
+int lwip_send(int s, const void *dataptr, size_t size, int flags);
+int lwip_sendto(int s, const void *dataptr, size_t size, int flags,
+    const struct sockaddr *to, socklen_t tolen);
+int lwip_socket(int domain, int type, int protocol);
+int lwip_write(int s, const void *dataptr, size_t size);
+int lwip_select(int maxfdp1, 
+# 396 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h" 3
+                            _types_fd_set 
+# 396 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h"
+                                   *readset, 
+# 396 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h" 3
+                                             _types_fd_set 
+# 396 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h"
+                                                    *writeset, 
+# 396 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h" 3
+                                                               _types_fd_set 
+# 396 "c:/Espressif/ESP8266_RTOS_SDK/include/lwip/lwip/sockets.h"
+                                                                      *exceptset,
+                struct timeval *timeout);
+int lwip_ioctl(int s, long cmd, void *argp);
+int lwip_fcntl(int s, int cmd, int val);
+# 15 "include/Clay_Config.h" 2
+
 # 1 "include/Clay_Config.h" 1
-# 14 "include/Clay_Config.h" 2
+# 17 "include/Clay_Config.h" 2
 # 31 "user/String_Message_Parser.c" 2
 
 

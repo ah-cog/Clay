@@ -204,130 +204,71 @@ GPIO_Init:
 .LC8:
 	.string	"dips00BOYNEdo$!&"
 .LC10:
-	.string	""
+	.string	"ended\r"
 	.text
 	.literal_position
 	.literal .LC7, .LC6
 	.literal .LC9, .LC8
 	.literal .LC11, .LC10
-	.literal .LC12, UDP_Receiver_State_Step
-	.literal .LC13, UDP_Transmitter_State_Step
-	.literal .LC14, Serial_Receiver_State_Step
-	.literal .LC15, Serial_Transmitter_State_Step
-	.literal .LC16, String_Message_Parser_State_Step
 	.align	4
 	.global	user_init
 	.type	user_init, @function
 user_init:
 .LFB4:
 	.loc 1 113 0
-	addi	sp, sp, -32
+	addi	sp, sp, -16
 .LCFI9:
-	s32i.n	a0, sp, 28
-	s32i.n	a12, sp, 24
-	s32i.n	a13, sp, 20
+	.loc 1 120 0
+	movi.n	a2, 3
+	.loc 1 113 0
+	s32i.n	a0, sp, 12
+	s32i.n	a12, sp, 8
 .LCFI10:
-	.loc 1 114 0
-	call0	GPIO_Init
+	.loc 1 120 0
+	call0	wifi_set_opmode
 .LVL19:
 	.loc 1 121 0
-	movi.n	a2, 3
-	call0	wifi_set_opmode
-.LVL20:
-	.loc 1 122 0
 	call0	uart_init_new
+.LVL20:
+	.loc 1 123 0
+	call0	Message_Conversion_Test
 .LVL21:
 .LBB2:
-	.loc 1 125 0
+	.loc 1 126 0
 	movi	a2, 0x67
 	call0	zalloc
 .LVL22:
-	.loc 1 126 0
+	.loc 1 127 0
 	l32r	a3, .LC7
-	.loc 1 125 0
+	.loc 1 126 0
 	mov.n	a12, a2
 .LVL23:
-	.loc 1 126 0
+	.loc 1 127 0
 	call0	strcpy
 .LVL24:
-	.loc 1 127 0
+	.loc 1 128 0
 	l32r	a3, .LC9
 	addi	a2, a12, 32
 	call0	strcpy
 .LVL25:
-	.loc 1 131 0
+	.loc 1 132 0
 	mov.n	a2, a12
 	call0	wifi_station_set_config
 .LVL26:
-	.loc 1 132 0
+	.loc 1 133 0
 	mov.n	a2, a12
 	call0	free
 .LVL27:
 .LBE2:
-	.loc 1 135 0
-	l32r	a13, .LC11
-	movi.n	a12, 0
-.LVL28:
-	l32r	a2, .LC12
-	s32i.n	a12, sp, 4
-	s32i.n	a12, sp, 0
-	mov.n	a7, a12
-	mov.n	a5, a12
-	mov.n	a3, a13
-	movi.n	a6, 2
-	movi	a4, 0x100
-	call0	xTaskGenericCreate
-.LVL29:
-	.loc 1 136 0
-	l32r	a2, .LC13
-	s32i.n	a12, sp, 4
-	s32i.n	a12, sp, 0
-	mov.n	a7, a12
-	mov.n	a5, a12
-	mov.n	a3, a13
-	movi.n	a6, 2
-	movi	a4, 0x100
-	call0	xTaskGenericCreate
-.LVL30:
-	.loc 1 137 0
-	l32r	a2, .LC14
-	s32i.n	a12, sp, 4
-	s32i.n	a12, sp, 0
-	mov.n	a7, a12
-	mov.n	a5, a12
-	mov.n	a3, a13
-	movi.n	a6, 2
-	movi	a4, 0x100
-	call0	xTaskGenericCreate
-.LVL31:
 	.loc 1 138 0
-	l32r	a2, .LC15
-	s32i.n	a12, sp, 4
-	s32i.n	a12, sp, 0
-	mov.n	a7, a12
-	mov.n	a5, a12
-	mov.n	a3, a13
-	movi.n	a6, 2
-	movi	a4, 0x100
-	call0	xTaskGenericCreate
-.LVL32:
-	.loc 1 139 0
-	l32r	a2, .LC16
-	s32i.n	a12, sp, 4
-	s32i.n	a12, sp, 0
-	mov.n	a7, a12
-	mov.n	a5, a12
-	mov.n	a3, a13
-	movi.n	a6, 2
-	movi	a4, 0x100
-	call0	xTaskGenericCreate
-.LVL33:
-	.loc 1 140 0
-	l32i.n	a0, sp, 28
-	l32i.n	a12, sp, 24
-	l32i.n	a13, sp, 20
-	addi	sp, sp, 32
-	ret.n
+	l32r	a12, .LC11
+.LVL28:
+.L13:
+	.loc 1 138 0 is_stmt 0 discriminator 1
+	mov.n	a2, a12
+	call0	puts
+.LVL29:
+	j	.L13
 .LFE4:
 	.size	user_init, .-user_init
 	.comm	RxInvalid,1,1
@@ -431,15 +372,13 @@ user_init:
 	.byte	0x4
 	.4byte	.LCFI9-.LFB4
 	.byte	0xe
-	.uleb128 0x20
+	.uleb128 0x10
 	.byte	0x4
 	.4byte	.LCFI10-.LCFI9
 	.byte	0x80
 	.uleb128 0x1
 	.byte	0x8c
 	.uleb128 0x2
-	.byte	0x8d
-	.uleb128 0x3
 	.align	4
 .LEFDE8:
 	.text
@@ -449,25 +388,24 @@ user_init:
 	.file 4 "c:/Espressif/ESP8266_RTOS_SDK/include/espressif/c_types.h"
 	.file 5 "c:/Espressif/ESP8266_RTOS_SDK/include/espressif/esp_wifi.h"
 	.file 6 "c:/Espressif/ESP8266_RTOS_SDK/include/espressif/esp_sta.h"
-	.file 7 "c:/Espressif/ESP8266_RTOS_SDK/include/freertos/projdefs.h"
-	.file 8 "c:/Espressif/ESP8266_RTOS_SDK/include/freertos/portmacro.h"
-	.file 9 "c:/Espressif/ESP8266_RTOS_SDK/include/freertos/task.h"
-	.file 10 "user/../include/GPIO.h"
-	.file 11 "<built-in>"
-	.file 12 "c:/Espressif/ESP8266_RTOS_SDK/include/espressif/esp_libc.h"
-	.file 13 "c:\\espressif\\xtensa-lx106-elf\\xtensa-lx106-elf\\include\\stdlib.h"
-	.file 14 "user/../include/UART.h"
+	.file 7 "c:/Espressif/ESP8266_RTOS_SDK/include/freertos/portmacro.h"
+	.file 8 "user/../include/GPIO.h"
+	.file 9 "<built-in>"
+	.file 10 "c:/Espressif/ESP8266_RTOS_SDK/include/espressif/esp_libc.h"
+	.file 11 "c:\\espressif\\xtensa-lx106-elf\\xtensa-lx106-elf\\include\\stdlib.h"
+	.file 12 "user/../include/UART.h"
+	.file 13 "include/Clay_Message.h"
 	.section	.debug_info,"",@progbits
 .Ldebug_info0:
-	.4byte	0x77f
+	.4byte	0x5c3
 	.2byte	0x4
 	.4byte	.Ldebug_abbrev0
 	.byte	0x4
 	.uleb128 0x1
-	.4byte	.LASF74
+	.4byte	.LASF63
 	.byte	0x1
-	.4byte	.LASF75
-	.4byte	.LASF76
+	.4byte	.LASF64
+	.4byte	.LASF65
 	.4byte	.Ltext0
 	.4byte	.Letext0-.Ltext0
 	.4byte	.Ldebug_line0
@@ -615,7 +553,7 @@ user_init:
 	.byte	0x3f
 	.byte	0
 	.uleb128 0xc
-	.4byte	.LASF32
+	.4byte	.LASF66
 	.byte	0x67
 	.byte	0x6
 	.byte	0x34
@@ -656,100 +594,50 @@ user_init:
 	.uleb128 0x3
 	.4byte	.LASF29
 	.byte	0x7
-	.byte	0x45
-	.4byte	0x186
-	.uleb128 0x3
-	.4byte	.LASF30
-	.byte	0x8
 	.byte	0xb8
 	.4byte	0x186
-	.uleb128 0x3
-	.4byte	.LASF31
-	.byte	0x9
-	.byte	0x5f
-	.4byte	0xa9
-	.uleb128 0xc
-	.4byte	.LASF33
-	.byte	0xc
-	.byte	0x9
-	.byte	0x77
-	.4byte	0x1de
-	.uleb128 0xd
-	.4byte	.LASF34
-	.byte	0x9
-	.byte	0x79
-	.4byte	0xa9
-	.byte	0
-	.uleb128 0xd
-	.4byte	.LASF35
-	.byte	0x9
-	.byte	0x7a
-	.4byte	0xa2
-	.byte	0x4
-	.uleb128 0xd
-	.4byte	.LASF36
-	.byte	0x9
-	.byte	0x7b
-	.4byte	0xa2
-	.byte	0x8
-	.byte	0
-	.uleb128 0x3
-	.4byte	.LASF37
-	.byte	0x9
-	.byte	0x7c
-	.4byte	0x1ad
-	.uleb128 0x6
-	.byte	0x4
-	.4byte	0x1ef
-	.uleb128 0x7
-	.4byte	0x25
-	.uleb128 0x7
-	.4byte	0x1e9
-	.uleb128 0x6
-	.byte	0x4
-	.4byte	0xa2
 	.uleb128 0x8
 	.byte	0x4
 	.4byte	0x5e
-	.byte	0xa
+	.byte	0x8
 	.byte	0x5c
-	.4byte	0x230
+	.4byte	0x1c8
 	.uleb128 0x9
-	.4byte	.LASF38
+	.4byte	.LASF30
 	.byte	0
 	.uleb128 0x9
-	.4byte	.LASF39
+	.4byte	.LASF31
 	.byte	0x1
 	.uleb128 0x9
-	.4byte	.LASF40
+	.4byte	.LASF32
 	.byte	0x2
 	.uleb128 0x9
-	.4byte	.LASF41
+	.4byte	.LASF33
 	.byte	0x3
 	.uleb128 0x9
-	.4byte	.LASF42
+	.4byte	.LASF34
 	.byte	0x4
 	.uleb128 0x9
-	.4byte	.LASF43
+	.4byte	.LASF35
 	.byte	0x5
 	.byte	0
 	.uleb128 0x3
-	.4byte	.LASF44
-	.byte	0xa
+	.4byte	.LASF36
+	.byte	0x8
 	.byte	0x63
-	.4byte	0x1ff
+	.4byte	0x197
 	.uleb128 0x10
-	.4byte	.LASF45
+	.4byte	.LASF37
 	.byte	0x1
 	.byte	0x2e
 	.4byte	.LFB0
 	.4byte	.LFE0-.LFB0
 	.uleb128 0x1
 	.byte	0x9c
-	.4byte	0x264
+	.4byte	0x1fc
 	.uleb128 0x11
 	.4byte	.LVL0
-	.4byte	0x633
+	.4byte	0x4bd
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -759,14 +647,14 @@ user_init:
 	.byte	0
 	.byte	0
 	.uleb128 0x10
-	.4byte	.LASF46
+	.4byte	.LASF38
 	.byte	0x1
 	.byte	0x33
 	.4byte	.LFB1
 	.4byte	.LFE1-.LFB1
 	.uleb128 0x1
 	.byte	0x9c
-	.4byte	0x2cd
+	.4byte	0x265
 	.uleb128 0x13
 	.string	"i"
 	.byte	0x1
@@ -774,15 +662,15 @@ user_init:
 	.4byte	0x4c
 	.4byte	.LLST0
 	.uleb128 0x14
-	.4byte	.LASF47
+	.4byte	.LASF39
 	.byte	0x1
 	.byte	0x37
 	.4byte	0x89
 	.4byte	.LLST1
 	.uleb128 0x15
 	.4byte	.LVL3
-	.4byte	0x64c
-	.4byte	0x2ae
+	.4byte	0x4d6
+	.4byte	0x246
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -797,10 +685,10 @@ user_init:
 	.byte	0
 	.uleb128 0x16
 	.4byte	.LVL4
-	.4byte	0x23b
+	.4byte	0x1d3
 	.uleb128 0x11
 	.4byte	.LVL5
-	.4byte	0x64c
+	.4byte	0x4d6
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -815,14 +703,14 @@ user_init:
 	.byte	0
 	.byte	0
 	.uleb128 0x17
-	.4byte	.LASF50
+	.4byte	.LASF67
 	.byte	0x1
 	.byte	0x50
 	.4byte	.LFB2
 	.4byte	.LFE2-.LFB2
 	.uleb128 0x1
 	.byte	0x9c
-	.4byte	0x31c
+	.4byte	0x2b4
 	.uleb128 0x18
 	.string	"pin"
 	.byte	0x1
@@ -830,34 +718,34 @@ user_init:
 	.4byte	0x4c
 	.4byte	.LLST2
 	.uleb128 0x19
-	.4byte	.LASF48
+	.4byte	.LASF40
 	.byte	0x1
 	.byte	0x50
-	.4byte	0x230
+	.4byte	0x1c8
 	.4byte	.LLST3
 	.uleb128 0x16
 	.4byte	.LVL10
-	.4byte	0x663
+	.4byte	0x4ed
 	.uleb128 0x16
 	.4byte	.LVL11
-	.4byte	0x64c
+	.4byte	0x4d6
 	.uleb128 0x16
 	.4byte	.LVL12
-	.4byte	0x66a
+	.4byte	0x4f4
 	.byte	0
 	.uleb128 0x10
-	.4byte	.LASF49
+	.4byte	.LASF41
 	.byte	0x1
 	.byte	0x5d
 	.4byte	.LFB3
 	.4byte	.LFE3-.LFB3
 	.uleb128 0x1
 	.byte	0x9c
-	.4byte	0x3e0
+	.4byte	0x378
 	.uleb128 0x15
 	.4byte	.LVL13
-	.4byte	0x671
-	.4byte	0x353
+	.4byte	0x4fb
+	.4byte	0x2eb
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -881,8 +769,8 @@ user_init:
 	.byte	0
 	.uleb128 0x15
 	.4byte	.LVL14
-	.4byte	0x671
-	.4byte	0x375
+	.4byte	0x4fb
+	.4byte	0x30d
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -906,8 +794,8 @@ user_init:
 	.byte	0
 	.uleb128 0x15
 	.4byte	.LVL15
-	.4byte	0x671
-	.4byte	0x397
+	.4byte	0x4fb
+	.4byte	0x32f
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -931,8 +819,8 @@ user_init:
 	.byte	0
 	.uleb128 0x15
 	.4byte	.LVL16
-	.4byte	0x691
-	.4byte	0x3b8
+	.4byte	0x51b
+	.4byte	0x350
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -952,8 +840,8 @@ user_init:
 	.byte	0
 	.uleb128 0x15
 	.4byte	.LVL17
-	.4byte	0x6ac
-	.4byte	0x3cb
+	.4byte	0x536
+	.4byte	0x363
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -962,7 +850,7 @@ user_init:
 	.byte	0
 	.uleb128 0x11
 	.4byte	.LVL18
-	.4byte	0x2cd
+	.4byte	0x265
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -975,29 +863,29 @@ user_init:
 	.byte	0x32
 	.byte	0
 	.byte	0
-	.uleb128 0x17
-	.4byte	.LASF51
+	.uleb128 0x1a
+	.4byte	.LASF68
 	.byte	0x1
 	.byte	0x70
 	.4byte	.LFB4
 	.4byte	.LFE4-.LFB4
 	.uleb128 0x1
 	.byte	0x9c
-	.4byte	0x5c8
-	.uleb128 0x1a
+	.4byte	0x452
+	.uleb128 0x1b
 	.4byte	.LBB2
 	.4byte	.LBE2-.LBB2
-	.4byte	0x484
+	.4byte	0x41c
 	.uleb128 0x14
-	.4byte	.LASF52
+	.4byte	.LASF42
 	.byte	0x1
-	.byte	0x7d
-	.4byte	0x5c8
+	.byte	0x7e
+	.4byte	0x452
 	.4byte	.LLST4
 	.uleb128 0x15
 	.4byte	.LVL22
-	.4byte	0x6bd
-	.4byte	0x425
+	.4byte	0x547
+	.4byte	0x3bd
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -1007,8 +895,8 @@ user_init:
 	.byte	0
 	.uleb128 0x15
 	.4byte	.LVL24
-	.4byte	0x6d2
-	.4byte	0x442
+	.4byte	0x55c
+	.4byte	0x3da
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -1024,8 +912,8 @@ user_init:
 	.byte	0
 	.uleb128 0x15
 	.4byte	.LVL25
-	.4byte	0x6d2
-	.4byte	0x45f
+	.4byte	0x55c
+	.4byte	0x3f7
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -1041,8 +929,8 @@ user_init:
 	.byte	0
 	.uleb128 0x15
 	.4byte	.LVL26
-	.4byte	0x6f0
-	.4byte	0x473
+	.4byte	0x57a
+	.4byte	0x40b
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -1052,7 +940,7 @@ user_init:
 	.byte	0
 	.uleb128 0x11
 	.4byte	.LVL27
-	.4byte	0x705
+	.4byte	0x58f
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -1061,13 +949,10 @@ user_init:
 	.sleb128 0
 	.byte	0
 	.byte	0
-	.uleb128 0x16
-	.4byte	.LVL19
-	.4byte	0x31c
 	.uleb128 0x15
-	.4byte	.LVL20
-	.4byte	0x716
-	.4byte	0x4a0
+	.4byte	.LVL19
+	.4byte	0x5a0
+	.4byte	0x42f
 	.uleb128 0x12
 	.uleb128 0x1
 	.byte	0x52
@@ -1075,243 +960,17 @@ user_init:
 	.byte	0x33
 	.byte	0
 	.uleb128 0x16
+	.4byte	.LVL20
+	.4byte	0x5b5
+	.uleb128 0x16
 	.4byte	.LVL21
-	.4byte	0x72b
-	.uleb128 0x15
-	.4byte	.LVL29
-	.4byte	0x733
-	.4byte	0x4e3
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x53
-	.uleb128 0x2
-	.byte	0x7d
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x54
-	.uleb128 0x3
-	.byte	0xa
-	.2byte	0x100
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x55
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x56
-	.uleb128 0x1
-	.byte	0x32
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x57
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 0
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 4
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.byte	0
-	.uleb128 0x15
-	.4byte	.LVL30
-	.4byte	0x733
-	.4byte	0x51d
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x53
-	.uleb128 0x2
-	.byte	0x7d
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x54
-	.uleb128 0x3
-	.byte	0xa
-	.2byte	0x100
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x55
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x56
-	.uleb128 0x1
-	.byte	0x32
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x57
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 0
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 4
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.byte	0
-	.uleb128 0x15
-	.4byte	.LVL31
-	.4byte	0x733
-	.4byte	0x557
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x53
-	.uleb128 0x2
-	.byte	0x7d
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x54
-	.uleb128 0x3
-	.byte	0xa
-	.2byte	0x100
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x55
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x56
-	.uleb128 0x1
-	.byte	0x32
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x57
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 0
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 4
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.byte	0
-	.uleb128 0x15
-	.4byte	.LVL32
-	.4byte	0x733
-	.4byte	0x591
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x53
-	.uleb128 0x2
-	.byte	0x7d
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x54
-	.uleb128 0x3
-	.byte	0xa
-	.2byte	0x100
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x55
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x56
-	.uleb128 0x1
-	.byte	0x32
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x57
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 0
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 4
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.byte	0
+	.4byte	0x5bd
 	.uleb128 0x11
-	.4byte	.LVL33
-	.4byte	0x733
+	.4byte	.LVL29
+	.4byte	0x4bd
 	.uleb128 0x12
 	.uleb128 0x1
-	.byte	0x53
-	.uleb128 0x2
-	.byte	0x7d
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x54
-	.uleb128 0x3
-	.byte	0xa
-	.2byte	0x100
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x55
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x56
-	.uleb128 0x1
-	.byte	0x32
-	.uleb128 0x12
-	.uleb128 0x1
-	.byte	0x57
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 0
-	.uleb128 0x2
-	.byte	0x7c
-	.sleb128 0
-	.uleb128 0x12
-	.uleb128 0x2
-	.byte	0x71
-	.sleb128 4
+	.byte	0x52
 	.uleb128 0x2
 	.byte	0x7c
 	.sleb128 0
@@ -1320,16 +979,16 @@ user_init:
 	.uleb128 0x6
 	.byte	0x4
 	.4byte	0x13e
-	.uleb128 0x1b
-	.4byte	.LASF53
+	.uleb128 0x1c
+	.4byte	.LASF43
 	.byte	0x1
 	.byte	0x26
 	.4byte	0x89
 	.uleb128 0x5
 	.byte	0x3
 	.4byte	pendingRxBytes
-	.uleb128 0x1b
-	.4byte	.LASF54
+	.uleb128 0x1c
+	.4byte	.LASF44
 	.byte	0x1
 	.byte	0x27
 	.4byte	0x89
@@ -1338,68 +997,68 @@ user_init:
 	.4byte	pendingTxBytes
 	.uleb128 0xa
 	.4byte	0xbf
-	.4byte	0x600
+	.4byte	0x48a
 	.uleb128 0xb
 	.4byte	0xb2
 	.byte	0x63
 	.byte	0
-	.uleb128 0x1b
-	.4byte	.LASF55
+	.uleb128 0x1c
+	.4byte	.LASF45
 	.byte	0x1
 	.byte	0x29
-	.4byte	0x5f0
+	.4byte	0x47a
 	.uleb128 0x5
 	.byte	0x3
 	.4byte	rxBuf
-	.uleb128 0x1b
-	.4byte	.LASF56
+	.uleb128 0x1c
+	.4byte	.LASF46
 	.byte	0x1
 	.byte	0x2a
-	.4byte	0x5f0
+	.4byte	0x47a
 	.uleb128 0x5
 	.byte	0x3
 	.4byte	txBuf
-	.uleb128 0x1b
-	.4byte	.LASF57
+	.uleb128 0x1c
+	.4byte	.LASF47
 	.byte	0x1
 	.byte	0x2c
 	.4byte	0xd1
 	.uleb128 0x5
 	.byte	0x3
 	.4byte	RxInvalid
-	.uleb128 0x1c
-	.4byte	.LASF58
-	.byte	0xb
+	.uleb128 0x1d
+	.4byte	.LASF48
+	.byte	0x9
 	.byte	0
-	.4byte	.LASF66
+	.4byte	.LASF56
 	.4byte	0x4c
-	.4byte	0x64c
+	.4byte	0x4d6
 	.uleb128 0xf
 	.4byte	0xc6
 	.byte	0
-	.uleb128 0x1d
-	.4byte	.LASF61
-	.byte	0xa
+	.uleb128 0x1e
+	.4byte	.LASF51
+	.byte	0x8
 	.2byte	0x11c
-	.4byte	0x663
+	.4byte	0x4ed
 	.uleb128 0xf
 	.4byte	0x89
 	.uleb128 0xf
-	.4byte	0x230
+	.4byte	0x1c8
 	.byte	0
-	.uleb128 0x1e
-	.4byte	.LASF59
-	.byte	0x8
+	.uleb128 0x1f
+	.4byte	.LASF49
+	.byte	0x7
 	.byte	0x89
-	.uleb128 0x1e
-	.4byte	.LASF60
-	.byte	0x8
-	.byte	0x8a
 	.uleb128 0x1f
-	.4byte	.LASF62
-	.byte	0xa
+	.4byte	.LASF50
+	.byte	0x7
+	.byte	0x8a
+	.uleb128 0x20
+	.4byte	.LASF52
+	.byte	0x8
 	.byte	0xf5
-	.4byte	0x691
+	.4byte	0x51b
 	.uleb128 0xf
 	.4byte	0x89
 	.uleb128 0xf
@@ -1409,110 +1068,83 @@ user_init:
 	.uleb128 0xf
 	.4byte	0x89
 	.byte	0
-	.uleb128 0x1f
-	.4byte	.LASF63
-	.byte	0x8
+	.uleb128 0x20
+	.4byte	.LASF53
+	.byte	0x7
 	.byte	0xba
-	.4byte	0x6ac
+	.4byte	0x536
 	.uleb128 0xf
 	.4byte	0x7e
 	.uleb128 0xf
-	.4byte	0x197
+	.4byte	0x18c
 	.uleb128 0xf
 	.4byte	0xa9
 	.byte	0
-	.uleb128 0x1f
-	.4byte	.LASF64
-	.byte	0x8
+	.uleb128 0x20
+	.4byte	.LASF54
+	.byte	0x7
 	.byte	0xb2
-	.4byte	0x6bd
+	.4byte	0x547
 	.uleb128 0xf
 	.4byte	0x89
 	.byte	0
-	.uleb128 0x20
-	.4byte	.LASF68
-	.byte	0xc
+	.uleb128 0x21
+	.4byte	.LASF58
+	.byte	0xa
 	.byte	0x42
 	.4byte	0xa9
-	.4byte	0x6d2
+	.4byte	0x55c
 	.uleb128 0xf
 	.4byte	0x73
 	.byte	0
-	.uleb128 0x1c
-	.4byte	.LASF65
-	.byte	0xb
+	.uleb128 0x1d
+	.4byte	.LASF55
+	.byte	0x9
 	.byte	0
-	.4byte	.LASF67
+	.4byte	.LASF57
 	.4byte	0xb9
-	.4byte	0x6f0
+	.4byte	0x57a
 	.uleb128 0xf
 	.4byte	0xb9
 	.uleb128 0xf
 	.4byte	0xc6
 	.byte	0
-	.uleb128 0x20
-	.4byte	.LASF69
+	.uleb128 0x21
+	.4byte	.LASF59
 	.byte	0x6
 	.byte	0x60
 	.4byte	0xd1
-	.4byte	0x705
+	.4byte	0x58f
 	.uleb128 0xf
-	.4byte	0x5c8
+	.4byte	0x452
 	.byte	0
-	.uleb128 0x1f
-	.4byte	.LASF70
-	.byte	0xd
+	.uleb128 0x20
+	.4byte	.LASF60
+	.byte	0xb
 	.byte	0x52
-	.4byte	0x716
+	.4byte	0x5a0
 	.uleb128 0xf
 	.4byte	0xa9
 	.byte	0
-	.uleb128 0x20
-	.4byte	.LASF71
+	.uleb128 0x21
+	.4byte	.LASF61
 	.byte	0x5
 	.byte	0x6c
 	.4byte	0xd1
-	.4byte	0x72b
+	.4byte	0x5b5
 	.uleb128 0xf
 	.4byte	0x103
 	.byte	0
-	.uleb128 0x21
-	.4byte	.LASF72
-	.byte	0xe
-	.2byte	0x129
 	.uleb128 0x22
-	.4byte	.LASF73
-	.byte	0x9
-	.2byte	0x5c4
-	.4byte	0xab
-	.4byte	0x76c
-	.uleb128 0xf
-	.4byte	0x18c
-	.uleb128 0xf
-	.4byte	0x1f4
-	.uleb128 0xf
-	.4byte	0x45
-	.uleb128 0xf
-	.4byte	0xa9
-	.uleb128 0xf
-	.4byte	0xa2
-	.uleb128 0xf
-	.4byte	0x76c
-	.uleb128 0xf
-	.4byte	0x1f9
-	.uleb128 0xf
-	.4byte	0x77d
+	.4byte	.LASF62
+	.byte	0xc
+	.2byte	0x129
+	.uleb128 0x23
+	.4byte	.LASF69
+	.byte	0xd
+	.byte	0x23
+	.uleb128 0x24
 	.byte	0
-	.uleb128 0x6
-	.byte	0x4
-	.4byte	0x1a2
-	.uleb128 0x6
-	.byte	0x4
-	.4byte	0x778
-	.uleb128 0x7
-	.4byte	0x1de
-	.uleb128 0x7
-	.4byte	0x772
 	.byte	0
 	.section	.debug_abbrev,"",@progbits
 .Ldebug_abbrev0:
@@ -1828,6 +1460,33 @@ user_init:
 	.byte	0
 	.byte	0
 	.uleb128 0x1a
+	.uleb128 0x2e
+	.byte	0x1
+	.uleb128 0x3f
+	.uleb128 0x19
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x27
+	.uleb128 0x19
+	.uleb128 0x87
+	.uleb128 0x19
+	.uleb128 0x11
+	.uleb128 0x1
+	.uleb128 0x12
+	.uleb128 0x6
+	.uleb128 0x40
+	.uleb128 0x18
+	.uleb128 0x2117
+	.uleb128 0x19
+	.uleb128 0x1
+	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x1b
 	.uleb128 0xb
 	.byte	0x1
 	.uleb128 0x11
@@ -1838,7 +1497,7 @@ user_init:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0x1b
+	.uleb128 0x1c
 	.uleb128 0x34
 	.byte	0
 	.uleb128 0x3
@@ -1855,7 +1514,7 @@ user_init:
 	.uleb128 0x18
 	.byte	0
 	.byte	0
-	.uleb128 0x1c
+	.uleb128 0x1d
 	.uleb128 0x2e
 	.byte	0x1
 	.uleb128 0x3f
@@ -1878,7 +1537,7 @@ user_init:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0x1d
+	.uleb128 0x1e
 	.uleb128 0x2e
 	.byte	0x1
 	.uleb128 0x3f
@@ -1897,26 +1556,9 @@ user_init:
 	.uleb128 0x13
 	.byte	0
 	.byte	0
-	.uleb128 0x1e
-	.uleb128 0x2e
-	.byte	0
-	.uleb128 0x3f
-	.uleb128 0x19
-	.uleb128 0x3
-	.uleb128 0xe
-	.uleb128 0x3a
-	.uleb128 0xb
-	.uleb128 0x3b
-	.uleb128 0xb
-	.uleb128 0x27
-	.uleb128 0x19
-	.uleb128 0x3c
-	.uleb128 0x19
-	.byte	0
-	.byte	0
 	.uleb128 0x1f
 	.uleb128 0x2e
-	.byte	0x1
+	.byte	0
 	.uleb128 0x3f
 	.uleb128 0x19
 	.uleb128 0x3
@@ -1929,8 +1571,6 @@ user_init:
 	.uleb128 0x19
 	.uleb128 0x3c
 	.uleb128 0x19
-	.uleb128 0x1
-	.uleb128 0x13
 	.byte	0
 	.byte	0
 	.uleb128 0x20
@@ -1946,8 +1586,6 @@ user_init:
 	.uleb128 0xb
 	.uleb128 0x27
 	.uleb128 0x19
-	.uleb128 0x49
-	.uleb128 0x13
 	.uleb128 0x3c
 	.uleb128 0x19
 	.uleb128 0x1
@@ -1955,23 +1593,6 @@ user_init:
 	.byte	0
 	.byte	0
 	.uleb128 0x21
-	.uleb128 0x2e
-	.byte	0
-	.uleb128 0x3f
-	.uleb128 0x19
-	.uleb128 0x3
-	.uleb128 0xe
-	.uleb128 0x3a
-	.uleb128 0xb
-	.uleb128 0x3b
-	.uleb128 0x5
-	.uleb128 0x27
-	.uleb128 0x19
-	.uleb128 0x3c
-	.uleb128 0x19
-	.byte	0
-	.byte	0
-	.uleb128 0x22
 	.uleb128 0x2e
 	.byte	0x1
 	.uleb128 0x3f
@@ -1981,7 +1602,7 @@ user_init:
 	.uleb128 0x3a
 	.uleb128 0xb
 	.uleb128 0x3b
-	.uleb128 0x5
+	.uleb128 0xb
 	.uleb128 0x27
 	.uleb128 0x19
 	.uleb128 0x49
@@ -1990,6 +1611,43 @@ user_init:
 	.uleb128 0x19
 	.uleb128 0x1
 	.uleb128 0x13
+	.byte	0
+	.byte	0
+	.uleb128 0x22
+	.uleb128 0x2e
+	.byte	0
+	.uleb128 0x3f
+	.uleb128 0x19
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0x5
+	.uleb128 0x27
+	.uleb128 0x19
+	.uleb128 0x3c
+	.uleb128 0x19
+	.byte	0
+	.byte	0
+	.uleb128 0x23
+	.uleb128 0x2e
+	.byte	0x1
+	.uleb128 0x3f
+	.uleb128 0x19
+	.uleb128 0x3
+	.uleb128 0xe
+	.uleb128 0x3a
+	.uleb128 0xb
+	.uleb128 0x3b
+	.uleb128 0xb
+	.uleb128 0x3c
+	.uleb128 0x19
+	.byte	0
+	.byte	0
+	.uleb128 0x24
+	.uleb128 0x18
+	.byte	0
 	.byte	0
 	.byte	0
 	.byte	0
@@ -2070,13 +1728,13 @@ user_init:
 	.section	.debug_str,"MS",@progbits,1
 .LASF5:
 	.string	"uint32_t"
-.LASF62:
+.LASF52:
 	.string	"gpio_output_conf"
-.LASF58:
+.LASF48:
 	.string	"__builtin_puts"
-.LASF53:
+.LASF43:
 	.string	"pendingRxBytes"
-.LASF30:
+.LASF29:
 	.string	"_xt_isr"
 .LASF2:
 	.string	"short int"
@@ -2084,69 +1742,63 @@ user_init:
 	.string	"size_t"
 .LASF16:
 	.string	"sizetype"
-.LASF34:
-	.string	"pvBaseAddress"
 .LASF27:
 	.string	"bssid_set"
-.LASF51:
+.LASF68:
 	.string	"user_init"
 .LASF7:
 	.string	"long long int"
 .LASF26:
 	.string	"password"
-.LASF48:
+.LASF40:
 	.string	"mode"
-.LASF44:
+.LASF36:
 	.string	"GPIO_INT_TYPE"
-.LASF71:
+.LASF61:
 	.string	"wifi_set_opmode"
-.LASF52:
+.LASF42:
 	.string	"config"
 .LASF20:
 	.string	"STATION_MODE"
-.LASF49:
+.LASF41:
 	.string	"GPIO_Init"
 .LASF4:
 	.string	"uint8_t"
-.LASF45:
+.LASF37:
 	.string	"uC_Interrupt_Handler"
 .LASF10:
 	.string	"uint8"
-.LASF38:
+.LASF30:
 	.string	"GPIO_PIN_INTR_DISABLE"
-.LASF70:
+.LASF60:
 	.string	"free"
 .LASF22:
 	.string	"STATIONAP_MODE"
 .LASF12:
 	.string	"float"
-.LASF56:
+.LASF46:
 	.string	"txBuf"
 .LASF28:
 	.string	"bssid"
-.LASF29:
-	.string	"pdTASK_CODE"
 .LASF23:
 	.string	"MAX_MODE"
 .LASF15:
 	.string	"long int"
-.LASF43:
+.LASF35:
 	.string	"GPIO_PIN_INTR_HILEVEL"
-.LASF33:
-	.string	"xMEMORY_REGION"
-.LASF61:
+.LASF51:
 	.string	"gpio_pin_intr_state_set"
-.LASF47:
+.LASF39:
 	.string	"gpio_status"
-.LASF75:
+.LASF64:
 	.string	"user/user_main.c"
-.LASF46:
+.LASF38:
 	.string	"main_int_handler"
 .LASF1:
 	.string	"unsigned char"
-.LASF42:
+.LASF34:
 	.string	"GPIO_PIN_INTR_LOLEVEL"
-.LASF68:
+.LASF58:
 	.string	"zalloc"
 .LASF21:
 	.string	"SOFTAP_MODE"
@@ -2154,72 +1806,64 @@ user_init:
 	.string	"signed char"
 .LASF8:
 	.string	"long long unsigned int"
-.LASF36:
-	.string	"ulParameters"
-.LASF65:
+.LASF55:
 	.string	"__builtin_strcpy"
-.LASF31:
-	.string	"xTaskHandle"
 .LASF6:
 	.string	"unsigned int"
-.LASF66:
+.LASF69:
+	.string	"Message_Conversion_Test"
+.LASF56:
 	.string	"puts"
-.LASF37:
-	.string	"xMemoryRegion"
 .LASF3:
 	.string	"short unsigned int"
-.LASF57:
+.LASF47:
 	.string	"RxInvalid"
-.LASF55:
+.LASF45:
 	.string	"rxBuf"
-.LASF59:
+.LASF49:
 	.string	"vPortEnterCritical"
 .LASF17:
 	.string	"char"
-.LASF67:
+.LASF57:
 	.string	"strcpy"
 .LASF18:
 	.string	"_Bool"
-.LASF41:
+.LASF33:
 	.string	"GPIO_PIN_INTR_ANYEDGE"
-.LASF60:
+.LASF50:
 	.string	"vPortExitCritical"
-.LASF39:
+.LASF31:
 	.string	"GPIO_PIN_INTR_POSEDGE"
 .LASF25:
 	.string	"ssid"
-.LASF72:
+.LASF62:
 	.string	"uart_init_new"
 .LASF11:
 	.string	"uint32"
-.LASF76:
+.LASF65:
 	.string	"C:\\\\Users\\\\thebh\\\\Desktop\\\\dtf\\\\git\\\\clay\\\\Firmware\\\\ESP8266\\\\clay_udp_demo_2"
 .LASF14:
 	.string	"long unsigned int"
 .LASF13:
 	.string	"double"
-.LASF63:
+.LASF53:
 	.string	"_xt_isr_attach"
-.LASF32:
+.LASF66:
 	.string	"station_config"
-.LASF35:
-	.string	"ulLengthInBytes"
-.LASF69:
+.LASF59:
 	.string	"wifi_station_set_config"
 .LASF24:
 	.string	"WIFI_MODE"
-.LASF54:
+.LASF44:
 	.string	"pendingTxBytes"
-.LASF74:
+.LASF63:
 	.string	"GNU C89 5.1.0 -mlongcalls -mtext-section-literals -mno-serialize-volatile -g -Os -std=gnu90 -fno-inline-functions"
-.LASF73:
-	.string	"xTaskGenericCreate"
 .LASF19:
 	.string	"NULL_MODE"
-.LASF50:
+.LASF67:
 	.string	"registerInterrupt"
-.LASF40:
+.LASF32:
 	.string	"GPIO_PIN_INTR_NEGEDGE"
-.LASF64:
+.LASF54:
 	.string	"_xt_isr_unmask"
 	.ident	"GCC: (GNU) 5.1.0"

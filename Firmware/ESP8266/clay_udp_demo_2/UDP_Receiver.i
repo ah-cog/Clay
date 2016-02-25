@@ -3824,9 +3824,9 @@ int lwip_getaddrinfo(const char *nodename,
 # 36 "user/UDP_Receiver.c" 2
 
 # 1 "include/Clay_Config.h" 1
-# 13 "include/Clay_Config.h"
+# 16 "include/Clay_Config.h"
 # 1 "include/Clay_Config.h" 1
-# 14 "include/Clay_Config.h" 2
+# 17 "include/Clay_Config.h" 2
 # 38 "user/UDP_Receiver.c" 2
 
 
@@ -3887,7 +3887,7 @@ _Bool
               0
 # 76 "user/UDP_Receiver.c"
                    ;
-   UDP_Rx_Buffer = zalloc(1024);
+   UDP_Rx_Buffer = zalloc(((512 + 4 + ((2 * 1) + 2 + 8 + 4)) * 2));
    nNetTimeout = 100;
 
    CurrentState = Configure;
@@ -4007,13 +4007,13 @@ static
 # 171 "user/UDP_Receiver.c"
                    ;
 
-   memset(UDP_Rx_Buffer, 0, 1024);
+   memset(UDP_Rx_Buffer, 0, ((512 + 4 + ((2 * 1) + 2 + 8 + 4)) * 2));
    memset(&from, 0, sizeof(from));
    lwip_setsockopt(sock_fd,0xfff,0x1006,(char * ) &nNetTimeout,sizeof(int));
    fromlen = sizeof(struct sockaddr_in);
 
 
-   ret = lwip_recvfrom(sock_fd,(uint8 * ) UDP_Rx_Buffer,1024,0,(struct sockaddr * ) &from,(socklen_t * ) &fromlen)
+   ret = lwip_recvfrom(sock_fd,(uint8 * ) UDP_Rx_Buffer,((512 + 4 + ((2 * 1) + 2 + 8 + 4)) * 2),0,(struct sockaddr * ) &from,(socklen_t * ) &fromlen)
 
 
 

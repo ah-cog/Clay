@@ -4002,23 +4002,31 @@ void uart_init_new(void);
 # 21 "user/user_main.c" 2
 # 1 "include/Clay_Message.h" 1
 # 17 "include/Clay_Message.h"
+# 1 "include/Clay_Config.h" 1
+# 16 "include/Clay_Config.h"
+# 1 "include/Clay_Config.h" 1
+# 17 "include/Clay_Config.h" 2
+# 18 "include/Clay_Message.h" 2
+
+
 typedef struct
 {
       uint8 Message[512];
-      uint16 Length;
-      struct sockaddr_in Source;
+      uint32 Length;
+      struct sockaddr_in Address;
+
+
 } Clay_Message;
 
 
 extern char Terminator;
+
+
+extern uint32 FillBufferWithMessage(Clay_Message * Source, uint8* Destination, uint32 SourceLength);
+extern uint32 CreateMessageFromBuffer(uint8 * Source, uint32 SourceLength, Clay_Message * Destination);
+extern void Message_Conversion_Test();
 # 22 "user/user_main.c" 2
 # 1 "include/Serial_Receiver.h" 1
-# 12 "include/Serial_Receiver.h"
-# 1 "include/Clay_Config.h" 1
-# 13 "include/Clay_Config.h"
-# 1 "include/Clay_Config.h" 1
-# 14 "include/Clay_Config.h" 2
-# 13 "include/Serial_Receiver.h" 2
 # 21 "include/Serial_Receiver.h"
 extern 
 # 21 "include/Serial_Receiver.h" 3 4
@@ -4148,7 +4156,6 @@ void GPIO_Init()
 
 void user_init(void)
 {
-   GPIO_Init();
 
 
 
@@ -4157,6 +4164,8 @@ void user_init(void)
 
    wifi_set_opmode(STATIONAP_MODE);
    uart_init_new();
+
+   Message_Conversion_Test();
 
    {
       struct station_config *config = (struct station_config *) zalloc(sizeof(struct station_config));
@@ -4169,89 +4178,15 @@ void user_init(void)
       free(config);
    }
 
-   xTaskGenericCreate( ( UDP_Receiver_State_Step ), ( "" ), ( 256 ), ( 
-# 135 "user/user_main.c" 3 4
-  ((void *)0) 
-# 135 "user/user_main.c"
-  ), ( 2 ), ( 
-# 135 "user/user_main.c" 3 4
-  ((void *)0) 
-# 135 "user/user_main.c"
-  ), ( 
-# 135 "user/user_main.c" 3 4
-  ((void *)0) 
-# 135 "user/user_main.c"
-  ), ( 
-# 135 "user/user_main.c" 3 4
-  ((void *)0) 
-# 135 "user/user_main.c"
-  ) );
-   xTaskGenericCreate( ( UDP_Transmitter_State_Step ), ( "" ), ( 256 ), ( 
-# 136 "user/user_main.c" 3 4
-  ((void *)0) 
-# 136 "user/user_main.c"
-  ), ( 2 ), ( 
-# 136 "user/user_main.c" 3 4
-  ((void *)0) 
-# 136 "user/user_main.c"
-  ), ( 
-# 136 "user/user_main.c" 3 4
-  ((void *)0) 
-# 136 "user/user_main.c"
-  ), ( 
-# 136 "user/user_main.c" 3 4
-  ((void *)0) 
-# 136 "user/user_main.c"
-  ) );
-   xTaskGenericCreate( ( Serial_Receiver_State_Step ), ( "" ), ( 256 ), ( 
-# 137 "user/user_main.c" 3 4
-  ((void *)0) 
-# 137 "user/user_main.c"
-  ), ( 2 ), ( 
-# 137 "user/user_main.c" 3 4
-  ((void *)0) 
-# 137 "user/user_main.c"
-  ), ( 
-# 137 "user/user_main.c" 3 4
-  ((void *)0) 
-# 137 "user/user_main.c"
-  ), ( 
-# 137 "user/user_main.c" 3 4
-  ((void *)0) 
-# 137 "user/user_main.c"
-  ) );
-   xTaskGenericCreate( ( Serial_Transmitter_State_Step ), ( "" ), ( 256 ), ( 
-# 138 "user/user_main.c" 3 4
-  ((void *)0) 
-# 138 "user/user_main.c"
-  ), ( 2 ), ( 
-# 138 "user/user_main.c" 3 4
-  ((void *)0) 
-# 138 "user/user_main.c"
-  ), ( 
-# 138 "user/user_main.c" 3 4
-  ((void *)0) 
-# 138 "user/user_main.c"
-  ), ( 
-# 138 "user/user_main.c" 3 4
-  ((void *)0) 
-# 138 "user/user_main.c"
-  ) );
-   xTaskGenericCreate( ( String_Message_Parser_State_Step ), ( "" ), ( 256 ), ( 
-# 139 "user/user_main.c" 3 4
-  ((void *)0) 
-# 139 "user/user_main.c"
-  ), ( 2 ), ( 
-# 139 "user/user_main.c" 3 4
-  ((void *)0) 
-# 139 "user/user_main.c"
-  ), ( 
-# 139 "user/user_main.c" 3 4
-  ((void *)0) 
-# 139 "user/user_main.c"
-  ), ( 
-# 139 "user/user_main.c" 3 4
-  ((void *)0) 
-# 139 "user/user_main.c"
-  ) );
+   for (;;)
+   {
+      printf("ended\r\n");
+   }
+
+
+
+
+
+
+
 }

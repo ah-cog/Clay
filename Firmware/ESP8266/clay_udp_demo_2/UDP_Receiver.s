@@ -14,7 +14,7 @@ UDP_Receiver_Init:
 	addi	sp, sp, -16
 .LCFI0:
 	.loc 1 77 0
-	movi	a2, 0x400
+	movi	a2, 0x428
 	.loc 1 75 0
 	s32i.n	a0, sp, 12
 .LCFI1:
@@ -503,7 +503,7 @@ UDP_Receiver_State_Step:
 	.byte	0x52
 	.uleb128 0x3
 	.byte	0xa
-	.2byte	0x400
+	.2byte	0x428
 	.byte	0
 	.byte	0
 	.uleb128 0x10
