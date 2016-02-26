@@ -49,7 +49,7 @@ typedef enum
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
-static Serial_Transmitter_States CurrentState;
+static Serial_Transmitter_States State;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -60,7 +60,7 @@ bool Serial_Transmitter_Init()
 {
    bool rval = false;
 
-   CurrentState = Configure;
+   State = Configure;
    return rval;
 }
 
@@ -68,7 +68,7 @@ void Serial_Transmitter_State_Step()
 {
    for (;;)
    {
-      switch (CurrentState)
+      switch (State)
       {
          case Disable:
          {

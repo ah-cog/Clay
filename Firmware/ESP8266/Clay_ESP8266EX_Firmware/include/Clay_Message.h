@@ -30,8 +30,10 @@ typedef struct
 extern char Terminator;
 
 ////Prototypes/////////////////////////////////////////////////////
-extern uint32 FillBufferWithMessage(Clay_Message * Source, uint8* Destination, uint32 SourceLength);
-extern uint32 CreateMessageFromBuffer(uint8 * Source, uint32 SourceLength, Clay_Message * Destination);
+extern uint32 Fill_Buffer_With_Message(Clay_Message * Source, uint8* Destination, uint32 SourceLength);
+extern uint32 Create_Message_From_Buffer(uint8 * Source, uint32 SourceLength, Clay_Message * Destination);
+extern uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination, uint32 DestinationLength);
+extern void Deserialize_Address(uint8* Source, uint32 SourceLength, struct sockaddr_in * Destination);
 extern void Message_Conversion_Test();
 
 #endif /* INCLUDE_CLAY_MESSAGE_H_ */

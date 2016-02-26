@@ -16,14 +16,18 @@
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
 
-#include "../include/GPIO.h"
-#include "../include/UART.h"
-#include "Clay_Message.h"
+#include "GPIO.h"
+#include "UART.h"
+
 #include "Serial_Receiver.h"
 #include "Serial_Transmitter.h"
+#include "String_Message_Parser.h"
 #include "UDP_Receiver.h"
 #include "UDP_Transmitter.h"
-#include "String_Message_Parser.h"
+
+#include "Message_Queue.h"
+
+#include "Clay_Message.h"
 
 #define server_ip "192.168.101.142"
 #define server_port 9669
@@ -120,12 +124,17 @@ void user_init(void)
    wifi_set_opmode(STATIONAP_MODE);
    uart_init_new();
 
+#if 0
    Message_Conversion_Test();
+#endif
 
    {
       struct station_config *config = (struct station_config *) zalloc(sizeof(struct station_config));
-      sprintf(config->ssid, "hefnetm");
-      sprintf(config->password, "dips00BOYNEdo$!&");
+//      sprintf(config->ssid, "hefnetm");
+//      sprintf(config->password, "dips00BOYNEdo$!&");
+
+      sprintf(config->ssid, "hefnet");
+      sprintf(config->password, "h3fn3r_is_better_than_me");
 
       /* need to sure that you are in station mode first,
        * otherwise it will be failed. */
@@ -133,16 +142,11 @@ void user_init(void)
       free(config);
    }
 
-   for (;;)
-   {
-      printf("ended\r\n");
-   }
+   UDP_Transmitter_Init();
+   UDP_Receiver_Init();
 
-   //TODO: move these to init functions
-//   xTaskCreate(UDP_Receiver_State_Step, "", 256, NULL, 2, NULL);
-//   xTaskCreate(UDP_Transmitter_State_Step, "", 256, NULL, 2, NULL);
-//   xTaskCreate(Serial_Receiver_State_Step, "", 256, NULL, 2, NULL);
-//   xTaskCreate(Serial_Transmitter_State_Step, "", 256, NULL, 2, NULL);
-//   xTaskCreate(String_Message_Parser_State_Step, "", 256, NULL, 2, NULL);
+//   xTaskCreate(Serial_Receiver_State_Step, "uartrx1", 256, NULL, 2, NULL);
+//   xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 256, NULL, 2, NULL);
+//   xTaskCreate(String_Message_Parser_State_Step, "parse1", 256, NULL, 2, NULL);
 }
 

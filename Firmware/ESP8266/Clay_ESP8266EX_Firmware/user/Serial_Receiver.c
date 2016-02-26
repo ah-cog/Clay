@@ -50,7 +50,7 @@ typedef enum
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
-static Serial_Receiver_States CurrentState;
+static Serial_Receiver_States State;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -61,7 +61,7 @@ bool Serial_Receiver_Init()
 {
    bool rval = false;
 
-   CurrentState = Configure;
+   State = Configure;
    return rval;
 }
 
@@ -69,7 +69,7 @@ void Serial_Receiver_State_Step()
 {
    for (;;)
    {
-      switch (CurrentState)
+      switch (State)
       {
          case Disable:
          {

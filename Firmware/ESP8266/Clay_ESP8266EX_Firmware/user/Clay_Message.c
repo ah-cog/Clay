@@ -24,95 +24,100 @@ char Terminator = '\n';
 ////Local Prototypes///////////////////////////////////////////////
 
 ////Global implementations ////////////////////////////////////////
-uint32 FillBufferWithMessage(Clay_Message * Source, uint8 * Destination, uint32 DestinationLength)
+uint32 Fill_Buffer_With_Message(Clay_Message * Source, uint8 * Destination, uint32 DestinationLength)
 {
    uint32 rval = 0;
-
-   //copy until newline.
-   //strtok on the msg to place a null at the \n
-   //strcpy to destination buf
-   //replace the \n in msg buf
-   //add a \n to the destination buf
-   //print the address to the buffer
-   //return length of all written data.
-
    strncpy(Destination, Source->Message, Source->Length);
    rval += Source->Length;
 
+   rval += Serialize_Address(&(Source->Address), Destination + rval, DestinationLength - rval);
+
    //add on the addr
+
+   return rval;
+}
+
+uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination, uint32 DestinationLength)
+{
+   uint32 rval = 0;
    rval += snprintf(Destination + rval,
                     DestinationLength - rval,
-                    "%d,%d,%d,%d",
-                    Source->Address.sin_addr.s_addr,
-                    Source->Address.sin_family,
-                    Source->Address.sin_len,
-                    Source->Address.sin_port);
+                    "%u,%u,%u,%u",
+                    ntohl(Source->sin_addr.s_addr),
+                    Source->sin_family,
+                    Source->sin_len,
+                    ntohs(Source->sin_port));
+
+//   printf("dest pre array: [%s]\n", Destination);
 
    if (rval <= DestinationLength + SIN_ZERO_LEN)
    {
       int i;
       for (i = 0; i < SIN_ZERO_LEN; ++i)
       {
-         rval += snprintf(Destination + rval, DestinationLength - rval, ",%d", Source->Address.sin_zero[i]);
+         rval += snprintf(Destination + rval, DestinationLength - rval, "%s%u", i < SIN_ZERO_LEN ? "," : "", Source->sin_zero[i]);
          if (rval >= DestinationLength)
          {
+//            printf("rval too long\n");
             Destination[DestinationLength - 1] = '\n';
             rval = DestinationLength;
             break;
          }
       }
+      if (rval < DestinationLength)
+      {
+         Destination[rval] = '\n';
+      }
    }
-
-   return rval;
+//   printf("dest final: [%s]\n", Destination);
 }
 
-uint32 CreateMessageFromBuffer(uint8 * Source, uint32 SourceLength, Clay_Message * Destination)
+void Deserialize_Address(uint8* Source, uint32 SourceLength, struct sockaddr_in * Destination)
 {
-   uint32 rval = 0;
+   uint8 * token;
    char Comma = ',';
    uint32 temp;
+
+//   printf("tryna toke\n");
+   token = strtok(Source, &Comma);
+//   printf("s_addr [%s]\n", token);
+   sscanf(token, "%d", &temp);
+   Destination->sin_addr.s_addr = htonl(temp);
+
+   token = strtok(NULL, &Comma);
+   sscanf(token, "%d", &temp);
+//   printf("family [%s]\n", token);
+   Destination->sin_family = temp & 0xFF;
+
+   token = strtok(NULL, &Comma);
+   sscanf(token, "%d", &temp);
+//   printf("len [%s]\n", token);
+   Destination->sin_len = temp & 0xFF;
+
+   token = strtok(NULL, &Comma);
+   sscanf(token, "%d", &temp);
+//   printf("port [%s]\n", token);
+   Destination->sin_port = htons(temp & 0xFFFF);
+
+   int i;
+   for (i = 0; i < SIN_ZERO_LEN && token != NULL; ++i)
+   {
+      token = strtok(NULL, &Comma);
+//      printf("zero[%d] [%s]\n", i, token);
+      sscanf(token, "%d", &temp);
+      Destination->sin_zero[i] = temp & 0xFF;
+   }
+}
+
+uint32 Create_Message_From_Buffer(uint8 * Source, uint32 SourceLength, Clay_Message * Destination)
+{
+   uint32 rval = 0;
 
    uint8 * NewlineIndex = strchr(Source, '\n') + 1;
    Destination->Length = NewlineIndex - Source;
    memcpy(Destination->Message, Source, Destination->Length);
 
-   NewlineIndex = strtok(NewlineIndex, &Comma);
-   printf("s_addr");
-   printf(NewlineIndex);
-   printf("\n");
-   sscanf(NewlineIndex, "%d", &(Destination->Address.sin_addr.s_addr));
-
-   NewlineIndex = strtok(NewlineIndex, &Comma);
-   sscanf(NewlineIndex, "%d", &temp);
-   printf("family");
-   printf(NewlineIndex);
-   printf("\n");
-   Destination->Address.sin_family = temp & 0xFF;
-
-   NewlineIndex = strtok(NewlineIndex, &Comma);
-   sscanf(NewlineIndex, "%d", &temp);
-   printf("len");
-   printf(NewlineIndex);
-   printf("\n");
-   Destination->Address.sin_len = temp & 0xFF;
-
-   NewlineIndex = strtok(NewlineIndex, &Comma);
-   sscanf(NewlineIndex, "%d", &temp);
-   printf("port");
-   printf(NewlineIndex);
-   printf("\n");
-   Destination->Address.sin_port = temp & 0xFFFF;
-
-   int i;
-   for (i = 0; i < SIN_ZERO_LEN && NewlineIndex != NULL; ++i)
-   {
-      NewlineIndex = strtok(NewlineIndex, &Comma);
-      printf("%d zero", i);
-      printf(NewlineIndex);
-      printf("\n");
-      sscanf(NewlineIndex, "%d", &temp);
-      Destination->Address.sin_zero[i] = temp & 0xFF;
-   }
+   Deserialize_Address(NewlineIndex + 1, SourceLength - Destination->Length, &(Destination->Address));
 
    if (Destination->Length >= CLAY_MESSAGE_LENGTH_MAX_BYTES)
    {
@@ -155,7 +160,7 @@ void Message_Conversion_Test()
          m.Address.sin_zero[i] = m.Address.sin_addr.s_addr + i;
       }
 
-      bufferFillLength = FillBufferWithMessage(&m, buf, CLAY_MESSAGE_STRUCT_SIZE_BYTES * 2);
+      bufferFillLength = Fill_Buffer_With_Message(&m, buf, CLAY_MESSAGE_STRUCT_SIZE_BYTES * 2);
 
       m.Message[m.Length + 1] = '\0';
       printf("bfl: %d,len: %d msg: %s, addr: %d, fam: %d, len: %d, port: %d, zero: %s\n",
@@ -173,7 +178,7 @@ void Message_Conversion_Test()
       ++m.Address.sin_addr.s_addr;
       m.Message[0] = 'N';
 
-      messageFillLength = CreateMessageFromBuffer(buf, CLAY_MESSAGE_STRUCT_SIZE_BYTES * 2, &m);
+      messageFillLength = Create_Message_From_Buffer(buf, CLAY_MESSAGE_STRUCT_SIZE_BYTES * 2, &m);
    }
 }
 ////Local implementations /////////////////////////////////////////
