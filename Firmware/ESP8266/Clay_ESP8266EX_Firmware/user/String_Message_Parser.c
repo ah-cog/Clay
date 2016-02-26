@@ -40,7 +40,7 @@ typedef enum
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
-static String_Message_Parser_States CurrentState;
+static String_Message_Parser_States State;
 
 ////Local Prototypes///////////////////////////////////////////////
 
@@ -49,7 +49,6 @@ bool String_Message_Parser_Init()
 {
    bool rval = false;
 
-   CurrentState = Disable;
    return rval;
 }
 
@@ -57,7 +56,7 @@ void String_Message_Parser_State_Step()
 {
    for (;;)
    {
-      switch (CurrentState)
+      switch (State)
       {
          case Disable:
          {
