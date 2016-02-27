@@ -35,7 +35,10 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "Serial_Receiver.h"
 #include "Clay_Config.h"
+#include "Message_Queue.h"
+#include "Clay_Message.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -52,6 +55,9 @@ typedef enum
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Receiver_States State;
 
+uint8 * Serial_Rx_Buffer;
+uint32 Serial_Rx_Count;
+
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static bool Receive();
@@ -59,9 +65,13 @@ static bool Receive();
 ////Global implementations ////////////////////////////////////////
 bool Serial_Receiver_Init()
 {
-   bool rval = false;
+   bool rval = true;
 
-   State = Configure;
+   Serial_Rx_Buffer = zalloc(SERIAL_RX_BUFFER_SIZE_BYTES);
+
+   State = Disable;
+
+   xTaskCreate(Serial_Receiver_State_Step, "uartrx1", 256, NULL, 2, NULL);
    return rval;
 }
 
@@ -73,6 +83,10 @@ void Serial_Receiver_State_Step()
       {
          case Disable:
          {
+            if (wifi_station_get_connect_status() == STATION_GOT_IP)
+            {
+               State = Idle;
+            }
             break;
          }
 

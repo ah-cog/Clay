@@ -144,9 +144,9 @@ void user_init(void)
 
    UDP_Transmitter_Init();
    UDP_Receiver_Init();
+   Serial_Transmitter_Init();
+   Serial_Receiver_Init();
 
-//   xTaskCreate(Serial_Receiver_State_Step, "uartrx1", 256, NULL, 2, NULL);
-//   xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 256, NULL, 2, NULL);
 //   xTaskCreate(String_Message_Parser_State_Step, "parse1", 256, NULL, 2, NULL);
 }
 

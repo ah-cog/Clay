@@ -264,6 +264,8 @@ static void Disconnect()
 
 static bool Transmit()
 {
+   //TODO: there is probably still something wrong with the serialization; I would expect to be able to return the message
+   //      back to the same port. This works with nc64 -u -l -p UDP_RX_PORT, though. Gonna run with it for now.
    DestinationAddr.sin_port = htons(UDP_RX_PORT);
 //   printf("sending %d bytes: [%s]\n", UDP_Tx_Count, UDP_Tx_Buffer);
 //   printf("to %u.%u.%u.%u:%u\n\n-----\n",

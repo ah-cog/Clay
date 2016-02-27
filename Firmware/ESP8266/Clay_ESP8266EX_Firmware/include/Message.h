@@ -6,7 +6,7 @@
  */
 
 #define MAXIMUM_MESSAGE_LENGTH 512
-#define MAXIMUM_SOURCE_LENGTH 32
+#define MAXIMUM_SOURCE_LENGTH 64
 #define MAXIMUM_DESTINATION_LENGTH 64
 
 typedef struct Message
@@ -19,6 +19,5 @@ typedef struct Message
 // extern Message Create_Message (const char *content);
 // extern Delete_Message (Message *message);
 extern void Initialize_Message(Message *message, char *source, char *destination, char *content);
-
 
 #endif
