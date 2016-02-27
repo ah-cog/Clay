@@ -5,8 +5,72 @@
  *      Author: thebh
  */
 
+//this code was a UDP demo that would receive a message, send the message to the micro, and then take the micro's
+//  output and send it back. It only works with up to 9 chars though.
 #if 0
+void uC_Interrupt_Handler()
+{
+   //set flag to say send the message to the uC if a message is waiting.
+   //if message not waiting, set flag to stop rx interrupts and read message from the uC.
+   //signal uC that we're ready to receive by setting GPIO line low again
+//   printf("got the interrupt\r\n");
+}
 
+void main_int_handler()
+{
+//   printf("main_int_callback!\n");
+   int i;
+   uint32 gpio_status = GPIO_REG_READ(GPIO_STATUS_ADDRESS);
+   for (i = 0; i < MAX_PINS; i++)
+   {
+      if ((gpio_status & BIT(i)))
+      {
+//         printf("triggered on int: %d\n", i);
+         //disable interrupt
+         gpio_pin_intr_state_set(GPIO_ID_PIN(i), GPIO_PIN_INTR_DISABLE);
+
+         // call func here
+         if (i == 2)
+         {
+            //TODO: more generic caller
+            uC_Interrupt_Handler();
+         }
+
+         //clear interrupt status
+         GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, gpio_status & BIT(i));
+
+         // restore
+         gpio_pin_intr_state_set(GPIO_ID_PIN(i), GPIO_PIN_INTR_DISABLE);
+      }
+   }
+}
+
+void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode)
+{
+   portENTER_CRITICAL();
+
+   //clear interrupt status
+   GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(pin));
+
+   // set the mode
+   gpio_pin_intr_state_set(GPIO_ID_PIN(pin), mode);
+
+   portEXIT_CRITICAL();
+}
+
+void GPIO_Init()
+{
+   ///setup GPIO and set output to 1.
+   GPIO_AS_OUTPUT(BIT(0));
+   GPIO_OUTPUT(BIT(0), 1);
+   GPIO_AS_INPUT(BIT(2));
+
+   //TODO: interrupts
+//   _xt_isr_attach(ETS_GPIO_INUM, (_xt_isr) main_int_handler, NULL);
+//   _xt_isr_unmask(1 << ETS_GPIO_INUM);
+//
+//   registerInterrupt(2, GPIO_PIN_INTR_NEGEDGE);
+}
 
 void task2(void *pvParameters)
 {
@@ -24,7 +88,8 @@ void task2(void *pvParameters)
 
    RxInvalid = FALSE;
 
-   LOCAL int32 sock_fd;
+   LOCAL int32
+   sock_fd;
 
    GPIO_OUTPUT(BIT(0), 1);
    memset(&server_addr, 0, sizeof(server_addr));
@@ -47,7 +112,7 @@ void task2(void *pvParameters)
 
    do
    {
-      ret = bind(sock_fd, (struct sockaddr * )&server_addr, sizeof(server_addr));
+      ret = bind(sock_fd, (struct sockaddr *) &server_addr, sizeof(server_addr));
       if (ret != 0)
       {
 //         printf("ESP8266 UDP task > captdns_task failed to bind sock!\n");
@@ -60,9 +125,9 @@ void task2(void *pvParameters)
    {
       memset(udp_msg, 0, UDP_DATA_LEN);
       memset(&from, 0, sizeof(from));
-      setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (char * )&nNetTimeout, sizeof(int));
+      setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (char *) &nNetTimeout, sizeof(int));
       fromlen = sizeof(struct sockaddr_in);
-      ret = recvfrom(sock_fd, (uint8 * )udp_msg, UDP_DATA_LEN, 0, (struct sockaddr * )&from, (socklen_t * )&fromlen);
+      ret = recvfrom(sock_fd, (uint8 *) udp_msg, UDP_DATA_LEN, 0, (struct sockaddr *) &from, (socklen_t *) &fromlen);
       if (ret > 0 && !pendingRxBytes)
       {
 //         sendto(sock_fd, (uint8* )udp_msg, ret, 0, (struct sockaddr * )&from, fromlen);
@@ -91,7 +156,7 @@ void task2(void *pvParameters)
       if (pendingTxBytes)
       {
 //         printf("pending: %d - \"%s\"\r\n", pendingTxBytes, txBuf);
-         sendto(sock_fd, (uint8* )txBuf, pendingTxBytes, 0, (struct sockaddr * )&lastFrom, fromlen);
+         sendto(sock_fd, (uint8*) txBuf, pendingTxBytes, 0, (struct sockaddr *) &lastFrom, fromlen);
          pendingTxBytes = 0;
       }
    }

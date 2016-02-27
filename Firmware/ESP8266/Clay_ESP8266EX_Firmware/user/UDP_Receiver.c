@@ -170,11 +170,17 @@ void UDP_Receiver_State_Step()
             //               printf("message addr rx %d\n", &tempMessage);
             Serialize_Address(&lastSourceAddress, tempAddr, MAXIMUM_DESTINATION_LENGTH);
 
+//            printf("strlen addr: %d", strlen(tempAddr));
+//            printf("rx'd from: [%s]\n", tempAddr);
+
             Initialize_Message(&tempMessage, tempAddr, tempAddr, UDP_Rx_Buffer);
 
+//            printf("rx'd from: [%s]\n\n", tempAddr);
+//            printf("message source: [%s]\n\n", tempMessage.source);
+
             //TODO: incoming queue
-            //               Queue_Message(incomingMessageQueue, &tempMessage);
-            Queue_Message(&outgoingMessageQueue, &tempMessage);
+            Queue_Message(&incomingMessageQueue, &tempMessage);
+//            Queue_Message(&outgoingMessageQueue, &tempMessage);
 
             //               printf("cont:[%s]\ndest:[%s]\nsource:[%s]",
             //                      Peek_Message(&outgoingMessageQueue)->content,

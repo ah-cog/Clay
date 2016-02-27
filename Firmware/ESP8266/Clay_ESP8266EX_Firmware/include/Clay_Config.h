@@ -29,12 +29,17 @@
 //sa_family is u8_t typedefs.
 //
 
-#define U8_T_SIZE_BYTES                   1
-#define IN_PORT_T_SIZE_BYTES              2
-#define IN_ADDR_SIZE_BYTES                4          //2                    //2
+//TODO: double-check this size...
+//sizes as they are printed
+#define DELIMITER_SIZE                    1         //each char is 1 byte, there are 13 in the serialized string.
+#define DELIMITER_COUNT                   11
+#define NEWLINE_SIZE                      1
+#define U8_T_SIZE_BYTES                   2
+#define IN_PORT_T_SIZE_BYTES              4
+#define IN_ADDR_SIZE_BYTES                8          //4                    //4
 #define SOCKADDR_IN_SIZE_BYTES            ((2 * U8_T_SIZE_BYTES) + IN_PORT_T_SIZE_BYTES \
-                                             + SIN_ZERO_LEN + IN_ADDR_SIZE_BYTES)               //total size is 16
-//                                                 //8                //4
+                                             + SIN_ZERO_LEN * 2 + IN_ADDR_SIZE_BYTES + DELIMITER_SIZE * DELIMITER_COUNT + NEWLINE_SIZE)               //total size is 16
+//                                                 //8                //8                           //11
 
 #define UINT32_SIZE_BYTES                 4
 
@@ -54,6 +59,10 @@
 #define UDP_TX_MESSAGE_CAPACITY           2
 #define UDP_RX_BUFFER_SIZE_BYTES          (CLAY_MESSAGE_STRUCT_SIZE_BYTES * UDP_RX_MESSAGE_CAPACITY)
 #define UDP_TX_BUFFER_SIZE_BYTES          (CLAY_MESSAGE_STRUCT_SIZE_BYTES * UDP_TX_MESSAGE_CAPACITY)
+#define SERIAL_TX_MESSAGE_CAPACITY        2
+#define SERIAL_RX_MESSAGE_CAPACITY        2
+#define SERIAL_TX_BUFFER_SIZE_BYTES       (CLAY_MESSAGE_STRUCT_SIZE_BYTES * SERIAL_TX_MESSAGE_CAPACITY)
+#define SERIAL_RX_BUFFER_SIZE_BYTES       (CLAY_MESSAGE_STRUCT_SIZE_BYTES * SERIAL_RX_MESSAGE_CAPACITY)
 
 ///
 #define CLAY_RX_MESSAGE_QUEUE_SIZE        15        //Messages pending to the uC
