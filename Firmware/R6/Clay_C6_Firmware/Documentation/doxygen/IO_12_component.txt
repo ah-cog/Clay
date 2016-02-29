@@ -37,7 +37,7 @@ by the component.
 <td class="regNotResetVal">0x00000070</td>
  <td>NVICIP60 register, peripheral IO_12.</td></tr>
 <tr><td>0xE000E104</td><td>NVICISER1</td>
-<td class="regNotResetVal">0x38000401</td>
+<td class="regNotResetVal">0xB0000401</td>
  <td>NVICISER1 register, peripheral IO_12.</td></tr>
 <tr><td>0x4004A048</td><td>PORTB_PCR18</td>
 <td class="regNotResetVal">0x00000104</td>
@@ -384,10 +384,10 @@ registers of the peripheral(s) configured by the component.
         
 </div>
 <table class="regtbl2"><tr><td class="trowtit" colspan="2">Address</td><td colspan="2">0xE000E104</td></tr>
-<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0x38000401</td></tr>
+<tr class="trowtit"><td  class="trowtit" colspan="2">Initial value</td><td colspan="2">0xB0000401</td></tr>
 <tr class="trowtit"><td  class="trowtit" colspan="2">After-reset value</td><td colspan="2">0x00000000</td></tr>
 <tr><td class="ttitle2">Bit</td><td class="ttitle2">Field</td><td class="ttitle2">Value</td><td class="ttitle2">Description</td></tr>
-<tr><td>0 - 31</td><td>SETENA</td><td>0x00</td><td>Interrupt set enable bits</td>
+<tr><td>0 - 31</td><td>SETENA</td><td>0x80000000</td><td>Interrupt set enable bits</td>
 </tr></table>
 <div class="reghdr1">PORTB_PCR18</div>
 <div class="regdiag">

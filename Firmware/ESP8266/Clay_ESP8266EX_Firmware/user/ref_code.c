@@ -222,4 +222,149 @@ void task3(void *pvParameters)
       vTaskDelay(100 / portTICK_RATE_MS);
    }
 }
+
+void Serial_Receiver_State_Step()
+{
+	for (;;)
+	{
+		switch (State)
+		{
+		case Disable:
+		{
+			if (wifi_station_get_connect_status() == STATION_GOT_IP)
+			{
+				UART_ResetRxFifo(UART0);
+				State = Idle;
+			}
+			break;
+		}
+
+		case Configure:
+		{
+			break;
+		}
+
+		case Idle:
+		{
+			if (!Serial_Tx_In_Progress && !GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
+			{
+				Serial_Rx_In_Progress = true;
+
+				Serial_Rx_Count = 0;
+				UART_ResetRxFifo(UART0);
+				BytesReceived = 0;
+				Newline_Count = 0;
+				Ring_Buffer_Init();
+
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+				gpio16_output_set(0);
+#else
+				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
+#endif
+				stateTime = system_get_time();
+				State = Receiving;
+			}
+			break;
+		}
+
+		case Receiving:
+		{
+			if(false){
+//			if (Ring_Buffer_Has_Data())
+//			{
+//				Ring_Buffer_Get(Serial_Rx_Buffer);
+//				printf("%c", *Serial_Rx_Buffer);
+
+//				Ring_Buffer_Get(Serial_Rx_Buffer + BytesReceived);
+//				printf("%d:'%c'\n", BytesReceived,
+//						Serial_Rx_Buffer[BytesReceived]);
+//
+//				printf("1");
+//				if (Serial_Rx_Buffer[BytesReceived++] == '\n')
+//				{
+////					printf("2\n");
+//					++Newline_Count;
+////					printf("3\n");
+//				}
+//				printf("4\n");
+//
+////				printf("newline:%d\n", Newline_Count);
+////				printf("RxFifoIdx:%d\n", BytesReceived);
+//
+				if (Newline_Count >= CLAY_SERIAL_MESSAGE_NEWLINE_COUNT)
+				{
+					printf("enough newlines\n\n");
+
+					//TODO: update message_init to not require null termination?
+					Serial_Rx_Buffer[++BytesReceived] = '\0';
+
+					Serial_Rx_In_Progress = false;
+
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+					gpio16_output_set(1);
+#else
+					GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
+#endif
+					State = Parsing;
+				}
+			}
+			else if (system_get_time() - stateTime > 1000000) //GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
+			{
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+				gpio16_output_set(1);
+#else
+				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
+#endif
+
+				Serial_Rx_In_Progress = false;
+				State = Idle;
+			}
+			break;
+		}
+
+		case Parsing:
+		{
+			printf("parsing\n");
+			tempContent = strtok(Serial_Rx_Buffer, &Newline);
+
+			printf("content: [%s]\n", tempContent);
+
+			tempAddr = strtok(NULL, &Newline);
+
+			printf("addr: [%s]\n", tempAddr);
+
+			if (tempContent != NULL && tempAddr != NULL)
+			{
+				printf("not null, init message\n");
+				Initialize_Message(&tempMsg, tempAddr, tempAddr, tempContent);
+				printf("init message done\n");
+			}
+
+//			printf("queue message \n");
+			WAIT_FOR_OUTGOING_QUEUE();
+			Queue_Message(&outgoingMessageQueue, &tempMsg);
+			RELEASE_OUTGOING_QUEUE();
+
+			printf("queue message done, go to idle.\n\n\n");
+
+			while (GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
+				;
+
+			State = Idle;
+
+			break;
+		}
+
+		case UDP_STATE_MAX:
+		default:
+		{
+			break;
+		}
+		}
+
+		//this delay matches the timeout interrupt delay (tout) we set in uart.c
+//		vTaskDelay(2 / portTICK_RATE_MS);
+	}
+}
+
 #endif

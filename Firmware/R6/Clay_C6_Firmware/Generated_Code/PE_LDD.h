@@ -6,7 +6,7 @@
 **     Version     : Component 01.046, Driver 01.00, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-02-23, 01:45, # CodeGen: 10
+**     Date/Time   : 2016-02-27, 20:14, # CodeGen: 16
 **
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -72,9 +72,9 @@
 #include "ESP8266_Serial.h"
 #include "WIFI_GPIO0.h"
 #include "WIFI_GPIO2.h"
+#include "WIFI_XPD_DCDC_INTERRUPT.h"
 #include "WIFI_RESET.h"
 #include "WIFI_CHIP_EN.h"
-#include "WIFI_XPD_DCDC.h"
 #include "IMU_FSYNC.h"
 #include "FLASH1.h"
 #include "IO_1.h"
@@ -112,7 +112,7 @@
 **       len - Length of a memory block to fill.
 */
 /* ===================================================================*/
-//void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
+void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
 
 /*
 ** ===================================================================

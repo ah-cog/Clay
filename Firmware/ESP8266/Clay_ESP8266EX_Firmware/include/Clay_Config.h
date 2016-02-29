@@ -68,7 +68,10 @@
 #define CLAY_RX_MESSAGE_QUEUE_SIZE        15        //Messages pending to the uC
 #define CLAY_TX_MESSAGE_QUEUE_SIZE        15        //Messages pending for transmission
 
-//TODO: Define buffer sizes in terms of Clay_Message sizes. Add the sockaddr to the buffer
+#define CLAY_SERIAL_MESSAGE_NEWLINE_COUNT 2
+
+#define CLAY_INTERRUPT_OUT_PIN		      16		//send interrupt to uC
+#define CLAY_INTERRUPT_IN_PIN		      2			//receive interrupt from uC
 
 //TODO: define SSID/PW here.
 //TODO: timeouts on serial comms?

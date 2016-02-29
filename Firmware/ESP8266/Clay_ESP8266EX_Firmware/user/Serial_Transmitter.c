@@ -36,6 +36,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "UDP_Transmitter.h"
+#include "Serial_Receiver.h"
 #include "Serial_Transmitter.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
@@ -44,16 +46,17 @@
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-   Disable,
-   Configure,
-   Idle,
-   Message_Available,
-   Wait_For_Transmit_Ok,
-   Transmitting,
-   Transmitting_Done,
-   UDP_STATE_MAX
+	Disable,
+	Configure,
+	Idle,
+	Message_Available,
+	Wait_For_Transmit_Ok,
+	Transmitting,
+	Transmitting_Done,
+	UDP_STATE_MAX
 } Serial_Transmitter_States;
 ////Globals   /////////////////////////////////////////////////////
+volatile bool Serial_Tx_In_Progress;
 
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Transmitter_States State;
@@ -69,110 +72,191 @@ static bool Transmit();
 ////Global implementations ////////////////////////////////////////
 bool Serial_Transmitter_Init()
 {
-   bool rval = true;
+	bool rval = true;
 
-   State = Disable;
-   Serial_Tx_Buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
-   xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 256, NULL, 2, NULL);
+	State = Disable;
+	Serial_Tx_Buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
 
-   return rval;
+	Initialize_Message_Queue(&outgoingMessageQueue);
+
+	xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 256, NULL, 2, NULL);
+
+	return rval;
 }
 
 void Serial_Transmitter_State_Step()
 {
-   for (;;)
-   {
-      switch (State)
-      {
-         case Disable:
-         {
-            if (wifi_station_get_connect_status() == STATION_GOT_IP)
-            {
-               State = Idle;
-            }
-            break;
-         }
+//	xTimeOutType xTimeout;
+//	portTickType openTimeout = (20 / portTICK_RATE_MS);
+//
+//	vTaskSetTimeOutState(&xTimeout);
+//
+//	int32 timeSet = system_get_time();
+//	bool yield = false;
+//
+//  this works with the serial receiver task running
+	for (;;)
+	{
+		taskENTER_CRITICAL();
+		printf("a");
+		taskEXIT_CRITICAL();
+		taskYIELD();
+	}
+//
+//	this one worked, but crashed when we reset the timeout. with the timeout commented,
+//	for (;;)
+//	{
+//		taskENTER_CRITICAL();
+//		printf("a");
+//		taskEXIT_CRITICAL();
+//
+//		if (xTaskCheckForTimeOut(&xTimeout, &openTimeout) == pdTRUE)
+//		{
+//			vTaskSetTimeOutState(&xTimeout);
+//			taskENTER_CRITICAL();
+//			printf("y");
+//			taskYIELD();
+//		}
+//	}
 
-         case Configure:
-         {
-            break;
-         }
+// this one crashed
+//	for (;;)
+//	{
+//		taskENTER_CRITICAL();
+//		printf("a");
+//		if (xTaskCheckForTimeOut(&xTimeout, &openTimeout) == pdTRUE)
+//		{
+//			printf("y");
+//			yield = true;
+//		}
+//		taskEXIT_CRITICAL();
+//
+//		if (yield)
+//		{
+//			printf("y");
+//			vTaskSetTimeOutState(&xTimeout);
+//			taskENTER_CRITICAL();
+//			taskEXIT_CRITICAL();
+//			yield = false;
+//			taskYIELD();
+//		}
+//	}
 
-         case Idle:
-         {
-            if (Peek_Message(&incomingMessageQueue))
-            {
-               //TODO: check state with serial rx
+	for (;;)
+	{
+		switch (State)
+		{
+		case Disable:
+		{
+			if (wifi_station_get_connect_status() == STATION_GOT_IP)
+			{
+				State = Idle;
+			}
+			break;
+		}
 
-               State = Message_Available;
-            }
-            break;
-         }
+		case Configure:
+		{
+			break;
+		}
 
-         case Message_Available:
-         {
-            Temp_Message = Dequeue_Message(&incomingMessageQueue);
+		case Idle:
+		{
+			WAIT_FOR_OUTGOING_QUEUE();
+			Temp_Message = Peek_Message(&outgoingMessageQueue);
+			RELEASE_OUTGOING_QUEUE();
 
-            Serial_Tx_Count = strlen(Temp_Message->content);
-            strcpy(Serial_Tx_Buffer, Temp_Message->content);
+			if (!Serial_Rx_In_Progress && Temp_Message != NULL)
+			{
+				State = Message_Available;
+				UART_ResetTxFifo(UART0);
+			}
+			break;
+		}
+
+		case Message_Available:
+		{
+			Serial_Tx_In_Progress = true;
+
+			WAIT_FOR_OUTGOING_QUEUE();
+			Temp_Message = Dequeue_Message(&outgoingMessageQueue);
+			RELEASE_OUTGOING_QUEUE();
+
+			Serial_Tx_Count = strlen(Temp_Message->content);
+			strcpy(Serial_Tx_Buffer, Temp_Message->content);
 
 //            printf("msg only: [%s]", Serial_Tx_Buffer);
 
-            strcat(Serial_Tx_Buffer, Temp_Message->source);
+			strcat(Serial_Tx_Buffer, Temp_Message->source);
 
 //            printf("addr: [%s]", Temp_Message->source);
 //            printf("msg + addr: [%s]", Serial_Tx_Buffer);
 
-            State = Transmitting;
+			State = Wait_For_Transmit_Ok;
 
-            GPIO_OUTPUT(BIT(0), 0);
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+			gpio16_output_set(0);
+#else
+			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
+#endif
 
-            break;
-         }
+			break;
+		}
 
-         case Wait_For_Transmit_Ok:
-         {
-            if (!GPIO_INPUT_GET(2))
-            {
-               State = Transmitting;
-            }
-            break;
-         }
+		case Wait_For_Transmit_Ok:
+		{
+			if (!GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
+			{
+				State = Transmitting;
+				printf(Serial_Tx_Buffer);
+			}
+			break;
+		}
 
-         case Transmitting:
-         {
-            printf(Serial_Tx_Buffer);
-            State = Transmitting_Done;
-            break;
-         }
+		case Transmitting:
+		{
+			if (UART_CheckTxFifoEmpty(UART0))
+			{
+				State = Transmitting_Done;
 
-         case Transmitting_Done:
-         {
-            GPIO_OUTPUT(BIT(0), 1);
-            State = Idle;
-            break;
-         }
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+				gpio16_output_set(1);
+#else
+				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
+#endif
 
-         case UDP_STATE_MAX:
-         default:
-         {
-            break;
-         }
-      }
+			}
+			break;
+		}
 
-      vTaskDelay(5 / portTICK_RATE_MS);
-   }
+		case Transmitting_Done:
+		{
+			//TODO: use pulses rather than levels, and the receiving side should receive until it gets a newline.
+			Serial_Tx_In_Progress = FALSE;
+			State = Idle;
+			break;
+		}
+
+		case UDP_STATE_MAX:
+		default:
+		{
+			break;
+		}
+		}
+
+		taskYIELD();
+	}
 }
 
 ////Local implementations /////////////////////////////////////////
 static bool Connect()
 {
-   bool rval = false;
-   return rval;
+	bool rval = false;
+	return rval;
 }
 
 static bool Transmit()
 {
-   bool rval = false;
-   return rval;
+	bool rval = false;
+	return rval;
 }

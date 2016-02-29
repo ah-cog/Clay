@@ -34,14 +34,14 @@
 #include "PDD_Includes.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
 #include "ESP8266.h"
 #include "Clock.h"
-
 
 /*
  ** ===================================================================
@@ -61,11 +61,11 @@ extern "C" {
 /* ===================================================================*/
 void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
-	ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
+   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 
-	(void) ptr->rxPutFct (ptr->rxChar);
-	(void) ESP8266_Serial_ReceiveBlock (ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof (ptr->rxChar));
-	
+   (void) ESP8266_Serial_ReceiveBlock(ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof(ptr->rxChar));
+   //  (void) ptr->rxPutFct (ptr->rxChar);
+
 //	if (Ring_Buffer_NofElements () > 500) {
 //		printf ("Ring_Buffer_NofElements: %d\r\n", Ring_Buffer_NofElements ());
 //	}
@@ -89,8 +89,8 @@ void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr)
 /* ===================================================================*/
 void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
-	ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
-	ptr->isSent = TRUE;
+   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
+   ptr->isSent = TRUE;
 }
 
 /* END Events_ESP8266 */

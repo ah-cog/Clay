@@ -7,7 +7,7 @@
 **     Version     : Component 01.033, Driver 01.03, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-02-15, 21:35, # CodeGen: 0
+**     Date/Time   : 2016-02-27, 01:27, # CodeGen: 14
 **     Abstract    :
 **         The HAL BitIO component provides a low level API for unified
 **         access to general purpose digital input/output pins across
@@ -21,7 +21,7 @@
 **          Direction                                      : Output
 **          Initialization                                 : 
 **            Init. direction                              : Output
-**            Init. value                                  : 1
+**            Init. value                                  : 0
 **            Auto initialization                          : yes
 **          Safe mode                                      : no
 **     Contents    :
@@ -132,8 +132,8 @@ LDD_TDeviceData* WIFI_CHIP_EN_Init(LDD_TUserData *UserDataPtr)
   /* GPIOE_PDDR: PDD|=0x01000000 */
   GPIOE_PDDR |= GPIO_PDDR_PDD(0x01000000);
   /* Set initialization value */
-  /* GPIOE_PDOR: PDO|=0x01000000 */
-  GPIOE_PDOR |= GPIO_PDOR_PDO(0x01000000);
+  /* GPIOE_PDOR: PDO&=~0x01000000 */
+  GPIOE_PDOR &= (uint32_t)~(uint32_t)(GPIO_PDOR_PDO(0x01000000));
   /* Initialization of pin routing */
   /* PORTE_PCR24: ISF=0,MUX=1 */
   PORTE_PCR24 = (uint32_t)((PORTE_PCR24 & (uint32_t)~(uint32_t)(
