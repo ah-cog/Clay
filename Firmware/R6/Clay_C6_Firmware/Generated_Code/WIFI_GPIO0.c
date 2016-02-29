@@ -3,52 +3,35 @@
 **     Filename    : WIFI_GPIO0.c
 **     Project     : Clay_C6_Firmware
 **     Processor   : MK64FN1M0VLL12
-**     Component   : GPIO_LDD
-**     Version     : Component 01.128, Driver 01.08, CPU db: 3.00.000
+**     Component   : BitIO_LDD
+**     Version     : Component 01.033, Driver 01.03, CPU db: 3.00.000
 **     Repository  : Kinetis
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-02-18, 00:34, # CodeGen: 7
+**     Date/Time   : 2016-02-27, 20:14, # CodeGen: 16
 **     Abstract    :
-**         The HAL GPIO component will provide a low level API for unified
+**         The HAL BitIO component provides a low level API for unified
 **         access to general purpose digital input/output pins across
 **         various device designs.
 **
-**         RTOS drivers using HAL GPIO API will be simpler and more
+**         RTOS drivers using HAL BitIO API are simpler and more
 **         portable to various microprocessors.
 **     Settings    :
 **          Component name                                 : WIFI_GPIO0
-**          Port                                           : PTA
-**          Port width                                     : 32 bits
-**          Mask of allocated pins                         : 0x10000
-**          Interrupt service/event                        : Enabled
-**            Interrupt                                    : INT_PORTA
-**            Interrupt priority                           : medium priority
-**          Bit fields                                     : 1
-**            Bit field                                    : 
-**              Field name                                 : GPIO0
-**              Pins                                       : 1
-**                Pin                                      : 
-**                  Pin                                    : PTA16/SPI0_SOUT/UART0_CTS_b/UART0_COL_b/RMII0_TXD0/MII0_TXD0/I2S0_RX_FS/I2S0_RXD1
-**                  Initial pin direction                  : Output
-**                    Initial output state                 : 1
-**                  Initial pin event                      : Disabled
-**                  Lock initialization function           : no
+**          Pin for I/O                                    : PTA16/SPI0_SOUT/UART0_CTS_b/UART0_COL_b/RMII0_TXD0/MII0_TXD0/I2S0_RX_FS/I2S0_RXD1
+**          Direction                                      : Input/Output
 **          Initialization                                 : 
-**            Auto initialization                          : no
-**            Event mask                                   : 
-**              OnPortEvent                                : Enabled
+**            Init. direction                              : Output
+**            Init. value                                  : 1
+**            Auto initialization                          : yes
+**          Safe mode                                      : no
 **     Contents    :
-**         Init                   - LDD_TDeviceData* WIFI_GPIO0_Init(LDD_TUserData *UserDataPtr);
-**         SetPortEventCondition  - LDD_TError WIFI_GPIO0_SetPortEventCondition(LDD_TDeviceData *DeviceDataPtr,...
-**         SetPortValue           - void WIFI_GPIO0_SetPortValue(LDD_TDeviceData *DeviceDataPtr,...
-**         GetPortValue           - WIFI_GPIO0_TPortValue WIFI_GPIO0_GetPortValue(LDD_TDeviceData *DeviceDataPtr);
-**         SetPortInputDirection  - void WIFI_GPIO0_SetPortInputDirection(LDD_TDeviceData *DeviceDataPtr,...
-**         SetPortOutputDirection - void WIFI_GPIO0_SetPortOutputDirection(LDD_TDeviceData *DeviceDataPtr,...
-**         SetFieldValue          - void WIFI_GPIO0_SetFieldValue(LDD_TDeviceData *DeviceDataPtr,...
-**         GetFieldValue          - WIFI_GPIO0_TFieldValue WIFI_GPIO0_GetFieldValue(LDD_TDeviceData...
-**         ClearFieldBits         - void WIFI_GPIO0_ClearFieldBits(LDD_TDeviceData *DeviceDataPtr,...
-**         SetFieldBits           - void WIFI_GPIO0_SetFieldBits(LDD_TDeviceData *DeviceDataPtr,...
-**         ToggleFieldBits        - void WIFI_GPIO0_ToggleFieldBits(LDD_TDeviceData *DeviceDataPtr,...
+**         Init     - LDD_TDeviceData* WIFI_GPIO0_Init(LDD_TUserData *UserDataPtr);
+**         SetDir   - void WIFI_GPIO0_SetDir(LDD_TDeviceData *DeviceDataPtr, bool Dir);
+**         SetInput - void WIFI_GPIO0_SetInput(LDD_TDeviceData *DeviceDataPtr);
+**         GetVal   - bool WIFI_GPIO0_GetVal(LDD_TDeviceData *DeviceDataPtr);
+**         PutVal   - void WIFI_GPIO0_PutVal(LDD_TDeviceData *DeviceDataPtr, bool Val);
+**         ClrVal   - void WIFI_GPIO0_ClrVal(LDD_TDeviceData *DeviceDataPtr);
+**         SetVal   - void WIFI_GPIO0_SetVal(LDD_TDeviceData *DeviceDataPtr);
 **
 **     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
 **     All Rights Reserved.
@@ -83,13 +66,13 @@
 ** ###################################################################*/
 /*!
 ** @file WIFI_GPIO0.c
-** @version 01.08
+** @version 01.03
 ** @brief
-**         The HAL GPIO component will provide a low level API for unified
+**         The HAL BitIO component provides a low level API for unified
 **         access to general purpose digital input/output pins across
 **         various device designs.
 **
-**         RTOS drivers using HAL GPIO API will be simpler and more
+**         RTOS drivers using HAL BitIO API are simpler and more
 **         portable to various microprocessors.
 */         
 /*!
@@ -99,37 +82,38 @@
 
 /* MODULE WIFI_GPIO0. */
 
-#include "Events.h"
-#include "WIFI_GPIO0.h"
 /* {Default RTOS Adapter} No RTOS includes */
-#include "IO_Map.h"
+#include "WIFI_GPIO0.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
 typedef struct {
-  WIFI_GPIO0_TPortValue EventFlags;    /* Holds event flags */
-  LDD_TUserData *UserData;             /* RTOS device data structure */
-} WIFI_GPIO0_TDeviceData, *WIFI_GPIO0_TDeviceDataPtr; /* Device data structure type */
+  LDD_TUserData *UserDataPtr;          /* Pointer to user data */
+} WIFI_GPIO0_TDeviceData;              /* Device data structure type */
+
+typedef WIFI_GPIO0_TDeviceData *WIFI_GPIO0_TDeviceDataPtr ; /* Pointer to the device data structure. */
+
 /* {Default RTOS Adapter} Static object used for simulation of dynamic driver memory allocation */
 static WIFI_GPIO0_TDeviceData DeviceDataPrv__DEFAULT_RTOS_ALLOC;
-/* {Default RTOS Adapter} Global variable used for passing a parameter into ISR */
-static WIFI_GPIO0_TDeviceData * INT_PORTA__DEFAULT_RTOS_ISRPARAM;
 /*
 ** ===================================================================
-**     Method      :  WIFI_GPIO0_Init (component GPIO_LDD)
+**     Method      :  WIFI_GPIO0_Init (component BitIO_LDD)
 */
 /*!
 **     @brief
-**         This method initializes the associated peripheral(s) and the
-**         component internal variables. The method is called
-**         automatically as a part of the application initialization
-**         code.
+**         Initializes the device. Allocates memory for the device data
+**         structure, allocates interrupt vectors and sets interrupt
+**         priority, sets pin routing, sets timing, etc. If the "Enable
+**         in init. code" is set to "yes" value then the device is also
+**         enabled(see the description of the Enable() method). In this
+**         case the Enable() method is not necessary and needn't to be
+**         generated. 
 **     @param
-**         UserDataPtr     - Pointer to the RTOS device
-**                           structure. This pointer will be passed to
-**                           all events as parameter.
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer will be
+**                           passed as an event or callback parameter.
 **     @return
 **                         - Pointer to the dynamically allocated private
 **                           structure or NULL if there was an error.
@@ -137,24 +121,21 @@ static WIFI_GPIO0_TDeviceData * INT_PORTA__DEFAULT_RTOS_ISRPARAM;
 /* ===================================================================*/
 LDD_TDeviceData* WIFI_GPIO0_Init(LDD_TUserData *UserDataPtr)
 {
-  /* Allocate LDD device structure */
-  WIFI_GPIO0_TDeviceData *DeviceDataPrv;
+  /* Allocate device structure */
+  WIFI_GPIO0_TDeviceDataPtr DeviceDataPrv;
 
   /* {Default RTOS Adapter} Driver memory allocation: Dynamic allocation is simulated by a pointer to the static object */
   DeviceDataPrv = &DeviceDataPrv__DEFAULT_RTOS_ALLOC;
-  /* Save RTOS Device structure */
-  DeviceDataPrv->EventFlags = 0x00U;   /* Clears stored events */
-  DeviceDataPrv->UserData = UserDataPtr; /* Store the RTOS device structure */
-  /* Interrupt vector(s) allocation */
-  /* {Default RTOS Adapter} Set interrupt vector: IVT is static, ISR parameter is passed by the global variable */
-  INT_PORTA__DEFAULT_RTOS_ISRPARAM = DeviceDataPrv;
+  DeviceDataPrv->UserDataPtr = UserDataPtr; /* Store the RTOS device structure */
   /* Enable device clock gate */
   /* SIM_SCGC5: PORTA=1 */
   SIM_SCGC5 |= SIM_SCGC5_PORTA_MASK;
-  /* GPIOA_PDOR: PDO|=0x00010000 */
-  GPIOA_PDOR |= GPIO_PDOR_PDO(0x00010000);
+  /* Configure pin as output */
   /* GPIOA_PDDR: PDD|=0x00010000 */
   GPIOA_PDDR |= GPIO_PDDR_PDD(0x00010000);
+  /* Set initialization value */
+  /* GPIOA_PDOR: PDO|=0x00010000 */
+  GPIOA_PDOR |= GPIO_PDOR_PDO(0x00010000);
   /* Initialization of pin routing */
   /* PORTA_PCR16: ISF=0,MUX=1 */
   PORTA_PCR16 = (uint32_t)((PORTA_PCR16 & (uint32_t)~(uint32_t)(
@@ -163,454 +144,165 @@ LDD_TDeviceData* WIFI_GPIO0_Init(LDD_TUserData *UserDataPtr)
                 )) | (uint32_t)(
                  PORT_PCR_MUX(0x01)
                 ));
-  /* NVICIP59: PRI59=0x70 */
-  NVICIP59 = NVIC_IP_PRI59(0x70);
-  /* NVICISER1: SETENA|=0x08000000 */
-  NVICISER1 |= NVIC_ISER_SETENA(0x08000000);
   /* Registration of the device structure */
   PE_LDD_RegisterDeviceStructure(PE_LDD_COMPONENT_WIFI_GPIO0_ID,DeviceDataPrv);
   return ((LDD_TDeviceData *)DeviceDataPrv);
 }
-
 /*
 ** ===================================================================
-**     Method      :  WIFI_GPIO0_SetPortEventCondition (component GPIO_LDD)
+**     Method      :  WIFI_GPIO0_SetDir (component BitIO_LDD)
 */
 /*!
 **     @brief
-**         This method defines condition of the [OnPortEvent] for
-**         required pins of the port.
+**         Sets a pin direction (available only if the direction =
+**         _[input/output]_).
 **     @param
 **         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
+**                           pointer returned by <Init> method.
 **     @param
-**         Mask            - Unaligned mask of bits to setting the
-**                           event condition. Each port pin has
-**                           corresponding bit in the mask. Bit value 0
-**                           means not selected pin, bit value 1 means
-**                           selected pin. The bit 0 corresponds with
-**                           the pin which has index 0 within the port,
-**                           the bit 1 corresponds with the pin which
-**                           has index 1 within the port, etc.
-**     @param
-**         Condition       - Defines conditions when event
-**                           is invoked. Possible values are: 
-**                           LDD_GPIO_DISABLED - Event doesn't invoke. 
-**                           LDD_GPIO_LOW - Event when logic zero.
-**                           LDD_GPIO_HIGH - Event when logic one.
-**                           LDD_GPIO_RISING - Event on rising edge.
-**                           LDD_GPIO_FALLING - Event on falling edge.
-**                           LDD_GPIO_BOTH - Event on rising and falling
-**                           edge. 
-**     @return
-**                         - Error code, possible codes:
-**                           ERR_OK - OK
-**                           ERR_PARAM_MASK - Invalid pin mask.
-**                           ERR_PARAM_CONDITION - Invalid condition.
+**         Dir             - Direction to set. Possible values:
+**                           <false> - Input
+**                           <true> - Output
 */
 /* ===================================================================*/
-LDD_TError WIFI_GPIO0_SetPortEventCondition(LDD_TDeviceData *DeviceDataPtr, WIFI_GPIO0_TPortValue Mask, LDD_GPIO_TEventCondition Condition)
+void WIFI_GPIO0_SetDir(LDD_TDeviceData *DeviceDataPtr, bool Dir)
 {
-  uint8_t PinIndex = 0U;
-
   (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  /* Event mask test - this test can be disabled by setting the "Ignore range checking"
-     property to the "yes" value in the "Configuration inspector" */
-  if ((Mask & ((WIFI_GPIO0_TPortValue)(~((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK)))) != 0U) { /* Check Mask parameter */
-    return ERR_PARAM_MASK;             /* Invalid Mask parameter */
+  if (Dir) {
+    /* Output */
+    GPIO_PDD_SetPortOutputDirectionMask(WIFI_GPIO0_MODULE_BASE_ADDRESS, WIFI_GPIO0_PORT_MASK);
+  } else {
+    /* Input */
+    GPIO_PDD_SetPortInputDirectionMask(WIFI_GPIO0_MODULE_BASE_ADDRESS, WIFI_GPIO0_PORT_MASK);
   }
-  if ((Condition != LDD_GPIO_DISABLED) && (Condition != LDD_GPIO_LOW)
-    && (Condition != LDD_GPIO_HIGH) && (Condition != LDD_GPIO_RISING)
-    && (Condition != LDD_GPIO_FALLING) && (Condition != LDD_GPIO_BOTH)) { /* Check Condition parameter */
-    return ERR_PARAM_CONDITION;        /* Invalid Condition parameter */
-  }
-  while (Mask != 0x00U) {
-    if ((Mask & 0x01U) != 0U) {
-      PORT_PDD_SetPinInterruptConfiguration(WIFI_GPIO0_PORTCONTROL_BASE_ADDRESS, PinIndex, Condition); /* Set pin condition */
-    }
-    PinIndex++;
-    Mask >>= 1;
-  }
-  return ERR_OK;
 }
 
 /*
 ** ===================================================================
-**     Method      :  WIFI_GPIO0_SetPortValue (component GPIO_LDD)
+**     Method      :  WIFI_GPIO0_SetInput (component BitIO_LDD)
 */
 /*!
 **     @brief
-**         This method writes the output data value to the port. Only
-**         configured pins (through all of bit fields in this component)
-**         are affected.
+**         Sets a pin direction to input (available only if the
+**         direction = _[input/output]_).
 **     @param
 **         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
-**     @param
-**         Value           - Unaligned data value to write to the
-**                           port. The bit 0 corresponds with the pin
-**                           which has index 0 within the port, the bit
-**                           1 corresponds with the pin which has index
-**                           1 within the port, etc. Only configured
-**                           pins (through all of bit fields in this
-**                           component) are affected.
+**                           pointer returned by <Init> method.
 */
 /* ===================================================================*/
-void WIFI_GPIO0_SetPortValue(LDD_TDeviceData *DeviceDataPtr, WIFI_GPIO0_TPortValue Value)
+void WIFI_GPIO0_SetInput(LDD_TDeviceData *DeviceDataPtr)
 {
   (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  GPIO_PDD_SetPortDataOutput(WIFI_GPIO0_MODULE_BASE_ADDRESS,
-    (GPIO_PDD_GetPortDataOutput(WIFI_GPIO0_MODULE_BASE_ADDRESS)
-      & ((WIFI_GPIO0_TPortValue)(~((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK))))
-    | (((WIFI_GPIO0_TPortValue)(Value)) & ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK)));
+  GPIO_PDD_SetPortInputDirectionMask(WIFI_GPIO0_MODULE_BASE_ADDRESS, WIFI_GPIO0_PORT_MASK);
 }
 
 /*
 ** ===================================================================
-**     Method      :  WIFI_GPIO0_GetPortValue (component GPIO_LDD)
+**     Method      :  WIFI_GPIO0_GetVal (component BitIO_LDD)
 */
 /*!
 **     @brief
-**         This method returns the current port input data value. Only
-**         configured pins (through all of bit fields in this component)
-**         are returned.
+**         Returns the input/output value. If the direction is [input]
+**         then the input value of the pin is read and returned. If the
+**         direction is [output] then the last written value is read
+**         and returned (see <Safe mode> property for limitations).
+**         This method cannot be disabled if direction is [input].
 **     @param
 **         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
+**                           pointer returned by <Init> method.
 **     @return
-**                         - Unaligned current port input data value
-**                           masked for allocated pins of the port. The
-**                           bit 0 corresponds with the pin which has
-**                           index 0 within the port, the bit 1
-**                           corresponds with the pin which has index 1
-**                           within the port, etc. Only configured pins
-**                           (through all of bit fields in this
-**                           component) are returned. The others are
-**                           zeros.
+**                         - Input or output value. Possible values:
+**                           <false> - logical "0" (Low level)
+**                           <true> - logical "1" (High level)
 */
 /* ===================================================================*/
-WIFI_GPIO0_TPortValue WIFI_GPIO0_GetPortValue(LDD_TDeviceData *DeviceDataPtr)
+bool WIFI_GPIO0_GetVal(LDD_TDeviceData *DeviceDataPtr)
 {
+  uint32_t PortData;                   /* Port data masked according to the bit used */
+
   (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  return (WIFI_GPIO0_TPortValue)(GPIO_PDD_GetPortDataInput(WIFI_GPIO0_MODULE_BASE_ADDRESS)
-    & ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK));
+  if ((GPIO_PDD_GetPortDirection(WIFI_GPIO0_MODULE_BASE_ADDRESS) & WIFI_GPIO0_PORT_MASK) == 0U) {
+    /* Port is configured as input */
+    PortData = GPIO_PDD_GetPortDataInput(WIFI_GPIO0_MODULE_BASE_ADDRESS) & WIFI_GPIO0_PORT_MASK;
+  } else {
+    /* Port is configured as output */
+    PortData = GPIO_PDD_GetPortDataOutput(WIFI_GPIO0_MODULE_BASE_ADDRESS) & WIFI_GPIO0_PORT_MASK;
+  }
+  return (PortData != 0U) ? (bool)TRUE : (bool)FALSE;
 }
 
 /*
 ** ===================================================================
-**     Method      :  WIFI_GPIO0_SetPortInputDirection (component GPIO_LDD)
+**     Method      :  WIFI_GPIO0_PutVal (component BitIO_LDD)
 */
 /*!
 **     @brief
-**         This method sets the specified pins of the port to the input
-**         direction. Only configured pins (through all of bit fields
-**         in this component) are affected.
+**         The specified output value is set. If the direction is <b>
+**         input</b>, the component saves the value to a memory or a
+**         register and this value will be written to the pin after
+**         switching to the output mode (using <tt>SetDir(TRUE)</tt>;
+**         see <a href="BitIOProperties.html#SafeMode">Safe mode</a>
+**         property for limitations). If the direction is <b>output</b>,
+**         it writes the value to the pin. (Method is available only if
+**         the direction = <u><tt>output</tt></u> or <u><tt>
+**         input/output</tt></u>).
 **     @param
 **         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
+**                           pointer returned by <Init> method.
 **     @param
-**         Mask            - Mask of bits to setting the input
-**                           direction. Each port pin has corresponding
-**                           bit in the mask. Bit value 0 means not
-**                           selected bit, bit value 1 means selected
-**                           bit. The bit 0 corresponds with the pin
-**                           which has index 0 within the port, the bit
-**                           1 corresponds with the pin which has index
-**                           1 within the port, etc. Only configured
-**                           pins (through all of bit fields in this
-**                           component) are affected.
+**         Val             - Output value. Possible values:
+**                           <false> - logical "0" (Low level)
+**                           <true> - logical "1" (High level)
 */
 /* ===================================================================*/
-void WIFI_GPIO0_SetPortInputDirection(LDD_TDeviceData *DeviceDataPtr, WIFI_GPIO0_TPortValue Mask)
+void WIFI_GPIO0_PutVal(LDD_TDeviceData *DeviceDataPtr, bool Val)
 {
   (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  GPIO_PDD_SetPortInputDirectionMask(WIFI_GPIO0_MODULE_BASE_ADDRESS,
-    ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK) & ((WIFI_GPIO0_TPortValue)(Mask)));
+  if (Val) {
+    GPIO_PDD_SetPortDataOutputMask(WIFI_GPIO0_MODULE_BASE_ADDRESS, WIFI_GPIO0_PORT_MASK);
+  } else { /* !Val */
+    GPIO_PDD_ClearPortDataOutputMask(WIFI_GPIO0_MODULE_BASE_ADDRESS, WIFI_GPIO0_PORT_MASK);
+  } /* !Val */
 }
 
 /*
 ** ===================================================================
-**     Method      :  WIFI_GPIO0_SetPortOutputDirection (component GPIO_LDD)
+**     Method      :  WIFI_GPIO0_ClrVal (component BitIO_LDD)
 */
 /*!
 **     @brief
-**         This method sets the specified pins of the port to the
-**         output direction. The specified pins of the port will be
-**         driven to specified states. Only configured pins (through
-**         all of bit fields in this component) are affected.
+**         Clears (set to zero) the output value. It is equivalent to
+**         the [PutVal(FALSE)]. This method is available only if the
+**         direction = _[output]_ or _[input/output]_.
 **     @param
-**         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
-**     @param
-**         Mask            - Mask of bits to setting the output
-**                           direction. Each port pin has corresponding
-**                           bit in the mask. Bit value 0 means not
-**                           selected bit, bit value 1 means selected
-**                           bit. The bit 0 corresponds with the pin
-**                           which has index 0 within the port, the bit
-**                           1 corresponds with the pin which has index
-**                           1 within the port, etc. Only configured
-**                           pins (through all of bit fields in this
-**                           component) are affected.
-**     @param
-**         Value           - Unaligned port data value to appear on
-**                           the specified port pins after they have
-**                           been switched to the output direction.
+**         DeviceDataPtr   - Pointer to device data
+**                           structure returned by <Init> method.
 */
 /* ===================================================================*/
-void WIFI_GPIO0_SetPortOutputDirection(LDD_TDeviceData *DeviceDataPtr, WIFI_GPIO0_TPortValue Mask, WIFI_GPIO0_TPortValue Value)
+void WIFI_GPIO0_ClrVal(LDD_TDeviceData *DeviceDataPtr)
 {
   (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  GPIO_PDD_SetPortDataOutput(WIFI_GPIO0_MODULE_BASE_ADDRESS,
-    ((WIFI_GPIO0_TPortValue)(GPIO_PDD_GetPortDataOutput(WIFI_GPIO0_MODULE_BASE_ADDRESS)
-      & ((WIFI_GPIO0_TPortValue)(~((WIFI_GPIO0_TPortValue)(((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK)
-        & ((WIFI_GPIO0_TPortValue)(Mask))))))))
-    | (((WIFI_GPIO0_TPortValue)(Value))
-      & ((WIFI_GPIO0_TPortValue)(((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK) & ((WIFI_GPIO0_TPortValue)(Mask))))));
-  GPIO_PDD_SetPortOutputDirectionMask(WIFI_GPIO0_MODULE_BASE_ADDRESS,
-    ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK) & ((WIFI_GPIO0_TPortValue)(Mask)));
+  GPIO_PDD_ClearPortDataOutputMask(WIFI_GPIO0_MODULE_BASE_ADDRESS, WIFI_GPIO0_PORT_MASK);
 }
 
 /*
 ** ===================================================================
-**     Method      :  WIFI_GPIO0_SetFieldValue (component GPIO_LDD)
+**     Method      :  WIFI_GPIO0_SetVal (component BitIO_LDD)
 */
 /*!
 **     @brief
-**         This method sets the output data value of the specified bit
-**         field.
+**         Sets (to one) the output value. It is equivalent to the
+**         [PutVal(TRUE)]. This method is available only if the
+**         direction = _[output]_ or _[input/output]_.
 **     @param
-**         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
-**     @param
-**         Field           - Bit field to write. Bit fields are
-**                           defined during design time and for each bit
-**                           field there is a generated constant.
-**     @param
-**         Value           - Aligned data value to writting to the
-**                           specified bit field. The bit 0 corresponds
-**                           with the pin which has index 0 within the
-**                           given bit field, the bit 1 corresponds with
-**                           the pin which has index 1 within the given
-**                           bit field, etc.
+**         DeviceDataPtr   - Pointer to device data
+**                           structure returned by <Init> method.
 */
 /* ===================================================================*/
-void WIFI_GPIO0_SetFieldValue(LDD_TDeviceData *DeviceDataPtr, LDD_GPIO_TBitField Field, WIFI_GPIO0_TFieldValue Value)
+void WIFI_GPIO0_SetVal(LDD_TDeviceData *DeviceDataPtr)
 {
   (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  switch (Field) {                     /* no break */
-    case GPIO0: {                      /* bit field #0 */
-      GPIO_PDD_SetPortDataOutput(WIFI_GPIO0_MODULE_BASE_ADDRESS,
-        (
-          GPIO_PDD_GetPortDataOutput(WIFI_GPIO0_MODULE_BASE_ADDRESS)
-          & ((WIFI_GPIO0_TPortValue)(~((WIFI_GPIO0_TPortValue)WIFI_GPIO0_GPIO0_MASK)))
-        )
-        | (
-          ((WIFI_GPIO0_TPortValue)(Value << WIFI_GPIO0_GPIO0_START_BIT))
-          & ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_GPIO0_MASK)
-        )
-      );
-      break;
-    }
-    default:
-      break;                           /* Invalid Field is not treated, result is undefined */
-  } /* switch (Field) */
-}
-
-/*
-** ===================================================================
-**     Method      :  WIFI_GPIO0_GetFieldValue (component GPIO_LDD)
-*/
-/*!
-**     @brief
-**         This method returns the current input data of the specified
-**         field.
-**     @param
-**         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
-**     @param
-**         Field           - Bit field to reading. Bit fields are
-**                           defined during design time and for each bit
-**                           field there is a generated constant.
-**     @return
-**                         - Aligned current port input value masked for
-**                           allocated pins of the field. The bit 0
-**                           corresponds with the pin which has index 0
-**                           within the given bit field, the bit 1
-**                           corresponds with the pin which has index 1
-**                           within the given bit field, etc.
-*/
-/* ===================================================================*/
-WIFI_GPIO0_TFieldValue WIFI_GPIO0_GetFieldValue(LDD_TDeviceData *DeviceDataPtr, LDD_GPIO_TBitField Field)
-{
-  (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  switch (Field) {                     /* no break */
-    case GPIO0: {                      /* bit field #0 */
-      return
-        (WIFI_GPIO0_TFieldValue)(
-          (
-            GPIO_PDD_GetPortDataInput(WIFI_GPIO0_MODULE_BASE_ADDRESS)
-            & (WIFI_GPIO0_TPortValue)WIFI_GPIO0_GPIO0_MASK
-          )
-          >> WIFI_GPIO0_GPIO0_START_BIT
-        );
-    }
-    default:
-      break;                           /* Invalid BitField is not treated, result is undefined */
-  } /* switch (Field) */
-  return (WIFI_GPIO0_TFieldValue)0U;
-}
-
-/*
-** ===================================================================
-**     Method      :  WIFI_GPIO0_ClearFieldBits (component GPIO_LDD)
-*/
-/*!
-**     @brief
-**         This method drives the specified bits of the specified bit
-**         field to the inactive level.
-**     @param
-**         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
-**     @param
-**         Field           - Bit field to write. Bit fields are
-**                           defined during design time and for each bit
-**                           field there is a generated constant.
-**     @param
-**         Mask            - Aligned mask of bits to setting the
-**                           inactive level. Each field pin has
-**                           corresponding bit in the mask. Bit value 0
-**                           means not selected bit, bit value 1 means
-**                           selected bit. The bit 0 corresponds with
-**                           the pin which has index 0 within the given
-**                           bit field, the bit 1 corresponds with the
-**                           pin which has index 1 within the given bit
-**                           field, etc.
-*/
-/* ===================================================================*/
-void WIFI_GPIO0_ClearFieldBits(LDD_TDeviceData *DeviceDataPtr, LDD_GPIO_TBitField Field, WIFI_GPIO0_TFieldValue Mask)
-{
-  (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  switch (Field) {                     /* no break */
-    case GPIO0: {                      /* bit field #0 */
-      GPIO_PDD_ClearPortDataOutputMask(WIFI_GPIO0_MODULE_BASE_ADDRESS,
-        ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_GPIO0_MASK)
-        & ((WIFI_GPIO0_TPortValue)(Mask << WIFI_GPIO0_GPIO0_START_BIT))
-      );
-      break;
-    }
-    default:
-      break;                           /* Invalid Field is not treated, result is undefined */
-  } /* switch (Field) */
-}
-
-/*
-** ===================================================================
-**     Method      :  WIFI_GPIO0_SetFieldBits (component GPIO_LDD)
-*/
-/*!
-**     @brief
-**         This method drives the specified bits of the specified bit
-**         field to the active level.
-**     @param
-**         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
-**     @param
-**         Field           - Bit field to write. Bit fields are
-**                           defined during design time and for each bit
-**                           field there is a generated constant.
-**     @param
-**         Mask            - Aligned mask of bits to setting the
-**                           active level. Each field pin has
-**                           corresponding bit in the mask. Bit value 0
-**                           means not selected bit, bit value 1 means
-**                           selected bit. The bit 0 corresponds with
-**                           the pin which has index 0 within the given
-**                           bit field, the bit 1 corresponds with the
-**                           pin which has index 1 within the given bit
-**                           field, etc.
-*/
-/* ===================================================================*/
-void WIFI_GPIO0_SetFieldBits(LDD_TDeviceData *DeviceDataPtr, LDD_GPIO_TBitField Field, WIFI_GPIO0_TFieldValue Mask)
-{
-  (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  switch (Field) {                     /* no break */
-    case GPIO0: {                      /* bit field #0 */
-      GPIO_PDD_SetPortDataOutputMask(WIFI_GPIO0_MODULE_BASE_ADDRESS,
-        ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_GPIO0_MASK)
-        & ((WIFI_GPIO0_TPortValue)(Mask << WIFI_GPIO0_GPIO0_START_BIT))
-      );
-      break;
-    }
-    default:
-      break;                           /* Invalid Field is not treated, result is undefined */
-  } /* switch (Field) */
-}
-
-/*
-** ===================================================================
-**     Method      :  WIFI_GPIO0_ToggleFieldBits (component GPIO_LDD)
-*/
-/*!
-**     @brief
-**         This method inverts the specified bits of the specified bit
-**         field to other level.
-**     @param
-**         DeviceDataPtr   - Device data structure
-**                           pointer returned by [Init] method.
-**     @param
-**         Field           - Bit field to write. Bit fields are
-**                           defined during design time and for each bit
-**                           field there is a generated constant.
-**     @param
-**         Mask            - Aligned mask of bits to inverting the
-**                           current level. Each field pin has
-**                           corresponding bit in the mask. Bit value 0
-**                           means not selected bit, bit value 1 means
-**                           selected bit. The bit 0 corresponds with
-**                           the pin which has index 0 within the given
-**                           bit field, the bit 1 corresponds with the
-**                           pin which has index 1 within the given bit
-**                           field, etc.
-*/
-/* ===================================================================*/
-void WIFI_GPIO0_ToggleFieldBits(LDD_TDeviceData *DeviceDataPtr, LDD_GPIO_TBitField Field, WIFI_GPIO0_TFieldValue Mask)
-{
-  (void)DeviceDataPtr;                 /* Parameter is not used, suppress unused argument warning */
-  switch (Field) {                     /* no break */
-    case GPIO0: {                      /* bit field #0 */
-      GPIO_PDD_TogglePortDataOutputMask(WIFI_GPIO0_MODULE_BASE_ADDRESS,
-        ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_GPIO0_MASK)
-        & ((WIFI_GPIO0_TPortValue)(Mask << WIFI_GPIO0_GPIO0_START_BIT))
-      );
-      break;
-    }
-    default:
-      break;                           /* Invalid Field is not treated, result is undefined */
-  } /* switch (Field) */
-}
-
-/*
-** ===================================================================
-**     Method      :  WIFI_GPIO0_Interrupt (component GPIO_LDD)
-**
-**     Description :
-**         The method services the interrupt of the selected peripheral(s)
-**         and eventually invokes event(s) of the component.
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
-PE_ISR(WIFI_GPIO0_Interrupt)
-{
-  /* {Default RTOS Adapter} ISR parameter is passed through the global variable */
-  WIFI_GPIO0_TDeviceDataPtr DeviceDataPrv = INT_PORTA__DEFAULT_RTOS_ISRPARAM;
-  WIFI_GPIO0_TPortValue State;
-
-  State = (WIFI_GPIO0_TPortValue)(PORT_PDD_GetInterruptFlags(WIFI_GPIO0_PORTCONTROL_BASE_ADDRESS)
-          & ((WIFI_GPIO0_TPortValue)WIFI_GPIO0_ALLOCATED_PINS_MASK)); /* Retrieve flags */
-  DeviceDataPrv->EventFlags |= State;
-  PORT_PDD_ClearInterruptFlags(WIFI_GPIO0_PORTCONTROL_BASE_ADDRESS, State); /* Clears flags */
-  WIFI_GPIO0_OnPortEvent(DeviceDataPrv->UserData); /* Call OnPortEvent event */
+  GPIO_PDD_SetPortDataOutputMask(WIFI_GPIO0_MODULE_BASE_ADDRESS, WIFI_GPIO0_PORT_MASK);
 }
 
 /* END WIFI_GPIO0. */

@@ -50,9 +50,9 @@
 #include "ESP8266_Serial.h"
 #include "WIFI_GPIO0.h"
 #include "WIFI_GPIO2.h"
+#include "WIFI_XPD_DCDC_INTERRUPT.h"
 #include "WIFI_RESET.h"
 #include "WIFI_CHIP_EN.h"
-#include "WIFI_XPD_DCDC.h"
 #include "IMU_FSYNC.h"
 #include "FLASH1.h"
 #include "IO_1.h"
@@ -304,6 +304,26 @@ void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void WIFI_GPIO0_OnPortEvent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  WIFI_XPD_DCDC_INTERRUPT_OnPortEvent (module Events)
+**
+**     Component   :  WIFI_XPD_DCDC_INTERRUPT [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

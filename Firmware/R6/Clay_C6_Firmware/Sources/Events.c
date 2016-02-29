@@ -172,7 +172,7 @@ void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
    //   We can just cast the pointer to a uint32_t and
    //   access the uint32_t.
    //determine the source of the interrupt
-   if (*((uint32_t*) UserDataPtr) & 0x00000008) ///mesh is ptc3
+   if (*((uint32_t*) UserDataPtr) & 0x00000008)     ///mesh is ptc3
    {
       if (MeshRxEnabled)
       {
@@ -180,7 +180,7 @@ void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
       }
    }
 
-   if (*((uint32_t*) UserDataPtr) & 0x00000002)  //IMU is ptc1
+   if (*((uint32_t*) UserDataPtr) & 0x00000002)     //IMU is ptc1
    {
       data_ready = 1;
    }
@@ -271,26 +271,26 @@ void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr)
 }
 
 /*
-** ===================================================================
-**     Event       :  WIFI_GPIO0_OnPortEvent (module Events)
-**
-**     Component   :  WIFI_GPIO0 [GPIO_LDD]
-*/
+ ** ===================================================================
+ **     Event       :  WIFI_XPD_DCDC_INTERRUPT_OnPortEvent (module Events)
+ **
+ **     Component   :  WIFI_XPD_DCDC_INTERRUPT [GPIO_LDD]
+ */
 /*!
-**     @brief
-**         Called if defined event on any pin of the port occured.
-**         OnPortEvent event and GPIO interrupt must be enabled. See
-**         SetEventMask() and GetEventMask() methods. This event is
-**         enabled if [Interrupt service/event] is Enabled and disabled
-**         if [Interrupt service/event] is Disabled.
-**     @param
-**         UserDataPtr     - Pointer to RTOS device
-**                           data structure pointer.
-*/
+ **     @brief
+ **         Called if defined event on any pin of the port occured.
+ **         OnPortEvent event and GPIO interrupt must be enabled. See
+ **         SetEventMask() and GetEventMask() methods. This event is
+ **         enabled if [Interrupt service/event] is Enabled and disabled
+ **         if [Interrupt service/event] is Disabled.
+ **     @param
+ **         UserDataPtr     - Pointer to RTOS device
+ **                           data structure pointer.
+ */
 /* ===================================================================*/
-void WIFI_GPIO0_OnPortEvent(LDD_TUserData *UserDataPtr)
+void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr)
 {
-  /* Write your code here ... */
+   /* Write your code here ... */
    WifiInterruptReceived = TRUE;
 }
 

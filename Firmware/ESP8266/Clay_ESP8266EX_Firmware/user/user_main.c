@@ -21,7 +21,6 @@
 
 #include "Serial_Receiver.h"
 #include "Serial_Transmitter.h"
-#include "String_Message_Parser.h"
 #include "UDP_Receiver.h"
 #include "UDP_Transmitter.h"
 
@@ -39,72 +38,133 @@
 #define RX_BUF_SIZE    UDP_DATA_LEN
 #define TX_BUF_SIZE    100
 
-uint32 pendingRxBytes;
-uint32 pendingTxBytes;
-
-char rxBuf[RX_BUF_SIZE];
-char txBuf[TX_BUF_SIZE];
-
-bool RxInvalid;
-
 void uC_Interrupt_Handler()
 {
-   printf("got the interrupt\r\n");
+	printf("got the interrupt\r\n");
 }
 
 void main_int_handler()
 {
 //   printf("main_int_callback!\n");
-   int i;
-   uint32 gpio_status = GPIO_REG_READ(GPIO_STATUS_ADDRESS);
-   for (i = 0; i < MAX_PINS; i++)
-   {
-      if ((gpio_status & BIT(i)))
-      {
+	int i;
+	uint32 gpio_status = GPIO_REG_READ(GPIO_STATUS_ADDRESS);
+	for (i = 0; i < MAX_PINS; i++)
+	{
+		if ((gpio_status & BIT(i)))
+		{
 //         printf("triggered on int: %d\n", i);
-         //disable interrupt
-         gpio_pin_intr_state_set(GPIO_ID_PIN(i), GPIO_PIN_INTR_DISABLE);
+			//disable interrupt
+			gpio_pin_intr_state_set(GPIO_ID_PIN(i), GPIO_PIN_INTR_DISABLE);
 
-         // call func here
-         if (i == 2)
-         {
-            //TODO: more generic caller
-            uC_Interrupt_Handler();
-         }
+			// call func here
+			if (i == 2)
+			{
+				//TODO: more generic caller
+				uC_Interrupt_Handler();
+			}
 
-         //clear interrupt status
-         GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, gpio_status & BIT(i));
+			//clear interrupt status
+			GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, gpio_status & BIT(i));
 
-         // restore
-         gpio_pin_intr_state_set(GPIO_ID_PIN(i), GPIO_PIN_INTR_DISABLE);
-      }
-   }
+			// restore
+			gpio_pin_intr_state_set(GPIO_ID_PIN(i), GPIO_PIN_INTR_DISABLE);
+		}
+	}
 }
 
 void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode)
 {
-   portENTER_CRITICAL();
+	portENTER_CRITICAL();
 
-   //clear interrupt status
-   GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(pin));
+	//clear interrupt status
+	GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(pin));
 
-   // set the mode
-   gpio_pin_intr_state_set(GPIO_ID_PIN(pin), mode);
+	// set the mode
+	gpio_pin_intr_state_set(GPIO_ID_PIN(pin), mode);
 
-   portEXIT_CRITICAL();
+	portEXIT_CRITICAL();
 }
+
+//TODO: still need to be able to set the SSID and PW.
+//void Signal_Power_On_Complete()
+//{
+//	UART_SetPrintPort(UART1);
+//	//wait for wifi to connect, then
+//	while (wifi_station_get_connect_status() != STATION_GOT_IP)
+//	{
+//		vTaskDelay(500 / portTICK_RATE_MS);
+//	}
+//
+//	gpio16_output_set(0);
+//	vTaskDelay(500 / portTICK_RATE_MS);
+//	gpio16_output_set(1);
+//
+//	UART_SetPrintPort(UART0);
+//
+//	vTaskDelete(NULL);
+//}
 
 void GPIO_Init()
 {
-   ///setup GPIO and set output to 1.
-   GPIO_AS_OUTPUT(BIT(0));
-   GPIO_OUTPUT(BIT(0), 1);
-   GPIO_AS_INPUT(BIT(2));
+	///setup GPIO and set output to 1.
+#if CLAY_INTERRUPT_OUT_PIN == 16
+	gpio16_output_conf();
+	gpio16_output_set(1);
+#else
+	GPIO_AS_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN));
+	GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
+#endif
 
-   _xt_isr_attach(ETS_GPIO_INUM, (_xt_isr) main_int_handler, NULL);
-   _xt_isr_unmask(1 << ETS_GPIO_INUM);
+	GPIO_AS_INPUT(BIT(CLAY_INTERRUPT_IN_PIN));
 
-   registerInterrupt(2, GPIO_PIN_INTR_NEGEDGE);
+//	registerInterrupt(CLAY_INTERRUPT_IN_PIN, GPIO_PIN_INTR_NEGEDGE);
+//	_xt_isr_attach(ETS_GPIO_INUM, (_xt_isr) main_int_handler, NULL);
+//	_xt_isr_unmask(1 << ETS_GPIO_INUM);
+}
+
+void wifi_handle_event_cb(System_Event_t *evt)
+{
+//	os_printf("event %x\n", evt->event_id);
+	switch (evt->event_id)
+	{
+	case EVENT_STAMODE_CONNECTED:
+//		os_printf("connect to ssid %s, channel %d\n",
+//				evt->event_info.connected.ssid,
+//				evt->event_info.connected.channel);
+		break;
+	case EVENT_STAMODE_DISCONNECTED:
+//		os_printf("disconnect from ssid %s, reason %d\n",
+//				evt->event_info.disconnected.ssid,
+//				evt->event_info.disconnected.reason);
+		break;
+	case EVENT_STAMODE_AUTHMODE_CHANGE:
+//		os_printf("mode: %d -> %d\n", evt->event_info.auth_change.old_mode,
+//				evt->event_info.auth_change.new_mode);
+		break;
+	case EVENT_STAMODE_GOT_IP:
+//		os_printf("ip:" IPSTR ",mask:" IPSTR ",gw:" IPSTR,
+//				IP2STR(&evt->event_info.got_ip.ip),
+//				IP2STR(&evt->event_info.got_ip.mask),
+//				IP2STR(&evt->event_info.got_ip.gw));
+//		os_printf("\n");
+		UDP_Transmitter_Init();
+		UDP_Receiver_Init();
+		Serial_Receiver_Init();
+		Serial_Transmitter_Init();
+		break;
+	case EVENT_SOFTAPMODE_STACONNECTED:
+//		os_printf("station: " MACSTR "join, AID = %d\n",
+//				MAC2STR(evt->event_info.sta_connected.mac),
+//				evt->event_info.sta_connected.aid);
+		break;
+	case EVENT_SOFTAPMODE_STADISCONNECTED:
+//		os_printf("station: " MACSTR "leave, AID = %d\n",
+//				MAC2STR(evt->event_info.sta_disconnected.mac),
+//				evt->event_info.sta_disconnected.aid);
+		break;
+	default:
+		break;
+	}
 }
 
 /******************************************************************************
@@ -115,37 +175,42 @@ void GPIO_Init()
  *******************************************************************************/
 void user_init(void)
 {
-//   GPIO_Init();
+	GPIO_Init();
 
 #if 0
-   printf("SDK version:%s\n", system_get_sdk_version());
+	printf("SDK version:%s\n", system_get_sdk_version());
 #endif
-   /* need to set opmode before you set config */
-   wifi_set_opmode(STATIONAP_MODE);
-   uart_init_new();
+	/* need to set opmode before you set config */
+	wifi_set_opmode(STATIONAP_MODE);
+	uart_init_new();
 
 #if 0
-   Message_Conversion_Test();
+	Message_Conversion_Test();
 #endif
 
-   {
-      struct station_config *config = (struct station_config *) zalloc(sizeof(struct station_config));
+	{
+		struct station_config *config = (struct station_config *) zalloc(
+				sizeof(struct station_config));
 //      sprintf(config->ssid, "hefnetm");
 //      sprintf(config->password, "dips00BOYNEdo$!&");
 
-      sprintf(config->ssid, "hefnet");
-      sprintf(config->password, "h3fn3r_is_better_than_me");
+		sprintf(config->ssid, "hefnet");
+		sprintf(config->password, "h3fn3r_is_better_than_me");
 
-      /* need to sure that you are in station mode first,
-       * otherwise it will be failed. */
-      wifi_station_set_config(config);
-      free(config);
-   }
+		/* need to sure that you are in station mode first,
+		 * otherwise it will be failed. */
+		wifi_station_set_config(config);
+		free(config);
+	}
 
-   UDP_Transmitter_Init();
-   UDP_Receiver_Init();
-   Serial_Transmitter_Init();
-   Serial_Receiver_Init();
+//uncomment to generate an interrupt when we connect to the AP.
+//	xTaskCreate(Signal_Power_On_Complete, "power_on_signal", 256, NULL, 2, NULL);
+
+	wifi_set_event_handler_cb(wifi_handle_event_cb);
+//	UDP_Transmitter_Init();
+//	UDP_Receiver_Init();
+//	Serial_Transmitter_Init();
+//	Serial_Receiver_Init();
 
 //   xTaskCreate(String_Message_Parser_State_Step, "parse1", 256, NULL, 2, NULL);
 }

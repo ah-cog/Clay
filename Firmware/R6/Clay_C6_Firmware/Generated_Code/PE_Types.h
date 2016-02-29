@@ -6,7 +6,7 @@
 **     Component   : PE_Types
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-02-15, 21:35, # CodeGen: 0
+**     Date/Time   : 2016-02-27, 23:52, # CodeGen: 20
 **     Abstract    :
 **         PE_Types.h - contains definitions of basic types,
 **         register access macros and hardware specific macros
@@ -220,9 +220,9 @@ typedef unsigned long int       uint32;
 #define PE_LDD_COMPONENT_ESP8266_Serial_ID       0x0DU
 #define PE_LDD_COMPONENT_WIFI_GPIO0_ID           0x0EU
 #define PE_LDD_COMPONENT_WIFI_GPIO2_ID           0x0FU
-#define PE_LDD_COMPONENT_WIFI_RESET_ID           0x10U
-#define PE_LDD_COMPONENT_WIFI_CHIP_EN_ID         0x11U
-#define PE_LDD_COMPONENT_WIFI_XPD_DCDC_ID        0x12U
+#define PE_LDD_COMPONENT_WIFI_XPD_DCDC_INTERRUPT_ID 0x10U
+#define PE_LDD_COMPONENT_WIFI_RESET_ID           0x11U
+#define PE_LDD_COMPONENT_WIFI_CHIP_EN_ID         0x12U
 #define PE_LDD_COMPONENT_IMU_FSYNC_ID            0x13U
 #define PE_LDD_COMPONENT_FLASH1_ID               0x14U
 #define PE_LDD_COMPONENT_IO_1_ID                 0x15U
@@ -269,8 +269,8 @@ extern LDD_TDeviceData *PE_LDD_DeviceDataList[]; /*!< Array of LDD component dev
 
 
 /* Fills a memory area block by a specified value. Function defined in PE_LDD.c */
-extern void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
-
+//extern void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
+//
 
 /*
 ** ===================================================================

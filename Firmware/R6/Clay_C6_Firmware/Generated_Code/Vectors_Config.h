@@ -66,9 +66,9 @@
 #include "ESP8266_Serial.h"
 #include "WIFI_GPIO0.h"
 #include "WIFI_GPIO2.h"
+#include "WIFI_XPD_DCDC_INTERRUPT.h"
 #include "WIFI_RESET.h"
 #include "WIFI_CHIP_EN.h"
-#include "WIFI_XPD_DCDC.h"
 #include "IMU_FSYNC.h"
 #include "FLASH1.h"
 #include "IO_1.h"
@@ -168,11 +168,11 @@ extern "C" {
 #define VECTOR_72         (tIsrFunc)&Unhandled_ivINT_DAC0       /* 0x48 -    ivINT_DAC0                     unused by PE */
 #define VECTOR_73         (tIsrFunc)&Unhandled_ivINT_MCG        /* 0x49 -    ivINT_MCG                      unused by PE */
 #define VECTOR_74         (tIsrFunc)&Unhandled_ivINT_LPTMR0     /* 0x4A -    ivINT_LPTMR0                   unused by PE */
-#define VECTOR_75         (tIsrFunc)&WIFI_GPIO0_Interrupt       /* 0x4B 112  ivINT_PORTA                    used by PE */
+#define VECTOR_75         (tIsrFunc)&Unhandled_ivINT_PORTA      /* 0x4B -    ivINT_PORTA                    unused by PE */
 #define VECTOR_76         (tIsrFunc)&ButtonIn_Interrupt         /* 0x4C 112  ivINT_PORTB                    used by PE */
 #define VECTOR_77         (tIsrFunc)&PTC_IRQ_Interrupt          /* 0x4D 112  ivINT_PORTC                    used by PE */
 #define VECTOR_78         (tIsrFunc)&Unhandled_ivINT_PORTD      /* 0x4E -    ivINT_PORTD                    unused by PE */
-#define VECTOR_79         (tIsrFunc)&Unhandled_ivINT_PORTE      /* 0x4F -    ivINT_PORTE                    unused by PE */
+#define VECTOR_79         (tIsrFunc)&WIFI_XPD_DCDC_INTERRUPT_Interrupt /* 0x4F 112 ivINT_PORTE              used by PE */
 #define VECTOR_80         (tIsrFunc)&Unhandled_ivINT_SWI        /* 0x50 -    ivINT_SWI                      unused by PE */
 #define VECTOR_81         (tIsrFunc)&Unhandled_ivINT_SPI2       /* 0x51 -    ivINT_SPI2                     unused by PE */
 #define VECTOR_82         (tIsrFunc)&Unhandled_ivINT_UART4_RX_TX /* 0x52 -   ivINT_UART4_RX_TX              unused by PE */

@@ -42,9 +42,9 @@
 - \subpage ESP8266_Serial
 - \subpage WIFI_GPIO0
 - \subpage WIFI_GPIO2
+- \subpage WIFI_XPD_DCDC_INTERRUPT
 - \subpage WIFI_RESET
 - \subpage WIFI_CHIP_EN
-- \subpage WIFI_XPD_DCDC
 - \subpage IMU_FSYNC
 - \subpage FLASH1
 - \subpage FLASH1
@@ -108,9 +108,9 @@
 - \subpage ESP8266_Serial
 - \subpage WIFI_GPIO0
 - \subpage WIFI_GPIO2
+- \subpage WIFI_XPD_DCDC_INTERRUPT
 - \subpage WIFI_RESET
 - \subpage WIFI_CHIP_EN
-- \subpage WIFI_XPD_DCDC
 - \subpage IMU_FSYNC
 - \subpage FLASH1
 - \subpage FLASH1

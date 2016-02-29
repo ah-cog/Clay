@@ -12,13 +12,16 @@
 
 typedef enum
 {
-   PROGRAMMING,
-   IDLE,
-   RECEIVE_INTERRUPT,
-   START_TRANSMISSION,
-   TRANSMISSION_WAITING,
-   TRANSMISSION_SENT
-} WIFI_STATE;
+   Enable,
+   Programming,
+   Idle,
+   Receiving_Message,
+   Deserializing_Received_Message,
+   Serialize_Transmission,
+   Start_Transmission,
+   Transmission_Waiting,
+   Transmission_Sent
+} Wifi_States;
 
 typedef struct
 {
@@ -28,15 +31,17 @@ typedef struct
       uint8_t (*rxPutFct)(uint8_t);
 } ESP8266_UART_Device;        // NOTE: This was named "UART_Desc" previously.
 
-extern bool WifiInterruptReceived;
-extern bool WifiSetProgramMode;
+extern ESP8266_UART_Device deviceData;
+extern volatile bool WifiInterruptReceived;
+extern volatile bool WifiSetProgramMode;
+extern bool Wifi_Message_Available;
 
 extern bool Wifi_Enable();
 extern void Wifi_State_Step();
 extern void Wifi_Set_Programming_Mode();
 extern void Wifi_Set_Operating_Mode();
-extern void Wifi_Do_Reset();
-extern WIFI_STATE Wifi_Get_State();
+extern void Wifi_Do_Reset(bool StateMachineWaitForConnect);
+extern Wifi_States Wifi_Get_State();
 
 extern void Wifi_Send(void * data, uint32_t length);
 extern uint32_t Wifi_Receive(void * data);

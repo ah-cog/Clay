@@ -5,12 +5,13 @@
  *      Author: mokogobo
  */
 
+#include "esp_common.h"
 #include "Ring_Buffer.h"
 
-static uint8_t Ring_Buffer_buffer[Ring_Buffer_BUF_SIZE]; /* ring buffer */
-static uint16_t Ring_Buffer_inIdx; /* input index */
-static uint16_t Ring_Buffer_outIdx; /* output index */
-static uint16_t Ring_Buffer_inSize; /* size of input data */
+static uint8 Ring_Buffer_buffer[Ring_Buffer_BUF_SIZE]; /* ring buffer */
+static uint16 Ring_Buffer_inIdx; /* input index */
+static uint16 Ring_Buffer_outIdx; /* output index */
+static uint16 Ring_Buffer_inSize; /* size of input data */
 /*
  ** ===================================================================
  **     Method      :  Ring_Buffer_Put (component RingBufferUInt8)
@@ -23,28 +24,29 @@ static uint16_t Ring_Buffer_inSize; /* size of input data */
  **         ---             - Error code
  ** ===================================================================
  */
-byte Ring_Buffer_Put(byte elem)
+uint8 Ring_Buffer_Put(uint8 elem)
 {
-   byte res = ERR_OK;
+	uint8 res = false;
 
-   EnterCritical()
-   ;
-   if (Ring_Buffer_inSize == Ring_Buffer_BUF_SIZE)
-   {
-      res = ERR_TXFULL;
-   }
-   else
-   {
-      Ring_Buffer_buffer[Ring_Buffer_inIdx] = elem;
-      Ring_Buffer_inSize++;
-      Ring_Buffer_inIdx++;
-      if (Ring_Buffer_inIdx == Ring_Buffer_BUF_SIZE)
-      {
-         Ring_Buffer_inIdx = 0;
-      }
-   }
-   ExitCritical();
-   return res;
+//  EnterCritical();
+	taskENTER_CRITICAL();
+	if (Ring_Buffer_inSize == Ring_Buffer_BUF_SIZE)
+	{
+		res = true;
+	}
+	else
+	{
+		Ring_Buffer_buffer[Ring_Buffer_inIdx] = elem;
+		Ring_Buffer_inSize++;
+		Ring_Buffer_inIdx++;
+		if (Ring_Buffer_inIdx == Ring_Buffer_BUF_SIZE)
+		{
+			Ring_Buffer_inIdx = 0;
+		}
+	}
+	taskEXIT_CRITICAL();
+//  ExitCritical();
+	return res;
 }
 
 /*
@@ -60,29 +62,29 @@ byte Ring_Buffer_Put(byte elem)
  **         ---             - Error code
  ** ===================================================================
  */
-byte Ring_Buffer_Get(byte *elemP)
+uint8 Ring_Buffer_Get(uint8 *elemP)
 {
-   byte res = ERR_OK;
+	uint8 res = false;
 
-   EnterCritical()
-   ;
-   if (Ring_Buffer_inSize == 0)
-   {
-      res = ERR_RXEMPTY;
-   }
-   else
-   {
-      *elemP = Ring_Buffer_buffer[Ring_Buffer_outIdx];
-      Ring_Buffer_inSize--;
-      Ring_Buffer_outIdx++;
-      if (Ring_Buffer_outIdx == Ring_Buffer_BUF_SIZE)
-      {
-         Ring_Buffer_outIdx = 0;
-      }
-//    Monitor_Network_Communications ();
-   }
-   ExitCritical();
-   return res;
+//  EnterCritical();
+	taskENTER_CRITICAL();
+	if (Ring_Buffer_inSize == 0)
+	{
+		res = true;
+	}
+	else
+	{
+		*elemP = Ring_Buffer_buffer[Ring_Buffer_outIdx];
+		Ring_Buffer_inSize--;
+		Ring_Buffer_outIdx++;
+		if (Ring_Buffer_outIdx == Ring_Buffer_BUF_SIZE)
+		{
+			Ring_Buffer_outIdx = 0;
+		}
+	}
+	taskEXIT_CRITICAL();
+//  ExitCritical();
+	return res;
 }
 
 /*
@@ -95,10 +97,10 @@ byte Ring_Buffer_Get(byte *elemP)
  **         ---             - Number of elements in the buffer.
  ** ===================================================================
  */
-uint8_t Ring_Buffer_Has_Data()
+uint8 Ring_Buffer_Has_Data()
 {
 
-   return (Ring_Buffer_inSize > 0 ? TRUE : FALSE);
+	return (Ring_Buffer_inSize > 0 ? TRUE : FALSE);
 }
 
 /*
@@ -111,9 +113,9 @@ uint8_t Ring_Buffer_Has_Data()
  **         ---             - Number of elements in the buffer.
  ** ===================================================================
  */
-uint16_t Ring_Buffer_NofElements(void)
+uint16 Ring_Buffer_NofElements(void)
 {
-   return Ring_Buffer_inSize;
+	return Ring_Buffer_inSize;
 }
 
 /*
@@ -127,9 +129,9 @@ uint16_t Ring_Buffer_NofElements(void)
  **         ---             - Number of elements in the buffer.
  ** ===================================================================
  */
-uint16_t Ring_Buffer_NofFreeElements(void)
+uint16 Ring_Buffer_NofFreeElements(void)
 {
-   return (uint16_t) (Ring_Buffer_BUF_SIZE - Ring_Buffer_inSize);
+	return (uint16) (Ring_Buffer_BUF_SIZE - Ring_Buffer_inSize);
 }
 
 /*
@@ -143,7 +145,7 @@ uint16_t Ring_Buffer_NofFreeElements(void)
  */
 void Ring_Buffer_Init(void)
 {
-   Ring_Buffer_inIdx = 0;
-   Ring_Buffer_outIdx = 0;
-   Ring_Buffer_inSize = 0;
+	Ring_Buffer_inIdx = 0;
+	Ring_Buffer_outIdx = 0;
+	Ring_Buffer_inSize = 0;
 }

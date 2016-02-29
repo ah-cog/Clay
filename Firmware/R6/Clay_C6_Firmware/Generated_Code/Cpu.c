@@ -8,7 +8,7 @@
 **     Repository  : Kinetis
 **     Datasheet   : K64P144M120SF5RM, Rev.2, January 2014
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-02-17, 23:39, # CodeGen: 6
+**     Date/Time   : 2016-02-27, 20:14, # CodeGen: 16
 **     Abstract    :
 **
 **     Settings    :
@@ -181,14 +181,16 @@ void Components_Init(void)
   (void)MESH_SPI_Init(NULL);
   /* ### GPIO_LDD "PTC_IRQ" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)PTC_IRQ_Init(NULL);
+  /* ### BitIO_LDD "WIFI_GPIO0" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)WIFI_GPIO0_Init(NULL);
   /* ### BitIO_LDD "WIFI_GPIO2" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)WIFI_GPIO2_Init(NULL);
+  /* ### GPIO_LDD "WIFI_XPD_DCDC_INTERRUPT" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
+  (void)WIFI_XPD_DCDC_INTERRUPT_Init(NULL);
   /* ### BitIO_LDD "WIFI_RESET" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)WIFI_RESET_Init(NULL);
   /* ### BitIO_LDD "WIFI_CHIP_EN" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)WIFI_CHIP_EN_Init(NULL);
-  /* ### BitIO_LDD "WIFI_XPD_DCDC" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
-  (void)WIFI_XPD_DCDC_Init(NULL);
   /* ### BitIO_LDD "IMU_FSYNC" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
   (void)IMU_FSYNC_Init(NULL);
   /* ### FLASH_LDD "FLASH1" component auto initialization. Auto initialization feature can be disabled by component property "Auto initialization". */
