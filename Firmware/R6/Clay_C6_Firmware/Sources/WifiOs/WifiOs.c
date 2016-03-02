@@ -18,6 +18,9 @@
 #include "ESP8266_Serial.h"
 #include "Ring_Buffer.h"
 #include "Clock.h"
+#include "AddressSerialization.h"
+#include "Message_Queue.h"
+#include "Message.h"
 
 #define OUT_BUFFER_LENGTH           1024
 #define IN_BUFFER_LENGTH            1024
@@ -41,6 +44,13 @@ static uint32_t txStartTime;
 static uint32_t programStartTime;
 
 static uint8_t Newline_Count;
+static uint8_t * Temp_Content;
+static uint8_t * Temp_Address;
+
+static const uint8_t Newline = '\n';
+
+static Message Temp_Message;
+static Message * Temp_Message_ptr;
 
 static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
@@ -71,6 +81,9 @@ bool Wifi_Enable()
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
 
+   Initialize_Message_Queue(&incomingMessageQueue);
+   Initialize_Message_Queue(&outgoingMessageQueue);
+
    pendingTransmitByteCount = 0;
    interruptRxTime = 0;
 
@@ -84,7 +97,7 @@ void Wifi_State_Step()
 
    //TODO: if a transmission was waiting, we'll lose it here. Look at pendingbytecount? Maybe we don't care?
    //      This may just be test code, actually. The button handler in events.c is setting WifiSetProgramMode
-   if (State != Transmission_Waiting && State != Programming && WifiSetProgramMode)
+   if (State != Transmission_Wait && State != Programming && WifiSetProgramMode)
    {
       Wifi_Set_Programming_Mode();
       WifiSetProgramMode = FALSE;
@@ -122,7 +135,7 @@ void Wifi_State_Step()
          //waiting for an interrupt, no tranmission pending
          if (WifiInterruptReceived)
          {
-            State = Receiving_Message;
+            State = Receive_Message;
 
             WifiInterruptReceived = FALSE;
 
@@ -140,11 +153,15 @@ void Wifi_State_Step()
 
             WIFI_GPIO2_PutVal(NULL, 0);
          }
+         else if (Peek_Message(&outgoingMessageQueue) != NULL)
+         {
+            State = Serialize_Transmission;
+         }
 
          break;
       }
 
-      case Receiving_Message:
+      case Receive_Message:
       {
          if (Ring_Buffer_Has_Data())
          {
@@ -153,29 +170,44 @@ void Wifi_State_Step()
             if (inBuffer[Pending_Receive_Byte_Count++] == '!')
             {
                WIFI_GPIO2_PutVal(NULL, 1);
+               WifiInterruptReceived = FALSE;
                Wifi_Message_Available = TRUE;
-               State = Idle;
+               State = Deserialize_Received_Message;
             }
          }
          else if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS)
          {
             WIFI_GPIO2_PutVal(NULL, 1);
+            WifiInterruptReceived = FALSE;
             State = Idle;
          }
 
          break;
       }
 
-      case Deserializing_Received_Message:
+      case Deserialize_Received_Message:
       {
-         //TODO: deserialize. Set Buffer_Index to 0
+         Temp_Content = strtok(inBuffer, &Newline);
+
+         Temp_Address = strtok(NULL, &Newline);
+
+         if (Temp_Address != NULL && Temp_Content != NULL)
+         {
+            Initialize_Message(&Temp_Message, Temp_Address, Temp_Address, Temp_Content);
+            Queue_Message(&incomingMessageQueue, &Temp_Message);
+         }
+
          State = Idle;
          break;
       }
 
       case Serialize_Transmission:
       {
-         //TODO: serialize
+         Temp_Message_ptr = Dequeue_Message(&outgoingMessageQueue);
+         snprintf(outBuffer, OUT_BUFFER_LENGTH, "%s\n", Temp_Message_ptr->content);
+         strcat(outBuffer, Temp_Message_ptr->destination);
+         pendingTransmitByteCount = strlen(outBuffer);
+
          State = Start_Transmission;
          break;
       }
@@ -184,12 +216,12 @@ void Wifi_State_Step()
       {
          //signal to the WiFi that we're ready to send something
          WIFI_GPIO2_PutVal(NULL, 0);
-         State = Transmission_Waiting;
+         State = Transmission_Wait;
          txStartTime = Millis();
          break;
       }
 
-      case Transmission_Waiting:
+      case Transmission_Wait:
       {
          //waiting for WiFi to OK transmission.
          //send when we get the interrupt
@@ -215,6 +247,7 @@ void Wifi_State_Step()
          if (deviceData.isSent)
          {
             WIFI_GPIO2_PutVal(NULL, 1);
+            WifiInterruptReceived = FALSE;
             State = Idle;
          }
          break;
@@ -265,34 +298,30 @@ void Wifi_Do_Reset(bool StateMachineWaitForConnect)
    }
 }
 
-void Wifi_Send(void * data, uint32_t length)
+bool Wifi_Send(Message * message)
 {
-   if (State != Idle)
+   if (Queue_Full(&outgoingMessageQueue))
    {
-      return;
+      return FALSE;
    }
-   //TODO: NQ the message. The state machine will pick it up in idle.
-   pendingTransmitByteCount = length;
-   memcpy(outBuffer, data, (length <= OUT_BUFFER_LENGTH) ? length : OUT_BUFFER_LENGTH);
-   State = Serialize_Transmission;
+
+   Queue_Message(&outgoingMessageQueue, message);
+
+   return TRUE;
 }
 
-uint32_t Wifi_Receive(void * data)
+bool Wifi_Receive(Message * message)
 {
-   if (!Wifi_Message_Available)
-      return 0;
-
-   uint32_t rval = Pending_Receive_Byte_Count > IN_BUFFER_LENGTH ? IN_BUFFER_LENGTH : Pending_Receive_Byte_Count;
-
-   if (rval)
+   if (Peek_Message(&incomingMessageQueue) == NULL)
    {
-      memcpy(data, inBuffer, rval);
-      Pending_Receive_Byte_Count = 0;
+      return FALSE;
    }
 
-   Wifi_Message_Available = FALSE;
+   Temp_Message_ptr = Dequeue_Message(&incomingMessageQueue);
 
-   return rval;
+   Initialize_Message(message, Temp_Message_ptr->source, Temp_Message_ptr->destination, Temp_Message_ptr->content);
+
+   return TRUE;
 }
 
 Wifi_States Wifi_Get_State()

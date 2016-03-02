@@ -189,25 +189,6 @@ void Serial_Transmitter_State_Step()
 				taskEXIT_CRITICAL();
 				State = Transmitting;
 			}
-			else if ((system_get_time() - timeTemp) > 10)
-			{
-				timeTemp = system_get_time();
-
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-				gpio16_output_set(1);
-#else
-				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
-#endif
-				while ((system_get_time() - timeTemp) < 1)
-				{
-					taskYIELD();
-				}
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-				gpio16_output_set(0);
-#else
-				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
-#endif
-			}
 			break;
 		}
 

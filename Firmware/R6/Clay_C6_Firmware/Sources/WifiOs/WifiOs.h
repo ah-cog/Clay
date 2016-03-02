@@ -9,17 +9,18 @@
 #define SOURCES_WIFIOS_WIFIOS_H_
 
 #include "PE_Types.h"
+#include "Message.h"
 
 typedef enum
 {
    Enable,
    Programming,
    Idle,
-   Receiving_Message,
-   Deserializing_Received_Message,
+   Receive_Message,
+   Deserialize_Received_Message,
    Serialize_Transmission,
    Start_Transmission,
-   Transmission_Waiting,
+   Transmission_Wait,
    Transmission_Sent
 } Wifi_States;
 
@@ -43,7 +44,7 @@ extern void Wifi_Set_Operating_Mode();
 extern void Wifi_Do_Reset(bool StateMachineWaitForConnect);
 extern Wifi_States Wifi_Get_State();
 
-extern void Wifi_Send(void * data, uint32_t length);
-extern uint32_t Wifi_Receive(void * data);
+extern bool Wifi_Send(Message * message);
+extern bool Wifi_Receive(Message * message);
 
 #endif /* SOURCES_WIFIOS_WIFIOS_H_ */

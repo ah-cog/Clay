@@ -80,6 +80,7 @@
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/LEDs&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/I2C&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/Mesh&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/Message&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/WiFiOs&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/WiFi&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/Sources/WiFi/Driver&quot;"/>
@@ -178,7 +179,7 @@
 					</folderInfo>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.693725023..settings/com.freescale.processorexpert.core.prefs" name="com.freescale.processorexpert.core.prefs" rcbsApplicability="disable" resourcePath=".settings/com.freescale.processorexpert.core.prefs" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding=".settings/com.freescale.processorexpert.core.prefs" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="Sources/WiFi|.settings/com.freescale.processorexpert.core.prefs" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
