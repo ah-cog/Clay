@@ -237,7 +237,7 @@ void UDP_Transmitter_State_Step()
 			break;
 		}
 		}
-		taskYIELD();
+//		taskYIELD();
 //      vTaskDelay(5 / portTICK_RATE_MS);
 	}
 }
