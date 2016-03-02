@@ -6,7 +6,7 @@
 **     Component   : PE_Types
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2016-02-27, 23:52, # CodeGen: 20
+**     Date/Time   : 2016-03-01, 21:16, # CodeGen: 22
 **     Abstract    :
 **         PE_Types.h - contains definitions of basic types,
 **         register access macros and hardware specific macros
@@ -269,8 +269,8 @@ extern LDD_TDeviceData *PE_LDD_DeviceDataList[]; /*!< Array of LDD component dev
 
 
 /* Fills a memory area block by a specified value. Function defined in PE_LDD.c */
-//extern void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
-//
+extern void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
+
 
 /*
 ** ===================================================================

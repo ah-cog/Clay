@@ -64,7 +64,7 @@ void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr)
    ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 
    (void) ESP8266_Serial_ReceiveBlock(ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof(ptr->rxChar));
-   //  (void) ptr->rxPutFct (ptr->rxChar);
+   (void) ptr->rxPutFct(ptr->rxChar);
 
 //	if (Ring_Buffer_NofElements () > 500) {
 //		printf ("Ring_Buffer_NofElements: %d\r\n", Ring_Buffer_NofElements ());

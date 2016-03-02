@@ -112,7 +112,7 @@
 **       len - Length of a memory block to fill.
 */
 /* ===================================================================*/
-void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
+//void PE_FillMemory(register void* SourceAddressPtr, register uint8_t c, register uint32_t len);
 
 /*
 ** ===================================================================

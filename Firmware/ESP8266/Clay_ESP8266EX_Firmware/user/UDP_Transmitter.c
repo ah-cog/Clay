@@ -89,9 +89,7 @@ bool UDP_Transmitter_Init()
 	State = Disable;
 
 	OutgoingQueueLock = false; //init
-	WAIT_FOR_OUTGOING_QUEUE();
 	Initialize_Message_Queue(&outgoingMessageQueue);
-	RELEASE_OUTGOING_QUEUE();
 
 //   Initialize_Message(&mm, source, source, content);
 //   m = &mm;
@@ -108,25 +106,26 @@ bool UDP_Transmitter_Init()
 
 void UDP_Transmitter_State_Step()
 {
-	Connect();
-
-	memset(&DestinationAddr, 0, sizeof(DestinationAddr));
-
-	DestinationAddr.sin_family = AF_INET;
-	DestinationAddr.sin_addr.s_addr = htonl(3232235778U);
-	DestinationAddr.sin_port = htons(1201);
-	DestinationAddr.sin_len = sizeof(DestinationAddr);
-
-	taskENTER_CRITICAL();
-	sprintf(UDP_Tx_Buffer, "test message\n");
-	UDP_Tx_Count = 13;
-	taskEXIT_CRITICAL();
-
-	for (;;)
-	{
-		Transmit();
-		taskYIELD();
-	}
+//	Connect();
+//
+//	memset(&DestinationAddr, 0, sizeof(DestinationAddr));
+//
+//	DestinationAddr.sin_family = AF_INET;
+//	DestinationAddr.sin_addr.s_addr = htonl(3232235778U);
+//	DestinationAddr.sin_port = htons(1201);
+//	DestinationAddr.sin_len = sizeof(DestinationAddr);
+//
+//	taskENTER_CRITICAL();
+//	sprintf(UDP_Tx_Buffer, "test message\n");
+//	UDP_Tx_Count = 13;
+//	taskEXIT_CRITICAL();
+//
+//	for (;;)
+//	{
+//		Transmit();
+//		vTaskDelay(2 / portTICK_RATE_MS);
+////		taskYIELD();
+//	}
 
 	for (;;)
 	{
@@ -159,20 +158,20 @@ void UDP_Transmitter_State_Step()
 		case Idle:
 		{
 //          if (1 || Peek_Message(&outgoingMessageQueue) != NULL)
-			WAIT_FOR_OUTGOING_QUEUE();
+			taskENTER_CRITICAL();
 			m = Peek_Message(&outgoingMessageQueue);
-			RELEASE_OUTGOING_QUEUE();
+			taskEXIT_CRITICAL();
 
 			if (m != NULL)
 			{
-//               printf("cont:[%s]\ndest:[%s]\nsource:[%s]",
-//                      Peek_Message(&outgoingMessageQueue)->content,
-//                      Peek_Message(&outgoingMessageQueue)->destination,
-//                      Peek_Message(&outgoingMessageQueue)->source);
-
-				taskENTER_CRITICAL();
-				printf("message available\n");
-				taskEXIT_CRITICAL();
+//				printf("cont:[%s]\ndest:[%s]\nsource:[%s]",
+//						Peek_Message(&outgoingMessageQueue)->content,
+//						Peek_Message(&outgoingMessageQueue)->destination,
+//						Peek_Message(&outgoingMessageQueue)->source);
+//
+//				taskENTER_CRITICAL();
+//				printf("message available\n");
+//				taskEXIT_CRITICAL();
 				State = Buffer_Message;
 			}
 			break;
@@ -182,29 +181,29 @@ void UDP_Transmitter_State_Step()
 		{
 			memset(&DestinationAddr, 0, sizeof(DestinationAddr));
 
-			LOCK_OUTGOING_QUEUE();
+			taskENTER_CRITICAL();
 			m = Dequeue_Message(&outgoingMessageQueue);
-			RELEASE_OUTGOING_QUEUE();
-
 			taskEXIT_CRITICAL();
 
-			taskENTER_CRITICAL();
-			printf("message addr tx %d\n", m);
-			printf("lookin for newline in [%s]\n", m->content);
-			taskEXIT_CRITICAL();
-			char* mLen = strchr(m->content, '\n') + 1; //+1 as strchr rval points to the chr.
+//			printf("message addr tx %d\n", m);
+//			printf("lookin for newline in [%s]\n", m->content);
+//			taskENTER_CRITICAL();
+//			char* mLen = strchr(m->content, '\n') + 1; //+1 as strchr rval points to the chr.
+//			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			printf("copy content to buffer. %d bytes, %s\n", mLen - m->content,
-					m->content);
+//			printf("copy content to buffer. %d bytes, %s\n", mLen - m->content,
+//					m->content);
 			strncpy(UDP_Tx_Buffer, m->content, UDP_TX_BUFFER_SIZE_BYTES);
 			UDP_Tx_Count = strlen(m->content);
-			printf("done\n");
+//			printf("done\n");
 			taskEXIT_CRITICAL();
 
-			printf("tx serialized addr: [%s]\n", m->destination);
+//			printf("tx serialized addr: [%s]\n", m->destination);
+			taskENTER_CRITICAL();
 			Deserialize_Address(m->destination, MAXIMUM_DESTINATION_LENGTH,
 					&DestinationAddr);
+			taskEXIT_CRITICAL();
 
 //            printf("message available\n");
 //            sinZeroSize = 0;
@@ -238,7 +237,7 @@ void UDP_Transmitter_State_Step()
 			break;
 		}
 		}
-
+		taskYIELD();
 //      vTaskDelay(5 / portTICK_RATE_MS);
 	}
 }
@@ -301,21 +300,22 @@ static bool Transmit()
 	//TODO: there is probably still something wrong with the serialization; I would expect to be able to return the message
 	//      back to the same port. This works with nc64 -u -l -p UDP_RX_PORT, though. Gonna run with it for now.
 	DestinationAddr.sin_port = htons(UDP_TX_PORT);
-	taskENTER_CRITICAL();
-	printf("sending %d bytes: [%s]\n", UDP_Tx_Count, UDP_Tx_Buffer);
-	printf("to %u.%u.%u.%u:%u\n\n-----\n",
-			DestinationAddr.sin_addr.s_addr & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 8) & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 16) & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 24) & 0xFF,
-			ntohs(DestinationAddr.sin_port));
-	taskEXIT_CRITICAL();
+//	taskENTER_CRITICAL();
+//	printf("sending %d bytes: [%s]\n", UDP_Tx_Count, UDP_Tx_Buffer);
+//	printf("to %u.%u.%u.%u:%u\n\n-----\n",
+//			DestinationAddr.sin_addr.s_addr & 0xFF,
+//			(DestinationAddr.sin_addr.s_addr >> 8) & 0xFF,
+//			(DestinationAddr.sin_addr.s_addr >> 16) & 0xFF,
+//			(DestinationAddr.sin_addr.s_addr >> 24) & 0xFF,
+//			ntohs(DestinationAddr.sin_port));
+//	taskEXIT_CRITICAL();
 
 	bool rval = false;
 	rval = UDP_Tx_Count
 			== sendto(sock_fd, (uint8* ) UDP_Tx_Buffer, UDP_Tx_Count, 0,
 					(struct sockaddr * ) &DestinationAddr,
 					sizeof(DestinationAddr));
+
 	return rval;
 }
 
