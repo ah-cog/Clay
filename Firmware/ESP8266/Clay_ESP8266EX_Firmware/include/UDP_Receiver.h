@@ -10,10 +10,16 @@
 ////Includes //////////////////////////////////////////////////////
 #include "esp_common.h"
 
+////Macros ////////////////////////////////////////////////////////
+#define WAIT_FOR_INCOMING_QUEUE()			while(IncomingQueueLock){taskYIELD();} IncomingQueueLock = TRUE;
+#define LOCK_INCOMING_QUEUE()			if(!IncomingQueueLock){ IncomingQueueLock = TRUE; }
+#define RELEASE_INCOMING_QUEUE()		IncomingQueueLock = FALSE
+
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
 extern bool Exclusive_Rx_Access;
+extern volatile bool IncomingQueueLock;
 
 ////Prototypes/////////////////////////////////////////////////////
 extern bool UDP_Receiver_Init();

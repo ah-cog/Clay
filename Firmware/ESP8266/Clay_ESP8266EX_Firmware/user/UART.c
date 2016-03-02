@@ -44,8 +44,8 @@ typedef struct _os_event_
 
 uint8 RcvChar;
 uint8 uart_no = UART0;     //UartDev.buff_uart_no;
-uint8 fifo_len = 0;
-volatile uint8 InterruptFifoWriteIndex;
+uint8 BytesAvailable = 0;
+volatile uint8 BytesRead;
 uint8 fifo_tmp[512] =
 { 0 };
 
@@ -405,17 +405,21 @@ LOCAL void uart0_rx_intr_handler(void *para)
 		else if (UART_RXFIFO_FULL_INT_ST
 				== (uart_intr_status & UART_RXFIFO_FULL_INT_ST))
 		{
-//			printf("full\r\n");
-			fifo_len = (READ_PERI_REG(UART_STATUS(UART0)) >> UART_RXFIFO_CNT_S)
+//			printf("f\n");
+			BytesAvailable = (READ_PERI_REG(UART_STATUS(UART0)) >> UART_RXFIFO_CNT_S)
 					& UART_RXFIFO_CNT;
-			InterruptFifoWriteIndex = 0;
+			BytesRead = 0;
 
-			while (InterruptFifoWriteIndex < fifo_len)
+			while (BytesRead < BytesAvailable)
 			{
-//				++InterruptFifoWriteIndex;
-//				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
-				fifo_tmp[InterruptFifoWriteIndex++] =
-				READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
+//				Ring_Buffer_Lock = true;
+//				WAIT_FOR_RING_BUF();
+				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
+				++BytesRead;
+//				Ring_Buffer_Lock = false;
+//				RELEASE_RING_BUF();
+//				fifo_tmp[InterruptFifoWriteIndex++] =
+//				READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
 			}
 
 			WRITE_PERI_REG(UART_INT_CLR(UART0), UART_RXFIFO_FULL_INT_CLR);
@@ -423,16 +427,21 @@ LOCAL void uart0_rx_intr_handler(void *para)
 		else if (UART_RXFIFO_TOUT_INT_ST
 				== (uart_intr_status & UART_RXFIFO_TOUT_INT_ST))
 		{
-//			printf("tout\r\n");
-			fifo_len = (READ_PERI_REG(UART_STATUS(UART0)) >> UART_RXFIFO_CNT_S)
-					& UART_RXFIFO_CNT;
+//			printf("to\n");
+			BytesAvailable = (READ_PERI_REG(UART_STATUS(UART0))
+					>> UART_RXFIFO_CNT_S) & UART_RXFIFO_CNT;
+			BytesRead = 0;
 
-			while (InterruptFifoWriteIndex < fifo_len)
+			while (BytesRead < BytesAvailable)
 			{
-//				++InterruptFifoWriteIndex;
-//				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
-				fifo_tmp[InterruptFifoWriteIndex++] =
-				READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
+//				Ring_Buffer_Lock = true;
+//				WAIT_FOR_RING_BUF();
+				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
+				++BytesRead;
+//				Ring_Buffer_Lock = false;
+//				RELEASE_RING_BUF();
+//				fifo_tmp[InterruptFifoWriteIndex++] =
+//				READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
 			}
 
 			WRITE_PERI_REG(UART_INT_CLR(UART0), UART_RXFIFO_TOUT_INT_CLR);
@@ -448,7 +457,7 @@ LOCAL void uart0_rx_intr_handler(void *para)
 		{
 			//skip
 		}
-
+//		printf("d\n");
 		uart_intr_status = READ_PERI_REG(UART_INT_ST(uart_no));
 	}
 }

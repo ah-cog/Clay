@@ -71,6 +71,8 @@ static char Newline = '\n';
 static uint32 stateTime;
 int i;
 
+uint32 counter;
+
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static bool Receive();
@@ -82,42 +84,111 @@ bool Serial_Receiver_Init()
 
 	Serial_Rx_Buffer = zalloc(SERIAL_RX_BUFFER_SIZE_BYTES);
 
+//	printf("serial rx init\n");
+
+//	Serial_Tx_In_Progress = false;
+	Serial_Rx_In_Progress = false;
+
 	OutgoingQueueLock = false; //init
-	State = Disable;
+	State = Idle;
 	Ring_Buffer_Init();
 
-	Initialize_Message_Queue(&incomingMessageQueue);
+//	printf("done ring init\n");
+
+	Initialize_Message_Queue(&outgoingMessageQueue);
+
+//	printf("done incoming queue init\n");
 
 	xTaskCreate(Serial_Receiver_State_Step, "uartrx1", 256, NULL, 2, NULL);
+
+//	printf("create task and returning.\n");
+
 	return rval;
 }
 int x = 0;
+uint8 temp;
+bool DataInBuffer;
 void Serial_Receiver_State_Step()
 {
-	for (;;)
-	{
-		if (InterruptFifoWriteIndex > 0)
-		{
-			taskENTER_CRITICAL();
-			for (x = 0; x < InterruptFifoWriteIndex; ++x)
-			{
-				printf("%c", fifo_tmp[x]);
-			}
-			InterruptFifoWriteIndex = 0;
-			taskEXIT_CRITICAL();
-		}
-		taskYIELD();
-	}
+//	taskENTER_CRITICAL();
+//	if (Ring_Buffer_Lock)
+//	{
+//		taskEXIT_CRITICAL();
+//	}
+//	else
+//	{
+//		DataInBuffer = Ring_Buffer_Has_Data();
+//		taskEXIT_CRITICAL();
+//	}
+//
+//	if (DataInBuffer)
+//	{
+//		taskENTER_CRITICAL();
+//		if (Ring_Buffer_Lock)
+//		{
+//			taskEXIT_CRITICAL();
+//		}
+//		else
+//		{
+//			Ring_Buffer_Get(&temp);
+//			taskEXIT_CRITICAL();
+//		}
+//
+////			taskENTER_CRITICAL();
+////			printf("%c", temp);
+////			taskEXIT_CRITICAL();
+//
+//		vTaskDelay(1 / portTICK_RATE_MS);
+//	}
+//	else
+//	{
+//		vTaskDelay(1 / portTICK_RATE_MS);
+//	}
+
+//	for (;;)
+//	{
+//
+//		taskENTER_CRITICAL();
+//		if (Ring_Buffer_Has_Data())
+//		{
+//
+////			WAIT_FOR_RING_BUF();
+//			Ring_Buffer_Get(&temp);
+////			RELEASE_RING_BUF();
+//
+//			printf("%c", temp);
+//		}
+//		taskEXIT_CRITICAL();
+//		taskYIELD();
+//	}
 
 	for (;;)
 	{
+//		if (State != Disable && !(counter = (counter + 1) % 10000))
+//		{
+//			taskENTER_CRITICAL();
+//			printf("rxstate: %d\n", State);
+//			taskEXIT_CRITICAL();
+//			Serial_Tx_In_Progress = false;
+//		}
+
 		switch (State)
 		{
 		case Disable:
 		{
 			if (wifi_station_get_connect_status() == STATION_GOT_IP)
 			{
+//				taskENTER_CRITICAL();
+//				printf("reset fifo\n");
+//				taskEXIT_CRITICAL();
+
+				taskENTER_CRITICAL();
 				UART_ResetRxFifo(UART0);
+				taskEXIT_CRITICAL();
+
+//				taskENTER_CRITICAL();
+//				printf("fifo reset, goto idle\n");
+//				taskEXIT_CRITICAL();
 				State = Idle;
 			}
 			break;
@@ -132,19 +203,28 @@ void Serial_Receiver_State_Step()
 		{
 			if (!Serial_Tx_In_Progress && !GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
 			{
+
 				Serial_Rx_In_Progress = true;
 
 				Serial_Rx_Count = 0;
+
+				taskENTER_CRITICAL();
 				UART_ResetRxFifo(UART0);
+				taskEXIT_CRITICAL();
+
 				BytesReceived = 0;
 				Newline_Count = 0;
+
+				taskENTER_CRITICAL();
 				Ring_Buffer_Init();
+				taskEXIT_CRITICAL();
 
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 				gpio16_output_set(0);
 #else
 				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
 #endif
+
 				stateTime = system_get_time();
 				State = Receiving;
 			}
@@ -153,46 +233,58 @@ void Serial_Receiver_State_Step()
 
 		case Receiving:
 		{
-			if (InterruptFifoWriteIndex > 0)
-//			if (Ring_Buffer_Has_Data())
-			{
-				i = BytesReceived;
+			DataInBuffer = Ring_Buffer_Has_Data();
 
-//				Ring_Buffer_Get(Serial_Rx_Buffer + BytesReceived);
+//			if (InterruptFifoWriteIndex > 0)
+//			if (Ring_Buffer_Has_Data())
+			if (DataInBuffer)
+			{
+//				i = BytesReceived;
+
+				//critical sections are inside of ring_buffer functions.
+				taskENTER_CRITICAL();
+				Ring_Buffer_Get(Serial_Rx_Buffer + BytesReceived);
+//				printf("%c", Serial_Rx_Buffer[BytesReceived]);
+				taskEXIT_CRITICAL();
+
+//				taskENTER_CRITICAL();
 //				printf("%d:'%c'\n", BytesReceived,
-//						Serial_Rx_Buffer[BytesReceived - 1]);
-//
+//						Serial_Rx_Buffer[BytesReceived]);
+//				taskEXIT_CRITICAL();
+
 //				if (Serial_Rx_Buffer[BytesReceived++] == '\n')
 //				{
 //					++Newline_Count;
 //				}
 
-				memcpy(Serial_Rx_Buffer + BytesReceived, fifo_tmp, fifo_len);
+//				memcpy(Serial_Rx_Buffer + BytesReceived, fifo_tmp, fifo_len);
 //				printf("copied\n");
 
-				BytesReceived += InterruptFifoWriteIndex;
-
-				InterruptFifoWriteIndex = 0;
-
-				for (; i < BytesReceived; ++i)
-				{
-					if (Serial_Rx_Buffer[i] == '\n')
-					{
-						++Newline_Count;
-					}
-				}
+//				BytesReceived += InterruptFifoWriteIndex;
+//
+//				InterruptFifoWriteIndex = 0;
+//
+//				for (; i < BytesReceived; ++i)
+//				{
+//					if (Serial_Rx_Buffer[i] == '\n')
+//					{
+//						++Newline_Count;
+//					}
+//				}
 
 //				printf("newline:%d\n", Newline_Count);
 //				printf("RxFifoIdx:%d\n", BytesReceived);
 
-				if (Newline_Count >= CLAY_SERIAL_MESSAGE_NEWLINE_COUNT)
+//				if (Newline_Count >= CLAY_SERIAL_MESSAGE_NEWLINE_COUNT)
+				if (Serial_Rx_Buffer[BytesReceived++] == '!')
 				{
+//					taskENTER_CRITICAL();
+//					printf("enough newlines\n\n");
+//					taskEXIT_CRITICAL();
+
 					//TODO: update message to not require null termination?
 					Serial_Rx_Buffer[BytesReceived] = '\0';
 
-					taskENTER_CRITICAL();
-					printf("enough newlines\n\n");
-					taskEXIT_CRITICAL();
 					Serial_Rx_In_Progress = false;
 
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
@@ -203,8 +295,11 @@ void Serial_Receiver_State_Step()
 					State = Parsing;
 				}
 			}
-			else if (system_get_time() - stateTime > 1000000) //GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
+			else if ((system_get_time() - stateTime) > 1000000) //GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
 			{
+//				taskENTER_CRITICAL();
+//				printf("come on yo\n");
+//				taskEXIT_CRITICAL();
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 				gpio16_output_set(1);
 #else
@@ -219,40 +314,56 @@ void Serial_Receiver_State_Step()
 
 		case Parsing:
 		{
+//			taskENTER_CRITICAL();
+//			printf("parsing\n");
+//			taskEXIT_CRITICAL();
+
 			taskENTER_CRITICAL();
-			printf("parsing\n");
-
 			tempContent = strtok(Serial_Rx_Buffer, &Newline);
-
-			printf("content: [%s]\n", tempContent);
-
-			tempAddr = strtok(NULL, &Newline);
-
-			printf("addr: [%s]\n", tempAddr);
 			taskEXIT_CRITICAL();
+
+//			taskENTER_CRITICAL();
+//			printf("content: [%s]\n", tempContent);
+//			taskEXIT_CRITICAL();
+
+			taskENTER_CRITICAL();
+			tempAddr = strtok(NULL, &Newline);
+			taskEXIT_CRITICAL();
+
+//			taskENTER_CRITICAL();
+//			printf("addr: [%s]\n", tempAddr);
+//			taskEXIT_CRITICAL();
 
 			if (tempContent != NULL && tempAddr != NULL)
 			{
+//				taskENTER_CRITICAL();
+//				printf("not null, init message\n");
+//				taskEXIT_CRITICAL();
+
 				taskENTER_CRITICAL();
-				printf("not null, init message\n");
 				Initialize_Message(&tempMsg, tempAddr, tempAddr, tempContent);
-				printf("init message done\n");
 				taskEXIT_CRITICAL();
+
+//				taskENTER_CRITICAL();
+//				printf("init message done\n");
+//				taskEXIT_CRITICAL();
 			}
 
 //			printf("queue message \n");
+//			WAIT_FOR_OUTGOING_QUEUE();
 			taskENTER_CRITICAL();
-			WAIT_FOR_OUTGOING_QUEUE();
 			Queue_Message(&outgoingMessageQueue, &tempMsg);
-			RELEASE_OUTGOING_QUEUE();
 			taskEXIT_CRITICAL();
+//			RELEASE_OUTGOING_QUEUE();
 
-			taskENTER_CRITICAL();
-			printf("queue message done, go to idle.\n\n\n");
-			taskEXIT_CRITICAL();
+//			taskENTER_CRITICAL();
+//			printf("queue message done, go to idle.\n\n\n");
+//			taskEXIT_CRITICAL();
 
 			while (GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
-				;
+			{
+				taskYIELD();
+			}
 
 			State = Idle;
 

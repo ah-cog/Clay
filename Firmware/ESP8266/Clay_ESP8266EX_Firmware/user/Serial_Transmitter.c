@@ -65,6 +65,9 @@ static uint8 * Serial_Tx_Buffer;
 static uint32 Serial_Tx_Count;
 static Message * Temp_Message;
 
+static uint32 counter = 0;
+static uint32 timeTemp;
+
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static bool Transmit();
@@ -77,7 +80,7 @@ bool Serial_Transmitter_Init()
 	State = Disable;
 	Serial_Tx_Buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
 
-	Initialize_Message_Queue(&outgoingMessageQueue);
+	Initialize_Message_Queue(&incomingMessageQueue);
 
 	xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 256, NULL, 2, NULL);
 
@@ -86,64 +89,24 @@ bool Serial_Transmitter_Init()
 
 void Serial_Transmitter_State_Step()
 {
-//	xTimeOutType xTimeout;
-//	portTickType openTimeout = (20 / portTICK_RATE_MS);
-//
-//	vTaskSetTimeOutState(&xTimeout);
-//
-//	int32 timeSet = system_get_time();
-//	bool yield = false;
-//
 //  this works with the serial receiver task running
-	for (;;)
-	{
-		taskENTER_CRITICAL();
-		printf("a");
-		taskEXIT_CRITICAL();
-		taskYIELD();
-	}
-//
-//	this one worked, but crashed when we reset the timeout. with the timeout commented,
 //	for (;;)
 //	{
 //		taskENTER_CRITICAL();
 //		printf("a");
 //		taskEXIT_CRITICAL();
-//
-//		if (xTaskCheckForTimeOut(&xTimeout, &openTimeout) == pdTRUE)
-//		{
-//			vTaskSetTimeOutState(&xTimeout);
-//			taskENTER_CRITICAL();
-//			printf("y");
-//			taskYIELD();
-//		}
+//		taskYIELD();
 //	}
 
-// this one crashed
-//	for (;;)
-//	{
-//		taskENTER_CRITICAL();
-//		printf("a");
-//		if (xTaskCheckForTimeOut(&xTimeout, &openTimeout) == pdTRUE)
+	for (;;)
+	{
+//		if (State != Disable && !(counter = (counter + 1) % 10000))
 //		{
-//			printf("y");
-//			yield = true;
-//		}
-//		taskEXIT_CRITICAL();
-//
-//		if (yield)
-//		{
-//			printf("y");
-//			vTaskSetTimeOutState(&xTimeout);
 //			taskENTER_CRITICAL();
+//			printf("txstate: %d\n", State);
 //			taskEXIT_CRITICAL();
-//			yield = false;
-//			taskYIELD();
 //		}
-//	}
 
-	for (;;)
-	{
 		switch (State)
 		{
 		case Disable:
@@ -162,9 +125,11 @@ void Serial_Transmitter_State_Step()
 
 		case Idle:
 		{
-			WAIT_FOR_OUTGOING_QUEUE();
-			Temp_Message = Peek_Message(&outgoingMessageQueue);
-			RELEASE_OUTGOING_QUEUE();
+//			WAIT_FOR_OUTGOING_QUEUE(); ///TODO: make sure we're not blocking here. That'll create a deadlock.
+			taskENTER_CRITICAL();
+			Temp_Message = Peek_Message(&incomingMessageQueue);
+			taskEXIT_CRITICAL();
+//			RELEASE_OUTGOING_QUEUE();
 
 			if (!Serial_Rx_In_Progress && Temp_Message != NULL)
 			{
@@ -178,22 +143,34 @@ void Serial_Transmitter_State_Step()
 		{
 			Serial_Tx_In_Progress = true;
 
-			WAIT_FOR_OUTGOING_QUEUE();
-			Temp_Message = Dequeue_Message(&outgoingMessageQueue);
-			RELEASE_OUTGOING_QUEUE();
+//			WAIT_FOR_OUTGOING_QUEUE();
+			taskENTER_CRITICAL();
+			Temp_Message = Dequeue_Message(&incomingMessageQueue);
+			taskEXIT_CRITICAL();
+//			RELEASE_OUTGOING_QUEUE();
 
+			taskENTER_CRITICAL();
 			Serial_Tx_Count = strlen(Temp_Message->content);
+			taskEXIT_CRITICAL();
+
+			taskENTER_CRITICAL();
 			strcpy(Serial_Tx_Buffer, Temp_Message->content);
+			taskEXIT_CRITICAL();
 
 //            printf("msg only: [%s]", Serial_Tx_Buffer);
 
+			taskENTER_CRITICAL();
 			strcat(Serial_Tx_Buffer, Temp_Message->source);
+			taskEXIT_CRITICAL();
 
 //            printf("addr: [%s]", Temp_Message->source);
-//            printf("msg + addr: [%s]", Serial_Tx_Buffer);
+//			taskENTER_CRITICAL();
+//			printf("msg + addr: [%s]", Serial_Tx_Buffer);
+//			taskEXIT_CRITICAL();
 
 			State = Wait_For_Transmit_Ok;
 
+			timeTemp = system_get_time();
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 			gpio16_output_set(0);
 #else
@@ -207,8 +184,29 @@ void Serial_Transmitter_State_Step()
 		{
 			if (!GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
 			{
-				State = Transmitting;
+				taskENTER_CRITICAL();
 				printf(Serial_Tx_Buffer);
+				taskEXIT_CRITICAL();
+				State = Transmitting;
+			}
+			else if ((system_get_time() - timeTemp) > 10)
+			{
+				timeTemp = system_get_time();
+
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+				gpio16_output_set(1);
+#else
+				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
+#endif
+				while ((system_get_time() - timeTemp) < 1)
+				{
+					taskYIELD();
+				}
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+				gpio16_output_set(0);
+#else
+				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
+#endif
 			}
 			break;
 		}

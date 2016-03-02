@@ -53,6 +53,7 @@ typedef enum
 } UDP_Receiver_States;
 ////Globals   /////////////////////////////////////////////////////
 bool Exclusive_Rx_Access;
+volatile bool IncomingQueueLock;
 
 ////Local vars/////////////////////////////////////////////////////
 static UDP_Receiver_States State;
@@ -96,7 +97,7 @@ bool UDP_Receiver_Init()
 
 	State = Disable;
 
-	tempAddr = zalloc(32);
+	tempAddr = zalloc(SOCKADDR_IN_SIZE_BYTES * 2); //*2 for safety.
 	Initialize_Message_Queue(&incomingMessageQueue);
 
 //   printf("udp rx port: %u\n", htons(UDP_RX_PORT));
@@ -111,27 +112,22 @@ bool UDP_Receiver_Init()
 
 void UDP_Receiver_State_Step()
 {
-	Connect();
+//	Connect();
+//	for (;;)
+//	{
+//
+//		if (Receive())
+//		{
+//			taskENTER_CRITICAL();
+//			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';
+//			printf("%d:[%s]\n", system_get_time(), UDP_Rx_Buffer);
+//			taskEXIT_CRITICAL();
+//		}
+//		taskYIELD();
+//	}
+
 	for (;;)
 	{
-
-		if (Receive())
-		{
-			taskENTER_CRITICAL();
-			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';
-			printf("%d:[%s]\n", system_get_time(), UDP_Rx_Buffer);
-			taskEXIT_CRITICAL();
-		}
-		taskYIELD();
-	}
-
-	for (;;)
-	{
-//      if (!(testCounter = (testCounter + 1) % 10000))
-//      {
-//         printf("udprx_state: %d\n", State);
-//      }
-
 		switch (State)
 		{
 		case Disable:
@@ -148,7 +144,10 @@ void UDP_Receiver_State_Step()
 //            vTaskDelay(2000 / portTICK_RATE_MS);
 			if (Connect())
 			{
-//               printf("rx connected\n");
+
+//				taskENTER_CRITICAL();
+//				printf("rx connected\n");
+//				taskEXIT_CRITICAL();
 				State = Idle;
 			}
 			break;
@@ -169,6 +168,9 @@ void UDP_Receiver_State_Step()
 
 		case Enqueue_Message:
 		{
+//			taskENTER_CRITICAL();
+//			printf("enqueue.\n");
+//			taskEXIT_CRITICAL();
 //            sinZeroSize = 0;
 //            for (i = 0; i < SIN_ZERO_LEN; ++i)
 //            {
@@ -182,25 +184,43 @@ void UDP_Receiver_State_Step()
 //                   ntohs(lastSourceAddress.sin_port),
 //                   sinZeroStr);
 			//               printf("message addr rx %d\n", &tempMessage);
+			taskENTER_CRITICAL();
 			Serialize_Address(&lastSourceAddress, tempAddr,
 			MAXIMUM_DESTINATION_LENGTH);
+			taskEXIT_CRITICAL();
 
-//            printf("strlen addr: %d", strlen(tempAddr));
-//            printf("rx'd from: [%s]\n", tempAddr);
+//			taskENTER_CRITICAL();
+////            printf("strlen addr: %d", strlen(tempAddr));
+//			printf("rx'd from: [%s]\n", tempAddr);
+//			taskEXIT_CRITICAL();
 
+			taskENTER_CRITICAL();
 			Initialize_Message(&tempMessage, tempAddr, tempAddr, UDP_Rx_Buffer);
+			taskEXIT_CRITICAL();
 
 //            printf("rx'd from: [%s]\n\n", tempAddr);
 //            printf("message source: [%s]\n\n", tempMessage.source);
 
 			//TODO: incoming queue
+//			WAIT_FOR_INCOMING_QUEUE();
+			taskENTER_CRITICAL();
 			Queue_Message(&incomingMessageQueue, &tempMessage);
+			taskEXIT_CRITICAL();
+//			RELEASE_INCOMING_QUEUE();
 //            Queue_Message(&outgoingMessageQueue, &tempMessage);
 
-			//               printf("cont:[%s]\ndest:[%s]\nsource:[%s]",
-			//                      Peek_Message(&outgoingMessageQueue)->content,
-			//                      Peek_Message(&outgoingMessageQueue)->destination,
-			//                      Peek_Message(&outgoingMessageQueue)->source);
+//			taskENTER_CRITICAL();
+////			printf("cont:[%s]\ndest:[%s]\nsource:[%s]",
+////					Peek_Message(&incomingMessageQueue)->content,
+////					Peek_Message(&incomingMessageQueue)->destination,
+////					Peek_Message(&incomingMessageQueue)->source);
+//			taskEXIT_CRITICAL();
+
+//			taskENTER_CRITICAL();
+//			WAIT_FOR_INCOMING_QUEUE();
+//			Dequeue_Message(&incomingMessageQueue);
+//			RELEASE_INCOMING_QUEUE();
+//			taskEXIT_CRITICAL();
 
 			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';
 //            printf("received: [%s]\n", UDP_Rx_Buffer);
@@ -226,7 +246,7 @@ void UDP_Receiver_State_Step()
 			break;
 		}
 		}
-
+		taskYIELD();
 //      vTaskDelay(5 / portTICK_RATE_MS);
 	}
 }

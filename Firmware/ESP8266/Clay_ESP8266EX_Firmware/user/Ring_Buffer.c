@@ -8,6 +8,8 @@
 #include "esp_common.h"
 #include "Ring_Buffer.h"
 
+bool Ring_Buffer_Lock;
+
 static uint8 Ring_Buffer_buffer[Ring_Buffer_BUF_SIZE]; /* ring buffer */
 static uint16 Ring_Buffer_inIdx; /* input index */
 static uint16 Ring_Buffer_outIdx; /* output index */
@@ -28,8 +30,6 @@ uint8 Ring_Buffer_Put(uint8 elem)
 {
 	uint8 res = false;
 
-//  EnterCritical();
-	taskENTER_CRITICAL();
 	if (Ring_Buffer_inSize == Ring_Buffer_BUF_SIZE)
 	{
 		res = true;
@@ -44,8 +44,6 @@ uint8 Ring_Buffer_Put(uint8 elem)
 			Ring_Buffer_inIdx = 0;
 		}
 	}
-	taskEXIT_CRITICAL();
-//  ExitCritical();
 	return res;
 }
 
@@ -66,8 +64,6 @@ uint8 Ring_Buffer_Get(uint8 *elemP)
 {
 	uint8 res = false;
 
-//  EnterCritical();
-	taskENTER_CRITICAL();
 	if (Ring_Buffer_inSize == 0)
 	{
 		res = true;
@@ -82,8 +78,6 @@ uint8 Ring_Buffer_Get(uint8 *elemP)
 			Ring_Buffer_outIdx = 0;
 		}
 	}
-	taskEXIT_CRITICAL();
-//  ExitCritical();
 	return res;
 }
 
@@ -99,8 +93,9 @@ uint8 Ring_Buffer_Get(uint8 *elemP)
  */
 uint8 Ring_Buffer_Has_Data()
 {
+	uint8 rval = (Ring_Buffer_inSize > 0 ? TRUE : FALSE);
 
-	return (Ring_Buffer_inSize > 0 ? TRUE : FALSE);
+	return rval;
 }
 
 /*
@@ -115,7 +110,9 @@ uint8 Ring_Buffer_Has_Data()
  */
 uint16 Ring_Buffer_NofElements(void)
 {
-	return Ring_Buffer_inSize;
+	uint16 rval = Ring_Buffer_inSize;
+
+	return rval;
 }
 
 /*
@@ -131,7 +128,9 @@ uint16 Ring_Buffer_NofElements(void)
  */
 uint16 Ring_Buffer_NofFreeElements(void)
 {
-	return (uint16) (Ring_Buffer_BUF_SIZE - Ring_Buffer_inSize);
+	uint16 rval = (uint16) (Ring_Buffer_BUF_SIZE - Ring_Buffer_inSize);
+
+	return rval;
 }
 
 /*
@@ -145,6 +144,7 @@ uint16 Ring_Buffer_NofFreeElements(void)
  */
 void Ring_Buffer_Init(void)
 {
+	Ring_Buffer_Lock = false;
 	Ring_Buffer_inIdx = 0;
 	Ring_Buffer_outIdx = 0;
 	Ring_Buffer_inSize = 0;

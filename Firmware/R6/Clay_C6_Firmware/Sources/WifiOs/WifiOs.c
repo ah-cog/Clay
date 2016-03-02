@@ -19,13 +19,12 @@
 #include "Ring_Buffer.h"
 #include "Clock.h"
 
-#define OUT_BUFFER_LENGTH           100
-#define IN_BUFFER_LENGTH            100
+#define OUT_BUFFER_LENGTH           1024
+#define IN_BUFFER_LENGTH            1024
 #define INTERRUPT_RX_TIMEOUT_MS     1000
 #define INTERRUPT_TX_TIMEOUT_MS     1000
 
 ESP8266_UART_Device deviceData;
-//ESP8266_UART_Device deviceData;
 volatile bool WifiInterruptReceived;
 volatile bool WifiSetProgramMode;
 bool Wifi_Message_Available;
@@ -130,9 +129,14 @@ void Wifi_State_Step()
             Newline_Count = 0;
             Pending_Receive_Byte_Count = 0;
 
-            Ring_Buffer_Init();
-
             interruptRxTime = Millis();
+
+            while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar))
+                   == ERR_OK)
+            {
+
+            }
+            Ring_Buffer_Init();
 
             WIFI_GPIO2_PutVal(NULL, 0);
          }
@@ -145,12 +149,8 @@ void Wifi_State_Step()
          if (Ring_Buffer_Has_Data())
          {
             Ring_Buffer_Get(inBuffer + Pending_Receive_Byte_Count);
-            if (inBuffer[Pending_Receive_Byte_Count++] == '\n')
-            {
-               ++Newline_Count;
-            }
 
-            if (Newline_Count == 2)
+            if (inBuffer[Pending_Receive_Byte_Count++] == '!')
             {
                WIFI_GPIO2_PutVal(NULL, 1);
                Wifi_Message_Available = TRUE;
@@ -267,6 +267,10 @@ void Wifi_Do_Reset(bool StateMachineWaitForConnect)
 
 void Wifi_Send(void * data, uint32_t length)
 {
+   if (State != Idle)
+   {
+      return;
+   }
    //TODO: NQ the message. The state machine will pick it up in idle.
    pendingTransmitByteCount = length;
    memcpy(outBuffer, data, (length <= OUT_BUFFER_LENGTH) ? length : OUT_BUFFER_LENGTH);

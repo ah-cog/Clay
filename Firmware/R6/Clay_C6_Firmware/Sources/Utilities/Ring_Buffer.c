@@ -27,8 +27,6 @@ byte Ring_Buffer_Put(byte elem)
 {
    byte res = ERR_OK;
 
-   EnterCritical()
-   ;
    if (Ring_Buffer_inSize == Ring_Buffer_BUF_SIZE)
    {
       res = ERR_TXFULL;
@@ -43,7 +41,6 @@ byte Ring_Buffer_Put(byte elem)
          Ring_Buffer_inIdx = 0;
       }
    }
-   ExitCritical();
    return res;
 }
 
@@ -64,8 +61,6 @@ byte Ring_Buffer_Get(byte *elemP)
 {
    byte res = ERR_OK;
 
-   EnterCritical()
-   ;
    if (Ring_Buffer_inSize == 0)
    {
       res = ERR_RXEMPTY;
@@ -79,9 +74,7 @@ byte Ring_Buffer_Get(byte *elemP)
       {
          Ring_Buffer_outIdx = 0;
       }
-//    Monitor_Network_Communications ();
    }
-   ExitCritical();
    return res;
 }
 

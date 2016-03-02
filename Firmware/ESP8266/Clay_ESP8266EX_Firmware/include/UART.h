@@ -121,8 +121,8 @@ typedef struct
 
 extern uint8 RcvChar;
 extern uint8 uart_no;
-extern uint8 fifo_len;
-extern volatile uint8 InterruptFifoWriteIndex;
+extern uint8 BytesAvailable;
+extern volatile uint8 BytesRead;
 extern uint8 fifo_tmp[];
 
 //=======================================
