@@ -23,6 +23,7 @@
 #include "Serial_Transmitter.h"
 #include "UDP_Receiver.h"
 #include "UDP_Transmitter.h"
+#include "TCP_Receiver.h"
 
 #include "Message_Queue.h"
 
@@ -147,10 +148,11 @@ void wifi_handle_event_cb(System_Event_t *evt)
 //				IP2STR(&evt->event_info.got_ip.mask),
 //				IP2STR(&evt->event_info.got_ip.gw));
 //		os_printf("\n");
-		UDP_Transmitter_Init();
-		UDP_Receiver_Init();
-		Serial_Receiver_Init();
-		Serial_Transmitter_Init();
+//		UDP_Transmitter_Init();
+//		UDP_Receiver_Init();
+//		Serial_Receiver_Init();
+//		Serial_Transmitter_Init();
+		TCP_Receiver_Init();
 		break;
 	case EVENT_SOFTAPMODE_STACONNECTED:
 //		os_printf("station: " MACSTR "join, AID = %d\n",
