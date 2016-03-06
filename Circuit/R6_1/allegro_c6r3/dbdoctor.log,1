@@ -1,0 +1,28 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    DBDOCTOR                                                         )
+(                                                                     )
+(    Drawing          : CLAYc6r3.brd                                  )
+(    Software Version : 16.6P004                                      )
+(    Date/Time        : Sun Mar 06 02:56:46 2016                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+
+ERROR IN SHAPE (-367.00 715.49)
+  class = ETCH
+  subclass = TOP 
+  ERROR(SPMHDB-187): SHAPE boundary may not cross itself.
+   Error cannot be fixed.
+  Dynamic shape will try regenerating etch.
+
+Number of Xnets before update: 0        after update: 0
+Number of Diff Pairs before update: 0   after update: 0
+
+Regenerating DRC
+  Original DRC errors:   0
+  Updated DRC errors:    0
+  DRC elapsed time:      00:00:01
+
+0 warnings, 1 errors detected, 0 errors  fixed.

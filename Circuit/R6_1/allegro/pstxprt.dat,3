@@ -1,5 +1,5 @@
 FILE_TYPE = EXPANDEDPARTLIST;
-{ Using PSTWRITER 16.6.0 d001Feb-12-2016 at 01:01:54 }
+{ Using PSTWRITER 16.6.0 d001Mar-05-2016 at 19:14:15 }
 DIRECTIVES
  PST_VERSION='PST_HDL_CENTRIC_VERSION_0';
  ROOT_DRAWING='CLAYR6';
@@ -1244,6 +1244,26 @@ SECTION_NUMBER 1
  '@CLAYR6.SCHEMATIC1(SCH_1):SOFT_PWR_SW@CLAYR6.SCHEMATIC1(SCH_1):INS59363@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
  C_PATH='@clayr6.schematic1(sch_1):soft_pwr_sw@clayr6.schematic1(sch_1):ins59363@symlib.\testpoint.normal\(chips)',
  P_PATH='@clayr6.schematic1(sch_1):page1_soft_pwr_sw@clayr6.schematic1(sch_1):page8_ins59363@symlib.\testpoint.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ TP24 'TESTPOINT_TP_030_TP':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS11679@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins11679@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins11679@symlib.\testpoint.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ TP25 'TESTPOINT_TP_030_TP':;
+
+SECTION_NUMBER 1
+ '@CLAYR6.SCHEMATIC1(SCH_1):WIFI@CLAYR6.SCHEMATIC1(SCH_1):INS11691@SYMLIB.TESTPOINT.NORMAL(CHIPS)':
+ C_PATH='@clayr6.schematic1(sch_1):wifi@clayr6.schematic1(sch_1):ins11691@symlib.\testpoint.normal\(chips)',
+ P_PATH='@clayr6.schematic1(sch_1):page1_wifi@clayr6.schematic1(sch_1):page11_ins11691@symlib.\testpoint.normal\(chips)',
  PRIM_FILE='.\pstchip.dat',
  SECTION='';
 

@@ -1,0 +1,21 @@
+#  View replacement method:
+#  Complete
+
+color -globvis off
+color -vis "DRC ERROR CLASS/TOP"
+color -vis "DRC ERROR CLASS/GND"
+color -vis "DRC ERROR CLASS/PWR"
+color -vis "DRC ERROR CLASS/BOTTOM"
+color -vis "DRC ERROR CLASS/PASTEMASK_BOTTOM"
+color -vis "DRC ERROR CLASS/PASTEMASK_TOP"
+color -vis "DRC ERROR CLASS/SOLDERMASK_BOTTOM"
+color -vis "DRC ERROR CLASS/SOLDERMASK_TOP"
+color -vis "DRC ERROR CLASS/PACKAGE_BOTTOM"
+color -vis "DRC ERROR CLASS/PACKAGE_TOP"
+color -vis "DRC ERROR CLASS/ALL"
+color -vis "ETCH/TOP"
+color -vis "ETCH/BOTTOM"
+color -vis "PIN/TOP"
+color -vis "PIN/BOTTOM"
+color -vis "VIA CLASS/TOP"
+color -vis "VIA CLASS/BOTTOM"

@@ -1,0 +1,2 @@
+"C:\Cadence\SPB_16.6\share\pcb\examples\skill\cmds\change_net_on_vias.il"
+skill load("C:/Cadence/SPB_16.6/share/pcb/examples/skill/cmds/change_net_on_vias.il")

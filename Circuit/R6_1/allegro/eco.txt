@@ -2,26 +2,28 @@
 |                                 ECO   REPORT                                 |
 |                                                                    Page   1  |
 |------------------------------------------------------------------------------|
-|  C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CIRCUIT/R6_1/allegro/CLAYR6.brd         |
-|                                                    Fri Feb 12 01:20:09 2016  |
+|  E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd                          |
+|                                                    Sun Mar 06 02:35:24 2016  |
 |------------------------------------------------------------------------------|
-| NET CHANGES                                                                  |
+| COMPONENTS CHANGED from one device type to another in board drawing          |
 |- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
-|   net  name |  type of change |    pin_id     |   x   |   y   |   to  net    |
+|    ref des        | new device type     |   x   |   y   |  old  device type  |
 |- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
-  GND_EARTH_VREG pins MOVED FROM this net (to net name listed on right)
-                                 C29.2           -847.37  368.00
-                                                                      GND_EARTH
-                                 C30.2           -875.37  681.00
-                                                                      GND_EARTH
-                                 C31.2           -847.37  429.00
-                                                                      GND_EARTH
-                                 C32.2           -815.75  480.00
-                                                                      GND_EARTH
-                                 U6.4            -787.93  594.68
-                                                                      GND_EARTH
-                                 U6.11           -846.00  575.00
-                                                                      GND_EARTH
+ R1                  RESISTOR_R0402_200    -750.00  820.00 RESISTOR_R0402_30
+ R21                 RESISTOR_R0402_200    -736.00  265.00 RESISTOR_R0402_30
+|------------------------------------------------------------------------------|
+|                                 ECO   REPORT                                 |
+|                                                                    Page   2  |
 |------------------------------------------------------------------------------|
-|   total ECO changes reported  6                                              |
+|  E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd                          |
+|                                                    Sun Mar 06 02:35:24 2016  |
+|------------------------------------------------------------------------------|
+| SLOT PROPERTIES added to board drawing                                       |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|   slot_id    |   x   |   y   |   property   |             value              |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+ R1.2           -750.00  820.00 PRIM_FILE      .\pstchip.dat
+ R21.2          -736.00  265.00 PRIM_FILE      .\pstchip.dat
+|------------------------------------------------------------------------------|
+|   total ECO changes reported  4                                              |
 |------------------------------------------------------------------------------|
