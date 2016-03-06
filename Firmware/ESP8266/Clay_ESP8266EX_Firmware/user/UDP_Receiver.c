@@ -52,8 +52,6 @@ typedef enum
 	UDP_STATE_MAX
 } UDP_Receiver_States;
 ////Globals   /////////////////////////////////////////////////////
-bool Exclusive_Rx_Access;
-volatile bool IncomingQueueLock;
 
 ////Local vars/////////////////////////////////////////////////////
 static UDP_Receiver_States State;
@@ -159,10 +157,10 @@ void UDP_Receiver_State_Step()
 			{
 				State = Enqueue_Message;
 			}
-			else if (Exclusive_Rx_Access)
-			{
-				State = Rx_Blocked;
-			}
+//			else if (Exclusive_Rx_Access)
+//			{
+//				State = Rx_Blocked;
+//			}
 			break;
 		}
 
@@ -233,10 +231,10 @@ void UDP_Receiver_State_Step()
 
 		case Rx_Blocked:
 		{
-			if (!Exclusive_Rx_Access)
-			{
-				State = Idle;
-			}
+//			if (!Exclusive_Rx_Access)
+//			{
+			State = Idle;
+//			}
 			break;
 		}
 
@@ -255,7 +253,7 @@ void UDP_Receiver_State_Step()
 static bool Connect()
 {
 	Connected = false;
-	Exclusive_Rx_Access = false;
+//	Exclusive_Rx_Access = false;
 
 	memset(&server_addr, 0, sizeof(server_addr));
 

@@ -2,9 +2,37 @@
 |                                 ECO   REPORT                                 |
 |                                                                    Page   1  |
 |------------------------------------------------------------------------------|
-|  C:/USERS/THEBH/DESKTOP/DTF/GIT/CLAY/CIRCUIT/R6_1/allegro/CLAYR6.brd         |
-|                                                    Fri Feb 12 01:01:55 2016  |
+|  E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd                          |
+|                                                    Sat Mar 05 19:14:16 2016  |
 |------------------------------------------------------------------------------|
+| NET CHANGES                                                                  |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|   net  name |  type of change |    pin_id     |   x   |   y   |   to  net    |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+  WIFI_GPIO12  pins DELETED FROM this net (all pins deleted)
+                                 U7.10           -496.40 -590.20
+               pins MOVED FROM this net (to net name listed on right)
+                                 U5.96           -157.48  305.12
+                                                PTD3/SPI0_SIN/UART2_TX/FTM3_CH3
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  WIFI_GPIO14  pins DELETED FROM this net (all pins deleted)
+                                 U7.9            -496.40 -609.90
+               pins MOVED FROM this net (to net name listed on right)
+                                 U5.95           -137.80  305.12
+                                                PTD2/LLWU_P13/SPI0_SOUT/UART2_R
+|------------------------------------------------------------------------------|
+|                                 ECO   REPORT                                 |
+|                                                                    Page   2  |
 |------------------------------------------------------------------------------|
-|   total ECO changes reported  0                                              |
+|  E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd                          |
+|                                                    Sat Mar 05 19:14:16 2016  |
+|------------------------------------------------------------------------------|
+| COMPONENTS DELETED from board drawing                                        |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+|    ref des        |    device type      |   x   |   y                        |
+|- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - |
+ TP26                TESTPOINT_TP_030_TP                  
+ TP27                TESTPOINT_TP_030_TP                  
+|------------------------------------------------------------------------------|
+|   total ECO changes reported  6                                              |
 |------------------------------------------------------------------------------|

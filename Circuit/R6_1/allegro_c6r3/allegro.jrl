@@ -1,0 +1,16 @@
+\t (00:00:01) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:01)     Journal start - Sun Mar 06 05:27:01 2016
+\t (00:00:01)         Host=STEELGIANT User=thebh_000 Pid=1152 CPUs=8
+\t (00:00:01) 
+\t (00:00:04) Opening existing design...
+\d (00:00:04) Database opened: E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd
+\t (00:00:04) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:00:04) trapsize 1442
+\i (00:00:04) trapsize 1415
+\i (00:00:04) trapsize 1446
+\i (00:00:04) trapsize 1459
+\i (00:00:04) trapsize 1242
+\i (00:00:04) trapsize 1242
+\i (00:00:05) etchedit 
+\i (00:00:55) exit 
+\t (00:00:55)     Journal end - Sun Mar 06 05:27:55 2016
