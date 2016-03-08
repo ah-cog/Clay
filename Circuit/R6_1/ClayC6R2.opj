@@ -133,67 +133,16 @@
     (Doc
       (Type "COrCapturePMDoc")
       (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 0 200 0 401"))
+        (Placement "44 2 3 -1 -1 -8 -31 0 200 0 401"))
       (Tab 0))
     (Doc
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 0 1 -1 -1 -8 -31 26 1629 26 496")
-        (Scroll "0 0")
-        (Zoom "168")
+        (Scroll "-353 0")
+        (Zoom "42")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6_1\CLAYR6.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 78 1681 78 548")
-        (Scroll "13 212")
-        (Zoom "132")
-        (Occurrence "/WiFi"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\ESP8622EX\ESP8266EX.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 130 1733 130 600")
-        (Scroll "276 1347")
-        (Zoom "100")
-        (Occurrence "/uC"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\MK64FN1M0VLL12\MK64FN1M0VLL12.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 182 1785 182 652")
-        (Scroll "-297 0")
-        (Zoom "100")
-        (Occurrence "/BATTERY_CHARGER"))
-      (Path
-         "E:\GIT\CLAY\CIRCUIT\R6_1\BATTERY_CHARGER\LM3658_BATTERY_CHARGER.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 208 1811 208 678")
-        (Scroll "-292 0")
-        (Zoom "100")
-        (Occurrence "/SOFT_PWR_SW"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\SOFT_PWR_SW\SOFT_PWR_SW.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 2 3 -1 -1 -8 -31 130 1733 130 619")
-        (Scroll "-409 0")
-        (Zoom "100")
-        (Occurrence "/VREG"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\VREG_3.3V_FIXED\TPS61201.DSN")
       (Schematic "SCHEMATIC1")
       (Page "PAGE1")))
   (MPSSessionName "thebh_000")
