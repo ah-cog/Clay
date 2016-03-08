@@ -48,6 +48,7 @@ typedef enum
 	Data_Received,
 	UDP_STATE_MAX
 } TCP_Receiver_States;
+
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
@@ -78,6 +79,20 @@ static int32 testCounter;
 Message tempMessage;
 char * tempAddr;
 
+//TODO: move to clay_config.
+#define SERVER_PORT 1002
+#define MAX_CONN    10
+#define SERVER_IP "192.168.1.11"
+//#define SERVER_PORT 1001
+
+static int32 listenfd;
+static int32 len;
+static int sta_socket;
+static struct sockaddr_in remote_ip;
+static int32 client_sock;
+static struct sockaddr_in remote_addr;
+static uint16 httpd_server_port = 1002;
+
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static void Disconnect();
@@ -107,7 +122,8 @@ bool TCP_Receiver_Init()
 
 void TCP_Receiver_State_Step()
 {
-	while(!Connect());
+	while (!Connect())
+		;
 	for (;;)
 	{
 
@@ -123,59 +139,116 @@ void TCP_Receiver_State_Step()
 }
 
 ////Local implementations /////////////////////////////////////////
-
-///TCP Scratch area/////////
-#define SERVER_IP "192.168.1.12"
-#define SERVER_PORT 1001
-
-int sta_socket;
-struct sockaddr_in remote_ip;
-uint8 * pbuf;
-int recbytes;
-
 bool Connect()
 {
-	bool rval = true;
+	bool rval = false;
 
-	//create socket
-	sta_socket = socket(PF_INET, SOCK_STREAM, 0);
-
-	//this should be a loop like the UDP.
-	if (-1 == sta_socket)
+	/* Construct local address structure */
+	memset(&server_addr, 0, sizeof(server_addr)); /* Zero out structure */
+	server_addr.sin_family = AF_INET; /* Internet address family */
+	server_addr.sin_addr.s_addr = INADDR_ANY; /* Any incoming interface */
+	server_addr.sin_len = sizeof(server_addr);
+	server_addr.sin_port = htons(httpd_server_port); /* Local port */
+	/* Create socket for incoming connections */
+	listenfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (listenfd == -1)
 	{
-		close(sta_socket);
+		printf("ESP8266 TCP server task > socket error\n");
 		vTaskDelay(1000 / portTICK_RATE_MS);
-		printf("ESP8266 TCP client task > socket fail!\n");
 		rval = false;
 	}
-	if (rval) {
-		printf("ESP8266 TCP client task > socket ok!\n");
-	}
-
-	//create tcp connection
-	bzero(&remote_ip, sizeof(struct sockaddr_in));
-	remote_ip.sin_family = AF_INET;
-	remote_ip.sin_addr.s_addr = inet_addr(SERVER_IP);
-	remote_ip.sin_port = htons(SERVER_PORT);
-
-	//this should be a loop like the UDP.
-	if ((sta_socket != -1)
-			&& connect(sta_socket, (struct sockaddr * ) (&remote_ip),
-					sizeof(struct sockaddr)))
+	else
 	{
-		close(sta_socket);
-		vTaskDelay(1000 / portTICK_RATE_MS);
-		printf("ESP8266 TCP client task > connect fail!\n");
-		rval = false;
+		rval = true;
+		printf("ESP8266 TCP server task > create socket: %d\n", listenfd);
 	}
 
-	if (rval) {
-		printf("ESP8266 TCP client task > connect ok!\n");
+	if (rval)
+	{
+		/* Bind to the local port */
+		ret = bind(listenfd, (struct sockaddr * )&server_addr,
+				sizeof(server_addr));
+		if (ret != 0)
+		{
+			printf("ESP8266 TCP server task > bind fail\n");
+			vTaskDelay(1000 / portTICK_RATE_MS);
+			rval = false;
+			close(listenfd);
+		}
+		else
+		{
+			rval = true;
+			printf("ESP8266 TCP server task > port:%d\n",
+					ntohs(server_addr.sin_port));
+		}
+	}
+//Establish TCP server interception:
+	if (rval)
+	{
+		/* Listen to the local connection */
+		ret = listen(listenfd, MAX_CONN);
+		if (ret != 0)
+		{
+			close(listenfd);
+			printf("ESP8266 TCP server task > failed to set listen queue!\n");
+			vTaskDelay(1000 / portTICK_RATE_MS);
+			rval = false;
+		}
+		else
+		{
+			rval = true;
+			printf("ESP8266 TCP server task > listen ok\n");
+		}
+
 	}
 
 	return rval;
 }
-///TCP scratch area/////////
+
+static bool Receive()
+{
+	bool rval = false;
+
+	//Wait until TCP client is connected with the server, then start receiving data packets when TCP
+	//communication is established:
+
+	len = sizeof(struct sockaddr_in);
+	printf("ESP8266 TCP server task > wait client\n");
+	/*block here waiting remote connect request*/
+	if ((client_sock = accept(listenfd, (struct sockaddr * )&remote_addr,
+			(socklen_t * )&len)) < 0)
+	{
+		printf("ESP8266 TCP server task > accept fail\n");
+		rval = false;
+	}
+	else
+	{
+		rval = true;
+	}
+
+	if (rval)
+	{
+		printf("ESP8266 TCP server task > Client from %s %d\n",
+				inet_ntoa(remote_addr.sin_addr), htons(remote_addr.sin_port));
+
+		while ((TCP_Rx_Count = read(client_sock, TCP_Rx_Buffer, 128)) > 0)
+		{
+			TCP_Rx_Buffer[TCP_Rx_Count] = 0;
+			printf(
+					"ESP8266 TCP server task > read data success %d!\nESP8266 TCP server task > %s\n",
+					TCP_Rx_Count, TCP_Rx_Buffer);
+			rval = true;
+		}
+
+		if (TCP_Rx_Count <= 0)
+		{
+			printf("ESP8266 TCP server task > read data fail!\n");
+			rval = false;
+		}
+	}
+
+	return rval;
+}
 
 static void Disconnect()
 {
@@ -188,29 +261,103 @@ static void Disconnect()
 	close(sock_fd);
 }
 
-static bool Receive()
-{
-	bool rval = false;
+///may be useful for transmit
 
-	char *recv_buf = (char *) zalloc(128);
-	while ((recbytes = read(sta_socket, recv_buf, 128)) > 0)
-	{
-		recv_buf[recbytes] = 0;
-		printf(
-				"ESP8266 TCP client task > recv data %d bytes!\nESP8266 TCP client task > %s\n",
-				recbytes, recv_buf);
-	}
-	free(recv_buf);
-	if (recbytes <= 0)
-	{
-		rval = false;
-		close(sta_socket);
-		printf("ESP8266 TCP client task > read data fail!\n");
-	}
-	else
-	{
-		rval = true;
-	}
+//////working demo:
+//#define SERVER_IP "192.168.1.12"
+////#define SERVER_PORT 1001
+//
+//int sta_socket;
+//struct sockaddr_in remote_ip;
+//uint8 * pbuf;
+//int recbytes;
+//
+//////////////////////////////////////////////////////////////////////////////
+//#define SERVER_PORT 1002
+//#define MAX_CONN    10
+//
+//bool Connect_Server()
+//{
+//	int32 listenfd;
+//	//int32 ret;
+//	struct sockaddr_in server_addr, remote_addr;
+//	int stack_counter = 0;
+//	uint16 httpd_server_port = 1002;
+//
+//	/* Construct local address structure */
+//	memset(&server_addr, 0, sizeof(server_addr)); /* Zero out structure */
+//	server_addr.sin_family = AF_INET; /* Internet address family */
+//	server_addr.sin_addr.s_addr = INADDR_ANY; /* Any incoming interface */
+//	server_addr.sin_len = sizeof(server_addr);
+//	server_addr.sin_port = htons(httpd_server_port); /* Local port */
+//	/* Create socket for incoming connections */
+//	do
+//	{
+//		listenfd = socket(AF_INET, SOCK_STREAM, 0);
+//		if (listenfd == -1)
+//		{
+//			printf("ESP8266 TCP server task > socket error\n");
+//			vTaskDelay(1000 / portTICK_RATE_MS);
+//		}
+//	} while (listenfd == -1);
+//	printf("ESP8266 TCP server task > create socket: %d\n", listenfd);
+//	/* Bind to the local port */
+//	do
+//	{
+//		ret = bind(listenfd, (struct sockaddr * )&server_addr,
+//				sizeof(server_addr));
+//		if (ret != 0)
+//		{
+//			printf("ESP8266 TCP server task > bind fail\n");
+//			vTaskDelay(1000 / portTICK_RATE_MS);
+//		}
+//	} while (ret != 0);
+//	printf("ESP8266 TCP server task > port:%d\n", ntohs(server_addr.sin_port));
+////Establish TCP server interception:
+//	do
+//	{
+//		/* Listen to the local connection */
+//		ret = listen(listenfd, MAX_CONN);
+//		if (ret != 0)
+//		{
+//			printf("ESP8266 TCP server task > failed to set listen queue!\n");
+//			vTaskDelay(1000 / portTICK_RATE_MS);
+//		}
+//	} while (ret != 0);
+//	printf("ESP8266 TCP server task > listen ok\n");
+////Wait until TCP client is connected with the server, then start receiving data packets when TCP
+////communication is established
+//
+//	int32 client_sock;
+//	int32 len = sizeof(struct sockaddr_in);
+//	for (;;)
+//	{
+//		printf("ESP8266 TCP server task > wait client\n");
+//		/*block here waiting remote connect request*/
+//		if ((client_sock = accept(listenfd, (struct sockaddr * )&remote_addr,
+//				(socklen_t * )&len)) < 0)
+//		{
+//			printf("ESP8266 TCP server task > accept fail\n");
+//			continue;
+//		}
+//		printf("ESP8266 TCP server task > Client from %s %d\n",
+//				inet_ntoa(remote_addr.sin_addr),
+//				 htons(remote_addr.sin_port));
+//		char *recv_buf = (char *) zalloc(128);
+//		while ((recbytes = read(client_sock, recv_buf, 128)) > 0)
+//		{
+//			recv_buf[recbytes] = 0;
+//			printf(
+//					"ESP8266 TCP server task > read data success %d!\nESP8266 TCP server task > %s\n",
+//					recbytes, recv_buf);
+//		}
+//		free(recv_buf);
+//		if (recbytes <= 0)
+//		{
+//			printf("ESP8266 TCP server task > read data fail!\n");
+//			close(client_sock);
+//		}
+//	}
+//
+//}
 
-	return rval;
-}

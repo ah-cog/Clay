@@ -4,11 +4,14 @@
 (                                                                     )
 (    Drawing          : CLAYc6r3.brd                                  )
 (    Software Version : 16.6P004                                      )
-(    Date/Time        : Sun Mar 06 02:59:44 2016                      )
+(    Date/Time        : Sun Mar 06 07:38:00 2016                      )
 (                                                                     )
 (---------------------------------------------------------------------)
 
 
+
+Number of Xnets before update: 0        after update: 0
+Number of Diff Pairs before update: 0   after update: 0
 
 Regenerating DRC
   Original DRC errors:   0
