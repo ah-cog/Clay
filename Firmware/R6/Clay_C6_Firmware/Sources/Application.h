@@ -21,6 +21,14 @@
 #include "Behavior.h"
 #include "Messenger.h"
 
+/**
+ * Initializes the device.
+ */
+void Initialize ();
+
+/**
+ * Runs the application. This should be called only after calling Initialize().
+ */
 void Application ();
 
 #endif /* APPLICATION_H */

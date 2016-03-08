@@ -9,7 +9,8 @@
 #define SOURCES_WIFIOS_WIFIOS_H_
 
 #include "PE_Types.h"
-#include "Message.h"
+//#include "Message.h"
+#include "Messenger.h"
 
 typedef enum
 {
@@ -45,6 +46,7 @@ extern void Wifi_Do_Reset(bool StateMachineWaitForConnect);
 extern Wifi_States Wifi_Get_State();
 
 extern bool Wifi_Send(Message * message);
-extern bool Wifi_Receive(Message * message);
+//extern bool Wifi_Receive(Message * message);
+extern Message* Wifi_Receive ();
 
 #endif /* SOURCES_WIFIOS_WIFIOS_H_ */

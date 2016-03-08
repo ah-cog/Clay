@@ -71,10 +71,9 @@ bool Perform_Channel_Light_Effect(bool reverse)
    return TRUE;
 }
 
-void Application(void)
-{
-   uint8_t status = 0;
-   Message *message = NULL;
+void Initialize () {
+
+	uint8_t status = 0;
 
    // Initialize Clay
 
@@ -88,142 +87,153 @@ void Application(void)
    // Clock.
    if ((status = Clock_Enable()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
    if ((status = Clock_Start()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
    // Status LEDs.
 
    if ((status = LED_Enable()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
    Perform_Status_LED_Effect();
 
    if (!(status = Enable_Mesh()))
    {
-      //failure
+	  //failure
    }
 
    if (!(status = Start_Mesh()))
    {
-      //failure
+	  //failure
    }
 
    // Channels.
 
    if ((status = Enable_Channels()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
    if ((Initialize_Channels()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
    if ((status = RGB_LED_Enable()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
+   // RGBDemoLoop();
 
    if ((status = Start_Light_Behavior()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
    if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
    if ((Initialize_Channel_Lights()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
 //TODO: troubleshoot MPU start with invensense drivers.
    if ((status = Start_MPU9250()) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
 // Message queue.
    if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE)
    {
-      // Failure
+	  // Failure
    }
 
    if ((status = Initialize_Message_Queue(&outgoingMessageQueue)) != TRUE)
    {
-      // Failure
+	  // Failure
+   }
+
+   if ((status = Wifi_Enable()) != TRUE)
+   {
+	   // Failure
    }
 
 #if 1
 //#if !defined DISABLE_WIFI
 
-   // ESP8266, WiFi, HTTP, UDP.
-   if ((status = Enable_ESP8266()) != TRUE)
-   {
-      // Failure
-   }
-// TODO: Generate SSID for AP according to regular expression and set up access point to facilitate discovery.
-
-   if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE)
-   {
-      // Failure
-   }
-
-   if ((status = Start_HTTP_Server(HTTP_SERVER_PORT)) != TRUE)
-   {
-      // Failure
-   }
-
-   if ((Start_UDP_Server(MESSAGE_PORT)) != TRUE)
-   {
-      // Failure
-   }
-
-   if ((Start_Discovery_Broadcast()) != TRUE)
-   {
-      // Failure
-   }
+//   // ESP8266, WiFi, HTTP, UDP.
+//   if ((status = Enable_ESP8266()) != TRUE)
+//   {
+//      // Failure
+//   }
+//// TODO: Generate SSID for AP according to regular expression and set up access point to facilitate discovery.
+//
+//   if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE)
+//   {
+//      // Failure
+//   }
+//
+//   if ((status = Start_HTTP_Server(HTTP_SERVER_PORT)) != TRUE)
+//   {
+//      // Failure
+//   }
+//
+//   if ((Start_UDP_Server(MESSAGE_PORT)) != TRUE)
+//   {
+//      // Failure
+//   }
+//
+//   if ((Start_Discovery_Broadcast()) != TRUE)
+//   {
+//      // Failure
+//   }
 #endif
+}
 
-   bool LastButtonStateUpdated = ButtonPressed;
-   Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
+void Application(void)
+{
+	Message *message = NULL;
 
-   //add software ack to mesh layer
-   //add speaker output
-   //
-
-   //Behavior test loop: Button press on module sends message to other module. Other module receives message and changes LED output.
-   for (;;)
-   {
-      //call ticks for heartbeat
-      Monitor_Periodic_Events();
-      Mesh_Process_Commands();
-      if (ButtonPressed != LastButtonStateUpdated)
-      {
-         LastButtonStateUpdated = ButtonPressed;
-         uint8_t msgbuf[] = { MESH_CMD_BUTTON_PRESSED, 1 };
-
-         if (!ButtonPressed)
-         {
-            msgbuf[1] = 0;
-         }
-
-         Mesh_Tx_With_Retry(msgbuf, 2, RemoteAddress);
-//         Mesh_Tx(msgbuf,2,RemoteAddress);
-      }
-
-      //incoming button press messages are handled by interrupt.
-   }
+//	bool LastButtonStateUpdated = ButtonPressed;
+//	Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
+//
+//	//add software ack to mesh layer
+//	//add speaker output
+//	//
+//
+//   //Behavior test loop: Button press on module sends message to other module. Other module receives message and changes LED output.
+//   for (;;)
+//   {
+//      //call ticks for heartbeat
+//      Monitor_Periodic_Events();
+//      Mesh_Process_Commands();
+//      if (ButtonPressed != LastButtonStateUpdated)
+//      {
+//         LastButtonStateUpdated = ButtonPressed;
+//         uint8_t msgbuf[] = { MESH_CMD_BUTTON_PRESSED, 1 };
+//
+//         if (!ButtonPressed)
+//         {
+//            msgbuf[1] = 0;
+//         }
+//
+//         Mesh_Tx_With_Retry(msgbuf, 2, RemoteAddress);
+////         Mesh_Tx(msgbuf,2,RemoteAddress);
+//      }
+//
+//      //incoming button press messages are handled by interrupt.
+//   }
 
    //TODO: never reached because of test loop above
    for (;;)
@@ -233,8 +243,8 @@ void Application(void)
 
 // Check and process any incoming requests
 //        Wait(10);        // Wait (100);
-      Monitor_Network_Communications();
-      MeshTestLoopStep();
+//      Monitor_Network_Communications(); // Replace this!
+//      MeshTestLoopStep();
 
 //        mesh_process_commands();
 

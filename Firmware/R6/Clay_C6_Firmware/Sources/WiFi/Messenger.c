@@ -1,12 +1,5 @@
-/*
- * Interpreter.c
- *
- *  Created on: Sep 24, 2015
- *      Author: mokogobo
- */
-
 #include "Messenger.h"
-#include "ESP8266.h"
+//#include "ESP8266.h"
 #include "Behavior.h"
 
 #define DEFAULT_UUID_LENGTH 37
@@ -39,6 +32,32 @@ Message* Create_Message (const char *content) {
 	(*message).next = NULL;
 	
 	return message;
+}
+
+void Set_Message_Source (Message *message, const char *address) {
+
+	// Free the message's destination address from memory
+	if ((*message).source != NULL) {
+		free ((*message).source);
+		(*message).source = NULL;
+	}
+
+	// Copy the message destination address
+	(*message).source = (char *) malloc (strlen (address));
+	strcpy ((*message).source, address);
+}
+
+void Set_Message_Destination (Message *message, const char *address) {
+
+	// Free the message's destination address from memory
+	if ((*message).destination != NULL) {
+		free ((*message).destination);
+		(*message).destination = NULL;
+	}
+
+	// Copy the message destination address
+	(*message).destination = (char *) malloc (strlen (address));
+	strcpy ((*message).destination, address);
 }
 
 int8_t Delete_Message (Message *message) {
