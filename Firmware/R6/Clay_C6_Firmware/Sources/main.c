@@ -81,16 +81,30 @@ int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
 	/* Write your local variable definition here */
+	int8_t status = NULL;
 
 	/*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
 	PE_low_level_init();
 	/*** End of Processor Expert internal initialization.                    ***/
 
+	if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE)
+	{
+		// Failure
+	}
+
+	if ((status = Initialize_Message_Queue(&outgoingMessageQueue)) != TRUE)
+	{
+		// Failure
+	}
+
 	Wifi_Test();
 
-	for (;;) {
+//	Initialize();
+//	Application();
 
-	}
+//	for (;;) {
+//
+//	}
 
 	/*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
