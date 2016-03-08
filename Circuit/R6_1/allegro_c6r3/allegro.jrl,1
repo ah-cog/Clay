@@ -1,42 +1,26 @@
 \t (00:00:01) allegro 16.6 P004 (v16-6-112G) Windows 32
-\t (00:00:01)     Journal start - Sun Mar 06 05:23:04 2016
-\t (00:00:01)         Host=STEELGIANT User=thebh_000 Pid=8912 CPUs=8
+\t (00:00:01)     Journal start - Sun Mar 06 10:09:36 2016
+\t (00:00:01)         Host=STEELGIANT User=thebh_000 Pid=3228 CPUs=8
 \t (00:00:01) 
 \t (00:00:04) Opening existing design...
 \d (00:00:04) Database opened: E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd
-\t (00:00:04) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
-\i (00:00:04) trapsize 1442
-\i (00:00:04) trapsize 1415
-\i (00:00:05) trapsize 1446
-\i (00:00:05) trapsize 1459
-\i (00:00:05) trapsize 1242
-\i (00:00:05) trapsize 1242
-\i (00:00:05) etchedit 
-\i (00:00:09) status 
-\i (00:00:09) etchedit 
-\i (00:00:11) setwindow form.status
-\i (00:00:11) FORM status refresh  
-\i (00:00:12) FORM status drc_update  
-\t (00:00:12) Running DRC, please wait...
-\t (00:00:12) Performing DRC...
-\t (00:00:12) Multithreaded DRC update (8 threads).
-\t (00:00:12) No DRC errors detected.
-\t (00:00:12) DRC done.
-\i (00:00:13) FORM status drc_update  
-\t (00:00:13) Running DRC, please wait...
-\t (00:00:13) Performing DRC...
-\t (00:00:13) Multithreaded DRC update (8 threads).
-\t (00:00:13) No DRC errors detected.
-\t (00:00:13) DRC done.
-\i (00:00:13) FORM status drc_update  
-\t (00:00:13) Running DRC, please wait...
-\t (00:00:13) Performing DRC...
-\t (00:00:13) Multithreaded DRC update (8 threads).
-\t (00:00:13) No DRC errors detected.
-\t (00:00:13) DRC done.
-\i (00:00:14) FORM status done  
-\i (00:00:15) setwindow pcb
-\i (00:00:15) exit 
-\e (00:00:15) Do you want to save the changes you made to CLAYc6r3.brd?
-\i (00:00:16) fillin yes 
-\t (00:00:17)     Journal end - Sun Mar 06 05:23:19 2016
+\t (00:00:04) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:00:04) trapsize 5435
+\i (00:00:04) trapsize 5221
+\i (00:00:04) trapsize 5456
+\i (00:00:04) trapsize 5228
+\i (00:00:04) trapsize 4452
+\i (00:00:04) trapsize 5228
+\i (00:00:05) generaledit 
+\i (00:00:08) plot 
+\i (00:00:09) plotwint initialize "PDFCreator"
+\i (00:00:09) plotwint orientation 1
+\i (00:00:09) plotwint papername "A4"
+\i (00:00:09) plotwint scale 100
+\i (00:00:09) plotwint copies 1
+\i (00:00:09) plotwint defaultsource 15
+\i (00:00:09) plotwint printquality 600
+\i (00:00:09) plotwint color 2
+\i (00:00:09) plotwint execute
+\i (00:00:35) exit 
+\t (00:00:36)     Journal end - Sun Mar 06 10:10:11 2016

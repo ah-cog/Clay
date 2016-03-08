@@ -1,16 +1,76 @@
 \t (00:00:01) allegro 16.6 P004 (v16-6-112G) Windows 32
-\t (00:00:01)     Journal start - Sun Mar 06 05:27:01 2016
-\t (00:00:01)         Host=STEELGIANT User=thebh_000 Pid=1152 CPUs=8
+\t (00:00:01)     Journal start - Sun Mar 06 10:10:27 2016
+\t (00:00:01)         Host=STEELGIANT User=thebh_000 Pid=14132 CPUs=8
 \t (00:00:01) 
 \t (00:00:04) Opening existing design...
 \d (00:00:04) Database opened: E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd
-\t (00:00:04) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
-\i (00:00:04) trapsize 1442
-\i (00:00:04) trapsize 1415
-\i (00:00:04) trapsize 1446
-\i (00:00:04) trapsize 1459
-\i (00:00:04) trapsize 1242
-\i (00:00:04) trapsize 1242
-\i (00:00:05) etchedit 
-\i (00:00:55) exit 
-\t (00:00:55)     Journal end - Sun Mar 06 05:27:55 2016
+\t (00:00:04) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:00:04) trapsize 5435
+\i (00:00:04) trapsize 5221
+\i (00:00:04) trapsize 5456
+\i (00:00:04) trapsize 5228
+\i (00:00:04) trapsize 4452
+\i (00:00:04) trapsize 5228
+\i (00:00:05) generaledit 
+\i (00:00:06) zoom in 1 
+\i (00:00:06) setwindow pcb
+\i (00:00:06) zoom in -980.32 162.05
+\i (00:00:06) trapsize 2614
+\i (00:00:06) zoom in 1 
+\i (00:00:06) setwindow pcb
+\i (00:00:06) zoom in -832.72 141.15
+\t (00:00:06) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:00:06) trapsize 1307
+\i (00:00:14) pick grid 1307.96 507.08
+\t (00:00:14) last pick:  1308.00  507.00
+\i (00:00:51) setwindow form.vf_vis
+\i (00:00:51) FORM vf_vis colorview_list Film: OUTLINE 
+\i (00:00:53) FORM vf_vis all_etch_visible YES 
+\i (00:00:56) setwindow pcb
+\i (00:00:56) zoom in 1 
+\i (00:00:56) setwindow pcb
+\i (00:00:56) zoom in -615.78 128.08
+\i (00:00:56) trapsize 653
+\i (00:00:56) zoom out 1 
+\i (00:00:56) setwindow pcb
+\i (00:00:56) zoom out 403.59 223.49
+\i (00:00:56) trapsize 1307
+\i (00:00:57) zoom in 1 
+\i (00:00:57) setwindow pcb
+\i (00:00:57) zoom in -134.84 205.19
+\i (00:00:57) trapsize 653
+\i (00:01:00) setwindow form.vf_vis
+\i (00:01:00) FORM vf_vis all_via_visible YES 
+\i (00:01:01) FORM vf_vis all_pin_visible YES 
+\i (00:01:23) FORM vf_vis colorview_list File: pin_via_silk_soldermask 
+\i (00:01:23) color -globvis off 
+\i (00:01:23) color -vis 'BOARD GEOMETRY/SILKSCREEN_TOP' 
+\i (00:01:23) color -vis 'BOARD GEOMETRY/OUTLINE' 
+\i (00:01:23) color -vis 'PACKAGE GEOMETRY/SOLDERMASK_TOP' 
+\i (00:01:23) color -vis 'PACKAGE GEOMETRY/SILKSCREEN_TOP' 
+\i (00:01:23) color -vis PIN/TOP 
+\i (00:01:23) color -vis PIN/GND 
+\i (00:01:23) color -vis PIN/PWR 
+\i (00:01:23) color -vis PIN/BOTTOM 
+\i (00:01:23) color -vis PIN/FILMMASKBOTTOM 
+\i (00:01:23) color -vis PIN/FILMMASKTOP 
+\i (00:01:23) color -vis PIN/PASTEMASK_BOTTOM 
+\i (00:01:23) color -vis PIN/PASTEMASK_TOP 
+\i (00:01:23) color -vis PIN/SOLDERMASK_BOTTOM 
+\i (00:01:23) color -vis PIN/SOLDERMASK_TOP 
+\i (00:01:23) color -vis 'REF DES/SILKSCREEN_TOP' 
+\i (00:01:23) color -vis 'VIA CLASS/TOP' 
+\i (00:01:23) color -vis 'VIA CLASS/GND' 
+\i (00:01:23) color -vis 'VIA CLASS/PWR' 
+\i (00:01:23) color -vis 'VIA CLASS/BOTTOM' 
+\i (00:01:23) color -vis 'VIA CLASS/FILMMASKBOTTOM' 
+\i (00:01:23) color -vis 'VIA CLASS/FILMMASKTOP' 
+\i (00:01:24) color -vis 'VIA CLASS/PASTEMASK_BOTTOM' 
+\i (00:01:24) color -vis 'VIA CLASS/PASTEMASK_TOP' 
+\i (00:01:24) color -vis 'VIA CLASS/SOLDERMASK_BOTTOM' 
+\i (00:01:24) color -vis 'VIA CLASS/SOLDERMASK_TOP' 
+\i (00:01:24) setwindow pcb
+\i (00:01:24) trapsize 653
+\i (00:01:24) generaledit 
+\i (00:02:28) exit 
+\t (00:02:28)     Journal end - Sun Mar 06 10:12:55 2016

@@ -1,0 +1,6 @@
+#  View replacement method:
+#  Complete
+
+color -globvis off
+color -vis "BOARD GEOMETRY/OUTLINE"
+color -vis "MANUFACTURING/NCLEGEND-1-4"

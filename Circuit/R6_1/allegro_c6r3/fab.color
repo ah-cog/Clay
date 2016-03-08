@@ -1,0 +1,8 @@
+#  View replacement method:
+#  Complete
+
+color -globvis off
+color -vis "BOARD GEOMETRY/ASSEMBLY_NOTES"
+color -vis "BOARD GEOMETRY/OUTLINE"
+color -vis "MANUFACTURING/NCLEGEND-1-4"
+color -vis "MANUFACTURING/XSECTION_CHART"

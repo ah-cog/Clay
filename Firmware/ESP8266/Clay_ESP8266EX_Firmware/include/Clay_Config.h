@@ -51,8 +51,8 @@
 #define UDP_TX_TIMEOUT_MSEC               100
 
 ////
-#define UDP_RX_PORT                       1200
-#define UDP_TX_PORT                       1201
+#define UDP_RX_PORT                       4446
+#define UDP_TX_PORT                       4445
 
 ////
 #define UDP_RX_MESSAGE_CAPACITY           2
