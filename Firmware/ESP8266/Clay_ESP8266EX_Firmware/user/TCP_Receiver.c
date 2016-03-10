@@ -36,6 +36,7 @@
 
 #include "Clay_Message.h"
 #include "Message_Queue.h"
+#include "BufferQueue.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -77,33 +78,36 @@ static int32 testCounter;
 //static int sinZeroSize;
 //static int i;
 
-Message tempMessage;
-char * tempAddr;
+static Message tempMessage;
+static char * tempAddr;
 
 //TODO: move to clay_config.
-#define CONNECTION_ALIVE_TIME_us 200000
+#define CONNECTION_ALIVE_TIME_us 200 * 1000   //200 msec
 #define SERVER_PORT 1002
-#define MAX_CONN    10
+#define CLIENT_MAX_CONN    10
 #define SERVER_IP "192.168.1.11"
+#define RECEIVE_TASK_BUFFER_SIZE 600
 //#define SERVER_PORT 1001
 
 static int32 listenfd;
 static int32 len;
-static int sta_socket;
-static struct sockaddr_in remote_ip;
 static int32 client_sock;
-static struct sockaddr_in remote_addr;
 static uint16 httpd_server_port = 1002;
 
 static uint32 Rx_Start_Time;
 static uint32 Rx_Start_Time_temp;
 static int temp_rx_counter;
 
+static Buffer_Queue Rx_Queue;
+static int32 Task_Count;
+
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static void Disconnect();
 static bool Listen();
-static int32 Receive();
+static int32 Receive(int32 rxSocket, uint8_t * rxbuf, int32 maxRxCount);
+static void End_Receive();
+static void ReceiveTask(void * pvParameters);
 
 ////Local implementations /////////////////////////////////////////
 bool TCP_Receiver_Init()
@@ -111,6 +115,8 @@ bool TCP_Receiver_Init()
 	bool rval = false;
 	TCP_Rx_Buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
 	nNetTimeout = UDP_RX_TIMEOUT_MSEC;
+
+	BufferQueue_Initialize(&Rx_Queue);
 
 	State = Disable;
 
@@ -163,39 +169,47 @@ void TCP_Receiver_State_Step()
 		{
 			if (Connect())
 			{
-
 				taskENTER_CRITICAL();
 				printf("rx connected\r\n");
 				taskEXIT_CRITICAL();
 				State = ListenForConnect;
+
+				BufferQueue_Initialize(&Rx_Queue);
+				Task_Count = 0;
 			}
+
 			break;
 		}
 
 		case ListenForConnect:
 		{
-			if (Listen())
-			{
-				taskENTER_CRITICAL();
-				printf("heard summat\r\n");
-				taskEXIT_CRITICAL();
-				TCP_Rx_Count = 0;
-				Rx_Start_Time = system_get_time();
-				Rx_Start_Time_temp = Rx_Start_Time;
-				State = ReceiveFromClient;
-			}
+			Listen();
+
+//			if (Listen())
+//			{
+//				taskENTER_CRITICAL();
+//				printf("heard summat\r\n");
+//				taskEXIT_CRITICAL();
+//				TCP_Rx_Count = 0;
+//				Rx_Start_Time = system_get_time();
+//				Rx_Start_Time_temp = Rx_Start_Time;
+//				State = ReceiveFromClient;
+//			}
 			break;
 		}
 
 		case ReceiveFromClient:
 		{
+			//print system time in ms.
+			taskENTER_CRITICAL();
 			printf("time %d\r\n", system_get_time() / 1000);
+			taskEXIT_CRITICAL();
 			if ((system_get_time() - Rx_Start_Time_temp)
 					< CONNECTION_ALIVE_TIME_us)
 			{
 				//TODO: combine receipts
 				//TODO: return received count
-				temp_rx_counter = Receive();
+//				temp_rx_counter = Receive(TCP_Rx_Buffer + TCP_Rx_Count);
 				TCP_Rx_Count += temp_rx_counter;
 				if (temp_rx_counter > 0)
 				{
@@ -208,12 +222,17 @@ void TCP_Receiver_State_Step()
 				taskENTER_CRITICAL();
 				printf("done receive\r\n");
 				taskEXIT_CRITICAL();
+
+				End_Receive();
+
 				State = Enqueue_Message;
 			}
 			else
 			{
 				//TODO: disconnect here?
+				taskENTER_CRITICAL();
 				printf("back to listen.\r\n");
+				taskEXIT_CRITICAL();
 				State = ListenForConnect;
 			}
 			break;
@@ -242,10 +261,10 @@ void TCP_Receiver_State_Step()
 			MAXIMUM_DESTINATION_LENGTH);
 			taskEXIT_CRITICAL();
 
-			taskENTER_CRITICAL();
+//			taskENTER_CRITICAL();
 //            printf("strlen addr: %d", strlen(tempAddr));
-			printf("rx'd from: [%s]\r\n", tempAddr);
-			taskEXIT_CRITICAL();
+//			printf("rx'd from: [%s]\r\n", tempAddr);
+//			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
 			Initialize_Message(&tempMessage, tempAddr, tempAddr, TCP_Rx_Buffer);
@@ -308,6 +327,8 @@ void TCP_Receiver_State_Step()
 }
 
 ////Local implementations /////////////////////////////////////////
+
+//create and bind listener socket.
 bool Connect()
 {
 	bool rval = false;
@@ -355,7 +376,7 @@ bool Connect()
 	if (rval)
 	{
 		/* Listen to the local connection */
-		ret = listen(listenfd, MAX_CONN);
+		ret = listen(listenfd, CLIENT_MAX_CONN);
 		if (ret != 0)
 		{
 			close(listenfd);
@@ -368,59 +389,133 @@ bool Connect()
 			rval = true;
 			printf("ESP8266 TCP server task > listen ok\r\n");
 		}
-
 	}
 
 	return rval;
 }
 
+//listens for connections and accepts them
 static bool Listen()
 {
 	bool rval = false;
 
+	//TODO: could spawn some number (max connections) of new tasks as receivers.
+	//		Each task would need its own buffer.
+	//		use a second state machine to process the buffers.
+	//		Dynamically allocate buffers and pass them to second state machine, which frees them when its done
+	//		Receive until connection closed by client or timeout expires.
+
 	len = sizeof(struct sockaddr_in);
 	printf("ESP8266 TCP server task > wait client\r\n");
 	/*block here waiting remote connect request*/
-	if ((client_sock = accept(listenfd, (struct sockaddr * )&remote_addr,
+	if ((client_sock = accept(listenfd, (struct sockaddr * )&lastSourceAddress,
 			(socklen_t * )&len)) < 0)
 	{
 		printf("ESP8266 TCP server task > accept fail\r\n");
 		rval = false;
 	}
-	else
+	else if (Task_Count < CLIENT_MAX_CONN)
 	{
 		//timeout alive time in ms / 10. We should call this about 10 times before timing out.
-		int millis = (CONNECTION_ALIVE_TIME_us / 1000) / 10;
-		setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, &millis,
-				sizeof(millis));
+//		int millis = (CONNECTION_ALIVE_TIME_us / 1000) / 10;
+//		setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, &millis,
+//				sizeof(millis));
 
 		rval = true;
+
+		++Task_Count;
+		printf("tasks:%d\r\n", Task_Count);
+
+		//spawn new task to receive.
+		xTaskCreate(ReceiveTask, "socket_rx", 256, ((void* )&client_sock), 2,
+				NULL);
 	}
 
 	//Wait until TCP client is connected with the server, then start receiving data packets when TCP
 	//communication is established:
 
 	printf("ESP8266 TCP server task > Client from %s %d\r\n",
-			inet_ntoa(remote_addr.sin_addr), htons(remote_addr.sin_port));
+			inet_ntoa(lastSourceAddress.sin_addr),
+			htons(lastSourceAddress.sin_port));
 
 	return rval;
 }
 
-static int32 Receive()
+static void ReceiveTask(void * pvParameters)
 {
-	int32 rval = -1;
 
-	if ((rval = read(client_sock, TCP_Rx_Buffer, UDP_RX_BUFFER_SIZE_BYTES)) > 0)
+	int32 rxSocket = *((int32*) pvParameters);
+	Buffer_Element tempBufElt;
+	int tempCount;
+	void * tmp;
+
+	tempBufElt.data = zalloc(RECEIVE_TASK_BUFFER_SIZE);
+	tempBufElt.length = 0;
+
+	int32 startTime = system_get_time();
+
+	while ((system_get_time() - startTime) < CONNECTION_ALIVE_TIME_us
+			&& tempBufElt.length < RECEIVE_TASK_BUFFER_SIZE)
 	{
-		printf("read:%d\r\n", rval);
+		printf("time:%d start:%d\r\n", system_get_time(), startTime);
+
+		tempCount = Receive(rxSocket + tempBufElt.length, tempBufElt.data,
+		RECEIVE_TASK_BUFFER_SIZE - tempBufElt.length);
+		if (tempCount > 0)
+		{
+			tempBufElt.length += tempCount;
+			tempCount = 0;
+			startTime = system_get_time();
+		}
+//		else if (tempCount == -1)
+//		{
+//			printf("connection closed by client\r\n");
+//		}
+		else
+		{
+			printf("no data\r\n");
+		}
+
+		taskYIELD();
+	}
+
+	if (tempBufElt.length > 0)
+	{
+		//TODO: include the source address along with the data buffer. May need to make a struct and point to it with
+		//		tempBufElt.data
+		BufferQueue_FlattenEnqueue(&Rx_Queue, &tempBufElt, sizeof(tempBufElt));
+		printf("enqueued [%s]\r\n", tempBufElt.data);
+	}
+
+	lwip_close(rxSocket);
+	--Task_Count;
+
+	printf("disconnecto\r\n");
+
+	vTaskDelete(NULL);
+}
+
+//reads data from the socket
+static int32 Receive(int32 rxSocket, uint8_t * rxbuf, int32 maxRxCount)
+{
+	int32 rval = lwip_recv(rxSocket, (void*) rxbuf, maxRxCount, MSG_PEEK);
+
+	//0 and -1 will fall through. 0 means no data, -1 means disconnected or timed out
+	if (rval <= maxRxCount && rval > 0)
+	{
+		rval = lwip_recv(rxSocket, rxbuf, maxRxCount, 0);
 		TCP_Rx_Buffer[rval] = '\0';
-		printf("wrote null\r\n", rval);
-		printf(
-				"ESP8266 TCP server task > read data success %d!\r\nESP8266 TCP server task > %s\r\n",
-				rval, TCP_Rx_Buffer);
+		printf("count: %d!\r\nstr:[%s]\r\n", rval, rxbuf);
 	}
 
 	return rval;
+}
+
+//closes the receive socket.
+static void End_Receive()
+{
+	closesocket(client_sock);
+	printf("closed socket\r\n");
 }
 
 static void Disconnect()

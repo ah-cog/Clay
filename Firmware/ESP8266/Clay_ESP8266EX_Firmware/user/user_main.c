@@ -28,6 +28,7 @@
 #include "Message_Queue.h"
 
 #include "Clay_Message.h"
+#include "BufferQueue.h"
 
 #define server_ip "192.168.101.142"
 #define server_port 9669
@@ -152,6 +153,7 @@ void wifi_handle_event_cb(System_Event_t *evt)
 //		UDP_Receiver_Init();
 //		Serial_Receiver_Init();
 //		Serial_Transmitter_Init();
+
 		TCP_Receiver_Init();
 		break;
 	case EVENT_SOFTAPMODE_STACONNECTED:
@@ -207,7 +209,6 @@ void user_init(void)
 
 //uncomment to generate an interrupt when we connect to the AP.
 //	xTaskCreate(Signal_Power_On_Complete, "power_on_signal", 256, NULL, 2, NULL);
-
 	//Set up our event handler from above. this starts the tasks that talk over WiFi.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
 }
