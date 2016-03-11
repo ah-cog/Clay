@@ -68,11 +68,13 @@ static int32 sock_fd;
 static bool Connected;
 static int32 testCounter;
 
+Message_Type tempIgnoredMessageType;
+
 static Message * m;
 
-//static char sinZeroStr[50];
-//static int sinZeroSize;
-//static int i;
+static char sinZeroStr[50];
+static int sinZeroSize;
+static int i;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -199,26 +201,30 @@ void UDP_Transmitter_State_Step()
 //			printf("done\n");
 			taskEXIT_CRITICAL();
 
-//			printf("tx serialized addr: [%s]\n", m->destination);
 			taskENTER_CRITICAL();
+//			printf("tx serialized addr: [%s]\n", m->destination);
 			Deserialize_Address(m->destination, MAXIMUM_DESTINATION_LENGTH,
-					&DestinationAddr);
+					&DestinationAddr, &tempIgnoredMessageType);
 			taskEXIT_CRITICAL();
 
-//            printf("message available\n");
-//            sinZeroSize = 0;
-//            for (i = 0; i < SIN_ZERO_LEN; ++i)
-//            {
-//               sinZeroSize += sprintf(sinZeroStr + sinZeroSize, "%s%u", i == 0 ? "" : ",", DestinationAddr.sin_zero[i]);
-//            }
+			DestinationAddr.sin_port = htons(UDP_TX_PORT);
 
-//            printf("tx msg: [%s]\n", UDP_Tx_Buffer);
-//            printf("deserialized addr: %u, fam: %u, len: %u, port: %u, zero: %s\n",
-//                   ntohl(DestinationAddr.sin_addr.s_addr),
-//                   DestinationAddr.sin_family,
-//                   DestinationAddr.sin_len,
-//                   ntohs(DestinationAddr.sin_port),
-//                   sinZeroStr);
+//			taskENTER_CRITICAL();
+//			printf("message available\n");
+//			sinZeroSize = 0;
+//			for (i = 0; i < SIN_ZERO_LEN; ++i)
+//			{
+//				sinZeroSize += sprintf(sinZeroStr + sinZeroSize, "%s%u",
+//						i == 0 ? "" : ",", DestinationAddr.sin_zero[i]);
+//			}
+//
+////            printf("tx msg: [%s]\n", UDP_Tx_Buffer);
+//			printf(
+//					"deserialized addr: %s, fam: %u, len: %u, port: %u, zero: %s\n",
+//					inet_ntoa(DestinationAddr.sin_addr.s_addr),
+//					DestinationAddr.sin_family, DestinationAddr.sin_len,
+//					ntohs(DestinationAddr.sin_port), sinZeroStr);
+//			taskEXIT_CRITICAL();
 //            printf("buffer_message done, going to send_message\n\n----------------\n\n\n");
 			State = Send_Message;
 			break;
@@ -297,18 +303,15 @@ static void Disconnect()
 
 static bool Transmit()
 {
-	//TODO: there is probably still something wrong with the serialization; I would expect to be able to return the message
-	//      back to the same port. This works with nc64 -u -l -p UDP_RX_PORT, though. Gonna run with it for now.
-	DestinationAddr.sin_port = htons(UDP_TX_PORT);
-//	taskENTER_CRITICAL();
-//	printf("sending %d bytes: [%s]\n", UDP_Tx_Count, UDP_Tx_Buffer);
-//	printf("to %u.%u.%u.%u:%u\n\n-----\n",
-//			DestinationAddr.sin_addr.s_addr & 0xFF,
-//			(DestinationAddr.sin_addr.s_addr >> 8) & 0xFF,
-//			(DestinationAddr.sin_addr.s_addr >> 16) & 0xFF,
-//			(DestinationAddr.sin_addr.s_addr >> 24) & 0xFF,
-//			ntohs(DestinationAddr.sin_port));
-//	taskEXIT_CRITICAL();
+	taskENTER_CRITICAL();
+	printf("sending %d bytes: [%s]\n", UDP_Tx_Count, UDP_Tx_Buffer);
+	printf("to %u.%u.%u.%u:%u\n\n-----\n",
+			DestinationAddr.sin_addr.s_addr & 0xFF,
+			(DestinationAddr.sin_addr.s_addr >> 8) & 0xFF,
+			(DestinationAddr.sin_addr.s_addr >> 16) & 0xFF,
+			(DestinationAddr.sin_addr.s_addr >> 24) & 0xFF,
+			ntohs(DestinationAddr.sin_port));
+	taskEXIT_CRITICAL();
 
 	bool rval = false;
 	rval = UDP_Tx_Count
@@ -316,6 +319,9 @@ static bool Transmit()
 					(struct sockaddr * ) &DestinationAddr,
 					sizeof(DestinationAddr));
 
+	taskENTER_CRITICAL();
+	printf("rval:%s", rval ? "true" : "false");
+	taskEXIT_CRITICAL();
 	return rval;
 }
 

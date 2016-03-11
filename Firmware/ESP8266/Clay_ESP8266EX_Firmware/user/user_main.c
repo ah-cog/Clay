@@ -28,7 +28,6 @@
 #include "Message_Queue.h"
 
 #include "Clay_Message.h"
-#include "BufferQueue.h"
 
 #define server_ip "192.168.101.142"
 #define server_port 9669
@@ -149,12 +148,15 @@ void wifi_handle_event_cb(System_Event_t *evt)
 //				IP2STR(&evt->event_info.got_ip.mask),
 //				IP2STR(&evt->event_info.got_ip.gw));
 //		os_printf("\n");
-//		UDP_Transmitter_Init();
-//		UDP_Receiver_Init();
-//		Serial_Receiver_Init();
-//		Serial_Transmitter_Init();
+		UDP_Transmitter_Init();
+		UDP_Receiver_Init();
+		Serial_Receiver_Init();
+		Serial_Transmitter_Init();
 
-		TCP_Receiver_Init();
+		//TCP todo's
+		//TODO: on send, have flag for close after send
+
+//		TCP_Receiver_Init();
 		break;
 	case EVENT_SOFTAPMODE_STACONNECTED:
 //		os_printf("station: " MACSTR "join, AID = %d\n",

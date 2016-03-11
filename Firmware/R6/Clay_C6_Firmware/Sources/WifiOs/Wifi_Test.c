@@ -15,12 +15,14 @@ void Wifi_Test()
    Wifi_Enable();
 
    Message m;
+   int i = 0;
+   bool SendAnyway = FALSE;
 
    for (;;)
    {
       Wifi_State_Step();
 
-      if (Wifi_Receive(&m))
+      if (SendAnyway || Wifi_Receive(&m))
       {
          Wifi_Send(&m);
       }
