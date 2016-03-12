@@ -19,6 +19,8 @@ int getTokenCount (const char *string);
 
 int8_t getToken (const char *string, char *tokenBuffer, int tokenIndex); // TODO: Rename to copyToken?
 
+int8_t getTokenWithDelimiter (const char *string, const char delimiter, const char secondaryDelimiter, char *tokenBuffer, int tokenIndex);
+
 //int convertToInt (const char *string, char *tokenBuffer, int tokenIndex);
 
 #endif /* STRING_H_ */

@@ -680,8 +680,7 @@ int8_t Perform_Behavior(Behavior *behavior)
 
 	int8_t status = NULL;
 	int8_t result = NULL;
-	char token[32] =
-	{ 0 };
+	char token[32] = { 0 };
 	int tokenInt = 0;
 	int i;
 
@@ -1211,7 +1210,7 @@ int8_t Perform_Behavior(Behavior *behavior)
 				// TODO: Add parameter for "say" to specify maximum frequency of phrase
 				// TODO: Add parameters for alternative phrases
 				//Broadcast_UDP_Message ("say i should say something");
-				Broadcast_UDP_Message(behaviorContent, 4445);
+//				Broadcast_UDP_Message(behaviorContent, 4445);
 				// TODO: Queue_Outgoing_Message()
 
 				result = TRUE;
