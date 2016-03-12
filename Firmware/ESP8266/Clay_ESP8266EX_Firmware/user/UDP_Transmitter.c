@@ -29,6 +29,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "uart.h"
+
 #include "lwip/sockets.h"
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
@@ -111,11 +113,20 @@ void UDP_Transmitter_State_Step()
 //	Connect();
 //
 //	memset(&DestinationAddr, 0, sizeof(DestinationAddr));
+//	char addrStr[] = "192.168.1.2";
+////	char serializedAddr[100] = "UDP,255.255.255.255:4445";
+//	char serializedAddr[100] = "UDP,192.168.1.255:4445";
+//	Message_Type mt;
+//	bool txOk;
 //
-//	DestinationAddr.sin_family = AF_INET;
-//	DestinationAddr.sin_addr.s_addr = htonl(3232235778U);
-//	DestinationAddr.sin_port = htons(1201);
-//	DestinationAddr.sin_len = sizeof(DestinationAddr);
+////	DestinationAddr.sin_family = AF_INET;
+////	inet_aton(addrStr, &DestinationAddr.sin_addr.s_addr);
+////	DestinationAddr.sin_port = htons(4445);
+////	DestinationAddr.sin_len = sizeof(DestinationAddr);
+////
+////	Serialize_Address(&DestinationAddr, serializedAddr, 100, MESSAGE_TYPE_UDP);
+////	memset(&DestinationAddr, 0, sizeof(DestinationAddr));
+//	Deserialize_Address(serializedAddr, 100, &DestinationAddr, &mt);
 //
 //	taskENTER_CRITICAL();
 //	sprintf(UDP_Tx_Buffer, "test message\n");
@@ -124,9 +135,9 @@ void UDP_Transmitter_State_Step()
 //
 //	for (;;)
 //	{
-//		Transmit();
+//		txOk = Transmit();
+//		printf("%s\r\n", txOk ? "xmit ok" : "no xmit");
 //		vTaskDelay(2 / portTICK_RATE_MS);
-////		taskYIELD();
 //	}
 
 	for (;;)
@@ -304,13 +315,14 @@ static void Disconnect()
 static bool Transmit()
 {
 	taskENTER_CRITICAL();
-	printf("sending %d bytes: [%s]\n", UDP_Tx_Count, UDP_Tx_Buffer);
-	printf("to %u.%u.%u.%u:%u\n\n-----\n",
+	printf("sending %d bytes: [%s]\r\n", UDP_Tx_Count, UDP_Tx_Buffer);
+	printf("to %u.%u.%u.%u:%u\r\n\r\n-----\r\n",
 			DestinationAddr.sin_addr.s_addr & 0xFF,
 			(DestinationAddr.sin_addr.s_addr >> 8) & 0xFF,
 			(DestinationAddr.sin_addr.s_addr >> 16) & 0xFF,
 			(DestinationAddr.sin_addr.s_addr >> 24) & 0xFF,
 			ntohs(DestinationAddr.sin_port));
+	UART_WaitTxFifoEmpty(UART0);
 	taskEXIT_CRITICAL();
 
 	bool rval = false;

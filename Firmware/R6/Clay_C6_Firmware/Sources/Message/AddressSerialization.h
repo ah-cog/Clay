@@ -10,6 +10,27 @@
 
 #include "PE_Types.h"
 
+////defines ///////////////////////////////////////////////////////
+#define CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH     16
+
+///Copied definitions from lwip/inet.h, sockets.h
+#define AF_INET    2
+
+#define htons(x) lwip_htons(x)
+#define ntohs(x) lwip_ntohs(x)
+#define htonl(x) lwip_htonl(x)
+#define ntohl(x) lwip_ntohl(x)
+
+#define lwip_htons(x) LWIP_PLATFORM_HTONS(x)
+#define lwip_ntohs(x) LWIP_PLATFORM_HTONS(x)
+#define lwip_htonl(x) LWIP_PLATFORM_HTONL(x)
+#define lwip_ntohl(x) LWIP_PLATFORM_HTONL(x)
+
+#define LWIP_PLATFORM_HTONS(_n)  ((u16_t)((((_n) & 0xff) << 8) | (((_n) >> 8) & 0xff)))
+#define LWIP_PLATFORM_HTONL(_n)  ((u32_t)( (((_n) & 0xff) << 24) | (((_n) & 0xff00) << 8) | (((_n) >> 8)  & 0xff00) | (((_n) >> 24) & 0xff) ))
+
+////Typedefs  /////////////////////////////////////////////////////
+
 ///Copied typedefs from lwip/inet.h, sockets.h
 typedef uint8_t u8_t;
 typedef int8_t s8_t;
@@ -52,7 +73,29 @@ struct sockaddr_in
 };
 ///End copied typedefs from lwip/inet.h, sockets.h
 
-uint32_t Serialize_Address(struct sockaddr_in * Source, uint8_t* Destination, uint32_t DestinationLength);
-void Deserialize_Address(uint8_t* Source, uint32_t SourceLength, struct sockaddr_in * Destination);
+typedef enum
+{
+   MESSAGE_TYPE_UDP,
+   MESSAGE_TYPE_TCP,
+   MESSAGE_TYPE_MAX
+} Message_Type;
+
+////Globals   /////////////////////////////////////////////////////
+//max 16 chars
+extern uint8_t* Message_Strings[];
+extern char Terminator;
+
+////Prototypes/////////////////////////////////////////////////////
+extern void Deserialize_Address(uint8_t* Source, uint32_t SourceLength, struct sockaddr_in * Destination, Message_Type *type);
+extern uint32_t Serialize_Address(struct sockaddr_in * Source,
+                                  uint8_t* Destination,
+                                  uint32_t DestinationLength,
+                                  Message_Type ConnectionTypeStr);
+
+extern bool Get_Message_Type_Str(Message_Type type, uint8_t *returnStr);
+extern Message_Type Get_Message_Type_From_Str(uint8_t*typeString);
+
+extern uint8_t * inet_ntoa(const in_addr_t * addr);
+extern int inet_aton(const uint8_t * cp, in_addr_t * addr);
 
 #endif /* SOURCES_MESSAGE_ADDRESSSERIALIZATION_H_ */

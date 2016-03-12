@@ -11,7 +11,7 @@
 
 #include "lwip/sockets.h"
 
-#include "Clay_Message.h"
+#include "../include/AddressSerialization.h"
 #include "Clay_Config.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -28,11 +28,9 @@ uint8 messageTypeTempStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination,
 		uint32 DestinationLength, Message_Type ConnectionType)
 {
-	///TODO: add connection type bool
-
 	uint32 rval = 0;
 
-	uint8 * ntoaBuf = inet_ntoa(Source->sin_addr); //the buffer gets overwritten by subsequent calls.
+	uint8 * ntoaBuf = inet_ntoa(Source->sin_addr.s_addr); //the buffer gets overwritten by subsequent calls.
 	uint8 connectionTypeStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
 	if (Get_Message_Type_Str(ConnectionType, connectionTypeStr))
@@ -42,7 +40,7 @@ uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination,
 
 		if (rval <= DestinationLength)
 		{
-			rval = snprintf(Destination, DestinationLength, "%s,%s:%d!",
+			rval = snprintf(Destination, DestinationLength, "%s,%s:%d!\n",
 					connectionTypeStr, ntoaBuf, ntohs(Source->sin_port));
 		}
 
