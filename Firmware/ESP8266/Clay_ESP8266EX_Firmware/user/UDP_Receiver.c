@@ -27,8 +27,6 @@
 ////Includes //////////////////////////////////////////////////////
 #include "esp_common.h"
 
-#include "uart.h"
-
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -76,9 +74,9 @@ static int32 sock_fd;
 static bool Connected;
 static int32 testCounter;
 
-static char sinZeroStr[50];
-static int sinZeroSize;
-static int i;
+//static char sinZeroStr[50];
+//static int sinZeroSize;
+//static int i;
 
 Message tempMessage;
 char * tempAddr;
@@ -171,30 +169,22 @@ void UDP_Receiver_State_Step()
 //			taskENTER_CRITICAL();
 //			printf("enqueue.\n");
 //			taskEXIT_CRITICAL();
+//            sinZeroSize = 0;
+//            for (i = 0; i < SIN_ZERO_LEN; ++i)
+//            {
+//               sinZeroSize += sprintf(sinZeroStr + sinZeroSize, "%s%u", i == 0 ? "" : ",", lastSourceAddress.sin_zero[i]);
+//            }
 
-//			taskENTER_CRITICAL();
-//			sinZeroSize = 0;
-//			for (i = 0; i < SIN_ZERO_LEN; ++i)
-//			{
-//				sinZeroSize += sprintf(sinZeroStr + sinZeroSize, "%s%u",
-//						i == 0 ? "" : ",", lastSourceAddress.sin_zero[i]);
-//			}
-//
-//			printf("pre-serial: %s, fam: %u, len: %u, port: %u, ",
-//					inet_ntoa(lastSourceAddress.sin_addr.s_addr),
-//					lastSourceAddress.sin_family, lastSourceAddress.sin_len,
-//					ntohs(lastSourceAddress.sin_port));
-//
-//			printf("zero:%s\r\n", sinZeroStr);
-//			UART_WaitTxFifoEmpty(UART0);
-//			taskEXIT_CRITICAL();
-
-
-
-//			printf("message addr rx %d\n", &tempMessage);
+//            printf("original source addr: %u, fam: %u, len: %u, port: %u, zero: %s\n",
+//                   ntohl(lastSourceAddress.sin_addr.s_addr),
+//                   lastSourceAddress.sin_family,
+//                   lastSourceAddress.sin_len,
+//                   ntohs(lastSourceAddress.sin_port),
+//                   sinZeroStr);
+			//               printf("message addr rx %d\n", &tempMessage);
 			taskENTER_CRITICAL();
 			Serialize_Address(&lastSourceAddress, tempAddr,
-			MAXIMUM_DESTINATION_LENGTH, MESSAGE_TYPE_UDP);
+			MAXIMUM_DESTINATION_LENGTH);
 			taskEXIT_CRITICAL();
 
 //			taskENTER_CRITICAL();
@@ -346,3 +336,14 @@ static bool Receive()
 
 	return rval;
 }
+
+////cut snippets //////////////////////////////////////////////////////////////
+
+//      ///this goes to the transmitter side.
+//      if (pendingTxBytes)
+//      {
+//         //         printf("pending: %d - \"%s\"\r\n", pendingTxBytes, txBuf);
+//         sendto(sock_fd, (uint8* ) txBuf, pendingTxBytes, 0, (struct sockaddr * ) &lastFrom, fromlen);
+//         pendingTxBytes = 0;
+//      }
+//      ///end of transmitter side.
