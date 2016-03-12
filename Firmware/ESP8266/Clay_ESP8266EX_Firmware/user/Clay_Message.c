@@ -20,168 +20,92 @@
 
 ////Local vars/////////////////////////////////////////////////////
 char Terminator = '\n';
+uint8 messageTypeTempStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
 ////Local Prototypes///////////////////////////////////////////////
 
 ////Global implementations ////////////////////////////////////////
-uint32 Fill_Buffer_With_Message(Clay_Message * Source, uint8 * Destination,
-		uint32 DestinationLength)
-{
-	uint32 rval = 0;
-	strncpy(Destination, Source->Message, Source->Length);
-	rval += Source->Length;
-
-	rval += Serialize_Address(&(Source->Address), Destination + rval,
-			DestinationLength - rval);
-
-	//add on the addr
-
-	return rval;
-}
-
 uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination,
-		uint32 DestinationLength)
+		uint32 DestinationLength, Message_Type ConnectionType)
 {
+	///TODO: add connection type bool
+
 	uint32 rval = 0;
-	rval += snprintf(Destination + rval, DestinationLength - rval,
-			"%u,%u,%u,%u", ntohl(Source->sin_addr.s_addr), Source->sin_family,
-			Source->sin_len, ntohs(Source->sin_port));
 
-//   printf("dest pre array: [%s]\n", Destination);
+	uint8 * ntoaBuf = inet_ntoa(Source->sin_addr); //the buffer gets overwritten by subsequent calls.
+	uint8 connectionTypeStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
-	if (rval <= DestinationLength + SIN_ZERO_LEN)
+	if (Get_Message_Type_Str(ConnectionType, connectionTypeStr))
 	{
-		int i;
-		for (i = 0; i < SIN_ZERO_LEN; ++i)
+		//+ 2 for the terminating '!' and null, +3 for 1 comma and 1 colon
+		rval = strlen(ntoaBuf) + 2 + 3 + strlen(connectionTypeStr) + 5;
+
+		if (rval <= DestinationLength)
 		{
-			rval += snprintf(Destination + rval, DestinationLength - rval,
-					"%s%u", i < SIN_ZERO_LEN ? "," : "", Source->sin_zero[i]);
-			if (rval >= DestinationLength)
-			{
-//            printf("rval too long\n");
-				Destination[DestinationLength - 1] = '!';
-				rval = DestinationLength;
-				break;
-			}
+			rval = snprintf(Destination, DestinationLength, "%s,%s:%d!",
+					connectionTypeStr, ntoaBuf, ntohs(Source->sin_port));
 		}
-		if (rval < DestinationLength)
+
+		if (rval > DestinationLength)
 		{
-			Destination[rval] = '!';
+			rval = -1;
 		}
 	}
-//   printf("dest final: [%s]\n", Destination);
+
+	return rval;
 }
 
 void Deserialize_Address(uint8* Source, uint32 SourceLength,
-		struct sockaddr_in * Destination)
+		struct sockaddr_in * Destination, Message_Type *type)
 {
-	uint8 * token;
 	char Comma = ',';
-	uint32 temp;
+	char Colon = ':';
+	char Bang = '!';
 
-//   printf("tryna toke\n");
-	token = strtok(Source, &Comma);
-//   printf("s_addr [%s]\n", token);
-	sscanf(token, "%d", &temp);
-	Destination->sin_addr.s_addr = htonl(temp);
+	memset(Destination, 0, sizeof(*Destination));
 
-	token = strtok(NULL, &Comma);
-	sscanf(token, "%d", &temp);
-//   printf("family [%s]\n", token);
-	Destination->sin_family = temp & 0xFF;
+	//get the string off the front
+	uint8* typeStart = strtok(Source, &Comma);
+	uint8* ipStart = strtok(NULL, &Colon);
+	uint8* portStart = strtok(NULL, &Bang);
 
-	token = strtok(NULL, &Comma);
-	sscanf(token, "%d", &temp);
-//   printf("len [%s]\n", token);
-	Destination->sin_len = temp & 0xFF;
+	*type = Get_Message_Type_From_Str(typeStart);
 
-	token = strtok(NULL, &Comma);
-	sscanf(token, "%d", &temp);
-//   printf("port [%s]\n", token);
-	Destination->sin_port = htons(temp & 0xFFFF);
+	inet_aton(ipStart, &(Destination->sin_addr));
+	Destination->sin_port = htons(atoi(portStart));
 
-	int i;
-	for (i = 0; i < SIN_ZERO_LEN && token != NULL; ++i)
-	{
-		token = strtok(NULL, &Comma);
-//      printf("zero[%d] [%s]\n", i, token);
-		sscanf(token, "%d", &temp);
-		Destination->sin_zero[i] = temp & 0xFF;
-	}
+	Destination->sin_family = AF_INET;
+	Destination->sin_len = sizeof(*Destination);
 }
 
-uint32 Create_Message_From_Buffer(uint8 * Source, uint32 SourceLength,
-		Clay_Message * Destination)
+bool Get_Message_Type_Str(Message_Type type, uint8 *returnStr)
 {
-	uint32 rval = 0;
+	bool rval = false;
 
-	uint8 * NewlineIndex = strchr(Source, '\n') + 1;
-	Destination->Length = NewlineIndex - Source;
-	memcpy(Destination->Message, Source, Destination->Length);
-
-	Deserialize_Address(NewlineIndex + 1, SourceLength - Destination->Length,
-			&(Destination->Address));
-
-	if (Destination->Length >= CLAY_MESSAGE_LENGTH_MAX_BYTES)
+	if (type < MESSAGE_TYPE_MAX)
 	{
-		Destination->Message[CLAY_MESSAGE_LENGTH_MAX_BYTES - 1] = '\n';
+		strncpy(returnStr, Message_Strings[type],
+		CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH);
+		rval = true;
 	}
 
 	return rval;
 }
 
-void Message_Conversion_Test()
+Message_Type Get_Message_Type_From_Str(uint8*typeString)
 {
-	Clay_Message m;
-	m.Length = 10;
+	Message_Type rval = MESSAGE_TYPE_MAX;
+
 	int i;
-	for (i = 0; i < m.Length - 1; ++i)
+	for (i = 0; i < MESSAGE_TYPE_MAX; ++i)
 	{
-		m.Message[i] = 'h';
-	}
-
-	m.Message[i] = '\n';
-	m.Message[i + 1] = '\0';
-
-	m.Address.sin_addr.s_addr = 0x55;
-	m.Address.sin_len = 0;
-	m.Address.sin_port = 0;
-
-	uint32 bufferFillLength;
-	uint32 messageFillLength;
-	char sinZeroStr[50];
-	char sinZeroSize;
-
-	uint8 buf[CLAY_MESSAGE_STRUCT_SIZE_BYTES * 2];
-
-	for (;;)
-	{
-		sinZeroSize = 0;
-		for (i = 0; i < SIN_ZERO_LEN; ++i)
+		if (strcmp(typeString, Message_Strings[i]) == 0)
 		{
-			sinZeroSize += sprintf(sinZeroStr + sinZeroSize, "%s%d",
-					((i == 8 || i == 0) ? "" : ","), m.Address.sin_zero[i]);
-			m.Address.sin_zero[i] = m.Address.sin_addr.s_addr + i;
+			rval = (Message_Type) i;
 		}
-
-		bufferFillLength = Fill_Buffer_With_Message(&m, buf,
-		CLAY_MESSAGE_STRUCT_SIZE_BYTES * 2);
-
-		m.Message[m.Length + 1] = '\0';
-		printf(
-				"bfl: %d,len: %d msg: %s, addr: %d, fam: %d, len: %d, port: %d, zero: %s\n",
-				messageFillLength, m.Length, m.Message,
-				m.Address.sin_addr.s_addr, m.Address.sin_family,
-				m.Address.sin_len, m.Address.sin_port, sinZeroStr);
-
-		printf("len: %d, buf: %s]\n\n", bufferFillLength, buf);
-
-		++m.Address.sin_addr.s_addr;
-		m.Message[0] = 'N';
-
-		messageFillLength = Create_Message_From_Buffer(buf,
-		CLAY_MESSAGE_STRUCT_SIZE_BYTES * 2, &m);
 	}
-}
-////Local implementations /////////////////////////////////////////
 
+	return rval;
+}
+
+////Local implementations /////////////////////////////////////////

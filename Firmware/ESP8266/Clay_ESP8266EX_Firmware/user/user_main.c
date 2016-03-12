@@ -148,11 +148,15 @@ void wifi_handle_event_cb(System_Event_t *evt)
 //				IP2STR(&evt->event_info.got_ip.mask),
 //				IP2STR(&evt->event_info.got_ip.gw));
 //		os_printf("\n");
-//		UDP_Transmitter_Init();
-//		UDP_Receiver_Init();
-//		Serial_Receiver_Init();
-//		Serial_Transmitter_Init();
-		TCP_Receiver_Init();
+		UDP_Transmitter_Init();
+		UDP_Receiver_Init();
+		Serial_Receiver_Init();
+		Serial_Transmitter_Init();
+
+		//TCP todo's
+		//TODO: on send, have flag for close after send
+
+//		TCP_Receiver_Init();
 		break;
 	case EVENT_SOFTAPMODE_STACONNECTED:
 //		os_printf("station: " MACSTR "join, AID = %d\n",
@@ -207,7 +211,6 @@ void user_init(void)
 
 //uncomment to generate an interrupt when we connect to the AP.
 //	xTaskCreate(Signal_Power_On_Complete, "power_on_signal", 256, NULL, 2, NULL);
-
 	//Set up our event handler from above. this starts the tasks that talk over WiFi.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
 }

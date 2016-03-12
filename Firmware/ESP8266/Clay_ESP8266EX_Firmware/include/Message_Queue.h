@@ -24,7 +24,7 @@ typedef struct Message_Queue {
   Message messages[MAXIMUM_MESSAGE_COUNT];
   int front;
   int back;
-  int size;
+  int count;
 } Message_Queue;
 
 extern Message_Queue incomingMessageQueue;
