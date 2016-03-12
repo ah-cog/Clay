@@ -76,65 +76,75 @@
 #include "Application.h"
 #include "Wifi_Test.h"
 
-uint32_t toInteger(char *a) {
-  int c, sign, offset;
-  uint32_t n;
+uint32_t toInteger(char *a)
+{
+   int c, sign, offset;
+   uint32_t n;
 
-  if (a[0] == '-') {  // Handle negative integers
-    sign = -1;
-  }
+   if (a[0] == '-')
+   {     // Handle negative integers
+      sign = -1;
+   }
 
-  if (sign == -1) {  // Set starting position to convert
-    offset = 1;
-  }
-  else {
-    offset = 0;
-  }
+   if (sign == -1)
+   {     // Set starting position to convert
+      offset = 1;
+   }
+   else
+   {
+      offset = 0;
+   }
 
-  n = 0;
+   n = 0;
 
-  for (c = offset; a[c] != '\0'; c++) {
-    n = n * 10 + a[c] - '0';
-  }
+   for (c = offset; a[c] != '\0'; c++)
+   {
+      n = n * 10 + a[c] - '0';
+   }
 
-  if (sign == -1) {
-    n = -n;
-  }
+   if (sign == -1)
+   {
+      n = -n;
+   }
 
-  return n;
+   return n;
 }
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
-	/* Write your local variable definition here */
-	int8_t status = NULL;
+   /* Write your local variable definition here */
+   int8_t status = NULL;
 
-	/*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
-	PE_low_level_init();
-	/*** End of Processor Expert internal initialization.                    ***/
+   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+   PE_low_level_init();
+   /*** End of Processor Expert internal initialization.                    ***/
 
-	/*
-	char targetAddr[64] = "0000000000,2,16,51397,0,0,0,0,0,0,0,0!";
-	char token[32] = { 0 };
-	Get_ESP8266_Address (token, targetAddr);
-	Set_ESP8266_Address (targetAddr, "192.168.1.109");
-	*/
+   Wifi_Test();
 
-	Initialize();
+   /*
+    char targetAddr[64] = "0000000000,2,16,51397,0,0,0,0,0,0,0,0!";
+    char token[32] = { 0 };
+    Get_ESP8266_Address (token, targetAddr);
+    Set_ESP8266_Address (targetAddr, "192.168.1.109");
+    */
 
-	Application();
+   Initialize();
 
-	/*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-  #ifdef PEX_RTOS_START
-    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-  #endif
-  /*** End of RTOS startup code.  ***/
-  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-  for(;;){}
-  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+   Application();
+
+   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+#ifdef PEX_RTOS_START
+   PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
+   /*** End of RTOS startup code.  ***/
+   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+   for (;;)
+   {
+   }
+   /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
 /* END main */

@@ -37,9 +37,10 @@
 #include "lwip/netdb.h"
 
 #include "UDP_Receiver.h"
+
+#include "../include/AddressSerialization.h"
 #include "Clay_Config.h"
 
-#include "Clay_Message.h"
 #include "Message_Queue.h"
 
 ////Typedefs  /////////////////////////////////////////////////////

@@ -16,6 +16,7 @@
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
 
+#include "../include/AddressSerialization.h"
 #include "GPIO.h"
 #include "UART.h"
 
@@ -27,7 +28,6 @@
 
 #include "Message_Queue.h"
 
-#include "Clay_Message.h"
 
 #define server_ip "192.168.101.142"
 #define server_port 9669

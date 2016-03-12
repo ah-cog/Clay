@@ -39,9 +39,10 @@
 #include "UDP_Transmitter.h"
 #include "Serial_Receiver.h"
 #include "Serial_Transmitter.h"
+
+#include "../include/AddressSerialization.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
-#include "Clay_Message.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum

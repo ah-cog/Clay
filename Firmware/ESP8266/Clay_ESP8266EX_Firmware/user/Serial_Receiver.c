@@ -30,6 +30,8 @@
  * */
 
 ////Includes //////////////////////////////////////////////////////
+#include "../include/AddressSerialization.h"
+
 #include "esp_common.h"
 #include "GPIO.h"
 #include "UART.h"
@@ -42,7 +44,6 @@
 #include "Serial_Transmitter.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
-#include "Clay_Message.h"
 #include "Message.h"
 #include "Ring_Buffer.h"
 
