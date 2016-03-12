@@ -8,22 +8,42 @@
 #include "WifiOs.h"
 #include "Clock.h"
 #include "Ring_Buffer.h"
-#include "Message.h"
+//#include "Message.h"
+#include "Messenger.h"
 
 void Wifi_Test()
 {
    Wifi_Enable();
 
-   Message m;
+//   Message m;
+   Message *message = NULL;
 
    for (;;)
    {
       Wifi_State_Step();
 
-      if (Wifi_Receive(&m))
+      // Monitor communication message queues.
+      if (Has_Messages (&incomingMessageQueue) == TRUE)
       {
-         Wifi_Send(&m);
+//         message = Dequeue_Message (&incomingMessageQueue);
+//         status = Process_Incoming_Message (message);
+//			if (status == TRUE) {
+//				Delete_Message (message);
+//			}
+//         Delete_Message(message);
+
+    	  message = Wifi_Receive ();
+    	  if (message != NULL) {
+    		  Wifi_Send (message);
+    	  }
       }
+
+
+
+//      if (Wifi_Receive(&m))
+//      {
+//         Wifi_Send(&m);
+//      }
 
    }
 }

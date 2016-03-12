@@ -15,9 +15,10 @@
 #include "Debug.h"
 #include "clayString.h"
 
+#define DISCOVERY_BROADCAST_PORT 4445
+#define MESSAGE_PORT 4446
 
-
-#define MAXIMUM_MESSAGE_LENGTH 140
+#define MAXIMUM_MESSAGE_LENGTH 512 // 140
 #define MAXIMUM_GRAMMAR_SYMBOL_LENGTH 64
 
 typedef struct Message {
@@ -35,6 +36,9 @@ extern Message *outgoingMessageQueue;
 
 extern Message* Create_Message (const char *content);
 extern int8_t Delete_Message (Message *message);
+
+extern void Set_Message_Source (Message *message, const char *address);
+extern void Set_Message_Destination (Message *message, const char *address);
 
 // Message Queue
 extern uint8_t Initialize_Message_Queue (Message **messageQueue);
