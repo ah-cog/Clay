@@ -7,6 +7,7 @@
 ////includes
 #include "PE_Types.h"
 #include "Clock.h"
+#include "Messenger.h"
 
 ////global vars
 bool tick_50us;
@@ -14,6 +15,7 @@ bool tick_1ms;
 bool tick_50ms;
 bool tick_250ms;
 bool tick_500ms;
+bool tick_1000ms;
 bool tick_3000ms;
 
 ////local vars
@@ -73,6 +75,18 @@ void Tick() {
 
 		if (!(PowerOnTime_ms % 500)) {
 			tick_500ms = TRUE;
+		}
+
+		if (!(PowerOnTime_ms % 1000)) {
+			tick_1000ms = TRUE;
+
+//			Message *message = Create_Message ("discovery");
+////			message->destination = "255.255.255.255";
+//			Set_Message_Source(message, "0000000000,2,16,51397,0,0,0,0,0,0,0,0!");
+//			Set_Message_Destination(message, "0000000000,2,16,51397,0,0,0,0,0,0,0,0!");
+//			Set_ESP8266_Address (message->source, "192.168.1.255");
+//			Set_ESP8266_Address (message->destination, "192.168.1.255");
+//			Wifi_Send(&outgoingMessageQueue, message);
 		}
 
 		if (!(PowerOnTime_ms % 3000)) {
