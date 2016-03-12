@@ -15,36 +15,19 @@ void Wifi_Test()
 {
    Wifi_Enable();
 
-//   Message m;
    Message *message = NULL;
 
-   for (;;)
-   {
-      Wifi_State_Step();
+   for (;;) {
+	  // Step state machine
+      Wifi_State_Step ();
 
       // Monitor communication message queues.
-      if (Has_Messages (&incomingMessageQueue) == TRUE)
-      {
-//         message = Dequeue_Message (&incomingMessageQueue);
-//         status = Process_Incoming_Message (message);
-//			if (status == TRUE) {
-//				Delete_Message (message);
-//			}
-//         Delete_Message(message);
-
+      if (Has_Messages (&incomingMessageQueue) == TRUE) {
     	  message = Wifi_Receive ();
     	  if (message != NULL) {
     		  Wifi_Send (message);
     	  }
       }
-
-
-
-//      if (Wifi_Receive(&m))
-//      {
-//         Wifi_Send(&m);
-//      }
-
    }
 }
 
