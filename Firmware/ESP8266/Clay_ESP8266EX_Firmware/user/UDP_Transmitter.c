@@ -47,7 +47,6 @@ typedef enum
 	Disable, Configure, Idle, Buffer_Message, Send_Message, UDP_STATE_MAX
 } UDP_Transmitter_States;
 ////Globals   /////////////////////////////////////////////////////
-volatile bool OutgoingQueueLock;
 
 ////Local vars/////////////////////////////////////////////////////
 static UDP_Transmitter_States State;
@@ -57,26 +56,15 @@ static int ret;
 static uint8_t *UDP_Tx_Buffer;
 static uint16_t UDP_Tx_Count;
 
-static size_t fromlen;
-
 static struct sockaddr_in DestinationAddr;
-static struct sockaddr_in from;
-static struct sockaddr_in lastFrom;
 static struct sockaddr_in server_addr;
 
-static int nNetTimeout;
-
 static int32 sock_fd;
-static bool Connected;
 static int32 testCounter;
 
-Message_Type tempIgnoredMessageType;
+static Message_Type tempIgnoredMessageType;
 
 static Message * m;
-
-static char sinZeroStr[50];
-static int sinZeroSize;
-static int i;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -84,69 +72,26 @@ static void Disconnect();
 static bool Transmit();
 
 ////Global implementations ////////////////////////////////////////
-bool UDP_Transmitter_Init()
+bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 {
 	bool rval = false;
 
-//   printf("udp_tx_init\n");
 	UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
 	State = Disable;
 
-	OutgoingQueueLock = false; //init
-	Initialize_Message_Queue(&outgoingMessageQueue);
+	Initialize_Message_Queue(&outgoingUdpMessageQueue);
 
-//   Initialize_Message(&mm, source, source, content);
-//   m = &mm;
-
-//   printf("udp tx port: %u\n", htons(UDP_TX_PORT));
-//   printf("start udp tx\n");
-	xTaskCreate(UDP_Transmitter_State_Step, "udptx1", 1024, NULL, 2, NULL);
-//   printf("started udp tx\n");
+	xTaskCreate(UDP_Transmitter_State_Step, "udptx1", 512, NULL, 2, NULL);
 
 	testCounter = 0;
 
 	return rval;
 }
 
-void UDP_Transmitter_State_Step()
+void ICACHE_RODATA_ATTR UDP_Transmitter_State_Step()
 {
-//	Connect();
-//
-//	memset(&DestinationAddr, 0, sizeof(DestinationAddr));
-//	char addrStr[] = "192.168.1.2";
-////	char serializedAddr[100] = "UDP,255.255.255.255:4445";
-//	char serializedAddr[100] = "UDP,192.168.1.255:4445";
-//	Message_Type mt;
-//	bool txOk;
-//
-////	DestinationAddr.sin_family = AF_INET;
-////	inet_aton(addrStr, &DestinationAddr.sin_addr.s_addr);
-////	DestinationAddr.sin_port = htons(4445);
-////	DestinationAddr.sin_len = sizeof(DestinationAddr);
-////
-////	Serialize_Address(&DestinationAddr, serializedAddr, 100, MESSAGE_TYPE_UDP);
-////	memset(&DestinationAddr, 0, sizeof(DestinationAddr));
-//	Deserialize_Address(serializedAddr, 100, &DestinationAddr, &mt);
-//
-//	taskENTER_CRITICAL();
-//	sprintf(UDP_Tx_Buffer, "test message\n");
-//	UDP_Tx_Count = 13;
-//	taskEXIT_CRITICAL();
-//
-//	for (;;)
-//	{
-//		txOk = Transmit();
-//		printf("%s\r\n", txOk ? "xmit ok" : "no xmit");
-//		vTaskDelay(2 / portTICK_RATE_MS);
-//	}
-
 	for (;;)
 	{
-//      if (!(testCounter = (testCounter + 1) % 10000))
-//      {
-//         printf("udptx_state: %d\n", State);
-//      }
-
 		switch (State)
 		{
 		case Disable:
@@ -162,7 +107,6 @@ void UDP_Transmitter_State_Step()
 		{
 			if (Connect())
 			{
-//               printf("tx connected\n");
 				State = Idle;
 			}
 			break;
@@ -170,21 +114,12 @@ void UDP_Transmitter_State_Step()
 
 		case Idle:
 		{
-//          if (1 || Peek_Message(&outgoingMessageQueue) != NULL)
 			taskENTER_CRITICAL();
-			m = Peek_Message(&outgoingMessageQueue);
+			m = Peek_Message(&outgoingUdpMessageQueue);
 			taskEXIT_CRITICAL();
 
 			if (m != NULL)
 			{
-//				printf("cont:[%s]\ndest:[%s]\nsource:[%s]",
-//						Peek_Message(&outgoingMessageQueue)->content,
-//						Peek_Message(&outgoingMessageQueue)->destination,
-//						Peek_Message(&outgoingMessageQueue)->source);
-//
-//				taskENTER_CRITICAL();
-//				printf("message available\n");
-//				taskEXIT_CRITICAL();
 				State = Buffer_Message;
 			}
 			break;
@@ -195,48 +130,21 @@ void UDP_Transmitter_State_Step()
 			memset(&DestinationAddr, 0, sizeof(DestinationAddr));
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&outgoingMessageQueue);
+			m = Dequeue_Message(&outgoingUdpMessageQueue);
 			taskEXIT_CRITICAL();
 
-//			printf("message addr tx %d\n", m);
-//			printf("lookin for newline in [%s]\n", m->content);
-//			taskENTER_CRITICAL();
-//			char* mLen = strchr(m->content, '\n') + 1; //+1 as strchr rval points to the chr.
-//			taskEXIT_CRITICAL();
-
 			taskENTER_CRITICAL();
-//			printf("copy content to buffer. %d bytes, %s\n", mLen - m->content,
-//					m->content);
 			strncpy(UDP_Tx_Buffer, m->content, UDP_TX_BUFFER_SIZE_BYTES);
 			UDP_Tx_Count = strlen(m->content);
-//			printf("done\n");
 			taskEXIT_CRITICAL();
+
+			uint8* addrStr;
 
 			taskENTER_CRITICAL();
-//			printf("tx serialized addr: [%s]\n", m->destination);
-			Deserialize_Address(m->destination, MAXIMUM_DESTINATION_LENGTH,
-					&DestinationAddr, &tempIgnoredMessageType);
+			Deserialize_Address(m->destination, &DestinationAddr,
+					&tempIgnoredMessageType);
 			taskEXIT_CRITICAL();
 
-			DestinationAddr.sin_port = htons(UDP_TX_PORT);
-
-//			taskENTER_CRITICAL();
-//			printf("message available\n");
-//			sinZeroSize = 0;
-//			for (i = 0; i < SIN_ZERO_LEN; ++i)
-//			{
-//				sinZeroSize += sprintf(sinZeroStr + sinZeroSize, "%s%u",
-//						i == 0 ? "" : ",", DestinationAddr.sin_zero[i]);
-//			}
-//
-////            printf("tx msg: [%s]\n", UDP_Tx_Buffer);
-//			printf(
-//					"deserialized addr: %s, fam: %u, len: %u, port: %u, zero: %s\n",
-//					inet_ntoa(DestinationAddr.sin_addr.s_addr),
-//					DestinationAddr.sin_family, DestinationAddr.sin_len,
-//					ntohs(DestinationAddr.sin_port), sinZeroStr);
-//			taskEXIT_CRITICAL();
-//            printf("buffer_message done, going to send_message\n\n----------------\n\n\n");
 			State = Send_Message;
 			break;
 		}
@@ -254,13 +162,12 @@ void UDP_Transmitter_State_Step()
 			break;
 		}
 		}
-//		taskYIELD();
-//      vTaskDelay(5 / portTICK_RATE_MS);
+		taskYIELD();
 	}
 }
 
 ////Local implementations /////////////////////////////////////////
-static bool Connect()
+static bool ICACHE_RODATA_ATTR Connect()
 {
 	bool rval = false;
 
@@ -277,31 +184,26 @@ static bool Connect()
 		sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
 		if (sock_fd == -1)
 		{
-//         printf("ESP8266 UDP task > failed to create sock!\n");
 			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
 	} while (sock_fd == -1);
-//   printf("ESP8266 UDP task > socket OK!\n");
 
 	//bind the socket
 	do
 	{
-//      printf("sock_fd: %d", sock_fd);
 		ret = bind(sock_fd, (struct sockaddr * ) &server_addr,
 				sizeof(server_addr));
 		if (ret != 0)
 		{
-//         printf("ESP8266 UDP task > captdns_task failed to bind sock!\n");
 			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
 	} while (ret != 0);
-//   printf("ESP8266 UDP task > bind OK!\n");
 	rval = true;
 
 	return rval;
 }
 
-static void Disconnect()
+static void ICACHE_RODATA_ATTR Disconnect()
 {
 	if (UDP_Tx_Buffer)
 	{
@@ -314,36 +216,11 @@ static void Disconnect()
 
 static bool Transmit()
 {
-	taskENTER_CRITICAL();
-	printf("sending %d bytes: [%s]\r\n", UDP_Tx_Count, UDP_Tx_Buffer);
-	printf("to %u.%u.%u.%u:%u\r\n\r\n-----\r\n",
-			DestinationAddr.sin_addr.s_addr & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 8) & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 16) & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 24) & 0xFF,
-			ntohs(DestinationAddr.sin_port));
-	UART_WaitTxFifoEmpty(UART0);
-	taskEXIT_CRITICAL();
-
 	bool rval = false;
 	rval = UDP_Tx_Count
 			== sendto(sock_fd, (uint8* ) UDP_Tx_Buffer, UDP_Tx_Count, 0,
 					(struct sockaddr * ) &DestinationAddr,
 					sizeof(DestinationAddr));
 
-	taskENTER_CRITICAL();
-	printf("rval:%s", rval ? "true" : "false");
-	taskEXIT_CRITICAL();
 	return rval;
 }
-
-////cut snippets //////////////////////////////////////////////////////////////
-
-//   //cleanup stuff. gone, or maybe we create another state?
-//   if (UDP_Rx_Buffer)
-//   {
-//      free(UDP_Rx_Buffer);
-//      UDP_Rx_Buffer = NULL;
-//   }
-//   free(UDP_Rx_Buffer);
-//   close(sock_fd);

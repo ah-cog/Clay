@@ -8,11 +8,7 @@
 #ifndef RING_BUFFER_H_
 #define RING_BUFFER_H_
 
-#define Ring_Buffer_BUF_SIZE   2048  /* number of elements in the buffer */
-
-#define WAIT_FOR_RING_BUF()			while(Ring_Buffer_Lock){taskYIELD();} Ring_Buffer_Lock = TRUE;
-#define LOCK_RING_BUF()				if(!Ring_Buffer_Lock){ Ring_Buffer_Lock = TRUE; }
-#define RELEASE_RING_BUF()			Ring_Buffer_Lock = FALSE
+#define Ring_Buffer_BUF_SIZE   1048  /* number of elements in the buffer */
 
 extern bool Ring_Buffer_Lock;
 

@@ -77,10 +77,6 @@ static int32 sock_fd;
 static bool Connected;
 static int32 testCounter;
 
-static char sinZeroStr[50];
-static int sinZeroSize;
-static int i;
-
 Message tempMessage;
 char * tempAddr;
 
@@ -90,7 +86,7 @@ static void Disconnect();
 static bool Receive();
 
 ////Global implementations ////////////////////////////////////////
-bool UDP_Receiver_Init()
+bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 {
 	bool rval = false;
 	UDP_Rx_Buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
@@ -101,32 +97,15 @@ bool UDP_Receiver_Init()
 	tempAddr = zalloc(SOCKADDR_IN_SIZE_BYTES * 2); //*2 for safety.
 	Initialize_Message_Queue(&incomingMessageQueue);
 
-//   printf("udp rx port: %u\n", htons(UDP_RX_PORT));
-//   printf("start udp rx\n");
-	xTaskCreate(UDP_Receiver_State_Step, "udprx1", 1024, NULL, 2, NULL);
-//   printf("started udp rx\n");
+	xTaskCreate(UDP_Receiver_State_Step, "udprx1", 512, NULL, 2, NULL);
 
 	testCounter = 0;
 
 	return rval;
 }
 
-void UDP_Receiver_State_Step()
+void ICACHE_RODATA_ATTR UDP_Receiver_State_Step()
 {
-//	Connect();
-//	for (;;)
-//	{
-//
-//		if (Receive())
-//		{
-//			taskENTER_CRITICAL();
-//			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';
-//			printf("%d:[%s]\n", system_get_time(), UDP_Rx_Buffer);
-//			taskEXIT_CRITICAL();
-//		}
-//		taskYIELD();
-//	}
-
 	for (;;)
 	{
 		switch (State)
@@ -142,13 +121,8 @@ void UDP_Receiver_State_Step()
 
 		case Configure:
 		{
-//            vTaskDelay(2000 / portTICK_RATE_MS);
 			if (Connect())
 			{
-
-//				taskENTER_CRITICAL();
-//				printf("rx connected\n");
-//				taskEXIT_CRITICAL();
 				State = Idle;
 			}
 			break;
@@ -160,81 +134,25 @@ void UDP_Receiver_State_Step()
 			{
 				State = Enqueue_Message;
 			}
-//			else if (Exclusive_Rx_Access)
-//			{
-//				State = Rx_Blocked;
-//			}
 			break;
 		}
 
 		case Enqueue_Message:
 		{
-//			taskENTER_CRITICAL();
-//			printf("enqueue.\n");
-//			taskEXIT_CRITICAL();
-
-//			taskENTER_CRITICAL();
-//			sinZeroSize = 0;
-//			for (i = 0; i < SIN_ZERO_LEN; ++i)
-//			{
-//				sinZeroSize += sprintf(sinZeroStr + sinZeroSize, "%s%u",
-//						i == 0 ? "" : ",", lastSourceAddress.sin_zero[i]);
-//			}
-//
-//			printf("pre-serial: %s, fam: %u, len: %u, port: %u, ",
-//					inet_ntoa(lastSourceAddress.sin_addr.s_addr),
-//					lastSourceAddress.sin_family, lastSourceAddress.sin_len,
-//					ntohs(lastSourceAddress.sin_port));
-//
-//			printf("zero:%s\r\n", sinZeroStr);
-//			UART_WaitTxFifoEmpty(UART0);
-//			taskEXIT_CRITICAL();
-
-
-
-//			printf("message addr rx %d\n", &tempMessage);
 			taskENTER_CRITICAL();
 			Serialize_Address(&lastSourceAddress, tempAddr,
 			MAXIMUM_DESTINATION_LENGTH, MESSAGE_TYPE_UDP);
 			taskEXIT_CRITICAL();
 
-//			taskENTER_CRITICAL();
-////            printf("strlen addr: %d", strlen(tempAddr));
-//			printf("rx'd from: [%s]\n", tempAddr);
-//			taskEXIT_CRITICAL();
-
 			taskENTER_CRITICAL();
 			Initialize_Message(&tempMessage, tempAddr, tempAddr, UDP_Rx_Buffer);
 			taskEXIT_CRITICAL();
 
-//            printf("rx'd from: [%s]\n\n", tempAddr);
-//            printf("message source: [%s]\n\n", tempMessage.source);
-
-			//TODO: incoming queue
-//			WAIT_FOR_INCOMING_QUEUE();
 			taskENTER_CRITICAL();
 			Queue_Message(&incomingMessageQueue, &tempMessage);
 			taskEXIT_CRITICAL();
-//			RELEASE_INCOMING_QUEUE();
-//            Queue_Message(&outgoingMessageQueue, &tempMessage);
-
-//			taskENTER_CRITICAL();
-////			printf("cont:[%s]\ndest:[%s]\nsource:[%s]",
-////					Peek_Message(&incomingMessageQueue)->content,
-////					Peek_Message(&incomingMessageQueue)->destination,
-////					Peek_Message(&incomingMessageQueue)->source);
-//			taskEXIT_CRITICAL();
-
-//			taskENTER_CRITICAL();
-//			WAIT_FOR_INCOMING_QUEUE();
-//			Dequeue_Message(&incomingMessageQueue);
-//			RELEASE_INCOMING_QUEUE();
-//			taskEXIT_CRITICAL();
 
 			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';
-//            printf("received: [%s]\n", UDP_Rx_Buffer);
-//            printf("rx serialized addr: [%s]\n", tempAddr);
-//            printf("rx_done, going to data_received\n\n----------------\n");
 
 			State = Idle;
 			break;
@@ -242,10 +160,7 @@ void UDP_Receiver_State_Step()
 
 		case Rx_Blocked:
 		{
-//			if (!Exclusive_Rx_Access)
-//			{
 			State = Idle;
-//			}
 			break;
 		}
 
@@ -255,16 +170,13 @@ void UDP_Receiver_State_Step()
 			break;
 		}
 		}
-//		taskYIELD();
-//      vTaskDelay(5 / portTICK_RATE_MS);
 	}
 }
 
 ////Local implementations /////////////////////////////////////////
-static bool Connect()
+static bool ICACHE_RODATA_ATTR Connect()
 {
 	Connected = false;
-//	Exclusive_Rx_Access = false;
 
 	memset(&server_addr, 0, sizeof(server_addr));
 
@@ -280,11 +192,9 @@ static bool Connect()
 		if (sock_fd == -1)
 		{
 			Connected = false;
-			//         printf("ESP8266 UDP task > failed to create sock!\n");
 			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
 	} while (sock_fd == -1);
-	//   printf("ESP8266 UDP task > socket OK!\n");
 
 	//bind the socket
 	do
@@ -293,17 +203,15 @@ static bool Connect()
 				sizeof(server_addr));
 		if (ret != 0)
 		{
-			//         printf("ESP8266 UDP task > captdns_task failed to bind sock!\n");
 			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
 	} while (ret != 0);
 	Connected = true;
-	//   printf("ESP8266 UDP task > bind OK!\n");
 
 	return Connected;
 }
 
-static void Disconnect()
+static void ICACHE_RODATA_ATTR Disconnect()
 {
 	if (UDP_Rx_Buffer)
 	{
@@ -314,7 +222,7 @@ static void Disconnect()
 	close(sock_fd);
 }
 
-static bool Receive()
+static bool ICACHE_RODATA_ATTR Receive()
 {
 	bool rval = false;
 

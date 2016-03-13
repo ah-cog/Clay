@@ -42,17 +42,14 @@ typedef struct _os_event_
 	uint32 param;
 } os_event_t;
 
-uint8 RcvChar;
 uint8 uart_no = UART0;     //UartDev.buff_uart_no;
 uint8 BytesAvailable = 0;
 volatile uint8 BytesRead;
-uint8 fifo_tmp[512] =
-{ 0 };
 
 xTaskHandle xUartTaskHandle;
 xQueueHandle xQueueUart;
 
-LOCAL STATUS uart_tx_one_char(uint8 uart, uint8 TxChar)
+LOCAL STATUS ICACHE_RODATA_ATTR uart_tx_one_char(uint8 uart, uint8 TxChar)
 {
 	while (true)
 	{
@@ -69,12 +66,12 @@ LOCAL STATUS uart_tx_one_char(uint8 uart, uint8 TxChar)
 	return OK;
 }
 
-LOCAL void uart1_write_char(char c)
+LOCAL void ICACHE_RODATA_ATTR uart1_write_char(char c)
 {
 	uart_tx_one_char(UART1, c);
 }
 
-LOCAL void uart0_write_char(char c)
+LOCAL void ICACHE_RODATA_ATTR uart0_write_char(char c)
 {
 	uart_tx_one_char(UART0, c);
 }
@@ -150,7 +147,7 @@ LOCAL void uart_config(uint8 uart_no, UART_ConfigTypeDef *uart)
 }
 #endif
 
-LOCAL void uart_task(void *pvParameters)
+LOCAL void ICACHE_RODATA_ATTR uart_task(void *pvParameters)
 {
 	os_event_t e;
 
@@ -206,24 +203,28 @@ void uart_init(void)
 
 //=================================================================
 
-void UART_SetWordLength(UART_Port uart_no, UART_WordLength len)
+void ICACHE_RODATA_ATTR UART_SetWordLength(UART_Port uart_no,
+		UART_WordLength len)
 {
 	SET_PERI_REG_BITS(UART_CONF0(uart_no), UART_BIT_NUM, len, UART_BIT_NUM_S);
 }
 
-void UART_SetStopBits(UART_Port uart_no, UART_StopBits bit_num)
+void ICACHE_RODATA_ATTR UART_SetStopBits(UART_Port uart_no,
+		UART_StopBits bit_num)
 {
 	SET_PERI_REG_BITS(UART_CONF0(uart_no), UART_STOP_BIT_NUM, bit_num,
 			UART_STOP_BIT_NUM_S);
 }
 
-void UART_SetLineInverse(UART_Port uart_no, UART_LineLevelInverse inverse_mask)
+void ICACHE_RODATA_ATTR UART_SetLineInverse(UART_Port uart_no,
+		UART_LineLevelInverse inverse_mask)
 {
 	CLEAR_PERI_REG_MASK(UART_CONF0(uart_no), UART_LINE_INV_MASK);
 	SET_PERI_REG_MASK(UART_CONF0(uart_no), inverse_mask);
 }
 
-void UART_SetParity(UART_Port uart_no, UART_ParityMode Parity_mode)
+void ICACHE_RODATA_ATTR UART_SetParity(UART_Port uart_no,
+		UART_ParityMode Parity_mode)
 {
 	CLEAR_PERI_REG_MASK(UART_CONF0(uart_no), UART_PARITY | UART_PARITY_EN);
 
@@ -236,14 +237,14 @@ void UART_SetParity(UART_Port uart_no, UART_ParityMode Parity_mode)
 	}
 }
 
-void UART_SetBaudrate(UART_Port uart_no, uint32 baud_rate)
+void ICACHE_RODATA_ATTR UART_SetBaudrate(UART_Port uart_no, uint32 baud_rate)
 {
 	uart_div_modify(uart_no, UART_CLK_FREQ / baud_rate);
 }
 
 //only when USART_HardwareFlowControl_RTS is set , will the rx_thresh value be set.
-void UART_SetFlowCtrl(UART_Port uart_no, UART_HwFlowCtrl flow_ctrl,
-		uint8 rx_thresh)
+void ICACHE_RODATA_ATTR UART_SetFlowCtrl(UART_Port uart_no,
+		UART_HwFlowCtrl flow_ctrl, uint8 rx_thresh)
 {
 	if (flow_ctrl & USART_HardwareFlowControl_RTS)
 	{
@@ -268,20 +269,21 @@ void UART_SetFlowCtrl(UART_Port uart_no, UART_HwFlowCtrl flow_ctrl,
 	}
 }
 
-bool UART_CheckTxFifoEmpty(UART_Port uart_no)
+bool ICACHE_RODATA_ATTR UART_CheckTxFifoEmpty(UART_Port uart_no)
 {
 	return !(READ_PERI_REG(UART_STATUS(uart_no))
 			& (UART_TXFIFO_CNT << UART_TXFIFO_CNT_S));
 }
 
-void UART_WaitTxFifoEmpty(UART_Port uart_no) //do not use if tx flow control enabled
+void ICACHE_RODATA_ATTR UART_WaitTxFifoEmpty(UART_Port uart_no) //do not use if tx flow control enabled
 {
 	while (!UART_CheckTxFifoEmpty(uart_no))
 		;
 }
 
 ///same as resetFifo, but it accepts the flags to set so you can just set rx or tx.
-void UART_ResetFifo_WithFlagOption(UART_Port uart_no, uint32 flags)
+void ICACHE_RODATA_ATTR UART_ResetFifo_WithFlagOption(UART_Port uart_no,
+		uint32 flags)
 {
 	SET_PERI_REG_MASK(UART_CONF0(uart_no),
 			flags & (UART_RXFIFO_RST | UART_TXFIFO_RST));
@@ -289,36 +291,36 @@ void UART_ResetFifo_WithFlagOption(UART_Port uart_no, uint32 flags)
 			flags & (UART_RXFIFO_RST | UART_TXFIFO_RST));
 }
 
-void UART_ResetRxFifo(UART_Port uart_no)
+void ICACHE_RODATA_ATTR UART_ResetRxFifo(UART_Port uart_no)
 {
 	UART_ResetFifo_WithFlagOption(uart_no, UART_RXFIFO_RST);
 }
-void UART_ResetTxFifo(UART_Port uart_no)
+void ICACHE_RODATA_ATTR UART_ResetTxFifo(UART_Port uart_no)
 {
 	UART_ResetFifo_WithFlagOption(uart_no, UART_TXFIFO_RST);
 }
 
-void UART_ResetFifo(UART_Port uart_no)
+void ICACHE_RODATA_ATTR UART_ResetFifo(UART_Port uart_no)
 {
 	UART_ResetFifo_WithFlagOption(uart_no, UART_RXFIFO_RST | UART_TXFIFO_RST);
 }
 
-void UART_ClearIntrStatus(UART_Port uart_no, uint32 clr_mask)
+void ICACHE_RODATA_ATTR UART_ClearIntrStatus(UART_Port uart_no, uint32 clr_mask)
 {
 	WRITE_PERI_REG(UART_INT_CLR(uart_no), clr_mask);
 }
 
-void UART_SetIntrEna(UART_Port uart_no, uint32 ena_mask)
+void ICACHE_RODATA_ATTR UART_SetIntrEna(UART_Port uart_no, uint32 ena_mask)
 {
 	SET_PERI_REG_MASK(UART_INT_ENA(uart_no), ena_mask);
 }
 
-void UART_intr_handler_register(void *fn, void *arg)
+void ICACHE_RODATA_ATTR UART_intr_handler_register(void *fn, void *arg)
 {
 	_xt_isr_attach(ETS_UART_INUM, fn, arg);
 }
 
-void UART_SetPrintPort(UART_Port uart_no)
+void ICACHE_RODATA_ATTR UART_SetPrintPort(UART_Port uart_no)
 {
 	if (uart_no == 1)
 	{
@@ -330,7 +332,8 @@ void UART_SetPrintPort(UART_Port uart_no)
 	}
 }
 
-void UART_ParamConfig(UART_Port uart_no, UART_ConfigTypeDef *pUARTConfig)
+void ICACHE_RODATA_ATTR UART_ParamConfig(UART_Port uart_no,
+		UART_ConfigTypeDef *pUARTConfig)
 {
 	if (uart_no == UART1)
 	{
@@ -353,7 +356,8 @@ void UART_ParamConfig(UART_Port uart_no, UART_ConfigTypeDef *pUARTConfig)
 	UART_ResetFifo(uart_no);
 }
 
-void UART_IntrConfig(UART_Port uart_no, UART_IntrConfTypeDef *pUARTIntrConf)
+void ICACHE_RODATA_ATTR UART_IntrConfig(UART_Port uart_no,
+		UART_IntrConfTypeDef *pUARTIntrConf)
 {
 
 	uint32 reg_val = 0;
@@ -405,21 +409,15 @@ LOCAL void uart0_rx_intr_handler(void *para)
 		else if (UART_RXFIFO_FULL_INT_ST
 				== (uart_intr_status & UART_RXFIFO_FULL_INT_ST))
 		{
-//			printf("f\n");
-			BytesAvailable = (READ_PERI_REG(UART_STATUS(UART0)) >> UART_RXFIFO_CNT_S)
-					& UART_RXFIFO_CNT;
+//			printf("full\n");
+			BytesAvailable = (READ_PERI_REG(UART_STATUS(UART0))
+					>> UART_RXFIFO_CNT_S) & UART_RXFIFO_CNT;
 			BytesRead = 0;
 
 			while (BytesRead < BytesAvailable)
 			{
-//				Ring_Buffer_Lock = true;
-//				WAIT_FOR_RING_BUF();
 				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
 				++BytesRead;
-//				Ring_Buffer_Lock = false;
-//				RELEASE_RING_BUF();
-//				fifo_tmp[InterruptFifoWriteIndex++] =
-//				READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
 			}
 
 			WRITE_PERI_REG(UART_INT_CLR(UART0), UART_RXFIFO_FULL_INT_CLR);
@@ -434,14 +432,8 @@ LOCAL void uart0_rx_intr_handler(void *para)
 
 			while (BytesRead < BytesAvailable)
 			{
-//				Ring_Buffer_Lock = true;
-//				WAIT_FOR_RING_BUF();
 				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
 				++BytesRead;
-//				Ring_Buffer_Lock = false;
-//				RELEASE_RING_BUF();
-//				fifo_tmp[InterruptFifoWriteIndex++] =
-//				READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
 			}
 
 			WRITE_PERI_REG(UART_INT_CLR(UART0), UART_RXFIFO_TOUT_INT_CLR);
@@ -457,12 +449,11 @@ LOCAL void uart0_rx_intr_handler(void *para)
 		{
 			//skip
 		}
-//		printf("d\n");
 		uart_intr_status = READ_PERI_REG(UART_INT_ST(uart_no));
 	}
 }
 
-void uart_init_new(void)
+void ICACHE_RODATA_ATTR uart_init_new(void)
 {
 	UART_WaitTxFifoEmpty(UART0);
 	UART_WaitTxFifoEmpty(UART1);

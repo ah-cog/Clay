@@ -1,12 +1,13 @@
 /*
- * UDP_Transmitter.h
+ * TCP_Transmitter.h
  *
- *  Created on: Feb 22, 2016
- *      Author: thebh
+ *  Created on: Mar 12, 2016
+ *      Author: thebh_000
  */
 
-#ifndef INCLUDE_UDP_TRANSMITTER_H_
-#define INCLUDE_UDP_TRANSMITTER_H_
+#ifndef INCLUDE_TCP_TRANSMITTER_H_
+#define INCLUDE_TCP_TRANSMITTER_H_
+
 ////Includes //////////////////////////////////////////////////////
 #include "esp_common.h"
 
@@ -17,7 +18,7 @@
 ////Globals   /////////////////////////////////////////////////////
 
 ////Prototypes/////////////////////////////////////////////////////
-extern bool UDP_Transmitter_Init();
-extern void UDP_Transmitter_State_Step();
+extern bool TCP_Transmitter_Init();
+extern void TCP_Transmitter_State_Step();
 
-#endif /* INCLUDE_UDP_TRANSMITTER_H_ */
+#endif /* INCLUDE_TCP_TRANSMITTER_H_ */

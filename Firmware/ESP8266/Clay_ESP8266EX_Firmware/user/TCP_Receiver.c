@@ -31,6 +31,7 @@
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
 
+#include "TCP_Connection_Manager.h"
 #include "TCP_Receiver.h"
 
 #include "../include/AddressSerialization.h"
@@ -41,7 +42,7 @@
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-	Disable, Configure, ListenForConnect, UDP_STATE_MAX
+	Disable, Configure, ListenForConnect, TCP_STATE_MAX
 } TCP_Receiver_States;
 
 ////Globals   /////////////////////////////////////////////////////
@@ -54,34 +55,18 @@ static int ret;
 static struct sockaddr_in lastSourceAddress;
 static struct sockaddr_in server_addr;
 
-//static char sinZeroStr[50];
-//static int sinZeroSize;
-//static int i;
-
-//TODO: move to clay_config.
-#define CONNECTION_ALIVE_TIME_us 200 * 1000   //200 msec
-#define SERVER_PORT 1002
-#define CLIENT_MAX_CONN    10
-#define SERVER_IP "192.168.1.11"
-#define RECEIVE_TASK_BUFFER_SIZE 512
-#define CLAY_ADDR_STRING_BUF_LENGTH 70
-//#define SERVER_PORT 1001
-
 static int32 listenfd;
 static int32 len;
 static int32 client_sock;
 static uint16 httpd_server_port = 1002;
 
-static uint32 Rx_Start_Time;
-static uint32 Rx_Start_Time_temp;
-static int temp_rx_counter;
-
 static volatile int32 Task_Count;
 
 ////Local Prototypes///////////////////////////////////////////////
-static bool Connect();
+static bool ConnectListener();
 static void Disconnect();
 static bool Listen();
+bool TCP_Open_Connection(int newSocket);
 static int32 Receive(int32 rxSocket, uint8_t * rxbuf, int32 maxRxCount);
 static void ReceiveTask(void * pvParameters);
 static int32 Get_Index_Of_Message_End(uint8 * buffer, int32 count);
@@ -89,37 +74,21 @@ static bool Enqueue(uint8 * buffer, int32 count,
 		struct sockaddr_in * sourceAddress);
 
 ////Local implementations /////////////////////////////////////////
-bool TCP_Receiver_Init()
+bool ICACHE_RODATA_ATTR TCP_Receiver_Init()
 {
 	bool rval = false;
 	State = Disable;
 
+	SocketListInitialize();
 	Initialize_Message_Queue(&incomingMessageQueue);
 
-	xTaskCreate(TCP_Receiver_State_Step, "tcprx1", 1024, NULL, 2, NULL);
+	xTaskCreate(TCP_Receiver_State_Step, "tcprx1", 512, NULL, 2, NULL);
 
 	return rval;
 }
 
-void TCP_Receiver_State_Step()
+void ICACHE_RODATA_ATTR TCP_Receiver_State_Step()
 {
-	//Working demo:
-//	while (!Connect())
-//		;
-//	for (;;)
-//	{
-//
-//		if (Receive())
-//		{
-//			taskENTER_CRITICAL();
-//			TCP_Rx_Buffer[TCP_Rx_Count] = '\0';
-//			printf("%d:[%s]\r\n", system_get_time(), TCP_Rx_Buffer);
-//			taskEXIT_CRITICAL();
-//		}
-//		taskYIELD();
-//	}
-	//end working demo
-
 	for (;;)
 	{
 		switch (State)
@@ -135,12 +104,8 @@ void TCP_Receiver_State_Step()
 
 		case Configure:
 		{
-			if (Connect())
+			if (ConnectListener())
 			{
-//				taskENTER_CRITICAL();
-//				printf("rx connected\r\n");
-//				taskEXIT_CRITICAL();
-
 				State = ListenForConnect;
 				Task_Count = 0;
 			}
@@ -154,7 +119,7 @@ void TCP_Receiver_State_Step()
 			break;
 		}
 
-		case UDP_STATE_MAX:
+		case TCP_STATE_MAX:
 		default:
 		{
 			State = ListenForConnect;
@@ -168,7 +133,7 @@ void TCP_Receiver_State_Step()
 ////Local implementations /////////////////////////////////////////
 
 //create and bind listener socket.
-bool Connect()
+bool ICACHE_RODATA_ATTR ConnectListener()
 {
 	bool rval = false;
 
@@ -182,14 +147,12 @@ bool Connect()
 	listenfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (listenfd == -1)
 	{
-//		printf("ESP8266 TCP server task > socket error\r\n");
 		vTaskDelay(1000 / portTICK_RATE_MS);
 		rval = false;
 	}
 	else
 	{
 		rval = true;
-//		printf("ESP8266 TCP server task > create socket: %d\r\n", listenfd);
 	}
 
 	if (rval)
@@ -199,7 +162,6 @@ bool Connect()
 				sizeof(server_addr));
 		if (ret != 0)
 		{
-//			printf("ESP8266 TCP server task > bind fail\r\n");
 			vTaskDelay(1000 / portTICK_RATE_MS);
 			rval = false;
 			close(listenfd);
@@ -207,26 +169,22 @@ bool Connect()
 		else
 		{
 			rval = true;
-//			printf("ESP8266 TCP server task > port:%d\r\n",
-//					ntohs(server_addr.sin_port));
 		}
 	}
 //Establish TCP server interception:
 	if (rval)
 	{
 		/* Listen to the local connection */
-		ret = listen(listenfd, CLIENT_MAX_CONN);
+		ret = listen(listenfd, TCP_MAX_CONNECTIONS);
 		if (ret != 0)
 		{
 			close(listenfd);
-//			printf("ESP8266 TCP server task > failed to set listen queue!\r\n");
 			vTaskDelay(1000 / portTICK_RATE_MS);
 			rval = false;
 		}
 		else
 		{
 			rval = true;
-//			printf("ESP8266 TCP server task > listen ok\r\n");
 		}
 	}
 
@@ -234,50 +192,40 @@ bool Connect()
 }
 
 //listens for connections and accepts them
-static bool Listen()
+static bool ICACHE_RODATA_ATTR Listen()
 {
 	bool rval = false;
 
-//spawn new tasks as receivers.
-//		Each task allocates its own buffer.
-//		each task receives until connection closes or timeout expires
-//			 then enqueues messages into incoming queue
+	//spawn new tasks as receivers.
+	//		Each task allocates its own buffer.
+	//		each task receives until connection closes or timeout expires
+	//			 then enqueues messages into incoming queue
 
 	len = sizeof(struct sockaddr_in);
-//	taskENTER_CRITICAL();
-//	printf("wait client\r\n");
-//	taskEXIT_CRITICAL();
 	/*block here waiting remote connect request*/
 	if ((client_sock = accept(listenfd, (struct sockaddr * )&lastSourceAddress,
 			(socklen_t * )&len)) < 0)
 	{
-//		taskENTER_CRITICAL();
-//		printf("accept fail\r\n");
-//		taskEXIT_CRITICAL();
 		rval = false;
+		lwip_close(client_sock);
 	}
-	else if (Task_Count <= CLIENT_MAX_CONN)
+	else if (Task_Count <= TCP_MAX_CONNECTIONS)
 	{
 		//timeout alive time in ms / 10. We should call this about 10 times before timing out.
-		int millis = (CONNECTION_ALIVE_TIME_us / 1000) / 10;
+		int millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
 		setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, &millis,
 				sizeof(millis));
 
-		rval = true;
+		if (TCP_Open_Connection(client_sock))
+		{
+			rval = true;
+		}
 
-		++Task_Count;
-//		taskENTER_CRITICAL();
-//		printf("tasks:%d\r\n", Task_Count);
-//		taskEXIT_CRITICAL();
+	}
 
-		//spawn new task to receive.
-		xTaskCreate(ReceiveTask, "socket_rx", 512, ((void* )&client_sock), 2,
-				NULL);
-
-		taskENTER_CRITICAL();
-//		printf("Client: %s %d\r\n", inet_ntoa(lastSourceAddress.sin_addr),
-//				htons(lastSourceAddress.sin_port));
-		taskEXIT_CRITICAL();
+	if (!rval)
+	{
+		lwip_close(client_sock);
 	}
 
 //Wait until TCP client is connected with the server, then start receiving data packets when TCP
@@ -286,14 +234,30 @@ static bool Listen()
 	return rval;
 }
 
-static void ReceiveTask(void * pvParameters)
+bool ICACHE_RODATA_ATTR TCP_Open_Connection(int newSocket)
+{
+	bool rval = (SocketListAdd(newSocket) != -1);
+
+	if (rval)
+	{
+		++Task_Count;
+
+		//spawn new task to receive.
+		xTaskCreate(ReceiveTask, "socket_rx", 512, ((void* )&newSocket), 2,
+				NULL);
+	}
+
+	return rval;
+}
+
+static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 {
 	int32 rxSocket = *((int32*) pvParameters);
 	struct sockaddr_in sourceAddress;
 	int32 addressSize = sizeof(sourceAddress);
 	getpeername(rxSocket, (struct sockaddr* )&sourceAddress, &addressSize);
 
-	uint8 * data = zalloc(RECEIVE_TASK_BUFFER_SIZE);
+	uint8 * data = zalloc(TCP_RECEIVE_TASK_BUFFER_SIZE);
 	int32 length = 0;
 	int receivedValue = 0;
 	int indexOfMessageEnd;
@@ -303,19 +267,11 @@ static void ReceiveTask(void * pvParameters)
 		//listen until socket is closed.
 		while (rxSocket > 0)
 		{
-//			taskENTER_CRITICAL();
-//			printf("receive\r\n");
-//			taskEXIT_CRITICAL();
-
 			receivedValue = Receive(rxSocket, data + length,
-			RECEIVE_TASK_BUFFER_SIZE - length);
-
-//			taskENTER_CRITICAL();
-//			printf("received\r\n");
-//			taskEXIT_CRITICAL();
+			TCP_RECEIVE_TASK_BUFFER_SIZE - length);
 
 			if (receivedValue
-					> 0&& length + receivedValue <= RECEIVE_TASK_BUFFER_SIZE)
+					> 0&& length + receivedValue <= TCP_RECEIVE_TASK_BUFFER_SIZE)
 			{
 				length += receivedValue;
 				receivedValue = 0;
@@ -327,31 +283,16 @@ static void ReceiveTask(void * pvParameters)
 				{
 					//TODO: parse multiple messages here, in case we got more than one newline
 
-//					taskENTER_CRITICAL();
-//					printf("got a message\r\n");
-//					taskEXIT_CRITICAL();
-
 					//enqueue if we received message end.
 					Enqueue(data, length, &sourceAddress);
 
-//					taskENTER_CRITICAL();
-//					printf("setting length 0 and data 0 null\r\n");
-//					taskEXIT_CRITICAL();
-
 					length = 0;
 					taskENTER_CRITICAL();
-					memset(data, 0, RECEIVE_TASK_BUFFER_SIZE);
+					memset(data, 0, TCP_RECEIVE_TASK_BUFFER_SIZE);
 					taskEXIT_CRITICAL();
-
-//					taskENTER_CRITICAL();
-//					printf("done enqueue\r\n");
-//					taskEXIT_CRITICAL();
 				}
-				else if (length >= RECEIVE_TASK_BUFFER_SIZE)
+				else if (length >= TCP_RECEIVE_TASK_BUFFER_SIZE)
 				{
-//					taskENTER_CRITICAL();
-//					printf("overflow\r\n");
-//					taskEXIT_CRITICAL();
 
 					//overflow. drop this message.
 					length = 0;
@@ -359,34 +300,25 @@ static void ReceiveTask(void * pvParameters)
 			}
 			else if (receivedValue < 0)
 			{
-//				taskENTER_CRITICAL();
-//				printf("DC.\r\n");
-//				taskEXIT_CRITICAL();
-
 				break;
 			}
 
-//			taskENTER_CRITICAL();
-//			printf("yield\r\n");
-//			taskEXIT_CRITICAL();
 			taskYIELD();
 		}
 	}
 
+	SocketListRemove(rxSocket);
 	lwip_close(rxSocket);
 	free((void*) data);
 
 	--Task_Count;
 
-//	taskENTER_CRITICAL();
-//	printf("freed data, delete task\r\n");
-//	taskEXIT_CRITICAL();
-
 	vTaskDelete(NULL);
 }
 
 //reads data from the socket
-static int32 Receive(int32 rxSocket, uint8_t * rxbuf, int32 maxRxCount)
+static int32 ICACHE_RODATA_ATTR Receive(int32 rxSocket, uint8_t * rxbuf,
+		int32 maxRxCount)
 {
 	int32 rval = lwip_recv(rxSocket, (void*) rxbuf, maxRxCount, MSG_PEEK);
 
@@ -408,7 +340,8 @@ static int32 Receive(int32 rxSocket, uint8_t * rxbuf, int32 maxRxCount)
 	return rval;
 }
 
-static int32 Get_Index_Of_Message_End(uint8 * buffer, int32 count)
+static int32 ICACHE_RODATA_ATTR Get_Index_Of_Message_End(uint8 * buffer,
+		int32 count)
 {
 	int32 rval = false;
 	uint8 * bangIdx = strchr(buffer, '\n');
@@ -421,25 +354,17 @@ static int32 Get_Index_Of_Message_End(uint8 * buffer, int32 count)
 	return rval;
 }
 
-static bool Enqueue(uint8 * buffer, int32 count,
+static bool ICACHE_RODATA_ATTR Enqueue(uint8 * buffer, int32 count,
 		struct sockaddr_in * sourceAddress)
 {
 	bool rval = false;
 	Message tempMessage;
 	uint8 * addrStringBuf = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 
-//	taskENTER_CRITICAL();
-//	printf("enqueue message [%s]\r\n", buffer);
-//	taskEXIT_CRITICAL();
-
 	taskENTER_CRITICAL();
 	Serialize_Address(sourceAddress, addrStringBuf, CLAY_ADDR_STRING_BUF_LENGTH,
 			MESSAGE_TYPE_TCP);
 	taskEXIT_CRITICAL();
-
-//	taskENTER_CRITICAL();
-//	printf("from %s\r\n", addrStringBuf);
-//	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
 	Initialize_Message(&tempMessage, addrStringBuf, addrStringBuf, buffer);
@@ -448,17 +373,7 @@ static bool Enqueue(uint8 * buffer, int32 count,
 
 	rval = true;
 
-//	taskENTER_CRITICAL();
-//	buffer[count] = '\0';
-//	printf("received: [%s]\r\n", tempMessage.content);
-//	printf("rx serialized addr: [%s]\r\n", tempMessage.source);
-//	taskEXIT_CRITICAL();
-
 	free(addrStringBuf);
-
-//	taskENTER_CRITICAL();
-//	printf("nq,free. returning\r\n");
-//	taskEXIT_CRITICAL();
 
 	return rval;
 }

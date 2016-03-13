@@ -75,6 +75,16 @@
 
 #define CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH 16
 
+#define TCP_RECEIVE_CONNECTION_TIMEOUT_ms			 20
+#define TCP_RECEIVE_PORT							 1002
+#define TCP_MAX_CONNECTIONS    						 5
+#define TCP_RECEIVE_TASK_BUFFER_SIZE 				 256
+#define CLAY_ADDR_STRING_BUF_LENGTH 				 64
+
+#define TCP_TRANSMIT_CONNECT_TIMEOUT_ms				 20
+#define TCP_TX_BUFFER_SIZE_BYTES					 256
+#define TCP_TRANSMIT_PORT					         1001
+
 //TODO: define SSID/PW here.
 //TODO: timeouts on serial comms?
 

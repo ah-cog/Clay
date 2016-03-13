@@ -26,7 +26,7 @@ static uint16 Ring_Buffer_inSize; /* size of input data */
  **         ---             - Error code
  ** ===================================================================
  */
-uint8 Ring_Buffer_Put(uint8 elem)
+uint8 ICACHE_RODATA_ATTR Ring_Buffer_Put(uint8 elem)
 {
 	uint8 res = false;
 
@@ -60,7 +60,7 @@ uint8 Ring_Buffer_Put(uint8 elem)
  **         ---             - Error code
  ** ===================================================================
  */
-uint8 Ring_Buffer_Get(uint8 *elemP)
+uint8 ICACHE_RODATA_ATTR Ring_Buffer_Get(uint8 *elemP)
 {
 	uint8 res = false;
 
@@ -91,7 +91,7 @@ uint8 Ring_Buffer_Get(uint8 *elemP)
  **         ---             - Number of elements in the buffer.
  ** ===================================================================
  */
-uint8 Ring_Buffer_Has_Data()
+uint8 ICACHE_RODATA_ATTR Ring_Buffer_Has_Data()
 {
 	uint8 rval = (Ring_Buffer_inSize > 0 ? TRUE : FALSE);
 
@@ -108,7 +108,7 @@ uint8 Ring_Buffer_Has_Data()
  **         ---             - Number of elements in the buffer.
  ** ===================================================================
  */
-uint16 Ring_Buffer_NofElements(void)
+uint16 ICACHE_RODATA_ATTR Ring_Buffer_NofElements(void)
 {
 	uint16 rval = Ring_Buffer_inSize;
 
@@ -126,7 +126,7 @@ uint16 Ring_Buffer_NofElements(void)
  **         ---             - Number of elements in the buffer.
  ** ===================================================================
  */
-uint16 Ring_Buffer_NofFreeElements(void)
+uint16 ICACHE_RODATA_ATTR Ring_Buffer_NofFreeElements(void)
 {
 	uint16 rval = (uint16) (Ring_Buffer_BUF_SIZE - Ring_Buffer_inSize);
 
@@ -142,7 +142,7 @@ uint16 Ring_Buffer_NofFreeElements(void)
  **     Returns     : Nothing
  ** ===================================================================
  */
-void Ring_Buffer_Init(void)
+void ICACHE_RODATA_ATTR Ring_Buffer_Init(void)
 {
 	Ring_Buffer_Lock = false;
 	Ring_Buffer_inIdx = 0;

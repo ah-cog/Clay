@@ -21,12 +21,14 @@
 ////Local vars/////////////////////////////////////////////////////
 char Terminator = '\n';
 uint8 messageTypeTempStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
+uint8 deserializeTempStr[50];
 
 ////Local Prototypes///////////////////////////////////////////////
 
 ////Global implementations ////////////////////////////////////////
-uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination,
-		uint32 DestinationLength, Message_Type ConnectionType)
+uint32 ICACHE_RODATA_ATTR Serialize_Address(struct sockaddr_in * Source,
+		uint8* Destination, uint32 DestinationLength,
+		Message_Type ConnectionType)
 {
 	uint32 rval = 0;
 
@@ -53,7 +55,7 @@ uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination,
 	return rval;
 }
 
-void Deserialize_Address(uint8* Source, uint32 SourceLength,
+void ICACHE_RODATA_ATTR Deserialize_Address(uint8* Source,
 		struct sockaddr_in * Destination, Message_Type *type)
 {
 	char Comma = ',';
@@ -62,8 +64,10 @@ void Deserialize_Address(uint8* Source, uint32 SourceLength,
 
 	memset(Destination, 0, sizeof(*Destination));
 
+	strcpy(deserializeTempStr, Source);
+
 	//get the string off the front
-	uint8* typeStart = strtok(Source, &Comma);
+	uint8* typeStart = strtok(deserializeTempStr, &Comma);
 	uint8* ipStart = strtok(NULL, &Colon);
 	uint8* portStart = strtok(NULL, &Bang);
 
@@ -71,12 +75,12 @@ void Deserialize_Address(uint8* Source, uint32 SourceLength,
 
 	inet_aton(ipStart, &(Destination->sin_addr));
 	Destination->sin_port = htons(atoi(portStart));
-
 	Destination->sin_family = AF_INET;
 	Destination->sin_len = sizeof(*Destination);
 }
 
-bool Get_Message_Type_Str(Message_Type type, uint8 *returnStr)
+bool ICACHE_RODATA_ATTR Get_Message_Type_Str(Message_Type type,
+		uint8 *returnStr)
 {
 	bool rval = false;
 
@@ -90,7 +94,7 @@ bool Get_Message_Type_Str(Message_Type type, uint8 *returnStr)
 	return rval;
 }
 
-Message_Type Get_Message_Type_From_Str(uint8*typeString)
+Message_Type ICACHE_RODATA_ATTR Get_Message_Type_From_Str(uint8*typeString)
 {
 	Message_Type rval = MESSAGE_TYPE_MAX;
 
