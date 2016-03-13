@@ -8,7 +8,7 @@
 #ifndef RING_BUFFER_H_
 #define RING_BUFFER_H_
 
-#define Ring_Buffer_BUF_SIZE   2048  /* number of elements in the buffer */
+#define Ring_Buffer_BUF_SIZE   1048  /* number of elements in the buffer */
 
 extern bool Ring_Buffer_Lock;
 

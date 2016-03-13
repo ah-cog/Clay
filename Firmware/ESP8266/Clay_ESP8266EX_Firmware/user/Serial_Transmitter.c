@@ -66,7 +66,6 @@ static uint8 * Serial_Tx_Buffer;
 static uint32 Serial_Tx_Count;
 static Message * Temp_Message;
 
-static uint32 counter = 0;
 static uint32 timeTemp;
 
 ////Local Prototypes///////////////////////////////////////////////
@@ -74,7 +73,7 @@ static bool Connect();
 static bool Transmit();
 
 ////Global implementations ////////////////////////////////////////
-bool Serial_Transmitter_Init()
+bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 {
 	bool rval = true;
 
@@ -88,26 +87,10 @@ bool Serial_Transmitter_Init()
 	return rval;
 }
 
-void Serial_Transmitter_State_Step()
+void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 {
-//  this works with the serial receiver task running
-//	for (;;)
-//	{
-//		taskENTER_CRITICAL();
-//		printf("a");
-//		taskEXIT_CRITICAL();
-//		taskYIELD();
-//	}
-
 	for (;;)
 	{
-//		if (State != Disable && !(counter = (counter + 1) % 10000))
-//		{
-//			taskENTER_CRITICAL();
-//			printf("txstate: %d\n", State);
-//			taskEXIT_CRITICAL();
-//		}
-
 		switch (State)
 		{
 		case Disable:
@@ -126,11 +109,9 @@ void Serial_Transmitter_State_Step()
 
 		case Idle:
 		{
-//			WAIT_FOR_OUTGOING_QUEUE(); ///TODO: make sure we're not blocking here. That'll create a deadlock.
 			taskENTER_CRITICAL();
 			Temp_Message = Peek_Message(&incomingMessageQueue);
 			taskEXIT_CRITICAL();
-//			RELEASE_OUTGOING_QUEUE();
 
 			if (!Serial_Rx_In_Progress && Temp_Message != NULL)
 			{
@@ -144,11 +125,9 @@ void Serial_Transmitter_State_Step()
 		{
 			Serial_Tx_In_Progress = true;
 
-//			WAIT_FOR_OUTGOING_QUEUE();
 			taskENTER_CRITICAL();
 			Temp_Message = Dequeue_Message(&incomingMessageQueue);
 			taskEXIT_CRITICAL();
-//			RELEASE_OUTGOING_QUEUE();
 
 			taskENTER_CRITICAL();
 			Serial_Tx_Count = strlen(Temp_Message->content);
@@ -158,16 +137,9 @@ void Serial_Transmitter_State_Step()
 			strcpy(Serial_Tx_Buffer, Temp_Message->content);
 			taskEXIT_CRITICAL();
 
-//            printf("msg only: [%s]", Serial_Tx_Buffer);
-
 			taskENTER_CRITICAL();
 			strcat(Serial_Tx_Buffer, Temp_Message->source);
 			taskEXIT_CRITICAL();
-
-//            printf("addr: [%s]", Temp_Message->source);
-//			taskENTER_CRITICAL();
-//			printf("msg + addr: [%s]", Serial_Tx_Buffer);
-//			taskEXIT_CRITICAL();
 
 			State = Wait_For_Transmit_Ok;
 
@@ -229,13 +201,13 @@ void Serial_Transmitter_State_Step()
 }
 
 ////Local implementations /////////////////////////////////////////
-static bool Connect()
+static bool ICACHE_RODATA_ATTR Connect()
 {
 	bool rval = false;
 	return rval;
 }
 
-static bool Transmit()
+static bool ICACHE_RODATA_ATTR Transmit()
 {
 	bool rval = false;
 	return rval;

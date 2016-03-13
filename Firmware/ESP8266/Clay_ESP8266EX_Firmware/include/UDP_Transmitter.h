@@ -11,14 +11,10 @@
 #include "esp_common.h"
 
 ////Defines ///////////////////////////////////////////////////////
-#define WAIT_FOR_OUTGOING_QUEUE()			while(OutgoingQueueLock){taskYIELD();} OutgoingQueueLock = TRUE;
-#define LOCK_OUTGOING_QUEUE()			if(!OutgoingQueueLock){ OutgoingQueueLock = TRUE; }
-#define RELEASE_OUTGOING_QUEUE()		OutgoingQueueLock = FALSE
 
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
-extern volatile bool OutgoingQueueLock;
 
 ////Prototypes/////////////////////////////////////////////////////
 extern bool UDP_Transmitter_Init();

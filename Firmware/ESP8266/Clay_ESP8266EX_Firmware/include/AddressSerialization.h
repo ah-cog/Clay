@@ -22,8 +22,8 @@
 extern char Terminator;
 
 ////Prototypes/////////////////////////////////////////////////////
-extern void Deserialize_Address(uint8* Source, uint32 SourceLength,
-		struct sockaddr_in * Destination, Message_Type *type);
+extern void Deserialize_Address(uint8* Source, struct sockaddr_in * Destination,
+		Message_Type *type);
 extern uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination,
 		uint32 DestinationLength, Message_Type ConnectionTypeStr);
 bool Get_Message_Type_Str(Message_Type type, uint8 *returnStr);

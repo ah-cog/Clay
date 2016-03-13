@@ -36,7 +36,7 @@ SPI_MODE ?= qio
 # 4 : 4096 KB (512 KB + 512 KB)
 # 5 : 2048 KB (1024 KB + 1024 KB)
 # 6 : 4096 KB (1024 KB + 1024 KB)
-SPI_SIZE_MAP ?= 0
+SPI_SIZE_MAP ?= 6
 
 ifeq ($(SPI_SPEED), 26.7)
     freqdiv = 1
@@ -130,9 +130,11 @@ CFLAGS		= -g -save-temps -std=gnu90 -Os -Wpointer-arith -Wundef -Werror -Wl,-EL 
 CXXFLAGS	= $(CFLAGS) -fno-rtti -fno-exceptions
 
 # linker flags used to generate the main object file
-LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static
+LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static -Wl,-Map=clay_esp.map 
+#-Wl,-verbose
 
 # linker script used for the above linkier step
+#LD_SCRIPT	= eagle.app.v6.ld
 LD_SCRIPT	= eagle.app.v6.ld
 
 # various paths from the SDK used in this project
@@ -163,6 +165,7 @@ APP_AR		:= $(addprefix $(BUILD_BASE)/,$(TARGET)_app.a)
 TARGET_OUT	:= $(addprefix $(BUILD_BASE)/,$(TARGET).out)
 
 LD_SCRIPT	:= $(addprefix -T$(SDK_BASE)/$(SDK_LDDIR)/,$(LD_SCRIPT))
+#LD_SCRIPT	:= $(addprefix -T$(BUILD_BASE)/../,$(LD_SCRIPT))
 
 INCDIR	:= $(addprefix -I,$(SRC_DIR))
 EXTRA_INCDIR	:= $(addprefix -I,$(EXTRA_INCDIR))

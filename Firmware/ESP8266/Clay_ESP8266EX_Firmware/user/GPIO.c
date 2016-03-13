@@ -27,7 +27,7 @@
 
 #include "../include/GPIO.h"
 
-void gpio_config(GPIO_ConfigTypeDef *pGPIOConfig)
+void ICACHE_RODATA_ATTR gpio_config(GPIO_ConfigTypeDef *pGPIOConfig)
 {
 	uint16 gpio_pin_mask = pGPIOConfig->GPIO_Pin;
 	uint32 io_reg;
@@ -109,7 +109,7 @@ void gpio_config(GPIO_ConfigTypeDef *pGPIOConfig)
  * writes is significant, calling code should divide a single call
  * into multiple calls.
  */
-void gpio_output_conf(uint32 set_mask, uint32 clear_mask, uint32 enable_mask,
+void ICACHE_RODATA_ATTR gpio_output_conf(uint32 set_mask, uint32 clear_mask, uint32 enable_mask,
 		uint32 disable_mask)
 {
 	GPIO_REG_WRITE(GPIO_OUT_W1TS_ADDRESS, set_mask);
@@ -121,7 +121,7 @@ void gpio_output_conf(uint32 set_mask, uint32 clear_mask, uint32 enable_mask,
 /*
  * Sample the value of GPIO input pins and returns a bitmask.
  */
-uint32 gpio_input_get(void)
+uint32 ICACHE_RODATA_ATTR gpio_input_get(void)
 {
 	return GPIO_REG_READ(GPIO_IN_ADDRESS);
 }
@@ -137,7 +137,7 @@ uint32 gpio_input_get(void)
  * application-specific handler may wish to use gpio_intr_pending
  * to check for any additional pending interrupts before it returns.
  */
-void gpio_intr_handler_register(void *fn, void *arg)
+void ICACHE_RODATA_ATTR gpio_intr_handler_register(void *fn, void *arg)
 {
 	_xt_isr_attach(ETS_GPIO_INUM, fn, arg);
 }
@@ -145,7 +145,7 @@ void gpio_intr_handler_register(void *fn, void *arg)
 /*
  only highlevel and lowlevel intr can use for wakeup
  */
-void gpio_pin_wakeup_enable(uint32 i, GPIO_INT_TYPE intr_state)
+void ICACHE_RODATA_ATTR gpio_pin_wakeup_enable(uint32 i, GPIO_INT_TYPE intr_state)
 {
 	uint32 pin_reg;
 
@@ -164,7 +164,7 @@ void gpio_pin_wakeup_enable(uint32 i, GPIO_INT_TYPE intr_state)
 	}
 }
 
-void gpio_pin_wakeup_disable(void)
+void ICACHE_RODATA_ATTR gpio_pin_wakeup_disable(void)
 {
 	uint8 i;
 	uint32 pin_reg;
@@ -183,7 +183,7 @@ void gpio_pin_wakeup_disable(void)
 	}
 }
 
-void gpio_pin_intr_state_set(uint32 i, GPIO_INT_TYPE intr_state)
+void ICACHE_RODATA_ATTR gpio_pin_intr_state_set(uint32 i, GPIO_INT_TYPE intr_state)
 {
 	uint32 pin_reg;
 
@@ -197,7 +197,7 @@ void gpio_pin_intr_state_set(uint32 i, GPIO_INT_TYPE intr_state)
 	portEXIT_CRITICAL();
 }
 
-void gpio16_output_conf(void)
+void ICACHE_RODATA_ATTR gpio16_output_conf(void)
 {
 	WRITE_PERI_REG(PAD_XPD_DCDC_CONF,
 			(READ_PERI_REG(PAD_XPD_DCDC_CONF) & 0xffffffbc) | (uint32)0x1); // mux configuration for XPD_DCDC to output rtc_gpio0
@@ -209,13 +209,13 @@ void gpio16_output_conf(void)
 			(READ_PERI_REG(RTC_GPIO_ENABLE) & (uint32)0xfffffffe) | (uint32)0x1); //out enable
 }
 
-void gpio16_output_set(uint8 value)
+void ICACHE_RODATA_ATTR gpio16_output_set(uint8 value)
 {
 	WRITE_PERI_REG(RTC_GPIO_OUT,
 			(READ_PERI_REG(RTC_GPIO_OUT) & (uint32)0xfffffffe) | (uint32)(value & 1));
 }
 
-void gpio16_input_conf(void)
+void ICACHE_RODATA_ATTR gpio16_input_conf(void)
 {
 	WRITE_PERI_REG(PAD_XPD_DCDC_CONF,
 			(READ_PERI_REG(PAD_XPD_DCDC_CONF) & 0xffffffbc) | (uint32)0x1); // mux configuration for XPD_DCDC and rtc_gpio0 connection
@@ -227,7 +227,7 @@ void gpio16_input_conf(void)
 			READ_PERI_REG(RTC_GPIO_ENABLE) & (uint32)0xfffffffe);//out disable
 }
 
-uint8 gpio16_input_get(void)
+uint8 ICACHE_RODATA_ATTR gpio16_input_get(void)
 {
 	return (uint8) (READ_PERI_REG(RTC_GPIO_IN_DATA) & 1);
 }

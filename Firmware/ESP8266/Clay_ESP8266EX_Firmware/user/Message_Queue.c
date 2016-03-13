@@ -1,10 +1,11 @@
+#include "esp_common.h"
 #include "Message_Queue.h"
 
 Message_Queue incomingMessageQueue;
 Message_Queue outgoingUdpMessageQueue;
 Message_Queue outgoingTcpMessageQueue;
 
-bool Initialize_Message_Queue(Message_Queue *message_queue)
+bool ICACHE_RODATA_ATTR Initialize_Message_Queue(Message_Queue *message_queue)
 {
 	int i;
 
@@ -22,7 +23,7 @@ bool Initialize_Message_Queue(Message_Queue *message_queue)
 	return true;
 }
 
-Message* Get_Next_Message(Message_Queue *message_queue)
+Message* ICACHE_RODATA_ATTR Get_Next_Message(Message_Queue *message_queue)
 {
 	Message *message = NULL;
 	if ((*message_queue).count < MAXIMUM_MESSAGE_COUNT)
@@ -32,19 +33,19 @@ Message* Get_Next_Message(Message_Queue *message_queue)
 	return message;
 }
 
-int Queue_Message(Message_Queue *message_queue, Message *message)
+int ICACHE_RODATA_ATTR Queue_Message(Message_Queue *message_queue, Message *message)
 {
 	if ((*message_queue).count < MAXIMUM_MESSAGE_COUNT)
 	{
 		(*message_queue).messages[(*message_queue).back] = *message;
 		(*message_queue).back = ((*message_queue).back + 1)
-				% MAXIMUM_MESSAGE_COUNT;
+		% MAXIMUM_MESSAGE_COUNT;
 		(*message_queue).count++;
 	}
 	return (*message_queue).count;
 }
 
-Message* Peek_Message(Message_Queue *message_queue)
+Message* ICACHE_RODATA_ATTR Peek_Message(Message_Queue *message_queue)
 {
 	Message *message = NULL;
 	if ((*message_queue).count > 0)
@@ -54,20 +55,20 @@ Message* Peek_Message(Message_Queue *message_queue)
 	return message;
 }
 
-Message* Dequeue_Message(Message_Queue *message_queue)
+Message* ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue)
 {
 	Message *message = NULL;
 	if ((*message_queue).count > 0)
 	{
 		message = &((*message_queue).messages[(*message_queue).front]);
 		(*message_queue).front = ((*message_queue).front + 1)
-				% MAXIMUM_MESSAGE_COUNT;
+		% MAXIMUM_MESSAGE_COUNT;
 		(*message_queue).count--;
 	}
 	return message;
 }
 
-bool Has_Messages(Message_Queue *message_queue)
+bool ICACHE_RODATA_ATTR Has_Messages(Message_Queue *message_queue)
 {
 	return ((*message_queue).count > 0);
 }

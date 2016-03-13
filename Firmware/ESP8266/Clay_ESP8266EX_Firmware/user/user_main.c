@@ -41,7 +41,7 @@
 
 void uC_Interrupt_Handler()
 {
-	printf("got the interrupt\r\n");
+//	printf("got the interrupt\r\n");
 }
 
 void main_int_handler()
@@ -105,7 +105,7 @@ void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode)
 //	vTaskDelete(NULL);
 //}
 
-void GPIO_Init()
+void ICACHE_RODATA_ATTR GPIO_Init()
 {
 	///setup GPIO and set output to 1.
 #if CLAY_INTERRUPT_OUT_PIN == 16
@@ -123,7 +123,7 @@ void GPIO_Init()
 //	_xt_isr_unmask(1 << ETS_GPIO_INUM);
 }
 
-void wifi_handle_event_cb(System_Event_t *evt)
+void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
 {
 //	os_printf("event %x\n", evt->event_id);
 	switch (evt->event_id)
@@ -150,13 +150,11 @@ void wifi_handle_event_cb(System_Event_t *evt)
 //		os_printf("\n");
 		UDP_Transmitter_Init();
 		UDP_Receiver_Init();
+		TCP_Transmitter_Init();
+		TCP_Receiver_Init();
 		Serial_Receiver_Init();
 		Serial_Transmitter_Init();
 
-		//TCP todo's
-		//TODO: on send, have flag for close after send
-		TCP_Transmitter_Init();
-		TCP_Receiver_Init();
 		break;
 	case EVENT_SOFTAPMODE_STACONNECTED:
 //		os_printf("station: " MACSTR "join, AID = %d\n",
@@ -179,7 +177,7 @@ void wifi_handle_event_cb(System_Event_t *evt)
  * Parameters   : none
  * Returns      : none
  *******************************************************************************/
-void user_init(void)
+void ICACHE_RODATA_ATTR user_init(void)
 {
 	GPIO_Init();
 
@@ -208,6 +206,9 @@ void user_init(void)
 		wifi_station_set_config(config);
 		free(config);
 	}
+
+	//added to allow 3+ TCP connections per ESP RTOS SDK API Reference 1.3.0 Chapter 1, page 2
+	TCP_WND = 2 * TCP_MSS;
 
 //uncomment to generate an interrupt when we connect to the AP.
 //	xTaskCreate(Signal_Power_On_Complete, "power_on_signal", 256, NULL, 2, NULL);
