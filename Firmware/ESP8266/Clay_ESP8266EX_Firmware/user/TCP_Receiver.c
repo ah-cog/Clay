@@ -76,7 +76,7 @@ static uint32 Rx_Start_Time;
 static uint32 Rx_Start_Time_temp;
 static int temp_rx_counter;
 
-static int32 Task_Count;
+static volatile int32 Task_Count;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -271,12 +271,12 @@ static bool Listen()
 //		taskEXIT_CRITICAL();
 
 		//spawn new task to receive.
-		xTaskCreate(ReceiveTask, "socket_rx", 256, ((void* )&client_sock), 2,
+		xTaskCreate(ReceiveTask, "socket_rx", 512, ((void* )&client_sock), 2,
 				NULL);
 
 		taskENTER_CRITICAL();
-		printf("Client: %s %d\r\n", inet_ntoa(lastSourceAddress.sin_addr),
-				htons(lastSourceAddress.sin_port));
+//		printf("Client: %s %d\r\n", inet_ntoa(lastSourceAddress.sin_addr),
+//				htons(lastSourceAddress.sin_port));
 		taskEXIT_CRITICAL();
 	}
 
@@ -295,7 +295,7 @@ static void ReceiveTask(void * pvParameters)
 
 	uint8 * data = zalloc(RECEIVE_TASK_BUFFER_SIZE);
 	int32 length = 0;
-	int tempCount = 0;
+	int receivedValue = 0;
 	int indexOfMessageEnd;
 
 	if (data != NULL)
@@ -307,31 +307,45 @@ static void ReceiveTask(void * pvParameters)
 //			printf("receive\r\n");
 //			taskEXIT_CRITICAL();
 
-			tempCount = Receive(rxSocket, data + length,
+			receivedValue = Receive(rxSocket, data + length,
 			RECEIVE_TASK_BUFFER_SIZE - length);
 
 //			taskENTER_CRITICAL();
 //			printf("received\r\n");
 //			taskEXIT_CRITICAL();
 
-			if (tempCount > 0 && length + tempCount <= RECEIVE_TASK_BUFFER_SIZE)
+			if (receivedValue
+					> 0&& length + receivedValue <= RECEIVE_TASK_BUFFER_SIZE)
 			{
-				length += tempCount;
-				tempCount = 0;
+				length += receivedValue;
+				receivedValue = 0;
 
 				//check for end of message
 				indexOfMessageEnd = Get_Index_Of_Message_End(data, length);
 
 				if (indexOfMessageEnd > 0)
 				{
+					//TODO: parse multiple messages here, in case we got more than one newline
+
 //					taskENTER_CRITICAL();
 //					printf("got a message\r\n");
 //					taskEXIT_CRITICAL();
 
 					//enqueue if we received message end.
 					Enqueue(data, length, &sourceAddress);
+
+//					taskENTER_CRITICAL();
+//					printf("setting length 0 and data 0 null\r\n");
+//					taskEXIT_CRITICAL();
+
 					length = 0;
-					data[0] = '\0';
+					taskENTER_CRITICAL();
+					memset(data, 0, RECEIVE_TASK_BUFFER_SIZE);
+					taskEXIT_CRITICAL();
+
+//					taskENTER_CRITICAL();
+//					printf("done enqueue\r\n");
+//					taskEXIT_CRITICAL();
 				}
 				else if (length >= RECEIVE_TASK_BUFFER_SIZE)
 				{
@@ -343,12 +357,14 @@ static void ReceiveTask(void * pvParameters)
 					length = 0;
 				}
 			}
-//			else
-//			{
+			else if (receivedValue < 0)
+			{
 //				taskENTER_CRITICAL();
-//				printf("no data\r\n");
+//				printf("DC.\r\n");
 //				taskEXIT_CRITICAL();
-//			}
+
+				break;
+			}
 
 //			taskENTER_CRITICAL();
 //			printf("yield\r\n");
@@ -357,13 +373,14 @@ static void ReceiveTask(void * pvParameters)
 		}
 	}
 
-	free(data);
 	lwip_close(rxSocket);
+	free((void*) data);
+
 	--Task_Count;
 
-	taskENTER_CRITICAL();
-	printf("disconnected\r\n");
-	taskEXIT_CRITICAL();
+//	taskENTER_CRITICAL();
+//	printf("freed data, delete task\r\n");
+//	taskEXIT_CRITICAL();
 
 	vTaskDelete(NULL);
 }
@@ -371,48 +388,22 @@ static void ReceiveTask(void * pvParameters)
 //reads data from the socket
 static int32 Receive(int32 rxSocket, uint8_t * rxbuf, int32 maxRxCount)
 {
-//	taskENTER_CRITICAL();
-//	printf("peek\r\n");
-//	taskEXIT_CRITICAL();
-
 	int32 rval = lwip_recv(rxSocket, (void*) rxbuf, maxRxCount, MSG_PEEK);
-
-//	taskENTER_CRITICAL();
-//	printf("peek returned %d\r\n", rval);
-//	taskEXIT_CRITICAL();
 
 	if (rval < 0)
 	{
-		int32 error;
+		int32 error = 0;
 		uint32 optionLength = sizeof(error);
 		int getReturn = lwip_getsockopt(rxSocket, SOL_SOCKET, SO_ERROR, &error,
 				&optionLength);
-		//check errno to see if we timed out, or the connection's closed
-		if (errno)
-		{
-			taskENTER_CRITICAL();
-			printf("errno:%d", errno);
-			taskEXIT_CRITICAL();
-			rval = -1;
-		}
-		else
-		{
-			rval = 0;
-		}
+
+		rval = (error == ECONNRESET ? -1 : 0);
 	}
-	if (rval <= maxRxCount && rval > 0)
+	else if (rval <= maxRxCount && rval > 0)
 	{
 		rval = lwip_recv(rxSocket, rxbuf, maxRxCount, 0);
 		rxbuf[rval] = '\0';
-
-//		taskENTER_CRITICAL();
-//		printf("count: %d\r\nstr:[%s]\r\n", rval, rxbuf);
-//		taskEXIT_CRITICAL();
 	}
-
-//	taskENTER_CRITICAL();
-//	printf("receive done %d\r\n", rval);
-//	taskEXIT_CRITICAL();
 
 	return rval;
 }
@@ -437,38 +428,36 @@ static bool Enqueue(uint8 * buffer, int32 count,
 	Message tempMessage;
 	uint8 * addrStringBuf = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 
+//	taskENTER_CRITICAL();
+//	printf("enqueue message [%s]\r\n", buffer);
+//	taskEXIT_CRITICAL();
+
 	taskENTER_CRITICAL();
 	Serialize_Address(sourceAddress, addrStringBuf, CLAY_ADDR_STRING_BUF_LENGTH,
 			MESSAGE_TYPE_TCP);
 	taskEXIT_CRITICAL();
 
+//	taskENTER_CRITICAL();
+//	printf("from %s\r\n", addrStringBuf);
+//	taskEXIT_CRITICAL();
+
 	taskENTER_CRITICAL();
 	Initialize_Message(&tempMessage, addrStringBuf, addrStringBuf, buffer);
 	Queue_Message(&incomingMessageQueue, &tempMessage);
-	rval = true;
 	taskEXIT_CRITICAL();
 
-//			taskENTER_CRITICAL();
-////			printf("cont:[%s]\r\ndest:[%s]\r\nsource:[%s]",
-////					Peek_Message(&incomingMessageQueue)->content,
-////					Peek_Message(&incomingMessageQueue)->destination,
-////					Peek_Message(&incomingMessageQueue)->source);
-//			taskEXIT_CRITICAL();
-
-//			taskENTER_CRITICAL();
-//			Dequeue_Message(&incomingMessageQueue);
-//			taskEXIT_CRITICAL();
+	rval = true;
 
 //	taskENTER_CRITICAL();
 //	buffer[count] = '\0';
 //	printf("received: [%s]\r\n", tempMessage.content);
 //	printf("rx serialized addr: [%s]\r\n", tempMessage.source);
-//	printf("message was enqueued\r\n-----------------------------\r\n\r\n");
 //	taskEXIT_CRITICAL();
 
 	free(addrStringBuf);
+
 //	taskENTER_CRITICAL();
-//	printf("freed, returning\r\n");
+//	printf("nq,free. returning\r\n");
 //	taskEXIT_CRITICAL();
 
 	return rval;
