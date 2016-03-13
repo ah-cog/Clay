@@ -156,7 +156,7 @@ void wifi_handle_event_cb(System_Event_t *evt)
 		//TCP todo's
 		//TODO: on send, have flag for close after send
 
-//		TCP_Receiver_Init();
+		TCP_Receiver_Init();
 		break;
 	case EVENT_SOFTAPMODE_STACONNECTED:
 //		os_printf("station: " MACSTR "join, AID = %d\n",

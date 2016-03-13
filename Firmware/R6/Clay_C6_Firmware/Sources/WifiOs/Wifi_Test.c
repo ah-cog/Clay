@@ -44,7 +44,9 @@ void Wifi_Test()
    message = Create_Message(testMessageStr);
 
    Set_Message_Destination(message, serializedAddr);
-#else
+#endif
+
+#if 0
    char addrStr[] = "UDP,255.255.255.255:4445!";
    char testMsg[] = "hey hey mama";
 
