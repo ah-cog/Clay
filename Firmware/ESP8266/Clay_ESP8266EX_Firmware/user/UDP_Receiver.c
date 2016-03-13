@@ -190,8 +190,6 @@ void UDP_Receiver_State_Step()
 //			UART_WaitTxFifoEmpty(UART0);
 //			taskEXIT_CRITICAL();
 
-
-
 //			printf("message addr rx %d\n", &tempMessage);
 			taskENTER_CRITICAL();
 			Serialize_Address(&lastSourceAddress, tempAddr,
@@ -211,11 +209,9 @@ void UDP_Receiver_State_Step()
 //            printf("message source: [%s]\n\n", tempMessage.source);
 
 			//TODO: incoming queue
-//			WAIT_FOR_INCOMING_QUEUE();
 			taskENTER_CRITICAL();
 			Queue_Message(&incomingMessageQueue, &tempMessage);
 			taskEXIT_CRITICAL();
-//			RELEASE_INCOMING_QUEUE();
 //            Queue_Message(&outgoingMessageQueue, &tempMessage);
 
 //			taskENTER_CRITICAL();
@@ -226,9 +222,7 @@ void UDP_Receiver_State_Step()
 //			taskEXIT_CRITICAL();
 
 //			taskENTER_CRITICAL();
-//			WAIT_FOR_INCOMING_QUEUE();
 //			Dequeue_Message(&incomingMessageQueue);
-//			RELEASE_INCOMING_QUEUE();
 //			taskEXIT_CRITICAL();
 
 			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';

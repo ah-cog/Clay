@@ -25,9 +25,9 @@
 #include "UDP_Receiver.h"
 #include "UDP_Transmitter.h"
 #include "TCP_Receiver.h"
+#include "TCP_Transmitter.h"
 
 #include "Message_Queue.h"
-
 
 #define server_ip "192.168.101.142"
 #define server_port 9669
@@ -155,7 +155,7 @@ void wifi_handle_event_cb(System_Event_t *evt)
 
 		//TCP todo's
 		//TODO: on send, have flag for close after send
-
+		TCP_Transmitter_Init();
 		TCP_Receiver_Init();
 		break;
 	case EVENT_SOFTAPMODE_STACONNECTED:

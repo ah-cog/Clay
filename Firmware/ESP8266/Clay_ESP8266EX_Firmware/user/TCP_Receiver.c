@@ -41,7 +41,7 @@
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-	Disable, Configure, ListenForConnect, UDP_STATE_MAX
+	Disable, Configure, ListenForConnect, TCP_STATE_MAX
 } TCP_Receiver_States;
 
 ////Globals   /////////////////////////////////////////////////////
@@ -57,15 +57,6 @@ static struct sockaddr_in server_addr;
 //static char sinZeroStr[50];
 //static int sinZeroSize;
 //static int i;
-
-//TODO: move to clay_config.
-#define CONNECTION_ALIVE_TIME_us 200 * 1000   //200 msec
-#define SERVER_PORT 1002
-#define CLIENT_MAX_CONN    10
-#define SERVER_IP "192.168.1.11"
-#define RECEIVE_TASK_BUFFER_SIZE 512
-#define CLAY_ADDR_STRING_BUF_LENGTH 70
-//#define SERVER_PORT 1001
 
 static int32 listenfd;
 static int32 len;
@@ -154,7 +145,7 @@ void TCP_Receiver_State_Step()
 			break;
 		}
 
-		case UDP_STATE_MAX:
+		case TCP_STATE_MAX:
 		default:
 		{
 			State = ListenForConnect;
@@ -215,7 +206,7 @@ bool Connect()
 	if (rval)
 	{
 		/* Listen to the local connection */
-		ret = listen(listenfd, CLIENT_MAX_CONN);
+		ret = listen(listenfd, TCP_CLIENT_MAX_CONN);
 		if (ret != 0)
 		{
 			close(listenfd);
@@ -256,10 +247,10 @@ static bool Listen()
 //		taskEXIT_CRITICAL();
 		rval = false;
 	}
-	else if (Task_Count <= CLIENT_MAX_CONN)
+	else if (Task_Count <= TCP_CLIENT_MAX_CONN)
 	{
 		//timeout alive time in ms / 10. We should call this about 10 times before timing out.
-		int millis = (CONNECTION_ALIVE_TIME_us / 1000) / 10;
+		int millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
 		setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, &millis,
 				sizeof(millis));
 
@@ -293,7 +284,7 @@ static void ReceiveTask(void * pvParameters)
 	int32 addressSize = sizeof(sourceAddress);
 	getpeername(rxSocket, (struct sockaddr* )&sourceAddress, &addressSize);
 
-	uint8 * data = zalloc(RECEIVE_TASK_BUFFER_SIZE);
+	uint8 * data = zalloc(TCP_RECEIVE_TASK_BUFFER_SIZE);
 	int32 length = 0;
 	int receivedValue = 0;
 	int indexOfMessageEnd;
@@ -308,14 +299,14 @@ static void ReceiveTask(void * pvParameters)
 //			taskEXIT_CRITICAL();
 
 			receivedValue = Receive(rxSocket, data + length,
-			RECEIVE_TASK_BUFFER_SIZE - length);
+					TCP_RECEIVE_TASK_BUFFER_SIZE - length);
 
 //			taskENTER_CRITICAL();
 //			printf("received\r\n");
 //			taskEXIT_CRITICAL();
 
-			if (receivedValue
-					> 0&& length + receivedValue <= RECEIVE_TASK_BUFFER_SIZE)
+			if (receivedValue > 0
+					&& length + receivedValue <= TCP_RECEIVE_TASK_BUFFER_SIZE)
 			{
 				length += receivedValue;
 				receivedValue = 0;
@@ -340,14 +331,14 @@ static void ReceiveTask(void * pvParameters)
 
 					length = 0;
 					taskENTER_CRITICAL();
-					memset(data, 0, RECEIVE_TASK_BUFFER_SIZE);
+					memset(data, 0, TCP_RECEIVE_TASK_BUFFER_SIZE);
 					taskEXIT_CRITICAL();
 
 //					taskENTER_CRITICAL();
 //					printf("done enqueue\r\n");
 //					taskEXIT_CRITICAL();
 				}
-				else if (length >= RECEIVE_TASK_BUFFER_SIZE)
+				else if (length >= TCP_RECEIVE_TASK_BUFFER_SIZE)
 				{
 //					taskENTER_CRITICAL();
 //					printf("overflow\r\n");

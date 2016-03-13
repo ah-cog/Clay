@@ -93,7 +93,7 @@ bool UDP_Transmitter_Init()
 	State = Disable;
 
 	OutgoingQueueLock = false; //init
-	Initialize_Message_Queue(&outgoingMessageQueue);
+	Initialize_Message_Queue(&outgoingUdpMessageQueue);
 
 //   Initialize_Message(&mm, source, source, content);
 //   m = &mm;
@@ -172,7 +172,7 @@ void UDP_Transmitter_State_Step()
 		{
 //          if (1 || Peek_Message(&outgoingMessageQueue) != NULL)
 			taskENTER_CRITICAL();
-			m = Peek_Message(&outgoingMessageQueue);
+			m = Peek_Message(&outgoingUdpMessageQueue);
 			taskEXIT_CRITICAL();
 
 			if (m != NULL)
@@ -195,7 +195,7 @@ void UDP_Transmitter_State_Step()
 			memset(&DestinationAddr, 0, sizeof(DestinationAddr));
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&outgoingMessageQueue);
+			m = Dequeue_Message(&outgoingUdpMessageQueue);
 			taskEXIT_CRITICAL();
 
 //			printf("message addr tx %d\n", m);
@@ -314,16 +314,16 @@ static void Disconnect()
 
 static bool Transmit()
 {
-	taskENTER_CRITICAL();
-	printf("sending %d bytes: [%s]\r\n", UDP_Tx_Count, UDP_Tx_Buffer);
-	printf("to %u.%u.%u.%u:%u\r\n\r\n-----\r\n",
-			DestinationAddr.sin_addr.s_addr & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 8) & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 16) & 0xFF,
-			(DestinationAddr.sin_addr.s_addr >> 24) & 0xFF,
-			ntohs(DestinationAddr.sin_port));
-	UART_WaitTxFifoEmpty(UART0);
-	taskEXIT_CRITICAL();
+//	taskENTER_CRITICAL();
+//	printf("sending %d bytes: [%s]\r\n", UDP_Tx_Count, UDP_Tx_Buffer);
+//	printf("to %u.%u.%u.%u:%u\r\n\r\n-----\r\n",
+//			DestinationAddr.sin_addr.s_addr & 0xFF,
+//			(DestinationAddr.sin_addr.s_addr >> 8) & 0xFF,
+//			(DestinationAddr.sin_addr.s_addr >> 16) & 0xFF,
+//			(DestinationAddr.sin_addr.s_addr >> 24) & 0xFF,
+//			ntohs(DestinationAddr.sin_port));
+//	UART_WaitTxFifoEmpty(UART0);
+//	taskEXIT_CRITICAL();
 
 	bool rval = false;
 	rval = UDP_Tx_Count
@@ -331,9 +331,9 @@ static bool Transmit()
 					(struct sockaddr * ) &DestinationAddr,
 					sizeof(DestinationAddr));
 
-	taskENTER_CRITICAL();
-	printf("rval:%s", rval ? "true" : "false");
-	taskEXIT_CRITICAL();
+//	taskENTER_CRITICAL();
+//	printf("rval:%s", rval ? "true" : "false");
+//	taskEXIT_CRITICAL();
 	return rval;
 }
 

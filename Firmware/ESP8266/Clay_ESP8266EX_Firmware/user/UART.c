@@ -413,11 +413,9 @@ LOCAL void uart0_rx_intr_handler(void *para)
 			while (BytesRead < BytesAvailable)
 			{
 //				Ring_Buffer_Lock = true;
-//				WAIT_FOR_RING_BUF();
 				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
 				++BytesRead;
 //				Ring_Buffer_Lock = false;
-//				RELEASE_RING_BUF();
 //				fifo_tmp[InterruptFifoWriteIndex++] =
 //				READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
 			}
@@ -435,11 +433,9 @@ LOCAL void uart0_rx_intr_handler(void *para)
 			while (BytesRead < BytesAvailable)
 			{
 //				Ring_Buffer_Lock = true;
-//				WAIT_FOR_RING_BUF();
 				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
 				++BytesRead;
 //				Ring_Buffer_Lock = false;
-//				RELEASE_RING_BUF();
 //				fifo_tmp[InterruptFifoWriteIndex++] =
 //				READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
 			}

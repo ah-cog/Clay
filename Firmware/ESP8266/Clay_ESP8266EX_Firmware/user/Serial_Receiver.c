@@ -72,6 +72,9 @@ static char Newline = '\n';
 static uint32 stateTime;
 int i;
 
+static struct sockaddr_in tempAddressIgnore;
+static Message_Type receivedMessageType;
+
 uint32 counter;
 
 ////Local Prototypes///////////////////////////////////////////////
@@ -96,7 +99,7 @@ bool Serial_Receiver_Init()
 
 //	printf("done ring init\n");
 
-	Initialize_Message_Queue(&outgoingMessageQueue);
+	Initialize_Message_Queue(&outgoingUdpMessageQueue);
 
 //	printf("done incoming queue init\n");
 
@@ -345,16 +348,27 @@ void Serial_Receiver_State_Step()
 				Initialize_Message(&tempMsg, tempAddr, tempAddr, tempContent);
 				taskEXIT_CRITICAL();
 
-//				taskENTER_CRITICAL();
-//				printf("init message done\n");
-//				taskEXIT_CRITICAL();
+				taskENTER_CRITICAL();
+				Deserialize_Address(tempAddr, strlen(tempAddr),
+						&tempAddressIgnore, &receivedMessageType);
+				taskEXIT_CRITICAL();
+
+				if (receivedMessageType == MESSAGE_TYPE_UDP)
+				{
+					taskENTER_CRITICAL();
+					Queue_Message(&outgoingUdpMessageQueue, &tempMsg);
+					taskEXIT_CRITICAL();
+				}
+				else if (receivedMessageType == MESSAGE_TYPE_TCP)
+				{
+					taskENTER_CRITICAL();
+					Queue_Message(&outgoingTcpMessageQueue, &tempMsg);
+					taskEXIT_CRITICAL();
+				}
 			}
 
 //			printf("queue message \n");
 //			WAIT_FOR_OUTGOING_QUEUE();
-			taskENTER_CRITICAL();
-			Queue_Message(&outgoingMessageQueue, &tempMsg);
-			taskEXIT_CRITICAL();
 //			RELEASE_OUTGOING_QUEUE();
 
 //			taskENTER_CRITICAL();

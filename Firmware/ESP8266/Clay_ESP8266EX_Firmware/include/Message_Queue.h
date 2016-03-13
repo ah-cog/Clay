@@ -7,7 +7,9 @@
 
 #ifndef bool
 typedef int bool;
-enum { false, true };
+enum
+{
+false, true};
 #endif
 
 #ifndef NULL
@@ -20,21 +22,23 @@ enum { false, true };
 
 #define MAXIMUM_MESSAGE_COUNT 10
 
-typedef struct Message_Queue {
-  Message messages[MAXIMUM_MESSAGE_COUNT];
-  int front;
-  int back;
-  int count;
+typedef struct Message_Queue
+{
+Message messages[MAXIMUM_MESSAGE_COUNT];
+int front;
+int back;
+int count;
 } Message_Queue;
 
 extern Message_Queue incomingMessageQueue;
-extern Message_Queue outgoingMessageQueue;
+extern Message_Queue outgoingUdpMessageQueue;
+extern Message_Queue outgoingTcpMessageQueue;
 
-extern bool Initialize_Message_Queue (Message_Queue *message_queue);
-extern Message* Get_Next_Message (Message_Queue *message_queue);
-extern int Queue_Message (Message_Queue *message_queue, Message *message);
-extern Message* Peek_Message (Message_Queue *message_queue);
-extern Message* Dequeue_Message (Message_Queue *message_queue);
-extern bool Has_Messages (Message_Queue *message_queue);
+extern bool Initialize_Message_Queue(Message_Queue *message_queue);
+extern Message* Get_Next_Message(Message_Queue *message_queue);
+extern int Queue_Message(Message_Queue *message_queue, Message *message);
+extern Message* Peek_Message(Message_Queue *message_queue);
+extern Message* Dequeue_Message(Message_Queue *message_queue);
+extern bool Has_Messages(Message_Queue *message_queue);
 
 #endif

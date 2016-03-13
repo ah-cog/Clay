@@ -10,10 +10,6 @@
 
 #define Ring_Buffer_BUF_SIZE   2048  /* number of elements in the buffer */
 
-#define WAIT_FOR_RING_BUF()			while(Ring_Buffer_Lock){taskYIELD();} Ring_Buffer_Lock = TRUE;
-#define LOCK_RING_BUF()				if(!Ring_Buffer_Lock){ Ring_Buffer_Lock = TRUE; }
-#define RELEASE_RING_BUF()			Ring_Buffer_Lock = FALSE
-
 extern bool Ring_Buffer_Lock;
 
 uint8 Ring_Buffer_Put(uint8 elem);

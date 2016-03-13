@@ -1,0 +1,25 @@
+/*
+ * TCP_Transmitter.h
+ *
+ *  Created on: Mar 12, 2016
+ *      Author: thebh_000
+ */
+
+#ifndef INCLUDE_TCP_TRANSMITTER_H_
+#define INCLUDE_TCP_TRANSMITTER_H_
+
+////Includes //////////////////////////////////////////////////////
+#include "esp_common.h"
+
+////Defines ///////////////////////////////////////////////////////
+
+////Typedefs  /////////////////////////////////////////////////////
+
+////Globals   /////////////////////////////////////////////////////
+extern volatile bool OutgoingQueueLock;
+
+////Prototypes/////////////////////////////////////////////////////
+extern bool TCP_Transmitter_Init();
+extern void TCP_Transmitter_State_Step();
+
+#endif /* INCLUDE_TCP_TRANSMITTER_H_ */
