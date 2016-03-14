@@ -35,7 +35,7 @@
 #include "Mesh.h"
 #include "I2C.h"
 #include "MPU9250.h"
-#include "WifiOs.h"
+#include "WiFi.h"
 
 FREQ_OUT SelectedFreq = f_Off;
 bool ButtonPressed = FALSE;

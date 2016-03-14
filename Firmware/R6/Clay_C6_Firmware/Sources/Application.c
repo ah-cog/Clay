@@ -1,4 +1,5 @@
 #include "Application.h"
+
 //#include "meshTest.h"
 #include "Bootloader.h"
 #include "Mesh.h"
@@ -9,6 +10,7 @@
 #include "LEDs.h"
 #include "Events.h"
 //#include "RGBDemo.h"
+#include "Messenger.h"
 
 static bool led_1_state;
 static bool led_2_state;
@@ -17,37 +19,6 @@ int status;
 
 void Monitor_Periodic_Events ();
 void Remote_Button_Pressed (uint8_t * data, uint8_t len);
-
-int8_t Start_Light_Behavior () {
-	//stubbed.
-}
-
-bool Perform_Channel_Light_Effect (bool reverse) {
-	RGB_Color c = { 0, 0, 0 };
-
-	for (c.R = 0; c.R <= 200; c.R += 70) {
-		for (c.G = 0; c.G <= 200; c.G += 70) {
-			for (c.B = 0; c.B <= 200; c.B += 70) {
-				for (int i = reverse ? RGB_MAX : 0;
-						reverse ? i > 0 : i < RGB_MAX; i +=
-								(reverse ? -1 : 1)) {
-					RGB_LED_SetColor ((RGB_LED) i, &c);
-					Wait (1);
-				}
-			}
-		}
-	}
-
-	c.R = 0;
-	c.G = 0;
-	c.B = 0;
-
-	for (int i = 0; i < RGB_MAX; ++i) {
-		RGB_LED_SetColor ((RGB_LED) i, &c);
-	}
-
-	return TRUE;
-}
 
 void Initialize () {
 
@@ -78,12 +49,12 @@ void Initialize () {
 	}
 	Perform_Status_LED_Effect ();
 
-	if (!(status = Enable_Mesh ())) {
-		//failure
+	if ((status = Enable_Mesh ()) != TRUE) {
+		// Failure
 	}
 
-	if (!(status = Start_Mesh ())) {
-		//failure
+	if ((status = Start_Mesh ()) != TRUE) {
+		// Failure
 	}
 
 	// Channels.
@@ -127,7 +98,7 @@ void Initialize () {
 		// Failure
 	}
 
-	if ((status = Wifi_Enable ()) != TRUE) {
+	if ((status = Enable_WiFi (SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
 		// Failure
 	}
 
@@ -165,43 +136,12 @@ void Initialize () {
 
 void Application (void) {
 	Message *message = NULL;
-//	int broadcastCount = 0;
-//	Message *broadcastMessage = NULL;
-//	Message *m1 = NULL;
-//	Message *m2 = NULL;
-//	Message *m3 = NULL;
-//	Message *m4 = NULL;
-//
-//	m1 = Create_Message ("discovery\n");
-//	Set_Message_Source (m1, "UDP,192.168.1.255:4445!");
-//	Set_Message_Destination (m1, "UDP,192.168.1.255:4445!");
-////	Wifi_Send(&outgoingMessageQueue, m1);
-//	Queue_Message(&outgoingMessageQueue, m1);
-//
-//	m2 = Create_Message ("discovery\n");
-//	Set_Message_Source (m2, "UDP,192.168.1.255:4445!");
-//	Set_Message_Destination (m2, "UDP,192.168.1.255:4445!");
-////	Wifi_Send(&outgoingMessageQueue, m2);
-//	Queue_Message(&outgoingMessageQueue, m2);
-//
-//	m3 = Create_Message ("discovery\n");
-//	Set_Message_Source (m3, "UDP,192.168.1.255:4445!");
-//	Set_Message_Destination (m3, "UDP,192.168.1.255:4445!");
-////	Wifi_Send(&outgoingMessageQueue, m3);
-//	Queue_Message(&outgoingMessageQueue, m3);
-//
-//	m4 = Create_Message ("discovery\n");
-//	Set_Message_Source (m4, "UDP,192.168.1.255:4445!");
-//	Set_Message_Destination (m4, "UDP,192.168.1.255:4445!");
-////	Wifi_Send(&outgoingMessageQueue, m4);
-//	Queue_Message(&outgoingMessageQueue, m4);
 
 //	bool LastButtonStateUpdated = ButtonPressed;
 //	Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
 //
 //	//add software ack to mesh layer
 //	//add speaker output
-//	//
 //
 //   //Behavior test loop: Button press on module sends message to other module. Other module receives message and changes LED output.
 //   for (;;)
@@ -226,14 +166,9 @@ void Application (void) {
 //      //incoming button press messages are handled by interrupt.
 //   }
 
-	//TODO: never reached because of test loop above
 	for (;;) {
 
-//		Send_HTTP_Request ("192.168.1.105", 8080, "test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test");
-
 // Check and process any incoming requests
-//        Wait(10);        // Wait (100);
-//      Monitor_Network_Communications(); // Replace this!
 //      MeshTestLoopStep();
 
 //        mesh_process_commands();
@@ -281,14 +216,14 @@ void Application (void) {
 ////			}
 //		}
 
-//		// Send the next message on the outgoing message queue.
-//		if (Has_Messages (&outgoingMessageQueue) == TRUE) {
-//			Message *message = Dequeue_Message (&outgoingMessageQueue);
-//			if ((status = Process_Outgoing_Message (message)) == TRUE) {
-//				// Delete_Message (message);
-//			}
-////			Delete_Message (message);
-//		}
+		// Send the next message on the outgoing message queue.
+		if (Has_Messages (&outgoingMessageQueue) == TRUE) {
+			Message *message = Dequeue_Message (&outgoingMessageQueue);
+			if ((status = Process_Outgoing_Message (message)) == TRUE) {
+				// Delete_Message (message);
+			}
+//			Delete_Message (message);
+		}
 
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
