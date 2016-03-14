@@ -92,65 +92,6 @@ int8_t Delete_Message (Message *message) {
 	return FALSE;
 }
 
-// TODO: Update this to use device-nonspecific encoding
-void Get_ESP8266_Address (char *addressBuffer, const char *address) {
-
-	int8_t status = NULL;
-	int n = 0;
-	char token[32] = { 0 };
-	uint32_t addressInt = 0;
-
-	if ((status = getTokenWithDelimiter (address, ',', '"', token, 0)) != NULL) {
-		addressInt = toInteger (token);
-	}
-
-	n = 0;
-	uint8_t octet4 = (addressInt >> (8 * n)) & 0xFF;
-	n = 1;
-	uint8_t octet3 = (addressInt >> (8 * n)) & 0xFF;
-	n = 2;
-	uint8_t octet2 = (addressInt >> (8 * n)) & 0xFF;
-	n = 3;
-	uint8_t octet1 = (addressInt >> (8 * n)) & 0xFF;
-
-	snprintf (addressBuffer, 32, "%d.%d.%d.%d", octet1, octet2, octet3, octet4);
-}
-
-// TODO: Update this to use device-nonspecific encoding
-void Set_ESP8266_Address (char *addressBuffer, char *destination) {
-
-	int8_t status = NULL;
-	int n = 0;
-	char token[32] = { 0 };
-	uint32_t addressInt = 0UL;
-	uint8_t octet1, octet2, octet3, octet4;
-
-	if ((status = getTokenWithDelimiter (destination, '.', '"', token, 0)) != NULL) {
-		octet1 = atoi(token);
-	}
-	if ((status = getTokenWithDelimiter (destination, '.', '"', token, 1)) != NULL) {
-		octet2 = atoi(token);
-	}
-	if ((status = getTokenWithDelimiter (destination, '.', '"', token, 2)) != NULL) {
-		octet3 = atoi(token);
-	}
-	if ((status = getTokenWithDelimiter (destination, '.', '"', token, 3)) != NULL) {
-		octet4 = atoi(token);
-	}
-	n = 3;
-	addressInt = addressInt | ((octet1 << (8 * n)) & 0xFFFFFFFF);
-	n = 2;
-	addressInt = addressInt | ((octet2 << (8 * n)) & 0xFFFFFFFF);
-	n = 1;
-	addressInt = addressInt | ((octet3 << (8 * n)) & 0xFFFFFFFF);
-	n = 0;
-	addressInt = addressInt | ((octet4 << (8 * n)) & 0xFFFFFFFF);
-
-	snprintf (token, 32, "%lu", addressInt);
-
-	strncpy (addressBuffer, token, strlen (token));
-}
-
 uint8_t Initialize_Message_Queue (Message **messageQueue) {
 	
 	(*messageQueue) = NULL;
@@ -184,9 +125,11 @@ int16_t Queue_Message (Message **messageQueue, Message *message) {
 		}
 		
 		// Update the linked list to add the message to the back of the queue.
-		// (*message).previous = NULL; // NOTE: This should already be NULL at this point, so this is redundant, but adds some degree of robustness.
+		(*message).previous = NULL; // NOTE: This should already be NULL at this point, so this is redundant, but adds some degree of robustness.
 		(*message).next = lastMessage;
+
 		(*lastMessage).previous = message;
+
 		messageCount++;
 		
 	}
@@ -286,7 +229,7 @@ int8_t Process_Incoming_Message (Message *message) {
 					// TODO: Queue the outgoing UDP message!
 //					Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
 					Message *responseMessage = Create_Message (token);
-					Set_Message_Destination(responseMessage, message->source);
+					Set_Message_Destination(responseMessage, "UDP,192.168.1.255:4445!"); // <HACK />
 					Queue_Message(&outgoingMessageQueue, responseMessage);
 					// TODO: Queue the message rather than executing it immediately (unless specified)
 					// TODO: Parse the message rather than brute force like this.

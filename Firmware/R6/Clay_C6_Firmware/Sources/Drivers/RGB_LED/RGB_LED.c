@@ -9,7 +9,7 @@
 #include "RGB_LED.h"
 #include "PE_Types.h"
 #include "I2C2.h"
-#include "I2C.h"
+#include "Drivers/I2C/I2C.h"
 #include "LED_SDB.h"
 #include "Clock.h"
 

@@ -1078,7 +1078,10 @@ Autoselect
       <Port v="PTE" />
       <Port_width v="32 bits" />
       <Mask_of_allocated_pins v="33554432" />
-      <boolgroup name="Interrupt service/event" v="Disabled" />
+      <boolgroup name="Interrupt service/event" v="Enabled">
+        <Interrupt v="INT_PORTE" />
+        <Interrupt_priority v="medium priority" />
+      </boolgroup>
       <list name="Bit fields" v="1">
         <group name="Bit field">
           <Field_name v="INTERRUPT" />
@@ -1094,7 +1097,7 @@ Autoselect
       </list>
       <group name="Initialization">
         <group name="Event mask">
-          <OnPortEvent v="Disabled" />
+          <OnPortEvent v="Enabled" />
         </group>
       </group>
     </Properties>
@@ -1125,7 +1128,9 @@ Autoselect
     </Methods>
     <Events>
       <Event_module_name v="Events" />
-      <event name="OnPortEvent" v="don&amp;apos;t generate code" />
+      <event name="OnPortEvent" v="generate code">
+        <Event_procedure_name v="WIFI_XPD_DCDC_INTERRUPT_OnPortEvent" />
+      </event>
     </Events>
   </Bean>
   <Bean name="WIFI_RESET" type="BitIO_LDD">

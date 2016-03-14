@@ -12,7 +12,6 @@
 //#include <stdio.h>
 #include "string.h"
 
-#include "Debug.h"
 #include "clayString.h"
 
 #define DISCOVERY_BROADCAST_PORT 4445
@@ -39,9 +38,6 @@ extern int8_t Delete_Message (Message *message);
 
 extern void Set_Message_Source (Message *message, const char *address);
 extern void Set_Message_Destination (Message *message, const char *address);
-
-extern void Get_ESP8266_Address (char *addressBuffer, const char *address);
-extern void Set_ESP8266_Address (char *addressBuffer, char *destination);
 
 // Message Queue
 extern uint8_t Initialize_Message_Queue (Message **messageQueue);

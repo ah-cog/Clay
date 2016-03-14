@@ -10,6 +10,8 @@
 
 #include "PE_Types.h"
 
+extern bool enableBroadcastService;
+
 extern bool tick_50us;
 extern bool tick_1ms;
 extern bool tick_50ms;
