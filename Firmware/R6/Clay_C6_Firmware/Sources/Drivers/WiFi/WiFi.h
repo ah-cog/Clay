@@ -1,12 +1,8 @@
-/*
- * WifiOs.h
- *
- *  Created on: Feb 18, 2016
- *      Author: thebh
- */
+#ifndef WIFI_H
+#define WIFI_H
 
-#ifndef SOURCES_WIFIOS_WIFIOS_H_
-#define SOURCES_WIFIOS_WIFIOS_H_
+#define SSID_DEFAULT "hefnet"
+#define PASSWORD_DEFAULT "h3fn3r_is_better_than_me"
 
 #include "PE_Types.h"
 //#include "Message.h"
@@ -38,7 +34,7 @@ extern volatile bool WifiInterruptReceived;
 extern volatile bool WifiSetProgramMode;
 extern bool Wifi_Message_Available;
 
-extern bool Wifi_Enable();
+extern bool Enable_WiFi();
 extern void Wifi_State_Step();
 extern void Wifi_Set_Programming_Mode();
 extern void Wifi_Set_Operating_Mode();
@@ -46,7 +42,6 @@ extern void Wifi_Do_Reset(bool StateMachineWaitForConnect);
 extern Wifi_States Wifi_Get_State();
 
 extern bool Wifi_Send(Message * message);
-//extern bool Wifi_Receive(Message * message);
 extern Message* Wifi_Receive ();
 
-#endif /* SOURCES_WIFIOS_WIFIOS_H_ */
+#endif

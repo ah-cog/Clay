@@ -15,9 +15,6 @@
 
 #include "Clock.h"
 
-//#include "ESP8266_Serial.h"
-//#include "ESP8266.h"
-
 #include "Behavior.h"
 #include "Messenger.h"
 

@@ -5,7 +5,7 @@
  *      Author: thebh
  */
 #include "PE_Types.h"
-#include "WifiOs.h"
+#include "WiFi.h"
 #include "Clock.h"
 #include "Ring_Buffer.h"
 //#include "Message.h"
@@ -14,7 +14,7 @@
 
 void Wifi_Test()
 {
-   Wifi_Enable();
+   Enable_WiFi();
 
    Message *message = NULL;
    uint32_t lastMessageSendTime = 0;
