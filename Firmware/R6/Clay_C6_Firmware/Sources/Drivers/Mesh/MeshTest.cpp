@@ -13,12 +13,12 @@
 
 extern "C"{
 #include "Clock.h"
-#include "mpu_9250_driver.h"
+#include "Drivers/IMU/mpu_9250_driver.h"
 #include "LED1.h"
 #include "LED2.h"
 #include "PE_Types.h"
 #include "RHRouter.h"
-#include "RGB_LED.h"
+#include "Drivers/RGB_LED/RGB_LED.h"
 }
 
 ///defines /////////////////////////////////////////////////////////

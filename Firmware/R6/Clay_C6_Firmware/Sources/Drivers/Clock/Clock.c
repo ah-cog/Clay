@@ -9,6 +9,9 @@
 #include "Clock.h"
 #include "Messenger.h"
 
+bool enableBroadcastService = FALSE;
+Message *broadcastMessage = NULL;
+
 ////global vars
 bool tick_50us;
 bool tick_1ms;
@@ -82,11 +85,18 @@ void Tick() {
 
 //			Message *message = Create_Message ("discovery");
 ////			message->destination = "255.255.255.255";
-//			Set_Message_Source(message, "0000000000,2,16,51397,0,0,0,0,0,0,0,0!");
-//			Set_Message_Destination(message, "0000000000,2,16,51397,0,0,0,0,0,0,0,0!");
-//			Set_ESP8266_Address (message->source, "192.168.1.255");
-//			Set_ESP8266_Address (message->destination, "192.168.1.255");
-//			Wifi_Send(&outgoingMessageQueue, message);
+////			Set_Message_Source(message, "0000000000,2,16,51397,0,0,0,0,0,0,0,0!");
+////			Set_Message_Destination(message, "0000000000,2,16,51397,0,0,0,0,0,0,0,0!");
+////			Set_Message_Source (message, "192.168.1.255");
+//			Set_Message_Destination (message, "192.168.1.255:4445");
+////			Wifi_Send(&outgoingMessageQueue, message);
+//			Queue_Message(&outgoingMessageQueue, message);
+
+//			if (enableBroadcastService) {
+//				broadcastMessage = Create_Message ("discover me!\n");
+//				Set_Message_Destination (broadcastMessage, "UDP,192.168.1.255:4445!");
+//				Wifi_Send (broadcastMessage);
+//			}
 		}
 
 		if (!(PowerOnTime_ms % 3000)) {

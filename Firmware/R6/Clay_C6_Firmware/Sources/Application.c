@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "meshTest.h"
+//#include "meshTest.h"
 #include "Bootloader.h"
 #include "Mesh.h"
 #include "RGB_LED.h"
@@ -8,24 +8,7 @@
 #include "MPU9250.h"
 #include "LEDs.h"
 #include "Events.h"
-#include "RGBDemo.h"
-
-// Clay's print, debug, and error messages.
-
-//#define ENABLE_DEBUG_OUTPUT TRUE
-//#if ENABLE_DEBUG_OUTPUT == TRUE
-//	#define print(fmt, ...) printf("print: " fmt, __VA_ARGS__);
-//	#define status(fmt, ...) printf("status: " fmt);
-//	#define debug(fmt, ...) printf("%s:%d: " fmt, __FILE__, __LINE__, __VA_ARGS__);
-//	#define error(fmt, ...) printf("%s:%d: " fmt, __FILE__, __LINE__, __VA_ARGS__);
-//#else
-//	#define print(fmt, ...) ; // (void) 0;
-//	#define status(fmt, ...) ;
-//	#define debug(fmt, ...) ; // (void) 0;
-//	#define error(fmt, ...) ; // (void) 0;
-//#endif
-
-#define DISABLE_WIFI //wifi disable. comment or remove to enable wifi.
+//#include "RGBDemo.h"
 
 static bool led_1_state;
 static bool led_2_state;
@@ -77,7 +60,7 @@ void Initialize () {
 	// Initialize bootloader.
 	//todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //	bool is_update_available = FALSE;
-	Initialize_Bootloader ();
+//	Initialize_Bootloader (); // TODO: Make this work!
 
 	// Clock.
 	if ((status = Clock_Enable ()) != TRUE) {
@@ -93,7 +76,6 @@ void Initialize () {
 	if ((status = LED_Enable ()) != TRUE) {
 		// Failure
 	}
-
 	Perform_Status_LED_Effect ();
 
 	if (!(status = Enable_Mesh ())) {
@@ -131,12 +113,12 @@ void Initialize () {
 		// Failure
 	}
 
-//TODO: troubleshoot MPU start with invensense drivers.
+	//TODO: troubleshoot MPU start with invensense drivers.
 	if ((status = Start_MPU9250 ()) != TRUE) {
 		// Failure
 	}
 
-// Message queue.
+	// Message queue.
 	if ((status = Initialize_Message_Queue (&incomingMessageQueue)) != TRUE) {
 		// Failure
 	}
@@ -183,6 +165,36 @@ void Initialize () {
 
 void Application (void) {
 	Message *message = NULL;
+//	int broadcastCount = 0;
+//	Message *broadcastMessage = NULL;
+//	Message *m1 = NULL;
+//	Message *m2 = NULL;
+//	Message *m3 = NULL;
+//	Message *m4 = NULL;
+//
+//	m1 = Create_Message ("discovery\n");
+//	Set_Message_Source (m1, "UDP,192.168.1.255:4445!");
+//	Set_Message_Destination (m1, "UDP,192.168.1.255:4445!");
+////	Wifi_Send(&outgoingMessageQueue, m1);
+//	Queue_Message(&outgoingMessageQueue, m1);
+//
+//	m2 = Create_Message ("discovery\n");
+//	Set_Message_Source (m2, "UDP,192.168.1.255:4445!");
+//	Set_Message_Destination (m2, "UDP,192.168.1.255:4445!");
+////	Wifi_Send(&outgoingMessageQueue, m2);
+//	Queue_Message(&outgoingMessageQueue, m2);
+//
+//	m3 = Create_Message ("discovery\n");
+//	Set_Message_Source (m3, "UDP,192.168.1.255:4445!");
+//	Set_Message_Destination (m3, "UDP,192.168.1.255:4445!");
+////	Wifi_Send(&outgoingMessageQueue, m3);
+//	Queue_Message(&outgoingMessageQueue, m3);
+//
+//	m4 = Create_Message ("discovery\n");
+//	Set_Message_Source (m4, "UDP,192.168.1.255:4445!");
+//	Set_Message_Destination (m4, "UDP,192.168.1.255:4445!");
+////	Wifi_Send(&outgoingMessageQueue, m4);
+//	Queue_Message(&outgoingMessageQueue, m4);
 
 //	bool LastButtonStateUpdated = ButtonPressed;
 //	Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
@@ -231,13 +243,32 @@ void Application (void) {
 		// Step state machine
 		Wifi_State_Step ();
 
+//		if (!Has_Messages(&outgoingMessageQueue)) {
+//		while (broadcastCount < 10) {
+//			Message *broadcastMessage = Create_Message ("discover me!\n");
+//			Set_Message_Source (broadcastMessage, "UDP,192.168.1.255:4445!");
+//			Set_Message_Destination (broadcastMessage, "UDP,192.168.1.255:4445!");
+////			Queue_Message (&outgoingMessageQueue, broadcastMessage);
+//			Wifi_Send (broadcastMessage);
+//			broadcastCount++;
+//		}
+
+//		message = Create_Message ("discovery");
+//		Set_Message_Source (message, "192.168.1.255");
+//		Set_Message_Destination (message, "192.168.1.255:4445");
+////			Wifi_Send(&outgoingMessageQueue, message);
+//		Queue_Message(&outgoingMessageQueue, message);
+//
+//		continue;
+
+
+		// TODO: Check for Wi-Fi messages on the Wi-Fi queue, and put them onto the system incoming queue.
 		// Monitor communication message queues.
 		if (Has_Messages (&incomingMessageQueue) == TRUE) {
 			message = Wifi_Receive ();
 			status = Process_Incoming_Message (message);
 			if (message != NULL) {
-				Set_ESP8266_Address(message, "255.255.255.255");
-				Wifi_Send (message);
+
 			}
 		}
 
@@ -249,14 +280,15 @@ void Application (void) {
 ////				Delete_Message (message);
 ////			}
 //		}
-		// Send the next message on the outgoing message queue.
-		if (Has_Messages (&outgoingMessageQueue) == TRUE) {
-			Message *message = Dequeue_Message (&outgoingMessageQueue);
-			if ((status = Process_Outgoing_Message (message)) == TRUE) {
-				// Delete_Message (message);
-			}
-//			Delete_Message (message);
-		}
+
+//		// Send the next message on the outgoing message queue.
+//		if (Has_Messages (&outgoingMessageQueue) == TRUE) {
+//			Message *message = Dequeue_Message (&outgoingMessageQueue);
+//			if ((status = Process_Outgoing_Message (message)) == TRUE) {
+//				// Delete_Message (message);
+//			}
+////			Delete_Message (message);
+//		}
 
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
@@ -381,8 +413,8 @@ void Monitor_Periodic_Events () {
 		//		Queue_Outgoing_Message ("255.255.255.255", message);
 
 		//#if !defined DONT_DO_WIFI_STUFF
-		outMessage = Create_Message (discoveryMessage);
-		Queue_Outgoing_Message ("255.255.255.255", outMessage);
+//		outMessage = Create_Message (discoveryMessage);
+//		Queue_Outgoing_Message ("255.255.255.255", outMessage);
 		//#endif
 		//		Queue_Message (&outgoingMessageQueue, outMessage);
 		//		Delete_Message (outMessage);

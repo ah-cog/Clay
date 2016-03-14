@@ -10,17 +10,14 @@
 #include "string.h"
 
 #include "PE_Types.h"
-#include "WifiOs.h"
+#include "WiFi.h"
 #include "WIFI_GPIO0.h"
 #include "WIFI_GPIO2.h"
 #include "WIFI_CHIP_EN.h"
 #include "WIFI_RESET.h"
-#include "ESP8266_Serial.h"
 #include "Ring_Buffer.h"
 #include "Clock.h"
 #include "AddressSerialization.h"
-//#include "Message_Queue.h"
-//#include "Message.h"
 #include "Messenger.h"
 
 #define OUT_BUFFER_LENGTH           1024
