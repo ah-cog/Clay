@@ -8,7 +8,7 @@
 #ifndef BOOTLOADER_H
 #define BOOTLOADER_H
 
-#include "ESP8266.h"
+//#include "ESP8266.h"
 #include "program_flash.h"
 
 //includes

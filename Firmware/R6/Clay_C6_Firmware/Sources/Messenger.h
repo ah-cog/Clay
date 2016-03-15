@@ -12,7 +12,6 @@
 //#include <stdio.h>
 #include "string.h"
 
-#include "Debug.h"
 #include "clayString.h"
 
 #define DISCOVERY_BROADCAST_PORT 4445
@@ -26,13 +25,10 @@ typedef struct Message {
 	char *source;
 	char *destination;
 	char *content;
-	
+
 	struct Message *previous;
 	struct Message *next;
 } Message;
-
-extern Message *incomingMessageQueue;
-extern Message *outgoingMessageQueue;
 
 extern Message* Create_Message (const char *content);
 extern int8_t Delete_Message (Message *message);
@@ -40,8 +36,8 @@ extern int8_t Delete_Message (Message *message);
 extern void Set_Message_Source (Message *message, const char *address);
 extern void Set_Message_Destination (Message *message, const char *address);
 
-extern void Get_ESP8266_Address (char *addressBuffer, const char *address);
-extern void Set_ESP8266_Address (char *addressBuffer, char *destination);
+extern Message *incomingMessageQueue;
+extern Message *outgoingMessageQueue;
 
 // Message Queue
 extern uint8_t Initialize_Message_Queue (Message **messageQueue);
@@ -49,11 +45,7 @@ extern int16_t Queue_Message (Message **messageQueue, Message *message); // Circ
 extern Message* Dequeue_Message (Message **messageQueue); // Get the message on the front of the incoming message queue.
 extern int8_t Has_Messages (Message **messageQueue);
 
-// Incoming Message Queue
-extern int8_t Process_Incoming_Message (Message *message);
-
 // Outgoing Message Queue
 extern int16_t Queue_Outgoing_Message (char *address, Message *message);
-extern int8_t Process_Outgoing_Message (Message *message);
 
-#endif /* MESSENGER_H */
+#endif

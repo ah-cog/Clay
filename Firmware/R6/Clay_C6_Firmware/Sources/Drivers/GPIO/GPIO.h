@@ -4,7 +4,7 @@
 #include "PE_Types.h"
 #include "PE_LDD.h"
 
-#include "RGB_LED.h"
+#include "Drivers/RGB_LED/RGB_LED.h"
 
 #define CHANNEL_COUNT 12
 

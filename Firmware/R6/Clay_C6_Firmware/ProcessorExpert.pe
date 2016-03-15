@@ -3,10 +3,10 @@
   <Header>
     <Name>Clay_C6_Firmware</Name>
     <SavedBy>thebh</SavedBy>
-    <ModificationStamp>61</ModificationStamp>
+    <ModificationStamp>62</ModificationStamp>
     <Date>2016-01-26</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.12.2.RT7_b1550-0615</PEversion>
+    <PEversion>1.12.1.RT7_b1531-0480</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -29777,7 +29777,7 @@
         <ItemSymbol>EventModule</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>Events_ESP8266</Value>
+        <Value>Events</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>OnBlockReceived</ItemSymbol>

@@ -28,7 +28,6 @@
 
 #include "Cpu.h"
 #include "Events.h"
-#include "Events_ESP8266.h"
 #include "Init_Config.h"
 #include "PDD_Includes.h"
 
@@ -36,7 +35,7 @@
 #include "Mesh.h"
 #include "I2C.h"
 #include "MPU9250.h"
-#include "WifiOs.h"
+#include "WiFi.h"
 
 FREQ_OUT SelectedFreq = f_Off;
 bool ButtonPressed = FALSE;
@@ -292,6 +291,52 @@ void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
    WifiInterruptReceived = TRUE;
+}
+
+/*
+** ===================================================================
+**     Event       :  ESP8266_Serial_OnBlockReceived (module Events)
+**
+**     Component   :  ESP8266_Serial [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when the requested number of data is
+**         moved to the input buffer.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr)
+{
+	   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
+
+	   (void) ESP8266_Serial_ReceiveBlock(ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof(ptr->rxChar));
+	   (void) ptr->rxPutFct(ptr->rxChar);
+}
+
+/*
+** ===================================================================
+**     Event       :  ESP8266_Serial_OnBlockSent (module Events)
+**
+**     Component   :  ESP8266_Serial [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event is called after the last character from the
+**         output buffer is moved to the transmitter. 
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr)
+{
+	   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
+	   ptr->isSent = TRUE;
 }
 
 /* END Events */

@@ -1,5 +1,6 @@
 #include "Application.h"
-#include "meshTest.h"
+
+//#include "meshTest.h"
 #include "Bootloader.h"
 #include "Mesh.h"
 #include "RGB_LED.h"
@@ -8,24 +9,8 @@
 #include "MPU9250.h"
 #include "LEDs.h"
 #include "Events.h"
-#include "RGBDemo.h"
-
-// Clay's print, debug, and error messages.
-
-//#define ENABLE_DEBUG_OUTPUT TRUE
-//#if ENABLE_DEBUG_OUTPUT == TRUE
-//	#define print(fmt, ...) printf("print: " fmt, __VA_ARGS__);
-//	#define status(fmt, ...) printf("status: " fmt);
-//	#define debug(fmt, ...) printf("%s:%d: " fmt, __FILE__, __LINE__, __VA_ARGS__);
-//	#define error(fmt, ...) printf("%s:%d: " fmt, __FILE__, __LINE__, __VA_ARGS__);
-//#else
-//	#define print(fmt, ...) ; // (void) 0;
-//	#define status(fmt, ...) ;
-//	#define debug(fmt, ...) ; // (void) 0;
-//	#define error(fmt, ...) ; // (void) 0;
-//#endif
-
-#define DISABLE_WIFI //wifi disable. comment or remove to enable wifi.
+//#include "RGBDemo.h"
+#include "Messenger.h"
 
 static bool led_1_state;
 static bool led_2_state;
@@ -34,37 +19,6 @@ int status;
 
 void Monitor_Periodic_Events ();
 void Remote_Button_Pressed (uint8_t * data, uint8_t len);
-
-int8_t Start_Light_Behavior () {
-	//stubbed.
-}
-
-bool Perform_Channel_Light_Effect (bool reverse) {
-	RGB_Color c = { 0, 0, 0 };
-
-	for (c.R = 0; c.R <= 200; c.R += 70) {
-		for (c.G = 0; c.G <= 200; c.G += 70) {
-			for (c.B = 0; c.B <= 200; c.B += 70) {
-				for (int i = reverse ? RGB_MAX : 0;
-						reverse ? i > 0 : i < RGB_MAX; i +=
-								(reverse ? -1 : 1)) {
-					RGB_LED_SetColor ((RGB_LED) i, &c);
-					Wait (1);
-				}
-			}
-		}
-	}
-
-	c.R = 0;
-	c.G = 0;
-	c.B = 0;
-
-	for (int i = 0; i < RGB_MAX; ++i) {
-		RGB_LED_SetColor ((RGB_LED) i, &c);
-	}
-
-	return TRUE;
-}
 
 void Initialize () {
 
@@ -77,7 +31,7 @@ void Initialize () {
 	// Initialize bootloader.
 	//todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //	bool is_update_available = FALSE;
-	Initialize_Bootloader ();
+//	Initialize_Bootloader (); // TODO: Make this work!
 
 	// Clock.
 	if ((status = Clock_Enable ()) != TRUE) {
@@ -93,15 +47,14 @@ void Initialize () {
 	if ((status = LED_Enable ()) != TRUE) {
 		// Failure
 	}
-
 	Perform_Status_LED_Effect ();
 
-	if (!(status = Enable_Mesh ())) {
-		//failure
+	if ((status = Enable_Mesh ()) != TRUE) {
+		// Failure
 	}
 
-	if (!(status = Start_Mesh ())) {
-		//failure
+	if ((status = Start_Mesh ()) != TRUE) {
+		// Failure
 	}
 
 	// Channels.
@@ -131,12 +84,12 @@ void Initialize () {
 		// Failure
 	}
 
-//TODO: troubleshoot MPU start with invensense drivers.
+	//TODO: troubleshoot MPU start with invensense drivers.
 	if ((status = Start_MPU9250 ()) != TRUE) {
 		// Failure
 	}
 
-// Message queue.
+	// Message queue.
 	if ((status = Initialize_Message_Queue (&incomingMessageQueue)) != TRUE) {
 		// Failure
 	}
@@ -145,7 +98,7 @@ void Initialize () {
 		// Failure
 	}
 
-	if ((status = Wifi_Enable ()) != TRUE) {
+	if ((status = Enable_WiFi (SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
 		// Failure
 	}
 
@@ -189,7 +142,6 @@ void Application (void) {
 //
 //	//add software ack to mesh layer
 //	//add speaker output
-//	//
 //
 //   //Behavior test loop: Button press on module sends message to other module. Other module receives message and changes LED output.
 //   for (;;)
@@ -214,14 +166,9 @@ void Application (void) {
 //      //incoming button press messages are handled by interrupt.
 //   }
 
-	//TODO: never reached because of test loop above
 	for (;;) {
 
-//		Send_HTTP_Request ("192.168.1.105", 8080, "test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test,test");
-
 // Check and process any incoming requests
-//        Wait(10);        // Wait (100);
-//      Monitor_Network_Communications(); // Replace this!
 //      MeshTestLoopStep();
 
 //        mesh_process_commands();
@@ -231,13 +178,32 @@ void Application (void) {
 		// Step state machine
 		Wifi_State_Step ();
 
+//		if (!Has_Messages(&outgoingMessageQueue)) {
+//		while (broadcastCount < 10) {
+//			Message *broadcastMessage = Create_Message ("discover me!\n");
+//			Set_Message_Source (broadcastMessage, "UDP,192.168.1.255:4445!");
+//			Set_Message_Destination (broadcastMessage, "UDP,192.168.1.255:4445!");
+////			Queue_Message (&outgoingMessageQueue, broadcastMessage);
+//			Wifi_Send (broadcastMessage);
+//			broadcastCount++;
+//		}
+
+//		message = Create_Message ("discovery");
+//		Set_Message_Source (message, "192.168.1.255");
+//		Set_Message_Destination (message, "192.168.1.255:4445");
+////			Wifi_Send(&outgoingMessageQueue, message);
+//		Queue_Message(&outgoingMessageQueue, message);
+//
+//		continue;
+
+
+		// TODO: Check for Wi-Fi messages on the Wi-Fi queue, and put them onto the system incoming queue.
 		// Monitor communication message queues.
 		if (Has_Messages (&incomingMessageQueue) == TRUE) {
 			message = Wifi_Receive ();
 			status = Process_Incoming_Message (message);
 			if (message != NULL) {
-				Set_ESP8266_Address(message, "255.255.255.255");
-				Wifi_Send (message);
+
 			}
 		}
 
@@ -249,6 +215,7 @@ void Application (void) {
 ////				Delete_Message (message);
 ////			}
 //		}
+
 		// Send the next message on the outgoing message queue.
 		if (Has_Messages (&outgoingMessageQueue) == TRUE) {
 			Message *message = Dequeue_Message (&outgoingMessageQueue);
@@ -381,8 +348,8 @@ void Monitor_Periodic_Events () {
 		//		Queue_Outgoing_Message ("255.255.255.255", message);
 
 		//#if !defined DONT_DO_WIFI_STUFF
-		outMessage = Create_Message (discoveryMessage);
-		Queue_Outgoing_Message ("255.255.255.255", outMessage);
+//		outMessage = Create_Message (discoveryMessage);
+//		Queue_Outgoing_Message ("255.255.255.255", outMessage);
 		//#endif
 		//		Queue_Message (&outgoingMessageQueue, outMessage);
 		//		Delete_Message (outMessage);

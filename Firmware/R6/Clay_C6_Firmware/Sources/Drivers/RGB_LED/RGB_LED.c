@@ -9,7 +9,7 @@
 #include "RGB_LED.h"
 #include "PE_Types.h"
 #include "I2C2.h"
-#include "I2C.h"
+#include "Drivers/I2C/I2C.h"
 #include "LED_SDB.h"
 #include "Clock.h"
 
@@ -154,4 +154,35 @@ void RGB_LED_UpdateOutput()
 {
    uint8_t temp[] = { UPDATE_REGISTER, 0x00 };
    I2C_Send_Message(temp, 2, RGB_LED_ADDR);
+}
+
+int8_t Start_Light_Behavior () {
+	//stubbed.
+}
+
+bool Perform_Channel_Light_Effect (bool reverse) {
+	RGB_Color c = { 0, 0, 0 };
+
+	for (c.R = 0; c.R <= 200; c.R += 70) {
+		for (c.G = 0; c.G <= 200; c.G += 70) {
+			for (c.B = 0; c.B <= 200; c.B += 70) {
+				for (int i = reverse ? RGB_MAX : 0;
+						reverse ? i > 0 : i < RGB_MAX; i +=
+								(reverse ? -1 : 1)) {
+					RGB_LED_SetColor ((RGB_LED) i, &c);
+					Wait (1);
+				}
+			}
+		}
+	}
+
+	c.R = 0;
+	c.G = 0;
+	c.B = 0;
+
+	for (int i = 0; i < RGB_MAX; ++i) {
+		RGB_LED_SetColor ((RGB_LED) i, &c);
+	}
+
+	return TRUE;
 }
