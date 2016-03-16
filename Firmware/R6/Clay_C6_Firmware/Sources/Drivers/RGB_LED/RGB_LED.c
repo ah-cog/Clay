@@ -8,7 +8,7 @@
 ////includes
 #include "RGB_LED.h"
 #include "PE_Types.h"
-#include "I2C2.h"
+#include "I2C0.h"
 #include "Drivers/I2C/I2C.h"
 #include "LED_SDB.h"
 #include "Clock.h"
@@ -56,35 +56,20 @@ typedef struct
 //CtrlReg= CHANNEL_INDEX + 0x25
 
 ////local vars
-#if defined C6R2
 static RGB_LED_Channel LED_Channels[RGB_MAX] =
 {
-   {  RGB1, 29, 30, 28},
-   {  RGB2, 32, 33, 31},
-   {  RGB3, 35, 36, 34},
-   {  RGB4, 20, 21, 19},
-   {  RGB5, 23, 24, 22},
-   {  RGB6, 26, 27, 25},
-   {  RGB7, 17, 18, 16},
-   {  RGB8, 14, 15, 13},
-   {  RGB9, 11, 12, 10},
-   {  RGB10, 8, 9, 7},
-   {  RGB11, 5, 6, 4},
-   {  RGB12, 2, 3, 1}};
-#else
-static RGB_LED_Channel LED_Channels[RGB_MAX] = { { RGB1, 26, 27, 25 },
-                                                 { RGB2, 23, 24, 22 },
-                                                 { RGB3, 20, 21, 19 },
-                                                 { RGB4, 35, 36, 34 },
-                                                 { RGB5, 32, 33, 31 },
-                                                 { RGB6, 29, 30, 28 },
-                                                 { RGB7, 2, 3, 1 },
-                                                 { RGB8, 5, 6, 4 },
-                                                 { RGB9, 8, 9, 7 },
-                                                 { RGB10, 11, 12, 10 },
-                                                 { RGB11, 14, 15, 13 },
-                                                 { RGB12, 17, 18, 16 } };
-#endif
+   {RGB1, 11, 12, 10},
+   {RGB2, 14, 15, 13},
+   {RGB3, 17, 18, 16},
+   {RGB5, 23, 24, 22},
+   {RGB4, 26, 27, 25},
+   {RGB6, 20, 21, 19},
+   {RGB7, 35, 36, 34},
+   {RGB8, 32, 33, 31},
+   {RGB9, 29, 30, 28},
+   {RGB10, 8, 9, 7},
+   {RGB11, 5, 6, 4},
+   { RGB12, 2, 3, 1 } };
 ////local function prototypes
 
 ////global function implementations
@@ -156,33 +141,38 @@ void RGB_LED_UpdateOutput()
    I2C_Send_Message(temp, 2, RGB_LED_ADDR);
 }
 
-int8_t Start_Light_Behavior () {
-	//stubbed.
+int8_t Start_Light_Behavior()
+{
+   //stubbed.
 }
 
-bool Perform_Channel_Light_Effect (bool reverse) {
-	RGB_Color c = { 0, 0, 0 };
+bool Perform_Channel_Light_Effect(bool reverse)
+{
+   RGB_Color c = { 0, 0, 0 };
 
-	for (c.R = 0; c.R <= 200; c.R += 70) {
-		for (c.G = 0; c.G <= 200; c.G += 70) {
-			for (c.B = 0; c.B <= 200; c.B += 70) {
-				for (int i = reverse ? RGB_MAX : 0;
-						reverse ? i > 0 : i < RGB_MAX; i +=
-								(reverse ? -1 : 1)) {
-					RGB_LED_SetColor ((RGB_LED) i, &c);
-					Wait (1);
-				}
-			}
-		}
-	}
+   for (c.R = 0; c.R <= 200; c.R += 70)
+   {
+      for (c.G = 0; c.G <= 200; c.G += 70)
+      {
+         for (c.B = 0; c.B <= 200; c.B += 70)
+         {
+            for (int i = reverse ? RGB_MAX : 0; reverse ? i > 0 : i < RGB_MAX; i += (reverse ? -1 : 1))
+            {
+               RGB_LED_SetColor((RGB_LED) i, &c);
+               Wait(1);
+            }
+         }
+      }
+   }
 
-	c.R = 0;
-	c.G = 0;
-	c.B = 0;
+   c.R = 0;
+   c.G = 0;
+   c.B = 0;
 
-	for (int i = 0; i < RGB_MAX; ++i) {
-		RGB_LED_SetColor ((RGB_LED) i, &c);
-	}
+   for (int i = 0; i < RGB_MAX; ++i)
+   {
+      RGB_LED_SetColor((RGB_LED) i, &c);
+   }
 
-	return TRUE;
+   return TRUE;
 }

@@ -8,7 +8,7 @@
 ////includes
 #include "PE_Types.h"
 #include "Clock.h"
-#include "I2C2.h"
+#include "I2C0.h"
 #include "I2C.h"
 
 ////defines
@@ -33,7 +33,7 @@ static uint32_t start_time;
 //address is the I2C address of the device which is to be read
 LDD_TError I2C_Send_Message(uint8_t * message, int32 size, uint8_t address)
 {
-   LDD_TError rval = I2C2_SelectSlaveDevice(I2C2_DeviceData, LDD_I2C_ADDRTYPE_7BITS, address);
+   LDD_TError rval = I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, address);
 
    if (!rval)
    {
@@ -41,7 +41,7 @@ LDD_TError I2C_Send_Message(uint8_t * message, int32 size, uint8_t address)
       i2c_tx_complete = FALSE;
       start_time = Millis();
 
-      rval = I2C2_MasterSendBlock(I2C2_DeviceData, (LDD_TData*) message, (LDD_I2C_TSize) size, LDD_I2C_SEND_STOP);
+      rval = I2C0_MasterSendBlock(I2C0_DeviceData, (LDD_TData*) message, (LDD_I2C_TSize) size, LDD_I2C_SEND_STOP);
       while (!i2c_tx_complete && (Millis() - start_time) < SEND_TIMEOUT_MSEC)
          ;
    }
@@ -67,7 +67,7 @@ LDD_TError I2C_Receive_Message(uint8_t * tx_buf, int32 tx_size, uint8_t * rx_buf
       i2c_rx_complete = FALSE;
       start_time = Millis();
 
-      rval = I2C2_MasterReceiveBlock(I2C2_DeviceData, rx_buf, rx_size, LDD_I2C_SEND_STOP);
+      rval = I2C0_MasterReceiveBlock(I2C0_DeviceData, rx_buf, rx_size, LDD_I2C_SEND_STOP);
 
       while (!i2c_rx_complete && (Millis() - start_time) < SEND_TIMEOUT_MSEC)
          ;

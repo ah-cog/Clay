@@ -30,15 +30,15 @@
 - \subpage LED2
 - \subpage TU1
 - \subpage TI1
-- \subpage I2C2
+- \subpage I2C0
 - \subpage LED_SDB
-- \subpage BuzzerOut
-- \subpage BuzzerLine
+- \subpage BuzzerSwitch
+- \subpage ADC0
 - \subpage ButtonIn
 - \subpage MESH_SPI
 - \subpage MESH_CE
 - \subpage MESH_CS
-- \subpage PTC_IRQ
+- \subpage MESH_IRQ
 - \subpage ESP8266_Serial
 - \subpage WIFI_GPIO0
 - \subpage WIFI_GPIO2
@@ -46,6 +46,7 @@
 - \subpage WIFI_RESET
 - \subpage WIFI_CHIP_EN
 - \subpage IMU_FSYNC
+- \subpage IMU_IRQ
 - \subpage FLASH1
 - \subpage FLASH1
 - \subpage IO_1
@@ -60,6 +61,7 @@
 - \subpage IO_10
 - \subpage IO_11
 - \subpage IO_12
+- \subpage PowerOn
 
 */
 
@@ -96,15 +98,15 @@
 - \subpage LED2
 - \subpage TU1
 - \subpage TI1
-- \subpage I2C2
+- \subpage I2C0
 - \subpage LED_SDB
-- \subpage BuzzerOut
-- \subpage BuzzerLine
+- \subpage BuzzerSwitch
+- \subpage ADC0
 - \subpage ButtonIn
 - \subpage MESH_SPI
 - \subpage MESH_CE
 - \subpage MESH_CS
-- \subpage PTC_IRQ
+- \subpage MESH_IRQ
 - \subpage ESP8266_Serial
 - \subpage WIFI_GPIO0
 - \subpage WIFI_GPIO2
@@ -112,6 +114,7 @@
 - \subpage WIFI_RESET
 - \subpage WIFI_CHIP_EN
 - \subpage IMU_FSYNC
+- \subpage IMU_IRQ
 - \subpage FLASH1
 - \subpage FLASH1
 - \subpage IO_1
@@ -126,6 +129,7 @@
 - \subpage IO_10
 - \subpage IO_11
 - \subpage IO_12
+- \subpage PowerOn
 
 */
 

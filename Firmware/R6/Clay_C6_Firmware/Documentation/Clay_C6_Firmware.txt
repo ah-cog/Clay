@@ -60,13 +60,13 @@ Module "TU1"       (component TimerUnit_LDD)
                 <Enable> method is not necessary and needn't to be generated. This method can be called only once. Before the 
                 second call of Init the <Deinit> must be called first.
 
-Module "I2C2"      (component I2C_LDD)
-   - I2C2_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+Module "I2C0"      (component I2C_LDD)
+   - I2C0_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
                 interrupt priority, sets pin routing, sets timing, etc.   If the "Enable in init. code" is set to "yes" value 
                 then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
                 is not necessary and needn't to be generated.    This method can be called only once. Before the second call of 
                 Init() the Deinit() must be called first.
-   - I2C2_MasterSendBlock -This method writes one (7-bit addressing) or two (10-bit addressing) slave address bytes inclusive 
+   - I2C0_MasterSendBlock -This method writes one (7-bit addressing) or two (10-bit addressing) slave address bytes inclusive 
                 of R/W bit = 0 to the I2C bus and then writes the block of characters to the bus. The slave address must be 
                 specified before, by the "SelectSlaveDevice" method or in component initialization section, "Target slave 
                 address init" property. If the method returns ERR_OK, it doesn't mean that transmission was successful. The 
@@ -74,7 +74,7 @@ Module "I2C2"      (component I2C_LDD)
                 not copied to an internal buffer and remains in the original location. Therefore the content of the buffer 
                 should not be changed until the transmission is complete. Event "OnMasterBlockSent"can be used to detect the 
                 end of the transmission. This method is available only for the MASTER or MASTER - SLAVE mode.
-   - I2C2_MasterReceiveBlock -This method writes one (7-bit addressing) or two (10-bit addressing) slave address bytes 
+   - I2C0_MasterReceiveBlock -This method writes one (7-bit addressing) or two (10-bit addressing) slave address bytes 
                 inclusive of R/W bit = 1 to the I2C bus and then receives the block of characters from the bus. The slave 
                 address must be specified before, by the "SelectSlaveDevice" method or in component initialization section, 
                 "Target slave address init" property. If the method returns ERR_OK, it doesn't mean that reception was 
@@ -82,7 +82,7 @@ Module "I2C2"      (component I2C_LDD)
                 be received are not copied to an internal buffer and remains in the original location. Therefore the content of 
                 the buffer should not be changed until the transmission is complete. Event "OnMasterBlockReceived"can be used 
                 to detect the end of the reception. This method is available only for the MASTER or MASTER - SLAVE mode.
-   - I2C2_SelectSlaveDevice -This method selects a new slave for communication by its 7-bit slave, 10-bit address or general 
+   - I2C0_SelectSlaveDevice -This method selects a new slave for communication by its 7-bit slave, 10-bit address or general 
                 call value. Any send or receive method directs to or from selected device, until a new slave device is selected 
                 by this method. This method is available for the MASTER mode.
 
@@ -104,54 +104,67 @@ Module "LED_SDB"   (component BitIO_LDD)
    - LED_SDB_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if 
                 the direction = _[output]_ or _[input/output]_.
 
-Module "BuzzerOut" (component BitIO_LDD)
-   - BuzzerOut_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 
+Module "BuzzerSwitch" (component BitIO_LDD)
+   - BuzzerSwitch_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 
                 sets interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" 
                 value then the device is also enabled(see the description of the Enable() method). In this case the Enable() 
                 method is not necessary and needn't to be generated.
-   - BuzzerOut_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+   - BuzzerSwitch_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read 
+                and returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
                 property for limitations). This method cannot be disabled if direction is [input].
-   - BuzzerOut_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
+   - BuzzerSwitch_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to 
+                a memory or a register and this value will be written to the pin after switching to the output mode (using 
                 <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
                 the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
                 <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - BuzzerOut_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available 
-                only if the direction = _[output]_ or _[input/output]_.
-   - BuzzerOut_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if 
-                the direction = _[output]_ or _[input/output]_.
+   - BuzzerSwitch_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is 
+                available only if the direction = _[output]_ or _[input/output]_.
+   - BuzzerSwitch_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only 
+                if the direction = _[output]_ or _[input/output]_.
 
-Module "BuzzerLine" (component ADC_LDD)
-   - BuzzerLine_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 
-                sets interrupt priority, sets pin routing, sets timing, etc.   If the "Enable in init. code" is set to "yes" 
-                value then the device is also enabled(see the description of the Enable() method). In this case the Enable() 
-                method is not necessary and needn't to be generated.    This method can be called only once. Before the second 
-                call of Init() the Deinit() must be called first.
-   - BuzzerLine_StartSingleMeasurement -This method starts one measurement of the selected group of samples and exits 
-                immediately. This is ADC SW trigger method. The group of samples for measurement is specified by preceding call 
-                to <SelectSampleGroup()> or <CreateSampleGroup> method.     DMA disabled: The <OnMeasurementComplete() > event 
-                is invoked after the measurement is done and if the event is enabled. Results of the measurement can be read by 
+Module "ADC0"      (component ADC_LDD)
+   - ADC0_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc.   If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.    This method can be called only once. Before the second call of 
+                Init() the Deinit() must be called first.
+   - ADC0_StartSingleMeasurement -This method starts one measurement of the selected group of samples and exits immediately. 
+                This is ADC SW trigger method. The group of samples for measurement is specified by preceding call to 
+                <SelectSampleGroup()> or <CreateSampleGroup> method.     DMA disabled: The <OnMeasurementComplete() > event is 
+                invoked after the measurement is done and if the event is enabled. Results of the measurement can be read by 
                 the <GetMeasuredValues()> method.     DMA enabled: DMA request from configured ADC is enabled automatically. 
                 The <OnMeasurementComplete() > event is invoked after the requested number of results are transferred to 
                 destination buffer by DMA and if the event is enabled. <GetMeasuredValues()> method is not available if DMA 
                 mode is enabled. If the DMA transfer was completed before and DMA is not recofingured, DMA error can occur. See 
                 also <SetBuffer()> method.     The state of the measurement can be also polled by the 
                 <GetMeasurementCompleteStatus()> method. The <Discontinuous mode> doesn't support this method.
-   - BuzzerLine_GetMeasuredValues -This method copies results of the last measurement to the user supplied buffer. Data size 
-                depends on the size of measured sample group (see <SelectSampleGroup()> or <CreateSampleGroup()> method). Data 
+   - ADC0_GetMeasuredValues -This method copies results of the last measurement to the user supplied buffer. Data size depends 
+                on the size of measured sample group (see <SelectSampleGroup()> or <CreateSampleGroup()> method). Data 
                 representation is defined by the <Result type> property. Typically this method is called from 
                 <OnMeasurementComplete> event to get results of the last measurement. This method is not available if DMA is 
                 enabled.
-   - BuzzerLine_CreateSampleGroup -This method prepares HW for next measurement according to array of samples defined during 
-                run-time. The array of samples should be prepared prior to calling this method. Pointer to the array is passed 
-                into this method in parameter SampleGroupPtr. The number of samples is defined by parameter SampleCount. Once 
-                any group is prepared, the measurement can be started multiple times. Note: This method works only with the 
-                sample groups defined during run-time. For design-time defined groups use <SelectSampleGroup()> method.
+   - ADC0_SelectSampleGroup -This method selects one of the (design-time) predefined <Static sample groups> for the next 
+                measurement. Each call rewrites the preceding setting. Once any group is selected, the measurement can be 
+                started multiple times. Note: This method works only with the sample groups defined at design time. For 
+                run-time defined groups use <CreateSampleGroup()> method.
+   - ADC0_CreateSampleGroup -This method prepares HW for next measurement according to array of samples defined during run-time.
+                The array of samples should be prepared prior to calling this method. Pointer to the array is passed into this 
+                method in parameter SampleGroupPtr. The number of samples is defined by parameter SampleCount. Once any group 
+                is prepared, the measurement can be started multiple times. Note: This method works only with the sample groups 
+                defined during run-time. For design-time defined groups use <SelectSampleGroup()> method.
+   - ADC0_GetMeasurementCompleteStatus -Returns whether the measurement is done and the results can be read by the user. It can 
+                be used to poll the state of measurement if <Interrupt service/event> is disabled or if <OnMeasurementComplete> 
+                event is disabled by the <SetEventMask()> methods.
+   - ADC0_StartCalibration -This method starts self calibration process. Calibration is typically used to remove the effects of 
+                the gain and offset from a specific reading.
+   - ADC0_GetCalibrationResultStatus -This method should be used for check the last calibration result. If calibration 
+                completed normally the method finish calibration process by writing gain calibration values.
 
 Module "ButtonIn"  (component GPIO_LDD)
    - ButtonIn_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
                 called automatically as a part of the application initialization code.
+   - ButtonIn_GetPortValue -This method returns the current port input data value. Only configured pins (through all of bit 
+                fields in this component) are returned.
    - ButtonIn_SetFieldValue -This method sets the output data value of the specified bit field.
    - ButtonIn_GetFieldValue -This method returns the current input data of the specified field.
    - ButtonIn_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
@@ -216,14 +229,14 @@ Module "MESH_CS"   (component BitIO_LDD)
    - MESH_CS_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if 
                 the direction = _[output]_ or _[input/output]_.
 
-Module "PTC_IRQ"   (component GPIO_LDD)
-   - PTC_IRQ_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
+Module "MESH_IRQ"  (component GPIO_LDD)
+   - MESH_IRQ_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
                 called automatically as a part of the application initialization code.
-   - PTC_IRQ_SetFieldValue -This method sets the output data value of the specified bit field.
-   - PTC_IRQ_GetFieldValue -This method returns the current input data of the specified field.
-   - PTC_IRQ_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
-   - PTC_IRQ_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
-   - PTC_IRQ_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
+   - MESH_IRQ_SetFieldValue -This method sets the output data value of the specified bit field.
+   - MESH_IRQ_GetFieldValue -This method returns the current input data of the specified field.
+   - MESH_IRQ_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
+   - MESH_IRQ_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
+   - MESH_IRQ_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
 
 Module "ESP8266_Serial" (component Serial_LDD)
    - ESP8266_Serial_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors 
@@ -347,6 +360,15 @@ Module "IMU_FSYNC" (component BitIO_LDD)
                 only if the direction = _[output]_ or _[input/output]_.
    - IMU_FSYNC_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if 
                 the direction = _[output]_ or _[input/output]_.
+
+Module "IMU_IRQ"   (component GPIO_LDD)
+   - IMU_IRQ_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
+                called automatically as a part of the application initialization code.
+   - IMU_IRQ_SetFieldValue -This method sets the output data value of the specified bit field.
+   - IMU_IRQ_GetFieldValue -This method returns the current input data of the specified field.
+   - IMU_IRQ_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
+   - IMU_IRQ_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
+   - IMU_IRQ_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
 
 Module "FLASH1"    (component FLASH_LDD)
    - FLASH1_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
@@ -609,6 +631,26 @@ Module "IO_12"     (component BitIO_LDD)
                 only if the direction = _[output]_ or _[input/output]_.
    - IO_12_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
                 direction = _[output]_ or _[input/output]_.
+
+Module "PowerOn"   (component BitIO_LDD)
+   - PowerOn_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.
+   - PowerOn_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
+   - PowerOn_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
+   - PowerOn_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
+                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
+                property for limitations). This method cannot be disabled if direction is [input].
+   - PowerOn_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
+                memory or a register and this value will be written to the pin after switching to the output mode (using 
+                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
+                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
+                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
+   - PowerOn_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available 
+                only if the direction = _[output]_ or _[input/output]_.
+   - PowerOn_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if 
+                the direction = _[output]_ or _[input/output]_.
 
 Module "Cpu"       (component MK64FN1M0LL12)
 

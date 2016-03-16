@@ -34,15 +34,15 @@
 #include "LED2.h"
 #include "TI1.h"
 #include "TU1.h"
-#include "I2C2.h"
+#include "I2C0.h"
 #include "LED_SDB.h"
-#include "BuzzerOut.h"
-#include "BuzzerLine.h"
+#include "BuzzerSwitch.h"
+#include "ADC0.h"
 #include "ButtonIn.h"
 #include "MESH_SPI.h"
 #include "MESH_CE.h"
 #include "MESH_CS.h"
-#include "PTC_IRQ.h"
+#include "MESH_IRQ.h"
 #include "ESP8266_Serial.h"
 #include "WIFI_GPIO0.h"
 #include "WIFI_GPIO2.h"
@@ -50,6 +50,7 @@
 #include "WIFI_RESET.h"
 #include "WIFI_CHIP_EN.h"
 #include "IMU_FSYNC.h"
+#include "IMU_IRQ.h"
 #include "FLASH1.h"
 #include "IO_1.h"
 #include "IO_2.h"
@@ -63,6 +64,7 @@
 #include "IO_10.h"
 #include "IO_11.h"
 #include "IO_12.h"
+#include "PowerOn.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -120,23 +122,27 @@ int main(void)
    PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
-//   Wifi_Test();
+   Wifi_Test();
 
    Initialize();
 
    Application();
 
-   for (;;) {}
+   for (;;)
+   {
+   }
 
    /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-  #ifdef PEX_RTOS_START
-    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-  #endif
-  /*** End of RTOS startup code.  ***/
-  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-  for(;;){}
-  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+#ifdef PEX_RTOS_START
+   PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
+   /*** End of RTOS startup code.  ***/
+   /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+   for (;;)
+   {
+   }
+   /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
 /* END main */

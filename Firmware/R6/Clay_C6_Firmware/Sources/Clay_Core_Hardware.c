@@ -10,7 +10,6 @@
 #include "LED1.h"
 #include "LED2.h"
 #include "Drivers/RGB_LED/RGB_LED.h"
-#include "BuzzerOut.h"
 #include "Events.h"
 #include "WIFI_RESET.h"
 #include "mpu_9250_driver.h"
@@ -26,12 +25,9 @@
 ////local vars
 static bool LED1_State;
 static bool LED2_State;
-static bool BuzzerOutState;
 bool status;
-static uint32_t TickCount; //todo: expose this?
 
-static mpu_values v =
-{ 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+static mpu_values v = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 ////local function prototypes
 
@@ -96,104 +92,25 @@ static mpu_values v =
 
 void Clay_Core_Update()
 {
-	if (tick_50us)
-	{
-		tick_50us = FALSE;
 
-		switch (SelectedFreq)
-		{
-		case f_110Hz:
-		{
-			if (TickCount >= 182)
-			{
-				BuzzerOutState = !BuzzerOutState;
-				TickCount = 0;
-			}
-			break;
-		}
-		case f_220Hz:
-		{
-			if (TickCount >= 91)
-			{
-				BuzzerOutState = !BuzzerOutState;
-				TickCount = 0;
-			}
-			break;
-		}
-		case f_440Hz:
-		{
-			if (TickCount >= 45)
-			{
-				BuzzerOutState = !BuzzerOutState;
-				TickCount = 0;
-			}
-			break;
-		}
-		case f_880Hz:
-		{
-			if (TickCount >= 22)
-			{
-				BuzzerOutState = !BuzzerOutState;
-				TickCount = 0;
-			}
-			break;
-		}
-		case f_1760Hz:
-		{
-			if (TickCount >= 11)
-			{
-				BuzzerOutState = !BuzzerOutState;
-				TickCount = 0;
-			}
-			break;
-		}
-		case f_3520Hz:
-		{
-			if (TickCount >= 6)
-			{
-				BuzzerOutState = !BuzzerOutState;
-				TickCount = 0;
-			}
-			break;
-		}
-		case f_7040Hz:
-		{
-			if (TickCount >= 3)
-			{
-				BuzzerOutState = !BuzzerOutState;
-				TickCount = 0;
-			}
-			break;
-		}
-		case f_Off:
-		default:
-		{
-			break;
-		}
-		}
+   if (tick_1ms)
+   {
+      tick_1ms = FALSE;
+   }
+   if (tick_50ms)
+   {
+      tick_50ms = FALSE;
+   }
+   if (tick_250ms)
+   {
+      tick_250ms = FALSE;
+      get_mpu_readings(&v);
 
-		++TickCount;
-		BuzzerOut_PutVal(NULL, BuzzerOutState);
-	}
-
-	if (tick_1ms)
-	{
-		tick_1ms = FALSE;
-	}
-	if (tick_50ms)
-	{
-		tick_50ms = FALSE;
-	}
-	if (tick_250ms)
-	{
-		tick_250ms = FALSE;
-		get_mpu_readings(&v);
-
-		LED1_PutVal(NULL, LED1_State);
-		LED2_PutVal(NULL, LED2_State);
-		LED1_State = !LED1_State;
-		LED2_State = !LED2_State;
-	}
+      LED1_PutVal(NULL, LED1_State);
+      LED2_PutVal(NULL, LED2_State);
+      LED1_State = !LED1_State;
+      LED2_State = !LED2_State;
+   }
 
 }
 
