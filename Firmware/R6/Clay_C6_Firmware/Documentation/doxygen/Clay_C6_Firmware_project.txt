@@ -35,6 +35,7 @@
 - \subpage BuzzerSwitch
 - \subpage ADC0
 - \subpage ButtonIn
+- \subpage PowerOn
 - \subpage MESH_SPI
 - \subpage MESH_CE
 - \subpage MESH_CS
@@ -61,7 +62,8 @@
 - \subpage IO_10
 - \subpage IO_11
 - \subpage IO_12
-- \subpage PowerOn
+- \subpage TU2
+- \subpage PWM1
 
 */
 
@@ -103,6 +105,7 @@
 - \subpage BuzzerSwitch
 - \subpage ADC0
 - \subpage ButtonIn
+- \subpage PowerOn
 - \subpage MESH_SPI
 - \subpage MESH_CE
 - \subpage MESH_CS
@@ -129,7 +132,8 @@
 - \subpage IO_10
 - \subpage IO_11
 - \subpage IO_12
-- \subpage PowerOn
+- \subpage TU2
+- \subpage PWM1
 
 */
 

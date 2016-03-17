@@ -74,7 +74,7 @@ void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
 
 /*
  ** ===================================================================
- **     Event       :  I2C0_OnMasterBlockSent (module Events)
+ **     Event       :  I2C2_OnMasterBlockSent (module Events)
  **
  **     Component   :  I2C0 [I2C_LDD]
  */
@@ -90,7 +90,7 @@ void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void I2C0_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
+void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
    i2c_tx_complete = TRUE;
@@ -98,7 +98,7 @@ void I2C0_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
 
 /*
  ** ===================================================================
- **     Event       :  I2C0_OnMasterBlockReceived (module Events)
+ **     Event       :  I2C2_OnMasterBlockReceived (module Events)
  **
  **     Component   :  I2C0 [I2C_LDD]
  */
@@ -114,7 +114,7 @@ void I2C0_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void I2C0_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
+void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
    i2c_rx_complete = TRUE;
@@ -142,7 +142,7 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
    ButtonPressed = !ButtonPressed;
-   WifiSetProgramMode = TRUE;
+//   WifiSetProgramMode = TRUE;
 
    if (ButtonPressed)
    {

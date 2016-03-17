@@ -139,6 +139,7 @@ void ICACHE_RODATA_ATTR UDP_Receiver_State_Step()
 
 		case Enqueue_Message:
 		{
+			lastSourceAddress.sin_port = htons(UDP_RX_PORT);
 			taskENTER_CRITICAL();
 			Serialize_Address(&lastSourceAddress, tempAddr,
 			MAXIMUM_DESTINATION_LENGTH, MESSAGE_TYPE_UDP);

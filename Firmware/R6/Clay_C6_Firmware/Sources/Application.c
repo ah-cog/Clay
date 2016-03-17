@@ -17,6 +17,7 @@
 #include "Buzzer.h"
 #include "PowerOn.h"
 #include "ButtonIn.h"
+#include "PWM1.h"
 
 static bool led_1_state;
 static bool led_2_state;
@@ -27,6 +28,9 @@ int status;
 #define VBAT_ADC_OFFSET         3.20144E-2
 static double vBat;
 
+static uint16_t buzzerRatio = 6500;
+static uint16_t buzzerPeriod_us = 240;
+static uint16_t buzzerDuty_us = 120;
 uint32_t Button_Press_Time;
 uint32_t adcRead = 0;
 LDD_TDeviceDataPtr ADC0_DeviceData;
@@ -177,13 +181,13 @@ void Application(void)
 {
    Message *message = NULL;
 
-//	bool LastButtonStateUpdated = ButtonPressed;
-//	Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
-//
-//	//add software ack to mesh layer
-//	//add speaker output
-//
-//   //Behavior test loop: Button press on module sends message to other module. Other module receives message and changes LED output.
+   bool LastButtonStateUpdated = ButtonPressed;
+   Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
+
+   //add software ack to mesh layer
+   //add speaker output
+
+   //Behavior test loop: Button press on module sends message to other module. Other module receives message and changes LED output.
 //   for (;;)
 //   {
 //      //call ticks for heartbeat
@@ -218,6 +222,12 @@ void Application(void)
 
       // Step state machine
       Wifi_State_Step();
+
+      if (ButtonPressed)
+      {
+         PWM1_SetRatio16(PWM1_DeviceData, buzzerRatio);
+         buzzerRatio = (buzzerRatio + 6500) % 65535;
+      }
 
 //		if (!Has_Messages(&outgoingMessageQueue)) {
 //		while (broadcastCount < 10) {
@@ -337,7 +347,7 @@ void Monitor_Periodic_Events()
       //        LED1_PutVal(NULL, led_1_state);
       //        led_1_state = !led_1_state;
 
-      imu_periodic_callback();
+//      imu_periodic_callback();
    }
 
 // LEDs
