@@ -23,7 +23,7 @@ extern bool i2c_rx_complete;
 
 // prototypes ////////////////
 
-LDD_TError I2C_Receive_Message(uint8_t * tx_buf, int32 tx_size, uint8_t * rx_buf, int32 rx_size, uint8_t address);
+LDD_TError I2C_Send_Message(uint8_t * message, int32 size, uint8_t address);
 LDD_TError I2C_Receive_Message(uint8_t * tx_buf, int32 tx_size, uint8_t * rx_buf, int32 rx_size, uint8_t address);
 
 #endif /* SOURCES_I2C_I2C_H_ */

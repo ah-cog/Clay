@@ -38,7 +38,7 @@
 #include "WiFi.h"
 
 FREQ_OUT SelectedFreq = f_Off;
-bool ButtonPressed = FALSE;
+volatile bool ButtonPressed = FALSE;
 
 #ifdef __cplusplus
 extern "C"
@@ -76,7 +76,7 @@ void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
  ** ===================================================================
  **     Event       :  I2C2_OnMasterBlockSent (module Events)
  **
- **     Component   :  I2C2 [I2C_LDD]
+ **     Component   :  I2C0 [I2C_LDD]
  */
 /*!
  **     @brief
@@ -100,7 +100,7 @@ void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
  ** ===================================================================
  **     Event       :  I2C2_OnMasterBlockReceived (module Events)
  **
- **     Component   :  I2C2 [I2C_LDD]
+ **     Component   :  I2C0 [I2C_LDD]
  */
 /*!
  **     @brief
@@ -142,14 +142,19 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
    ButtonPressed = !ButtonPressed;
-   WifiSetProgramMode = TRUE;
+//   WifiSetProgramMode = TRUE;
+
+   if (ButtonPressed)
+   {
+      SelectedFreq = (SelectedFreq + 1) % (f_Off + 1);
+   }
 }
 
 /*
  ** ===================================================================
- **     Event       :  PTC_IRQ_OnPortEvent (module Events)
+ **     Event       :  MESH_IRQ_OnPortEvent (module Events)
  **
- **     Component   :  PTC_IRQ [GPIO_LDD]
+ **     Component   :  MESH_IRQ [GPIO_LDD]
  */
 /*!
  **     @brief
@@ -163,25 +168,12 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void PTC_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
+void MESH_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
-
-   //The PTC_IRQ_TDeviceDataPtr is a uint32_t and a void *.
-   //   We can just cast the pointer to a uint32_t and
-   //   access the uint32_t.
-   //determine the source of the interrupt
-   if (*((uint32_t*) UserDataPtr) & 0x00000008)     ///mesh is ptc3
+   if (MeshRxEnabled)
    {
-      if (MeshRxEnabled)
-      {
-         Mesh_Irq_Handler();
-      }
-   }
-
-   if (*((uint32_t*) UserDataPtr) & 0x00000002)     //IMU is ptc1
-   {
-      data_ready = 1;
+      Mesh_Irq_Handler();
    }
 }
 
@@ -294,49 +286,73 @@ void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr)
 }
 
 /*
-** ===================================================================
-**     Event       :  ESP8266_Serial_OnBlockReceived (module Events)
-**
-**     Component   :  ESP8266_Serial [Serial_LDD]
-*/
+ ** ===================================================================
+ **     Event       :  ESP8266_Serial_OnBlockReceived (module Events)
+ **
+ **     Component   :  ESP8266_Serial [Serial_LDD]
+ */
 /*!
-**     @brief
-**         This event is called when the requested number of data is
-**         moved to the input buffer.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
+ **     @brief
+ **         This event is called when the requested number of data is
+ **         moved to the input buffer.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. This pointer is passed
+ **                           as the parameter of Init method.
+ */
 /* ===================================================================*/
 void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr)
 {
-	   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
+   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 
-	   (void) ESP8266_Serial_ReceiveBlock(ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof(ptr->rxChar));
-	   (void) ptr->rxPutFct(ptr->rxChar);
+   (void) ESP8266_Serial_ReceiveBlock(ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof(ptr->rxChar));
+   (void) ptr->rxPutFct(ptr->rxChar);
 }
 
 /*
-** ===================================================================
-**     Event       :  ESP8266_Serial_OnBlockSent (module Events)
-**
-**     Component   :  ESP8266_Serial [Serial_LDD]
-*/
+ ** ===================================================================
+ **     Event       :  ESP8266_Serial_OnBlockSent (module Events)
+ **
+ **     Component   :  ESP8266_Serial [Serial_LDD]
+ */
 /*!
-**     @brief
-**         This event is called after the last character from the
-**         output buffer is moved to the transmitter. 
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
+ **     @brief
+ **         This event is called after the last character from the
+ **         output buffer is moved to the transmitter.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. This pointer is passed
+ **                           as the parameter of Init method.
+ */
 /* ===================================================================*/
 void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr)
 {
-	   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
-	   ptr->isSent = TRUE;
+   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
+   ptr->isSent = TRUE;
+}
+
+/*
+ ** ===================================================================
+ **     Event       :  IMU_IRQ_OnPortEvent (module Events)
+ **
+ **     Component   :  IMU_IRQ [GPIO_LDD]
+ */
+/*!
+ **     @brief
+ **         Called if defined event on any pin of the port occured.
+ **         OnPortEvent event and GPIO interrupt must be enabled. See
+ **         SetEventMask() and GetEventMask() methods. This event is
+ **         enabled if [Interrupt service/event] is Enabled and disabled
+ **         if [Interrupt service/event] is Disabled.
+ **     @param
+ **         UserDataPtr     - Pointer to RTOS device
+ **                           data structure pointer.
+ */
+/* ===================================================================*/
+void IMU_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
+{
+   /* Write your code here ... */
+   data_ready = 1;
 }
 
 /* END Events */
