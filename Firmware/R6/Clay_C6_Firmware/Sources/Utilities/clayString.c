@@ -9,7 +9,7 @@
 #include "clayString.h"
 #include "PE_Types.h"
 
-int getTokenCount (const char *string) {
+int Get_Token_Count (const char *string) {
 	// TODO: Don't count the delimiters between tokens enclosed by the secondary delimiter (i.e., the " character).
 	
 	int i = 0;
@@ -36,7 +36,7 @@ int getTokenCount (const char *string) {
 	
 }
 
-int8_t getToken (const char *string, char *tokenBuffer, int tokenIndex) {
+int8_t Get_Token (const char *string, char *tokenBuffer, int tokenIndex) {
 	
 	int i = 0;
 	const char *token = NULL;

@@ -6,7 +6,7 @@
     <ModificationStamp>98</ModificationStamp>
     <Date>2016-01-26</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.12.2.RT7_b1550-0615</PEversion>
+    <PEversion>1.12.1.RT7_b1531-0480</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -21420,7 +21420,7 @@
         <ItemSymbol>Overrundevice</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>FTM0_Free</Value>
+        <Value>FTM1_Free</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -21518,7 +21518,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>CounterInt</ItemSymbol>
-        <Value>INT_FTM0</Value>
+        <Value>INT_FTM1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>CounterInitPriority</ItemSymbol>
@@ -37970,8 +37970,6 @@
         <List lines_count="0" />
         <UnitText>us</UnitText>
         <MinCounterTicks>0</MinCounterTicks>
-        <ControlledTimingCfgFromPropertySymbol>Tmg_Period</ControlledTimingCfgFromPropertySymbol>
-        <ControlledTimingCfgFromComponentRef>LinkedTimerUnit</ControlledTimingCfgFromComponentRef>
       </ItemState>
       <ItemState>
         <ItemSymbol>DutyTmg</ItemSymbol>
@@ -38011,8 +38009,6 @@
         <List lines_count="0" />
         <UnitText>us</UnitText>
         <MinCounterTicks>0</MinCounterTicks>
-        <ControlledTimingCfgFromPropertySymbol>Tmg_ChanOffset0</ControlledTimingCfgFromPropertySymbol>
-        <ControlledTimingCfgFromComponentRef>LinkedTimerUnit</ControlledTimingCfgFromComponentRef>
       </ItemState>
       <ItemState>
         <ItemSymbol>InitOutputLevel</ItemSymbol>
