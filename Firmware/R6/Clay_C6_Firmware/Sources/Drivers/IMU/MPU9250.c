@@ -171,6 +171,7 @@ void imu_periodic_callback()
 
 const quaternion * get_quaternion_history(uint8_t* count, uint8_t * head)
 {
+   //TODO: we'll need to know the size of the measurement array, otherwise we'll just walk off the end when we try to iterate.
    *count = quat_count;
    *head = quat_head;
    return quat_history;
@@ -178,6 +179,7 @@ const quaternion * get_quaternion_history(uint8_t* count, uint8_t * head)
 
 const mpu_values * get_raw_history(uint8_t* count, uint8_t * head)
 {
+   //TODO: we'll need to know the size of the measurement array, otherwise we'll just walk off the end when we try to iterate.
    *count = raw_count;
    *head = raw_head;
    return raw_history;
