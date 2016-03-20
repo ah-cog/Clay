@@ -96,12 +96,10 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\MESH_IRQ.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\MESH_SPI.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\PE_LDD.c</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\PWM1.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\Pins1.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\PowerOn.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\TI1.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\TU1.c</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\TU2.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\WIFI_CHIP_EN.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\WIFI_GPIO0.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\WIFI_GPIO2.c</PathName>
@@ -184,12 +182,10 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\PE_Error.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\PE_LDD.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\PE_Types.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\PWM1.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\Pins1.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\PowerOn.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\TI1.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\TU1.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\TU2.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\Vectors_Config.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\WIFI_CHIP_EN.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Generated_Code\WIFI_GPIO0.h</PathName>

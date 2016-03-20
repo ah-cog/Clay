@@ -142,7 +142,7 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
 {
    /* Write your code here ... */
    ButtonPressed = !ButtonPressed;
-//   WifiSetProgramMode = TRUE;
+   WifiSetProgramMode = TRUE;
 
    if (ButtonPressed)
    {

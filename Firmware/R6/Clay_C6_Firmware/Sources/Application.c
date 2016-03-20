@@ -17,7 +17,7 @@
 #include "Buzzer.h"
 #include "PowerOn.h"
 #include "ButtonIn.h"
-#include "PWM1.h"
+//#include "PWM1.h"
 
 static bool led_1_state;
 static bool led_2_state;
@@ -99,7 +99,7 @@ void Initialize()
    {
       // Failure
    }
-//	 RGBDemoLoop();
+//   RGBDemoLoop();
 
    if ((status = Start_Light_Behavior()) != TRUE)
    {
@@ -223,11 +223,11 @@ void Application(void)
       // Step state machine
       Wifi_State_Step();
 
-      if (ButtonPressed)
-      {
-         PWM1_SetRatio16(PWM1_DeviceData, buzzerRatio);
-         buzzerRatio = (buzzerRatio + 6500) % 65535;
-      }
+//      if (ButtonPressed)
+//      {
+//         PWM1_SetRatio16(PWM1_DeviceData, buzzerRatio);
+//         buzzerRatio = (buzzerRatio + 6500) % 65535;
+//      }
 
 //		if (!Has_Messages(&outgoingMessageQueue)) {
 //		while (broadcastCount < 10) {
@@ -347,7 +347,7 @@ void Monitor_Periodic_Events()
       //        LED1_PutVal(NULL, led_1_state);
       //        led_1_state = !led_1_state;
 
-//      imu_periodic_callback();
+      imu_periodic_callback();
    }
 
 // LEDs

@@ -1808,7 +1808,7 @@ Autoselect
       <Output_pin v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
       <Counter v="FTM0_CNT" />
       <boolgroup name="Interrupt service/event" v="Disabled" />
-      <Period v="240 &amp;#181;s" />
+      <Period v="400 &amp;#181;s" />
       <Starting_pulse_width v="120 &amp;#181;s" />
       <Initial_polarity v="low" />
       <group name="Initialization">
@@ -1860,7 +1860,7 @@ Autoselect
       </enumgroup>
       <enumgroup name="Counter restart" v="On-match">
         <Period_device v="FTM0_MOD" />
-        <Period v="240 &amp;#181;s" />
+        <Period v="400 &amp;#181;s" />
         <boolgroup name="Interrupt" v="Disabled" />
       </enumgroup>
       <list name="Channel list" v="1">
