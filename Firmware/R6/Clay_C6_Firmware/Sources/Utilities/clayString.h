@@ -15,9 +15,9 @@
 #define DEFAULT_TOKEN_DELIMIETER ' '
 #define DEFAULT_TOKEN_SECONDARY_DELIMIETER '"'
 
-int getTokenCount (const char *string);
+int Get_Token_Count (const char *string);
 
-int8_t getToken (const char *string, char *tokenBuffer, int tokenIndex); // TODO: Rename to copyToken?
+int8_t Get_Token (const char *string, char *tokenBuffer, int tokenIndex); // TODO: Rename to copyToken?
 
 int8_t getTokenWithDelimiter (const char *string, const char delimiter, const char secondaryDelimiter, char *tokenBuffer, int tokenIndex);
 

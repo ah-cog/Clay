@@ -1,216 +1,142 @@
 #include "Message_Processor.h"
-#include "Behavior.h"
+#include "Action.h"
 
-char uuidBuffer[DEFAULT_UUID_LENGTH] = { 0 };
-char uuidBuffer2[DEFAULT_UUID_LENGTH] = { 0 };
-char behaviorDescriptionBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
+char uuid_buffer[DEFAULT_UUID_LENGTH] = { 0 };
+char uuid_buffer2[DEFAULT_UUID_LENGTH] = { 0 };
+char state_buffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
 
 int8_t Process_Incoming_Message (Message *message) {
 
 	int8_t status = NULL;
 	int8_t result = NULL;
 	char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-	int tokenCount = 0;
+	int token_count = 0;
 
-	char *messageContent = NULL;
-	messageContent = (*message).content;
+	char *message_content = NULL;
+	message_content = (*message).content;
 
-	tokenCount = getTokenCount (messageContent);
+	token_count = Get_Token_Count (message_content);
 
-	if ((status = getToken (messageContent, token, 0)) != NULL) { // status = getToken (message, token, 0);
+	// Reset the buffer
+	memset(uuid_buffer2, '\0', DEFAULT_UUID_LENGTH);
 
-		// create behavior
+	if ((status = Get_Token (message_content, token, 0)) != NULL) {
+
+		// cache action
 		// ^
-		if (strncmp (token, "create", strlen ("create")) == 0) {
+		if (strncmp (token, "cache", strlen ("cache")) == 0) {
 
-			if ((status = getToken (messageContent, token, 1)) != NULL) {
+			if ((status = Get_Token (message_content, token, 1)) != NULL) {
 
-				// create behavior <uuid> "turn lights on"
-				//        ^
-				if (strncmp (token, "behavior", strlen ("behavior")) == 0) {
+				// cache action <uuid> /* "turn lights on" */
+				//       ^
+				if (strncmp (token, "action", strlen ("action")) == 0) {
 
-					// Get UUID (parameter index 2)
-					status = getToken (messageContent, uuidBuffer, 2);
+					// Get UUID (parameter index 2) and command (parenthesized string index 3)
+					Get_Token (message_content, uuid_buffer, 2);
+//					Get_Token (message_content, state_buffer, 3);
 
-					// Get command (parenthesized string index 3)
-					status = getToken (messageContent, behaviorDescriptionBuffer, 3);
-
-					// TODO: Send the acknowledgment .
-					// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
-					// TODO: Send_UDP_Message ();
-					strncpy (token, "got ", 4);
-					strncpy (token + 4, messageContent, strlen (messageContent));
-					// TODO: Queue the outgoing UDP message!
-//					Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
-					Message *responseMessage = Create_Message (token);
-					Set_Message_Destination(responseMessage, "UDP,192.168.1.255:4445!"); // <HACK />
-					Queue_Message(&outgoingMessageQueue, responseMessage);
-					// TODO: Queue the message rather than executing it immediately (unless specified)
-					// TODO: Parse the message rather than brute force like this.
+					// Send message to sender to acknowledge receipt
+					Send_Acknowledgment (token, message_content);
 
 					// Delete the message
-					if (message != NULL) {
-						Delete_Message (message);
-					}
+					Delete_Message (message);
 
-					// Check if the behavior is already in the cache. If nay, cache it!
-					if (Has_Cached_Behavior_By_UUID (uuidBuffer) == FALSE) {
-
-						// TODO: Get available memory and only create the behavior if there's enough memory. Otherwise, move something out of memory to make room for it (and stream the moved thing back in when it's needed).
-
-						// Parse the message content and perform the corresponding behavior operation
-						Behavior *behavior = Create_Behavior (uuidBuffer, behaviorDescriptionBuffer);
-						if (behavior != NULL) {
-							// NOTE: The behavior was successfully created.
-							// Add the behavior to the local cache!
-							Cache_Behavior (behavior);
-							result = TRUE;
-						}
-
+					// Check if the action is already in the cache. If nay, cache it!
+					// TODO: Get available memory and only create the action if there's enough memory. Otherwise, move something out of memory to make room for it (and stream the moved thing back in when it's needed).
+					if (Has_Cached_Action_By_UUID (uuid_buffer) == FALSE) {
+						Action *action = Create_Action (uuid_buffer); // Create the action then cache it
+						result = Cache_Action (action); // Add the action to the local cache!
 					} else {
-
-						// The behavior construct already exists in the cache. There's no need to create it!
-						result = TRUE;
+						result = TRUE; // The action construct already exists in the cache. There's no need to create it!
 
 					}
-
-//					// TODO: Send the acknowledgment.
-//					// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
-//					// TODO: Send_UDP_Message ();
-//					strncpy (token, "got ", 4);
-//					strncpy (token + 4, messageContent, strlen (messageContent));
-//					// TODO: Queue the outgoing UDP message!
-//					Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
-//
-//					// TODO: Queue the message rather than executing it immediately (unless specified)
-//					// TODO: Parse the message rather than brute force like this.
-
 				}
-
-				/*
-				// create loop <uuid>
-				//        ^
-				else if (strncmp (token, "loop", strlen ("loop")) == 0) {
-
-					// TODO:
-
-				}
-				*/
-
 			}
 
-		} else if (strncmp (token, "add", strlen ("add")) == 0) {
+		} else if (strncmp (token, "start", strlen ("start")) == 0) {
 
-			if ((status = getToken (messageContent, token, 1)) != NULL) {
+			if ((status = Get_Token (message_content, token, 1)) != NULL) {
 
-				// add behavior <uuid> [to loop <uuid>] [before <uuid>]
-				//     ^
-				if (strncmp (token, "behavior", strlen ("behavior")) == 0) {
+				// i.e., "start event <event-uuid> [at <index> [on <timeline-uuid>]]"
 
-					// TODO: Check for "add behavior <uuid> (to loop <loop-uuid>) after <other-uuid>"
+				if (strncmp (token, "event", strlen ("event")) == 0) {
 
-					// Check for "add behavior <uuid> after <uuid>"
-					if (tokenCount == 3) {
+					if (token_count == 3) {
 
-						// add behavior <uuid>
-						//              ^
+						// i.e., "start event <uuid>"
 
 						// Get UUID (parameter index 2)
-						status = getToken (messageContent, uuidBuffer, 2);
+						status = Get_Token (message_content, uuid_buffer, 2);
 
-						// TODO: Send the acknowledgment .
-						// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
-						// TODO: Send_UDP_Message ();
-						strncpy (token, "got ", 4);
-						strncpy (token + 4, messageContent, strlen (messageContent));
-						// TODO: Queue the outgoing UDP message!
-//						Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
-						Message *responseMessage = Create_Message (token);
-						Set_Message_Destination(responseMessage, message->source);
-						Queue_Message(&outgoingMessageQueue, responseMessage);
-						// TODO: Queue the message rather than executing it immediately (unless specified)
-						// TODO: Parse the message rather than brute force like this.
+						// Send message to sender to acknowledge receipt
+						Send_Acknowledgment (token, message_content);
 
 						// Delete the message
-						if (message != NULL) {
-							Delete_Message (message);
-						}
+						Delete_Message (message);
 
-						// Check if the behavior is already in the cache. If nay, cache it!
-						if (Has_Cached_Behavior_By_UUID (uuidBuffer) == TRUE) {
-
-							// TODO: Only call either Get_Cached_Behavior_By_UUID. Don't call both Has_Cached_Behavior_By_UUID and Get_Cached_Behavior_By_UUID. They do the same search work. Don't search multiple times for no reason during behavior construct recall!
-
-							// Parse the message content and perform the corresponding behavior operation
-							Behavior *behavior = Get_Cached_Behavior_By_UUID (uuidBuffer);
-							if (behavior != NULL) {
-								// NOTE: The behavior was successfully created.
-								// Add the behavior to the local cache!
-								Add_Behavior (behavior);
-								result = TRUE;
-							}
-
-						} else {
-
-							// TODO: The behavior is not in the cache! Return response indicating this! Or request it from the cloud!
-
-							result = FALSE;
-
-						}
-
-					} else if (tokenCount > 3) {
-
-						// add behavior <uuid> before <uuid>
-						//              ^
-
-						// Get UUIDs of behaviors
-						status = getToken (messageContent, uuidBuffer, 2); // Get UUID of behavior being added (parameter index 2)
-						status = getToken (messageContent, uuidBuffer2, 4); // Get UUID of behavior already on the loop (parameter index 4)
-
-						// TODO: Send the acknowledgment .
-						// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
-						// TODO: Send_UDP_Message ();
-						strncpy (token, "got ", 4);
-						strncpy (token + 4, messageContent, strlen (messageContent));
-						// TODO: Queue the outgoing UDP message!
-//						Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
-						Message *responseMessage = Create_Message (token);
-						Set_Message_Destination(responseMessage, message->source);
-						Queue_Message(&outgoingMessageQueue, responseMessage);
-						// TODO: Queue the message rather than executing it immediately (unless specified)
-						// TODO: Parse the message rather than brute force like this.
-
-						// Delete the message
-						if (message != NULL) {
-							Delete_Message (message);
-						}
-
-						// Check if the behavior is already in the cache. If nay, cache it!
-						if (Has_Cached_Behavior_By_UUID (uuidBuffer) == TRUE && Has_Cached_Behavior_By_UUID (uuidBuffer2) == TRUE ) {
-
-							// TODO: Only call either Get_Cached_Behavior_By_UUID. Don't call both Has_Cached_Behavior_By_UUID and Get_Cached_Behavior_By_UUID. They do the same search work. Don't search multiple times for no reason during behavior construct recall!
-
-							// Parse the message content and perform the corresponding behavior operation
-							Behavior *behavior = Get_Cached_Behavior_By_UUID (uuidBuffer);
-							Behavior *nextBehavior = Get_Cached_Behavior_By_UUID (uuidBuffer2);
-							if (behavior != NULL && nextBehavior != NULL) {
-								// NOTE: The behavior was successfully created.
-								// Add the behavior to the local cache!
-								Add_Before_Behavior (behavior, nextBehavior);
+						// Check if the action is already in the cache. If nay, cache it!
+						// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
+//						if (Has_Cached_Action_By_UUID (uuid_buffer) == TRUE) {
+//							Event *event = Get_Cached_Action_By_UUID (uuid_buffer);
+							Event *event = Create_Event (uuid_buffer, NULL, NULL);
+							if (event != NULL) {
+								Add_Event (timeline, event);
 								result = TRUE;
 							} else {
+								result = FALSE;
+							}
+//						} else {
+//							result = FALSE;
+//						}
 
-								// TODO: If behavior or nextBehavior are NULL, stream them in over the Internet.
+					} else if (token_count > 3) {
 
+						// i.e., "start event <event-uuid> at <index>"
+
+						// Extract parameters
+						status = Get_Token (message_content, uuid_buffer, 2); // Get UUID of action being added (parameter index 2)
+						status = Get_Token (message_content, uuid_buffer2, 4); // Get UUID of action already on the loop (parameter index 4)
+
+						// Send message to sender to acknowledge receipt
+						Send_Acknowledgment (token, message_content);
+
+						// Delete the message
+						Delete_Message (message);
+
+						// Check if the action is already in the cache. If nay, cache it!
+						// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
+//						if (Has_Cached_Action_By_UUID (uuid_buffer) == TRUE && Has_Cached_Action_By_UUID (uuid_buffer2) == TRUE ) {
+
+							Event *event = Create_Event (uuid_buffer, NULL, NULL);
+//							Event *event = Get_Cached_Action_By_UUID (uuid_buffer);
+							uint16_t event_index = atoi (uuid_buffer2);
+							if (event != NULL) {
+								result = Insert_Event (timeline, event, event_index);
+//								result = TRUE;
+							} else {
+								result = FALSE;
 							}
 
-						} else {
+//							// Parse the message content and perform the corresponding action operation
+//							Action *action = Get_Cached_Action_By_UUID (uuid_buffer);
+//							Action *nextAction = Get_Cached_Action_By_UUID (uuid_buffer2);
+//							if (action != NULL && nextAction != NULL) {
+//								Add_Before_Event (timeline, action, nextAction);
+//								result = TRUE;
+//							} else {
+//
+//								// TODO: If action or nextAction are NULL, stream them in over the Internet.
+//
+//							}
 
-							// TODO: The behavior is not in the cache! Return response indicating this! Or request it from the cloud!
-
-							result = FALSE;
-
-						}
+//						} else {
+//
+//							// TODO: The action is not in the cache! Return response indicating this! Or request it from the cloud!
+//
+//							result = FALSE;
+//
+//						}
 
 					}
 
@@ -218,52 +144,37 @@ int8_t Process_Incoming_Message (Message *message) {
 
 			}
 
-		} else if (strncmp (token, "remove", strlen ("remove")) == 0) {
+		} else if (strncmp (token, "stop", strlen ("stop")) == 0) {
 
-			if ((status = getToken (messageContent, token, 1)) != NULL) {
+			if ((status = Get_Token (message_content, token, 1)) != NULL) {
 
-				// add behavior <uuid> [to loop <uuid>]
-				//     ^
-				if (strncmp (token, "behavior", strlen ("behavior")) == 0) {
+				// stop event <event-uuid> [on <timeline-uuid>]
+				//      ^
+				if (strncmp (token, "event", strlen ("event")) == 0) {
 
 					// Get UUID (parameter index 2)
-					status = getToken (messageContent, uuidBuffer, 2);
+					status = Get_Token (message_content, uuid_buffer, 2);
 
-					// TODO: Send the acknowledgment .
-					// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
-					// TODO: Send_UDP_Message ();
-					strncpy (token, "got ", 4);
-					strncpy (token + 4, messageContent, strlen (messageContent));
-					// TODO: Queue the outgoing UDP message!
-//					Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
-					Message *responseMessage = Create_Message (token);
-					Set_Message_Destination(responseMessage, message->source);
-					Queue_Message(&outgoingMessageQueue, responseMessage);
-					// TODO: Queue the message rather than executing it immediately (unless specified)
-					// TODO: Parse the message rather than brute force like this.
+					// Send message to sender to acknowledge receipt
+					Send_Acknowledgment (token, message_content);
 
 					// Delete the message
-					if (message != NULL) {
-						Delete_Message (message);
-					}
+					Delete_Message (message);
 
-					// Check if the behavior is already in the cache. If nay, cache it!
-					if (Has_Behavior_By_UUID (uuidBuffer) == TRUE) {
-
-						// TODO: Only call either Get_Cached_Behavior_By_UUID. Don't call both Has_Cached_Behavior_By_UUID and Get_Cached_Behavior_By_UUID. They do the same search work. Don't search multiple times for no reason during behavior construct recall!
-
-						// Parse the message content and perform the corresponding behavior operation
-						Behavior *behavior = Get_Behavior_By_UUID (uuidBuffer);
-						if (behavior != NULL) {
-							// NOTE: The behavior was successfully created.
-							// Add the behavior to the local cache!
-							Remove_Behavior (behavior);
+					// Check if the action is already in the cache. If nay, cache it!
+					// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
+					// Parse the message content and perform the corresponding action operation
+					if (Has_Event_By_UUID (timeline, uuid_buffer) == TRUE) {
+						Event *event = Get_Event_By_UUID (timeline, uuid_buffer);
+						if (event != NULL) {
+							Remove_Event (timeline, event); // Add the action to the local cache!
+							Delete_Event (event);
 							result = TRUE;
 						}
 
 					} else {
 
-						// TODO: The behavior is not in the cache! Return response indicating this! Or request it from the cloud!
+						// TODO: The action is not in the cache! Return response indicating this! Or request it from the cloud!
 
 						result = FALSE;
 
@@ -273,35 +184,100 @@ int8_t Process_Incoming_Message (Message *message) {
 
 			}
 
+		} else if (strncmp (token, "set", strlen ("set")) == 0) {
+
+			// "set event <event-uuid> action <action-uuid>"
+			// "set event <event-uuid> state <state>"
+
+			// TODO: Token_Match (message_content, 1, "event")
+
+			if ((status = Get_Token (message_content, token, 1)) != NULL) {
+				if (strncmp (token, "event", strlen ("event")) == 0) {
+
+					if ((status = Get_Token (message_content, token, 3)) != NULL) {
+						if (strncmp (token, "action", strlen ("action")) == 0) {
+
+							// i.e., "set event <event-uuid> action <action-uuid>"
+
+							// Extract parameters
+							status = Get_Token (message_content, uuid_buffer, 2); // Get UUID of action being added (parameter index 2)
+							status = Get_Token (message_content, uuid_buffer2, 4); // Get UUID of action already on the loop (parameter index 4)
+
+							// Send message to sender to acknowledge receipt
+							Send_Acknowledgment (token, message_content);
+
+							// Delete the message
+							Delete_Message (message);
+
+							// Check if the action is already in the cache. If nay, cache it!
+							// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
+							if (Has_Event_By_UUID (timeline, uuid_buffer) == TRUE && Has_Cached_Action_By_UUID (uuid_buffer2) == TRUE ) {
+
+								// Get the event with the UUID and assign the action with the UUID.
+								Event *event = Get_Event_By_UUID (timeline, uuid_buffer);
+								Action *action = Get_Cached_Action_By_UUID (uuid_buffer2);
+								if (event != NULL && action != NULL) {
+									(*event).action = action;
+									result = TRUE;
+								} else {
+									// TODO: If action or nextAction are NULL, stream them in over the Internet.
+								}
+
+							} else {
+								// TODO: The action is not in the cache! Return response indicating this! Or request it from the cloud!
+								result = FALSE;
+							}
+
+						} else if (strncmp (token, "state", strlen ("state")) == 0) {
+
+							// i.e., "set event <event-uuid> action <action-uuid>"
+
+							// Extract parameters
+							status = Get_Token (message_content, uuid_buffer, 2); // Get UUID of action (parameter index 2)
+							status = Get_Token (message_content, uuid_buffer2, 4); // Get state of action (parameter index 4)
+
+							// Send message to sender to acknowledge receipt
+							Send_Acknowledgment (token, message_content);
+
+							// Delete the message
+							Delete_Message (message);
+
+							// Check if the action is already in the cache. If nay, cache it!
+							// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
+							if (Has_Event_By_UUID (timeline, uuid_buffer) == TRUE) {
+
+								// Get the event with the UUID and assign the action with the UUID.
+								Event *event = Get_Event_By_UUID (timeline, uuid_buffer);
+//								Action *action = Get_Cached_Action_By_UUID (uuid_buffer2);
+								if (event != NULL) {
+									Set_Event_State (event, uuid_buffer2);
+									result = TRUE;
+								} else {
+									// TODO: If action or nextAction are NULL, stream them in over the Internet.
+								}
+
+							} else {
+								// TODO: The action is not in the cache! Return response indicating this! Or request it from the cloud!
+								result = FALSE;
+							}
+
+						}
+					}
+				}
+			}
+
 		} else if (strncmp (token, "reset", strlen ("reset")) == 0) {
 
 			// HACK: Remove the "reset" command. This is used for testing!
 
-			// Remove behaviors constructs from loop
-			// Delete behaviors
-			// Set loop to null
-			// Delete behaviors
-			// Remove behavior constructs from cache
-			// Set cache to null
-			Reset_Unit ();
+			// Reset the device
+			Reset_Device ();
+
+			// Send message to sender to acknowledge receipt
+			Send_Acknowledgment (token, message_content);
 
 			// Delete the message
-			if (message != NULL) {
-				Delete_Message (message);
-			}
-
-			// TODO: Send the acknowledgment .
-			// TODO: Queue_Outgoing_Message (i.e., "got <message-uuid> <message-content>")
-			// TODO: Send_UDP_Message ();
-			strncpy (token, "got ", 4);
-			strncpy (token + 4, messageContent, strlen (messageContent));
-			// TODO: Queue the outgoing UDP message!
-//			Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT); // Broadcast_UDP_Message (token, UDP_SERVER_PORT);
-			Message *responseMessage = Create_Message (token);
-			Set_Message_Destination(responseMessage, message->source);
-			Queue_Message(&outgoingMessageQueue, responseMessage);
-			// TODO: Queue the message rather than executing it immediately (unless specified)
-			// TODO: Parse the message rather than brute force like this.
+			Delete_Message (message);
 
 			result = TRUE;
 
@@ -367,4 +343,15 @@ int8_t Process_Outgoing_Message (Message *message) {
 	}
 
 	return result;
+}
+
+void Send_Acknowledgment (char *token, char *messageContent) {
+
+	// Send the acknowledgment (i.e., "got <message-uuid> <message-content>")
+	sprintf (token, "got %s\n", messageContent);
+
+	// Queue the outgoing acknowledgment message!
+	Message *responseMessage = Create_Message (token);
+	Set_Message_Destination (responseMessage, "UDP,10.0.0.255:4445!"); // <HACK />
+	Queue_Message (&outgoingMessageQueue, responseMessage);
 }
