@@ -1,6 +1,5 @@
 #include "Messenger.h"
-//#include "ESP8266.h"
-#include "Behavior.h"
+#include "Action.h"
 
 #define DEFAULT_UUID_LENGTH 37
 
@@ -19,10 +18,12 @@ Message* Create_Message (const char *content) {
 	(*message).destination = NULL;
 
 	// Allocate memory for the message's content.
+//	(*message).content = (char *) malloc (strlen (content + 1)); // Add one for "\0"
 	(*message).content = (char *) malloc (strlen (content));
 
 	// Copy message content
 	strcpy ((*message).content, content);
+//	(*message).content[strlen(content)] = '\0';
 
 	// Set up links for queue
 	(*message).previous = NULL;
@@ -184,7 +185,7 @@ int8_t Has_Messages (Message **messageQueue) {
 }
 
 int16_t Queue_Outgoing_Message (char *address, Message *message) {
-	// Allocate memory for the UUID for this behavior.
+	// Allocate memory for the UUID for this action.
 	(*message).destination = (char *) malloc (strlen (address));
 	strcpy ((*message).destination, address); // Copy the message destination address
 

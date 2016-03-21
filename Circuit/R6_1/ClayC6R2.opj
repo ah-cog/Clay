@@ -127,7 +127,8 @@
       (Path "Design Resources" ".\clayr6.dsn")
       (Path "Design Resources" ".\clayr6.dsn" "SCHEMATIC1")
       (Path "Design Resources" ".\clayr6.dsn" "Design Cache")
-      (Path "Outputs"))
+      (Path "Outputs")
+      (Select "Design Resources" ".\clayr6.dsn" "Design Cache" "LED"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -142,47 +143,6 @@
         (Zoom "152")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6_1\CLAYR6.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 52 1658 52 531")
-        (Scroll "1301 1319")
-        (Zoom "112")
-        (Occurrence "/uC"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\MK64FN1M0VLL12\MK64FN1M0VLL12.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 2 3 -1 -1 -8 -31 78 1684 78 557")
-        (Scroll "42 180")
-        (Zoom "200")
-        (Occurrence "/SOFT_PWR_SW"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\SOFT_PWR_SW\SOFT_PWR_SW.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 156 1814 156 581")
-        (Scroll "-324 0")
-        (Zoom "100")
-        (Occurrence "/BATTERY_CHARGER"))
-      (Path
-         "E:\GIT\CLAY\CIRCUIT\R6_1\BATTERY_CHARGER\LM3658_BATTERY_CHARGER.DSN")
-      (Schematic "SCHEMATIC1")
-      (Page "PAGE1"))
-    (Doc
-      (Type "COrSchematicDoc")
-      (Frame
-        (Placement "44 0 1 -1 -1 -8 -31 182 1840 182 607")
-        (Scroll "-324 0")
-        (Zoom "100")
-        (Occurrence "/BUZZER"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\BUZZER\PIEZO.DSN")
       (Schematic "SCHEMATIC1")
       (Page "PAGE1")))
   (MPSSessionName "thebh_000")

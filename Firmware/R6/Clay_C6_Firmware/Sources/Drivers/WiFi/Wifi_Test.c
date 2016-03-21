@@ -12,8 +12,7 @@
 #include "Messenger.h"
 #include "AddressSerialization.h"
 
-void Wifi_Test()
-{
+void Wifi_Test() {
    Enable_WiFi();
 
    Message *message = NULL;
@@ -61,16 +60,14 @@ void Wifi_Test()
 
 //echo and repeated send. include one of the blocks above.
 #if 1
-   for (;;)
-   {
+   for (;;) {
 
       // Step state machine
       Wifi_State_Step();
 
       if (Wifi_Get_State() != Programming
           && !Has_Messages(&outgoingMessageQueue)
-          && Millis() - lastMessageSendTime > messageSendPeriod)
-      {
+          && Millis() - lastMessageSendTime > messageSendPeriod) {
          message = Create_Message(testMsg);
          Set_Message_Destination(message, addrStr);
          Wifi_Send(message);

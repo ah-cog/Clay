@@ -77,40 +77,6 @@
 #include "Application.h"
 #include "Drivers/WiFi/Wifi_Test.h"
 
-//uint32_t toInteger(char *a)
-//{
-//   int c, sign, offset;
-//   uint32_t n;
-//
-//   if (a[0] == '-')
-//   {     // Handle negative integers
-//      sign = -1;
-//   }
-//
-//   if (sign == -1)
-//   {     // Set starting position to convert
-//      offset = 1;
-//   }
-//   else
-//   {
-//      offset = 0;
-//   }
-//
-//   n = 0;
-//
-//   for (c = offset; a[c] != '\0'; c++)
-//   {
-//      n = n * 10 + a[c] - '0';
-//   }
-//
-//   if (sign == -1)
-//   {
-//      n = -n;
-//   }
-//
-//   return n;
-//}
-
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
@@ -122,15 +88,13 @@ int main(void)
    PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
-   Wifi_Test();
+//   Wifi_Test();
 
    Initialize();
 
    Application();
 
-   for (;;)
-   {
-   }
+   for (;;) {}
 
    /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
