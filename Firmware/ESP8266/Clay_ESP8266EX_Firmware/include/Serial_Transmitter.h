@@ -18,5 +18,6 @@ extern volatile bool Serial_Tx_In_Progress;
 ////Prototypes/////////////////////////////////////////////////////
 extern bool Serial_Transmitter_Init();
 extern void Serial_Transmitter_State_Step();
+extern void Send_Message_To_Master(char * message, Message_Type type);
 
 #endif /* INCLUDE_SERIAL_TRANSMITTER_H_ */

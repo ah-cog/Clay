@@ -73,7 +73,7 @@
 #define CLAY_INTERRUPT_OUT_PIN		                 16		//send interrupt to uC
 #define CLAY_INTERRUPT_IN_PIN		                 2			//receive interrupt from uC
 
-#define CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH 16
+#define CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH 	     16
 
 #define TCP_RECEIVE_CONNECTION_TIMEOUT_ms			 20
 #define TCP_RECEIVE_PORT							 1002
@@ -95,7 +95,11 @@
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-	MESSAGE_TYPE_UDP, MESSAGE_TYPE_TCP, MESSAGE_TYPE_COMMAND, MESSAGE_TYPE_MAX
+	MESSAGE_TYPE_UDP,
+	MESSAGE_TYPE_TCP,
+	MESSAGE_TYPE_COMMAND,
+	MESSAGE_TYPE_INFO,
+	MESSAGE_TYPE_MAX
 } Message_Type;
 
 //max 16 chars

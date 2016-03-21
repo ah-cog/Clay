@@ -17,14 +17,14 @@
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
-const char * AddressTerminator = "\022";
+const char * address_terminator = "\x12";
 
 ////Local vars/////////////////////////////////////////////////////
-static uint8 messageTypeTempStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
-static uint8 deserializeTempStr[50];
+static uint8 message_type_temp_str[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
+static uint8 deserialize_temp_str[50];
 
-static const char* TypeDelim = ",";
-static const char* PortDelim = ":";
+static const char* type_delim = ",";
+static const char* port_delim = ":";
 
 ////Local Prototypes///////////////////////////////////////////////
 
@@ -45,9 +45,9 @@ uint32 ICACHE_RODATA_ATTR Serialize_Address(struct sockaddr_in * Source,
 
 		if (rval <= DestinationLength)
 		{
-			rval = snprintf(Destination, DestinationLength, "%s,%s:%d%c\n",
-					connectionTypeStr, ntoaBuf, ntohs(Source->sin_port),
-					AddressTerminator);
+			rval = snprintf(Destination, DestinationLength, "%s%s%s%s%d%s\n",
+					connectionTypeStr, type_delim, ntoaBuf, port_delim,
+					ntohs(Source->sin_port), address_terminator);
 		}
 
 		if (rval > DestinationLength)
@@ -64,12 +64,12 @@ void ICACHE_RODATA_ATTR Deserialize_Address(uint8* Source,
 {
 	memset(Destination, 0, sizeof(*Destination));
 
-	strcpy(deserializeTempStr, Source);
+	strcpy(deserialize_temp_str, Source);
 
 	//get the string off the front
-	uint8* typeStart = strtok(deserializeTempStr, TypeDelim);
-	uint8* ipStart = strtok(NULL, PortDelim);
-	uint8* portStart = strtok(NULL, AddressTerminator);
+	uint8* typeStart = strtok(deserialize_temp_str, type_delim);
+	uint8* ipStart = strtok(NULL, port_delim);
+	uint8* portStart = strtok(NULL, address_terminator);
 
 	if (typeStart != NULL)
 	{

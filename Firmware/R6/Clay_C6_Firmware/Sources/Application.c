@@ -375,8 +375,39 @@ void Monitor_Periodic_Events () {
 		LED1_PutVal (NULL, led_2_state);
 		led_2_state = !led_2_state;
 
-		// TODO: Perform any periodic actions (500 ms).
-	}
+      //monitor the input voltage line. We need to shut down on low battery ~3.2v. See schematic for resistor divider and input scaling.
+      if ((vBat != 0 && vBat < 3.2) || Button_Press_Time > 0 && (Millis() - Button_Press_Time) > 1500) {
+
+         //TODO: We may need a watchdog or high priority timer interrupt, or task, that checks to see if the user is holding down the button. Perhaps we just make it a high priority double-edge
+         //IDEA: start flashing LEDs to signal to the user that they are about to shut
+         //      the module down. If the user releases the button, continue operation
+         //      as usual. Otherwise:
+
+         //TODO: stop doing things, shut down gracefully,  and then:
+
+         //TODO: Make it apparent that Clay is ready to turn off. Stop flashing things. The power LED will remain on.
+         //We wait for the user to release the button so that they don't immediately turn the module back on again.
+
+         LED2_PutVal(NULL, FALSE);
+         LED1_PutVal(NULL, FALSE);
+         while (Read_Button_In()) {
+            Wait(1);
+         }
+
+         //Pull the PowerOn line low. The Vreg enable button will drop below 0 and
+         PowerOn_PutVal(NULL, 0);
+         for (;;)
+            ;
+      }
+      else if (Button_Press_Time == 0 && Read_Button_In()) {
+         Button_Press_Time = Millis();
+      }
+      else if (Button_Press_Time > 0 && !Read_Button_In()) {
+         Button_Press_Time = 0;
+      }
+
+      // TODO: Perform any periodic actions (500 ms).
+   }
 
 	if (tick_1000ms) {
 		tick_1000ms = FALSE;

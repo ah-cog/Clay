@@ -29,15 +29,8 @@
 #include "TCP_Transmitter.h"
 #include "Message_Queue.h"
 
-#define server_ip "192.168.101.142"
-#define server_port 9669
-
-#define UDP_LOCAL_PORT 1200
-#define UDP_DATA_LEN   100
-#define MAX_PINS       3
-
-#define RX_BUF_SIZE    UDP_DATA_LEN
-#define TX_BUF_SIZE    100
+#define DISCONNECTED_MESSAGE		"DISCONNECTED\n"
+#define CONNECTED_MESSAGE			"CONNECTED\n"
 
 void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode);
 void ICACHE_RODATA_ATTR GPIO_Init();
@@ -120,52 +113,57 @@ void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
 	switch (evt->event_id)
 	{
 	case EVENT_STAMODE_CONNECTED:
+	{
 //		os_printf("connect to ssid %s, channel %d\n",
 //				evt->event_info.connected.ssid,
 //				evt->event_info.connected.channel);
 		break;
+	}
 	case EVENT_STAMODE_DISCONNECTED:
+	{
 //		os_printf("disconnect from ssid %s, reason %d\n",
 //				evt->event_info.disconnected.ssid,
 //				evt->event_info.disconnected.reason);
 
-		//TODO: send message to master saying we lost connection.
+		Send_Message_To_Master(DISCONNECTED_MESSAGE, MESSAGE_TYPE_INFO);
 		break;
+	}
 	case EVENT_STAMODE_AUTHMODE_CHANGE:
+	{
 //		os_printf("mode: %d -> %d\n", evt->event_info.auth_change.old_mode,
 //				evt->event_info.auth_change.new_mode);
 		break;
+	}
 	case EVENT_STAMODE_GOT_IP:
-//		os_printf("ip:" IPSTR ",mask:" IPSTR ",gw:" IPSTR,
-//				IP2STR(&evt->event_info.got_ip.ip),
-//				IP2STR(&evt->event_info.got_ip.mask),
-//				IP2STR(&evt->event_info.got_ip.gw));
-//		os_printf("\n");
+	{
 		UDP_Transmitter_Init();
 		UDP_Receiver_Init();
 		TCP_Transmitter_Init();
 		TCP_Receiver_Init();
 
-		//TODO: send message to master saying we connected.
-		//		send one for each task too?
-
-		//TODO: add another message class, something like 'system' or 'info'
-		//		that will be handled by the driver on the micro.
-		//		 --this could be used for handling power-on and things like that that affect communications.
+		UART_WaitTxFifoEmpty(UART0);
+		Send_Message_To_Master(CONNECTED_MESSAGE, MESSAGE_TYPE_INFO);
 
 		break;
+	}
 	case EVENT_SOFTAPMODE_STACONNECTED:
+	{
 //		os_printf("station: " MACSTR "join, AID = %d\n",
 //				MAC2STR(evt->event_info.sta_connected.mac),
 //				evt->event_info.sta_connected.aid);
 		break;
+	}
 	case EVENT_SOFTAPMODE_STADISCONNECTED:
+	{
 //		os_printf("station: " MACSTR "leave, AID = %d\n",
 //				MAC2STR(evt->event_info.sta_disconnected.mac),
 //				evt->event_info.sta_disconnected.aid);
 		break;
+	}
 	default:
+	{
 		break;
+	}
 	}
 }
 
