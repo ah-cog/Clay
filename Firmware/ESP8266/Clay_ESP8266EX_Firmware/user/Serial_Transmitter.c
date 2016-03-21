@@ -77,7 +77,7 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 {
 	bool rval = true;
 
-	State = Disable;
+	State = Idle;
 	Serial_Tx_Buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
 
 	Initialize_Message_Queue(&incomingMessageQueue);

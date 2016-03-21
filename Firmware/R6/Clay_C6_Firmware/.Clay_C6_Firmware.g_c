@@ -82,10 +82,10 @@
       <GenExtraFileSrcDir45>Repositories\lib\doxygen\</GenExtraFileSrcDir45>
       <GenExtraFileSrcDir38>lib\Kinetis\startup\</GenExtraFileSrcDir38>
       <XtraAge35>1215497227</XtraAge35>
-      <XtraAge36>1215497227</XtraAge36>
+      <XtraAge36>1215536604</XtraAge36>
       <XtraAge38>1213771170</XtraAge38>
       <XtraAge39>1215497227</XtraAge39>
-      <XtraAge40>1215497227</XtraAge40>
+      <XtraAge40>1215536602</XtraAge40>
       <XtraAge41>1215016405</XtraAge41>
       <GenExtraFileType45>5</GenExtraFileType45>
       <GenExtraFileType44>4</GenExtraFileType44>
@@ -5246,8 +5246,8 @@
     <GenComponentVersion>01.014</GenComponentVersion>
     <GenDriverVersion>01.03</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1215476532</HeaderAge>
-    <CodeAge>1215476532</CodeAge>
+    <HeaderAge>-1</HeaderAge>
+    <CodeAge>-1</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>18</GenNumMethods>
     <Init>true</Init>
@@ -5355,8 +5355,8 @@
     <GenComponentVersion>01.164</GenComponentVersion>
     <GenDriverVersion>01.11</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1215368755</HeaderAge>
-    <CodeAge>1215368755</CodeAge>
+    <HeaderAge>-1</HeaderAge>
+    <CodeAge>-1</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>22</GenNumMethods>
     <Init>true</Init>

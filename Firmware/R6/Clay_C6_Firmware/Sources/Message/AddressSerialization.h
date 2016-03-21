@@ -77,13 +77,14 @@ typedef enum
 {
    MESSAGE_TYPE_UDP,
    MESSAGE_TYPE_TCP,
+   MESSAGE_TYPE_COMMAND,
    MESSAGE_TYPE_MAX
 } Message_Type;
 
 ////Globals   /////////////////////////////////////////////////////
 //max 16 chars
 extern uint8_t* Message_Strings[];
-extern char Terminator;
+extern const char * AddressTerminator;
 
 ////Prototypes/////////////////////////////////////////////////////
 extern void Deserialize_Address(uint8_t* Source, uint32_t SourceLength, struct sockaddr_in * Destination, Message_Type *type);

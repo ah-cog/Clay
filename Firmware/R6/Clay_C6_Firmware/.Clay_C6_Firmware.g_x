@@ -47,8 +47,8 @@
       <File Name="Static_Code/PDD/DMAMUX_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106127" FileType="1048576" />
       <File Name="Generated_Code/IO_12.h" FileDate="2016-03-14, 22:42:55" FileAge="1458020575132" FileType="45637" CompNumb="68" />
       <File Name="Generated_Code/TU1.c" FileDate="2016-03-17, 01:18:24" FileAge="1458202704647" FileType="45637" CompNumb="9" />
-      <File Name="Generated_Code/BuzzerSwitch.c" FileDate="2016-03-19, 00:32:23" FileAge="1458372743499" FileType="45637" CompNumb="15" />
       <File Name="Generated_Code/WIFI_GPIO2.h" FileDate="2016-03-11, 21:46:43" FileAge="1457761603714" FileType="45637" CompNumb="26" />
+      <File Name="Generated_Code/BuzzerSwitch.c" FileDate="2016-03-19, 00:32:23" FileAge="1458372743499" FileType="45637" CompNumb="15" />
       <File Name="Generated_Code/IO_12.c" FileDate="2016-03-14, 22:42:55" FileAge="1458020575137" FileType="45637" CompNumb="68" />
       <File Name="Documentation/doxygen/IMU_IRQ_component.txt" FileDate="2016-03-17, 01:18:24" FileAge="1458202704765" FileType="45637" CompNumb="79" />
       <File Name="Generated_Code/IO_10.h" FileDate="2016-03-14, 22:42:55" FileAge="1458020575094" FileType="45637" CompNumb="67" />
@@ -70,10 +70,10 @@
       <File Name="Generated_Code/IO_Map.h" FileDate="2016-03-11, 21:46:43" FileAge="1457761603535" FileType="45637" />
       <File Name="Sources/Events.h" FileDate="2016-03-19, 00:32:23" FileAge="1458372743622" FileType="131328" />
       <File Name="Static_Code/PDD/LPTMR_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106148" FileType="1048576" />
-      <File Name="Sources/Events.c" FileDate="2016-03-17, 00:17:57" FileAge="1458199077199" FileType="131328" />
+      <File Name="Sources/Events.c" FileDate="2016-03-19, 00:56:09" FileAge="1458374169151" FileType="131328" />
       <File Name="Documentation/doxygen/TI1_component.txt" FileDate="2016-03-17, 01:18:24" FileAge="1458202704670" FileType="45637" CompNumb="8" />
       <File Name="Static_Code/PDD/PDB_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106156" FileType="1048576" />
-      <File Name="Sources/main.c" FileDate="2016-03-19, 00:32:23" FileAge="1458372743551" FileType="128" />
+      <File Name="Sources/main.c" FileDate="2016-03-19, 13:44:40" FileAge="1458420280344" FileType="128" />
       <File Name="Static_Code/PDD/ENET_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106133" FileType="1048576" />
       <File Name="Project_Settings/Linker_Files/ProcessorExpert.ld" FileDate="2016-02-24, 21:45:05" FileAge="1456379105928" FileType="8" CompNumb="12" />
       <File Name="Generated_Code/IO_9.h" FileDate="2016-03-14, 22:42:55" FileAge="1458020575074" FileType="45637" CompNumb="66" />
@@ -113,8 +113,8 @@
       <File Name="Documentation/doxygen/pex.doxyfile" FileDate="2016-03-11, 21:10:19" FileAge="1457759419249" FileType="45637" CompNumb="12" />
       <File Name="Generated_Code/ButtonIn.h" FileDate="2016-03-17, 00:25:18" FileAge="1458199518401" FileType="45637" CompNumb="18" />
       <File Name="Static_Code/System/PDD_Includes.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106210" FileType="1048576" CompNumb="12" />
-      <File Name="Documentation/Clay_C6_Firmware_Settings.xml" FileDate="2016-03-19, 00:32:23" FileAge="1458372743857" FileType="3072" />
-      <File Name="Generated_Code/PE_LDD.h" FileDate="2016-03-19, 00:32:23" FileAge="1458372743560" FileType="45637" CompNumb="12" />
+      <File Name="Documentation/Clay_C6_Firmware_Settings.xml" FileDate="2016-03-19, 19:46:58" FileAge="1458442018097" FileType="3072" />
+      <File Name="Generated_Code/PE_LDD.h" FileDate="2016-03-19, 19:46:57" FileAge="1458442017766" FileType="45637" CompNumb="12" />
       <File Name="Generated_Code/LED2.h" FileDate="2016-03-11, 21:46:43" FileAge="1457761603842" FileType="45637" CompNumb="7" />
       <File Name="Generated_Code/ButtonIn.c" FileDate="2016-03-17, 00:25:18" FileAge="1458199518406" FileType="45637" CompNumb="18" />
       <File Name="Generated_Code/PowerOn.h" FileDate="2016-03-14, 23:51:38" FileAge="1458024698895" FileType="45637" CompNumb="78" />
@@ -171,14 +171,14 @@
       <File Name="Documentation/doxygen/MESH_SPI_component.txt" FileDate="2016-03-17, 01:18:24" FileAge="1458202704716" FileType="45637" CompNumb="21" />
       <File Name="Generated_Code/IO_8.c" FileDate="2016-03-11, 21:46:43" FileAge="1457761603590" FileType="45637" CompNumb="65" />
       <File Name="Generated_Code/IO_6.h" FileDate="2016-03-14, 22:42:55" FileAge="1458020575028" FileType="45637" CompNumb="63" />
-      <File Name="Documentation/Clay_C6_Firmware.txt" FileDate="2016-03-19, 00:32:24" FileAge="1458372744463" FileType="3072" />
       <File Name="Generated_Code/IO_6.c" FileDate="2016-03-14, 22:42:55" FileAge="1458020575033" FileType="45637" CompNumb="63" />
+      <File Name="Documentation/Clay_C6_Firmware.txt" FileDate="2016-03-19, 00:32:24" FileAge="1458372744463" FileType="3072" />
       <File Name="Generated_Code/IO_4.h" FileDate="2016-03-14, 22:42:54" FileAge="1458020574990" FileType="45637" CompNumb="60" />
       <File Name="Project_Settings/Startup_Code/startup.c" FileDate="2016-02-24, 21:45:05" FileAge="1456379105929" FileType="16384" CompNumb="12" />
-      <File Name="Static_Code/PDD/MCG_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106151" FileType="1048576" />
       <File Name="Static_Code/System/Vectors.c" FileDate="2016-02-24, 21:45:06" FileAge="1456379106310" FileType="1048576" CompNumb="12" />
-      <File Name="Static_Code/PDD/SMC_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106180" FileType="1048576" />
+      <File Name="Static_Code/PDD/MCG_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106151" FileType="1048576" />
       <File Name="Generated_Code/IO_4.c" FileDate="2016-03-14, 22:42:54" FileAge="1458020574995" FileType="45637" CompNumb="60" />
+      <File Name="Static_Code/PDD/SMC_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106180" FileType="1048576" />
       <File Name="Generated_Code/IMU_IRQ.h" FileDate="2016-03-17, 00:17:57" FileAge="1458199077084" FileType="45637" CompNumb="79" />
       <File Name="Generated_Code/IO_2.h" FileDate="2016-03-14, 22:42:54" FileAge="1458020574952" FileType="45637" CompNumb="58" />
       <File Name="Documentation/doxygen/BuzzerSwitch_component.txt" FileDate="2016-03-19, 00:32:23" FileAge="1458372743510" FileType="45637" CompNumb="15" />
@@ -187,8 +187,8 @@
       <File Name="Documentation/doxygen/LED1_component.txt" FileDate="2016-03-11, 21:10:19" FileAge="1457759419202" FileType="45637" CompNumb="6" />
       <File Name="Generated_Code/PE_Const.h" FileDate="2016-03-11, 21:46:43" FileAge="1457761603538" FileType="45637" />
       <File Name="Static_Code/PDD/I2C_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106145" FileType="1048576" />
-      <File Name="Documentation/doxygen/pex.css" FileDate="2016-02-24, 21:45:05" FileAge="1456379105752" FileType="16384" CompNumb="12" />
       <File Name="Documentation/doxygen/IMU_FSYNC_component.txt" FileDate="2016-03-15, 21:52:42" FileAge="1458103962892" FileType="45637" CompNumb="33" />
+      <File Name="Documentation/doxygen/pex.css" FileDate="2016-02-24, 21:45:05" FileAge="1456379105752" FileType="16384" CompNumb="12" />
       <File Name="Static_Code/PDD/SCB_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106173" FileType="1048576" />
       <File Name="Static_Code/PDD/PMC_PDD.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106160" FileType="1048576" />
       <File Name="Static_Code/System/CPU_Init.h" FileDate="2016-02-24, 21:45:06" FileAge="1456379106208" FileType="1048576" CompNumb="12" />
@@ -197,14 +197,14 @@
       <File Name="Generated_Code/I2C0.h" FileDate="2016-03-14, 23:08:47" FileAge="1458022127176" FileType="45637" CompNumb="13" />
       <File Name="Generated_Code/MESH_SPI.h" FileDate="2016-03-11, 21:46:43" FileAge="1457761603769" FileType="45637" CompNumb="21" />
       <File Name="Generated_Code/I2C0.c" FileDate="2016-03-17, 00:13:01" FileAge="1458198781597" FileType="45637" CompNumb="13" />
-      <File Name="Generated_Code/MESH_SPI.c" FileDate="2016-03-11, 21:46:43" FileAge="1457761603765" FileType="45637" CompNumb="21" />
       <File Name="Generated_Code/Pins1.h" FileDate="2016-03-17, 00:29:55" FileAge="1458199795916" FileType="45637" CompNumb="5" />
-      <File Name="Generated_Code/CPU_Config.h" FileDate="2016-03-19, 00:32:22" FileAge="1458372742158" FileType="45637" CompNumb="12" />
-      <File Name="Documentation/doxygen/WIFI_GPIO0_component.txt" FileDate="2016-03-15, 21:52:42" FileAge="1458103962860" FileType="45637" CompNumb="77" />
+      <File Name="Generated_Code/MESH_SPI.c" FileDate="2016-03-11, 21:46:43" FileAge="1457761603765" FileType="45637" CompNumb="21" />
+      <File Name="Generated_Code/CPU_Config.h" FileDate="2016-03-19, 19:46:53" FileAge="1458442013744" FileType="45637" CompNumb="12" />
       <File Name="ProjectInfo.xml" FileDate="2016-03-19, 00:32:24" FileAge="1458372744447" FileType="45637" />
-      <File Name="Generated_Code/Pins1.c" FileDate="2016-03-17, 00:29:55" FileAge="1458199795900" FileType="45637" CompNumb="5" />
+      <File Name="Documentation/doxygen/WIFI_GPIO0_component.txt" FileDate="2016-03-15, 21:52:42" FileAge="1458103962860" FileType="45637" CompNumb="77" />
       <File Name="Generated_Code/IMU_FSYNC.h" FileDate="2016-03-11, 21:46:43" FileAge="1457761603677" FileType="45637" CompNumb="33" />
+      <File Name="Generated_Code/Pins1.c" FileDate="2016-03-17, 00:29:55" FileAge="1458199795900" FileType="45637" CompNumb="5" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>41</CodeGenReference>
+  <CodeGenReference>42</CodeGenReference>
 </CodeGenerationInfo>

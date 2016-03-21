@@ -17,11 +17,14 @@
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
+const char * AddressTerminator = "\022";
 
 ////Local vars/////////////////////////////////////////////////////
-char Terminator = '\n';
-uint8 messageTypeTempStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
-uint8 deserializeTempStr[50];
+static uint8 messageTypeTempStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
+static uint8 deserializeTempStr[50];
+
+static const char* TypeDelim = ",";
+static const char* PortDelim = ":";
 
 ////Local Prototypes///////////////////////////////////////////////
 
@@ -37,13 +40,14 @@ uint32 ICACHE_RODATA_ATTR Serialize_Address(struct sockaddr_in * Source,
 
 	if (Get_Message_Type_Str(ConnectionType, connectionTypeStr))
 	{
-		//+ 2 for the terminating '!' and null, +3 for 1 comma and 1 colon
+		//+ 2 for AddressTerminator and null, +3 for 1 comma and 1 colon
 		rval = strlen(ntoaBuf) + 2 + 3 + strlen(connectionTypeStr) + 5;
 
 		if (rval <= DestinationLength)
 		{
-			rval = snprintf(Destination, DestinationLength, "%s,%s:%d!\n",
-					connectionTypeStr, ntoaBuf, ntohs(Source->sin_port));
+			rval = snprintf(Destination, DestinationLength, "%s,%s:%d%c\n",
+					connectionTypeStr, ntoaBuf, ntohs(Source->sin_port),
+					AddressTerminator);
 		}
 
 		if (rval > DestinationLength)
@@ -58,25 +62,35 @@ uint32 ICACHE_RODATA_ATTR Serialize_Address(struct sockaddr_in * Source,
 void ICACHE_RODATA_ATTR Deserialize_Address(uint8* Source,
 		struct sockaddr_in * Destination, Message_Type *type)
 {
-	char Comma = ',';
-	char Colon = ':';
-	char Bang = '!';
-
 	memset(Destination, 0, sizeof(*Destination));
 
 	strcpy(deserializeTempStr, Source);
 
 	//get the string off the front
-	uint8* typeStart = strtok(deserializeTempStr, &Comma);
-	uint8* ipStart = strtok(NULL, &Colon);
-	uint8* portStart = strtok(NULL, &Bang);
+	uint8* typeStart = strtok(deserializeTempStr, TypeDelim);
+	uint8* ipStart = strtok(NULL, PortDelim);
+	uint8* portStart = strtok(NULL, AddressTerminator);
 
-	*type = Get_Message_Type_From_Str(typeStart);
+	if (typeStart != NULL)
+	{
+		*type = Get_Message_Type_From_Str(typeStart);
+	}
 
-	inet_aton(ipStart, &(Destination->sin_addr));
-	Destination->sin_port = htons(atoi(portStart));
-	Destination->sin_family = AF_INET;
-	Destination->sin_len = sizeof(*Destination);
+	if (ipStart != NULL)
+	{
+		inet_aton(ipStart, &(Destination->sin_addr));
+	}
+
+	if (portStart != NULL)
+	{
+		Destination->sin_port = htons(atoi(portStart));
+	}
+
+	if (ipStart != NULL && portStart != NULL)
+	{
+		Destination->sin_family = AF_INET;
+		Destination->sin_len = sizeof(*Destination);
+	}
 }
 
 bool ICACHE_RODATA_ATTR Get_Message_Type_Str(Message_Type type,
@@ -101,9 +115,10 @@ Message_Type ICACHE_RODATA_ATTR Get_Message_Type_From_Str(uint8*typeString)
 	int i;
 	for (i = 0; i < MESSAGE_TYPE_MAX; ++i)
 	{
-		if (strcmp(typeString, Message_Strings[i]) == 0)
+		if (strstr(typeString, Message_Strings[i]) != NULL)
 		{
 			rval = (Message_Type) i;
+			break;
 		}
 	}
 
