@@ -18,11 +18,12 @@ Message* Create_Message (const char *content) {
 	(*message).destination = NULL;
 
 	// Allocate memory for the message's content.
-	(*message).content = (char *) malloc (strlen (content + 1)); // Add one for "\0"
+//	(*message).content = (char *) malloc (strlen (content + 1)); // Add one for "\0"
+	(*message).content = (char *) malloc (strlen (content));
 
 	// Copy message content
 	strcpy ((*message).content, content);
-	(*message).content[strlen(content)] = '\0';
+//	(*message).content[strlen(content)] = '\0';
 
 	// Set up links for queue
 	(*message).previous = NULL;

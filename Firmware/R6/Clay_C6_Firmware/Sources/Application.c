@@ -50,6 +50,8 @@ void Initialize () {
 
 	Initialize_Unit_UUID ();
 
+	timeline = Create_Timeline ("timeline-uuid");
+
 	// Initialize bootloader.
 	//todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //	bool is_update_available = FALSE;
@@ -166,8 +168,6 @@ void Initialize () {
 void Application (void) {
 	Message *message = NULL;
 
-	timeline = Create_Timeline ("timeline-uuid");
-
 //	bool LastButtonStateUpdated = ButtonPressed;
 //	Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
 
@@ -238,16 +238,8 @@ void Application (void) {
 
 		// Step state machine
 		Wifi_State_Step ();
-
-//		if (!Has_Messages(&outgoingMessageQueue)) {
-//		while (broadcastCount < 10) {
-//			Message *broadcastMessage = Create_Message ("discover me!\n");
-//			Set_Message_Source (broadcastMessage, "UDP,192.168.1.255:4445!");
-//			Set_Message_Destination (broadcastMessage, "UDP,192.168.1.255:4445!");
-////			Queue_Message (&outgoingMessageQueue, broadcastMessage);
-//			Wifi_Send (broadcastMessage);
-//			broadcastCount++;
-//		}
+		Wifi_State_Step ();
+		Wifi_State_Step ();
 
 //		message = Create_Message ("discovery");
 //		Set_Message_Source (message, "192.168.1.255");
@@ -261,11 +253,19 @@ void Application (void) {
 		// Monitor communication message queues.
 		if (Has_Messages (&incomingMessageQueue) == TRUE) {
 			message = Wifi_Receive ();
-			status = Process_Incoming_Message (message);
-			if (message != NULL) {
-
-			}
+//			Delete_Message (message);
+			Set_Message_Destination(message, "UDP,10.0.0.255:4445!");
+			Wifi_Send(message);
+//			status = Process_Incoming_Message (message);
+//			if (message != NULL) {
+//
+//			}
 		}
+
+		// Step state machine
+		Wifi_State_Step ();
+		Wifi_State_Step ();
+		Wifi_State_Step ();
 
 //		// Monitor communication message queues.
 //		if (Has_Messages (&incomingMessageQueue) == TRUE) {
@@ -297,24 +297,24 @@ void Application (void) {
 //			Jump_To_Bootloader_And_Update_Application ();
 //		}
 
+		/*
 		// Perform action.
-//		Event *active_event = (*timeline).current_event;
 		if ((*timeline).current_event != NULL) {
-//			if (Perform_Action ((*((*timeline).current_event)).action) != NULL) {
 			if (Perform_Action (((*timeline).current_event)) != NULL) {
+
 				// NOTE: Action was performed successfully.
 
-				// Go to the next action
 				// TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
+
+				// Go to the next action
 				if ((*((*timeline).current_event)).next != NULL) {
-					(*timeline).current_event =
-							(*((*timeline).current_event)).next;
+					// Go to the next action.
+					(*timeline).current_event = (*((*timeline).current_event)).next;
 				} else {
 					// Go to the start of the loop.
 					(*timeline).current_event = (*timeline).first_event;
 				}
 			}
-
 		} else {
 
 			// Reset the channel states...
@@ -328,6 +328,12 @@ void Application (void) {
 			// ...and the device states.
 			// TODO: Reset any other device states.
 		}
+		*/
+
+		// Step state machine
+		Wifi_State_Step ();
+		Wifi_State_Step ();
+		Wifi_State_Step ();
 
 		// TODO: Monitor_Orientation ();
 
@@ -340,7 +346,7 @@ void Application (void) {
 
 void Monitor_Periodic_Events () {
 
-// TODO: Add dynamic list of timers with custom timeouts to check periodically.
+	// TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
 
 	if (data_ready) {
 		//        LED1_PutVal(NULL, led_1_state);
@@ -349,18 +355,16 @@ void Monitor_Periodic_Events () {
 		imu_periodic_callback ();
 	}
 
-// LEDs
 	if (tick_1ms) {
 		tick_1ms = FALSE;
 
 		// TODO: Perform any periodic actions (1 ms).
-
 	}
 
 	if (tick_250ms) {
 		tick_250ms = FALSE;
 
-		// TODO: Perform any periodic actions (1 ms).
+		// TODO: Perform any periodic actions (250 ms).
 	}
 
 	if (tick_500ms) {
@@ -370,28 +374,17 @@ void Monitor_Periodic_Events () {
 		LED1_PutVal (NULL, led_2_state);
 		led_2_state = !led_2_state;
 
-		// TODO: Perform any periodic actions (1 ms).
-
-		/*
-		 //toggle LEDs
-		 LED1_PutVal(LED1_DeviceData, !led_state);
-		 LED2_PutVal(LED2_DeviceData, led_state);
-		 led_state = !led_state;
-
-		 Color_RGB * derp = colors + color_index;
-
-		 Set_LED_Output((RGB_LED) led_index, derp);
-
-		 if (++led_index % RGB_INVALID == 0)
-		 {
-		 led_index = 0;
-		 color_index = (color_index + 1) % 3;
-		 }
-		 */
+		// TODO: Perform any periodic actions (500 ms).
 	}
 
 	if (tick_1000ms) {
 		tick_1000ms = FALSE;
+
+		// TODO: Perform any periodic action (1000 ms).
+	}
+
+	if (tick_3000ms) {
+		tick_3000ms = FALSE;
 
 		char *uuid = Get_Unit_UUID ();
 		sprintf (buffer2, "announce device %s\n", uuid);
@@ -400,50 +393,8 @@ void Monitor_Periodic_Events () {
 		Set_Message_Destination (broadcastMessage, "UDP,10.0.0.255:4445!");
 		Queue_Message (&outgoingMessageQueue, broadcastMessage);
 //		Wifi_Send (broadcastMessage);
-	}
 
-	if (tick_3000ms) {
-		tick_3000ms = FALSE;
-
-		// Periodically send a datagram announcing the presence of this device.
-		// TODO: Only broadcast UDP message if an address has been received!
-		//		if (Has_Internet_Address () == TRUE) {
-		//			char *address = Get_Internet_Address ();
-		//			// TODO: Create and buffer the command to broadcast the unit's address.
-		//			n = sprintf (buffer2, "connect to %s", address); // Create message to send.
-		//	//			printf("buffer = %s\r\n", buffer2);
-		//	//		Broadcast_UDP_Message (buffer2, 4445);
-		//			// TODO: Queue a (periodic) UDP broadcast announcing the unit's presence on the network.
-		//		}
-
-		// TODO: Do this elsewhere! Broadcast_UDP_Message (discoveryMessage, DISCOVERY_BROADCAST_PORT);
-		//		Broadcast_UDP_Message (discoveryMessage, DISCOVERY_BROADCAST_PORT);
-		//		message = Create_Message (discoveryMessage);
-		//		Queue_Outgoing_Message ("255.255.255.255", message);
-
-		//#if !defined DONT_DO_WIFI_STUFF
-//		outMessage = Create_Message (discoveryMessage);
-//		Queue_Outgoing_Message ("255.255.255.255", outMessage);
-		//#endif
-		//		Queue_Message (&outgoingMessageQueue, outMessage);
-		//		Delete_Message (outMessage);
-
-		/*
-		 // Send the next message on the outgoing message queue.
-		 if (Has_Messages (&outgoingMessageQueue) == TRUE) {
-		 Message *message = Dequeue_Message (&outgoingMessageQueue);
-		 if ((status = Process_Outgoing_Message (message)) == TRUE) {
-		 // Delete_Message (message);
-		 }
-		 Delete_Message (message);
-		 }
-		 */
-
-		//		Wait (200);
-		//		if (Has_Actions() == TRUE) {
-		//			Broadcast_UDP_Message ("got turn light 1 on", DISCOVERY_BROADCAST_PORT);
-		//		}
-		//		Wait (200);
+		// TODO: Perform any periodic actions (3000 ms).
 	}
 }
 
