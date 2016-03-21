@@ -8,4 +8,5 @@
 #include "esp_common.h"
 #include "Clay_Config.h"
 
-uint8* Message_Strings[] ={ "UDP", "TCP" };
+uint8* Message_Strings[] =
+{ "UDP", "TCP", "CMD" };

@@ -31,6 +31,7 @@ int count;
 } Message_Queue;
 
 extern Message_Queue incomingMessageQueue;
+extern Message_Queue incomingCommandMessageQueue;
 extern Message_Queue outgoingUdpMessageQueue;
 extern Message_Queue outgoingTcpMessageQueue;
 

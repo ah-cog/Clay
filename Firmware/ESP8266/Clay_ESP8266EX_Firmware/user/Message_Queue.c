@@ -2,6 +2,7 @@
 #include "Message_Queue.h"
 
 Message_Queue incomingMessageQueue;
+Message_Queue incomingCommandMessageQueue;
 Message_Queue outgoingUdpMessageQueue;
 Message_Queue outgoingTcpMessageQueue;
 
@@ -33,13 +34,14 @@ Message* ICACHE_RODATA_ATTR Get_Next_Message(Message_Queue *message_queue)
 	return message;
 }
 
-int ICACHE_RODATA_ATTR Queue_Message(Message_Queue *message_queue, Message *message)
+int ICACHE_RODATA_ATTR Queue_Message(Message_Queue *message_queue,
+		Message *message)
 {
 	if ((*message_queue).count < MAXIMUM_MESSAGE_COUNT)
 	{
 		(*message_queue).messages[(*message_queue).back] = *message;
 		(*message_queue).back = ((*message_queue).back + 1)
-		% MAXIMUM_MESSAGE_COUNT;
+				% MAXIMUM_MESSAGE_COUNT;
 		(*message_queue).count++;
 	}
 	return (*message_queue).count;
@@ -62,7 +64,7 @@ Message* ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue)
 	{
 		message = &((*message_queue).messages[(*message_queue).front]);
 		(*message_queue).front = ((*message_queue).front + 1)
-		% MAXIMUM_MESSAGE_COUNT;
+				% MAXIMUM_MESSAGE_COUNT;
 		(*message_queue).count--;
 	}
 	return message;

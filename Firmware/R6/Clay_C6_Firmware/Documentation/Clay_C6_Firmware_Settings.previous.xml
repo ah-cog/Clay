@@ -501,7 +501,7 @@
     <Enabled v="Y" />
     <Properties>
       <Component_name v="BuzzerSwitch" />
-      <Pin_for_I_O v="ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1" />
+      <Pin_for_I_O v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
       <Direction v="Output" />
       <group name="Initialization">
         <Init__direction v="Output" />
@@ -1800,7 +1800,7 @@ Autoselect
     </Events>
   </Bean>
   <Bean name="PWM1" type="PWM_LDD">
-    <Enabled v="Y" />
+    <Enabled v="N" />
     <Properties>
       <Component_name v="PWM1" />
       <Period_device v="FTM0_MOD" />
@@ -1847,35 +1847,23 @@ Autoselect
     </Events>
   </Bean>
   <Bean name="TU2" type="TimerUnit_LDD">
-    <Enabled v="Y" />
+    <Enabled v="N" />
     <Properties>
       <Component_name v="TU2" />
       <Module_name v="FTM0" />
       <Counter v="FTM0_CNT" />
       <Counter_direction v="Up" />
       <Counter_width v="16 bits" />
-      <Value_type v="uint16_t" />
+      <Value_type v="Optimal" />
       <enumgroup name="Input clock source" v="Internal">
         <Counter_frequency v="Auto select" />
       </enumgroup>
-      <enumgroup name="Counter restart" v="On-match">
-        <Period_device v="FTM0_MOD" />
-        <Period v="400 &amp;#181;s" />
+      <enumgroup name="Counter restart" v="On-overrun">
+        <Overrun_period v="Auto select" />
         <boolgroup name="Interrupt" v="Disabled" />
       </enumgroup>
-      <list name="Channel list" v="1">
-        <group name="Channel 0">
-          <enumgroup name="Mode" v="Compare">
-            <Compare v="FTM0_C0V" />
-            <Offset v="120 &amp;#181;s" />
-            <enumgroup name="Output on compare" v="Set">
-              <Output_on_overrun v="Clear" />
-              <Initial_state v="Low" />
-              <Output_pin v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
-            </enumgroup>
-            <boolgroup name="Interrupt" v="Disabled" />
-          </enumgroup>
-        </group>
+      <list name="Channel list" v="0">
+        <EmptySection_DummyValue />
       </list>
       <group name="Initialization">
         <Enabled_in_init__code v="yes" />
@@ -1904,13 +1892,13 @@ Autoselect
       <GetInputFrequencyReal v="don&amp;apos;t generate code" />
       <GetInputFrequency v="don&amp;apos;t generate code" />
       <SetPeriodTicks v="don&amp;apos;t generate code" />
-      <GetPeriodTicks v="generate code" />
+      <GetPeriodTicks v="don&amp;apos;t generate code" />
       <ResetCounter v="don&amp;apos;t generate code" />
-      <GetCounterValue v="generate code" />
-      <SetOffsetTicks v="generate code" />
-      <GetOffsetTicks v="generate code" />
+      <GetCounterValue v="don&amp;apos;t generate code" />
+      <SetOffsetTicks v="don&amp;apos;t generate code" />
+      <GetOffsetTicks v="don&amp;apos;t generate code" />
       <GetCaptureValue v="don&amp;apos;t generate code" />
-      <SelectOutputAction v="generate code" />
+      <SelectOutputAction v="don&amp;apos;t generate code" />
       <SelectCaptureEdge v="don&amp;apos;t generate code" />
       <ConnectPin v="don&amp;apos;t generate code" />
       <SetOperationMode v="don&amp;apos;t generate code" />

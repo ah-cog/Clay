@@ -95,7 +95,7 @@
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-	MESSAGE_TYPE_UDP, MESSAGE_TYPE_TCP, MESSAGE_TYPE_MAX
+	MESSAGE_TYPE_UDP, MESSAGE_TYPE_TCP, MESSAGE_TYPE_COMMAND, MESSAGE_TYPE_MAX
 } Message_Type;
 
 //max 16 chars

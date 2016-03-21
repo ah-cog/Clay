@@ -68,9 +68,11 @@ static uint8 Newline_Count;
 static Message tempMsg;
 static char * tempContent;
 static char * tempAddr;
-static char Newline = '\n';
+static const char * MessageDelimiter = "\n";
 static uint32 stateTime;
 int i;
+
+Message_Queue * selected_message_queue;
 
 static struct sockaddr_in tempAddressIgnore;
 static Message_Type receivedMessageType;
@@ -167,7 +169,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 				Ring_Buffer_Get(Serial_Rx_Buffer + BytesReceived);
 				taskEXIT_CRITICAL();
 
-				if (Serial_Rx_Buffer[BytesReceived++] == '!')
+				if (Serial_Rx_Buffer[BytesReceived++] == AddressTerminator[0])
 				{
 					Serial_Rx_Buffer[BytesReceived] = '\0';
 
@@ -178,6 +180,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 #else
 					GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
 #endif
+
 					State = Parsing;
 				}
 			}
@@ -198,11 +201,11 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 		case Parsing:
 		{
 			taskENTER_CRITICAL();
-			tempContent = strtok(Serial_Rx_Buffer, &Newline);
+			tempContent = strtok(Serial_Rx_Buffer, MessageDelimiter);
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			tempAddr = strtok(NULL, &Newline);
+			tempAddr = strtok(NULL, MessageDelimiter);
 			taskEXIT_CRITICAL();
 
 			if (tempContent != NULL && tempAddr != NULL)
@@ -216,18 +219,37 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 						&receivedMessageType);
 				taskEXIT_CRITICAL();
 
-				if (receivedMessageType == MESSAGE_TYPE_UDP)
+				switch (receivedMessageType)
+				{
+				case MESSAGE_TYPE_UDP:
+				{
+					selected_message_queue = &outgoingUdpMessageQueue;
+					break;
+				}
+				case MESSAGE_TYPE_TCP:
+				{
+					selected_message_queue = &outgoingTcpMessageQueue;
+					break;
+				}
+				case MESSAGE_TYPE_COMMAND:
+				{
+					selected_message_queue = &incomingCommandMessageQueue;
+					break;
+				}
+				default:
+				{
+					selected_message_queue = NULL;
+					break;
+				}
+				}
+
+				if (selected_message_queue != NULL)
 				{
 					taskENTER_CRITICAL();
-					Queue_Message(&outgoingUdpMessageQueue, &tempMsg);
+					Queue_Message(selected_message_queue, &tempMsg);
 					taskEXIT_CRITICAL();
 				}
-				else if (receivedMessageType == MESSAGE_TYPE_TCP)
-				{
-					taskENTER_CRITICAL();
-					Queue_Message(&outgoingTcpMessageQueue, &tempMsg);
-					taskEXIT_CRITICAL();
-				}
+
 			}
 
 			while (GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
