@@ -37,9 +37,10 @@ static uint32_t programStartTime;
 
 static uint8_t Newline_Count;
 static uint8_t * Temp_Content;
-static uint8_t * Temp_Address;
+static uint8_t * temp_address_tok;
+static uint8_t temp_address_string[50];
 
-static const uint8_t Newline = '\n';
+static const char * message_terminator = "\n";
 
 //static Message Temp_Message;
 //static Message * Temp_Message_ptr;
@@ -112,7 +113,6 @@ void Wifi_State_Step() {
       }
 
       case Idle: {
-         //TODO: Monitor outgoing message queue for messages too.
          //waiting for an interrupt, no tranmission pending
          if (WifiInterruptReceived) {
             State = Receive_Message;
@@ -144,7 +144,7 @@ void Wifi_State_Step() {
          if (Ring_Buffer_Has_Data()) {
             Ring_Buffer_Get(inBuffer + Pending_Receive_Byte_Count);
 
-            if (inBuffer[Pending_Receive_Byte_Count++] == AddressTerminator) {
+            if (inBuffer[Pending_Receive_Byte_Count++] == address_terminator[0]) {
                WIFI_GPIO2_PutVal(NULL, 1);
                WifiInterruptReceived = FALSE;
                Wifi_Message_Available = TRUE;
@@ -161,16 +161,18 @@ void Wifi_State_Step() {
       }
 
       case Deserialize_Received_Message: {
-         Temp_Content = strtok(inBuffer, &Newline);
+         Temp_Content = strtok(inBuffer, message_terminator);
 
-         Temp_Address = strtok(NULL, &Newline);
+         temp_address_tok = strtok(NULL, address_terminator);
 
-         if (Temp_Address != NULL && Temp_Content != NULL) {
+         if (temp_address_tok != NULL && Temp_Content != NULL) {
+
+            sprintf(temp_address_string, "%s%s", temp_address_tok, address_terminator);
 
             // Create message object
             Message *message = Create_Message(Temp_Content);
-            Set_Message_Source(message, Temp_Address);
-            Set_Message_Destination(message, Temp_Address);
+            Set_Message_Source(message, temp_address_string);
+            Set_Message_Destination(message, temp_address_string);
 
             // Queue the message
             //Initialize_Message (&Temp_Message, Temp_Address, Temp_Address, Temp_Content);

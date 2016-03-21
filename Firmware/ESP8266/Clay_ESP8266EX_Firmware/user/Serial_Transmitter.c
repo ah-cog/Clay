@@ -26,8 +26,6 @@
  *          -Reset interrupt output and return to Idle upon completion.
  * */
 
-//dequeue message before resetting GPIO line to prevent us from receiving a message twice.
-//TODO: look into doing parity, rechecks.
 ////Includes //////////////////////////////////////////////////////
 #include "esp_common.h"
 #include "GPIO.h"
@@ -69,8 +67,6 @@ static Message * Temp_Message;
 static uint32 timeTemp;
 
 ////Local Prototypes///////////////////////////////////////////////
-static bool Connect();
-static bool Transmit();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
@@ -200,15 +196,25 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 	}
 }
 
-////Local implementations /////////////////////////////////////////
-static bool ICACHE_RODATA_ATTR Connect()
+void Send_Message_To_Master(char * message, Message_Type type)
 {
-	bool rval = false;
-	return rval;
+	Message m;
+	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH]; //+3 for comma, terminator, and null
+	char addr_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH + 3]; //+3 for comma, terminator, and null
+
+	taskENTER_CRITICAL();
+	Get_Message_Type_Str(type, type_string);
+	sprintf(addr_string, "%s,%s", type_string, address_terminator);
+	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
+	Initialize_Message(&m, type_string, type_string, message);
+	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
+	Queue_Message(&incomingMessageQueue, &m);
+	taskEXIT_CRITICAL();
 }
 
-static bool ICACHE_RODATA_ATTR Transmit()
-{
-	bool rval = false;
-	return rval;
-}
+////Local implementations /////////////////////////////////////////
+

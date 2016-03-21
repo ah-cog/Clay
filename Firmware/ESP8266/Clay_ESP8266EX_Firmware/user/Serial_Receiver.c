@@ -169,7 +169,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 				Ring_Buffer_Get(Serial_Rx_Buffer + BytesReceived);
 				taskEXIT_CRITICAL();
 
-				if (Serial_Rx_Buffer[BytesReceived++] == AddressTerminator[0])
+				if (Serial_Rx_Buffer[BytesReceived++] == address_terminator[0])
 				{
 					Serial_Rx_Buffer[BytesReceived] = '\0';
 

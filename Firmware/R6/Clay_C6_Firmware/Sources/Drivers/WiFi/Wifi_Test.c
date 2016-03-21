@@ -17,7 +17,7 @@ void Wifi_Test() {
 
    Message *message = NULL;
    uint32_t lastMessageSendTime = 0;
-   uint32_t messageSendPeriod = 60000;
+   uint32_t messageSendPeriod = 6000;
 
 #if 0
    struct sockaddr_in DestinationAddr;
@@ -45,48 +45,63 @@ void Wifi_Test() {
    Set_Message_Destination(message, serializedAddr);
 #endif
 
-#if 1
+#if 0
    //   Set_Access_Point();
 
 //   char addrStr[] = "UDP,192.168.1.1:1000";
 //   char testMsg[] = "SETAP hefnetm,dips00BOYNEdo$!&";
 
    char addrStr[] = "CMD,\x12";
-   char testMsg[] = "SETAP hefnetm,dips00BOYNEdo$!&";
+   char testMsg[] = "SETAP hefnet,h3fn3r_is_better_than_me";
 
    message = Create_Message(testMsg);
    Set_Message_Destination(message, addrStr);
 #endif
 
 //echo and repeated send. include one of the blocks above.
-#if 1
+#if 0
    for (;;) {
 
       // Step state machine
       Wifi_State_Step();
 
       if (Wifi_Get_State() != Programming
-          && !Has_Messages(&outgoingMessageQueue)
-          && Millis() - lastMessageSendTime > messageSendPeriod) {
+            && !Has_Messages(&outgoingMessageQueue)
+            && Millis() - lastMessageSendTime > messageSendPeriod) {
          message = Create_Message(testMsg);
          Set_Message_Destination(message, addrStr);
          Wifi_Send(message);
          lastMessageSendTime = Millis();
       }
+   }
 
-      //      // Monitor communication message queues.
-//      if (Has_Messages(&incomingMessageQueue) == TRUE)
-//      {
-//         message = Wifi_Receive();
-//         if (message != NULL)
-//         {
-//            Wifi_Send(message);
-//         }
-//      }
+#endif
+#if 1
+   char addrStr[] = "CMD,\x12";
+   char testMsg[] = "SETAP hefnet,h3fn3r_is_better_than_me";
+
+   Wait(5000);
+
+   message = Create_Message(testMsg);
+   Set_Message_Destination(message, addrStr);
+   Wifi_Send(message);
+
+   for (;;) {
+
+      // Step state machine
+      Wifi_State_Step();
+
+      //Monitor communication message queues.
+      if (Has_Messages(&incomingMessageQueue) == TRUE) {
+         message = Wifi_Receive();
+         if (message != NULL) {
+            Wifi_Send(message);
+         }
+      }
    }
 #endif
 
-   //serialization tests.
+//serialization tests.
 #if 0
    char testCmdContent[] = "AP";
    char testTcpStr[] = "TCP,10.0.0.2:56012!";
