@@ -80,8 +80,6 @@ static Message_Type receivedMessageType;
 uint32 counter;
 
 ////Local Prototypes///////////////////////////////////////////////
-static bool Connect();
-static bool Receive();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
@@ -274,14 +272,3 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 }
 
 ////Local implementations /////////////////////////////////////////
-static bool ICACHE_RODATA_ATTR Connect()
-{
-	bool rval = false;
-	return rval;
-}
-
-static bool ICACHE_RODATA_ATTR Receive()
-{
-	bool rval = false;
-	return rval;
-}

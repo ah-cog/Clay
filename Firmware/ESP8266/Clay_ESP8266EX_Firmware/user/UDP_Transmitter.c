@@ -68,8 +68,8 @@ static Message * m;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
-static void Disconnect();
 static bool Transmit();
+static bool Message_Available();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
@@ -114,11 +114,7 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_State_Step()
 
 		case Idle:
 		{
-			taskENTER_CRITICAL();
-			m = Peek_Message(&outgoingUdpMessageQueue);
-			taskEXIT_CRITICAL();
-
-			if (m != NULL)
+			if (Message_Available())
 			{
 				State = Buffer_Message;
 			}
@@ -162,7 +158,11 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_State_Step()
 			break;
 		}
 		}
-		taskYIELD();
+
+		if (!Message_Available())
+		{
+			taskYIELD();
+		}
 	}
 }
 
@@ -203,17 +203,6 @@ static bool ICACHE_RODATA_ATTR Connect()
 	return rval;
 }
 
-static void ICACHE_RODATA_ATTR Disconnect()
-{
-	if (UDP_Tx_Buffer)
-	{
-		free(UDP_Tx_Buffer);
-		UDP_Tx_Buffer = NULL;
-	}
-	free(UDP_Tx_Buffer);
-	close(sock_fd);
-}
-
 static bool Transmit()
 {
 	bool rval = false;
@@ -221,6 +210,22 @@ static bool Transmit()
 			== sendto(sock_fd, (uint8* ) UDP_Tx_Buffer, UDP_Tx_Count, 0,
 					(struct sockaddr * ) &DestinationAddr,
 					sizeof(DestinationAddr));
+
+	return rval;
+}
+
+static bool Message_Available()
+{
+	bool rval = false;
+
+	taskENTER_CRITICAL();
+	m = Peek_Message(&outgoingUdpMessageQueue);
+	taskEXIT_CRITICAL();
+
+	if (m != NULL)
+	{
+		rval = true;
+	}
 
 	return rval;
 }

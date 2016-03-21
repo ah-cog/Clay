@@ -20,7 +20,6 @@
 const char * address_terminator = "\x12";
 
 ////Local vars/////////////////////////////////////////////////////
-static uint8 message_type_temp_str[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 static uint8 deserialize_temp_str[50];
 
 static const char* type_delim = ",";

@@ -147,6 +147,7 @@ LOCAL void uart_config(uint8 uart_no, UART_ConfigTypeDef *uart)
 }
 #endif
 
+#if 0
 LOCAL void ICACHE_RODATA_ATTR uart_task(void *pvParameters)
 {
 	os_event_t e;
@@ -169,6 +170,7 @@ LOCAL void ICACHE_RODATA_ATTR uart_task(void *pvParameters)
 
 	vTaskDelete(NULL);
 }
+#endif
 
 #if 0
 void uart_init(void)
