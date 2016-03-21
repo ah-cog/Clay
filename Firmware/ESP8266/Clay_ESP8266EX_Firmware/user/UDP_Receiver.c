@@ -82,7 +82,6 @@ char * tempAddr;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
-static void Disconnect();
 static bool Receive();
 
 ////Global implementations ////////////////////////////////////////
@@ -210,17 +209,6 @@ static bool ICACHE_RODATA_ATTR Connect()
 	Connected = true;
 
 	return Connected;
-}
-
-static void ICACHE_RODATA_ATTR Disconnect()
-{
-	if (UDP_Rx_Buffer)
-	{
-		free(UDP_Rx_Buffer);
-		UDP_Rx_Buffer = NULL;
-	}
-	free(UDP_Rx_Buffer);
-	close(sock_fd);
 }
 
 static bool ICACHE_RODATA_ATTR Receive()

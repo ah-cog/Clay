@@ -47,12 +47,9 @@ Message_Type tempIgnoredMessageType;
 static Message * m;
 
 ////Local Prototypes///////////////////////////////////////////////
-static bool Connect(struct sockaddr_in * destinationAddr, int * txSocket);
-static void Disconnect();
-
 static int tcpCreateSocket();
-static bool tcpConnect(int txSocket, struct sockaddr_in * remote_ip);
 static bool tcpSend(int txSocket, uint8* data, uint32 length);
+static bool Message_Available();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Transmitter_Init()
@@ -89,11 +86,7 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 
 		case Idle:
 		{
-			taskENTER_CRITICAL();
-			m = Peek_Message(&outgoingTcpMessageQueue);
-			taskEXIT_CRITICAL();
-
-			if (m != NULL)
+			if (Message_Available())
 			{
 				State = Buffer_Message;
 			}
@@ -151,36 +144,14 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 			break;
 		}
 		}
-		taskYIELD();
+		if (!Message_Available())
+		{
+			taskYIELD();
+		}
 	}
 }
 
 ////Local implementations /////////////////////////////////////////
-static bool ICACHE_RODATA_ATTR Connect(struct sockaddr_in * destinationAddr,
-		int * txSocket)
-{
-	bool rval;
-
-	*txSocket = tcpCreateSocket();
-
-	if (*txSocket > 0)
-	{
-		rval = tcpConnect(*txSocket, destinationAddr);
-	}
-	else
-	{
-		rval = false;
-	}
-
-	return rval;
-}
-
-static void ICACHE_RODATA_ATTR Disconnect(int * txSocket)
-{
-	lwip_close(*txSocket);
-	*txSocket = -1;
-}
-
 static int ICACHE_RODATA_ATTR tcpCreateSocket()
 {
 	int txSocket = socket(PF_INET, SOCK_STREAM, 0);
@@ -188,42 +159,9 @@ static int ICACHE_RODATA_ATTR tcpCreateSocket()
 	if (-1 == txSocket)
 	{
 		lwip_close(txSocket);
-		vTaskDelay(1000 / portTICK_RATE_MS);
 	}
 
 	return txSocket;
-}
-
-static bool ICACHE_RODATA_ATTR tcpConnect(int txSocket,
-		struct sockaddr_in * remote_ip)
-{
-	bool rval = false;
-
-	taskENTER_CRITICAL();
-	UART_WaitTxFifoEmpty(UART0);
-	taskEXIT_CRITICAL();
-
-	int connectResult = connect(txSocket, (struct sockaddr * )(remote_ip),
-			sizeof(struct sockaddr));
-
-	if (connectResult != 0)
-	{
-
-		int32 error = 0;
-		uint32 optionLength = sizeof(error);
-		int getReturn = lwip_getsockopt(txSocket, SOL_SOCKET, SO_ERROR, &error,
-				&optionLength);
-
-		lwip_close(txSocket);
-
-		rval = false;
-	}
-	else
-	{
-		rval = true;
-	}
-
-	return rval;
 }
 
 static bool ICACHE_RODATA_ATTR tcpSend(int txSocket, uint8 * data,
@@ -232,4 +170,20 @@ static bool ICACHE_RODATA_ATTR tcpSend(int txSocket, uint8 * data,
 	bool rval = write(txSocket, data, length) == length;
 
 	return true;
+}
+
+static bool Message_Available()
+{
+	bool rval = false;
+
+	taskENTER_CRITICAL();
+	m = Peek_Message(&outgoingTcpMessageQueue);
+	taskEXIT_CRITICAL();
+
+	if (m != NULL)
+	{
+		rval = true;
+	}
+
+	return rval;
 }

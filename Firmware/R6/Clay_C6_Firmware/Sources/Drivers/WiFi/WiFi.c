@@ -69,6 +69,15 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
 
+   char addrStr[] = "CMD,\x12";
+   char testMsg[] = "SETAP hefnet,h3fn3r_is_better_than_me";
+
+   Wait(5000);
+
+   Message * message = Create_Message(testMsg);
+   Set_Message_Destination(message, addrStr);
+   Wifi_Send(message);
+
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
 

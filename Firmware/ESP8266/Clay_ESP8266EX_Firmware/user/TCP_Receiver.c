@@ -64,14 +64,11 @@ static volatile int32 Task_Count;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool ConnectListener();
-static void Disconnect();
 static bool Listen();
 bool TCP_Open_Connection(int newSocket);
-static int32 Receive(int32 rxSocket, uint8_t * rxbuf, int32 maxRxCount);
+static int32 Receive(int32 rxSocket, uint8_t * rxbuf, int32 max_length);
 static void ReceiveTask(void * pvParameters);
-static int32 Get_Index_Of_Message_End(uint8 * buffer, int32 count);
-static bool Enqueue(uint8 * buffer, int32 count,
-		struct sockaddr_in * sourceAddress);
+static bool Enqueue(uint8 * buffer, struct sockaddr_in * sourceAddress);
 
 ////Local implementations /////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Receiver_Init()
@@ -127,7 +124,6 @@ void ICACHE_RODATA_ATTR TCP_Receiver_State_Step()
 		}
 		}
 	}
-
 }
 
 ////Local implementations /////////////////////////////////////////
@@ -220,7 +216,6 @@ static bool ICACHE_RODATA_ATTR Listen()
 		{
 			rval = true;
 		}
-
 	}
 
 	if (!rval)
@@ -257,70 +252,212 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 	int32 addressSize = sizeof(sourceAddress);
 	getpeername(rxSocket, (struct sockaddr* )&sourceAddress, &addressSize);
 
-	uint8 * data = zalloc(TCP_RECEIVE_TASK_BUFFER_SIZE);
+	uint8 * data = zalloc(CLAY_MESSAGE_LENGTH_MAX_BYTES);
+	uint8 * temp;
+	uint8 * unprocessed_data = NULL;
+	uint8 * processed_message;
+
+	bool found_message = false;
+
 	int32 length = 0;
-	int receivedValue = 0;
+	int32 unprocessed_length = 0;
+
+	int32 processed_message_length = 0;
+	int32 processed_message_index = 0;
+
+	int received_length = 0;
 	int indexOfMessageEnd;
 
-	if (data != NULL)
+//	taskENTER_CRITICAL();
+//	printf("opened sock:%d\r\n", rxSocket);
+//	taskEXIT_CRITICAL();
+
+	//listen until socket is closed.
+	while (rxSocket > 0)
 	{
-		//listen until socket is closed.
-		while (rxSocket > 0)
+		received_length = Receive(rxSocket, data,
+		CLAY_MESSAGE_LENGTH_MAX_BYTES);
+
+		if (received_length > 0)
 		{
-			receivedValue = Receive(rxSocket, data + length,
-			TCP_RECEIVE_TASK_BUFFER_SIZE - length);
+//			taskENTER_CRITICAL();
+//			printf("received %d\r\n", received_length);
+//			taskEXIT_CRITICAL();
 
-			if (receivedValue
-					> 0&& length + receivedValue <= TCP_RECEIVE_TASK_BUFFER_SIZE)
+//			taskENTER_CRITICAL();
+//			printf("already have %d\r\n", unprocessed_length);
+//			taskEXIT_CRITICAL();
+
+			//copy data into unprocessed_data
+			if (unprocessed_data == NULL)
 			{
-				length += receivedValue;
-				receivedValue = 0;
+//				taskENTER_CRITICAL();
+//				printf("unproc null\r\n");
+//				taskEXIT_CRITICAL();
 
-				//check for end of message
-				indexOfMessageEnd = Get_Index_Of_Message_End(data, length);
+				taskENTER_CRITICAL();
+				unprocessed_data = zalloc(received_length + 1);
+				memcpy(unprocessed_data, data, received_length);
 
-				if (indexOfMessageEnd > 0)
+//				taskENTER_CRITICAL();
+//				printf("copied, freeing\r\n");
+//				taskEXIT_CRITICAL();
+
+				taskEXIT_CRITICAL();
+
+				unprocessed_length = received_length;
+				unprocessed_data[unprocessed_length] = '\0';
+				processed_message_index = 0;
+			}
+			else
+			{
+//				taskENTER_CRITICAL();
+//				printf("unproc not null\r\n");
+//				taskEXIT_CRITICAL();
+
+				taskENTER_CRITICAL();
+				temp = zalloc(unprocessed_length + received_length + 1);
+				memcpy(temp, unprocessed_data, unprocessed_length);
+				memcpy(temp + unprocessed_length - 1, data, received_length);
+
+//				taskENTER_CRITICAL();
+//				printf("copied, freeing\r\n");
+//				taskEXIT_CRITICAL();
+
+				free(unprocessed_data);
+				taskEXIT_CRITICAL();
+
+				unprocessed_data = temp;
+				temp = NULL;
+
+				unprocessed_length += received_length;
+				unprocessed_data[unprocessed_length] = '\0';
+				processed_message_index = 0;
+			}
+
+//			taskENTER_CRITICAL();
+//			printf("unprocessed: %d", unprocessed_length);
+//			taskEXIT_CRITICAL();
+
+			received_length = 0;
+
+			//check for end of message
+			processed_message = strtok(unprocessed_data, "\n");
+
+			while (processed_message != NULL)
+			{
+//				taskENTER_CRITICAL();
+//				printf("tok'd message: %s\r\n", processed_message);
+//				taskEXIT_CRITICAL();
+
+				taskENTER_CRITICAL();
+				processed_message_length = strlen(processed_message) + 1;
+				taskEXIT_CRITICAL();
+
+//				taskENTER_CRITICAL();
+//				printf("processed length: %d\r\n", processed_message_length);
+//				taskEXIT_CRITICAL();
+
+				unprocessed_length -= processed_message_length; //+1 for newline, which is now null and not counted.
+				processed_message_index += processed_message_length;
+
+				taskENTER_CRITICAL();
+				temp = zalloc(processed_message_length + 1);
+				sprintf(temp, "%s\n", processed_message);
+				taskEXIT_CRITICAL();
+
+				//enqueue if we received message end.
+				Enqueue(temp, &sourceAddress);
+
+				taskENTER_CRITICAL();
+				free(temp);
+				taskEXIT_CRITICAL();
+
+				processed_message = strtok(NULL, "\n");
+
+				found_message = true;
+			}
+
+			if (found_message)
+			{
+//				taskENTER_CRITICAL();
+//				printf("found message, now update unproc'd buffer.\r\n");
+//				taskEXIT_CRITICAL();
+
+				if (unprocessed_length > 0)
 				{
-					//TODO: parse multiple messages here, in case we got more than one newline
+//					taskENTER_CRITICAL();
+//					printf("more unproc'd data:%d\r\n", unprocessed_length);
+//					taskEXIT_CRITICAL();
 
-					//enqueue if we received message end.
-					Enqueue(data, length, &sourceAddress);
-
-					length = 0;
 					taskENTER_CRITICAL();
-					memset(data, 0, TCP_RECEIVE_TASK_BUFFER_SIZE);
+					temp = zalloc(unprocessed_length);
+					memcpy(temp, unprocessed_data + processed_message_index,
+							unprocessed_length);
+
+//					taskENTER_CRITICAL();
+//					printf("alloc, copy done\r\n");
+//					taskEXIT_CRITICAL();
+
+					free(unprocessed_data);
 					taskEXIT_CRITICAL();
+
+//					taskENTER_CRITICAL();
+//					printf("freed\r\n");
+//					taskEXIT_CRITICAL();
+
+					unprocessed_data = temp;
+
+					unprocessed_data[unprocessed_length] = '\0';
 				}
-				else if (length >= TCP_RECEIVE_TASK_BUFFER_SIZE)
+				else
 				{
+//					taskENTER_CRITICAL();
+//					printf("no more unproc'd data\r\n", unprocessed_length);
+//					taskEXIT_CRITICAL();
 
-					//overflow. drop this message.
-					length = 0;
+					taskENTER_CRITICAL();
+					free(unprocessed_data);
+					taskEXIT_CRITICAL();
+					unprocessed_data = NULL;
 				}
-			}
-			else if (receivedValue < 0)
-			{
-				break;
-			}
 
-			taskYIELD();
+				processed_message_index = 0;
+			}
 		}
+		else if (received_length < 0)
+		{
+			break;
+		}
+
+		taskYIELD();
 	}
+
+	taskENTER_CRITICAL();
+	free(unprocessed_data);
+	free(data);
+	taskEXIT_CRITICAL();
+
+//	taskENTER_CRITICAL();
+//	printf("close sock:%d\r\n", rxSocket);
+//	printf("tasks:%d\r\n", Task_Count);
+//	taskEXIT_CRITICAL();
 
 	SocketListRemove(rxSocket);
 	lwip_close(rxSocket);
-	free((void*) data);
 
 	--Task_Count;
 
 	vTaskDelete(NULL);
 }
 
-//reads data from the socket
-static int32 ICACHE_RODATA_ATTR Receive(int32 rxSocket, uint8_t * rxbuf,
-		int32 maxRxCount)
+//reads data from the socket, allocates memory for it in rxbuf, and returns the count.
+//			if return = -1, the connection has been reset by the remote
+static int32 ICACHE_RODATA_ATTR Receive(int32 rxSocket, uint8_t *rxbuf,
+		int32 max_length)
 {
-	int32 rval = lwip_recv(rxSocket, (void*) rxbuf, maxRxCount, MSG_PEEK);
+	int32 rval = lwip_recv(rxSocket, (void*) rxbuf, (size_t) max_length,
+	MSG_PEEK);
 
 	if (rval < 0)
 	{
@@ -330,31 +467,20 @@ static int32 ICACHE_RODATA_ATTR Receive(int32 rxSocket, uint8_t * rxbuf,
 				&optionLength);
 
 		rval = (error == ECONNRESET ? -1 : 0);
+
+		if (rval == -1)
+		{
+		}
 	}
-	else if (rval <= maxRxCount && rval > 0)
+	else if (rval > 0 && rval < max_length)
 	{
-		rval = lwip_recv(rxSocket, rxbuf, maxRxCount, 0);
-		rxbuf[rval] = '\0';
+		rval = lwip_recv(rxSocket, rxbuf, max_length, 0);
 	}
 
 	return rval;
 }
 
-static int32 ICACHE_RODATA_ATTR Get_Index_Of_Message_End(uint8 * buffer,
-		int32 count)
-{
-	int32 rval = false;
-	uint8 * bangIdx = strchr(buffer, '\n');
-
-	if (bangIdx != NULL)
-	{
-		rval = (bangIdx - buffer);
-	}
-
-	return rval;
-}
-
-static bool ICACHE_RODATA_ATTR Enqueue(uint8 * buffer, int32 count,
+static bool ICACHE_RODATA_ATTR Enqueue(uint8 * buffer,
 		struct sockaddr_in * sourceAddress)
 {
 	bool rval = false;

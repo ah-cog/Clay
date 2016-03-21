@@ -43,6 +43,7 @@ int ICACHE_RODATA_ATTR SocketListAdd(int newSocket)
 	{
 		if (Open_Sockets[i] == -1)
 		{
+//			printf("added socket:%d\r\n", newSocket);
 			Open_Sockets[i] = newSocket;
 			rval = i;
 			break;
@@ -95,6 +96,7 @@ void ICACHE_RODATA_ATTR SocketListRemove(int targetSocket)
 	{
 		if (Open_Sockets[i] == targetSocket)
 		{
+//			printf("removing socket :%d\r\n", targetSocket);
 			Open_Sockets[i] = -1;
 		}
 	}

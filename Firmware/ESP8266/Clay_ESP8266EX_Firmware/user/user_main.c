@@ -57,8 +57,18 @@ void ICACHE_RODATA_ATTR user_init(void)
 	Message_Conversion_Test();
 #endif
 
-//	Set_Access_Point("hefnetm", "dips00BOYNEdo$!&");
-//	Set_Access_Point("hefnet", "h3fn3r_is_better_than_me");
+	{
+		struct station_config *config = (struct station_config *) zalloc(
+				sizeof(struct station_config));
+
+		sprintf(config->ssid, "hefnet");
+		sprintf(config->password, "h3fn3r_is_better_than_me");
+
+		/* need to sure that you are in station mode first,
+		 * otherwise it will be failed. */
+		wifi_station_set_config(config);
+		free(config);
+	}
 
 //added to allow 3+ TCP connections per ESP RTOS SDK API Reference 1.3.0 Chapter 1, page 2
 	TCP_WND = 2 * TCP_MSS;

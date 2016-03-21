@@ -77,14 +77,14 @@ void Wifi_Test() {
 
 #endif
 #if 1
-   char addrStr[] = "CMD,\x12";
-   char testMsg[] = "SETAP hefnet,h3fn3r_is_better_than_me";
-
-   Wait(5000);
-
-   message = Create_Message(testMsg);
-   Set_Message_Destination(message, addrStr);
-   Wifi_Send(message);
+//   char addrStr[] = "CMD,\x12";
+//   char testMsg[] = "SETAP hefnet,h3fn3r_is_better_than_me";
+//
+//   Wait(5000);
+//
+//   message = Create_Message(testMsg);
+//   Set_Message_Destination(message, addrStr);
+//   Wifi_Send(message);
 
    for (;;) {
 
