@@ -284,7 +284,6 @@ bool Wifi_Send (Message *message) {
 //		return FALSE;
 //	}
 
-//	Queue_Message (&outgoingMessageQueue, message);
 	Queue_Message (&outgoingMessageQueue, message);
 	return TRUE;
 }
