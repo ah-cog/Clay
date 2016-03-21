@@ -227,6 +227,9 @@ void Application (void) {
 	 Queue_Message (&incomingMessageQueue, testMessage);
 	 */
 
+	onColor.G = 100;
+	onColor.B = 200;
+
 	for (;;) {
 
 // Check and process any incoming requests
@@ -254,12 +257,12 @@ void Application (void) {
 		if (Has_Messages (&incomingMessageQueue) == TRUE) {
 			message = Wifi_Receive ();
 //			Delete_Message (message);
-			Set_Message_Destination(message, "UDP,10.0.0.255:4445!");
-			Wifi_Send(message);
-//			status = Process_Incoming_Message (message);
-//			if (message != NULL) {
-//
-//			}
+//			Set_Message_Destination(message, "UDP,10.0.0.255:4445!");
+//			Wifi_Send(message);
+			status = Process_Incoming_Message (message);
+			if (message != NULL) {
+
+			}
 		}
 
 		// Step state machine
@@ -297,7 +300,6 @@ void Application (void) {
 //			Jump_To_Bootloader_And_Update_Application ();
 //		}
 
-		/*
 		// Perform action.
 		if ((*timeline).current_event != NULL) {
 			if (Perform_Action (((*timeline).current_event)) != NULL) {
@@ -328,7 +330,6 @@ void Application (void) {
 			// ...and the device states.
 			// TODO: Reset any other device states.
 		}
-		*/
 
 		// Step state machine
 		Wifi_State_Step ();

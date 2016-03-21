@@ -507,16 +507,16 @@ int8_t Apply_Channel_Lights()
 				// Apply state.
 				Enable_Channel(channelLightProfiles[i].number, channelLightProfiles[i].enabled);
 
-				// Check if the direction change. Apply the corresponding transform if it changed.
-				if (updateChannelLightProfiles[i].color != channelLightProfiles[i].color)
-				{
+//				// Check if the direction change. Apply the corresponding transform if it changed.
+//				if (updateChannelLightProfiles[i].color != channelLightProfiles[i].color)
+//				{
 
 					// Update color.
 					channelLightProfiles[i].color = updateChannelLightProfiles[i].color;
 
 					// Apply color.
 					RGB_LED_SetColor((RGB_LED)(channelLightProfiles[i].number - 1), channelLightProfiles[i].color);
-				}
+//				}
 
 			}
 			else if (channelLightProfiles[i].enabled == FALSE)
