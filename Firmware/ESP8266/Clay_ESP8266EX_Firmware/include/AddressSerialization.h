@@ -24,8 +24,11 @@ extern const char * address_terminator;
 ////Prototypes/////////////////////////////////////////////////////
 extern void Deserialize_Address(uint8* Source, struct sockaddr_in * Destination,
 		Message_Type *type);
-extern uint32 Serialize_Address(struct sockaddr_in * Source, uint8* Destination,
-		uint32 DestinationLength, Message_Type ConnectionTypeStr);
+
+uint32 ICACHE_RODATA_ATTR Serialize_Address(in_addr_t source, int32 port,
+		uint8* Destination, uint32 DestinationLength,
+		Message_Type ConnectionType);
+
 bool Get_Message_Type_Str(Message_Type type, uint8 *returnStr);
 Message_Type Get_Message_Type_From_Str(uint8*typeString);
 #endif /* INCLUDE_ADDRESSSERIALIZATION_H_ */
