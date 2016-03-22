@@ -75,7 +75,8 @@ bool Enable_WiFi (const char *ssid, const char *password) {
 	Wait (5000);
 
 	Message * message = Create_Message (testMsg);
-	Set_Message_Destination2 (message, "CMD", addrStr);
+	Set_Message_Type (message, "CMD");
+	Set_Message_Destination (message, addrStr);
 	Wifi_Send (message);
 
 	WifiInterruptReceived = FALSE;
@@ -170,22 +171,26 @@ void Wifi_State_Step () {
 	case Deserialize_Received_Message: {
 		Temp_Content = strtok (inBuffer, message_terminator);
 
-		// UDP,10.0.0.1:4446\0x012
+		// UDP,10.0.0.1:4446\0x12
 
 		temp_address_tok = strtok (NULL, address_terminator);
 
 		if (temp_address_tok != NULL && Temp_Content != NULL) {
 
-			sprintf (temp_address_string, "%s%s", temp_address_tok, address_terminator);
+//			sprintf (temp_address_string, "%s%s", temp_address_tok, address_terminator);
+			sprintf (temp_address_string, "%s", temp_address_tok);
+
+			char *message_type = temp_address_string;
+			char *message_address = strchr (temp_address_string, ',') + 1;
+			(message_address - 1)[0] = '\0';
 
 			// Create message object
 			Message *message = Create_Message (Temp_Content);
-//			Set_Message_Source2 (message, temp_address_string);
-//			Set_Message_Destination2 (message, temp_address_string);
+			Set_Message_Type (message, message_type);
+			Set_Message_Source (message, message_address); // TODO: Correct this... the source and destination aren't the same... this is a hack...
+			Set_Message_Destination (message, message_address);
 
 			// Queue the message
-			//Initialize_Message (&Temp_Message, Temp_Address, Temp_Address, Temp_Content);
-			//Queue_Message (&incomingMessageQueue, &Temp_Message);
 			Queue_Message (&incomingMessageQueue, message);
 		}
 
@@ -194,15 +199,18 @@ void Wifi_State_Step () {
 	}
 
 	case Serialize_Transmission: {
-//		Temp_Message_ptr = Dequeue_Message (&outgoingMessageQueue);
-//		snprintf (outBuffer, OUT_BUFFER_LENGTH, "%s\n",
-//				Temp_Message_ptr->content);
-//		strcat (outBuffer, Temp_Message_ptr->destination);
-//		pendingTransmitByteCount = strlen (outBuffer);
-
 		Message *message = Dequeue_Message (&outgoingMessageQueue);
-		snprintf (outBuffer, OUT_BUFFER_LENGTH, "%s\n", message->content);
-		strcat (outBuffer, message->destination);
+
+		//	(*message).source = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
+		//	strcpy ((*message).source, address);
+
+		//	sprintf ((*message).source, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
+
+		snprintf (outBuffer, OUT_BUFFER_LENGTH, "%s\n%s,%s\x12\n", message->content, message->type, message->destination);
+//		snprintf (outBuffer, OUT_BUFFER_LENGTH, "%s,%s\x12%s\n", message->type, message->destination, message->content);
+//		strcat (outBuffer, message->type);
+//		strcat (outBuffer, ",");
+//		strcat (outBuffer, message->destination);
 		pendingTransmitByteCount = strlen (outBuffer);
 		Delete_Message (message);
 

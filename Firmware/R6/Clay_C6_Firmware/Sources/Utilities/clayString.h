@@ -1,12 +1,5 @@
-/*
- * String.h
- *
- *  Created on: Sep 22, 2015
- *      Author: mokogobo
- */
-
-#ifndef STRING_H_
-#define STRING_H_
+#ifndef STRING_H
+#define STRING_H
 
 #ifndef __PE_Types_H
 #include "PE_Types.h"
@@ -15,12 +8,10 @@
 #define DEFAULT_TOKEN_DELIMIETER ' '
 #define DEFAULT_TOKEN_SECONDARY_DELIMIETER '"'
 
-int Get_Token_Count (const char *string);
+extern int Get_Token_Count (const char *string);
 
-int8_t Get_Token (const char *string, char *tokenBuffer, int tokenIndex); // TODO: Rename to copyToken?
+extern int8_t Get_Token (const char *string, char *tokenBuffer, int tokenIndex);
 
-int8_t getTokenWithDelimiter (const char *string, const char delimiter, const char secondaryDelimiter, char *tokenBuffer, int tokenIndex);
+extern int8_t Get_Token_With_Delimiter (const char *string, const char delimiter, const char secondaryDelimiter, char *tokenBuffer, int tokenIndex);
 
-//int convertToInt (const char *string, char *tokenBuffer, int tokenIndex);
-
-#endif /* STRING_H_ */
+#endif */

@@ -96,7 +96,7 @@ int8_t Get_Token (const char *string, char *tokenBuffer, int tokenIndex) {
 	return NULL;
 }
 
-int8_t getTokenWithDelimiter (const char *string, const char delimiter, const char secondaryDelimiter, char *tokenBuffer, int tokenIndex) {
+int8_t Get_Token_With_Delimiter (const char *string, const char delimiter, const char secondaryDelimiter, char *tokenBuffer, int tokenIndex) {
 
 	int i = 0;
 	const char *token = NULL;

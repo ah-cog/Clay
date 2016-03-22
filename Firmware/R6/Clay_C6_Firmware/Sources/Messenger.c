@@ -17,16 +17,15 @@ Message* Create_Message (const char *content) {
 	// Allocate memory for message structure.
 	Message *message = (Message *) malloc (sizeof (Message));
 
+	(*message).type = NULL;
 	(*message).source = NULL;
 	(*message).destination = NULL;
 
 	// Allocate memory for the message's content.
-//	(*message).content = (char *) malloc (strlen (content + 1)); // Add one for "\0"
 	(*message).content = (char *) malloc (strlen (content));
 
 	// Copy message content
 	strcpy ((*message).content, content);
-//	(*message).content[strlen(content)] = '\0';
 
 	// Set up links for queue
 	(*message).previous = NULL;
@@ -35,8 +34,22 @@ Message* Create_Message (const char *content) {
 	return message;
 }
 
-void Set_Message_Source2 (Message *message, const char *channel, const char *address) {
-//	Set_Message_Destination(message, "TCP,10.0.0.5:1002!");
+void Set_Message_Type (Message *message, const char *type) {
+
+	// Free the message's destination stored type from memory
+	if ((*message).type != NULL) {
+		free ((*message).type);
+		(*message).type = NULL;
+	}
+
+	// Copy the type into the structure
+	(*message).type = (char *) malloc (strlen (type));
+	strcpy ((*message).type, type);
+
+//	sprintf ((*message).source, "%s,%s%c", channel, address, ADDRESS_TERMINATOR);
+}
+
+void Set_Message_Source (Message *message, const char *address) {
 
 	// Free the message's destination address from memory
 	if ((*message).source != NULL) {
@@ -45,27 +58,16 @@ void Set_Message_Source2 (Message *message, const char *channel, const char *add
 	}
 
 	// Copy the message destination address
-	(*message).source = (char *) malloc (strlen (channel) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
+	(*message).source = (char *) malloc (strlen (address));
+	strcpy ((*message).source, address);
+
+//	(*message).source = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
 //	strcpy ((*message).source, address);
 
-	sprintf ((*message).source, "%s,%s%c", channel, address, ADDRESS_TERMINATOR);
+//	sprintf ((*message).source, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
 }
 
-//void Set_Message_Source (Message *message, const char *address) {
-//
-//	// Free the message's destination address from memory
-//	if ((*message).source != NULL) {
-//		free ((*message).source);
-//		(*message).source = NULL;
-//	}
-//
-//	// Copy the message destination address
-//	(*message).source = (char *) malloc (strlen (address));
-//	strcpy ((*message).source, address);
-//}
-
-void Set_Message_Destination2 (Message *message, const char *channel, const char *address) {
-//	Set_Message_Destination(message, "TCP,10.0.0.5:1002!");
+void Set_Message_Destination (Message *message, const char *address) {
 
 	// Free the message's destination address from memory
 	if ((*message).destination != NULL) {
@@ -74,24 +76,18 @@ void Set_Message_Destination2 (Message *message, const char *channel, const char
 	}
 
 	// Copy the message destination address
-	(*message).destination = (char *) malloc (strlen (channel) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
+	(*message).destination = (char *) malloc (strlen (address));
+	strcpy ((*message).destination, address);
+
+//	(*message).destination = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
 //	strcpy ((*message).destination, address);
 
-	sprintf ((*message).destination, "%s,%s%c", channel, address, ADDRESS_TERMINATOR);
+//	sprintf ((*message).destination, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
 }
 
-//void Set_Message_Destination (Message *message, const char *address) {
-//
-//	// Free the message's destination address from memory
-//	if ((*message).destination != NULL) {
-//		free ((*message).destination);
-//		(*message).destination = NULL;
-//	}
-//
-//	// Copy the message destination address
-//	(*message).destination = (char *) malloc (strlen (address));
-//	strcpy ((*message).destination, address);
-//}
+//void Set_Message_Source (Message *message, const char *address);
+//void Set_Message_Destination (Message *message, const char *address);
+//void Set_Message_Content (Message *message, const char *content);
 
 int8_t Delete_Message (Message *message) {
 
