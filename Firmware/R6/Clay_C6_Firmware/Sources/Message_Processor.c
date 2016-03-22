@@ -354,18 +354,22 @@ void Send_Acknowledgment (char *token, char *messageContent) {
 	Message *responseMessage;
 
 	responseMessage = Create_Message (token);
-	Set_Message_Destination2 (responseMessage, "UDP", "10.0.0.255:4445"); // <HACK />
+	Set_Message_Type (responseMessage, "UDP");
+	Set_Message_Destination (responseMessage, "10.0.0.255:4445"); // <HACK />
 	Queue_Message (&outgoingMessageQueue, responseMessage);
 
 	responseMessage = Create_Message (token);
-	Set_Message_Destination2 (responseMessage, "UDP", "10.0.0.255:4445"); // <HACK />
+	Set_Message_Type (responseMessage, "UDP");
+	Set_Message_Destination (responseMessage, "10.0.0.255:4445"); // <HACK />
 	Queue_Message (&outgoingMessageQueue, responseMessage);
 
 	responseMessage = Create_Message (token);
-	Set_Message_Destination2 (responseMessage, "UDP", "10.0.0.255:4445"); // <HACK />
+	Set_Message_Type (responseMessage, "UDP");
+	Set_Message_Destination (responseMessage, "10.0.0.255:4445"); // <HACK />
 	Queue_Message (&outgoingMessageQueue, responseMessage);
 
 	responseMessage = Create_Message (token);
-	Set_Message_Destination2 (responseMessage, "UDP", "10.0.0.255:4445"); // <HACK />
+	Set_Message_Type (responseMessage, "UDP");
+	Set_Message_Destination (responseMessage, "10.0.0.255:4445"); // <HACK />
 	Queue_Message (&outgoingMessageQueue, responseMessage);
 }
