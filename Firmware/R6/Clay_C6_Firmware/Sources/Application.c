@@ -91,6 +91,8 @@ void Initialize () {
 		// Failure
 	}
 
+	Initialize_Color_Palette ();
+
 	if ((status = RGB_LED_Enable ()) != TRUE) {
 		// Failure
 	}
@@ -227,9 +229,6 @@ void Application (void) {
 	 Queue_Message (&incomingMessageQueue, testMessage);
 	 */
 
-	onColor.G = 100;
-	onColor.B = 200;
-
 	for (;;) {
 
 // Check and process any incoming requests
@@ -258,7 +257,9 @@ void Application (void) {
 			message = Wifi_Receive ();
 //			Delete_Message (message);
 //			Set_Message_Destination(message, "UDP,10.0.0.255:4445!");
-//			Wifi_Send(message);
+//			Set_Message_Destination(message, "TCP,10.0.0.5:1002!");
+//			Set_Message_Destination2 (message, "TCP", "10.0.0.5:1002");
+//			Wifi_Send (message);
 			status = Process_Incoming_Message (message);
 			if (message != NULL) {
 
@@ -421,8 +422,8 @@ void Monitor_Periodic_Events () {
 		char *uuid = Get_Unit_UUID ();
 		sprintf (buffer2, "announce device %s\n", uuid);
 		Message *broadcastMessage = Create_Message (buffer2);
-		Set_Message_Source (broadcastMessage, "UDP,10.0.0.255:4445!");
-		Set_Message_Destination (broadcastMessage, "UDP,10.0.0.255:4445!");
+		Set_Message_Source2 (broadcastMessage, "UDP", "10.0.0.255:4445");
+		Set_Message_Destination2 (broadcastMessage, "UDP", "10.0.0.255:4445");
 		Queue_Message (&outgoingMessageQueue, broadcastMessage);
 //		Wifi_Send (broadcastMessage);
 

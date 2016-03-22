@@ -1,14 +1,9 @@
-/*
- * RGB_LED.h
- *
- *  Created on: Jan 26, 2016
- *      Author: thebh
- */
-
-#ifndef SOURCES_RGB_LED_RGB_LED_H_
-#define SOURCES_RGB_LED_RGB_LED_H_
+#ifndef RGB_LED_H
+#define RGB_LED_H
 
 #include "PE_Types.h"
+
+#include "GPIO.h"
 
 int8_t Start_Light_Behavior ();
 bool Perform_Channel_Light_Effect (bool reverse);
@@ -31,6 +26,15 @@ typedef struct
       uint8_t B;
 } RGB_Color;
 
+typedef struct {
+	uint8_t number;
+	uint8_t enabled; // Specifies whether or not the channel being used.
+	RGB_Color *color;
+} Channel_Light;
+
+RGB_Color offColor;
+RGB_Color onColor;
+
 typedef enum
 {
    RGB1,
@@ -48,6 +52,9 @@ typedef enum
    RGB_MAX
 } RGB_LED;
 
+extern Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
+extern Channel_Light channelLightProfiles[CHANNEL_COUNT];
+
 extern bool RGB_LED_Enable();
 extern bool RGB_LED_Start();
 extern bool RGB_LED_Stop();
@@ -56,5 +63,11 @@ extern bool RGB_LED_Pause();
 extern void RGB_LED_SetState(RGB_LED LED, bool On, LED_Mode CurrentMax);
 extern void RGB_LED_SetColor(RGB_LED led, RGB_Color *output_color);
 extern void RGB_LED_UpdateOutput();
+
+int8_t Initialize_Channel_Lights ();
+void Reset_Channel_Lights ();
+int8_t Apply_Channel_Lights ();
+
+int8_t Initialize_Color_Palette ();
 
 #endif /* SOURCES_RGB_LED_RGB_LED_H_ */

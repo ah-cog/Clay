@@ -4,7 +4,7 @@
 #include "PE_Types.h"
 #include "PE_LDD.h"
 
-#include "Drivers/RGB_LED/RGB_LED.h"
+//#include "Drivers/RGB_LED/RGB_LED.h"
 
 #define CHANNEL_COUNT 12
 
@@ -20,12 +20,6 @@
 
 #define CHANNEL_VALUE_TOGGLE_ON  1
 #define CHANNEL_VALUE_TOGGLE_OFF 0
-
-typedef struct {
-	uint8_t number;
-	uint8_t enabled; // Specifies whether or not the channel being used.
-	RGB_Color *color;
-} Channel_Light;
 
 typedef struct {
 	uint8_t number;
@@ -46,12 +40,6 @@ typedef struct {
 extern Channel updateChannelProfile[CHANNEL_COUNT];
 extern Channel channelProfile[CHANNEL_COUNT];
 
-extern Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
-extern Channel_Light channelLightProfiles[CHANNEL_COUNT];
-
-RGB_Color offColor;
-RGB_Color onColor;
-
 int8_t Initialize_Channels ();
 int8_t Reset_Channels ();
 //int8_t Update_Channels ();
@@ -67,10 +55,5 @@ void Set_Channel_Value (uint8_t number, uint8_t state); // i.e., set discrete st
 int8_t Get_Channel_Value (uint8_t number); // i.e., get discrete input state
 //void Get_Channel_Signal (); // i.e., read the analog signal on the channel
 // void Disable_Channels ();
-
-
-int8_t Initialize_Channel_Lights ();
-void Reset_Channel_Lights ();
-int8_t Apply_Channel_Lights ();
 
 #endif /* GPIO_H */
