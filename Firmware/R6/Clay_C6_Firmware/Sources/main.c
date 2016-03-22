@@ -75,7 +75,7 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Clay_Core_Hardware.h"
 #include "Application.h"
-#include "Drivers/WiFi/Wifi_Test.h"
+//#include "Drivers/WiFi/Wifi_Test.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -88,7 +88,7 @@ int main(void)
    PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
-   Wifi_Test();
+//   Wifi_Test();
 
    Initialize();
 

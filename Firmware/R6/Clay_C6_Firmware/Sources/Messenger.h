@@ -33,8 +33,11 @@ typedef struct Message {
 extern Message* Create_Message (const char *content);
 extern int8_t Delete_Message (Message *message);
 
-extern void Set_Message_Source (Message *message, const char *address);
-extern void Set_Message_Destination (Message *message, const char *address);
+//extern void Set_Message_Source (Message *message, const char *address);
+//extern void Set_Message_Destination (Message *message, const char *address);
+
+extern void Set_Message_Source2 (Message *message, const char *channel, const char *address);
+extern void Set_Message_Destination2 (Message *message, const char *channel, const char *address);
 
 extern Message *incomingMessageQueue;
 extern Message *outgoingMessageQueue;

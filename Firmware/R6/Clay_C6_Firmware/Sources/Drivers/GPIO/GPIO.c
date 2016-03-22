@@ -3,9 +3,6 @@
 Channel updateChannelProfile[CHANNEL_COUNT];
 Channel channelProfile[CHANNEL_COUNT];
 
-Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
-Channel_Light channelLightProfiles[CHANNEL_COUNT];
-
 int8_t Initialize_Channels()
 {
 	int i;
@@ -450,84 +447,3 @@ int8_t Get_Channel_Value(uint8_t number)
 	return value;
 }
 
-int8_t Initialize_Channel_Lights()
-{
-	int i;
-
-	for (i = 0; i < CHANNEL_COUNT; i++)
-	{
-
-		// Initialize update channel profile
-		updateChannelLightProfiles[i].number = (i + 1);
-		updateChannelLightProfiles[i].enabled = TRUE;
-		updateChannelLightProfiles[i].color = &offColor;
-
-		// Initialize channel profile
-		channelLightProfiles[i].number = (i + 1);
-		channelLightProfiles[i].enabled = TRUE;
-		channelLightProfiles[i].color = &offColor;
-	}
-
-	return TRUE;
-}
-
-void Reset_Channel_Lights()
-{
-	int i;
-
-	for (i = 0; i < CHANNEL_COUNT; i++)
-	{
-
-		// Initialize update channel profile
-		updateChannelLightProfiles[i].number = (i + 1);
-		updateChannelLightProfiles[i].enabled = TRUE;
-		updateChannelLightProfiles[i].color = &offColor;
-	}
-
-//	return TRUE;
-}
-
-int8_t Apply_Channel_Lights()
-{
-	int i;
-
-	for (i = 0; i < CHANNEL_COUNT; i++)
-	{
-
-		// Check if the enable state changed. Apply the corresponding transform.
-		if (updateChannelLightProfiles[i].enabled != channelProfile[i].enabled)
-		{
-
-			// Update state.
-			channelLightProfiles[i].enabled = updateChannelLightProfiles[i].enabled;
-
-			if (channelLightProfiles[i].enabled == TRUE)
-			{
-
-				// Apply state.
-				Enable_Channel(channelLightProfiles[i].number, channelLightProfiles[i].enabled);
-
-//				// Check if the direction change. Apply the corresponding transform if it changed.
-//				if (updateChannelLightProfiles[i].color != channelLightProfiles[i].color)
-//				{
-
-					// Update color.
-					channelLightProfiles[i].color = updateChannelLightProfiles[i].color;
-
-					// Apply color.
-					RGB_LED_SetColor((RGB_LED)(channelLightProfiles[i].number - 1), channelLightProfiles[i].color);
-//				}
-
-			}
-			else if (channelLightProfiles[i].enabled == FALSE)
-			{
-
-				// Apply color.
-				RGB_LED_SetColor((RGB_LED)(channelLightProfiles[i].number - 1), &offColor);
-
-			}
-		}
-	}
-
-	return TRUE;
-}
