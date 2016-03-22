@@ -255,15 +255,13 @@ void Application (void) {
 		// Monitor communication message queues.
 		if (Has_Messages (&incomingMessageQueue) == TRUE) {
 			message = Wifi_Receive ();
-//			Delete_Message (message);
-//			Set_Message_Destination(message, "UDP,10.0.0.255:4445!");
-//			Set_Message_Destination(message, "TCP,10.0.0.5:1002!");
-//			Set_Message_Destination2 (message, "TCP", "10.0.0.5:1002");
-//			Wifi_Send (message);
 			status = Process_Incoming_Message (message);
 			if (message != NULL) {
 
 			}
+			//			Set_Message_Type (message, "TCP");
+			//			Set_Message_Destination (message, "10.0.0.5:8000");
+			//			Wifi_Send (message);
 		}
 
 		// Step state machine
@@ -333,9 +331,9 @@ void Application (void) {
 		}
 
 		// Step state machine
-		Wifi_State_Step ();
-		Wifi_State_Step ();
-		Wifi_State_Step ();
+//		Wifi_State_Step ();
+//		Wifi_State_Step ();
+//		Wifi_State_Step ();
 
 		// TODO: Monitor_Orientation ();
 
@@ -343,6 +341,11 @@ void Application (void) {
 
 		// Check and perform "scheduled" periodic events
 		Monitor_Periodic_Events ();
+
+		// Step state machine
+		Wifi_State_Step ();
+		Wifi_State_Step ();
+		Wifi_State_Step ();
 	}
 }
 
@@ -420,10 +423,11 @@ void Monitor_Periodic_Events () {
 		tick_3000ms = FALSE;
 
 		char *uuid = Get_Unit_UUID ();
-		sprintf (buffer2, "announce device %s\n", uuid);
+		sprintf (buffer2, "announce device %s", uuid);
 		Message *broadcastMessage = Create_Message (buffer2);
-		Set_Message_Source2 (broadcastMessage, "UDP", "10.0.0.255:4445");
-		Set_Message_Destination2 (broadcastMessage, "UDP", "10.0.0.255:4445");
+		Set_Message_Type (broadcastMessage, "UDP");
+		Set_Message_Source (broadcastMessage, "10.0.0.255:4445");
+		Set_Message_Destination (broadcastMessage, "10.0.0.255:4445");
 		Queue_Message (&outgoingMessageQueue, broadcastMessage);
 //		Wifi_Send (broadcastMessage);
 
