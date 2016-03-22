@@ -42,9 +42,7 @@ int ICACHE_RODATA_ATTR SocketListAdd(int newSocket)
 
 	while (socket_list_lock)
 	{
-		printf("yield add\r\n");
-		vTaskDelay(5 / portTICK_RATE_MS);
-//		taskYIELD();
+		vTaskDelay(1 / portTICK_RATE_MS);
 	}
 
 	socket_list_lock = true;
@@ -54,7 +52,6 @@ int ICACHE_RODATA_ATTR SocketListAdd(int newSocket)
 	{
 		if (Open_Sockets[i] == -1)
 		{
-			printf("added socket:%d\r\n", newSocket);
 			Open_Sockets[i] = newSocket;
 			rval = i;
 			break;
@@ -87,10 +84,9 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 		//this is here because getpeername can't be in a critical section.
 		while (socket_list_lock)
 		{
-			printf("yield query\r\n");
-			vTaskDelay(5 / portTICK_RATE_MS);
-//			taskYIELD();
+			vTaskDelay(1 / portTICK_RATE_MS);
 		}
+
 		socket_list_lock = true;
 
 		getpeername(Open_Sockets[i], (struct sockaddr* )&temp_addr_list,
@@ -105,7 +101,6 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 						== temp_addr_query.sin_addr.s_addr)
 		{
 			rval = Open_Sockets[i];
-			printf("found socket:%d\r\n", rval);
 			break;
 		}
 	}
@@ -118,9 +113,7 @@ void ICACHE_RODATA_ATTR SocketListRemove(int targetSocket)
 {
 	while (socket_list_lock)
 	{
-		vTaskDelay(5 / portTICK_RATE_MS);
-		printf("yield remove\r\n");
-//		taskYIELD();
+		vTaskDelay(1 / portTICK_RATE_MS);
 	}
 
 	socket_list_lock = true;
@@ -130,7 +123,6 @@ void ICACHE_RODATA_ATTR SocketListRemove(int targetSocket)
 	{
 		if (Open_Sockets[i] == targetSocket)
 		{
-			printf("removing socket :%d\r\n", targetSocket);
 			Open_Sockets[i] = -1;
 		}
 	}

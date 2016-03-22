@@ -88,7 +88,7 @@ int main(void)
    PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
-   Wifi_Test();
+//   Wifi_Test();
 
    Initialize();
 
