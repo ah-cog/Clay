@@ -18,7 +18,7 @@ int8_t Process_Incoming_Message (Message *message) {
 	token_count = Get_Token_Count (message_content);
 
 	// Reset the buffer
-	memset(uuid_buffer2, '\0', DEFAULT_UUID_LENGTH);
+	memset (uuid_buffer2, '\0', DEFAULT_UUID_LENGTH);
 
 	if ((status = Get_Token (message_content, token, 0)) != NULL) {
 
@@ -79,13 +79,13 @@ int8_t Process_Incoming_Message (Message *message) {
 						// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
 //						if (Has_Cached_Action_By_UUID (uuid_buffer) == TRUE) {
 //							Event *event = Get_Cached_Action_By_UUID (uuid_buffer);
-							Event *event = Create_Event (uuid_buffer, NULL, NULL);
-							if (event != NULL) {
-								Add_Event (timeline, event);
-								result = TRUE;
-							} else {
-								result = FALSE;
-							}
+						Event *event = Create_Event (uuid_buffer, NULL, NULL);
+						if (event != NULL) {
+							Add_Event (timeline, event);
+							result = TRUE;
+						} else {
+							result = FALSE;
+						}
 //						} else {
 //							result = FALSE;
 //						}
@@ -108,15 +108,15 @@ int8_t Process_Incoming_Message (Message *message) {
 						// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
 //						if (Has_Cached_Action_By_UUID (uuid_buffer) == TRUE && Has_Cached_Action_By_UUID (uuid_buffer2) == TRUE ) {
 
-							Event *event = Create_Event (uuid_buffer, NULL, NULL);
+						Event *event = Create_Event (uuid_buffer, NULL, NULL);
 //							Event *event = Get_Cached_Action_By_UUID (uuid_buffer);
-							uint16_t event_index = atoi (uuid_buffer2);
-							if (event != NULL) {
-								result = Insert_Event (timeline, event, event_index);
+						uint16_t event_index = atoi (uuid_buffer2);
+						if (event != NULL) {
+							result = Insert_Event (timeline, event, event_index);
 //								result = TRUE;
-							} else {
-								result = FALSE;
-							}
+						} else {
+							result = FALSE;
+						}
 
 //							// Parse the message content and perform the corresponding action operation
 //							Action *action = Get_Cached_Action_By_UUID (uuid_buffer);
@@ -211,7 +211,7 @@ int8_t Process_Incoming_Message (Message *message) {
 
 							// Check if the action is already in the cache. If nay, cache it!
 							// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
-							if (Has_Event_By_UUID (timeline, uuid_buffer) == TRUE && Has_Cached_Action_By_UUID (uuid_buffer2) == TRUE ) {
+							if (Has_Event_By_UUID (timeline, uuid_buffer) == TRUE && Has_Cached_Action_By_UUID (uuid_buffer2) == TRUE) {
 
 								// Get the event with the UUID and assign the action with the UUID.
 								Event *event = Get_Event_By_UUID (timeline, uuid_buffer);
@@ -296,13 +296,13 @@ int8_t Process_Incoming_Message (Message *message) {
 //			} // HACK
 
 //			if (SharedData.UpdateApplication) {
-				if (0) {
+			if (0) {
 
-			    // Disable all interrupts before jumping to the application.
-			    Disable_Interrupts ();
+				// Disable all interrupts before jumping to the application.
+				Disable_Interrupts ();
 
-			    // TODO: Reset the "application key" to indicate the bootloader.
-			    // Reset the "application key".
+				// TODO: Reset the "application key" to indicate the bootloader.
+				// Reset the "application key".
 //				SharedData.ApplicationKey = BOOTLOADER_KEY_VALUE;
 //			    SharedData.ApplicationKey = APPLICATION_KEY_VALUE;
 
@@ -354,18 +354,18 @@ void Send_Acknowledgment (char *token, char *messageContent) {
 	Message *responseMessage;
 
 	responseMessage = Create_Message (token);
-	Set_Message_Destination (responseMessage, "UDP,10.0.0.255:4445!"); // <HACK />
+	Set_Message_Destination2 (responseMessage, "UDP", "10.0.0.255:4445"); // <HACK />
 	Queue_Message (&outgoingMessageQueue, responseMessage);
 
 	responseMessage = Create_Message (token);
-	Set_Message_Destination (responseMessage, "UDP,10.0.0.255:4445!"); // <HACK />
+	Set_Message_Destination2 (responseMessage, "UDP", "10.0.0.255:4445"); // <HACK />
 	Queue_Message (&outgoingMessageQueue, responseMessage);
 
 	responseMessage = Create_Message (token);
-	Set_Message_Destination (responseMessage, "UDP,10.0.0.255:4445!"); // <HACK />
+	Set_Message_Destination2 (responseMessage, "UDP", "10.0.0.255:4445"); // <HACK />
 	Queue_Message (&outgoingMessageQueue, responseMessage);
 
 	responseMessage = Create_Message (token);
-	Set_Message_Destination (responseMessage, "UDP,10.0.0.255:4445!"); // <HACK />
+	Set_Message_Destination2 (responseMessage, "UDP", "10.0.0.255:4445"); // <HACK />
 	Queue_Message (&outgoingMessageQueue, responseMessage);
 }

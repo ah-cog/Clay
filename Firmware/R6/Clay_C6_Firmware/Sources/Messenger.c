@@ -6,6 +6,9 @@
 Message *incomingMessageQueue = NULL;
 Message *outgoingMessageQueue = NULL;
 
+#define MESSAGE_TERMINATOR '\n'
+#define ADDRESS_TERMINATOR '\x12'
+
 char messageUuidBuffer[DEFAULT_UUID_LENGTH] = { 0 };
 char grammarSymbolBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
 
@@ -32,7 +35,8 @@ Message* Create_Message (const char *content) {
 	return message;
 }
 
-void Set_Message_Source (Message *message, const char *address) {
+void Set_Message_Source2 (Message *message, const char *channel, const char *address) {
+//	Set_Message_Destination(message, "TCP,10.0.0.5:1002!");
 
 	// Free the message's destination address from memory
 	if ((*message).source != NULL) {
@@ -41,11 +45,27 @@ void Set_Message_Source (Message *message, const char *address) {
 	}
 
 	// Copy the message destination address
-	(*message).source = (char *) malloc (strlen (address));
-	strcpy ((*message).source, address);
+	(*message).source = (char *) malloc (strlen (channel) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
+//	strcpy ((*message).source, address);
+
+	sprintf ((*message).source, "%s,%s%c", channel, address, ADDRESS_TERMINATOR);
 }
 
-void Set_Message_Destination (Message *message, const char *address) {
+//void Set_Message_Source (Message *message, const char *address) {
+//
+//	// Free the message's destination address from memory
+//	if ((*message).source != NULL) {
+//		free ((*message).source);
+//		(*message).source = NULL;
+//	}
+//
+//	// Copy the message destination address
+//	(*message).source = (char *) malloc (strlen (address));
+//	strcpy ((*message).source, address);
+//}
+
+void Set_Message_Destination2 (Message *message, const char *channel, const char *address) {
+//	Set_Message_Destination(message, "TCP,10.0.0.5:1002!");
 
 	// Free the message's destination address from memory
 	if ((*message).destination != NULL) {
@@ -54,9 +74,24 @@ void Set_Message_Destination (Message *message, const char *address) {
 	}
 
 	// Copy the message destination address
-	(*message).destination = (char *) malloc (strlen (address));
-	strcpy ((*message).destination, address);
+	(*message).destination = (char *) malloc (strlen (channel) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
+//	strcpy ((*message).destination, address);
+
+	sprintf ((*message).destination, "%s,%s%c", channel, address, ADDRESS_TERMINATOR);
 }
+
+//void Set_Message_Destination (Message *message, const char *address) {
+//
+//	// Free the message's destination address from memory
+//	if ((*message).destination != NULL) {
+//		free ((*message).destination);
+//		(*message).destination = NULL;
+//	}
+//
+//	// Copy the message destination address
+//	(*message).destination = (char *) malloc (strlen (address));
+//	strcpy ((*message).destination, address);
+//}
 
 int8_t Delete_Message (Message *message) {
 
