@@ -192,7 +192,8 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 		}
 		}
 
-		taskYIELD();
+		vTaskDelay(5 / portTICK_RATE_MS);
+//		taskYIELD();
 	}
 }
 

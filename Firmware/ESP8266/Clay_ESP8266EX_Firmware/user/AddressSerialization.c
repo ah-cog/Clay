@@ -28,13 +28,13 @@ static const char* port_delim = ":";
 ////Local Prototypes///////////////////////////////////////////////
 
 ////Global implementations ////////////////////////////////////////
-uint32 ICACHE_RODATA_ATTR Serialize_Address(struct sockaddr_in * Source,
+uint32 ICACHE_RODATA_ATTR Serialize_Address(in_addr_t source, int32 port,
 		uint8* Destination, uint32 DestinationLength,
 		Message_Type ConnectionType)
 {
 	uint32 rval = 0;
 
-	uint8 * ntoaBuf = inet_ntoa(Source->sin_addr.s_addr); //the buffer gets overwritten by subsequent calls.
+	uint8 * ntoaBuf = inet_ntoa(source); //the buffer gets overwritten by subsequent calls.
 	uint8 connectionTypeStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
 	if (Get_Message_Type_Str(ConnectionType, connectionTypeStr))
@@ -45,8 +45,8 @@ uint32 ICACHE_RODATA_ATTR Serialize_Address(struct sockaddr_in * Source,
 		if (rval <= DestinationLength)
 		{
 			rval = snprintf(Destination, DestinationLength, "%s%s%s%s%d%s\n",
-					connectionTypeStr, type_delim, ntoaBuf, port_delim,
-					ntohs(Source->sin_port), address_terminator);
+					connectionTypeStr, type_delim, ntoaBuf, port_delim, port,
+					address_terminator);
 		}
 
 		if (rval > DestinationLength)
