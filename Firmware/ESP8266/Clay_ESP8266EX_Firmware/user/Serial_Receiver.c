@@ -200,9 +200,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 		{
 			taskENTER_CRITICAL();
 			tempContent = strtok(Serial_Rx_Buffer, MessageDelimiter);
-			taskEXIT_CRITICAL();
-
-			taskENTER_CRITICAL();
 			tempAddr = strtok(NULL, MessageDelimiter);
 			taskEXIT_CRITICAL();
 

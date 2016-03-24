@@ -101,6 +101,8 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 			m = Dequeue_Message(&outgoingTcpMessageQueue);
 			taskEXIT_CRITICAL();
 
+			//TODO: Need to be able to figure out the correct socket. echo is not working with the old code
+			//		when we go try to create a new connection.
 			sock_fd = SocketListQuery(m->destination);
 
 			taskENTER_CRITICAL();
@@ -119,14 +121,15 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 
 		case Send_Message:
 		{
-			//TODO: determine which socket the communication goes back to
-			//	    if there's a socket open to the destination addr, use it
-			//		otherwise create a socket and leave it open.
-
 			if (sock_fd == -1)
 			{
 				sock_fd = tcpCreateSocket();
-				if (!TCP_Open_Connection(sock_fd))
+
+				taskENTER_CRITICAL();
+				printf("create task for tx\r\n");
+				taskEXIT_CRITICAL();
+
+				if (!TCP_Open_Connection(&sock_fd))
 				{
 					lwip_close(sock_fd);
 				}

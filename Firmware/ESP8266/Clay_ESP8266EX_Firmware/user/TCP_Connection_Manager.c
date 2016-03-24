@@ -69,31 +69,26 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 	int rval = -1;
 	temp_addr_length = sizeof(temp_addr_list);
 
+	//this whole lock mechanism is here because getpeername can't be in a critical section.
+	while (socket_list_lock)
+	{
+		vTaskDelay(1 / portTICK_RATE_MS);
+	}
+
+	socket_list_lock = true;
 	taskENTER_CRITICAL();
 	Deserialize_Address(addrStr, &temp_addr_query, &temp_message_type);
 
 	for (i = 0; i < TCP_MAX_CONNECTIONS; ++i)
 	{
-		if (i == -1)
+		if (Open_Sockets[i] == -1)
 		{
 			continue;
 		}
 
 		taskEXIT_CRITICAL();
-
-		//this is here because getpeername can't be in a critical section.
-		while (socket_list_lock)
-		{
-			vTaskDelay(1 / portTICK_RATE_MS);
-		}
-
-		socket_list_lock = true;
-
 		getpeername(Open_Sockets[i], (struct sockaddr* )&temp_addr_list,
 				&temp_addr_length);
-
-		socket_list_lock = false;
-
 		taskENTER_CRITICAL();
 
 		if (temp_addr_list.sin_port == temp_addr_query.sin_port
@@ -101,10 +96,12 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 						== temp_addr_query.sin_addr.s_addr)
 		{
 			rval = Open_Sockets[i];
+
 			break;
 		}
 	}
 	taskEXIT_CRITICAL();
+	socket_list_lock = false;
 
 	return rval;
 }
