@@ -185,8 +185,10 @@ bool Set_AP_Command(char * args)
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
 	char * ssid = strtok(args, &args_delimiter);
 	char * key = strtok(NULL, &args_delimiter);
+	taskEXIT_CRITICAL();
 
 	Set_Access_Point(ssid, key);
 
