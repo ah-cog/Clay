@@ -60,6 +60,7 @@ volatile bool Serial_Tx_In_Progress;
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Transmitter_States State;
 
+static uint8 * temp;
 static uint8 * Serial_Tx_Buffer;
 static uint32 Serial_Tx_Count;
 static Message * Temp_Message;
@@ -137,7 +138,18 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 			strcat(Serial_Tx_Buffer, Temp_Message->source);
 			taskEXIT_CRITICAL();
 
-			State = Wait_For_Transmit_Ok;
+			//do this so we don't get two terminators
+			temp = strchr(Serial_Tx_Buffer, address_terminator[0]);
+
+			if (temp != NULL)
+			{
+				temp[0] = address_delimiter[0];
+				temp[1] = '\0';
+			}
+
+			taskENTER_CRITICAL();
+			strcat(Serial_Tx_Buffer, Temp_Message->destination);
+			taskEXIT_CRITICAL();
 
 			timeTemp = system_get_time();
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
@@ -145,6 +157,8 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 #else
 			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
 #endif
+
+			State = Wait_For_Transmit_Ok;
 
 			break;
 		}
@@ -205,11 +219,11 @@ void Send_Message_To_Master(char * message, Message_Type type)
 
 	taskENTER_CRITICAL();
 	Get_Message_Type_Str(type, type_string);
-	sprintf(addr_string, "%s,%s", type_string, address_terminator);
+	sprintf(addr_string, "%s,:;:%s", type_string, address_terminator);
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
-	Initialize_Message(&m, type_string, type_string, message);
+	Initialize_Message(&m, addr_string, "", message);
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();

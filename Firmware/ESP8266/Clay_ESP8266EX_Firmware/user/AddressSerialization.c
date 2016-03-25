@@ -18,6 +18,7 @@
 
 ////Globals   /////////////////////////////////////////////////////
 const char * address_terminator = "\x12";
+const char * address_delimiter = ";";
 
 ////Local vars/////////////////////////////////////////////////////
 static uint8 deserialize_temp_str[50];
@@ -35,18 +36,23 @@ uint32 ICACHE_RODATA_ATTR Serialize_Address(in_addr_t source, int32 port,
 	uint32 rval = 0;
 
 	uint8 * ntoaBuf = inet_ntoa(source); //the buffer gets overwritten by subsequent calls.
-	uint8 connectionTypeStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
+	char connectionTypeStr[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
-	if (Get_Message_Type_Str(ConnectionType, connectionTypeStr))
+	if (ConnectionType == MESSAGE_TYPE_MAX
+			|| Get_Message_Type_Str(ConnectionType, connectionTypeStr))
 	{
 		//+ 2 for AddressTerminator and null, +3 for 1 comma and 1 colon
 		rval = strlen(ntoaBuf) + 2 + 3 + strlen(connectionTypeStr) + 5;
 
 		if (rval <= DestinationLength)
 		{
-			rval = snprintf(Destination, DestinationLength, "%s%s%s%s%d%s\n",
-					connectionTypeStr, type_delim, ntoaBuf, port_delim, port,
-					address_terminator);
+			rval =
+					snprintf(Destination, DestinationLength, "%s%s%s%s%d%s\n",
+							(ConnectionType == MESSAGE_TYPE_MAX ?
+									"" : connectionTypeStr),
+							(ConnectionType == MESSAGE_TYPE_MAX ?
+									"" : type_delim), ntoaBuf, port_delim, port,
+							address_terminator);
 		}
 
 		if (rval > DestinationLength)
@@ -65,29 +71,29 @@ void ICACHE_RODATA_ATTR Deserialize_Address(uint8* Source,
 
 	strcpy(deserialize_temp_str, Source);
 
-	//get the string off the front
+//get the string off the front
 	taskENTER_CRITICAL();
-	uint8* typeStart = strtok(deserialize_temp_str, type_delim);
-	uint8* ipStart = strtok(NULL, port_delim);
-	uint8* portStart = strtok(NULL, address_terminator);
+	uint8* type_start = strtok(deserialize_temp_str, type_delim);
+	uint8* ip_start = strtok(NULL, port_delim);
+	uint8* port_start = strtok(NULL, address_terminator);
 	taskEXIT_CRITICAL();
 
-	if (typeStart != NULL)
+	if (type_start != NULL)
 	{
-		*type = Get_Message_Type_From_Str(typeStart);
+		*type = Get_Message_Type_From_Str(type_start);
 	}
 
-	if (ipStart != NULL)
+	if (ip_start != NULL)
 	{
-		inet_aton(ipStart, &(Destination->sin_addr));
+		inet_aton(ip_start, &(Destination->sin_addr));
 	}
 
-	if (portStart != NULL)
+	if (port_start != NULL)
 	{
-		Destination->sin_port = htons(atoi(portStart));
+		Destination->sin_port = htons(atoi(port_start));
 	}
 
-	if (ipStart != NULL && portStart != NULL)
+	if (ip_start != NULL && port_start != NULL)
 	{
 		Destination->sin_family = AF_INET;
 		Destination->sin_len = sizeof(*Destination);

@@ -16,6 +16,7 @@
 ////Globals   /////////////////////////////////////////////////////
 uint8_t* message_strings[] = { "UDP", "TCP", "CMD", "INFO", "INVALID" };
 const char * address_terminator = "\x12";
+const char * address_delimiter = ";";
 
 ////Local vars/////////////////////////////////////////////////////
 uint8_t message_type_temp_str[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];

@@ -20,6 +20,7 @@
 
 ////Globals   /////////////////////////////////////////////////////
 extern const char * address_terminator;
+extern const char * address_delimiter;
 
 ////Prototypes/////////////////////////////////////////////////////
 extern void Deserialize_Address(uint8* Source, struct sockaddr_in * Destination,

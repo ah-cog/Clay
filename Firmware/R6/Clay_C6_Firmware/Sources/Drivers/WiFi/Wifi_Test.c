@@ -95,6 +95,10 @@ void Wifi_Test() {
       if (Has_Messages(&incomingMessageQueue) == TRUE) {
          message = Wifi_Receive();
          if (message != NULL) {
+            char * temp = message->destination;
+            message->destination = message->source;
+            message->source = temp;
+
             Wifi_Send(message);
          }
       }

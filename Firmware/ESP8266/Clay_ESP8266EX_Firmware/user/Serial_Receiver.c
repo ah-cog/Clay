@@ -66,8 +66,9 @@ static uint32 Serial_Rx_Count;
 
 static uint8 Newline_Count;
 static Message tempMsg;
-static char * tempContent;
-static char * tempAddr;
+static char * temp_content;
+static char * temp_source_addr;
+static char * temp_dest_addr;
 static const char * MessageDelimiter = "\n";
 static uint32 stateTime;
 int i;
@@ -199,18 +200,20 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 		case Parsing:
 		{
 			taskENTER_CRITICAL();
-			tempContent = strtok(Serial_Rx_Buffer, MessageDelimiter);
-			tempAddr = strtok(NULL, MessageDelimiter);
+			temp_content = strtok(Serial_Rx_Buffer, MessageDelimiter);
+			temp_source_addr = strtok(NULL, address_delimiter);
+			temp_dest_addr = strtok(NULL, address_terminator);
 			taskEXIT_CRITICAL();
 
-			if (tempContent != NULL && tempAddr != NULL)
+			if (temp_content != NULL && temp_source_addr != NULL)
 			{
 				taskENTER_CRITICAL();
-				Initialize_Message(&tempMsg, tempAddr, tempAddr, tempContent);
+				Initialize_Message(&tempMsg, temp_source_addr, temp_dest_addr,
+						temp_content);
 				taskEXIT_CRITICAL();
 
 				taskENTER_CRITICAL();
-				Deserialize_Address(tempAddr, &tempAddressIgnore,
+				Deserialize_Address(temp_source_addr, &tempAddressIgnore,
 						&receivedMessageType);
 				taskEXIT_CRITICAL();
 
