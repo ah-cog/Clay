@@ -128,43 +128,14 @@ void Initialize () {
 		// Failure
 	}
 
+	// Initialize Power Monitor
 	ADC0_DeviceData = ADC0_Init (NULL);
 
+	// Initialize Power Monitor
 	ADC0_StartCalibration (ADC0_DeviceData);
 	while (!ADC0_GetMeasurementCompleteStatus (ADC0_DeviceData))
 		;
 	LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus (ADC0_DeviceData);
-
-#if 1
-//#if !defined DISABLE_WIFI
-
-//   // ESP8266, WiFi, HTTP, UDP.
-//   if ((status = Enable_ESP8266()) != TRUE)
-//   {
-//      // Failure
-//   }
-//// TODO: Generate SSID for AP according to regular expression and set up access point to facilitate discovery.
-//
-//   if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE)
-//   {
-//      // Failure
-//   }
-//
-//   if ((status = Start_HTTP_Server(HTTP_SERVER_PORT)) != TRUE)
-//   {
-//      // Failure
-//   }
-//
-//   if ((Start_UDP_Server(MESSAGE_PORT)) != TRUE)
-//   {
-//      // Failure
-//   }
-//
-//   if ((Start_Discovery_Broadcast()) != TRUE)
-//   {
-//      // Failure
-//   }
-#endif
 }
 
 void Application (void) {
@@ -199,36 +170,6 @@ void Application (void) {
 //      //incoming button press messages are handled by interrupt.
 //   }
 
-	// TODO: Include "\n" at end of string? Or is this buried in the library?
-
-	/*
-	 Message *testMessage = NULL;
-
-	 // cache action <action-uuid> <state>
-	 testMessage = Create_Message ("cache action 34d87141-01f7-4812-a358-3892cf2f5a3c");
-	 Set_Message_Source (testMessage, "UDP,192.168.1.255:4445!");
-	 Set_Message_Destination (testMessage, "UDP,192.168.1.255:4445!");
-	 Queue_Message (&incomingMessageQueue, testMessage);
-
-	 // start event <event-uuid>
-	 testMessage = Create_Message ("start event 89d87141-01f7-4812-a358-3892cf2f5a66");
-	 Set_Message_Source (testMessage, "UDP,192.168.1.255:4445!");
-	 Set_Message_Destination (testMessage, "UDP,192.168.1.255:4445!");
-	 Queue_Message (&incomingMessageQueue, testMessage);
-
-	 // start event <event-uuid>
-	 testMessage = Create_Message ("set event 89d87141-01f7-4812-a358-3892cf2f5a66 action 34d87141-01f7-4812-a358-3892cf2f5a3c");
-	 Set_Message_Source (testMessage, "UDP,192.168.1.255:4445!");
-	 Set_Message_Destination (testMessage, "UDP,192.168.1.255:4445!");
-	 Queue_Message (&incomingMessageQueue, testMessage);
-
-	 // start event <event-uuid>
-	 testMessage = Create_Message ("set event 89d87141-01f7-4812-a358-3892cf2f5a66 state \"light T T T T T T T T T T T T\"");
-	 Set_Message_Source (testMessage, "UDP,192.168.1.255:4445!");
-	 Set_Message_Destination (testMessage, "UDP,192.168.1.255:4445!");
-	 Queue_Message (&incomingMessageQueue, testMessage);
-	 */
-
 	for (;;) {
 
 // Check and process any incoming requests
@@ -241,15 +182,6 @@ void Application (void) {
 		// Step state machine
 		Wifi_State_Step ();
 		Wifi_State_Step ();
-		Wifi_State_Step ();
-
-//		message = Create_Message ("discovery");
-//		Set_Message_Source (message, "192.168.1.255");
-//		Set_Message_Destination (message, "192.168.1.255:4445");
-////			Wifi_Send(&outgoingMessageQueue, message);
-//		Queue_Message(&outgoingMessageQueue, message);
-//
-//		continue;
 
 		// TODO: Check for Wi-Fi messages on the Wi-Fi queue, and put them onto the system incoming queue.
 		// Monitor communication message queues.
@@ -259,13 +191,9 @@ void Application (void) {
 			if (message != NULL) {
 
 			}
-			//			Set_Message_Type (message, "TCP");
-			//			Set_Message_Destination (message, "10.0.0.5:8000");
-			//			Wifi_Send (message);
 		}
 
 		// Step state machine
-		Wifi_State_Step ();
 		Wifi_State_Step ();
 		Wifi_State_Step ();
 
@@ -331,9 +259,8 @@ void Application (void) {
 		}
 
 		// Step state machine
-//		Wifi_State_Step ();
-//		Wifi_State_Step ();
-//		Wifi_State_Step ();
+		Wifi_State_Step ();
+		Wifi_State_Step ();
 
 		// TODO: Monitor_Orientation ();
 
@@ -343,7 +270,6 @@ void Application (void) {
 		Monitor_Periodic_Events ();
 
 		// Step state machine
-		Wifi_State_Step ();
 		Wifi_State_Step ();
 		Wifi_State_Step ();
 	}
@@ -426,8 +352,8 @@ void Monitor_Periodic_Events () {
 		sprintf (buffer2, "announce device %s", uuid);
 		Message *broadcastMessage = Create_Message (buffer2);
 		Set_Message_Type (broadcastMessage, "UDP");
-		Set_Message_Source (broadcastMessage, "10.0.0.255:4445");
-		Set_Message_Destination (broadcastMessage, "10.0.0.255:4445");
+		Set_Message_Source (broadcastMessage, "192.168.43.255:4445");
+		Set_Message_Destination (broadcastMessage, "192.168.43.255:4445");
 		Queue_Message (&outgoingMessageQueue, broadcastMessage);
 //		Wifi_Send (broadcastMessage);
 

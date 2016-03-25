@@ -571,7 +571,7 @@ registers of the peripheral(s) configured by the component.
 **            Counter frequency                            : Auto select
 **          Counter restart                                : On-match
 **            Period device                                : FTM1_MOD
-**            Period                                       : 50 µs
+**            Period                                       : 50 Âµs
 **            Interrupt                                    : Enabled
 **              Interrupt                                  : INT_FTM1
 **              Interrupt priority                         : medium priority

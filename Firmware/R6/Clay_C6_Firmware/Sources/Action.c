@@ -217,8 +217,9 @@ Action* Get_Cached_Action_By_UUID (char *uuid) {
 		// Search for the action construct associated with the action that has the specified UUID.
 		event = cache; // Get the first action construct in the cache list.
 		while (event != NULL) {
-			if (strncmp (uuid, (*event).uuid, strlen ((*event).uuid)) == 0) {
-				return (*event).action; // Return the action associated with the specified action construct.
+			Action *action = (*event).action;
+			if (strncmp (uuid, (*action).uuid, strlen ((*action).uuid)) == 0) {
+				return action; // Return the action associated with the specified action construct.
 			}
 			event = (*event).next;
 		}
@@ -785,22 +786,43 @@ int8_t Perform_Action (Event *event) {
 
 		} else if (strncmp (token, "light", strlen ("light")) == 0) {
 
-			// light T T T T T T T T T T T T
+			// light FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
 			// ^
+
+			//	char *hexString = "FFEEDD";
+			//	int hexInt = HexStringToUInt (hexString);
+			//	int red   = (hexInt & 0xFF0000) >> 16;
+			//	int green = (hexInt & 0x00FF00) >> 8;
+			//	int blue  = (hexInt & 0x0000FF) >> 0;
 
 			// Update the channels
 			// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
 			for (i = 0; i < 12; i++) {
+				int hex_color = 0x000000;
+				int red = 0;
+				int green = 0;
+				int blue = 0;
+
 				status = Get_Token (actionContent, token, 1 + i);
 
-				// Set LED state
-				if (token[0] == 'T') {
+				hex_color = HexStringToUInt (token);
+				red   = (hex_color & 0xFF0000) >> 16;
+				green = (hex_color & 0x00FF00) >> 8;
+				blue  = (hex_color & 0x0000FF) >> 0;
+
+//				// Set LED state
+//				if (token[0] == 'T') {
 					updateChannelLightProfiles[i].enabled = TRUE;
-					updateChannelLightProfiles[i].color = &onColor;
-				} else {
-					updateChannelLightProfiles[i].enabled = TRUE;
-					updateChannelLightProfiles[i].color = &offColor;
-				}
+//					updateChannelLightProfiles[i].color = &onColor;
+
+					Set_Light_Color (&updateChannelLightProfiles[i], red, green, blue);
+//					updateChannelLightProfiles[i].color.R = red;
+//					updateChannelLightProfiles[i].color.G = green;
+//					updateChannelLightProfiles[i].color.B = blue;
+//				} else {
+//					updateChannelLightProfiles[i].enabled = TRUE;
+//					updateChannelLightProfiles[i].color = &offColor;
+//				}
 
 			}
 
@@ -824,10 +846,11 @@ int8_t Perform_Action (Event *event) {
 				// Set LED state
 				if (token[0] == 'T') {
 					updateChannelLightProfiles[i].enabled = TRUE;
-					updateChannelLightProfiles[i].color = &onColor;
+//					updateChannelLightProfiles[i].color = &onColor;
+					Set_Light_Color (&updateChannelLightProfiles[i], onColor.R, onColor.G, onColor.B);
 				} else {
 					updateChannelLightProfiles[i].enabled = TRUE;
-					updateChannelLightProfiles[i].color = &offColor;
+					Set_Light_Color (&updateChannelLightProfiles[i], offColor.R, offColor.G, offColor.B);
 				}
 
 				// Update the GPIO states

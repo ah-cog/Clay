@@ -2,7 +2,7 @@
 #include "Action.h"
 
 char uuid_buffer[DEFAULT_UUID_LENGTH] = { 0 };
-char uuid_buffer2[DEFAULT_UUID_LENGTH] = { 0 };
+char uuid_buffer2[512] = { 0 }; // char uuid_buffer2[DEFAULT_UUID_LENGTH] = { 0 };
 char state_buffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
 
 int8_t Process_Incoming_Message (Message *message) {

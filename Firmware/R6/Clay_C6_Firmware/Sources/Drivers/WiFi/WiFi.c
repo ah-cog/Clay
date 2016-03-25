@@ -42,9 +42,6 @@ static uint8_t temp_address_string[50];
 
 static const char * message_terminator = "\n";
 
-//static Message Temp_Message;
-//static Message * Temp_Message_ptr;
-
 static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
 
@@ -140,9 +137,7 @@ void Wifi_State_Step () {
 			Ring_Buffer_Init ();
 
 			WIFI_GPIO2_PutVal (NULL, 0);
-		}
-//         else if (Peek_Message(&outgoingMessageQueue) != NULL)
-		else if (Has_Messages (&outgoingMessageQueue) == TRUE) {
+		} else if (Has_Messages (&outgoingMessageQueue) == TRUE) {
 			State = Serialize_Transmission;
 		}
 
@@ -177,9 +172,9 @@ void Wifi_State_Step () {
 
 		if (temp_address_tok != NULL && Temp_Content != NULL) {
 
-//			sprintf (temp_address_string, "%s%s", temp_address_tok, address_terminator);
 			sprintf (temp_address_string, "%s", temp_address_tok);
 
+			// Deserialize the string into temporary buffers (for copying into a corresponding object)
 			char *message_type = temp_address_string;
 			char *message_address = strchr (temp_address_string, ',') + 1;
 			(message_address - 1)[0] = '\0';
@@ -199,22 +194,18 @@ void Wifi_State_Step () {
 	}
 
 	case Serialize_Transmission: {
+
+		// Dequeue outgoing message
 		Message *message = Dequeue_Message (&outgoingMessageQueue);
 
-		//	(*message).source = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
-		//	strcpy ((*message).source, address);
-
-		//	sprintf ((*message).source, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
-
+		// Serialize the message
 		snprintf (outBuffer, OUT_BUFFER_LENGTH, "%s\n%s,%s\x12\n", message->content, message->type, message->destination);
-//		snprintf (outBuffer, OUT_BUFFER_LENGTH, "%s,%s\x12%s\n", message->type, message->destination, message->content);
-//		strcat (outBuffer, message->type);
-//		strcat (outBuffer, ",");
-//		strcat (outBuffer, message->destination);
 		pendingTransmitByteCount = strlen (outBuffer);
 		Delete_Message (message);
 
+		// Update the state
 		State = Start_Transmission;
+
 		break;
 	}
 
@@ -293,10 +284,6 @@ void Wifi_Do_Reset (bool StateMachineWaitForConnect) {
 }
 
 bool Wifi_Send (Message *message) {
-//	if (Queue_Full (&outgoingMessageQueue)) {
-//		return FALSE;
-//	}
-
 	Queue_Message (&outgoingMessageQueue, message);
 	return TRUE;
 }
