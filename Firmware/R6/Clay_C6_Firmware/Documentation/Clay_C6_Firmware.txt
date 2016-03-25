@@ -397,14 +397,14 @@ Module "FLASH1"    (component FLASH_LDD)
                 this case the Enable() method is not necessary and needn't to be generated. This method can be called only once.
                 Before the second call of Init() the Deinit() must be called first.
    - FLASH1_Read -This method sets up a flash memory read operation. The operation itself is performing by defined batches 
-                (property <Read batch size>) by periodical calling the component’s Main method in the user application (higher 
+                (property <Read batch size>) by periodical calling the componentâ€™s Main method in the user application (higher 
                 level OS service).
    - FLASH1_Write -This method sets up a flash memory write operation. The operation itself is performing by defined batches 
-                (property <Write batch size>) by periodical calling the component’s Main method in the user application (higher 
-                level OS service) or by the component’s ISR, if an component’s interrupt service is enabled.
+                (property <Write batch size>) by periodical calling the componentâ€™s Main method in the user application (higher 
+                level OS service) or by the componentâ€™s ISR, if an componentâ€™s interrupt service is enabled.
    - FLASH1_Erase -This method sets up a flash memory erase operation. The operation itself is performing by defined batches 
-                (property <Erase batch size>) by periodical calling the component’s Main method in the user application (higher 
-                level OS service) or by the component’s ISR, if an component’s interrupt service is enabled.
+                (property <Erase batch size>) by periodical calling the componentâ€™s Main method in the user application (higher 
+                level OS service) or by the componentâ€™s ISR, if an componentâ€™s interrupt service is enabled.
    - FLASH1_Main -This method is used to perform one batch of a flash memory operation. This method is used to perform batches 
                 of all flash memory operations (Write, Read, Erase, EraseBlock, VerifyErasedBlock) when the component works in 
                 the polled mode (interrupt service is disabled - property <Interrupt service>). This method performs batches of 

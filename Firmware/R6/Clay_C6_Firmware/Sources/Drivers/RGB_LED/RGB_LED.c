@@ -133,6 +133,12 @@ int8_t Initialize_Color_Palette () {
 	offColor.B = 0;
 }
 
+void Set_Light_Color (Channel_Light *channel_light, uint8_t red, uint8_t green, uint8_t blue) {
+	(*channel_light).color.R = red;
+	(*channel_light).color.G = green;
+	(*channel_light).color.B = blue;
+}
+
 int8_t Initialize_Channel_Lights () {
 	int i;
 
@@ -141,12 +147,12 @@ int8_t Initialize_Channel_Lights () {
 		// Initialize update channel profile
 		updateChannelLightProfiles[i].number = (i + 1);
 		updateChannelLightProfiles[i].enabled = TRUE;
-		updateChannelLightProfiles[i].color = &offColor;
+		Set_Light_Color (&updateChannelLightProfiles[i], 0, 0, 0);
 
 		// Initialize channel profile
 		channelLightProfiles[i].number = (i + 1);
 		channelLightProfiles[i].enabled = TRUE;
-		channelLightProfiles[i].color = &offColor;
+		Set_Light_Color (&channelLightProfiles[i], 0, 0, 0);
 	}
 
 	return TRUE;
@@ -160,7 +166,7 @@ void Reset_Channel_Lights () {
 		// Initialize update channel profile
 		updateChannelLightProfiles[i].number = (i + 1);
 		updateChannelLightProfiles[i].enabled = TRUE;
-		updateChannelLightProfiles[i].color = &offColor;
+		Set_Light_Color (&updateChannelLightProfiles[i], 0, 0, 0);
 	}
 
 //	return TRUE;
@@ -187,10 +193,12 @@ int8_t Apply_Channel_Lights () {
 //				{
 
 				// Update color.
-				channelLightProfiles[i].color = updateChannelLightProfiles[i].color;
+				channelLightProfiles[i].color.R = updateChannelLightProfiles[i].color.R;
+				channelLightProfiles[i].color.G = updateChannelLightProfiles[i].color.G;
+				channelLightProfiles[i].color.B = updateChannelLightProfiles[i].color.B;
 
 				// Apply color.
-				RGB_LED_SetColor ((RGB_LED) (channelLightProfiles[i].number - 1), channelLightProfiles[i].color);
+				RGB_LED_SetColor ((RGB_LED) (channelLightProfiles[i].number - 1), &(channelLightProfiles[i].color));
 //				}
 
 			} else if (channelLightProfiles[i].enabled == FALSE) {
