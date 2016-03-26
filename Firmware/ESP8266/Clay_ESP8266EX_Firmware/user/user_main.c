@@ -146,8 +146,8 @@ void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
 	}
 	case EVENT_STAMODE_GOT_IP:
 	{
-		UDP_Transmitter_Init();
-		UDP_Receiver_Init();
+//		UDP_Transmitter_Init();
+//		UDP_Receiver_Init();
 		TCP_Transmitter_Init();
 		TCP_Receiver_Init();
 

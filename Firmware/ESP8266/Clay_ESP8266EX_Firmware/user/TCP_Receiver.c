@@ -387,9 +387,8 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 			fail_count = 0;
 
 //			taskENTER_CRITICAL();
-//			printf("rx'd\r\n");
+//			printf("rx'd %d\r\n", received_length);
 //			taskEXIT_CRITICAL();
-//			UART_WaitTxFifoEmpty(UART0);
 
 			//copy data into unprocessed_data
 			if (unprocessed_data == NULL)
@@ -407,7 +406,6 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 //				printf("alloc'd %d unproc bytes\r\n", unprocessed_length);
 //				taskEXIT_CRITICAL();
 
-//				UART_WaitTxFifoEmpty(UART0);
 			}
 			else
 			{
@@ -419,7 +417,6 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 
 //				printf("before free unproc:%d\r\n",
 //						system_get_free_heap_size());
-//				UART_WaitTxFifoEmpty(UART0);
 
 				free(unprocessed_data);
 				taskEXIT_CRITICAL();
@@ -427,7 +424,6 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 //				taskENTER_CRITICAL();
 //				printf("free unproc:%d\r\n", system_get_free_heap_size());
 //				taskEXIT_CRITICAL();
-//				UART_WaitTxFifoEmpty(UART0);
 
 				unprocessed_data = temp;
 				temp = NULL;
@@ -440,7 +436,6 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 //				taskENTER_CRITICAL();
 //				printf("unprocessed now %d\r\n", unprocessed_length);
 //				taskEXIT_CRITICAL();
-//				UART_WaitTxFifoEmpty(UART0);
 			}
 
 			received_length = 0;
@@ -450,11 +445,13 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 			//
 			//
 			//IMPORTANT:
-			//MULTIPLE CALLS TO STRTOK: This means this loop must be in a
-			//							critical section to avoid resetting
-			//							the internal state machine.
-			//						    We could also make subsequent calls to strtok
-			//  						by using the processed_message_index
+			//MULTIPLE CALLS TO STRTOK: To avoid having strtok reset unexpectedly:
+			//							-This loop must be in a
+			//							 critical section to avoid resetting
+			//							 the internal state machine.
+			//						    -Subsequent calls to strtok are made
+			//  						 with with processed_message_index into
+			//						     unprocessed_data
 			//
 			//
 			//
@@ -493,7 +490,11 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 				//enqueue if we received message end.
 				Enqueue(temp, &source_address, &local_address); //TODO: add destination address.
 
+				taskENTER_CRITICAL();
 				free(temp);
+				taskEXIT_CRITICAL();
+
+				taskYIELD();
 
 				taskENTER_CRITICAL();
 				processed_message = strtok(
@@ -512,9 +513,6 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 //					unprocessed_data + processed_message_index);
 //			taskEXIT_CRITICAL();
 //
-//			portENTER_CRITICAL();
-//			UART_WaitTxFifoEmpty(UART0);
-//			portEXIT_CRITICAL();
 
 			if (found_message)
 			{
@@ -535,12 +533,10 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 //					taskENTER_CRITICAL();
 //					printf("unproc'd data left:%d\r\n", unprocessed_length);
 //					taskEXIT_CRITICAL();
-//					UART_WaitTxFifoEmpty(UART0);
 
 //					taskENTER_CRITICAL();
 //					printf("free heap:%d\r\n", system_get_free_heap_size());
 //					taskEXIT_CRITICAL();
-//					UART_WaitTxFifoEmpty(UART0);
 				}
 				else
 				{
@@ -551,8 +547,6 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 //					taskENTER_CRITICAL();
 //					printf("freed unproc:%d\r\n", system_get_free_heap_size());
 //					taskEXIT_CRITICAL();
-
-//					UART_WaitTxFifoEmpty(UART0);
 
 					unprocessed_data = NULL;
 				}
@@ -609,6 +603,10 @@ static int32 ICACHE_RODATA_ATTR Receive(int32 rx_socket, uint8 *rx_buf,
 //	taskENTER_CRITICAL();
 //	printf("rx rval:%d\r\n", rval);
 //	taskEXIT_CRITICAL();
+//
+//	portENTER_CRITICAL();
+//	UART_WaitTxFifoEmpty(UART0);
+//	portEXIT_CRITICAL();
 
 	if (rval < 0)
 	{
@@ -660,11 +658,11 @@ static int32 ICACHE_RODATA_ATTR Receive(int32 rx_socket, uint8 *rx_buf,
 	}
 	else if (rval > 0 && rval < max_length)
 	{
+		rval = lwip_recv(rx_socket, rx_buf, max_length, 0);
+
 //		taskENTER_CRITICAL();
 //		printf("rx:%d\r\n", rval);
 //		taskEXIT_CRITICAL();
-
-		rval = lwip_recv(rx_socket, rx_buf, max_length, 0);
 	}
 
 //	taskENTER_CRITICAL();
@@ -681,12 +679,13 @@ static bool ICACHE_RODATA_ATTR Enqueue(uint8 * buffer,
 //	printf("nq\r\n");
 //	taskEXIT_CRITICAL();
 
-//	UART_WaitTxFifoEmpty(UART0);
-
 	bool rval = false;
 	Message tempMessage;
+
+	taskENTER_CRITICAL();
 	uint8 * source_addr_string_buf = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 	uint8 * dest_addr_string_buf = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
+	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
 	Serialize_Address(source_address->sin_addr.s_addr,
@@ -710,8 +709,6 @@ static bool ICACHE_RODATA_ATTR Enqueue(uint8 * buffer,
 //	taskENTER_CRITICAL();
 //	printf("nq'd\r\n");
 //	taskEXIT_CRITICAL();
-
-//	UART_WaitTxFifoEmpty(UART0);
 
 	return rval;
 }

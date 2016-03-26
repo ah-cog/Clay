@@ -71,7 +71,6 @@ void ICACHE_RODATA_ATTR Deserialize_Address(uint8* Source,
 
 	strcpy(deserialize_temp_str, Source);
 
-//get the string off the front
 	taskENTER_CRITICAL();
 	uint8* type_start = strtok(deserialize_temp_str, type_delim);
 	uint8* ip_start = strtok(NULL, port_delim);
