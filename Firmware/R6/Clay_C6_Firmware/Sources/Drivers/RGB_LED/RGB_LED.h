@@ -29,7 +29,7 @@ typedef struct
 typedef struct {
 	uint8_t number;
 	uint8_t enabled; // Specifies whether or not the channel being used.
-	RGB_Color *color;
+	RGB_Color color;
 } Channel_Light;
 
 RGB_Color offColor;
@@ -63,6 +63,8 @@ extern bool RGB_LED_Pause();
 extern void RGB_LED_SetState(RGB_LED LED, bool On, LED_Mode CurrentMax);
 extern void RGB_LED_SetColor(RGB_LED led, RGB_Color *output_color);
 extern void RGB_LED_UpdateOutput();
+
+extern void Set_Light_Color (Channel_Light *channel_light, uint8_t red, uint8_t green, uint8_t blue);
 
 int8_t Initialize_Channel_Lights ();
 void Reset_Channel_Lights ();

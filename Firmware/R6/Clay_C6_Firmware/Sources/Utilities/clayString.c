@@ -155,3 +155,39 @@ int8_t Get_Token_With_Delimiter (const char *string, const char delimiter, const
 
 	return NULL;
 }
+
+#define ASCII_0_VALU 48
+#define ASCII_9_VALU 57
+#define ASCII_A_VALU 65
+#define ASCII_F_VALU 70
+
+unsigned int HexStringToUInt (char const* hexstring)
+{
+    unsigned int result = 0;
+    char const *c = hexstring;
+    char thisC;
+
+    while( (thisC = *c) != NULL )
+    {
+        unsigned int add;
+        thisC = toupper(thisC);
+
+        result <<= 4;
+
+        if( thisC >= ASCII_0_VALU &&  thisC <= ASCII_9_VALU )
+            add = thisC - ASCII_0_VALU;
+        else if( thisC >= ASCII_A_VALU && thisC <= ASCII_F_VALU)
+            add = thisC - ASCII_A_VALU + 10;
+        else
+        {
+            printf("Unrecognised hex character \"%c\"\n", thisC);
+            exit(-1);
+        }
+
+        result += add;
+        ++c;
+    }
+
+    return result;
+}
+

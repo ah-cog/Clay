@@ -44,9 +44,6 @@ static uint8_t temp_address_string[50];
 
 static const char * message_terminator = "\n";
 
-//static Message Temp_Message;
-//static Message * Temp_Message_ptr;
-
 static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
 
