@@ -137,11 +137,21 @@
     (Doc
       (Type "COrSchematicDoc")
       (Frame
-        (Placement "44 2 3 -1 -1 -8 -31 26 1629 26 496")
-        (Scroll "932 976")
-        (Zoom "152")
+        (Placement "44 0 1 -1 -1 -8 -31 26 1629 26 496")
+        (Scroll "0 0")
+        (Zoom "88")
         (Occurrence "/"))
       (Path "E:\GIT\CLAY\CIRCUIT\R6_1\CLAYR6.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE1"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -8 -31 52 1658 52 531")
+        (Scroll "-423 0")
+        (Zoom "100")
+        (Occurrence "/VREG"))
+      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\VREG_3.3V_FIXED\TPS61201.DSN")
       (Schematic "SCHEMATIC1")
       (Page "PAGE1")))
   (MPSSessionName "thebh_000")

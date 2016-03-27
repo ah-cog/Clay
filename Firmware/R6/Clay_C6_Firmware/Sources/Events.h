@@ -40,9 +40,8 @@
 #include "TU1.h"
 #include "I2C0.h"
 #include "LED_SDB.h"
-#include "BuzzerSwitch.h"
 #include "ADC0.h"
-#include "ButtonIn.h"
+#include "BUTTON_IN.h"
 #include "MESH_SPI.h"
 #include "MESH_CE.h"
 #include "MESH_CS.h"
@@ -68,6 +67,7 @@
 #include "IO_10.h"
 #include "IO_11.h"
 #include "IO_12.h"
+#include "BUZZER_PWM.h"
 
 #include "PowerOn.h"
 #include "Buzzer.h"
@@ -141,9 +141,9 @@ void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
 
 /*
  ** ===================================================================
- **     Event       :  ButtonIn_OnPortEvent (module Events)
+ **     Event       :  BUTTON_IN_OnPortEvent (module Events)
  **
- **     Component   :  ButtonIn [GPIO_LDD]
+ **     Component   :  BUTTON_IN [GPIO_LDD]
  */
 /*!
  **     @brief
@@ -157,7 +157,7 @@ void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr);
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr);
+void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr);
 
 /*
  ** ===================================================================

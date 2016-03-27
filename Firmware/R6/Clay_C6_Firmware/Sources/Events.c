@@ -37,7 +37,6 @@
 #include "MPU9250.h"
 #include "WiFi.h"
 
-FREQ_OUT SelectedFreq = f_Off;
 volatile bool ButtonPressed = FALSE;
 
 #ifdef __cplusplus
@@ -65,8 +64,7 @@ extern "C"
  **                           the parameter of Init method.
  */
 /* ===================================================================*/
-void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
-{
+void TI1_OnInterrupt(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
 
    Tick();
@@ -90,8 +88,7 @@ void TI1_OnInterrupt(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
-{
+void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
    i2c_tx_complete = TRUE;
 }
@@ -114,17 +111,16 @@ void I2C2_OnMasterBlockSent(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
-{
+void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
    i2c_rx_complete = TRUE;
 }
 
 /*
  ** ===================================================================
- **     Event       :  ButtonIn_OnPortEvent (module Events)
+ **     Event       :  BUTTON_IN_OnPortEvent (module Events)
  **
- **     Component   :  ButtonIn [GPIO_LDD]
+ **     Component   :  BUTTON_IN [GPIO_LDD]
  */
 /*!
  **     @brief
@@ -138,16 +134,9 @@ void I2C2_OnMasterBlockReceived(LDD_TUserData *UserDataPtr)
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
-{
+void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
-   ButtonPressed = !ButtonPressed;
-   WifiSetProgramMode = TRUE;
-
-   if (ButtonPressed)
-   {
-      SelectedFreq = (SelectedFreq + 1) % (f_Off + 1);
-   }
+   Button_Event_Handler();
 }
 
 /*
@@ -168,11 +157,9 @@ void ButtonIn_OnPortEvent(LDD_TUserData *UserDataPtr)
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void MESH_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
-{
+void MESH_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
-   if (MeshRxEnabled)
-   {
+   if (MeshRxEnabled) {
       Mesh_Irq_Handler();
    }
 }
@@ -194,8 +181,7 @@ void MESH_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr)
-{
+void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
 }
 
@@ -216,8 +202,7 @@ void MESH_SPI_OnBlockSent(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr)
-{
+void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
 }
 
@@ -234,8 +219,7 @@ void MESH_SPI_OnBlockReceived(LDD_TUserData *UserDataPtr)
  **         interrupt] property is set to 'Enabled'.
  */
 /* ===================================================================*/
-void Cpu_OnNMI(void)
-{
+void Cpu_OnNMI(void) {
    /* Write your code here ... */
 }
 
@@ -256,8 +240,7 @@ void Cpu_OnNMI(void)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr)
-{
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
 }
 
@@ -279,8 +262,7 @@ void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr)
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr)
-{
+void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
    WifiInterruptReceived = TRUE;
 }
@@ -301,8 +283,7 @@ void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr)
-{
+void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr) {
    ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 
    (void) ESP8266_Serial_ReceiveBlock(ptr->handle, (LDD_TData *) &ptr->rxChar, sizeof(ptr->rxChar));
@@ -325,8 +306,7 @@ void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr)
  **                           as the parameter of Init method.
  */
 /* ===================================================================*/
-void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr)
-{
+void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr) {
    ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
    ptr->isSent = TRUE;
 }
@@ -349,8 +329,7 @@ void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr)
  **                           data structure pointer.
  */
 /* ===================================================================*/
-void IMU_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr)
-{
+void IMU_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
    data_ready = 1;
 }
