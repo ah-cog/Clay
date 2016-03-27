@@ -20,7 +20,7 @@ false, true};
  * Message Queue
  */
 
-#define MAXIMUM_MESSAGE_COUNT 10
+#define MAXIMUM_MESSAGE_COUNT 20
 
 typedef struct Message_Queue
 {
@@ -30,10 +30,10 @@ int back;
 int count;
 } Message_Queue;
 
-extern Message_Queue incomingMessageQueue;
-extern Message_Queue incomingCommandMessageQueue;
-extern Message_Queue outgoingUdpMessageQueue;
-extern Message_Queue outgoingTcpMessageQueue;
+extern Message_Queue incoming_message_queue;
+extern Message_Queue incoming_command_queue;
+extern Message_Queue outgoing_UDP_message_queue;
+extern Message_Queue outgoing_TCP_message_queue;
 
 extern bool Initialize_Message_Queue(Message_Queue *message_queue);
 extern Message* Get_Next_Message(Message_Queue *message_queue);

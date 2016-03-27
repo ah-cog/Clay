@@ -81,7 +81,7 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 	socket_list_lock = true;
 
 	taskENTER_CRITICAL();
-//	Deserialize_Address(addrStr, &temp_addr_query, &temp_message_type);
+	Deserialize_Address(addrStr, &temp_addr_query, &temp_message_type);
 //	printf("\r\nsearch for addr:[%s]\r\n", addrStr);
 
 	for (i = 0; i < TCP_MAX_CONNECTIONS; ++i)
@@ -96,7 +96,6 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 		taskEXIT_CRITICAL();
 		getpeername(Open_Sockets[i], (struct sockaddr* )&temp_addr_list,
 				&temp_addr_length);
-
 		taskENTER_CRITICAL();
 
 		//

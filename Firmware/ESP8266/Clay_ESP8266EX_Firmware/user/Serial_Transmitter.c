@@ -55,17 +55,15 @@ typedef enum
 	UDP_STATE_MAX
 } Serial_Transmitter_States;
 ////Globals   /////////////////////////////////////////////////////
-volatile bool Serial_Tx_In_Progress;
 
 ////Local vars/////////////////////////////////////////////////////
-static Serial_Transmitter_States State;
+static Serial_Transmitter_States state;
 
-static uint8 * temp;
-static uint8 * Serial_Tx_Buffer;
-static uint32 Serial_Tx_Count;
-static Message * Temp_Message;
+static uint8 * serial_tx_buffer;
+static uint32 serial_tx_count;
+static Message * temp_message;
 
-static uint32 timeTemp;
+static uint32 time_temp;
 
 ////Local Prototypes///////////////////////////////////////////////
 
@@ -74,12 +72,12 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 {
 	bool rval = true;
 
-	State = Idle;
-	Serial_Tx_Buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
+	state = Idle;
+	serial_tx_buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
 
-	Initialize_Message_Queue(&incomingMessageQueue);
+	Initialize_Message_Queue(&incoming_message_queue);
 
-	xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 256, NULL, 2, NULL);
+	xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 300, NULL, 2, NULL);
 
 	return rval;
 }
@@ -88,13 +86,13 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 {
 	for (;;)
 	{
-		switch (State)
+		switch (state)
 		{
 		case Disable:
 		{
 			if (wifi_station_get_connect_status() == STATION_GOT_IP)
 			{
-				State = Idle;
+				state = Idle;
 			}
 			break;
 		}
@@ -107,12 +105,12 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 		case Idle:
 		{
 			taskENTER_CRITICAL();
-			Temp_Message = Peek_Message(&incomingMessageQueue);
+			temp_message = Peek_Message(&incoming_message_queue);
 			taskEXIT_CRITICAL();
 
-			if (!Serial_Rx_In_Progress && Temp_Message != NULL)
+			if (temp_message != NULL)
 			{
-				State = Message_Available;
+				state = Message_Available;
 				UART_ResetTxFifo(UART0);
 			}
 			break;
@@ -120,45 +118,25 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 
 		case Message_Available:
 		{
-			Serial_Tx_In_Progress = true;
-
 			taskENTER_CRITICAL();
-			Temp_Message = Dequeue_Message(&incomingMessageQueue);
+			temp_message = Dequeue_Message(&incoming_message_queue);
+
+			serial_tx_count = strlen(temp_message->content);
+
+			sprintf(serial_tx_buffer, "%s%s%s%s%s%s%s%s", temp_message->content,
+					message_delimiter, temp_message->message_type,
+					type_delimiter, temp_message->source, address_delimiter,
+					temp_message->destination, address_terminator);
 			taskEXIT_CRITICAL();
 
-			taskENTER_CRITICAL();
-			Serial_Tx_Count = strlen(Temp_Message->content);
-			taskEXIT_CRITICAL();
-
-			taskENTER_CRITICAL();
-			strcpy(Serial_Tx_Buffer, Temp_Message->content);
-			taskEXIT_CRITICAL();
-
-			taskENTER_CRITICAL();
-			strcat(Serial_Tx_Buffer, Temp_Message->source);
-			taskEXIT_CRITICAL();
-
-			//do this so we don't get two terminators
-			temp = strchr(Serial_Tx_Buffer, address_terminator[0]);
-
-			if (temp != NULL)
-			{
-				temp[0] = address_delimiter[0];
-				temp[1] = '\0';
-			}
-
-			taskENTER_CRITICAL();
-			strcat(Serial_Tx_Buffer, Temp_Message->destination);
-			taskEXIT_CRITICAL();
-
-			timeTemp = system_get_time();
+			time_temp = system_get_time();
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 			gpio16_output_set(0);
 #else
 			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
 #endif
 
-			State = Wait_For_Transmit_Ok;
+			state = Wait_For_Transmit_Ok;
 
 			break;
 		}
@@ -168,9 +146,9 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 			if (!GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
 			{
 				taskENTER_CRITICAL();
-				printf(Serial_Tx_Buffer);
+				printf(serial_tx_buffer);
 				taskEXIT_CRITICAL();
-				State = Transmitting;
+				state = Transmitting;
 			}
 			break;
 		}
@@ -179,7 +157,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 		{
 			if (UART_CheckTxFifoEmpty(UART0))
 			{
-				State = Transmitting_Done;
+				state = Transmitting_Done;
 
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 				gpio16_output_set(1);
@@ -193,9 +171,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 
 		case Transmitting_Done:
 		{
-			//TODO: use pulses rather than levels, and the receiving side should receive until it gets a newline.
-			Serial_Tx_In_Progress = FALSE;
-			State = Idle;
+			state = Idle;
 			break;
 		}
 
@@ -214,20 +190,18 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 void Send_Message_To_Master(char * message, Message_Type type)
 {
 	Message m;
-	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH]; //+3 for comma, terminator, and null
-	char addr_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH + 3]; //+3 for comma, terminator, and null
+	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
 	taskENTER_CRITICAL();
 	Get_Message_Type_Str(type, type_string);
-	sprintf(addr_string, "%s,:;:%s", type_string, address_terminator);
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
-	Initialize_Message(&m, addr_string, "", message);
+	Initialize_Message(&m, type_string, ":", ":", message);
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
-	Queue_Message(&incomingMessageQueue, &m);
+	Queue_Message(&incoming_message_queue, &m);
 	taskEXIT_CRITICAL();
 }
 

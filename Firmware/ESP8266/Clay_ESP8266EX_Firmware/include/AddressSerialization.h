@@ -21,14 +21,16 @@
 ////Globals   /////////////////////////////////////////////////////
 extern const char * address_terminator;
 extern const char * address_delimiter;
+extern const char * type_delimiter;
+extern const char * message_delimiter;
+extern const char * port_delimiter;
 
 ////Prototypes/////////////////////////////////////////////////////
 extern void Deserialize_Address(uint8* Source, struct sockaddr_in * Destination,
 		Message_Type *type);
 
 uint32 ICACHE_RODATA_ATTR Serialize_Address(in_addr_t source, int32 port,
-		uint8* Destination, uint32 DestinationLength,
-		Message_Type ConnectionType);
+		uint8* Destination, uint32 DestinationLength);
 
 bool Get_Message_Type_Str(Message_Type type, uint8 *returnStr);
 Message_Type Get_Message_Type_From_Str(uint8*typeString);

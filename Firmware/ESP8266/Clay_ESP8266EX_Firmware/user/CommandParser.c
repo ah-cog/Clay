@@ -28,7 +28,7 @@
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-	Disable, Idle, ParseCommand, RespondToMaster, COMMAND_PARSER_STATE_MAX
+	Disable, Idle, ParseCommand, COMMAND_PARSER_STATE_MAX
 } Command_Parser_States;
 
 typedef enum
@@ -36,13 +36,16 @@ typedef enum
 	CLAY_COMMAND_SET_AP,
 	CLAY_COMMAND_GET_AP,
 	CLAY_COMMAND_SCAN_AP,
+	CLAY_COMMAND_GET_IP,
+	CLAY_COMMAND_GET_GATEWAY,
+	CLAY_COMMAND_GET_SUBNET,
 	CLAY_COMMAND_MAX
 } CLAY_ESP_COMMANDS;
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
 char* command_tokens[CLAY_COMMAND_MAX] =
-{ "SETAP", "GETAP", "SCANAP" };
+{ "SETAP", "GETAP", "SCANAP", "GET_IP", "GET_GATEWAY", "GET_SUBNET" };
 
 char * command_args;
 char command_delimiter = ' ';
@@ -50,13 +53,16 @@ char args_delimiter = ',';
 
 int i;
 static Message * m;
-Command_Parser_States state;
+static Command_Parser_States state;
 
 ////Local Prototypes///////////////////////////////////////////////
-CLAY_ESP_COMMANDS Command_String_Parse(char * CommandStr, char ** ArgStr);
-bool Set_AP_Command(char * args);
-bool Get_AP_Command(char * args);
-bool Scan_AP_Command(char * args);
+static CLAY_ESP_COMMANDS Command_String_Parse(char * CommandStr, char ** ArgStr);
+static bool Set_AP_Command(char * args);
+static bool Get_AP_Command(char * args);
+static bool Scan_AP_Command(char * args);
+static bool Get_Subnet_Command(char * args);
+static bool Get_Gateway_Command(char * args);
+static bool Get_IP_Command(char * args);
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Command_Parser_Init()
@@ -65,7 +71,7 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 
 	state = Idle;
 
-	Initialize_Message_Queue(&incomingCommandMessageQueue);
+	Initialize_Message_Queue(&incoming_command_queue);
 
 	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL, 2, NULL);
 
@@ -90,7 +96,7 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 		case Idle:
 		{
 			taskENTER_CRITICAL();
-			m = Peek_Message(&incomingCommandMessageQueue);
+			m = Peek_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
 
 			if (m != NULL)
@@ -103,11 +109,8 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 		case ParseCommand:
 		{
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&incomingCommandMessageQueue);
+			m = Dequeue_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
-
-			//set state based on whether or not a response is necessary.
-			state = RespondToMaster;
 
 			switch (Command_String_Parse(m->content, &command_args))
 			{
@@ -129,6 +132,24 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 				break;
 			}
 
+			case CLAY_COMMAND_GET_IP:
+			{
+				Get_IP_Command(command_args);
+				break;
+			}
+
+			case CLAY_COMMAND_GET_GATEWAY:
+			{
+				Get_Gateway_Command(command_args);
+				break;
+			}
+
+			case CLAY_COMMAND_GET_SUBNET:
+			{
+				Get_Subnet_Command(command_args);
+				break;
+			}
+
 			case CLAY_COMMAND_MAX:
 			default:
 			{
@@ -138,11 +159,6 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 
 			}
 
-			break;
-		}
-
-		case RespondToMaster:
-		{
 			state = Idle;
 			break;
 		}
@@ -163,7 +179,8 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 //		point to the start of the arguments in commandStr
 //Command strings should be of the following format:
 //		"<Command Token> <arg1>,<arg2>...."
-CLAY_ESP_COMMANDS Command_String_Parse(char * commandStr, char ** argStr)
+static ICACHE_RODATA_ATTR CLAY_ESP_COMMANDS Command_String_Parse(
+		char * commandStr, char ** argStr)
 {
 	CLAY_ESP_COMMANDS rval = CLAY_COMMAND_MAX;
 
@@ -181,7 +198,7 @@ CLAY_ESP_COMMANDS Command_String_Parse(char * commandStr, char ** argStr)
 	return rval;
 }
 
-bool Set_AP_Command(char * args)
+static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 {
 	bool rval = false;
 
@@ -190,22 +207,63 @@ bool Set_AP_Command(char * args)
 	char * key = strtok(NULL, &args_delimiter);
 	taskEXIT_CRITICAL();
 
-	Set_Access_Point(ssid, key);
+	if (Set_Access_Point(ssid, key))
+	{
+		Send_Message_To_Master("SETAP_OK", MESSAGE_TYPE_INFO);
+	}
+	else
+	{
+		Send_Message_To_Master("SETAP_FAIL", MESSAGE_TYPE_INFO);
+	}
 
 	return rval;
 }
 
-bool Get_AP_Command(char * args)
+static ICACHE_RODATA_ATTR bool Get_AP_Command(char * args)
 {
 	bool rval = false;
 
 	return rval;
 }
 
-bool Scan_AP_Command(char * args)
+static ICACHE_RODATA_ATTR bool Scan_AP_Command(char * args)
 {
 	bool rval = false;
 
 	return rval;
 }
 
+static ICACHE_RODATA_ATTR bool Get_IP_Command(char * args)
+{
+	bool rval = false;
+
+	int ip = Get_IP_Address();
+	Send_Message_To_Master(inet_ntoa(ip), MESSAGE_TYPE_INFO);
+
+	rval = ip > 0;
+
+	return rval;
+}
+
+bool Get_Gateway_Command(char * args)
+{
+	bool rval = false;
+
+	int gw = Get_Gateway_Address();
+	Send_Message_To_Master(inet_ntoa(gw), MESSAGE_TYPE_INFO);
+
+	rval = gw > 0;
+
+	return rval;
+}
+
+bool Get_Subnet_Command(char * args)
+{
+	bool rval = false;
+	int mask = Get_Subnet_Mask();
+	Send_Message_To_Master(inet_ntoa(mask), MESSAGE_TYPE_INFO);
+
+	rval = mask > 0;
+
+	return rval;
+}

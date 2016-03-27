@@ -22,9 +22,10 @@
 ////Local Prototypes///////////////////////////////////////////////
 
 ////Global implementations ////////////////////////////////////////
-void Set_Access_Point(char * ssid, char * key)
+bool ICACHE_RODATA_ATTR Set_Access_Point(char * ssid, char * key)
 {
-	wifi_station_disconnect();
+
+	bool rval = wifi_station_disconnect();
 
 	struct station_config *config = (struct station_config *) zalloc(
 			sizeof(struct station_config));
@@ -32,12 +33,37 @@ void Set_Access_Point(char * ssid, char * key)
 	sprintf(config->ssid, ssid);
 	sprintf(config->password, key);
 
-	/* need to sure that you are in station mode first,
-	 * otherwise it will be failed. */
-	wifi_station_set_config(config);
+	rval &= wifi_station_set_config(config);
+
 	free(config);
 
-	wifi_station_connect();
+	rval &= wifi_station_connect();
+
+	return rval;
+}
+
+int ICACHE_RODATA_ATTR Get_IP_Address()
+{
+	struct ip_info ip;
+	wifi_get_ip_info(STATION_IF, &ip);
+
+	return ip.ip.addr;
+}
+
+int ICACHE_RODATA_ATTR Get_Gateway_Address()
+{
+	struct ip_info ip;
+	wifi_get_ip_info(STATION_IF, &ip);
+
+	return ip.gw.addr;
+}
+
+int ICACHE_RODATA_ATTR Get_Subnet_Mask()
+{
+	struct ip_info ip;
+	wifi_get_ip_info(STATION_IF, &ip);
+
+	return ip.netmask.addr;
 }
 
 ////Local implementations ////////////////////////////////////////

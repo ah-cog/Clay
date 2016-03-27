@@ -36,7 +36,8 @@ static uint32_t txStartTime;
 static uint32_t programStartTime;
 
 static uint8_t Newline_Count;
-static uint8_t * Temp_Content;
+static uint8_t * temp_content;
+static uint8_t * temp_type;
 static uint8_t * temp_source_address;
 static uint8_t * temp_dest_address;
 static uint8_t temp_address_string[50];
@@ -172,22 +173,19 @@ void Wifi_State_Step() {
       }
 
       case Deserialize_Received_Message: {
-         Temp_Content = strtok(inBuffer, message_terminator);
+         temp_content = strtok(inBuffer, message_terminator);
+         temp_type = strtok(NULL, type_delimiter);
          temp_source_address = strtok(NULL, address_delimiter);
          temp_dest_address = strtok(NULL, address_terminator);
 
-         if (temp_source_address != NULL && Temp_Content != NULL) {
+         if (temp_content != NULL && temp_type != NULL && temp_source_address != NULL && temp_dest_address != NULL) {
 
             sprintf(temp_address_string, "%s", temp_source_address);
 
-            char *message_type = temp_address_string;
-            char *message_source_address = strchr(temp_address_string, ',') + 1;
-            (message_source_address - 1)[0] = '\0';
-
             // Create message object
-            Message *message = Create_Message(Temp_Content);
-            Set_Message_Type(message, message_type);
-            Set_Message_Source(message, message_source_address);
+            Message *message = Create_Message(temp_content);
+            Set_Message_Type(message, temp_type);
+            Set_Message_Source(message, temp_source_address);
             Set_Message_Destination(message, temp_dest_address);
 
             // Queue the message

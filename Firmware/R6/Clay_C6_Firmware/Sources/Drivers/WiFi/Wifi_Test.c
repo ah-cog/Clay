@@ -76,15 +76,15 @@ void Wifi_Test() {
    }
 
 #endif
+
 #if 1
-//   char addrStr[] = "CMD,\x12";
-//   char testMsg[] = "SETAP hefnet,h3fn3r_is_better_than_me";
-//
-//   Wait(5000);
-//
-//   message = Create_Message(testMsg);
-//   Set_Message_Destination(message, addrStr);
-//   Wifi_Send(message);
+
+   char addrStr[] = ":";
+   char testMsg[] = "GET_IP";
+
+   Wait(5000);
+
+   int last_ip_get = 0;
 
    for (;;) {
 
@@ -94,7 +94,7 @@ void Wifi_Test() {
       //Monitor communication message queues.
       if (Has_Messages(&incomingMessageQueue) == TRUE) {
          message = Wifi_Receive();
-         if (message != NULL) {
+         if (message != NULL && strcmp(message->type, "INFO")) {
             char * temp = message->destination;
             message->destination = message->source;
             message->source = temp;
@@ -102,6 +102,16 @@ void Wifi_Test() {
             Wifi_Send(message);
          }
       }
+
+//      if (Millis() - last_ip_get > 5000) {
+//         Message * get_ip_message = Create_Message(testMsg);
+//         Set_Message_Type(get_ip_message, "CMD");
+//         Set_Message_Destination(get_ip_message, addrStr);
+//         Set_Message_Source(get_ip_message, addrStr);
+//
+//         Wifi_Send(get_ip_message);
+//         last_ip_get = Millis();
+//      }
    }
 #endif
 

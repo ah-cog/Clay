@@ -1,10 +1,10 @@
 #include "esp_common.h"
 #include "Message_Queue.h"
 
-Message_Queue incomingMessageQueue;
-Message_Queue incomingCommandMessageQueue;
-Message_Queue outgoingUdpMessageQueue;
-Message_Queue outgoingTcpMessageQueue;
+Message_Queue incoming_message_queue;
+Message_Queue incoming_command_queue;
+Message_Queue outgoing_UDP_message_queue;
+Message_Queue outgoing_TCP_message_queue;
 
 bool ICACHE_RODATA_ATTR Initialize_Message_Queue(Message_Queue *message_queue)
 {
@@ -18,7 +18,7 @@ bool ICACHE_RODATA_ATTR Initialize_Message_Queue(Message_Queue *message_queue)
 	// Initialize message queue
 	for (i = 0; i < MAXIMUM_MESSAGE_COUNT; i++)
 	{
-		Initialize_Message(&((*message_queue).messages[i]), "", "", "");
+		Initialize_Message(&((*message_queue).messages[i]), "", "", "", "");
 	}
 
 	return true;
@@ -29,7 +29,7 @@ Message* ICACHE_RODATA_ATTR Get_Next_Message(Message_Queue *message_queue)
 	Message *message = NULL;
 	if ((*message_queue).count < MAXIMUM_MESSAGE_COUNT)
 	{
-		message = &(incomingMessageQueue.messages[(*message_queue).back]);
+		message = &(incoming_message_queue.messages[(*message_queue).back]);
 	}
 	return message;
 }

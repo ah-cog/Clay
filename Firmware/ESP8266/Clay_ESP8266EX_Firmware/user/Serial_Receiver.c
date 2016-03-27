@@ -55,28 +55,26 @@ typedef enum
 	Disable, Configure, Idle, Receiving, Parsing, UDP_STATE_MAX
 } Serial_Receiver_States;
 ////Globals   /////////////////////////////////////////////////////
-volatile bool Serial_Rx_In_Progress;
 
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Receiver_States State;
 
-static uint32 BytesReceived;
-static uint8 * Serial_Rx_Buffer;
-static uint32 Serial_Rx_Count;
+static uint32 bytes_received;
+static uint8 * serial_rx_buffer;
+static uint32 serial_rx_count;
 
-static uint8 Newline_Count;
-static Message tempMsg;
+static bool buffer_has_data;
+static Message temp_msg;
 static char * temp_content;
-static char * temp_source_addr;
-static char * temp_dest_addr;
-static const char * MessageDelimiter = "\n";
-static uint32 stateTime;
+static char * temp_source_ptr;
+static char * temp_type_ptr;
+static char * temp_dest_ptr;
+static uint32 state_time;
 int i;
 
 Message_Queue * selected_message_queue;
 
-static struct sockaddr_in tempAddressIgnore;
-static Message_Type receivedMessageType;
+static Message_Type received_message_type;
 
 uint32 counter;
 
@@ -87,22 +85,21 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 {
 	bool rval = true;
 
-	Serial_Rx_Buffer = zalloc(SERIAL_RX_BUFFER_SIZE_BYTES);
-
-	Serial_Rx_In_Progress = false;
+	serial_rx_buffer = zalloc(SERIAL_RX_BUFFER_SIZE_BYTES);
 
 	State = Idle;
 	Ring_Buffer_Init();
 
-	Initialize_Message_Queue(&outgoingUdpMessageQueue);
+	Initialize_Message_Queue(&outgoing_UDP_message_queue);
+	Initialize_Message_Queue(&outgoing_TCP_message_queue);
+	Initialize_Message_Queue(&incoming_command_queue);
+	Initialize_Message_Queue(&incoming_message_queue);
 
 	xTaskCreate(Serial_Receiver_State_Step, "uartrx1", 256, NULL, 2, NULL);
 
 	return rval;
 }
-int x = 0;
-uint8 temp;
-bool DataInBuffer;
+
 void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 {
 	for (;;)
@@ -128,19 +125,15 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 
 		case Idle:
 		{
-			if (!Serial_Tx_In_Progress && !GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
+			if (!GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
 			{
-
-				Serial_Rx_In_Progress = true;
-
-				Serial_Rx_Count = 0;
+				serial_rx_count = 0;
 
 				taskENTER_CRITICAL();
 				UART_ResetRxFifo(UART0);
 				taskEXIT_CRITICAL();
 
-				BytesReceived = 0;
-				Newline_Count = 0;
+				bytes_received = 0;
 
 				taskENTER_CRITICAL();
 				Ring_Buffer_Init();
@@ -152,7 +145,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
 #endif
 
-				stateTime = system_get_time();
+				state_time = system_get_time();
 				State = Receiving;
 			}
 			break;
@@ -160,19 +153,21 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 
 		case Receiving:
 		{
-			DataInBuffer = Ring_Buffer_Has_Data();
+			buffer_has_data = Ring_Buffer_Has_Data();
 
-			if (DataInBuffer)
+			if (buffer_has_data)
 			{
 				taskENTER_CRITICAL();
-				Ring_Buffer_Get(Serial_Rx_Buffer + BytesReceived);
+				Ring_Buffer_Get(serial_rx_buffer + bytes_received);
 				taskEXIT_CRITICAL();
 
-				if (Serial_Rx_Buffer[BytesReceived++] == address_terminator[0])
+				if (serial_rx_buffer[bytes_received++] == address_terminator[0])
 				{
-					Serial_Rx_Buffer[BytesReceived] = '\0';
+					serial_rx_buffer[bytes_received] = '\0';
 
-					Serial_Rx_In_Progress = false;
+//					taskENTER_CRITICAL();
+//					printf("srx\r\n");
+//					taskEXIT_CRITICAL();
 
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 					gpio16_output_set(1);
@@ -183,7 +178,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 					State = Parsing;
 				}
 			}
-			else if ((system_get_time() - stateTime) > 1000000) //GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
+			else if ((system_get_time() - state_time) > 1000000) //GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
 			{
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 				gpio16_output_set(1);
@@ -191,7 +186,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
 #endif
 
-				Serial_Rx_In_Progress = false;
 				State = Idle;
 			}
 			break;
@@ -199,39 +193,50 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 
 		case Parsing:
 		{
+//			taskENTER_CRITICAL();
+//			printf("srx parse\r\n");
+//			taskEXIT_CRITICAL();
+
 			taskENTER_CRITICAL();
-			temp_content = strtok(Serial_Rx_Buffer, MessageDelimiter);
-			temp_source_addr = strtok(NULL, address_delimiter);
-			temp_dest_addr = strtok(NULL, address_terminator);
+			temp_content = strtok(serial_rx_buffer, message_delimiter);
+			temp_type_ptr = strtok(NULL, type_delimiter);
+			temp_source_ptr = strtok(NULL, address_delimiter);
+			temp_dest_ptr = strtok(NULL, address_terminator);
 			taskEXIT_CRITICAL();
 
-			if (temp_content != NULL && temp_source_addr != NULL)
+			if (temp_content != NULL && temp_type_ptr != NULL
+					&& temp_source_ptr != NULL && temp_dest_ptr != NULL)
 			{
 				taskENTER_CRITICAL();
-				Initialize_Message(&tempMsg, temp_source_addr, temp_dest_addr,
-						temp_content);
+				received_message_type = Get_Message_Type_From_Str(
+						temp_type_ptr);
 				taskEXIT_CRITICAL();
 
 				taskENTER_CRITICAL();
-				Deserialize_Address(temp_source_addr, &tempAddressIgnore,
-						&receivedMessageType);
+				Initialize_Message(&temp_msg,
+						message_type_strings[received_message_type],
+						temp_source_ptr, temp_dest_ptr, temp_content);
 				taskEXIT_CRITICAL();
 
-				switch (receivedMessageType)
+				switch (received_message_type)
 				{
+#if ENABLE_UDP_SENDER
 				case MESSAGE_TYPE_UDP:
 				{
-					selected_message_queue = &outgoingUdpMessageQueue;
+					selected_message_queue = &outgoing_UDP_message_queue;
 					break;
 				}
+#endif
+#if ENABLE_TCP_SENDER
 				case MESSAGE_TYPE_TCP:
 				{
-					selected_message_queue = &outgoingTcpMessageQueue;
+					selected_message_queue = &outgoing_TCP_message_queue;
 					break;
 				}
+#endif
 				case MESSAGE_TYPE_COMMAND:
 				{
-					selected_message_queue = &incomingCommandMessageQueue;
+					selected_message_queue = &incoming_command_queue;
 					break;
 				}
 				default:
@@ -244,7 +249,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 				if (selected_message_queue != NULL)
 				{
 					taskENTER_CRITICAL();
-					Queue_Message(selected_message_queue, &tempMsg);
+					Queue_Message(selected_message_queue, &temp_msg);
 					taskEXIT_CRITICAL();
 				}
 
