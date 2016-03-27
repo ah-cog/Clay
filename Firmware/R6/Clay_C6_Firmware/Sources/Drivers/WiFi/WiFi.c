@@ -204,10 +204,7 @@ void Wifi_State_Step() {
          snprintf(outBuffer,
          OUT_BUFFER_LENGTH,
                   "%s\n%s,%s;%s\x12\n", message->content, message->type, message->source, message->destination);
-//		snprintf (outBuffer, OUT_BUFFER_LENGTH, "%s,%s\x12%s\n", message->type, message->destination, message->content);
-//		strcat (outBuffer, message->type);
-//		strcat (outBuffer, ",");
-//		strcat (outBuffer, message->destination);
+
          pendingTransmitByteCount = strlen(outBuffer);
          Delete_Message(message);
 
