@@ -34,6 +34,8 @@ int8_t Process_Incoming_Message (Message *message) {
 	// Reset the buffer
 	memset (uuid_buffer2, '\0', DEFAULT_UUID_LENGTH);
 
+	// INFO,CONNECTED
+
 	if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "cache")) {
 		if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "action")) {
 			return Process_Cache_Action (message);
