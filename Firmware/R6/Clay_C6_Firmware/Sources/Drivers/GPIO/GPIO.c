@@ -1,7 +1,7 @@
 #include "GPIO.h"
 
-Channel updateChannelProfile[CHANNEL_COUNT];
-Channel channelProfile[CHANNEL_COUNT];
+Channel updated_channel_profile[CHANNEL_COUNT];
+Channel channel_profile[CHANNEL_COUNT];
 
 int8_t Initialize_Channels()
 {
@@ -9,20 +9,19 @@ int8_t Initialize_Channels()
 
 	for (i = 0; i < CHANNEL_COUNT; i++)
 	{
-
 		// Initialize update channel profile
-		updateChannelProfile[i].number = (i + 1);
-		updateChannelProfile[i].enabled = FALSE;
-		updateChannelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
-		updateChannelProfile[i].mode = CHANNEL_MODE_TOGGLE;
-		updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+		updated_channel_profile[i].number = (i + 1);
+		updated_channel_profile[i].enabled = FALSE;
+		updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+		updated_channel_profile[i].mode = CHANNEL_MODE_TOGGLE;
+		updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 
 		// Initialize channel profile
-		channelProfile[i].number = (i + 1);
-		channelProfile[i].enabled = FALSE;
-		channelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
-		channelProfile[i].mode = CHANNEL_MODE_TOGGLE;
-		channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+		channel_profile[i].number = (i + 1);
+		channel_profile[i].enabled = FALSE;
+		channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+		channel_profile[i].mode = CHANNEL_MODE_TOGGLE;
+		channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 	}
 
 	return TRUE;
@@ -36,11 +35,11 @@ int8_t Reset_Channels()
 	{
 
 		// Initialize update channel profile
-		updateChannelProfile[i].number = (i + 1);
-		updateChannelProfile[i].enabled = FALSE;
-		updateChannelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
-		updateChannelProfile[i].mode = CHANNEL_MODE_TOGGLE;
-		updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+		updated_channel_profile[i].number = (i + 1);
+		updated_channel_profile[i].enabled = FALSE;
+		updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+		updated_channel_profile[i].mode = CHANNEL_MODE_TOGGLE;
+		updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 
 //		// Initialize channel profile
 //		channelProfile[i].number = (i + 1);
@@ -96,68 +95,68 @@ int8_t Apply_Channels()
 	{
 
 		// Check if the enable state changed. Apply the corresponding transform.
-		if (updateChannelProfile[i].enabled != channelProfile[i].enabled)
+		if (updated_channel_profile[i].enabled != channel_profile[i].enabled)
 		{
 
 			// Update state.
-			channelProfile[i].enabled = updateChannelProfile[i].enabled;
+			channel_profile[i].enabled = updated_channel_profile[i].enabled;
 
-			if (channelProfile[i].enabled == TRUE)
+			if (channel_profile[i].enabled == TRUE)
 			{
 
 				// Apply state.
-				Enable_Channel(channelProfile[i].number, channelProfile[i].enabled);
+				Enable_Channel(channel_profile[i].number, channel_profile[i].enabled);
 
 				// Check if the direction change. Apply the corresponding transform if it changed.
-				if (updateChannelProfile[i].direction != channelProfile[i].direction)
+				if (updated_channel_profile[i].direction != channel_profile[i].direction)
 				{
 
 					// Update direction.
-					channelProfile[i].direction = updateChannelProfile[i].direction;
+					channel_profile[i].direction = updated_channel_profile[i].direction;
 
 					// Apply direction.
-					Set_Channel(channelProfile[i].number, channelProfile[i].direction, channelProfile[i].mode);
+					Set_Channel(channel_profile[i].number, channel_profile[i].direction, channel_profile[i].mode);
 				}
 
 				// Check if the mode change. Apply the corresponding transform if it changed.
-				if (updateChannelProfile[i].mode != channelProfile[i].mode)
+				if (updated_channel_profile[i].mode != channel_profile[i].mode)
 				{
 
 					// Update mode.
-					channelProfile[i].mode = updateChannelProfile[i].mode;
+					channel_profile[i].mode = updated_channel_profile[i].mode;
 
 					// Apply mode.
-					Set_Channel(channelProfile[i].number, channelProfile[i].direction, channelProfile[i].mode);
+					Set_Channel(channel_profile[i].number, channel_profile[i].direction, channel_profile[i].mode);
 				}
 
 				// Check if the value change. Apply the corresponding transform if it changed.
-				if (updateChannelProfile[i].value != channelProfile[i].value)
+				if (updated_channel_profile[i].value != channel_profile[i].value)
 				{
 
 					// Update value.
-					channelProfile[i].value = updateChannelProfile[i].value;
+					channel_profile[i].value = updated_channel_profile[i].value;
 
 					// Apply value.
-					if (channelProfile[i].direction == CHANNEL_DIRECTION_INPUT)
+					if (channel_profile[i].direction == CHANNEL_DIRECTION_INPUT)
 					{
 						//					channelProfile[i].value = IO_1_GetVal (NULL);
 						//					channelProfile[i].value = (uint16_t) Get_Channel_Value (channelProfile[i].number);
 					}
-					else if (channelProfile[i].direction == CHANNEL_DIRECTION_OUTPUT)
+					else if (channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT)
 					{
-						Set_Channel_Value(channelProfile[i].number, channelProfile[i].value);
+						Set_Channel_Value(channel_profile[i].number, channel_profile[i].value);
 					}
 				}
 
 			}
-			else if (channelProfile[i].enabled == FALSE)
+			else if (channel_profile[i].enabled == FALSE)
 			{
 
 				// Apply direction and mode.
-				Set_Channel(channelProfile[i].number, CHANNEL_DIRECTION_OUTPUT, CHANNEL_MODE_TOGGLE);
+				Set_Channel(channel_profile[i].number, CHANNEL_DIRECTION_OUTPUT, CHANNEL_MODE_TOGGLE);
 
 				// Apply value.
-				Set_Channel_Value(channelProfile[i].number, CHANNEL_VALUE_TOGGLE_OFF);
+				Set_Channel_Value(channel_profile[i].number, CHANNEL_VALUE_TOGGLE_OFF);
 
 			}
 		}
@@ -188,7 +187,7 @@ int8_t Enable_Channels()
 int8_t Enable_Channel(uint8_t number, uint8_t enabled)
 {
 
-	channelProfile[(number - 1)].enabled = enabled;
+	channel_profile[(number - 1)].enabled = enabled;
 
 	// TODO: Allow disabling!
 	if (number == 1)

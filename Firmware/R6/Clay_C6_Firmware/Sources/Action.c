@@ -693,8 +693,14 @@ Event* Get_Event_By_UUID (Timeline *timeline, char *uuid) {
 	return NULL;
 }
 
-uint32_t actionStartTime = 0;
-uint32_t actionWaitTime = 0;
+uint32_t action_start_time = 0;
+uint32_t action_wait_time = 0;
+
+static int8_t Perform_Light_Action (Event *event);
+static int8_t Perform_Signal_Action (Event *event);
+static int8_t Perform_Pause_Action (Event *event);
+static int8_t Perform_Message_Action (Event *event);
+static int8_t Perform_Say_Action (Event *event);
 
 /**
  * Performs the physical action for the specified action as it is defined
@@ -712,15 +718,15 @@ int8_t Perform_Action (Event *event) {
 
 	Action *action = (*event).action;
 
-	char *actionContent = NULL;
-	actionContent = (*event).state;
+	char *action_content = NULL;
+	action_content = (*event).state;
 
-	if (action == NULL || actionContent == NULL) {
+	if (action == NULL || action_content == NULL) {
 		return TRUE;
 	}
 
-	if (actionStartTime == 0) {
-		actionStartTime = Millis ();
+	if (action_start_time == 0) {
+		action_start_time = Millis ();
 	}
 
 	// TODO: Queue the message rather than executing it immediately (unless specified)
@@ -728,565 +734,278 @@ int8_t Perform_Action (Event *event) {
 	// TODO: Decompose the action into atomic actions and perform them!
 
 	if (strncmp ((*action).uuid, LIGHT_ACTION_UUID, strlen (LIGHT_ACTION_UUID)) == 0) {
+		return Perform_Light_Action (event);
+	} else if (strncmp ((*action).uuid, SIGNAL_ACTION_UUID, strlen (SIGNAL_ACTION_UUID)) == 0) {
+		return Perform_Signal_Action (event);
+	} else if (strncmp ((*action).uuid, MESSAGE_ACTION_UUID, strlen (MESSAGE_ACTION_UUID)) == 0) {
+		return Perform_Message_Action (event);
+	} else if (strncmp ((*action).uuid, PAUSE_ACTION_UUID, strlen (PAUSE_ACTION_UUID)) == 0) {
+		return Perform_Pause_Action (event);
+	} else if (strncmp ((*action).uuid, SAY_ACTION_UUID, strlen (SAY_ACTION_UUID)) == 0) {
+		return Perform_Say_Action (event);
+	} else {
+		// No recognized action was performed.
+		result = FALSE;
+	}
 
-		// light FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
-		// ^
+//	// turn light 1 on
+//	// ^
+//	if ((status = Get_Token (action_content, token, 0)) != NULL) {
+//
+//		if (strncmp (token, "cause", strlen ("cause")) == 0) {
+//
+//			// cause 1 effect 4
+//			// ^
+//			// TODO: Something like: cause TTOT TTOT effect TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT
+//
+//			// Update the channels
+//			// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
+////			status = getToken (actionContent, token, 1); // Cause
+////			status = getToken (actionContent, token, 2); // Effect
+//			// TODO: Consider updating the cause conditions?: Update_Channel_State ()
+//			status = Get_Token (action_content, token, 1); // Cause
+//			tokenInt = atoi (token) - 1;
+//
+//			// TODO: Consider NOT automatically changing the I/O state of the cause. Maybe rely on setting the pin mode first!
+//			// TODO: Update all the input states and then update all the output states.
+//
+//			updated_channel_profile[tokenInt].enabled = CHANNEL_ENABLED;
+//			updated_channel_profile[tokenInt].direction = CHANNEL_DIRECTION_INPUT;
+//			updated_channel_profile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+//			updated_channel_profile[tokenInt].value = Get_Channel_Value (updated_channel_profile[tokenInt].number);
+//
+////			if (strncmp (token, "switch", strlen ("switch")) == 0) {
+//			if (updated_channel_profile[tokenInt].value == CHANNEL_VALUE_TOGGLE_ON) {
+//
+//				// TODO: Look for "effect"
+//
+//				status = Get_Token (action_content, token, 3); // Effect
+//				tokenInt = atoi (token) - 1;
+//				updated_channel_profile[tokenInt].enabled = CHANNEL_ENABLED;
+//				updated_channel_profile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
+//				updated_channel_profile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+//				updated_channel_profile[tokenInt].value = CHANNEL_VALUE_TOGGLE_ON;
+//
+//			} else if (updated_channel_profile[tokenInt].value == CHANNEL_VALUE_TOGGLE_OFF) {
+//
+//				// TODO: Look for "effect"
+//
+//				status = Get_Token (action_content, token, 3); // Effect
+//				tokenInt = atoi (token) - 1;
+//				updated_channel_profile[tokenInt].enabled = CHANNEL_ENABLED;
+//				updated_channel_profile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
+//				updated_channel_profile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
+//				updated_channel_profile[tokenInt].value = CHANNEL_VALUE_TOGGLE_OFF;
+//
+//			}
+//			// TODO: Get the (cause, effect) condition.
+//
+//			// TODO: Create (cause, effect) action.
+//
+//			// Apply channel
+//			// TODO: Move this to a common place, maybe in Application in the loop logic.
+////			if (effect is local) { // TODO: Get UUID of cause and effect units.
+//			Apply_Channels ();
+////			} else if (effect is remote) {
+////				Request_Remote_Apply_Channels ();
+////			}
+//
+//			result = TRUE;
+//
+//		}
+//
+//	}
 
-		//	char *hexString = "FFEEDD";
-		//	int hexInt = HexStringToUInt (hexString);
-		//	int red   = (hexInt & 0xFF0000) >> 16;
-		//	int green = (hexInt & 0x00FF00) >> 8;
-		//	int blue  = (hexInt & 0x0000FF) >> 0;
+	return result;
+}
 
-		// Update the channels
-		// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
-		for (i = 0; i < 12; i++) {
-			int hex_color = 0x000000;
-			int red = 0;
-			int green = 0;
-			int blue = 0;
+static int8_t Perform_Light_Action (Event *event) {
 
-			status = Get_Token (actionContent, token, 1 + i);
+	int8_t status = NULL;
+	int8_t result = NULL;
+	char token[32] = { 0 };
+	int tokenInt = 0;
+	int i;
 
-			// Convert hex-encoded color string to seperate red, green, and blue color indices.
-			hex_color = HexStringToUInt (token);
-			red   = (hex_color & 0xFF0000) >> 16;
-			green = (hex_color & 0x00FF00) >> 8;
-			blue  = (hex_color & 0x0000FF) >> 0;
+	// e.g., FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
+
+	// Update the channels
+	// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
+	for (i = 0; i < 12; i++) {
+		int hex_color = 0x000000;
+		int red = 0;
+		int green = 0;
+		int blue = 0;
+
+		status = Get_Token ((*event).state, token, 1 + i);
+
+		// Convert hex-encoded color string to separate red, green, and blue color indices.
+		hex_color = Hex_String_To_UInt (token);
+		red   = (hex_color & 0xFF0000) >> 16;
+		green = (hex_color & 0x00FF00) >> 8;
+		blue  = (hex_color & 0x0000FF) >> 0;
 
 //				// Set LED state
-			updateChannelLightProfiles[i].enabled = TRUE;
-			Set_Light_Color (&updateChannelLightProfiles[i], red, green, blue);
-
-		}
-
-		// Apply channel
-		// TODO: Move this to a common place, maybe in Application in the loop logic.
-		Apply_Channels ();
-		Apply_Channel_Lights ();
-
-		result = TRUE;
-
-	} else if (strncmp ((*action).uuid, SIGNAL_ACTION_UUID, strlen (SIGNAL_ACTION_UUID)) == 0) {
-
-	} else if (strncmp ((*action).uuid, MESSAGE_ACTION_UUID, strlen (MESSAGE_ACTION_UUID)) == 0) {
-
-	} else if (strncmp ((*action).uuid, PAUSE_ACTION_UUID, strlen (PAUSE_ACTION_UUID)) == 0) {
-
-	} else if (strncmp ((*action).uuid, SAY_ACTION_UUID, strlen (SAY_ACTION_UUID)) == 0) {
+		proposed_light_profiles[i].enabled = TRUE;
+		Set_Light_Color (&proposed_light_profiles[i], red, green, blue);
 
 	}
 
-	// turn light 1 on
-	// ^
-	if ((status = Get_Token (actionContent, token, 0)) != NULL) {
+	// Apply channel
+	// TODO: Move this to a common place, maybe in Application in the loop logic.
+	Apply_Channels ();
+	Apply_Channel_Lights ();
 
-		if (strncmp (token, "cause", strlen ("cause")) == 0) {
+	result = TRUE;
 
-			// cause 1 effect 4
-			// ^
-			// TODO: Something like: cause TTOT TTOT effect TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT TTOT
+	return result;
+}
 
-			// Update the channels
-			// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
-//			status = getToken (actionContent, token, 1); // Cause
-//			status = getToken (actionContent, token, 2); // Effect
-			// TODO: Consider updating the cause conditions?: Update_Channel_State ()
-			status = Get_Token (actionContent, token, 1); // Cause
-			tokenInt = atoi (token) - 1;
+static int8_t Perform_Signal_Action (Event *event) {
 
-			// TODO: Consider NOT automatically changing the I/O state of the cause. Maybe rely on setting the pin mode first!
-			// TODO: Update all the input states and then update all the output states.
+	int8_t status = NULL;
+	int8_t result = NULL;
+	char token[32] = { 0 };
+	int tokenInt = 0;
+	int i;
 
-			updateChannelProfile[tokenInt].enabled = CHANNEL_ENABLED;
-			updateChannelProfile[tokenInt].direction = CHANNEL_DIRECTION_INPUT;
-			updateChannelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
-			updateChannelProfile[tokenInt].value = Get_Channel_Value (updateChannelProfile[tokenInt].number);
+	// e.g., TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL
 
-//			if (strncmp (token, "switch", strlen ("switch")) == 0) { 
-			if (updateChannelProfile[tokenInt].value == CHANNEL_VALUE_TOGGLE_ON) {
+	// Update the channels
+	// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
+	for (i = 0; i < 12; i++) {
 
-				// TODO: Look for "effect"
+		status = Get_Token ((*event).state, token, 1 + i);
 
-				status = Get_Token (actionContent, token, 3); // Effect
-				tokenInt = atoi (token) - 1;
-				updateChannelProfile[tokenInt].enabled = CHANNEL_ENABLED;
-				updateChannelProfile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
-				updateChannelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
-				updateChannelProfile[tokenInt].value = CHANNEL_VALUE_TOGGLE_ON;
-
-			} else if (updateChannelProfile[tokenInt].value
-					== CHANNEL_VALUE_TOGGLE_OFF) {
-
-				// TODO: Look for "effect"
-
-				status = Get_Token (actionContent, token, 3); // Effect
-				tokenInt = atoi (token) - 1;
-				updateChannelProfile[tokenInt].enabled = CHANNEL_ENABLED;
-				updateChannelProfile[tokenInt].direction = CHANNEL_DIRECTION_OUTPUT;
-				updateChannelProfile[tokenInt].mode = CHANNEL_MODE_TOGGLE;
-				updateChannelProfile[tokenInt].value = CHANNEL_VALUE_TOGGLE_OFF;
-
-			}
-			// TODO: Get the (cause, effect) condition.
-
-			// TODO: Create (cause, effect) action.
-
-			// Apply channel
-			// TODO: Move this to a common place, maybe in Application in the loop logic.
-//			if (effect is local) { // TODO: Get UUID of cause and effect units.
-			Apply_Channels ();
-//			} else if (effect is remote) {
-//				Request_Remote_Apply_Channels ();
+//			// Set LED state
+//			if (token[0] == 'T') {
+//				updateChannelLightProfiles[i].enabled = TRUE;
+////					updateChannelLightProfiles[i].color = &onColor;
+//				Set_Light_Color (&updateChannelLightProfiles[i], onColor.R, onColor.G, onColor.B);
+//			} else {
+//				updateChannelLightProfiles[i].enabled = TRUE;
+//				Set_Light_Color (&updateChannelLightProfiles[i], offColor.R, offColor.G, offColor.B);
 //			}
 
-			result = TRUE;
-
-		} else if (strncmp (token, "light", strlen ("light")) == 0) {
-
-			// light FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
-			// ^
-
-			//	char *hexString = "FFEEDD";
-			//	int hexInt = HexStringToUInt (hexString);
-			//	int red   = (hexInt & 0xFF0000) >> 16;
-			//	int green = (hexInt & 0x00FF00) >> 8;
-			//	int blue  = (hexInt & 0x0000FF) >> 0;
-
-			// Update the channels
-			// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
-			for (i = 0; i < 12; i++) {
-				int hex_color = 0x000000;
-				int red = 0;
-				int green = 0;
-				int blue = 0;
-
-				status = Get_Token (actionContent, token, 1 + i);
-
-				// Convert hex-encoded color string to seperate red, green, and blue color indices.
-				hex_color = HexStringToUInt (token);
-				red   = (hex_color & 0xFF0000) >> 16;
-				green = (hex_color & 0x00FF00) >> 8;
-				blue  = (hex_color & 0x0000FF) >> 0;
-
-//				// Set LED state
-				updateChannelLightProfiles[i].enabled = TRUE;
-				Set_Light_Color (&updateChannelLightProfiles[i], red, green, blue);
-
-			}
-
-			// Apply channel
-			// TODO: Move this to a common place, maybe in Application in the loop logic.
-			Apply_Channels ();
-			Apply_Channel_Lights ();
-
-			result = TRUE;
-
-		} else if (strncmp (token, "apply", strlen ("apply")) == 0) {
-
-			// apply TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL
-			// ^
-
-			// Update the channels
-			// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
-			for (i = 0; i < 12; i++) {
-				status = Get_Token (actionContent, token, 1 + i);
-
-				// Set LED state
-				if (token[0] == 'T') {
-					updateChannelLightProfiles[i].enabled = TRUE;
-//					updateChannelLightProfiles[i].color = &onColor;
-					Set_Light_Color (&updateChannelLightProfiles[i], onColor.R, onColor.G, onColor.B);
-				} else {
-					updateChannelLightProfiles[i].enabled = TRUE;
-					Set_Light_Color (&updateChannelLightProfiles[i], offColor.R, offColor.G, offColor.B);
-				}
-
-				// Update the GPIO states
-				// TODO: Update the intermediate data structure and only update the actual GPIO when the state changes.
-				// TODO: Make 0-indexing (or not) consistent with LEDs
+		// Update the GPIO states
+		// TODO: Update the intermediate data structure and only update the actual GPIO when the state changes.
+		// TODO: Make 0-indexing (or not) consistent with LEDs
 //				Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
 //				Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_ON);
 
-				// Enable. Is the channel enabled?
-				// TODO: Add an additional state to handle "no change" for channel
-				updateChannelProfile[i].enabled = (token[1] == 'T' ? TRUE : FALSE); // HACK
+		// Enable. Is the channel enabled?
+		// TODO: Add an additional state to handle "no change" for channel
+		updated_channel_profile[i].enabled = (token[1] == 'T' ? TRUE : FALSE); // HACK
 
-				// Direction. Set channel direction. Is the channel an input or output?
-				if (token[2] == 'I') {
-					updateChannelProfile[i].direction = CHANNEL_DIRECTION_INPUT;
-				} else if (token[2] == 'O') {
-					updateChannelProfile[i].direction =
-					CHANNEL_DIRECTION_OUTPUT;
-				} else if (token[2] == '-') {
-					// NOTE: Don't change!
+		// Direction. Set channel direction. Is the channel an input or output?
+		if (token[2] == 'I') {
+			updated_channel_profile[i].direction = CHANNEL_DIRECTION_INPUT;
+		} else if (token[2] == 'O') {
+			updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+		} else if (token[2] == '-') {
+			// NOTE: Don't change!
+		}
+
+		// Mode. Set channel mode. Is it a toggle (discrete switch), waveform (continuous analog signal), or pulse (e.g., PWM).
+		if (token[3] == 'T') {
+			updated_channel_profile[i].mode = CHANNEL_MODE_TOGGLE; // TODO: Rename this to MODE_TOGGLE
+		} else if (token[3] == 'W') {
+			updated_channel_profile[i].mode = CHANNEL_MODE_WAVEFORM;
+		} else if (token[3] == 'P') {
+			updated_channel_profile[i].mode = CHANNEL_MODE_PULSE;
+		} else if (token[3] == '-') {
+			// NOTE: Don't change!
+		}
+
+		// Value. Set channel value. This depends on the direction and mode of the channel.
+		if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
+			if (updated_channel_profile[i].mode == CHANNEL_MODE_TOGGLE) {
+				// Assign the channel's value based on the received data.
+				if (token[4] == 'H') {
+					updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_ON;
+				} else if (token[4] == 'L') {
+					updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+				} else {
+					// ERROR: Error. An unrecognized toggle value was specified.
 				}
-
-				// Mode. Set channel mode. Is it a toggle (discrete switch), waveform (continuous analog signal), or pulse (e.g., PWM).
-				if (token[3] == 'T') {
-					updateChannelProfile[i].mode = CHANNEL_MODE_TOGGLE; // TODO: Rename this to MODE_TOGGLE
-				} else if (token[3] == 'W') {
-					updateChannelProfile[i].mode = CHANNEL_MODE_WAVEFORM;
-				} else if (token[3] == 'P') {
-					updateChannelProfile[i].mode = CHANNEL_MODE_PULSE;
-				} else if (token[3] == '-') {
-					// NOTE: Don't change!
-				}
-
-				// Value. Set channel value. This depends on the direction and mode of the channel.
-				if (updateChannelProfile[i].direction
-						== CHANNEL_DIRECTION_OUTPUT) {
-					if (updateChannelProfile[i].mode == CHANNEL_MODE_TOGGLE) {
-						// Assign the channel's value based on the received data.
-						if (token[4] == 'H') {
-							updateChannelProfile[i].value =
-							CHANNEL_VALUE_TOGGLE_ON;
-						} else if (token[4] == 'L') {
-							updateChannelProfile[i].value =
-							CHANNEL_VALUE_TOGGLE_OFF;
-						} else {
-							// ERROR: Error. An unrecognized toggle value was specified.
-						}
-					} else if (updateChannelProfile[i].mode
-							== CHANNEL_MODE_WAVEFORM) {
-						// TODO: Assign the value differently, depending on the specified channel direction and mode.
-						// TODO: Assign this based on the received data.
-					} else if (updateChannelProfile[i].mode
-							== CHANNEL_MODE_PULSE) {
-						// TODO: Assign the value differently, depending on the specified channel direction and mode.
-						// TODO: Assign this based on the received data.
-					} else {
-						// ERROR: Error. An invalid mode was specified.
-					}
-				} else if (updateChannelProfile[i].direction
-						== CHANNEL_DIRECTION_INPUT) {
-					// NOTE: The channel direction is input, so its value is set by the pin's voltage state.
-					if (updateChannelProfile[i].mode == CHANNEL_MODE_TOGGLE) {
-						// Assign the channel value based on the physical pin state.
-						updateChannelProfile[i].value = Get_Channel_Value (
-								updateChannelProfile[i].number);
-
+			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_WAVEFORM) {
+				// TODO: Assign the value differently, depending on the specified channel direction and mode.
+				// TODO: Assign this based on the received data.
+			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_PULSE) {
+				// TODO: Assign the value differently, depending on the specified channel direction and mode.
+				// TODO: Assign this based on the received data.
+			} else {
+				// ERROR: Error. An invalid mode was specified.
+			}
+		} else if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
+			// NOTE: The channel direction is input, so its value is set by the pin's voltage state.
+			if (updated_channel_profile[i].mode == CHANNEL_MODE_TOGGLE) {
+				// Assign the channel value based on the physical pin state.
+				updated_channel_profile[i].value = Get_Channel_Value (updated_channel_profile[i].number);
 //						if (token[4] == 'H') {
-//							updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
+//							updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_ON;
 //						} else if (token[4] == 'L') {
-//							updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+//							updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 //						} else {
 //							// ERROR: Error. An unrecognized toggle value was specified.
 //						}
-					} else if (updateChannelProfile[i].mode
-							== CHANNEL_MODE_WAVEFORM) {
-						// TODO: Assign the value differently, depending on the specified channel direction and mode.
-						// TODO: Assign this based on the received data.
-					} else if (updateChannelProfile[i].mode
-							== CHANNEL_MODE_PULSE) {
-						// TODO: Assign the value differently, depending on the specified channel direction and mode.
-						// TODO: Assign this based on the received data.
-					} else {
-						// ERROR: Error. An invalid mode was specified.
-					}
-				} else {
-					// ERROR: Error. An unrecognized channel direction was specified.
-				}
-				// TODO: Apply individual channel here! Only the changed ones!
-
-//				// Set GPIO state
-//				// TODO: Add an additional state to handle "no change" for channel
-//				if (token[1] == 'T') {
-//					Enable_Channel ((i + 1), TRUE);
-//				} else {
-//					Enable_Channel ((i + 1), FALSE);
-//				}
-//
-//				// Set channel direction. Is the channel an input or output?
-//				if (token[2] == 'O') {
-//					Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
-//				} else if (token[2] == 'I') {
-//					Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
-//				}
-
-//				if (tokenInt == 1) {
-//					Set_LED_Output ((RGB_LED) (i + 1),  &onColor);
-//				} else {
-//					Set_LED_Output ((RGB_LED) (i + 1),  &offColor);
-//				}
+			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_WAVEFORM) {
+				// TODO: Assign the value differently, depending on the specified channel direction and mode.
+				// TODO: Assign this based on the received data.
+			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_PULSE) {
+				// TODO: Assign the value differently, depending on the specified channel direction and mode.
+				// TODO: Assign this based on the received data.
+			} else {
+				// ERROR: Error. An invalid mode was specified.
 			}
-
-			// Apply channel
-			// TODO: Move this to a common place, maybe in Application in the loop logic.
-			Apply_Channels ();
-			Apply_Channel_Lights ();
-
-			result = TRUE;
-
-		} else if (strncmp (token, "change", strlen ("change")) == 0) {
-
-			// change lights to 1 0 1 1 0 1 0 1 0 0 1 1
-			// ^
-
-			if ((status = Get_Token (actionContent, token, 1)) != NULL) {
-
-				// change lights to 1 0 1 1 0 1 0 1 0 0 1 1
-				//        ^
-				if (strncmp (token, "channel", strlen ("channel")) == 0) {
-
-					if ((status = Get_Token (actionContent, token, 2)) != NULL) { // TODO: Remove this! The parameter is used later.
-
-						// change channel to 1 0 1 1 0 1 0 1 0 0 1 1 1 0 1 1 0 1 0 1 0 0 1 1
-						//                   ^                       ^
-
-						/*
-						 // Update the LED states
-						 // TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
-						 for (i = 0; i < 12; i++) {
-						 status = getToken (actionContent, token, 3 + i);
-						 tokenInt = atoi (token);
-						 if (tokenInt == 1) {
-						 Set_LED_Output ((RGB_LED) (i + 1),  &onColor);
-						 } else {
-						 Set_LED_Output ((RGB_LED) (i + 1),  &offColor);
-						 }
-						 }
-
-						 // Update the GPIO states
-						 // TODO: Update the intermediate data structure and only update the actual GPIO when the state changes.
-						 for (i = 0; i < 12; i++) {
-						 status = getToken (actionContent, token, 3 + 12 + i);
-						 tokenInt = atoi (token);
-						 if (tokenInt == 1) {
-						 // TODO: Make 0-indexing (or not) consident with LEDs
-						 //								Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
-						 //								Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_ON);
-						 // Update channel
-						 updateChannelProfile[i].enabled = TRUE; // HACK
-						 updateChannelProfile[i].direction = OUTPUT_CHANNEL;
-						 updateChannelProfile[i].mode = MODE_DIGITAL;
-						 updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_ON;
-						 // TODO: Apply individual channel here! Only the changed ones!
-						 } else {
-						 // TODO: Make 0-indexing (or not) consident with LEDs
-						 //								Set_Channel ((i + 1), OUTPUT_CHANNEL, NULL);
-						 //								Set_Channel_State ((i + 1), CHANNEL_VALUE_TOGGLE_OFF);
-						 // Update channel
-						 updateChannelProfile[i].enabled = TRUE; // HACK
-						 updateChannelProfile[i].direction = OUTPUT_CHANNEL;
-						 updateChannelProfile[i].mode = MODE_DIGITAL;
-						 updateChannelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
-						 // TODO: Apply individual channel here! Only the changed ones!
-						 }
-						 }
-						 // Apply channel
-						 Apply_Channels ();
-
-						 // Update the wait
-						 // TODO: Add this as a separate action!
-						 status = getToken (actionContent, token, 3 + 24);
-						 tokenInt = atoi (token);
-						 //						Wait (tokenInt);
-
-						 result = TRUE;
-
-						 //						if (strncmp (token, "on", strlen ("on")) == 0) {
-						 //
-						 //							// Turn all LEDs on
-						 //							for (i = 0; i < 12; i++) {
-						 //								Set_Channel_State (i, CHANNEL_VALUE_TOGGLE_ON);
-						 //							}
-						 //
-						 //							result = TRUE;
-						 //
-						 //						} else if (strncmp (token, "off", strlen ("off")) == 0) {
-						 //
-						 //							// Turn all LEDs off
-						 //							for (i = 0; i < 12; i++) {
-						 //								Set_Channel_State (i, CHANNEL_VALUE_TOGGLE_OFF);
-						 //							}
-						 //
-						 //							result = TRUE;
-						 //
-						 //						}
-						 */
-					}
-
-				}
-
-			}
-
-		} else if (strncmp (token, "turn", strlen ("turn")) == 0) {
-
-			if ((status = Get_Token (actionContent, token, 1)) != NULL) {
-
-				// turn lights on
-				//      ^
-				if (strncmp (token, "lights", strlen ("lights")) == 0) {
-
-					if ((status = Get_Token (actionContent, token, 2)) != NULL) { // TODO: Remove this! The parameter is used later.
-
-						// turn lights on
-						//             ^
-						if (strncmp (token, "on", strlen ("on")) == 0) {
-
-							// Turn all LEDs on
-							for (i = 0; i < 12; i++) {
-								Set_Channel_Value (i, CHANNEL_VALUE_TOGGLE_ON);
-							}
-
-							result = TRUE;
-
-						} else if (strncmp (token, "off", strlen ("off"))
-								== 0) {
-
-							// Turn all LEDs off
-							for (i = 0; i < 12; i++) {
-								Set_Channel_Value (i, CHANNEL_VALUE_TOGGLE_OFF);
-							}
-
-							result = TRUE;
-
-						}
-					}
-
-				} else if (strncmp (token, "light", strlen ("light")) == 0) {
-
-					// turn light 1 on
-					//      ^
-
-					if ((status = Get_Token (actionContent, token, 2)) != NULL) { // TODO: Remove this! The parameter is used later.
-
-						if ((status = Get_Token (actionContent, token, 3))
-								!= NULL) {
-
-							// turn light 1 on
-							//              ^
-							if (strncmp (token, "on", strlen ("on")) == 0) {
-
-								// Turn the specified LED off
-								status = Get_Token (actionContent, token, 2);
-								tokenInt = atoi (token);
-								onColor.B = 200;
-								onColor.G = 50;
-								RGB_LED_SetColor ((RGB_LED) tokenInt, &onColor);
-
-								result = TRUE;
-
-							} else if (strncmp (token, "off", strlen ("off"))
-									== 0) {
-
-								// Turn the specified LED off
-								status = Get_Token (actionContent, token, 2);
-								tokenInt = atoi (token);
-								RGB_LED_SetColor ((RGB_LED) tokenInt, &offColor);
-
-								result = TRUE;
-
-							}
-						}
-					}
-
-					// turn channel 1 on
-					//      ^
-				} else if (strncmp (token, "channel", strlen ("channel"))
-						== 0) {
-
-					if ((status = Get_Token (actionContent, token, 2)) != NULL) { // TODO: Remove this! The parameter is used later.
-
-						// turn channel 1 on
-						//              ^
-
-						if ((status = Get_Token (actionContent, token, 3))
-								!= NULL) {
-
-							// turn channel 1 on
-							//                ^
-							if (strncmp (token, "on", strlen ("on")) == 0) {
-
-								// Turn the specified LED off
-								status = Get_Token (actionContent, token, 2);
-								tokenInt = atoi (token);
-								Set_Channel_Value (tokenInt,
-								CHANNEL_VALUE_TOGGLE_ON);
-
-								result = TRUE;
-
-							} else if (strncmp (token, "off", strlen ("off"))
-									== 0) {
-
-								// Turn the specified LED off
-								status = Get_Token (actionContent, token, 2);
-								tokenInt = atoi (token);
-								Set_Channel_Value (tokenInt,
-								CHANNEL_VALUE_TOGGLE_OFF);
-
-								result = TRUE;
-
-							}
-						}
-					}
-
-				}
-
-			}
-
-		} else if (strncmp (token, "wait", strlen ("wait")) == 0) {
-
-			if ((status = Get_Token (actionContent, token, 1)) != NULL) {
-
-				// wait 500 ms
-				//      ^
-
-				// Set the action wait time (i.e., the time after the action before proceeding to the next one)
-				status = Get_Token (actionContent, token, 1); // TODO: This is redundant. Remove redundancy!
-				tokenInt = atoi (token);
-				if (actionWaitTime == 0) {
-					actionWaitTime = tokenInt;
-				}
-
-				// Check if the action's wait time has expired
-				if ((Millis () - actionStartTime) > actionWaitTime) {
-					actionStartTime = 0;
-					actionWaitTime = 0;
-					result = TRUE;
-				} else {
-					result = FALSE;
-				}
-
-			}
-
-		} else if (strncmp (token, "say", strlen ("say")) == 0) {
-
-			if ((status = Get_Token (actionContent, token, 1)) != NULL) {
-
-				// wait 500 ms
-				//      ^
-
-				// Set the action wait time (i.e., the time after the action before proceeding to the next one)
-				status = Get_Token (actionContent, token, 1);
-
-				// TODO: Create string "say token"
-
-				// TODO: Add parameter for "say" to specify maximum frequency of phrase
-				// TODO: Add parameters for alternative phrases
-				//Broadcast_UDP_Message ("say i should say something");
-//				Broadcast_UDP_Message(actionContent, 4445);
-				// TODO: Queue_Outgoing_Message()
-
-				result = TRUE;
-
-			}
-
-			// TODO: Add commands that render a graphical finger using Clay on your behalf, in response to commands, as if the computer is doing it! The computer can also point things out to you! It mirrors your action? Or shows up as "slip" under a action?
-			// TODO: "touch at <x,y>"
-			// TOOD: "drag to <x,y>"
-
 		} else {
-
-			result = TRUE;
-
+			// ERROR: Error. An unrecognized channel direction was specified.
 		}
+	}
 
-	} else {
+	// Apply channel
+	// TODO: Move this to a common place, maybe in Application in the loop logic.
+	Apply_Channels ();
+	Apply_Channel_Lights ();
 
+	result = TRUE;
+
+	return result;
+}
+
+// e.g., "500 ms"
+static int8_t Perform_Pause_Action (Event *event) {
+
+	int8_t status = NULL;
+	int8_t result = NULL;
+	char token[32] = { 0 };
+	int pause_duration_integer = 0;
+
+	// Set the action wait time (i.e., the time after the action before proceeding to the next one)
+	status = Get_Token ((*event).state, token, 1); // TODO: This is redundant. Remove redundancy!
+	if (action_wait_time == 0) {
+		pause_duration_integer = atoi (token);
+		action_wait_time = pause_duration_integer;
+	}
+
+	// Check if the action's wait time has expired
+	if ((Millis () - action_start_time) > action_wait_time) {
+		action_start_time = 0;
+		action_wait_time = 0;
 		result = TRUE;
+	} else {
+		result = FALSE;
 	}
 
 	return result;
+}
+
+static int8_t Perform_Message_Action (Event *event) {
+	// TODO: Make an action that queues a message.
+	return FALSE;
+}
+
+static int8_t Perform_Say_Action (Event *event) {
+	// TODO: Make action that queues a message specifically to generate speech on the app.
+	return FALSE;
 }

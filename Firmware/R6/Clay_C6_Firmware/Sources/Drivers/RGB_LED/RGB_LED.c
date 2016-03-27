@@ -17,7 +17,7 @@
 
 #define RGB_LED_ADDR					0x3C
 
-Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
+Channel_Light proposed_light_profiles[CHANNEL_COUNT];
 Channel_Light channelLightProfiles[CHANNEL_COUNT];
 
 typedef struct {
@@ -145,9 +145,9 @@ int8_t Initialize_Channel_Lights () {
 	for (i = 0; i < CHANNEL_COUNT; i++) {
 
 		// Initialize update channel profile
-		updateChannelLightProfiles[i].number = (i + 1);
-		updateChannelLightProfiles[i].enabled = TRUE;
-		Set_Light_Color (&updateChannelLightProfiles[i], 0, 0, 0);
+		proposed_light_profiles[i].number = (i + 1);
+		proposed_light_profiles[i].enabled = TRUE;
+		Set_Light_Color (&proposed_light_profiles[i], 0, 0, 0);
 
 		// Initialize channel profile
 		channelLightProfiles[i].number = (i + 1);
@@ -164,9 +164,9 @@ void Reset_Channel_Lights () {
 	for (i = 0; i < CHANNEL_COUNT; i++) {
 
 		// Initialize update channel profile
-		updateChannelLightProfiles[i].number = (i + 1);
-		updateChannelLightProfiles[i].enabled = TRUE;
-		Set_Light_Color (&updateChannelLightProfiles[i], 0, 0, 0);
+		proposed_light_profiles[i].number = (i + 1);
+		proposed_light_profiles[i].enabled = TRUE;
+		Set_Light_Color (&proposed_light_profiles[i], 0, 0, 0);
 	}
 
 //	return TRUE;
@@ -178,10 +178,10 @@ int8_t Apply_Channel_Lights () {
 	for (i = 0; i < CHANNEL_COUNT; i++) {
 
 		// Check if the enable state changed. Apply the corresponding transform.
-		if (updateChannelLightProfiles[i].enabled != channelProfile[i].enabled) {
+		if (proposed_light_profiles[i].enabled != channel_profile[i].enabled) {
 
 			// Update state.
-			channelLightProfiles[i].enabled = updateChannelLightProfiles[i].enabled;
+			channelLightProfiles[i].enabled = proposed_light_profiles[i].enabled;
 
 			if (channelLightProfiles[i].enabled == TRUE) {
 
@@ -193,9 +193,9 @@ int8_t Apply_Channel_Lights () {
 //				{
 
 				// Update color.
-				channelLightProfiles[i].color.R = updateChannelLightProfiles[i].color.R;
-				channelLightProfiles[i].color.G = updateChannelLightProfiles[i].color.G;
-				channelLightProfiles[i].color.B = updateChannelLightProfiles[i].color.B;
+				channelLightProfiles[i].color.R = proposed_light_profiles[i].color.R;
+				channelLightProfiles[i].color.G = proposed_light_profiles[i].color.G;
+				channelLightProfiles[i].color.B = proposed_light_profiles[i].color.B;
 
 				// Apply color.
 				RGB_LED_SetColor ((RGB_LED) (channelLightProfiles[i].number - 1), &(channelLightProfiles[i].color));
