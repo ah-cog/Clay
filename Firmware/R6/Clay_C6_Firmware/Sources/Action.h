@@ -8,7 +8,7 @@
 #include "stdlib.h"
 #include "string.h"
 
-#include "String.h"
+#include "clayString.h"
 
 #ifndef DEFAULT_UUID_LENGTH
 #define DEFAULT_UUID_LENGTH 37
