@@ -28,4 +28,4 @@ void Initialize ();
  */
 void Application ();
 
-#endif /* APPLICATION_H */
+#endif

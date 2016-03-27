@@ -805,24 +805,15 @@ int8_t Perform_Action (Event *event) {
 
 				status = Get_Token (actionContent, token, 1 + i);
 
+				// Convert hex-encoded color string to seperate red, green, and blue color indices.
 				hex_color = HexStringToUInt (token);
 				red   = (hex_color & 0xFF0000) >> 16;
 				green = (hex_color & 0x00FF00) >> 8;
 				blue  = (hex_color & 0x0000FF) >> 0;
 
 //				// Set LED state
-//				if (token[0] == 'T') {
-					updateChannelLightProfiles[i].enabled = TRUE;
-//					updateChannelLightProfiles[i].color = &onColor;
-
-					Set_Light_Color (&updateChannelLightProfiles[i], red, green, blue);
-//					updateChannelLightProfiles[i].color.R = red;
-//					updateChannelLightProfiles[i].color.G = green;
-//					updateChannelLightProfiles[i].color.B = blue;
-//				} else {
-//					updateChannelLightProfiles[i].enabled = TRUE;
-//					updateChannelLightProfiles[i].color = &offColor;
-//				}
+				updateChannelLightProfiles[i].enabled = TRUE;
+				Set_Light_Color (&updateChannelLightProfiles[i], red, green, blue);
 
 			}
 
