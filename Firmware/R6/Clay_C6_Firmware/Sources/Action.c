@@ -3,6 +3,14 @@
 #include "RGB_LED.h"
 #include "GPIO.h"
 
+// TODO: These should be loaded from the section of memory where basic...
+// TODO: ...actions are stored.
+#define LIGHT_ACTION_UUID   "1470f5c4-eaf1-43fb-8fb3-d96dc4e2bee4"
+#define SIGNAL_ACTION_UUID  "bdb49750-9ead-466e-96a0-3aa88e7d246c"
+#define MESSAGE_ACTION_UUID "99ff8f6d-a0e7-4b6e-8033-ee3e0dc9a78e"
+#define PAUSE_ACTION_UUID   "56d0cf7d-ede6-4529-921c-ae9307d1afbc"
+#define SAY_ACTION_UUID     "269f2e19-1fc8-40f5-99b2-6ca67e828e70"
+
 Event* cache;
 
 Timeline *timeline;
@@ -718,6 +726,56 @@ int8_t Perform_Action (Event *event) {
 	// TODO: Queue the message rather than executing it immediately (unless specified)
 	// TODO: Parse the message rather than brute force like this.
 	// TODO: Decompose the action into atomic actions and perform them!
+
+	if (strncmp ((*action).uuid, LIGHT_ACTION_UUID, strlen (LIGHT_ACTION_UUID)) == 0) {
+
+		// light FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
+		// ^
+
+		//	char *hexString = "FFEEDD";
+		//	int hexInt = HexStringToUInt (hexString);
+		//	int red   = (hexInt & 0xFF0000) >> 16;
+		//	int green = (hexInt & 0x00FF00) >> 8;
+		//	int blue  = (hexInt & 0x0000FF) >> 0;
+
+		// Update the channels
+		// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
+		for (i = 0; i < 12; i++) {
+			int hex_color = 0x000000;
+			int red = 0;
+			int green = 0;
+			int blue = 0;
+
+			status = Get_Token (actionContent, token, 1 + i);
+
+			// Convert hex-encoded color string to seperate red, green, and blue color indices.
+			hex_color = HexStringToUInt (token);
+			red   = (hex_color & 0xFF0000) >> 16;
+			green = (hex_color & 0x00FF00) >> 8;
+			blue  = (hex_color & 0x0000FF) >> 0;
+
+//				// Set LED state
+			updateChannelLightProfiles[i].enabled = TRUE;
+			Set_Light_Color (&updateChannelLightProfiles[i], red, green, blue);
+
+		}
+
+		// Apply channel
+		// TODO: Move this to a common place, maybe in Application in the loop logic.
+		Apply_Channels ();
+		Apply_Channel_Lights ();
+
+		result = TRUE;
+
+	} else if (strncmp ((*action).uuid, SIGNAL_ACTION_UUID, strlen (SIGNAL_ACTION_UUID)) == 0) {
+
+	} else if (strncmp ((*action).uuid, MESSAGE_ACTION_UUID, strlen (MESSAGE_ACTION_UUID)) == 0) {
+
+	} else if (strncmp ((*action).uuid, PAUSE_ACTION_UUID, strlen (PAUSE_ACTION_UUID)) == 0) {
+
+	} else if (strncmp ((*action).uuid, SAY_ACTION_UUID, strlen (SAY_ACTION_UUID)) == 0) {
+
+	}
 
 	// turn light 1 on
 	// ^
