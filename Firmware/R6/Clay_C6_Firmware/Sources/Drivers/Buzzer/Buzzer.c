@@ -5,92 +5,87 @@
  *      Author: thebh_000
  */
 
+////Includes //////////////////////////////////////////////////////
 #include "Clock.h"
 #include "Buzzer.h"
+#include "BUZZER_PWM.h"
 
-FREQ_OUT SelectedFreq;
-static bool BuzzerOutState;
-static uint32_t TickCount = 0;     //todo: expose this?
+////Typedefs  /////////////////////////////////////////////////////
 
-void Buzzer_Tick()
-{
-   if (tick_50us)
-   {
-      tick_50us = FALSE;
+////Globals   /////////////////////////////////////////////////////
 
-      switch (SelectedFreq)
-      {
-         case f_110Hz:
-         {
-            if (TickCount >= 182)
-            {
-               BuzzerOutState = !BuzzerOutState;
-               TickCount = 0;
-            }
-            break;
-         }
-         case f_220Hz:
-         {
-            if (TickCount >= 91)
-            {
-               BuzzerOutState = !BuzzerOutState;
-               TickCount = 0;
-            }
-            break;
-         }
-         case f_440Hz:
-         {
-            if (TickCount >= 45)
-            {
-               BuzzerOutState = !BuzzerOutState;
-               TickCount = 0;
-            }
-            break;
-         }
-         case f_880Hz:
-         {
-            if (TickCount >= 22)
-            {
-               BuzzerOutState = !BuzzerOutState;
-               TickCount = 0;
-            }
-            break;
-         }
-         case f_1760Hz:
-         {
-            if (TickCount >= 11)
-            {
-               BuzzerOutState = !BuzzerOutState;
-               TickCount = 0;
-            }
-            break;
-         }
-         case f_3520Hz:
-         {
-            if (TickCount >= 6)
-            {
-               BuzzerOutState = !BuzzerOutState;
-               TickCount = 0;
-            }
-            break;
-         }
-         case f_7040Hz:
-         {
-            if (TickCount >= 3)
-            {
-               BuzzerOutState = !BuzzerOutState;
-               TickCount = 0;
-            }
-            break;
-         }
-         case f_Off:
-         default:
-         {
-            break;
-         }
-      }
+////Local vars/////////////////////////////////////////////////////
+static LDD_TDeviceData * buzzer_pwm_data;
+static uint32_t notes[] = { 2093,            //c
+                            2217,            //c#/db
+                            2349,            //d
+                            2489,            //d#/eb
+                            2637,            //e
+                            2794,            //f
+                            2960,            //f#/gb
+                            3136,            //g
+                            3322,            //g#/ab
+                            3520,            //a
+                            3729,            //a#/bb
+                            3951,            //b
+                            0 };
 
-      ++TickCount;
-      BuzzerSwitch_PutVal(NULL, BuzzerOutState);
+static uint32_t buzzer_stop_time;
+
+////Local Prototypes///////////////////////////////////////////////
+uint16 Scale_Percent(uint8_t percent);
+
+////Global implementations ////////////////////////////////////////
+
+bool Buzzer_Enable() {
+
+   bool rval = FALSE;
+
+   LDD_TError err;
+
+   buzzer_pwm_data = BUZZER_PWM_Init(NULL);
+
+   err = BUZZER_PWM_SetFrequencyHz(buzzer_pwm_data, 0);
+   BUZZER_PWM_SetRatio16(buzzer_pwm_data, Scale_Percent(75));
+
+   return rval;
+}
+
+bool Buzzer_Disable() {
+   BUZZER_PWM_Deinit(buzzer_pwm_data);
+
+   return TRUE;
+}
+
+void Buzzer_Play_Note(NOTE_INDEX note, uint32_t duration_ms) {
+   Buzzer_Play_Frequency(notes[note], duration_ms);
+}
+
+void Buzzer_Play_Frequency(uint32_t frequency, uint32_t duration_ms) {
+
+   if (frequency > 0) {
+      BUZZER_PWM_SetFrequencyHz(buzzer_pwm_data, frequency);
+      BUZZER_PWM_SetRatio16(buzzer_pwm_data, Scale_Percent(75));
    }
+   else {
+      BUZZER_PWM_SetRatio16(buzzer_pwm_data, 0);
+   }
+
+   if (duration_ms > 0) {
+      buzzer_stop_time = Millis() + duration_ms;
+   }
+   else {
+      buzzer_stop_time = 0;
+   }
+}
+
+void Buzzer_Stop_Check() {
+   if (buzzer_stop_time > 0 && Millis() > buzzer_stop_time) {
+      Buzzer_Play_Frequency(0, 0);
+   }
+}
+
+////Local implementations ////////////////////////////////////////
+uint16 Scale_Percent(uint8_t percent) {
+   return (uint16) (((double) percent / 100.0) * 0xFFFF);
 }

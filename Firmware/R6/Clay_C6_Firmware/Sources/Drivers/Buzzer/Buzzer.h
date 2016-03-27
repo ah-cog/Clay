@@ -8,25 +8,42 @@
 #ifndef SOURCES_DRIVERS_BUZZER_BUZZER_H_
 #define SOURCES_DRIVERS_BUZZER_BUZZER_H_
 
+////Includes //////////////////////////////////////////////////////
+#include "PE_Types.h"
+
+////Macros ////////////////////////////////////////////////////////
+
+////Typedefs  /////////////////////////////////////////////////////
 //enum for test.
 typedef enum
 {
-   f_110Hz,
-   f_220Hz,
-   f_440Hz,
-   f_880Hz,
-   f_1760Hz,
-   f_3520Hz,
-   f_7040Hz,
-   f_Off
+   NOTE_C,
+   NOTE_Db,
+   NOTE_D,
+   NOTE_Eb,
+   NOTE_E,
+   NOTE_F,
+   NOTE_Gb,
+   NOTE_G,
+   NOTE_Ab,
+   NOTE_A,
+   NOTE_Bb,
+   NOTE_B,
+   NOTE_OFF,
+   NOTE_INDEX_MAX
+} NOTE_INDEX;
 
-} FREQ_OUT;
+////Globals   /////////////////////////////////////////////////////
 
-extern FREQ_OUT SelectedFreq;
+////Prototypes/////////////////////////////////////////////////////
+extern bool Buzzer_Enable();
 
-extern void Buzzer_Tick();
+extern bool Buzzer_Disable();
 
-//TODO: method that takes a frequency and outputs it to the buzzah.
-//TODO: lookup table for a few octaves of notes within the range of the buzzer.
+extern void Buzzer_Play_Note(NOTE_INDEX note, uint32_t duration);
+
+extern void Buzzer_Play_Frequency(uint32_t frequency, uint32_t duration);
+
+extern void Buzzer_Stop_Check();
 
 #endif /* SOURCES_DRIVERS_BUZZER_BUZZER_H_ */

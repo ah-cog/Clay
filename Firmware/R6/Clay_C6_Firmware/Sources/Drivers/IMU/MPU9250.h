@@ -36,7 +36,7 @@ extern uint8_t data_ready;
 
 extern uint8_t Start_MPU9250();
 extern void tap_callback();
-extern void imu_periodic_callback();
+extern void Imu_Get_Data();
 extern const quaternion * get_quaternion_history(uint8_t * count, uint8_t * head);
 extern const mpu_values * get_raw_history(uint8_t * count, uint8_t * head);
 

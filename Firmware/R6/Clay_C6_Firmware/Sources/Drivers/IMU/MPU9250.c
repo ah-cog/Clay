@@ -63,8 +63,7 @@ static void android_orient_cb(unsigned char orientation);
 static void add_datapoint(quaternion * quat, mpu_values * mpu_raw);
 
 //initalizes mpu and dmp. returns 1 if successful, 0 if not.
-uint8_t Start_MPU9250()
-{
+uint8_t Start_MPU9250() {
    raw_head = 0;
    raw_count = 0;
    raw_tail = 0;
@@ -117,8 +116,7 @@ uint8_t Start_MPU9250()
    int32 accel_test[100];
    status = status && mpu_run_self_test(gyro_test, accel_test) == 0x07;
 
-   while (status)
-   {
+   while (status) {
       ++fw_load_attempts;
       status = dmp_load_motion_driver_firmware();
       Wait(200);
@@ -140,13 +138,14 @@ uint8_t Start_MPU9250()
    return status;
 }
 
-void tap_callback()
-{
+void tap_callback() {
 
 }
 
-void imu_periodic_callback()
-{
+void Imu_Get_Data() {
+   if (!data_ready)
+      return;
+
    mpu_values v;
    quaternion q;
 
@@ -169,60 +168,50 @@ void imu_periodic_callback()
    data_ready = more > 0;
 }
 
-const quaternion * get_quaternion_history(uint8_t* count, uint8_t * head)
-{
+const quaternion * get_quaternion_history(uint8_t* count, uint8_t * head) {
    //TODO: we'll need to know the size of the measurement array, otherwise we'll just walk off the end when we try to iterate.
    *count = quat_count;
    *head = quat_head;
    return quat_history;
 }
 
-const mpu_values * get_raw_history(uint8_t* count, uint8_t * head)
-{
+const mpu_values * get_raw_history(uint8_t* count, uint8_t * head) {
    //TODO: we'll need to know the size of the measurement array, otherwise we'll just walk off the end when we try to iterate.
    *count = raw_count;
    *head = raw_head;
    return raw_history;
 }
 
-static void add_datapoint(quaternion * quat, mpu_values * mpu_raw)
-{
+static void add_datapoint(quaternion * quat, mpu_values * mpu_raw) {
    quaternion * quat_dest = quat_history + quat_head;
    mpu_values * raw_dest = raw_history + raw_head;
 
-   for (int i = 0; i < 4; ++i)
-   {
+   for (int i = 0; i < 4; ++i) {
       quat_dest->array[i] = quat->array[i];
    }
    quat_head = (quat_head + 1) % MAX_HISTORY_COUNT;
-   if (quat_count == MAX_HISTORY_COUNT)
-   {
+   if (quat_count == MAX_HISTORY_COUNT) {
       quat_tail = (quat_tail + 1 % MAX_HISTORY_COUNT);
    }
-   else
-   {
+   else {
       ++quat_count;
    }
 
-   for (int i = 0; i < 3; ++i)
-   {
+   for (int i = 0; i < 3; ++i) {
       raw_dest->values.accel.array[i] = mpu_raw->values.accel.array[i];
       raw_dest->values.gyro.array[i] = mpu_raw->values.gyro.array[i];
       raw_dest->values.mag.array[i] = mpu_raw->values.mag.array[i];
    }
    raw_head = (raw_head + 1) % MAX_HISTORY_COUNT;
-   if (raw_count == MAX_HISTORY_COUNT)
-   {
+   if (raw_count == MAX_HISTORY_COUNT) {
       raw_tail = (raw_tail + 1) % MAX_HISTORY_COUNT;
    }
-   else
-   {
+   else {
       ++raw_count;
    }
 }
 
-static void tap_cb(unsigned char direction, unsigned char count)
-{
+static void tap_cb(unsigned char direction, unsigned char count) {
 //    data_ready = 0;
 //
 //    set_led_output(RGB_1, colors);
@@ -259,10 +248,8 @@ static void tap_cb(unsigned char direction, unsigned char count)
 //    return;
 }
 
-static void android_orient_cb(unsigned char orientation)
-{
-   switch (orientation)
-   {
+static void android_orient_cb(unsigned char orientation) {
+   switch (orientation) {
       case ANDROID_ORIENT_PORTRAIT:
          break;
       case ANDROID_ORIENT_LANDSCAPE:

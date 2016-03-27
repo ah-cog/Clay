@@ -498,7 +498,7 @@
     </Events>
   </Bean>
   <Bean name="BuzzerSwitch" type="BitIO_LDD">
-    <Enabled v="Y" />
+    <Enabled v="N" />
     <Properties>
       <Component_name v="BuzzerSwitch" />
       <Pin_for_I_O v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
@@ -639,10 +639,10 @@ Autoselect
       <event name="OnError" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
-  <Bean name="ButtonIn" type="GPIO_LDD">
+  <Bean name="BUTTON_IN" type="GPIO_LDD">
     <Enabled v="Y" />
     <Properties>
-      <Component_name v="ButtonIn" />
+      <Component_name v="BUTTON_IN" />
       <Port v="PTE" />
       <Port_width v="32 bits" />
       <Mask_of_allocated_pins v="16" />
@@ -652,7 +652,7 @@ Autoselect
       </boolgroup>
       <list name="Bit fields" v="1">
         <group name="Bit field">
-          <Field_name v="Button_Field" />
+          <Field_name v="button_field" />
           <list name="Pins" v="1">
             <group name="Pin">
               <Pin v="PTE4/LLWU_P2/SPI1_PCS0/UART3_TX/SDHC0_D3/TRACE_D0" />
@@ -671,7 +671,7 @@ Autoselect
     </Properties>
     <Methods>
       <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
+      <Deinit v="generate code" />
       <SetEventMask v="don&amp;apos;t generate code" />
       <GetEventMask v="don&amp;apos;t generate code" />
       <SetPortEventCondition v="don&amp;apos;t generate code" />
@@ -697,7 +697,7 @@ Autoselect
     <Events>
       <Event_module_name v="Events" />
       <event name="OnPortEvent" v="generate code">
-        <Event_procedure_name v="ButtonIn_OnPortEvent" />
+        <Event_procedure_name v="BUTTON_IN_OnPortEvent" />
       </event>
     </Events>
   </Bean>
@@ -1799,10 +1799,10 @@ Autoselect
       <EmptySection_DummyValue />
     </Events>
   </Bean>
-  <Bean name="PWM1" type="PWM_LDD">
+  <Bean name="BUZZER_PWM" type="PWM_LDD">
     <Enabled v="N" />
     <Properties>
-      <Component_name v="PWM1" />
+      <Component_name v="BUZZER_PWM" />
       <Period_device v="FTM0_MOD" />
       <Duty_device v="FTM0_C0V" />
       <Output_pin v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
@@ -1818,7 +1818,7 @@ Autoselect
         </group>
       </group>
       <group name="Referenced components">
-        <Linked_component v="TU2" />
+        <Linked_component v="BUZZER_PWM_TIMER" />
       </group>
     </Properties>
     <Methods>
@@ -1846,10 +1846,10 @@ Autoselect
       <event name="OnEnd" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
-  <Bean name="TU2" type="TimerUnit_LDD">
+  <Bean name="BUZZER_PWM_TIMER" type="TimerUnit_LDD">
     <Enabled v="N" />
     <Properties>
-      <Component_name v="TU2" />
+      <Component_name v="BUZZER_PWM_TIMER" />
       <Module_name v="FTM0" />
       <Counter v="FTM0_CNT" />
       <Counter_direction v="Up" />
@@ -1915,6 +1915,59 @@ Autoselect
       <event name="OnChannel5" v="don&amp;apos;t generate code" />
       <event name="OnChannel6" v="don&amp;apos;t generate code" />
       <event name="OnChannel7" v="don&amp;apos;t generate code" />
+    </Events>
+  </Bean>
+  <Bean name="BUZZER_PWM" type="PPG_LDD">
+    <Enabled v="Y" />
+    <Properties>
+      <Component_name v="BUZZER_PWM" />
+      <Module_name v="FTM0" />
+      <Counter v="FTM0_CNT" />
+      <Period_device v="FTM0_MOD" />
+      <Duty_device v="FTM0_C0V" />
+      <Output_pin v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
+      <boolgroup name="Interrupt service/event" v="Disabled" />
+      <Period init="7.152557 Hz" runtime_settings="interval" low="7.152557 Hz" high="15.625 kHz" />
+      <Starting_pulse_width v="70169.825 &amp;#181;s" />
+      <Initial_polarity v="low" />
+      <group name="Initialization">
+        <Enabled_in_init__code v="yes" />
+        <group name="Event mask">
+          <OnEnd v="Disabled" />
+        </group>
+      </group>
+    </Properties>
+    <Methods>
+      <Init v="generate code" />
+      <Deinit v="generate code" />
+      <Enable v="don&amp;apos;t generate code" />
+      <Disable v="don&amp;apos;t generate code" />
+      <SetEventMask v="don&amp;apos;t generate code" />
+      <GetEventMask v="don&amp;apos;t generate code" />
+      <GetEventStatus v="don&amp;apos;t generate code" />
+      <SelectPeriod v="don&amp;apos;t generate code" />
+      <SetPeriodUS v="don&amp;apos;t generate code" />
+      <SetPeriodMS v="generate code" />
+      <SetPeriodSec v="don&amp;apos;t generate code" />
+      <SetPeriodReal v="don&amp;apos;t generate code" />
+      <SetFrequencyHz v="generate code" />
+      <SetFrequencykHz v="don&amp;apos;t generate code" />
+      <SetFrequencyMHz v="don&amp;apos;t generate code" />
+      <SetRatio8 v="don&amp;apos;t generate code" />
+      <SetRatio16 v="generate code" />
+      <SetDutyUS v="don&amp;apos;t generate code" />
+      <SetDutyMS v="generate code" />
+      <SetDutySec v="don&amp;apos;t generate code" />
+      <SetDutyReal v="don&amp;apos;t generate code" />
+      <SetValue v="don&amp;apos;t generate code" />
+      <ClearValue v="don&amp;apos;t generate code" />
+      <ConnectPin v="don&amp;apos;t generate code" />
+      <SetOperationMode v="don&amp;apos;t generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+    </Methods>
+    <Events>
+      <Event_module_name v="Events" />
+      <event name="OnEnd" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
 </PE_PROJECT_SETTINGS_DOCUMENTATION>

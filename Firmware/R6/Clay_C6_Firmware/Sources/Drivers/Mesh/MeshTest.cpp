@@ -372,3 +372,37 @@ static void mesh_update_imu_leds(uint8_t * data, uint8_t len)
 	rx_led_toggle = !rx_led_toggle;
 }
 
+
+///grabbed from application(). turns lights on remote module while local button pressed.
+//  bool LastButtonStateUpdated = ButtonPressed;
+//  Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
+
+   //add software ack to mesh layer
+   //add speaker output
+
+//   //Action test loop: Button press on module sends message to other module. Other module receives message and changes LED output.
+//   for (;;)
+//   {
+//      //call ticks for heartbeat
+//      Monitor_Periodic_Events();
+//      Mesh_Process_Commands();
+//      if (ButtonPressed != LastButtonStateUpdated)
+//      {
+//         LastButtonStateUpdated = ButtonPressed;
+//         uint8_t msgbuf[] = { MESH_CMD_BUTTON_PRESSED, 1 };
+//
+//         if (!ButtonPressed)
+//         {
+//            msgbuf[1] = 0;
+//         }
+//
+//         Mesh_Tx_With_Retry(msgbuf, 2, RemoteAddress);
+////         Mesh_Tx(msgbuf,2,RemoteAddress);
+//      }
+//
+//      //incoming button press messages are handled by interrupt.
+//   }
+
+//also from main. used to run the mesh test loop alongside everything else.
+// Check and process any incoming requests
+//      MeshTestLoopStep();
