@@ -14,6 +14,6 @@ extern int8_t Get_Token (const char *string, char *tokenBuffer, int tokenIndex);
 
 extern int8_t Get_Token_With_Delimiter (const char *string, const char delimiter, const char secondaryDelimiter, char *tokenBuffer, int tokenIndex);
 
-extern unsigned int HexStringToUInt (char const* hexstring);
+extern unsigned int Hex_String_To_UInt (char const* hexstring);
 
 #endif

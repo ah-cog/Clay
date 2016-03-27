@@ -37,8 +37,8 @@ typedef struct {
 	// TODO: UUID for transform.
 } Channel;
 
-extern Channel updateChannelProfile[CHANNEL_COUNT];
-extern Channel channelProfile[CHANNEL_COUNT];
+extern Channel updated_channel_profile[CHANNEL_COUNT];
+extern Channel channel_profile[CHANNEL_COUNT];
 
 int8_t Initialize_Channels ();
 int8_t Reset_Channels ();
