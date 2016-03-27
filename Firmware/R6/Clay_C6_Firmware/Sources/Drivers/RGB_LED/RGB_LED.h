@@ -52,7 +52,7 @@ typedef enum
    RGB_MAX
 } RGB_LED;
 
-extern Channel_Light updateChannelLightProfiles[CHANNEL_COUNT];
+extern Channel_Light proposed_light_profiles[CHANNEL_COUNT];
 extern Channel_Light channelLightProfiles[CHANNEL_COUNT];
 
 extern bool RGB_LED_Enable();

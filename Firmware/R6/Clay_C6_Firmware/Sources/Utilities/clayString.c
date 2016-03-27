@@ -161,7 +161,7 @@ int8_t Get_Token_With_Delimiter (const char *string, const char delimiter, const
 #define ASCII_A_VALU 65
 #define ASCII_F_VALU 70
 
-unsigned int HexStringToUInt (char const* hexstring)
+unsigned int Hex_String_To_UInt (char const* hexstring)
 {
     unsigned int result = 0;
     char const *c = hexstring;
