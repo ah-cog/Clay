@@ -79,7 +79,7 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 	UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
 	State = Disable;
 
-	Initialize_Message_Queue(&outgoingUdpMessageQueue);
+	Initialize_Message_Queue(&outgoing_UDP_message_queue);
 
 	xTaskCreate(UDP_Transmitter_State_Step, "udptx1", 512, NULL, 2, NULL);
 
@@ -126,7 +126,7 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_State_Step()
 			memset(&DestinationAddr, 0, sizeof(DestinationAddr));
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&outgoingUdpMessageQueue);
+			m = Dequeue_Message(&outgoing_UDP_message_queue);
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
@@ -219,7 +219,7 @@ static bool Message_Available()
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	m = Peek_Message(&outgoingUdpMessageQueue);
+	m = Peek_Message(&outgoing_UDP_message_queue);
 	taskEXIT_CRITICAL();
 
 	if (m != NULL)

@@ -37,18 +37,20 @@ static TCP_Transmitter_States State;
 static uint8_t *TCP_Tx_Buffer;
 static uint16_t TCP_Tx_Count;
 
-static struct sockaddr_in DestinationAddr;
+static struct sockaddr_in destination_addr;
 
 static int32 sock_fd;
-static int32 testCounter;
+static int32 test_counter;
+static int32 tx_fail_count;
 
-Message_Type tempIgnoredMessageType;
+Message_Type temp_ignored_message_type;
 
 static Message * m;
+static Message message_temp;
 
 ////Local Prototypes///////////////////////////////////////////////
-static int tcpCreateSocket();
-static bool tcpSend(int txSocket, uint8* data, uint32 length);
+static int TCP_Connect_Socket(struct sockaddr_in * remote_addr);
+static bool TCP_Send(int tx_socket, uint8* data, uint32 length);
 static bool Message_Available();
 
 ////Global implementations ////////////////////////////////////////
@@ -59,17 +61,23 @@ bool ICACHE_RODATA_ATTR TCP_Transmitter_Init()
 	TCP_Tx_Buffer = zalloc(TCP_TX_BUFFER_SIZE_BYTES);
 	State = Disable;
 
-	Initialize_Message_Queue(&outgoingTcpMessageQueue);
+	SocketListInitialize();
+	Initialize_Message_Queue(&outgoing_TCP_message_queue);
 
 	xTaskCreate(TCP_Transmitter_State_Step, "TCPtx1", 512, NULL, 2, NULL);
 
-	testCounter = 0;
+	test_counter = 0;
 
 	return rval;
 }
 
 void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 {
+//	Message test_message;
+
+//	Initialize_Message(&test_message, "TCP,10.0.0.6:1002\x12",
+//			"TCP,10.0.0.2:1002\x12", "a test\n");
+
 	for (;;)
 	{
 		switch (State)
@@ -86,6 +94,8 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 
 		case Idle:
 		{
+//			Queue_Message(&outgoingTcpMessageQueue, &test_message);
+
 			if (Message_Available())
 			{
 				State = Buffer_Message;
@@ -95,26 +105,37 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 
 		case Buffer_Message:
 		{
-			memset(&DestinationAddr, 0, sizeof(DestinationAddr));
+			memset(&destination_addr, 0, sizeof(destination_addr));
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&outgoingTcpMessageQueue);
+			m = Dequeue_Message(&outgoing_TCP_message_queue);
+
+			Initialize_Message(&message_temp, message_type_strings[MESSAGE_TYPE_TCP],
+					m->source, m->destination, m->content);
+			m = &message_temp;
 			taskEXIT_CRITICAL();
 
-			//TODO: Need to be able to figure out the correct socket. echo is not working with the old code
-			//		when we go try to create a new connection.
-			sock_fd = SocketListQuery(m->destination);
+			sock_fd = SocketListQuery(message_temp.destination);
 
 			taskENTER_CRITICAL();
-			strncpy(TCP_Tx_Buffer, m->content, TCP_TX_BUFFER_SIZE_BYTES);
-			TCP_Tx_Count = strlen(m->content);
+			strncpy(TCP_Tx_Buffer, message_temp.content,
+			TCP_TX_BUFFER_SIZE_BYTES);
+			TCP_Tx_Count = strlen(message_temp.content);
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			Deserialize_Address(m->destination, &DestinationAddr,
-					&tempIgnoredMessageType);
+			Deserialize_Address(message_temp.destination, &destination_addr,
+					&temp_ignored_message_type);
 			taskEXIT_CRITICAL();
 
+//			taskENTER_CRITICAL();
+//			printf("remote addr:%s:%d, size:%d\r\n",
+//					inet_ntoa(destination_addr.sin_addr.s_addr),
+//					ntohs(destination_addr.sin_port),
+//					sizeof(struct sockaddr_in));
+//			taskEXIT_CRITICAL();
+
+			tx_fail_count = 0;
 			State = Send_Message;
 			break;
 		}
@@ -123,27 +144,67 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 		{
 			if (sock_fd == -1)
 			{
-				sock_fd = tcpCreateSocket();
+				sock_fd = TCP_Connect_Socket(&destination_addr);
 
-				taskENTER_CRITICAL();
-				printf("create task for tx\r\n");
-				taskEXIT_CRITICAL();
+//				taskENTER_CRITICAL();
+//				printf("\r\n\r\nsock:%d\r\n", sock_fd);
+//				taskEXIT_CRITICAL();
 
-				if (!TCP_Open_Connection(&sock_fd))
+				if (sock_fd != -1)
 				{
-					lwip_close(sock_fd);
+//					taskENTER_CRITICAL();
+//					printf("connected tx sock:%d\r\n", sock_fd);
+//					taskEXIT_CRITICAL();
+
+					if (!TCP_Start_Task(&sock_fd))
+					{
+//						taskENTER_CRITICAL();
+//						printf("start task failed\r\n");
+//						taskEXIT_CRITICAL();
+
+						lwip_close(sock_fd);
+						sock_fd = -1;
+					}
 				}
+//				else
+//				{
+//					taskENTER_CRITICAL();
+//					printf("open sock failed\r\n", sock_fd);
+//					taskEXIT_CRITICAL();
+//				}
+			}
+			else
+			{
+//				taskENTER_CRITICAL();
+//				printf("sock already open\r\n");
+//				taskEXIT_CRITICAL();
 			}
 
-			tcpSend(sock_fd, TCP_Tx_Buffer, TCP_Tx_Count);
+			if (sock_fd != -1)
+			{
+//				taskENTER_CRITICAL();
+//				printf("start sock ok:%d\r\n", sock_fd);
+//				printf("send [%s]", TCP_Tx_Buffer);
+//				taskEXIT_CRITICAL();
 
-			State = Idle;
+				TCP_Send(sock_fd, TCP_Tx_Buffer, TCP_Tx_Count);
+				State = Idle;
+			}
+			else if (tx_fail_count++ > 10)
+			{
+//				taskENTER_CRITICAL();
+//				printf("start sock failed\r\n\r\n");
+//				taskEXIT_CRITICAL();
+				State = Idle;
+			}
+
 			break;
 		}
 
 		case TCP_STATE_MAX:
 		default:
 		{
+			State = Idle;
 			break;
 		}
 		}
@@ -155,22 +216,78 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 }
 
 ////Local implementations /////////////////////////////////////////
-static int ICACHE_RODATA_ATTR tcpCreateSocket()
+static int ICACHE_RODATA_ATTR TCP_Connect_Socket(
+		struct sockaddr_in * remote_addr)
 {
-	int txSocket = socket(PF_INET, SOCK_STREAM, 0);
+//	taskENTER_CRITICAL();
+//	printf("sock to [%s]\r\n", message_temp.destination);
+//	taskEXIT_CRITICAL();
 
-	if (-1 == txSocket)
+	int tx_socket = socket(PF_INET, SOCK_STREAM, 0);
+
+//	taskENTER_CRITICAL();
+//	printf("tx socket:%d\r\n", tx_socket);
+//	taskEXIT_CRITICAL();
+
+//	taskENTER_CRITICAL();
+//	printf("remote addr:%s:%d, size:%d\r\n",
+//			inet_ntoa(remote_addr->sin_addr.s_addr),
+//			ntohs(remote_addr->sin_port), sizeof(struct sockaddr_in));
+//	taskEXIT_CRITICAL();
+
+	if (tx_socket == -1)
 	{
-		lwip_close(txSocket);
+//		taskENTER_CRITICAL();
+//		printf("sock create fail\r\n");
+//		taskEXIT_CRITICAL();
+
+		lwip_close(tx_socket);
+	}
+	else if (0
+			!= connect(tx_socket, (struct sockaddr * )(remote_addr),
+					sizeof(struct sockaddr_in)))
+	{
+//		int32 error = 0;
+//		uint32 optionLength = sizeof(error);
+//		int getReturn = lwip_getsockopt(tx_socket, SOL_SOCKET, SO_ERROR, &error,
+//				&optionLength);
+
+//		taskENTER_CRITICAL();
+//		printf("connect fail: %d\r\n", error);
+//		taskEXIT_CRITICAL();
+
+		lwip_close(tx_socket);
+		tx_socket = -1;
 	}
 
-	return txSocket;
+	if (tx_socket != -1)
+	{
+		int millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
+		setsockopt(tx_socket, SOL_SOCKET, SO_RCVTIMEO, &millis, sizeof(millis));
+	}
+
+//	taskENTER_CRITICAL();
+//	printf("connect leave:%d\r\n", tx_socket);
+//	taskEXIT_CRITICAL();
+
+	return tx_socket;
 }
 
-static bool ICACHE_RODATA_ATTR tcpSend(int txSocket, uint8 * data,
+static bool ICACHE_RODATA_ATTR TCP_Send(int tx_socket, uint8 * data,
 		uint32 length)
 {
-	bool rval = write(txSocket, data, length) == length;
+//	char addr_str[50];
+//
+//	taskENTER_CRITICAL();
+//	Serialize_Address(destination_addr.sin_addr.s_addr,
+//			ntohs(destination_addr.sin_port), addr_str, 50);
+//	taskEXIT_CRITICAL();
+
+//	taskENTER_CRITICAL();
+//	printf("sending:[%s] to %s on sock %d\r\n", data, addr_str, tx_socket);
+//	taskEXIT_CRITICAL();
+
+	bool rval = write(tx_socket, data, length) == length;
 
 	return true;
 }
@@ -180,7 +297,7 @@ static bool Message_Available()
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	m = Peek_Message(&outgoingTcpMessageQueue);
+	m = Peek_Message(&outgoing_TCP_message_queue);
 	taskEXIT_CRITICAL();
 
 	if (m != NULL)

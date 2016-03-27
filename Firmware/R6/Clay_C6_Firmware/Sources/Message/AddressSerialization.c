@@ -16,6 +16,9 @@
 ////Globals   /////////////////////////////////////////////////////
 uint8_t* message_strings[] = { "UDP", "TCP", "CMD", "INFO", "INVALID" };
 const char * address_terminator = "\x12";
+const char * address_delimiter = ";";
+const char * type_delimiter = ",";
+const char * port_delimiter = ":";
 
 ////Local vars/////////////////////////////////////////////////////
 uint8_t message_type_temp_str[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
@@ -25,8 +28,6 @@ uint8_t * octet_1_ptr;
 uint8_t * octet_2_ptr;
 uint8_t * octet_3_ptr;
 char dotChar = '.';
-static const char * type_delim = ",";
-static const char * port_delim = ":";
 
 ////Local Prototypes///////////////////////////////////////////////
 
@@ -67,8 +68,8 @@ void Deserialize_Address(uint8_t* Source, uint32_t SourceLength, struct sockaddr
    memset(Destination, 0, sizeof(*Destination));
 
    //get the string off the front
-   uint8_t* typeStart = strtok(Source, &type_delim);
-   uint8_t* ipStart = strtok(NULL, &port_delim);
+   uint8_t* typeStart = strtok(Source, &type_delimiter);
+   uint8_t* ipStart = strtok(NULL, &port_delimiter);
    uint8_t* portStart = strtok(NULL, &address_terminator);
 
    if (typeStart != NULL) {

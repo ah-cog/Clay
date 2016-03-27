@@ -46,9 +46,7 @@ void ICACHE_RODATA_ATTR user_init(void)
 {
 	GPIO_Init();
 
-#if 0
-	printf("SDK version:%s\n", system_get_sdk_version());
-#endif
+//	printf("SDK version:%s\n", system_get_sdk_version());
 	/* need to set opmode before you set config */
 	wifi_set_opmode(STATIONAP_MODE);
 	uart_init_new();
@@ -146,10 +144,21 @@ void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
 	}
 	case EVENT_STAMODE_GOT_IP:
 	{
+#if ENABLE_UDP_SENDER
 		UDP_Transmitter_Init();
+#endif
+
+#if ENABLE_UDP_RECEIVER
 		UDP_Receiver_Init();
+#endif
+
+#if ENABLE_TCP_SENDER
 		TCP_Transmitter_Init();
+#endif
+
+#if ENABLE_TCP_RECEIVER
 		TCP_Receiver_Init();
+#endif
 
 		UART_WaitTxFifoEmpty(UART0);
 		Send_Message_To_Master(CONNECTED_MESSAGE, MESSAGE_TYPE_INFO);

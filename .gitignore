@@ -5,6 +5,8 @@ Circuit/P1R5/P1R5.zip
 Firmware/R5/*/Generated_Code
 Firmware/R6/*/Generated_Code
 Firmware/R6/*/Documentation
+*.g_c
+*.g_x
 
 # Files being edited
 *~

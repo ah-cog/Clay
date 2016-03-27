@@ -78,7 +78,8 @@ static bool Connected;
 static int32 testCounter;
 
 Message tempMessage;
-char * tempAddr;
+char * source_addr;
+char * dest_addr;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -93,8 +94,9 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 
 	State = Disable;
 
-	tempAddr = zalloc(SOCKADDR_IN_SIZE_BYTES * 2); //*2 for safety.
-	Initialize_Message_Queue(&incomingMessageQueue);
+	source_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
+	dest_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
+	Initialize_Message_Queue(&incoming_message_queue);
 
 	xTaskCreate(UDP_Receiver_State_Step, "udprx1", 512, NULL, 2, NULL);
 
@@ -139,17 +141,18 @@ void ICACHE_RODATA_ATTR UDP_Receiver_State_Step()
 		case Enqueue_Message:
 		{
 			taskENTER_CRITICAL();
-			Serialize_Address(lastSourceAddress.sin_addr.s_addr, UDP_RX_PORT,
-					tempAddr,
-					MAXIMUM_DESTINATION_LENGTH, MESSAGE_TYPE_UDP);
+			Serialize_Address(lastSourceAddress.sin_addr.s_addr,
+					ntohs(lastSourceAddress.sin_port), source_addr,
+					MAXIMUM_DESTINATION_LENGTH);
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			Initialize_Message(&tempMessage, tempAddr, tempAddr, UDP_Rx_Buffer);
+			Initialize_Message(&tempMessage, message_type_strings[MESSAGE_TYPE_UDP],
+					source_addr, dest_addr, UDP_Rx_Buffer);
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			Queue_Message(&incomingMessageQueue, &tempMessage);
+			Queue_Message(&incoming_message_queue, &tempMessage);
 			taskEXIT_CRITICAL();
 
 			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';
@@ -170,6 +173,7 @@ void ICACHE_RODATA_ATTR UDP_Receiver_State_Step()
 			break;
 		}
 		}
+		taskYIELD();
 	}
 }
 
@@ -184,6 +188,11 @@ static bool ICACHE_RODATA_ATTR Connect()
 	server_addr.sin_addr.s_addr = INADDR_ANY;
 	server_addr.sin_port = htons(UDP_RX_PORT);
 	server_addr.sin_len = sizeof(server_addr);
+
+	taskENTER_CRITICAL();
+	Serialize_Address(Get_IP_Address(), UDP_RX_PORT, dest_addr,
+	CLAY_ADDR_STRING_BUF_LENGTH);
+	taskEXIT_CRITICAL();
 
 	///create the socket
 	do
@@ -208,6 +217,9 @@ static bool ICACHE_RODATA_ATTR Connect()
 	} while (ret != 0);
 	Connected = true;
 
+	setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (char * ) &nNetTimeout,
+			sizeof(int));
+
 	return Connected;
 }
 
@@ -217,8 +229,7 @@ static bool ICACHE_RODATA_ATTR Receive()
 
 	memset(UDP_Rx_Buffer, 0, UDP_RX_BUFFER_SIZE_BYTES);
 	memset(&from, 0, sizeof(from));
-	setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (char * ) &nNetTimeout,
-			sizeof(int));
+
 	fromlen = sizeof(struct sockaddr_in);
 
 	// attempt to receive

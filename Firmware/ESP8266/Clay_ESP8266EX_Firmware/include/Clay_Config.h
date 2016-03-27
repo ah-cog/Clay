@@ -29,6 +29,12 @@
 //sa_family is u8_t typedefs.
 //
 
+#define ENABLE_TCP_SENDER	0
+#define ENABLE_TCP_RECEIVER	0
+#define ENABLE_UDP_SENDER	1
+#define ENABLE_UDP_RECEIVER	1
+
+
 //TODO: double-check this size...
 //sizes as they are printed
 #define DELIMITER_SIZE                               1         //each char is 1 byte, there are 13 in the serialized string.
@@ -103,7 +109,7 @@ typedef enum
 } Message_Type;
 
 //max 16 chars
-extern uint8* Message_Strings[];
+extern uint8* message_type_strings[];
 ////Globals   /////////////////////////////////////////////////////
 
 ////Prototypes/////////////////////////////////////////////////////

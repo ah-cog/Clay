@@ -10,6 +10,7 @@
 #include "AddressSerialization.h"
 #include "Clay_Config.h"
 #include "TCP_Connection_Manager.h"
+#include "UART.h"
 
 int Open_Sockets[TCP_MAX_CONNECTIONS];
 int i;
@@ -66,6 +67,8 @@ int ICACHE_RODATA_ATTR SocketListAdd(int newSocket)
 
 int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 {
+	uint8 current_addr[50];
+
 	int rval = -1;
 	temp_addr_length = sizeof(temp_addr_list);
 
@@ -76,8 +79,10 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 	}
 
 	socket_list_lock = true;
+
 	taskENTER_CRITICAL();
 	Deserialize_Address(addrStr, &temp_addr_query, &temp_message_type);
+//	printf("\r\nsearch for addr:[%s]\r\n", addrStr);
 
 	for (i = 0; i < TCP_MAX_CONNECTIONS; ++i)
 	{
@@ -86,16 +91,30 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 			continue;
 		}
 
+		//
+
 		taskEXIT_CRITICAL();
 		getpeername(Open_Sockets[i], (struct sockaddr* )&temp_addr_list,
 				&temp_addr_length);
 		taskENTER_CRITICAL();
+
+		//
+
+//		Serialize_Address(temp_addr_list.sin_addr.s_addr,
+//				temp_addr_list.sin_port, current_addr, 50, MESSAGE_TYPE_TCP);
+//		printf("%d:[%s]\r\n", i, current_addr);
+//		taskEXIT_CRITICAL();
+//		UART_WaitTxFifoEmpty(UART0);
+//
+//		taskENTER_CRITICAL();
 
 		if (temp_addr_list.sin_port == temp_addr_query.sin_port
 				&& temp_addr_list.sin_addr.s_addr
 						== temp_addr_query.sin_addr.s_addr)
 		{
 			rval = Open_Sockets[i];
+
+//			printf("found sock:%d\r\n", rval);
 
 			break;
 		}
@@ -120,6 +139,7 @@ void ICACHE_RODATA_ATTR SocketListRemove(int targetSocket)
 	{
 		if (Open_Sockets[i] == targetSocket)
 		{
+//			printf("removed sock:%d\r\n", targetSocket);
 			Open_Sockets[i] = -1;
 		}
 	}

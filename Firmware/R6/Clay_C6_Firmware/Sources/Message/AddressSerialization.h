@@ -86,6 +86,9 @@ typedef enum
 //max 16 chars
 extern uint8_t* message_strings[];
 extern const char * address_terminator;
+extern const char * address_delimiter;
+extern const char * type_delimiter;
+extern const char * port_delimiter;
 
 ////Prototypes/////////////////////////////////////////////////////
 extern void Deserialize_Address(uint8_t* Source, uint32_t SourceLength, struct sockaddr_in * Destination, Message_Type *type);
