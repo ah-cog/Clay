@@ -46,7 +46,7 @@ bool Buzzer_Enable() {
    buzzer_pwm_data = BUZZER_PWM_Init(NULL);
 
    err = BUZZER_PWM_SetFrequencyHz(buzzer_pwm_data, 0);
-   BUZZER_PWM_SetRatio16(buzzer_pwm_data, Scale_Percent(75));
+   BUZZER_PWM_SetRatio16(buzzer_pwm_data, Scale_Percent(0));
 
    return rval;
 }
@@ -66,15 +66,13 @@ void Buzzer_Play_Frequency(uint32_t frequency, uint32_t duration_ms) {
    if (frequency > 0) {
       BUZZER_PWM_SetFrequencyHz(buzzer_pwm_data, frequency);
       BUZZER_PWM_SetRatio16(buzzer_pwm_data, Scale_Percent(75));
-   }
-   else {
+   } else {
       BUZZER_PWM_SetRatio16(buzzer_pwm_data, 0);
    }
 
    if (duration_ms > 0) {
       buzzer_stop_time = Millis() + duration_ms;
-   }
-   else {
+   } else {
       buzzer_stop_time = 0;
    }
 }

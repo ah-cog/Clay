@@ -32,6 +32,7 @@
 - \subpage TI1
 - \subpage I2C0
 - \subpage LED_SDB
+- \subpage BUZZER_PWM
 - \subpage ADC0
 - \subpage BUTTON_IN
 - \subpage PowerOn
@@ -49,19 +50,10 @@
 - \subpage IMU_IRQ
 - \subpage FLASH1
 - \subpage FLASH1
-- \subpage IO_1
-- \subpage IO_2
-- \subpage IO_3
-- \subpage IO_4
-- \subpage IO_5
-- \subpage IO_6
-- \subpage IO_7
-- \subpage IO_8
-- \subpage IO_9
-- \subpage IO_10
-- \subpage IO_11
-- \subpage IO_12
-- \subpage BUZZER_PWM
+- \subpage GPIO_PTB
+- \subpage GPIO_PTD
+- \subpage GPIO_PTC
+- \subpage GPIO_PTE
 
 */
 
@@ -100,6 +92,7 @@
 - \subpage TI1
 - \subpage I2C0
 - \subpage LED_SDB
+- \subpage BUZZER_PWM
 - \subpage ADC0
 - \subpage BUTTON_IN
 - \subpage PowerOn
@@ -117,19 +110,10 @@
 - \subpage IMU_IRQ
 - \subpage FLASH1
 - \subpage FLASH1
-- \subpage IO_1
-- \subpage IO_2
-- \subpage IO_3
-- \subpage IO_4
-- \subpage IO_5
-- \subpage IO_6
-- \subpage IO_7
-- \subpage IO_8
-- \subpage IO_9
-- \subpage IO_10
-- \subpage IO_11
-- \subpage IO_12
-- \subpage BUZZER_PWM
+- \subpage GPIO_PTB
+- \subpage GPIO_PTD
+- \subpage GPIO_PTC
+- \subpage GPIO_PTE
 
 */
 
