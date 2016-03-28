@@ -104,6 +104,28 @@ Module "LED_SDB"   (component BitIO_LDD)
    - LED_SDB_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if 
                 the direction = _[output]_ or _[input/output]_.
 
+Module "BUZZER_PWM" (component PPG_LDD)
+   - BUZZER_PWM_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 
+                sets interrupt priority, sets pin routing, sets timing, etc. If the property <"Enable in init. code"> is set to 
+                "yes" value then the device is also enabled (see the description of the <Enable> method). In this case the 
+                <Enable> method is not necessary and needn't to be generated. This method can be called only once. Before the 
+                second call of Init the <Deinit> must be called first.
+   - BUZZER_PWM_Deinit -Deinitializes the device. Switches off the device, frees the device data structure memory, interrupts 
+                vectors, etc.
+   - BUZZER_PWM_SetPeriodMS -This method sets the new period of the output signal. The period is expressed in [milliseconds] as 
+                a 16-bit unsigned integer number. This method is available only if <"Runtime setting type"> property is set to 
+                "interval" .
+   - BUZZER_PWM_SetFrequencyHz -This method sets the new frequency of the output signal. The frequency is expressed in [Hz] as 
+                a 16-bit unsigned integer number. This method is available only if <"Runtime setting type"> property is set to 
+                "interval" .
+   - BUZZER_PWM_SetRatio16 -This method sets a new duty-cycle ratio. Ratio is expressed as a 16-bit unsigned integer number. 0 
+                - FFFF value is proportional to ratio 0 - 100%. The method is available only if it is not selected list of 
+                predefined values in <Starting pulse width> property.   Note: Calculated duty depends on the timer 
+                possibilities and on the selected period.
+   - BUZZER_PWM_SetDutyMS -This method sets the new duty value of the output signal. The duty is expressed in milliseconds as a 
+                16-bit unsigned integer number. The method is available only if it is not selected list of predefined values in 
+                <Starting pulse width> property.
+
 Module "ADC0"      (component ADC_LDD)
    - ADC0_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
                 interrupt priority, sets pin routing, sets timing, etc.   If the "Enable in init. code" is set to "yes" value 
@@ -395,267 +417,181 @@ Module "FLASH1"    (component FLASH_LDD)
                 enabled). This method is enabled only if the component works in the polled mode or if the Read method is 
                 enabled.
 
-Module "IO_1"      (component BitIO_LDD)
-   - IO_1_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_1_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_1_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_1_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_1_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_1_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_1_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
+Module "GPIO_PTB"  (component GPIO_LDD)
+   - GPIO_PTB_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
+                called automatically as a part of the application initialization code.
+   - GPIO_PTB_Deinit -This method disables the device and frees the device data structure memory.
+   - GPIO_PTB_SetEventMask -This method enables/disables event(s) of the port. The events contained within the mask are enabled.
+                Events not contained within the mask are disabled. The component event masks are defined in the PE_Types.h file.
+                Note: Event that are not generated (See the "Events" tab in the Component inspector) are not handled by this 
+                method. In this case the method returns ERR_PARAM_MASK error code.   Pair method to GetEventMask().
+   - GPIO_PTB_GetEventMask -This method returns current events mask of the port.    Note: Event that are not generated (See the 
+                "Events" tab in the Component inspector) are not handled by this method.   Pair method to SetEventMask().
+   - GPIO_PTB_SetPortEventCondition -This method defines condition of the <OnPortEvent> for required pins of the port.
+   - GPIO_PTB_GetPortEventStatus -Returns a set of asserted flags. The flags are accumulated in the set. After calling this 
+                method the set is returned and cleared.   Note: Some type of "Port" device requires enabling "Interrupt 
+                service/event" property for a pin edge detect function.
+   - GPIO_PTB_SetPortValue -This method writes the output data value to the port. Only configured pins (through all of bit 
+                fields in this component) are affected.
+   - GPIO_PTB_GetPortValue -This method returns the current port input data value. Only configured pins (through all of bit 
+                fields in this component) are returned.
+   - GPIO_PTB_ClearPortBits -This method drives the specified bits of the port to the inactive level. Only configured pins 
+                (through all of bit fields in this component) are affected.
+   - GPIO_PTB_SetPortBits -This method drives the specified bits of the port to the active level. Only configured pins (through 
+                all of bit fields in this component) are affected.
+   - GPIO_PTB_TogglePortBits -This method inverts the specified bits of the port to another level. Only configured pins 
+                (through all of bit fields in this component) are affected.
+   - GPIO_PTB_SetPortInputDirection -This method sets the specified pins of the port to the input direction. Only configured 
+                pins (through all of bit fields in this component) are affected.
+   - GPIO_PTB_SetPortOutputDirection -This method sets the specified pins of the port to the output direction. The specified 
+                pins of the port will be driven to specified states. Only configured pins (through all of bit fields in this 
+                component) are affected.
+   - GPIO_PTB_SetFieldValue -This method sets the output data value of the specified bit field.
+   - GPIO_PTB_GetFieldValue -This method returns the current input data of the specified field.
+   - GPIO_PTB_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
+   - GPIO_PTB_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
+   - GPIO_PTB_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
+   - GPIO_PTB_SetFieldInputDirection -This method sets all pins of the field to the input direction.
+   - GPIO_PTB_SetFieldOutputDirection -This method sets all pins of the field to the output direction.
+   - GPIO_PTB_SetOperationMode -This method requests to change the component's operation mode. Upon a request to change the 
+                operation mode, the component will finish a pending job first and then notify a caller that an operation mode 
+                has been changed. When no job is pending (ERR_OK), the component changes an operation mode immediately and 
+                notify a caller about this change.
+   - GPIO_PTB_ConnectPin -This method reconnects the requested pin associated with the selected peripheral in this component. 
+                This method is only available for CPU derivatives and peripherals that support the runtime pin sharing with 
+                other internal on-chip peripherals.
 
-Module "IO_2"      (component BitIO_LDD)
-   - IO_2_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_2_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_2_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_2_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_2_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_2_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_2_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
+Module "GPIO_PTD"  (component GPIO_LDD)
+   - GPIO_PTD_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
+                called automatically as a part of the application initialization code.
+   - GPIO_PTD_Deinit -This method disables the device and frees the device data structure memory.
+   - GPIO_PTD_SetEventMask -This method enables/disables event(s) of the port. The events contained within the mask are enabled.
+                Events not contained within the mask are disabled. The component event masks are defined in the PE_Types.h file.
+                Note: Event that are not generated (See the "Events" tab in the Component inspector) are not handled by this 
+                method. In this case the method returns ERR_PARAM_MASK error code.   Pair method to GetEventMask().
+   - GPIO_PTD_GetEventMask -This method returns current events mask of the port.    Note: Event that are not generated (See the 
+                "Events" tab in the Component inspector) are not handled by this method.   Pair method to SetEventMask().
+   - GPIO_PTD_SetPortEventCondition -This method defines condition of the <OnPortEvent> for required pins of the port.
+   - GPIO_PTD_GetPortEventStatus -Returns a set of asserted flags. The flags are accumulated in the set. After calling this 
+                method the set is returned and cleared.   Note: Some type of "Port" device requires enabling "Interrupt 
+                service/event" property for a pin edge detect function.
+   - GPIO_PTD_SetPortValue -This method writes the output data value to the port. Only configured pins (through all of bit 
+                fields in this component) are affected.
+   - GPIO_PTD_GetPortValue -This method returns the current port input data value. Only configured pins (through all of bit 
+                fields in this component) are returned.
+   - GPIO_PTD_ClearPortBits -This method drives the specified bits of the port to the inactive level. Only configured pins 
+                (through all of bit fields in this component) are affected.
+   - GPIO_PTD_SetPortBits -This method drives the specified bits of the port to the active level. Only configured pins (through 
+                all of bit fields in this component) are affected.
+   - GPIO_PTD_TogglePortBits -This method inverts the specified bits of the port to another level. Only configured pins 
+                (through all of bit fields in this component) are affected.
+   - GPIO_PTD_SetPortInputDirection -This method sets the specified pins of the port to the input direction. Only configured 
+                pins (through all of bit fields in this component) are affected.
+   - GPIO_PTD_SetPortOutputDirection -This method sets the specified pins of the port to the output direction. The specified 
+                pins of the port will be driven to specified states. Only configured pins (through all of bit fields in this 
+                component) are affected.
+   - GPIO_PTD_SetFieldValue -This method sets the output data value of the specified bit field.
+   - GPIO_PTD_GetFieldValue -This method returns the current input data of the specified field.
+   - GPIO_PTD_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
+   - GPIO_PTD_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
+   - GPIO_PTD_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
+   - GPIO_PTD_SetFieldInputDirection -This method sets all pins of the field to the input direction.
+   - GPIO_PTD_SetFieldOutputDirection -This method sets all pins of the field to the output direction.
+   - GPIO_PTD_SetOperationMode -This method requests to change the component's operation mode. Upon a request to change the 
+                operation mode, the component will finish a pending job first and then notify a caller that an operation mode 
+                has been changed. When no job is pending (ERR_OK), the component changes an operation mode immediately and 
+                notify a caller about this change.
+   - GPIO_PTD_ConnectPin -This method reconnects the requested pin associated with the selected peripheral in this component. 
+                This method is only available for CPU derivatives and peripherals that support the runtime pin sharing with 
+                other internal on-chip peripherals.
 
-Module "IO_3"      (component BitIO_LDD)
-   - IO_3_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_3_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_3_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_3_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_3_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_3_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_3_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
+Module "GPIO_PTC"  (component GPIO_LDD)
+   - GPIO_PTC_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
+                called automatically as a part of the application initialization code.
+   - GPIO_PTC_Deinit -This method disables the device and frees the device data structure memory.
+   - GPIO_PTC_SetEventMask -This method enables/disables event(s) of the port. The events contained within the mask are enabled.
+                Events not contained within the mask are disabled. The component event masks are defined in the PE_Types.h file.
+                Note: Event that are not generated (See the "Events" tab in the Component inspector) are not handled by this 
+                method. In this case the method returns ERR_PARAM_MASK error code.   Pair method to GetEventMask().
+   - GPIO_PTC_GetEventMask -This method returns current events mask of the port.    Note: Event that are not generated (See the 
+                "Events" tab in the Component inspector) are not handled by this method.   Pair method to SetEventMask().
+   - GPIO_PTC_SetPortEventCondition -This method defines condition of the <OnPortEvent> for required pins of the port.
+   - GPIO_PTC_GetPortEventStatus -Returns a set of asserted flags. The flags are accumulated in the set. After calling this 
+                method the set is returned and cleared.   Note: Some type of "Port" device requires enabling "Interrupt 
+                service/event" property for a pin edge detect function.
+   - GPIO_PTC_SetPortValue -This method writes the output data value to the port. Only configured pins (through all of bit 
+                fields in this component) are affected.
+   - GPIO_PTC_GetPortValue -This method returns the current port input data value. Only configured pins (through all of bit 
+                fields in this component) are returned.
+   - GPIO_PTC_ClearPortBits -This method drives the specified bits of the port to the inactive level. Only configured pins 
+                (through all of bit fields in this component) are affected.
+   - GPIO_PTC_SetPortBits -This method drives the specified bits of the port to the active level. Only configured pins (through 
+                all of bit fields in this component) are affected.
+   - GPIO_PTC_TogglePortBits -This method inverts the specified bits of the port to another level. Only configured pins 
+                (through all of bit fields in this component) are affected.
+   - GPIO_PTC_SetPortInputDirection -This method sets the specified pins of the port to the input direction. Only configured 
+                pins (through all of bit fields in this component) are affected.
+   - GPIO_PTC_SetPortOutputDirection -This method sets the specified pins of the port to the output direction. The specified 
+                pins of the port will be driven to specified states. Only configured pins (through all of bit fields in this 
+                component) are affected.
+   - GPIO_PTC_SetFieldValue -This method sets the output data value of the specified bit field.
+   - GPIO_PTC_GetFieldValue -This method returns the current input data of the specified field.
+   - GPIO_PTC_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
+   - GPIO_PTC_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
+   - GPIO_PTC_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
+   - GPIO_PTC_SetFieldInputDirection -This method sets all pins of the field to the input direction.
+   - GPIO_PTC_SetFieldOutputDirection -This method sets all pins of the field to the output direction.
+   - GPIO_PTC_SetOperationMode -This method requests to change the component's operation mode. Upon a request to change the 
+                operation mode, the component will finish a pending job first and then notify a caller that an operation mode 
+                has been changed. When no job is pending (ERR_OK), the component changes an operation mode immediately and 
+                notify a caller about this change.
+   - GPIO_PTC_ConnectPin -This method reconnects the requested pin associated with the selected peripheral in this component. 
+                This method is only available for CPU derivatives and peripherals that support the runtime pin sharing with 
+                other internal on-chip peripherals.
 
-Module "IO_4"      (component BitIO_LDD)
-   - IO_4_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_4_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_4_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_4_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_4_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_4_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_4_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "IO_5"      (component BitIO_LDD)
-   - IO_5_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_5_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_5_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_5_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_5_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_5_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_5_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "IO_6"      (component BitIO_LDD)
-   - IO_6_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_6_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_6_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_6_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_6_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_6_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_6_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "IO_7"      (component BitIO_LDD)
-   - IO_7_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_7_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_7_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_7_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_7_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_7_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_7_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "IO_8"      (component BitIO_LDD)
-   - IO_8_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_8_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_8_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_8_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_8_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_8_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_8_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "IO_9"      (component BitIO_LDD)
-   - IO_9_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_9_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_9_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_9_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_9_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_9_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available only 
-                if the direction = _[output]_ or _[input/output]_.
-   - IO_9_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "IO_10"     (component BitIO_LDD)
-   - IO_10_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_10_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_10_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_10_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_10_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_10_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available 
-                only if the direction = _[output]_ or _[input/output]_.
-   - IO_10_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "IO_11"     (component BitIO_LDD)
-   - IO_11_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_11_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_11_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_11_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_11_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_11_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available 
-                only if the direction = _[output]_ or _[input/output]_.
-   - IO_11_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "IO_12"     (component BitIO_LDD)
-   - IO_12_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
-                interrupt priority, sets pin routing, sets timing, etc. If the "Enable in init. code" is set to "yes" value 
-                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
-                is not necessary and needn't to be generated.
-   - IO_12_SetDir -Sets a pin direction (available only if the direction = _[input/output]_).
-   - IO_12_SetInput -Sets a pin direction to input (available only if the direction = _[input/output]_).
-   - IO_12_GetVal -Returns the input/output value. If the direction is [input] then the input value of the pin is read and 
-                returned. If the direction is [output] then the last written value is read and returned (see <Safe mode> 
-                property for limitations). This method cannot be disabled if direction is [input].
-   - IO_12_PutVal -The specified output value is set. If the direction is <b>input</b>, the component saves the value to a 
-                memory or a register and this value will be written to the pin after switching to the output mode (using 
-                <tt>SetDir(TRUE)</tt>; see <a href="BitIOProperties.html#SafeMode">Safe mode</a> property for limitations). If 
-                the direction is <b>output</b>, it writes the value to the pin. (Method is available only if the direction = 
-                <u><tt>output</tt></u> or <u><tt>input/output</tt></u>).
-   - IO_12_ClrVal -Clears (set to zero) the output value. It is equivalent to the [PutVal(FALSE)]. This method is available 
-                only if the direction = _[output]_ or _[input/output]_.
-   - IO_12_SetVal -Sets (to one) the output value. It is equivalent to the [PutVal(TRUE)]. This method is available only if the 
-                direction = _[output]_ or _[input/output]_.
-
-Module "BUZZER_PWM" (component PPG_LDD)
-   - BUZZER_PWM_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 
-                sets interrupt priority, sets pin routing, sets timing, etc. If the property <"Enable in init. code"> is set to 
-                "yes" value then the device is also enabled (see the description of the <Enable> method). In this case the 
-                <Enable> method is not necessary and needn't to be generated. This method can be called only once. Before the 
-                second call of Init the <Deinit> must be called first.
-   - BUZZER_PWM_Deinit -Deinitializes the device. Switches off the device, frees the device data structure memory, interrupts 
-                vectors, etc.
-   - BUZZER_PWM_SetPeriodMS -This method sets the new period of the output signal. The period is expressed in [milliseconds] as 
-                a 16-bit unsigned integer number. This method is available only if <"Runtime setting type"> property is set to 
-                "interval" .
-   - BUZZER_PWM_SetFrequencyHz -This method sets the new frequency of the output signal. The frequency is expressed in [Hz] as 
-                a 16-bit unsigned integer number. This method is available only if <"Runtime setting type"> property is set to 
-                "interval" .
-   - BUZZER_PWM_SetRatio16 -This method sets a new duty-cycle ratio. Ratio is expressed as a 16-bit unsigned integer number. 0 
-                - FFFF value is proportional to ratio 0 - 100%. The method is available only if it is not selected list of 
-                predefined values in <Starting pulse width> property.   Note: Calculated duty depends on the timer 
-                possibilities and on the selected period.
-   - BUZZER_PWM_SetDutyMS -This method sets the new duty value of the output signal. The duty is expressed in milliseconds as a 
-                16-bit unsigned integer number. The method is available only if it is not selected list of predefined values in 
-                <Starting pulse width> property.
+Module "GPIO_PTE"  (component GPIO_LDD)
+   - GPIO_PTE_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
+                called automatically as a part of the application initialization code.
+   - GPIO_PTE_Deinit -This method disables the device and frees the device data structure memory.
+   - GPIO_PTE_SetEventMask -This method enables/disables event(s) of the port. The events contained within the mask are enabled.
+                Events not contained within the mask are disabled. The component event masks are defined in the PE_Types.h file.
+                Note: Event that are not generated (See the "Events" tab in the Component inspector) are not handled by this 
+                method. In this case the method returns ERR_PARAM_MASK error code.   Pair method to GetEventMask().
+   - GPIO_PTE_GetEventMask -This method returns current events mask of the port.    Note: Event that are not generated (See the 
+                "Events" tab in the Component inspector) are not handled by this method.   Pair method to SetEventMask().
+   - GPIO_PTE_SetPortEventCondition -This method defines condition of the <OnPortEvent> for required pins of the port.
+   - GPIO_PTE_GetPortEventStatus -Returns a set of asserted flags. The flags are accumulated in the set. After calling this 
+                method the set is returned and cleared.   Note: Some type of "Port" device requires enabling "Interrupt 
+                service/event" property for a pin edge detect function.
+   - GPIO_PTE_SetPortValue -This method writes the output data value to the port. Only configured pins (through all of bit 
+                fields in this component) are affected.
+   - GPIO_PTE_GetPortValue -This method returns the current port input data value. Only configured pins (through all of bit 
+                fields in this component) are returned.
+   - GPIO_PTE_ClearPortBits -This method drives the specified bits of the port to the inactive level. Only configured pins 
+                (through all of bit fields in this component) are affected.
+   - GPIO_PTE_SetPortBits -This method drives the specified bits of the port to the active level. Only configured pins (through 
+                all of bit fields in this component) are affected.
+   - GPIO_PTE_TogglePortBits -This method inverts the specified bits of the port to another level. Only configured pins 
+                (through all of bit fields in this component) are affected.
+   - GPIO_PTE_SetPortInputDirection -This method sets the specified pins of the port to the input direction. Only configured 
+                pins (through all of bit fields in this component) are affected.
+   - GPIO_PTE_SetPortOutputDirection -This method sets the specified pins of the port to the output direction. The specified 
+                pins of the port will be driven to specified states. Only configured pins (through all of bit fields in this 
+                component) are affected.
+   - GPIO_PTE_SetFieldValue -This method sets the output data value of the specified bit field.
+   - GPIO_PTE_GetFieldValue -This method returns the current input data of the specified field.
+   - GPIO_PTE_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
+   - GPIO_PTE_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
+   - GPIO_PTE_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
+   - GPIO_PTE_SetFieldInputDirection -This method sets all pins of the field to the input direction.
+   - GPIO_PTE_SetFieldOutputDirection -This method sets all pins of the field to the output direction.
+   - GPIO_PTE_SetOperationMode -This method requests to change the component's operation mode. Upon a request to change the 
+                operation mode, the component will finish a pending job first and then notify a caller that an operation mode 
+                has been changed. When no job is pending (ERR_OK), the component changes an operation mode immediately and 
+                notify a caller about this change.
+   - GPIO_PTE_ConnectPin -This method reconnects the requested pin associated with the selected peripheral in this component. 
+                This method is only available for CPU derivatives and peripherals that support the runtime pin sharing with 
+                other internal on-chip peripherals.
 
 Module "Cpu"       (component MK64FN1M0LL12)
 

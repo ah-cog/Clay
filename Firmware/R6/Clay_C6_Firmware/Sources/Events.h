@@ -55,19 +55,11 @@
 #include "IMU_FSYNC.h"
 #include "IMU_IRQ.h"
 #include "FLASH1.h"
-#include "IO_1.h"
-#include "IO_2.h"
-#include "IO_3.h"
-#include "IO_4.h"
-#include "IO_5.h"
-#include "IO_6.h"
-#include "IO_7.h"
-#include "IO_8.h"
-#include "IO_9.h"
-#include "IO_10.h"
-#include "IO_11.h"
-#include "IO_12.h"
 #include "BUZZER_PWM.h"
+#include "GPIO_PTB.h"
+#include "GPIO_PTD.h"
+#include "GPIO_PTC.h"
+#include "GPIO_PTE.h"
 
 #include "PowerOn.h"
 #include "Buzzer.h"
@@ -346,6 +338,86 @@ void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr);
  */
 /* ===================================================================*/
 void IMU_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  GPIO_PTE_OnPortEvent (module Events)
+**
+**     Component   :  GPIO_PTE [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void GPIO_PTE_OnPortEvent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  GPIO_PTC_OnPortEvent (module Events)
+**
+**     Component   :  GPIO_PTC [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void GPIO_PTC_OnPortEvent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  GPIO_PTD_OnPortEvent (module Events)
+**
+**     Component   :  GPIO_PTD [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void GPIO_PTD_OnPortEvent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  GPIO_PTB_OnPortEvent (module Events)
+**
+**     Component   :  GPIO_PTB [GPIO_LDD]
+*/
+/*!
+**     @brief
+**         Called if defined event on any pin of the port occured.
+**         OnPortEvent event and GPIO interrupt must be enabled. See
+**         SetEventMask() and GetEventMask() methods. This event is
+**         enabled if [Interrupt service/event] is Enabled and disabled
+**         if [Interrupt service/event] is Disabled.
+**     @param
+**         UserDataPtr     - Pointer to RTOS device
+**                           data structure pointer.
+*/
+/* ===================================================================*/
+void GPIO_PTB_OnPortEvent(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

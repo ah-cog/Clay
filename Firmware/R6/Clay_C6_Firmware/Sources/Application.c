@@ -37,7 +37,6 @@ LDD_TDeviceDataPtr ADC0_DeviceData;
 
 void Monitor_Periodic_Events();
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
-bool Read_Button_In();
 
 void Initialize() {
 
@@ -62,6 +61,10 @@ void Initialize() {
    }
 
    if ((status = Start_Clock()) != TRUE) {
+      // Failure
+   }
+
+   if ((status = Button_Enable()) != TRUE) {
       // Failure
    }
 
@@ -247,6 +250,7 @@ void Application(void) {
    }
 }
 
+bool io_state;
 void Monitor_Periodic_Events() {
 
    // TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
