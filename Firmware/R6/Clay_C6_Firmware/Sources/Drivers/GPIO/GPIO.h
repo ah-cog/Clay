@@ -4,8 +4,10 @@
 #include "PE_Types.h"
 #include "PE_LDD.h"
 
-//#include "Drivers/RGB_LED/RGB_LED.h"
+////Includes //////////////////////////////////////////////////////
+#include "PE_Types.h"
 
+////Macros ////////////////////////////////////////////////////////
 #define CHANNEL_COUNT 12
 
 #define CHANNEL_ENABLED  1
@@ -21,42 +23,7 @@
 #define CHANNEL_VALUE_TOGGLE_ON  1
 #define CHANNEL_VALUE_TOGGLE_OFF 0
 
-typedef struct
-{
-      uint8_t number;
-      uint8_t enabled;     // Specifies whether or not the channel being used.
-      uint8_t direction;     // input or output
-      uint8_t mode;     // (output) digital, pwm, (input) digital, analog, pwm
-      uint16_t value;     // The raw value of the channel.
-      // TODO: logical value
-      // TODO: continuous value
-
-      // TODO: Expected value. Set this to monitor the channel and look for a value. This will be used to set the LED state (maybe green or red, depending on correct or incorrect)
-
-      // TODO: UUID for port. Used to record data and use it to submit data and request data.
-
-      // TODO: UUID for transform.
-} Channel;
-
-extern Channel updated_channel_profile[CHANNEL_COUNT];
-extern Channel channel_profile[CHANNEL_COUNT];
-
-int8_t Initialize_Channels();
-int8_t Reset_Channels();
-//int8_t Update_Channels ();
-
-int8_t Enable_Channels();
-int8_t Enable_Channel(uint8_t number, uint8_t enabled);
-int8_t Apply_Channels();
-
-//uint8_t Enable_Channel (uint8_t number);
-void Set_Channel(uint8_t number, uint8_t direction, uint8_t mode);
-void Set_Channel_Value(uint8_t number, uint8_t state);     // i.e., set discrete state of the channel (on or off)
-//void Set_Channel_Signal (); // i.e., analog signal to generate on the channel
-int8_t Get_Channel_Value(uint8_t number);     // i.e., get discrete input state
-//void Get_Channel_Signal (); // i.e., read the analog signal on the channel
-// void Disable_Channels ();
-
+////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
    PORT_TYPE_DIGITAL,
@@ -89,17 +56,58 @@ typedef enum
    PORT_MAX
 } PORT_NUMBER;
 
+typedef struct
+{
+      uint8_t number;
+      uint8_t enabled;     // Specifies whether or not the channel being used.
+      uint8_t direction;     // input or output
+      uint8_t mode;     // (output) digital, pwm, (input) digital, analog, pwm
+      uint16_t value;     // The raw value of the channel.
+      // TODO: logical value
+      // TODO: continuous value
+
+      // TODO: Expected value. Set this to monitor the channel and look for a value. This will be used to set the LED state (maybe green or red, depending on correct or incorrect)
+
+      // TODO: UUID for port. Used to record data and use it to submit data and request data.
+
+      // TODO: UUID for transform.
+} Channel;
+
+////Globals   /////////////////////////////////////////////////////
+extern Channel updated_channel_profile[CHANNEL_COUNT];
+extern Channel channel_profile[CHANNEL_COUNT];
+
+////Prototypes/////////////////////////////////////////////////////
 extern bool Port_Enable_All();
 extern void Port_Disable_All();
+
 extern bool Port_Enable(PORT_NUMBER number);
 extern void Port_Disable(PORT_NUMBER number);
+
 extern bool Port_Set_Type(PORT_NUMBER number, PORT_TYPE type);
-// type: can be "digital", "analog", "pwm"
 extern PORT_TYPE Port_Get_Type(PORT_NUMBER number);
+
 extern bool Port_Set_Direction(PORT_NUMBER number, PORT_DIRECTION direction);
-// direction: can be "input" or "output"
 extern PORT_DIRECTION Port_Get_Direction(PORT_NUMBER number);
+
 extern void Port_Set_Data(PORT_NUMBER number, int32_t data);
 extern uint32 Port_Get_Data(PORT_NUMBER number);
+
+//old functions
+int8_t Initialize_Channels();
+int8_t Reset_Channels();
+//int8_t Update_Channels ();
+
+int8_t Enable_Channels();
+int8_t Enable_Channel(uint8_t number, uint8_t enabled);
+int8_t Apply_Channels();
+
+//uint8_t Enable_Channel (uint8_t number);
+void Set_Channel(uint8_t number, uint8_t direction, uint8_t mode);
+void Set_Channel_Value(uint8_t number, uint8_t state);     // i.e., set discrete state of the channel (on or off)
+//void Set_Channel_Signal (); // i.e., analog signal to generate on the channel
+int8_t Get_Channel_Value(uint8_t number);     // i.e., get discrete input state
+//void Get_Channel_Signal (); // i.e., read the analog signal on the channel
+// void Disable_Channels ();
 
 #endif /* GPIO_H */
