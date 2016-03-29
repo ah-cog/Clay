@@ -24,20 +24,8 @@
 
 typedef struct Action {
 	char *uuid;
-	int8_t (*script) (char *); // !!!!!!!!!!!!!!!!!!!!!!
-	//void (*script) (uint32_t); // Pointer to the procedure corresponding to the action.
+	int8_t (*script) (char *); // Pointer to the procedure corresponding to the action.
 } Action;
-
-extern void Enable_Actions ();
-extern Action* Create_Action (char *uuid); // TODO: Add function pointer parameter
-//extern void Set_Action_Script (Action *action, void (*script)());
-//extern void Set_Action_Script (Action *action, int8_t (*script) (const Event *));
-extern void Set_Action_Script (Action *action, int8_t (*script) (char *));
-extern int8_t Delete_Action (Action *action);
-
-/**
- * Event
- */
 
 /**
  * The action construct points to a action and provides a linked list
@@ -52,64 +40,11 @@ typedef struct Event {
 	struct Event *next;
 } Event;
 
-extern Event* Create_Event (char *uuid, Action *action, char *state);
-extern int8_t Delete_Event (Event *event);
-extern void Set_Event_State (Event *event, char *state);
+extern void Enable_Actions ();
+extern Action* Create_Action (char *uuid); // TODO: Add function pointer parameter
+extern void Set_Action_Script (Action *action, int8_t (*script) (char *));
+extern int8_t Delete_Action (Action *action);
 
-// Action Cache
-// The local behavior cache.
-
-// TODO: Update this so it doesn't use the Event structure.
-extern Event* cache;
-
-// Device
-extern uint8_t Reset_Device ();
-
-/**
- * Cache
- */
-
-extern uint8_t Initialize_Action_Cache ();
-extern int8_t Cache_Action (Action *action);
-extern Action* Get_Cached_Action_By_UUID (char *uuid);
-extern Event* Get_Cached_Action_Construct_By_UUID (char *uuid);
-extern uint8_t Has_Cached_Actions ();
-extern uint8_t Has_Cached_Action_By_UUID (char *uuid);
-extern Action* Remove_Action_From_Cache (Action *action);
-
-/**
- * Timeline
- */
-
-typedef struct Timeline {
-	char *uuid;
-	struct Event *first_event;
-	struct Event *current_event;
-} Timeline;
-
-extern Timeline *timeline;
-
-extern Timeline* Create_Timeline (char *uuid);
-extern void Reset_Timeline (Timeline *timeline);
-extern void Delete_Timeline (Timeline *timeline);
-
-//extern Event* timeline;
-//extern Event* currentEvent; // Pointer to the loop's current behavior.
-
-//uint8_t Initialize_Action ();
-
-/**
- * Event
- */
-
-int16_t Add_Event (Timeline *timeline, Event *event); // TODO: int16_t Add_Behavior (Behavior *loop, Behavior *behavior);
-int16_t Insert_Event (Timeline *timeline, Event *event, uint16_t index);
-int16_t Add_Before_Event (Timeline *timeline, Event *event, Event *other_event);
-Action* Remove_Event (Timeline *timeline, Event *event); // TODO: Behavior* Remove_Behavior (Behavior *loop, Behavior *behavior);
-uint8_t Has_Events (Timeline *timeline);
-uint8_t Has_Event_By_UUID (Timeline *timeline, char *uuid);
-Event* Get_Event_By_UUID (Timeline *timeline, char *uuid);
-
-int8_t Perform_Action (Event *event);
+extern int8_t Perform_Action_2 (Action *action, char *state);
 
 #endif
