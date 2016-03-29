@@ -1,9 +1,12 @@
+////Includes //////////////////////////////////////////////////////
 #include "GPIO.h"
+
 #include "GPIO_PTB.h"
 #include "GPIO_PTC.h"
 #include "GPIO_PTD.h"
 #include "GPIO_PTE.h"
 
+////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
    IO_PTB,
@@ -20,27 +23,166 @@ typedef struct
    LDD_GPIO_TBitField field;
 } Channel_Map;
 
-static Channel_Map channel_map[PORT_MAX] = { { IO_PTE, GPIO_PTE_IO_1_MASK },
-                                             { IO_PTE, GPIO_PTE_IO_2_MASK },
-                                             { IO_PTE, GPIO_PTE_IO_3_MASK },
-                                             { IO_PTB, GPIO_PTB_IO_4_MASK },
-                                             { IO_PTB, GPIO_PTB_IO_5_MASK },
-                                             { IO_PTB, GPIO_PTB_IO_6_MASK },
-                                             { IO_PTB, GPIO_PTB_IO_7_MASK },
-                                             { IO_PTB, GPIO_PTB_IO_8_MASK },
-                                             { IO_PTB, GPIO_PTB_IO_9_MASK },
-                                             { IO_PTC, GPIO_PTC_IO_10_MASK },
-                                             { IO_PTC, GPIO_PTC_IO_11_MASK },
-                                             { IO_PTD, GPIO_PTD_IO_12_MASK } };
+////Globals   /////////////////////////////////////////////////////
+Channel updated_channel_profile[CHANNEL_COUNT];
+Channel channel_profile[CHANNEL_COUNT];
+
+////Local vars/////////////////////////////////////////////////////
+static Channel_Map channel_map[PORT_MAX] = { { IO_PTE, GPIO_PTE_IO_1_MASK },            //PTE1
+                                             { IO_PTE, GPIO_PTE_IO_2_MASK },            //PTE2
+                                             { IO_PTE, GPIO_PTE_IO_3_MASK },            //PTE3
+                                             { IO_PTB, GPIO_PTB_IO_4_MASK },            //PTB18
+                                             { IO_PTB, GPIO_PTB_IO_5_MASK },            //PTB19
+                                             { IO_PTB, GPIO_PTB_IO_6_MASK },            //PTB0
+                                             { IO_PTB, GPIO_PTB_IO_7_MASK },            //PTB21
+                                             { IO_PTB, GPIO_PTB_IO_8_MASK },            //PTB22
+                                             { IO_PTB, GPIO_PTB_IO_9_MASK },            //PTB23
+                                             { IO_PTC, GPIO_PTC_IO_10_MASK },           //PTC16
+                                             { IO_PTC, GPIO_PTC_IO_11_MASK },           //PTC17
+                                             { IO_PTD, GPIO_PTD_IO_12_MASK } };         //PTD6
 
 static LDD_TDeviceData * PTB_data;
 static LDD_TDeviceData * PTC_data;
 static LDD_TDeviceData * PTD_data;
 static LDD_TDeviceData * PTE_data;
 
-Channel updated_channel_profile[CHANNEL_COUNT];
-Channel channel_profile[CHANNEL_COUNT];
+////Local Prototypes///////////////////////////////////////////////
+static bool Enable_Digital(PORT_NUMBER number);
+static bool Enable_Analog(PORT_NUMBER number);
+static bool Enable_PWM(PORT_NUMBER number);
 
+////Global implementations ////////////////////////////////////////
+bool Port_Enable_All() {
+
+   bool rval = FALSE;
+
+   for (int i = 0; i < PORT_MAX; ++i) {
+      Port_Enable((PORT_NUMBER) i);
+   }
+
+   return rval;
+}
+
+void Port_Disable_All() {
+}
+
+bool Port_Enable(PORT_NUMBER number) {
+
+   bool rval = FALSE;
+
+   switch (channel_profile[number].mode) {
+
+      case PORT_TYPE_DIGITAL: {
+
+         rval = Enable_Digital(number);
+         break;
+      }
+
+      case PORT_TYPE_ANALOG: {
+
+         rval = Enable_Analog(number);
+         break;
+      }
+
+      case PORT_TYPE_PWM: {
+
+         rval = Enable_PWM(number);
+         break;
+      }
+
+      case PORT_TYPE_MAX: {
+         rval = FALSE;
+         break;
+      }
+
+      default: {
+         break;
+      }
+   }
+
+   return rval;
+}
+
+void Port_Disable(PORT_NUMBER number) {
+}
+
+bool Port_Set_Type(PORT_NUMBER number, PORT_TYPE type) {
+
+   bool rval = FALSE;
+   return rval;
+}
+
+PORT_TYPE Port_Get_Type(PORT_NUMBER number) {
+
+   PORT_TYPE rval = PORT_TYPE_MAX;
+   return rval;
+}
+
+bool Port_Set_Direction(PORT_NUMBER number, PORT_DIRECTION direction) {
+
+   bool rval = FALSE;
+   return rval;
+}
+
+PORT_DIRECTION Port_Get_Direction(PORT_NUMBER number) {
+
+   PORT_DIRECTION rval = PORT_DIR_MAX;
+   return rval;
+}
+
+void Port_Set_Data(PORT_NUMBER number, int32_t data) {
+
+}
+
+uint32_t Port_Get_Data(PORT_NUMBER number) {
+
+   uint32_t rval = 0;
+   return rval;
+}
+
+////Local implementations /////////////////////////////////////////
+static bool Enable_Digital(PORT_NUMBER number) {
+   bool rval = FALSE;
+
+   return rval;
+}
+
+static bool Enable_Analog(PORT_NUMBER number) {
+   bool rval = FALSE;
+   return rval;
+}
+
+static bool Enable_PWM(PORT_NUMBER number) {
+   bool rval = FALSE;
+
+   return rval;
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int8_t Initialize_Channels() {
    int i;
 
