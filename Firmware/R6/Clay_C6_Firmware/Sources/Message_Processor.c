@@ -1,10 +1,12 @@
 #include "Message_Processor.h"
 #include "Action.h"
+#include "Event.h"
+#include "Timeline.h"
 
 #define FIRST_PARAMETER  0
-#define SECOND_PARAMETER  1
-#define THIRD_PARAMETER   2
-#define FOURTH_PARAMETER  3
+#define SECOND_PARAMETER 1
+#define THIRD_PARAMETER  2
+#define FOURTH_PARAMETER 3
 #define FIFTH_PARAMETER  4
 #define SIXTH_PARAMETER  5
 
@@ -34,7 +36,8 @@ int8_t Process_Incoming_Message (Message *message) {
 	// Reset the buffer
 	memset (uuid_buffer2, '\0', DEFAULT_UUID_LENGTH);
 
-	// INFO,CONNECTED
+	// TODO: Handle messages from ESP8266:
+	// TODO: - INFO,CONNECTED
 
 	if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "cache")) {
 		if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "action")) {

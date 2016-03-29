@@ -1,3 +1,4 @@
+#include <Message.h>
 #include "Application.h"
 
 //#include "meshTest.h"
@@ -10,8 +11,6 @@
 #include "LEDs.h"
 #include "Events.h"
 //#include "RGBDemo.h"
-#include "Messenger.h"
-
 #include "ADC0.h"
 
 #include "Buzzer.h"
@@ -49,6 +48,8 @@ void Initialize() {
    Initialize_Unit_UUID();
 
    timeline = Create_Timeline("timeline-uuid");
+
+   Enable_Actions ();
 
    // Initialize bootloader.
    //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
@@ -328,8 +329,8 @@ void Monitor_Periodic_Events() {
       sprintf(buffer2, "announce device %s", uuid);
       Message *broadcastMessage = Create_Message(buffer2);
       Set_Message_Type(broadcastMessage, "UDP");
-      Set_Message_Source(broadcastMessage, "10.0.0.255:4445");
-      Set_Message_Destination(broadcastMessage, "10.0.0.255:4445");
+      Set_Message_Source(broadcastMessage, "192.168.43.255:4445");
+      Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
       Queue_Message(&outgoingMessageQueue, broadcastMessage);
 //		Wifi_Send (broadcastMessage);
 

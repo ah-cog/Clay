@@ -5,9 +5,9 @@
  *      Author: thebh
  */
 ////includes
+#include <Message.h>
 #include "PE_Types.h"
 #include "Clock.h"
-#include "Messenger.h"
 
 ////global vars
 bool tick_50us;

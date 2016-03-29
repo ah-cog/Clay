@@ -8,7 +8,7 @@
 #define DEFAULT_WIFI_HOTSPOT_PASSWORD "Clay"
 
 #include "PE_Types.h"
-#include "Messenger.h"
+#include <Message.h>
 
 typedef enum {
 	Enable,
