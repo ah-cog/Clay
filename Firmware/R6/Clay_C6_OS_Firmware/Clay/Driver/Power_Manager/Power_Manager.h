@@ -1,0 +1,15 @@
+/*
+ * Power_Manager.h
+ *
+ *  Created on: Mar 27, 2016
+ *      Author: thebh_000
+ */
+
+#ifndef SOURCES_DRIVERS_POWER_MANAGER_POWER_MANAGER_H_
+#define SOURCES_DRIVERS_POWER_MANAGER_POWER_MANAGER_H_
+
+
+
+
+
+#endif /* SOURCES_DRIVERS_POWER_MANAGER_POWER_MANAGER_H_ */

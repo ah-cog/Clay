@@ -210,8 +210,7 @@ static bool ICACHE_RODATA_ATTR Listen()
 	if ((client_sock = accept(listenfd, (struct sockaddr * )&last_source_address,
 			(socklen_t * )&len)) < 0)
 	{
-		rval = false;
-		lwip_close(client_sock);
+		rval = false; //no need to close -1 socket.
 	}
 	else if (task_count <= TCP_MAX_CONNECTIONS)
 	{
