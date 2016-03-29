@@ -20,7 +20,7 @@ bool i2c_tx_complete;
 bool i2c_rx_complete;
 
 // local vars ////////////////
-static uint32_t start_time;
+//static uint32_t start_time;
 static uint8_t outgoing_msg_buf[32];
 static uint8_t incoming_msg_buf[32];
 
@@ -237,4 +237,6 @@ static bool mpu9250_write_bit(uint8_t reg_addr, uint8_t bit_index, uint8_t data,
 //   outgoing_msg_buf[1] = (data ? (current_value | (1 << bit_index)) : (current_value & ~(1 << bit_index)));
 //
 //   return send_message(outgoing_msg_buf, 2, address);
+   //TODO: return value
+   return false;
 }

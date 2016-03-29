@@ -10,14 +10,14 @@
 #include "Clock.h"
 #include "Ring_Buffer.h"
 //#include "Message.h"
-#include "AddressSerialization.h"
+#include "Message_Info.h"
 
 void Wifi_Test() {
    Enable_WiFi();
 
    Message *message = NULL;
-   uint32_t lastMessageSendTime = 0;
-   uint32_t messageSendPeriod = 6000;
+//   uint32_t lastMessageSendTime = 0;
+//   uint32_t messageSendPeriod = 6000;
 
 #if 0
    struct sockaddr_in DestinationAddr;
@@ -79,12 +79,12 @@ void Wifi_Test() {
 
 #if 1
 
-   char addrStr[] = ":";
-   char testMsg[] = "GET_IP";
+//   char addrStr[] = ":";
+//   char testMsg[] = "GET_IP";
 
    Wait(5000);
 
-   int last_ip_get = 0;
+//   int last_ip_get = 0;
 
    for (;;) {
 

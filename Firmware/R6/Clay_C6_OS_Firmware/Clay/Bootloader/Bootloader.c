@@ -36,6 +36,8 @@ uint8_t Initialize_Bootloader() {
    is_update_available = false;
    // TODO: Check value of SharedData.ApplicationUpdateAvailable and other shared data and configure state?
    SharedData.UpdateApplication = false;
+
+   return 0;     //todo: fix
 }
 
 /**
@@ -51,13 +53,13 @@ uint8_t Has_Latest_Firmware() {
    uint16_t firmwareChecksum = NULL;     // The stored checksum value.
    uint16_t latestFirmwareChecksum = NULL;     // The checksum of the latest firmware.
 
-   char *address = FIRMWARE_SERVER_ADDRESS;
-   uint16_t port = FIRMWARE_SERVER_PORT;
-   char uriParameters[64] = { 0 };
+   //TODO: fix bootloader
+//   char *address = FIRMWARE_SERVER_ADDRESS;
+//   uint16_t port = FIRMWARE_SERVER_PORT;
+//   char uriParameters[64] = { 0 };
 
    // Retrieve firmware checksum from the server.
 
-   //TODO: fix bootloader
 //   sprintf(uriParameters, "/clay/firmware/checksum/");
 //   Send_HTTP_GET_Request(address, port, uriParameters);
 //   latestFirmwareChecksum = atoi(httpResponseBuffer);
@@ -116,7 +118,7 @@ void Jump_To_Bootloader_And_Update_Application() {
 //      SCB_VTOR = BOOT_START_ADDR & 0x1FFFFF80;
 //
 //      //set stack pointer/pc to the reset interrupt.
-//      boot_jump(BOOT_START_ADDR);
+   boot_jump(BOOT_START_ADDR);
 //   }
 }
 

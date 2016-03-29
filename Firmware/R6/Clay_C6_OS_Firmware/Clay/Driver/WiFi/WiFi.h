@@ -29,7 +29,7 @@ typedef struct
 //      LDD_TDeviceData *handle; //TODO: Update this struct
       volatile uint8_t isSent;
       uint8_t rxChar;
-      uint8_t (*rxPutFct)(uint8_t);
+      uint8_t (*rxPutFct)(char);
 } ESP8266_UART_Device;        // NOTE: This was named "UART_Desc" previously.
 
 extern ESP8266_UART_Device deviceData;

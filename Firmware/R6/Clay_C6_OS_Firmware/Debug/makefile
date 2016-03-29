@@ -17,7 +17,6 @@ RM := rm -rf
 -include drivers/subdir.mk
 -include board/subdir.mk
 -include Clay/Utilities/subdir.mk
--include Clay/Message/subdir.mk
 -include Clay/Driver/WiFi/subdir.mk
 -include Clay/Driver/RGB_LED/subdir.mk
 -include Clay/Driver/Power_Manager/subdir.mk

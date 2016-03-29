@@ -36,7 +36,6 @@ freertos/Source/portable/GCC/ARM_CM4F \
 drivers \
 board \
 Clay/Utilities \
-Clay/Message \
 Clay/Driver/WiFi \
 Clay/Driver/RGB_LED \
 Clay/Driver/Power_Manager \

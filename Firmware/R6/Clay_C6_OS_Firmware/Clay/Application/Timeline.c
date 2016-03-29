@@ -53,7 +53,7 @@ void Reset_Timeline (Timeline *timeline) {
 		// (1) Removes the action construct associated with the specified action from the loop,
 		// (2) Updates the linked list of action constructs representing the loop to reflect the removal, and
 		// (3) Deletes the action construct from memory.
-		action = Remove_Event (timeline, (*event).action);
+		action = Remove_Event (timeline, (Event *)(*event).action);
 		// NOTE: The action construct associated with the action is deleted in Remove_Action ((*actionConstruct).action), which calls Delete_Action_Construct (actionConstruct).
 
 		// NOTE: The actual action associated with the action construct is deleted below, when deleting the cache.

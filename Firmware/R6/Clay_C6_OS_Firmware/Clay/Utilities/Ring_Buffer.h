@@ -12,7 +12,7 @@
 
 #define Ring_Buffer_BUF_SIZE   2048  /* number of elements in the buffer */
 
-uint8_t Ring_Buffer_Put(uint8_t elem);
+uint8_t Ring_Buffer_Put(char elem);
 /*
  ** ===================================================================
  **     Method      :  Ring_Buffer_Put (component RingBufferUInt8)
@@ -26,7 +26,7 @@ uint8_t Ring_Buffer_Put(uint8_t elem);
  ** ===================================================================
  */
 
-uint8_t Ring_Buffer_Get(uint8_t *elemP);
+uint8_t Ring_Buffer_Get(char *elemP);
 /*
  ** ===================================================================
  **     Method      :  Ring_Buffer_Get (component RingBufferUInt8)

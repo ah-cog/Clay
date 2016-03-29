@@ -1,5 +1,6 @@
-#include <Message.h>
 #include "Application.h"
+#include "Message.h"
+#include "Message_Processor.h"
 
 //#include "meshTest.h"
 #include "Bootloader.h"
@@ -17,8 +18,8 @@
 //#include "PowerOn.h"      //TODO: update UVLO GPIO
 #include "Button.h"
 
-static bool led_1_state;
-static bool led_2_state;
+//static bool led_1_state;
+//static bool led_2_state;
 Message *outMessage = NULL;
 int status;
 char buffer2[128] = { 0 };
@@ -99,7 +100,7 @@ void Initialize() {
       // Failure
    }
 
-   if (status == Buzzer_Enable() != true) {
+   if ((status == Buzzer_Enable()) != true) {
       // Failure
    }
    // RGBDemoLoop();
@@ -163,7 +164,9 @@ void Application(void) {
       // Monitor communication message queues.
       if (Has_Messages(&incomingMessageQueue) == true) {
          message = Wifi_Receive();
-         status = Process_Incoming_Message(message);
+//         status = //TODO: unused
+         Process_Incoming_Message(message);
+
          if (message != NULL) {
 
          }
@@ -205,7 +208,7 @@ void Application(void) {
 
       // Perform action.
       if ((*timeline).current_event != NULL) {
-         if (Perform_Action(((*timeline).current_event)) != NULL) {
+         if (Perform_Action(((*timeline).current_event)) != 0) {
 
             // NOTE: Action was performed successfully.
 
@@ -276,9 +279,10 @@ void Monitor_Periodic_Events() {
    if (tick_500ms) {
       tick_500ms = false;
 
-      LED2_PutVal(NULL, led_2_state);
-      LED1_PutVal(NULL, led_2_state);
-      led_2_state = !led_2_state;
+      //TODO: update LED driver
+//      LED2_PutVal(NULL, led_2_state);
+//      LED1_PutVal(NULL, led_2_state);
+//      led_2_state = !led_2_state;
 
 //      //monitor the input voltage line. We need to shut down on low battery ~3.2v. See schematic for resistor divider and input scaling.
 //      if ((vBat != 0 && vBat < 3.2) || Button_Press_Time > 0 && (Millis() - Button_Press_Time) > 1500) {
