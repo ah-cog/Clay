@@ -5,6 +5,7 @@
  2016
  *      Author: thebh
  */
+#include <Message.h>
 #include "Clay_Core_Hardware.h"
 #include "Clock.h"
 #include "LED1.h"
@@ -14,7 +15,6 @@
 #include "WIFI_RESET.h"
 #include "mpu_9250_driver.h"
 #include "MeshTest.h"
-#include "Messenger.h"
 //#include "ESP8266.h"
 ////defines
 

@@ -1,3 +1,4 @@
+#include <Message.h>
 #include "Application.h"
 
 //#include "meshTest.h"
@@ -10,8 +11,6 @@
 #include "LEDs.h"
 #include "Events.h"
 //#include "RGBDemo.h"
-#include "Messenger.h"
-
 #include "ADC0.h"
 
 #include "Buzzer.h"

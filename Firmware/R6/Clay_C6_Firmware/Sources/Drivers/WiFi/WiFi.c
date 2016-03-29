@@ -1,3 +1,4 @@
+#include <Message.h>
 #include "stdint.h"
 #include "stdlib.h"
 #include "string.h"
@@ -12,7 +13,6 @@
 #include "Ring_Buffer.h"
 #include "Clock.h"
 #include "AddressSerialization.h"
-#include "Messenger.h"
 
 #define OUT_BUFFER_LENGTH           1024
 #define IN_BUFFER_LENGTH            1024

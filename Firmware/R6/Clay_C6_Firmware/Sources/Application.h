@@ -3,6 +3,7 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
+#include <Message.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -18,7 +19,6 @@
 #include "Action.h"
 #include "Event.h"
 #include "Timeline.h"
-#include "Messenger.h"
 
 /**
  * Initializes the device.
