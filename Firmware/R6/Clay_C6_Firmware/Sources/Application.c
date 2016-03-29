@@ -205,7 +205,7 @@ void Application(void) {
 
       // Perform action.
       if ((*timeline).current_event != NULL) {
-         if (Perform_Action(((*timeline).current_event)) != NULL) {
+         if (Process_Event(((*timeline).current_event)) != NULL) {
 
             // NOTE: Action was performed successfully.
 

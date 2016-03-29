@@ -16,10 +16,6 @@
 #define DEFAULT_UUID_LENGTH 37
 #endif
 
-/**
- * Timeline
- */
-
 typedef struct Timeline {
 	char *uuid;
 	struct Event *first_event;
@@ -31,15 +27,6 @@ extern Timeline *timeline;
 extern Timeline* Create_Timeline (char *uuid);
 extern void Reset_Timeline (Timeline *timeline);
 extern void Delete_Timeline (Timeline *timeline);
-
-//extern Event* timeline;
-//extern Event* currentEvent; // Pointer to the loop's current behavior.
-
-//uint8_t Initialize_Action ();
-
-/**
- * Event
- */
 
 int16_t Add_Event (Timeline *timeline, Event *event); // TODO: int16_t Add_Behavior (Behavior *loop, Behavior *behavior);
 int16_t Insert_Event (Timeline *timeline, Event *event, uint16_t index);
