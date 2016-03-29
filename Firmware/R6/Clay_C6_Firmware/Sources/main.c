@@ -65,7 +65,6 @@
 #include "PDD_Includes.h"
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
-#include "Clay_Core_Hardware.h"
 #include "Application.h"
 //#include "Drivers/WiFi/Wifi_Test.h"
 

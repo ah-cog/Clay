@@ -3,7 +3,8 @@
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
-#include <Message.h>
+#include "Message.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
