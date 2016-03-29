@@ -1,4 +1,4 @@
-#include "Messenger.h"
+#include <Message.h>
 #include "Action.h"
 
 #define DEFAULT_UUID_LENGTH 37

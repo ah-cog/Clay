@@ -2,8 +2,8 @@
  * Implements FIFO queues for incoming and outgoing messages.
  */
 
-#ifndef MESSENGER_H
-#define MESSENGER_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
 #ifndef __PE_Types_H
 #include "PE_Types.h"

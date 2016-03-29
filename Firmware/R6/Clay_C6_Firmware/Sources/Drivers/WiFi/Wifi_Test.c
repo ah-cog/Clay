@@ -4,12 +4,12 @@
  *  Created on: Feb 18, 2016
  *      Author: thebh
  */
+#include <Message.h>
 #include "PE_Types.h"
 #include "WiFi.h"
 #include "Clock.h"
 #include "Ring_Buffer.h"
 //#include "Message.h"
-#include "Messenger.h"
 #include "AddressSerialization.h"
 
 void Wifi_Test() {
