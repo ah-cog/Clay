@@ -22,10 +22,11 @@ Message* Create_Message (const char *content) {
 	(*message).destination = NULL;
 
 	// Allocate memory for the message's content.
-	(*message).content = (char *) malloc (strlen (content));
+	(*message).content = (char *) malloc (strlen (content) + 1);
+	memset ((*message).content, '\0', strlen (content) + 1);
 
 	// Copy message content
-	strcpy ((*message).content, content);
+	strncpy ((*message).content, content, strlen (content));
 
 	// Set up links for queue
 	(*message).previous = NULL;
@@ -43,7 +44,9 @@ void Set_Message_Type (Message *message, const char *type) {
 	}
 
 	// Copy the type into the structure
-	(*message).type = (char *) malloc (strlen (type));
+	(*message).type = (char *) malloc (strlen (type) + 1);
+	memset ((*message).type, '\0', strlen (type) + 1);
+
 	strcpy ((*message).type, type);
 
 //	sprintf ((*message).source, "%s,%s%c", channel, address, ADDRESS_TERMINATOR);
@@ -58,7 +61,9 @@ void Set_Message_Source (Message *message, const char *address) {
 	}
 
 	// Copy the message destination address
-	(*message).source = (char *) malloc (strlen (address));
+	(*message).source = (char *) malloc (strlen (address) + 1);
+	memset ((*message).source, '\0', strlen (address) + 1);
+
 	strcpy ((*message).source, address);
 
 //	(*message).source = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
@@ -77,6 +82,8 @@ void Set_Message_Destination (Message *message, const char *address) {
 
 	// Copy the message destination address
 	(*message).destination = (char *) malloc (strlen (address));
+	memset ((*message).destination, '\0', strlen (address) + 1);
+
 	strcpy ((*message).destination, address);
 
 //	(*message).destination = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
@@ -217,7 +224,9 @@ int8_t Has_Messages (Message **messageQueue) {
 
 int16_t Queue_Outgoing_Message (char *address, Message *message) {
 	// Allocate memory for the UUID for this action.
-	(*message).destination = (char *) malloc (strlen (address));
+	(*message).destination = (char *) malloc (strlen (address) + 1);
+	memset ((*message).destination, '\0', strlen (address) + 1);
+
 	strcpy ((*message).destination, address); // Copy the message destination address
 
 	// Queue the message.

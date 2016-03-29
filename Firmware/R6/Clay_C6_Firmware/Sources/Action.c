@@ -15,14 +15,25 @@ Event* cache;
 
 Timeline *timeline;
 
+uint32_t action_start_time = 0;
+uint32_t action_wait_time = 0;
+
+static int8_t Perform_Light_Action (char *state);
+static int8_t Perform_Signal_Action (char *state);
+static int8_t Perform_Pause_Action (char *state);
+static int8_t Perform_Message_Action (char *state);
+static int8_t Perform_Say_Action (char *state);
+
 Timeline* Create_Timeline (char *uuid) {
 
 	// Allocate memory for timeline structure.
 	Timeline *timeline = (Timeline *) malloc (sizeof (Timeline));
 
 	// Allocate memory for the UUID for this action.
-	(*timeline).uuid = (char *) malloc (strlen (uuid));
+	(*timeline).uuid = (char *) malloc (strlen (uuid) + 1);
 	strcpy ((*timeline).uuid, uuid); // Copy the action construct's UUID
+	(*timeline).uuid[(strlen (uuid))] = '\0';
+
 
 	// Set event references to null.
 	(*timeline).first_event = NULL;
@@ -106,16 +117,18 @@ Event* Create_Event (char *uuid, Action *action, char *state) {
 	// TODO: strcpy ((*actionConstruct).uuid, uuid); // Copy action construct content
 
 	// Allocate memory for the UUID for this action.
-	(*event).uuid = (char *) malloc (strlen (uuid));
-	strcpy ((*event).uuid, uuid); // Copy the action construct's UUID
+	(*event).uuid = (char *) malloc (strlen (uuid) + 1);
+	strncpy ((*event).uuid, uuid, strlen (uuid)); // Copy the action construct's UUID
+	(*event).uuid[strlen (uuid)] = NULL;
 
 	// Assign the action construct to the specified action (or NULL).
 	(*event).action = (Action *) action;
 
 	// Allocate memory for the content (i.e., the starting symbol to the grammar defining Clay's action).
 	if (state != NULL) {
-		(*event).state = (char *) malloc (strlen (state));
-		strcpy ((*event).state, state); // Copy action construct content
+		(*event).state = (char *) malloc (strlen (state) + 1);
+		strncpy ((*event).state, state, strlen (state)); // Copy action construct content
+		(*event).state[strlen (state)] = NULL;
 	} else {
 		(*event).state = NULL;
 	}
@@ -161,8 +174,9 @@ void Set_Event_State (Event *event, char *state) {
 		}
 
 		// Copy new state
-		(*event).state = (char *) malloc (strlen (state));
-		strcpy ((*event).state, state); // Copy action construct content
+		(*event).state = (char *) malloc (strlen (state) + 1);
+		strncpy ((*event).state, state, strlen (state)); // Copy action construct content
+		(*event).state[strlen (state)] = '\0';
 	}
 }
 
@@ -249,7 +263,7 @@ uint8_t Has_Cached_Action_By_UUID (char *uuid) {
 		// Search for the last element in the queue.
 		event = cache; // Get the front of the queue.
 		while (event != NULL) {
-			if (strncmp (uuid, (*((*event).action)).uuid, (*((*event).action)).uuid) == 0) {
+			if (strncmp (uuid, (*((*event).action)).uuid, strlen((*((*event).action)).uuid)) == 0) {
 				return TRUE;
 			}
 			event = (*event).next;
@@ -362,14 +376,49 @@ Action* Remove_Action_From_Cache (Action *action) {
 //	return TRUE;
 //}
 
+// TODO: Update to automatically scan memory for action structures and create pointers to them.
+void Enable_Actions () {
+
+	Action *action = NULL;
+
+	// Light
+	action = Create_Action (LIGHT_ACTION_UUID); // Create the action then cache it
+	Set_Action_Script (action, &Perform_Light_Action);
+	Cache_Action (action);
+
+	// Signal
+	action = Create_Action (SIGNAL_ACTION_UUID); // Create the action then cache it
+	Set_Action_Script (action, &Perform_Signal_Action);
+	Cache_Action (action);
+
+	// Message
+	action = Create_Action (MESSAGE_ACTION_UUID); // Create the action then cache it
+	Set_Action_Script (action, &Perform_Message_Action);
+	Cache_Action (action);
+
+	// Pause
+	action = Create_Action (PAUSE_ACTION_UUID); // Create the action then cache it
+	Set_Action_Script (action, &Perform_Pause_Action);
+	Cache_Action (action);
+
+	// Say
+	action = Create_Action (SAY_ACTION_UUID); // Create the action then cache it
+	Set_Action_Script (action, &Perform_Say_Action);
+	Cache_Action (action);
+}
+
 Action* Create_Action (char *uuid) {
 
 	// Allocate memory for action construct.
 	Action *action = (Action *) malloc (sizeof(Action));
 
 	// Allocate memory for the UUID for this action.
-	(*action).uuid = (char *) malloc (strlen (uuid));
-	strcpy ((*action).uuid, uuid); // Copy action construct content
+	(*action).uuid = (char *) malloc (strlen (uuid) + 1); // Add one for '\0' null termination of string
+	strncpy ((*action).uuid, uuid, strlen (uuid)); // Copy action construct content
+	(*action).uuid[strlen (uuid)] = '\0';
+
+	// Initialize script function pointer to NULL
+	(*action).script = NULL;
 
 //	// Allocate memory for the content (i.e., the starting symbol to the grammar defining Clay's action).
 //	(*action).state = (char *) malloc (strlen (state));
@@ -378,6 +427,13 @@ Action* Create_Action (char *uuid) {
 	// TODO: Set up link to the action's loop. This will be NULL for the basic actions provided by the formal grammar defining Clay's physical action.
 
 	return action;
+}
+
+//void Set_Action_Script (Action *action, void (*script)()) {
+//void Set_Action_Script (Action *action, void (*script) (const Event *)) {
+//void Set_Action_Script (Action *action, int8_t (*script) (Event *)) {
+void Set_Action_Script (Action *action, int8_t (*script) (char *)) {
+	(*action).script = script;
 }
 
 int8_t Delete_Action (Action *action) {
@@ -693,19 +749,10 @@ Event* Get_Event_By_UUID (Timeline *timeline, char *uuid) {
 	return NULL;
 }
 
-uint32_t action_start_time = 0;
-uint32_t action_wait_time = 0;
-
-static int8_t Perform_Light_Action (Event *event);
-static int8_t Perform_Signal_Action (Event *event);
-static int8_t Perform_Pause_Action (Event *event);
-static int8_t Perform_Message_Action (Event *event);
-static int8_t Perform_Say_Action (Event *event);
-
 /**
  * Performs the physical action for the specified action as it is defined
  * by the formal grammar that defines the capabilities of Clay.
- * 
+ *
  * Presently, the grammar is implemented as a series of conditional statements.
  */
 int8_t Perform_Action (Event *event) {
@@ -733,6 +780,11 @@ int8_t Perform_Action (Event *event) {
 	// TODO: Parse the message rather than brute force like this.
 	// TODO: Decompose the action into atomic actions and perform them!
 
+	// TODO: Check event condition, and only call script if it is met.
+	return ((*action).script ( (*event).state ));
+	// TODO: return (*action).script ( (*event).state );
+
+	/*
 	if (strncmp ((*action).uuid, LIGHT_ACTION_UUID, strlen (LIGHT_ACTION_UUID)) == 0) {
 		return Perform_Light_Action (event);
 	} else if (strncmp ((*action).uuid, SIGNAL_ACTION_UUID, strlen (SIGNAL_ACTION_UUID)) == 0) {
@@ -747,6 +799,7 @@ int8_t Perform_Action (Event *event) {
 		// No recognized action was performed.
 		result = FALSE;
 	}
+	*/
 
 //	// turn light 1 on
 //	// ^
@@ -819,7 +872,7 @@ int8_t Perform_Action (Event *event) {
 	return result;
 }
 
-static int8_t Perform_Light_Action (Event *event) {
+static int8_t Perform_Light_Action (char *state) {
 
 	int8_t status = NULL;
 	int8_t result = NULL;
@@ -837,7 +890,7 @@ static int8_t Perform_Light_Action (Event *event) {
 		int green = 0;
 		int blue = 0;
 
-		status = Get_Token ((*event).state, token, 1 + i);
+		status = Get_Token (state, token, 1 + i);
 
 		// Convert hex-encoded color string to separate red, green, and blue color indices.
 		hex_color = Hex_String_To_UInt (token);
@@ -861,7 +914,7 @@ static int8_t Perform_Light_Action (Event *event) {
 	return result;
 }
 
-static int8_t Perform_Signal_Action (Event *event) {
+static int8_t Perform_Signal_Action (char *state) {
 
 	int8_t status = NULL;
 	int8_t result = NULL;
@@ -875,7 +928,7 @@ static int8_t Perform_Signal_Action (Event *event) {
 	// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
 	for (i = 0; i < 12; i++) {
 
-		status = Get_Token ((*event).state, token, 1 + i);
+		status = Get_Token (state, token, 1 + i);
 
 //			// Set LED state
 //			if (token[0] == 'T') {
@@ -974,7 +1027,7 @@ static int8_t Perform_Signal_Action (Event *event) {
 }
 
 // e.g., "500 ms"
-static int8_t Perform_Pause_Action (Event *event) {
+static int8_t Perform_Pause_Action (char *state) {
 
 	int8_t status = NULL;
 	int8_t result = NULL;
@@ -982,7 +1035,7 @@ static int8_t Perform_Pause_Action (Event *event) {
 	int pause_duration_integer = 0;
 
 	// Set the action wait time (i.e., the time after the action before proceeding to the next one)
-	status = Get_Token ((*event).state, token, 1); // TODO: This is redundant. Remove redundancy!
+	status = Get_Token (state, token, 1); // TODO: This is redundant. Remove redundancy!
 	if (action_wait_time == 0) {
 		pause_duration_integer = atoi (token);
 		action_wait_time = pause_duration_integer;
@@ -1000,12 +1053,12 @@ static int8_t Perform_Pause_Action (Event *event) {
 	return result;
 }
 
-static int8_t Perform_Message_Action (Event *event) {
+static int8_t Perform_Message_Action (char *state) {
 	// TODO: Make an action that queues a message.
 	return FALSE;
 }
 
-static int8_t Perform_Say_Action (Event *event) {
+static int8_t Perform_Say_Action (char *state) {
 	// TODO: Make action that queues a message specifically to generate speech on the app.
 	return FALSE;
 }
