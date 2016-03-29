@@ -74,9 +74,6 @@ int8_t Process_Outgoing_Message (Message *message) {
 
 	if (message != NULL) {
 
-//		// Broadcast_UDP_Message (token, DISCOVERY_BROADCAST_PORT);
-//		Send_UDP_Message ((*message).destination, DISCOVERY_BROADCAST_PORT, (*message).content);
-
 		// Send message over Wi-Fi
 		result = Wifi_Send (message);
 

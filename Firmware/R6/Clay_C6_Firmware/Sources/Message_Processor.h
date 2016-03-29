@@ -2,6 +2,7 @@
 #define MESSAGE_PROCESSOR_H
 
 #include <Message.h>
+#include <Message_Queue.h>
 
 extern int8_t Process_Incoming_Message (Message *message);
 

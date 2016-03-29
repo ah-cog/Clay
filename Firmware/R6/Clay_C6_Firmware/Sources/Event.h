@@ -47,6 +47,6 @@ extern uint8_t Has_Cached_Actions ();
 extern uint8_t Has_Cached_Action_By_UUID (char *uuid);
 extern Action* Remove_Action_From_Cache (Action *action);
 
-int8_t Perform_Action (Event *event);
+int8_t Process_Event (Event *event);
 
 #endif

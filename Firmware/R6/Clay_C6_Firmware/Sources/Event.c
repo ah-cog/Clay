@@ -89,7 +89,7 @@ void Set_Event_State (Event *event, char *state) {
  *
  * Presently, the grammar is implemented as a series of conditional statements.
  */
-int8_t Perform_Action (Event *event) {
+int8_t Process_Event (Event *event) {
 
 	int8_t result = NULL;
 
