@@ -1,13 +1,16 @@
 /*
  $License:
-    Copyright (C) 2011 InvenSense Corporation, All Rights Reserved.
+ Copyright (C) 2011 InvenSense Corporation, All Rights Reserved.
  $
  */
 #ifndef INV_INCLUDE_H__
 #define INV_INCLUDE_H__
 
+#ifdef DEBUG
+#define INVENSENSE_FUNC_START  typedef int invensensePutFunctionCallsHere; invensensePutFunctionCallsHere x; (void)x //stupid shit to kill warnings. Should get optimized out.
+#else
 #define INVENSENSE_FUNC_START  typedef int invensensePutFunctionCallsHere
-
+#endif
 #ifdef COVERAGE
 #include "utestCommon.h"
 #endif

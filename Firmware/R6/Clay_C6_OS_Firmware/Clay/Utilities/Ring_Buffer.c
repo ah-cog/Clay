@@ -9,7 +9,7 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-static uint8_t Ring_Buffer_buffer[Ring_Buffer_BUF_SIZE]; /* ring buffer */
+static char Ring_Buffer_buffer[Ring_Buffer_BUF_SIZE]; /* ring buffer */
 static uint16_t Ring_Buffer_inIdx; /* input index */
 static uint16_t Ring_Buffer_outIdx; /* output index */
 static uint16_t Ring_Buffer_inSize; /* size of input data */
@@ -25,7 +25,7 @@ static uint16_t Ring_Buffer_inSize; /* size of input data */
  **         ---             - Error code
  ** ===================================================================
  */
-uint8_t Ring_Buffer_Put(uint8_t elem) {
+uint8_t Ring_Buffer_Put(char elem) {
    uint8_t res = 0;
 
    if (Ring_Buffer_inSize == Ring_Buffer_BUF_SIZE) {
@@ -54,7 +54,7 @@ uint8_t Ring_Buffer_Put(uint8_t elem) {
  **         ---             - Error code
  ** ===================================================================
  */
-uint8_t Ring_Buffer_Get(uint8_t *elemP) {
+uint8_t Ring_Buffer_Get(char *elemP) {
    uint8_t res = 0;
 
    if (Ring_Buffer_inSize == 0) {

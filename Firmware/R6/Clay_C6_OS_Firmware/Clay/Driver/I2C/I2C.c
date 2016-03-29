@@ -22,7 +22,7 @@
 bool i2c_tx_complete;
 bool i2c_rx_complete;
 ////local vars
-static uint32_t start_time;
+//static uint32_t start_time;
 
 ////local function prototypes
 

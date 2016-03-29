@@ -34,7 +34,8 @@ void HardwareSPI::end(void) {
 }
 
 static uint8_t rval = 0;
-static uint8_t * rvalPtr = &rval;        //attempting to pass &rval into ReceiveBlock was yielding 0x00 returns every time.
+//TODO: gone
+//static uint8_t * rvalPtr = &rval;        //attempting to pass &rval into ReceiveBlock was yielding 0x00 returns every time.
 static uint8_t retryCount;
 
 uint8_t HardwareSPI::transfer(uint8_t data) {

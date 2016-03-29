@@ -31,6 +31,7 @@ uint32_t Millis() {
    return PowerOnTime_ms;
 }
 
+//TODO: clock settings.
 void Wait(uint32_t wait_ms) {
    uint32_t Start = PowerOnTime_ms;
    while ((PowerOnTime_ms - Start) <= wait_ms)
@@ -38,19 +39,24 @@ void Wait(uint32_t wait_ms) {
 }
 
 bool Enable_Clock() {
+   return false;
 }
 
 bool Start_Clock() {
    PowerOnTime_ms = 0;
    tick_count = 0;
+
+   return false;
 }
 
 bool Stop_Clock() {
    //todo: disable/deinit
+   return false;
 }
 
 bool Pause_Clock() {
    //todo: disable
+   return false;
 }
 
 void Resume_Clock() {

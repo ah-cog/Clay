@@ -11,8 +11,7 @@
 #include "mesh_stastistics.h"
 #include "wirish.h"
 
-extern "C"
-{
+extern "C" {
 #include "Clock.h"
 }
 
@@ -34,197 +33,195 @@ uint32_t experiment_index = 0;
 
 static void print_uint32_array(uint32_t * data, uint8_t count, char * string);
 
-void send_data_and_setup_next_experiment()
-{
-	transmit_data(&experiment_data);
-	setup_next_experiment();
+void send_data_and_setup_next_experiment() {
+   transmit_data(&experiment_data);
+   setup_next_experiment();
 }
 
-void setup_next_experiment()
-{
+void setup_next_experiment() {
 
-	//not implemented
-	if (0)
-	{
-		experiment_data.settings.tx_attenuation = _0dBm;        //not yet implemented
-	}
-	else
-	{
-		experiment_data.settings.tx_attenuation = _0dBm;
-	}
+   //not implemented
+   if (0) {
+      experiment_data.settings.tx_attenuation = _0dBm;        //not yet implemented
+   } else {
+      experiment_data.settings.tx_attenuation = _0dBm;
+   }
 
-	if (0)
-	{
-		experiment_data.settings.mesh_datarate = _2Mbps;        //not yet implemented
-	}
-	else
-	{
-		experiment_data.settings.mesh_datarate = _2Mbps;
+   if (0) {
+      experiment_data.settings.mesh_datarate = _2Mbps;        //not yet implemented
+   } else {
+      experiment_data.settings.mesh_datarate = _2Mbps;
 
-	}
+   }
 
-	if (0)
-	{
-		experiment_data.settings.spi_datarate = 0xFF;           //not yet implemented in hardware SPI, RH_NRF24.cpp, or mesh.c
-	}
-	else
-	{
-		experiment_data.settings.spi_datarate = 0xFF;
-	}
+   if (0) {
+      experiment_data.settings.spi_datarate = 0xFF;           //not yet implemented in hardware SPI, RH_NRF24.cpp, or mesh.c
+   } else {
+      experiment_data.settings.spi_datarate = 0xFF;
+   }
 
-	if (experiment_index < 60)
-	{
-		experiment_data.settings.randomize_hw_retry_count = random(0, 1);
-		experiment_data.settings.randomize_hw_retry_timeout = !experiment_data.settings.randomize_hw_retry_count;
-	}
-	else
-	{
-		experiment_data.settings.randomize_hw_retry_count = false;
-		experiment_data.settings.randomize_hw_retry_timeout = false;
-	}
+   if (experiment_index < 60) {
+      experiment_data.settings.randomize_hw_retry_count = random(0, 1);
+      experiment_data.settings.randomize_hw_retry_timeout = !experiment_data.settings.randomize_hw_retry_count;
+   } else {
+      experiment_data.settings.randomize_hw_retry_count = false;
+      experiment_data.settings.randomize_hw_retry_timeout = false;
+   }
 
-	if (experiment_index < 60)
-	{
-		experiment_data.settings.radio_retry_count = random(0, 15);
-	}
-	else
-	{
-		experiment_data.settings.radio_retry_count = 15;
-	}
+   if (experiment_index < 60) {
+      experiment_data.settings.radio_retry_count = random(0, 15);
+   } else {
+      experiment_data.settings.radio_retry_count = 15;
+   }
 
-	if (experiment_index < 60)
-	{
-		experiment_data.settings.retry_interval = (mesh_HW_retry_interval) random(0, 15);
-	}
-	else
-	{
-		experiment_data.settings.retry_interval = _500uS;
-	}
+   if (experiment_index < 60) {
+      experiment_data.settings.retry_interval = (mesh_HW_retry_interval) random(0, 15);
+   } else {
+      experiment_data.settings.retry_interval = _500uS;
+   }
 
-	if (60 <= experiment_index && experiment_index < 90)
-	{
-		experiment_data.settings.min_rh_retry_count = random(0, 15);
-		experiment_data.settings.max_rh_retry_count = (random(0, 1) ? random(experiment_data.settings.min_rh_retry_count, 15) : 0);
-	}
-	else
-	{
-		experiment_data.settings.min_rh_retry_count = 3;
-		experiment_data.settings.max_rh_retry_count = 0;
-	}
+   if (60 <= experiment_index && experiment_index < 90) {
+      experiment_data.settings.min_rh_retry_count = random(0, 15);
+      experiment_data.settings.max_rh_retry_count = (random(0, 1) ? random(experiment_data.settings.min_rh_retry_count, 15) : 0);
+   } else {
+      experiment_data.settings.min_rh_retry_count = 3;
+      experiment_data.settings.max_rh_retry_count = 0;
+   }
 
-	if (90 <= experiment_index && experiment_index < 120)
-	{
-		experiment_data.settings.min_rh_retry_timeout_ms = random(10, 3000);
-		experiment_data.settings.max_rh_retry_timeout_ms = (random(0, 1) ? random(experiment_data.settings.min_rh_retry_timeout_ms + 10, 3000) : 0);
-	}
-	else
-	{
-		experiment_data.settings.min_rh_retry_timeout_ms = 10;
-		experiment_data.settings.max_rh_retry_timeout_ms = 0;
-	}
+   if (90 <= experiment_index && experiment_index < 120) {
+      experiment_data.settings.min_rh_retry_timeout_ms = random(10, 3000);
+      experiment_data.settings.max_rh_retry_timeout_ms = (
+            random(0, 1) ? random(experiment_data.settings.min_rh_retry_timeout_ms + 10, 3000) : 0);
+   } else {
+      experiment_data.settings.min_rh_retry_timeout_ms = 10;
+      experiment_data.settings.max_rh_retry_timeout_ms = 0;
+   }
 
-	if (120 <= experiment_index && experiment_index < 150)
-	{
-		experiment_data.settings.mesh_tx_period_min_ms = random(10, 3000);
-		experiment_data.settings.mesh_tx_period_max_ms = (random(0, 1) ? random(experiment_data.settings.mesh_tx_period_min_ms + 10, 3000) : 0);
-	}
-	else
-	{
-		experiment_data.settings.mesh_tx_period_min_ms = 50;
-		experiment_data.settings.mesh_tx_period_max_ms = 0;
-	}
+   if (120 <= experiment_index && experiment_index < 150) {
+      experiment_data.settings.mesh_tx_period_min_ms = random(10, 3000);
+      experiment_data.settings.mesh_tx_period_max_ms = (
+            random(0, 1) ? random(experiment_data.settings.mesh_tx_period_min_ms + 10, 3000) : 0);
+   } else {
+      experiment_data.settings.mesh_tx_period_min_ms = 50;
+      experiment_data.settings.mesh_tx_period_max_ms = 0;
+   }
 
-	//not implemented
-	if (0)
-	{
-		experiment_data.settings.check_channel_clear_before_tx = false;         //not yet implemented in RH_NRF24.c or mesh.c
-	}
-	else
-	{
-		experiment_data.settings.check_channel_clear_before_tx = false;
-	}
+   //not implemented
+   if (0) {
+      experiment_data.settings.check_channel_clear_before_tx = false;         //not yet implemented in RH_NRF24.c or mesh.c
+   } else {
+      experiment_data.settings.check_channel_clear_before_tx = false;
+   }
 
-	//not implemented
-	if (0)
-	{
-		experiment_data.settings.dma_enabled = false;                           //not yet implemented anywhere.
-	}
-	else
-	{
-		experiment_data.settings.dma_enabled = false;
-	}
+   //not implemented
+   if (0) {
+      experiment_data.settings.dma_enabled = false;                           //not yet implemented anywhere.
+   } else {
+      experiment_data.settings.dma_enabled = false;
+   }
 
-	//not implemented
-	if (0)
-	{
-		experiment_data.settings.send_alive_messages = true;
-		experiment_data.settings.alive_message_period = 5000;
-	}
-	else
-	{
-		experiment_data.settings.send_alive_messages = true;
-		experiment_data.settings.alive_message_period = 5000;
-	}
+   //not implemented
+   if (0) {
+      experiment_data.settings.send_alive_messages = true;
+      experiment_data.settings.alive_message_period = 5000;
+   } else {
+      experiment_data.settings.send_alive_messages = true;
+      experiment_data.settings.alive_message_period = 5000;
+   }
 
-	//not implemented
-	if (0)
-	{
-		experiment_data.settings.tx_packet_length = 18;
-	}
-	else
-	{
-		experiment_data.settings.tx_packet_length = 18;
-	}
+   //not implemented
+   if (0) {
+      experiment_data.settings.tx_packet_length = 18;
+   } else {
+      experiment_data.settings.tx_packet_length = 18;
+   }
 
-	//not modified
-	experiment_data.settings.message_transmission_count = 100;
-	experiment_data.settings.experiment_duration_ms = 0;
+   //not modified
+   experiment_data.settings.message_transmission_count = 100;
+   experiment_data.settings.experiment_duration_ms = 0;
 
-	Reinit_Mesh_Retries();
+   Reinit_Mesh_Retries();
 
-	experiment_index = (experiment_index + 1) % 150;
+   experiment_index = (experiment_index + 1) % 150;
 
-	//reset counters
-	transmissions_sent_for_this_experiment = 0;
-	start_time = Millis() - start_time;
+   //reset counters
+   transmissions_sent_for_this_experiment = 0;
+   start_time = Millis() - start_time;
 }
 
-void settings_to_string(mesh_experiment_settings * settings, uint8_t * string)
-{
-	sprintf((char*) string, "%u,%u,%u,%u,%u,%s,%s,%lu,%lu,%lu,%lu,%lu,%lu,%s,%s,%lu,%lu,%s,%lu,%lu", (uint8_t) settings->tx_attenuation, (uint8_t) settings->mesh_datarate, settings->spi_datarate, (uint8_t) settings->radio_retry_count, (uint8_t) settings->retry_interval, settings->randomize_hw_retry_count ? "true" : "false", settings->randomize_hw_retry_timeout ? "true" : "false", settings->min_rh_retry_count, settings->max_rh_retry_count, settings->min_rh_retry_timeout_ms, settings->max_rh_retry_timeout_ms, settings->mesh_tx_period_min_ms, settings->mesh_tx_period_max_ms, settings->check_channel_clear_before_tx ? "true" : "false", settings->dma_enabled ? "true" : "false", settings->message_transmission_count, settings->experiment_duration_ms, settings->send_alive_messages ? "true" : "false", settings->alive_message_period, settings->tx_packet_length);
+void settings_to_string(mesh_experiment_settings * settings, uint8_t * string) {
+   sprintf((char*) string,
+           "%u,%u,%u,%u,%u,%s,%s,%u,%u,%u,%u,%u,%u,%s,%s,%lu,%lu,%s,%lu,%u",
+           (uint8_t) settings->tx_attenuation,
+           (uint8_t) settings->mesh_datarate,
+           settings->spi_datarate,
+           (uint8_t) settings->radio_retry_count,
+           (uint8_t) settings->retry_interval,
+           settings->randomize_hw_retry_count ? "true" : "false",
+           settings->randomize_hw_retry_timeout ? "true" : "false",
+           settings->min_rh_retry_count,
+           settings->max_rh_retry_count,
+           settings->min_rh_retry_timeout_ms,
+           settings->max_rh_retry_timeout_ms,
+           settings->mesh_tx_period_min_ms,
+           settings->mesh_tx_period_max_ms,
+           settings->check_channel_clear_before_tx ? "true" : "false",
+           settings->dma_enabled ? "true" : "false",
+           settings->message_transmission_count,
+           settings->experiment_duration_ms,
+           settings->send_alive_messages ? "true" : "false",
+           settings->alive_message_period,
+           settings->tx_packet_length);
 }
 
-void experiment_data_to_string(mesh_experiment_data * data, uint8_t * string)
-{
-	settings_to_string(&(data->settings), (uint8_t *) settings_string);
+void experiment_data_to_string(mesh_experiment_data * data, uint8_t * string) {
+   settings_to_string(&(data->settings), (uint8_t *) settings_string);
 
-	print_uint32_array(data->tx_messages_sent, MAX_NODE_COUNT, tx_sent_str);
-	print_uint32_array(data->tx_messages_failed, MAX_NODE_COUNT, tx_fail_str);
-	print_uint32_array(data->messages_received, MAX_NODE_COUNT + 1, msg_rx_str);
-	print_uint32_array(data->alives_received, MAX_NODE_COUNT + 1, alive_rx_str);
+   print_uint32_array(data->tx_messages_sent, MAX_NODE_COUNT, tx_sent_str);
+   print_uint32_array(data->tx_messages_failed, MAX_NODE_COUNT, tx_fail_str);
+   print_uint32_array(data->messages_received, MAX_NODE_COUNT + 1, msg_rx_str);
+   print_uint32_array(data->alives_received, MAX_NODE_COUNT + 1, alive_rx_str);
 
-	sprintf((char*) string, "%s,%lu,%s%s%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%s%s%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\r\n", settings_string, data->experiment_duration_ms, tx_sent_str, tx_fail_str, data->ERROR_NONE_count, data->ERROR_INVALID_LENGTH_count, data->ERROR_NO_ROUTE_count, data->ERROR_TIMEOUT_count, data->ERROR_NO_REPLY_count, data->ERROR_UNABLE_TO_DELIVER_count, data->RH_retry_count, data->RH_total_send_count, msg_rx_str, alive_rx_str, data->transmit_time_success_total_ms, data->transmit_time_fail_total_ms, data->do_arp_time_total_ms, data->do_arp_success_count, data->route_table_miss, data->rx_interrupt_time_total_ms, data->rx_interrupt_count, data->detected_node_count);
+   sprintf((char*) string,
+           "%s,%lu,%s%s%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%s%s%lu,%lu,%lu,%lu,%lu,%lu,%lu,%u\r\n",
+           settings_string,
+           data->experiment_duration_ms,
+           tx_sent_str,
+           tx_fail_str,
+           data->ERROR_NONE_count,
+           data->ERROR_INVALID_LENGTH_count,
+           data->ERROR_NO_ROUTE_count,
+           data->ERROR_TIMEOUT_count,
+           data->ERROR_NO_REPLY_count,
+           data->ERROR_UNABLE_TO_DELIVER_count,
+           data->RH_retry_count,
+           data->RH_total_send_count,
+           msg_rx_str,
+           alive_rx_str,
+           data->transmit_time_success_total_ms,
+           data->transmit_time_fail_total_ms,
+           data->do_arp_time_total_ms,
+           data->do_arp_success_count,
+           data->route_table_miss,
+           data->rx_interrupt_time_total_ms,
+           data->rx_interrupt_count,
+           data->detected_node_count);
 }
 
 //send data to the collection server
-bool transmit_data(mesh_experiment_data * data)
-{
-	bool rval = false;
+bool transmit_data(mesh_experiment_data * data) {
+   bool rval = false;
 
-	experiment_data_to_string(data, tx_string);
+   experiment_data_to_string(data, tx_string);
 
-	int d = strlen((char*) tx_string);
-
-	return rval;
+   return rval;
 }
 
-static void print_uint32_array(uint32_t * data, uint8_t count, char * string)
-{
-	uint32_t offset = 0;
-	for (uint8_t i = 0; i < count; ++i)
-	{
-		offset += sprintf(string + offset, "%lu,", data[i]);
-	}
+static void print_uint32_array(uint32_t * data, uint8_t count, char * string) {
+   uint32_t offset = 0;
+   for (uint8_t i = 0; i < count; ++i) {
+      offset += sprintf(string + offset, "%lu,", data[i]);
+   }
 }
 
 ////max length of string with the following vars is 446 bytes

@@ -40,9 +40,9 @@ static uint8_t hb_led_count = 0;
 
 uint8_t last_tx_return_value;
 
-static uint32_t size = sizeof(mpu_values) - 2;
+//static uint32_t size = sizeof(mpu_values) - 2;
 static mpu_values local_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-static mpu_values remote_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+//static mpu_values remote_imu_data = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 #if ENABLE_DIAGNOSTIC_LED
 static Color_RGB colors[] =
@@ -63,11 +63,11 @@ static uint32_t tx_time;
 static bool Initialized = false;
 
 ///prototypes //////////////////////////////////////////////////////
-static void update_imu_leds(const mpu_values * remote_imu_data, RGB_Color colors[]);
+//static void update_imu_leds(const mpu_values * remote_imu_data, RGB_Color colors[]); //TODO: unused
 static void upcount_hb_leds();
 static void update_mesh_mode(uint8_t * data, uint8_t len);
 static void mesh_update_imu_leds(uint8_t * data, uint8_t len);
-static void complete_experiment_and_send();
+//static void complete_experiment_and_send(); //TODO: unused
 
 extern "C" {
 void MeshTestLoop() {
@@ -145,7 +145,7 @@ void MeshTestLoopStep() {
    if ((Millis() - mode_start_time)
        > (experiment_data.settings.mesh_tx_period_max_ms ? random(experiment_data.settings.mesh_tx_period_min_ms,
                                                                   experiment_data.settings.mesh_tx_period_max_ms) :
-                                                           experiment_data.settings.mesh_tx_period_min_ms)) {
+                                                           (uint32_t) experiment_data.settings.mesh_tx_period_min_ms)) {
       mode_start_time = Millis();
 
       //update the target address

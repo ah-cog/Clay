@@ -75,10 +75,8 @@ int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
    /* Write your local variable definition here */
-   int8_t status = NULL;
 
    /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
-   PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
 //   Wifi_Test();

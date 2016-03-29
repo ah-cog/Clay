@@ -23,8 +23,6 @@
 
 ////global function implementations
 
-static int ledIndex = 0;
-static int colorIndex = 0;
 static RGB_Color currentColor = { 0, 0, 0 };
 
 static uint8_t rTime = 30;
@@ -52,7 +50,7 @@ static bool gDescending = true;
 static bool bDescending = true;
 
 static bool LastState = false;
-static bool ButtonPressed; //TODO: use button library for this demo.
+static bool ButtonPressed;     //TODO: use button library for this demo.
 
 void RGBDemoLoop() {
    r = rDescending ? rMax : rMin;
