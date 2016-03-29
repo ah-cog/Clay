@@ -24,11 +24,15 @@
 
 typedef struct Action {
 	char *uuid;
-//	char *state;
-	// void *script; // TODO: Update this to point to the action's structure.
+	int8_t (*script) (char *); // !!!!!!!!!!!!!!!!!!!!!!
+	//void (*script) (uint32_t); // Pointer to the procedure corresponding to the action.
 } Action;
 
+extern void Enable_Actions ();
 extern Action* Create_Action (char *uuid); // TODO: Add function pointer parameter
+//extern void Set_Action_Script (Action *action, void (*script)());
+//extern void Set_Action_Script (Action *action, int8_t (*script) (const Event *));
+extern void Set_Action_Script (Action *action, int8_t (*script) (char *));
 extern int8_t Delete_Action (Action *action);
 
 /**
@@ -41,6 +45,7 @@ extern int8_t Delete_Action (Action *action);
  */
 typedef struct Event {
 	char *uuid; // The UUID of the action.
+	// TODO: Add condition. Check it before calling Perform_Action(action, state)
 	Action *action; // The pointer to the action (if it's present in memory) or NULL (if it's not present in memory).
 	char *state;
 	struct Event *previous;

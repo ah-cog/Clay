@@ -697,9 +697,9 @@ registers of the peripheral(s) configured by the component.
 **                CS to CLK delay index                    : 0
 **                CLK to CS delay index                    : 0
 **            Clock rate                                   : 5 MHz
-**            Delay after transfer                         : 0.066667 µs
-**            CS to CLK delay                              : 0.066667 µs
-**            CLK to CS delay                              : 0.033333 µs
+**            Delay after transfer                         : 0.066667 Âµs
+**            CS to CLK delay                              : 0.066667 Âµs
+**            CLK to CS delay                              : 0.033333 Âµs
 **            HW input buffer size                         : 1
 **            HW input watermark                           : 1
 **            HW output buffer size                        : 1
