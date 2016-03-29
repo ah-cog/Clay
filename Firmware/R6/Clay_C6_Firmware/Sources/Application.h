@@ -16,6 +16,8 @@
 #include "Clock.h"
 
 #include "Action.h"
+#include "Event.h"
+#include "Timeline.h"
 #include "Messenger.h"
 
 /**
