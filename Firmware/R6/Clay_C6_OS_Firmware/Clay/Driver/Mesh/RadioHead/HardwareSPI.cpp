@@ -5,8 +5,8 @@
 
 #include "wirish.h"
 #include "HardwareSPI.h"
-//#include "MESH_SPI.h" //TODO: update driver
-//#include "MESH_CS.h"  //TODO: Update driver
+//#include "MESH_SPI.h" // TODO: update SPI driver
+//#include "MESH_CS.h"  // TODO: update mesh GPIOdriver
 //#include "LED1.h"
 //#include "LED2.h"
 #include "Mesh.h"
@@ -34,14 +34,14 @@ void HardwareSPI::end(void) {
 }
 
 static uint8_t rval = 0;
-//TODO: gone
+// TODO: gone
 //static uint8_t * rvalPtr = &rval;        //attempting to pass &rval into ReceiveBlock was yielding 0x00 returns every time.
 static uint8_t retryCount;
 
 uint8_t HardwareSPI::transfer(uint8_t data) {
    retryCount = 0;
 
-   //TODO: Update SPI driver.
+   // TODO: Update SPI driver.
 
    //Enable receive, then initiate send. the RX will happen at the same time.
 //   MESH_SPI_ReceiveBlock(SPI_DeviceData, rvalPtr, 1);

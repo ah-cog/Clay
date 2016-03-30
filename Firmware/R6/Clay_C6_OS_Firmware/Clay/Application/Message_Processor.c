@@ -30,16 +30,16 @@ static int8_t Process_Set_Event_State(Message *message);
 int8_t Process_Incoming_Message(Message *message) {
 
 //   int8_t status = NULL;
-   //TODO: unused
+   // TODO: unused
 //   int8_t result = NULL;
 //   char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-   //TODO: unused
+   // TODO: unused
 //   int token_count = 0;
 
    char *message_content = NULL;
    message_content = (*message).content;
 
-//   token_count = //TODO: unused
+//   token_count = // TODO: unused
          Get_Token_Count(message_content);
 
    // Reset the buffer
@@ -111,7 +111,7 @@ static uint8_t Message_Content_Parameter_Equals(Message *message, int token_inde
 
 static int8_t Process_Cache_Action(Message *message) {
 
-   //TODO: unused
+   // TODO: unused
 //   int8_t status = NULL;
    int8_t result = NULL;
 
@@ -143,7 +143,7 @@ static int8_t Process_Cache_Action(Message *message) {
 
 static int8_t Process_Start_Event(Message *message) {
 
-   //TODO: unused
+   // TODO: unused
 //   int8_t status = NULL;
    int8_t result = NULL;
 
@@ -159,7 +159,7 @@ static int8_t Process_Start_Event(Message *message) {
       // i.e., "start event <uuid>"
 
       // Get UUID (parameter index 2)
-//      status = //TODO: unused
+//      status = // TODO: unused
       Get_Token(message_content, uuid_buffer, 2);
 
       // Send message to sender to acknowledge receipt
@@ -185,9 +185,9 @@ static int8_t Process_Start_Event(Message *message) {
       // i.e., "start event <event-uuid> at <index>"
 
       // Extract parameters
-//      status =  //TODO: unused
+//      status =  // TODO: unused
       Get_Token(message_content, uuid_buffer, 2);     // Get UUID of action being added (parameter index 2)
-//      status = //TODO: unused
+//      status = // TODO: unused
       Get_Token(message_content, uuid_buffer2, 4);     // Get UUID of action already on the loop (parameter index 4)
 
       // Send message to sender to acknowledge receipt
@@ -214,11 +214,11 @@ static int8_t Process_Start_Event(Message *message) {
 
 static int8_t Process_Stop_Event(Message *message) {
 
-   //TODO: unused
+   // TODO: unused
 //   int8_t status = NULL;
    int8_t result = NULL;
 
-   //TODO: unused
+   // TODO: unused
 //   int token_count = 0;
 
    char *message_content = (*message).content;
@@ -229,7 +229,7 @@ static int8_t Process_Stop_Event(Message *message) {
    if (strncmp(token, "event", strlen("event")) == 0) {
 
       // Get UUID (parameter index 2)
-//      status = //TODO: unused
+//      status = // TODO: unused
       Get_Token(message_content, uuid_buffer, 2);
 
       // Send message to sender to acknowledge receipt
@@ -269,9 +269,9 @@ static int8_t Process_Set_Event_Action(Message *message) {
    // i.e., "set event <event-uuid> action <action-uuid>"
 
    // Extract parameters
-//   status = //TODO: unused
+//   status = // TODO: unused
    Get_Token(message_content, uuid_buffer, 2);     // Get UUID of action being added (parameter index 2)
-//   status = //TODO: unused
+//   status = // TODO: unused
    Get_Token(message_content, uuid_buffer2, 4);     // Get UUID of action already on the loop (parameter index 4)
 
    // Send message to sender to acknowledge receipt
@@ -303,11 +303,11 @@ static int8_t Process_Set_Event_Action(Message *message) {
 
 static int8_t Process_Set_Event_State(Message *message) {
 
-   //TODO: unused
+   // TODO: unused
 //   int8_t status = NULL;
    int8_t result = NULL;
 
-   //TODO: unused
+   // TODO: unused
 //   int token_count = 0;
 
    char *message_content = (*message).content;
@@ -316,9 +316,9 @@ static int8_t Process_Set_Event_State(Message *message) {
    // i.e., "set event <event-uuid> action <action-uuid>"
 
    // Extract parameters
-//   status = //TODO: unused
+//   status = // TODO: unused
    Get_Token(message_content, uuid_buffer, 2);     // Get UUID of action (parameter index 2)
-//   status = //TODO unused
+//   status = // TODO unused
    Get_Token(message_content, uuid_buffer2, 4);     // Get state of action (parameter index 4)
 
    // Send message to sender to acknowledge receipt

@@ -17,7 +17,7 @@
 extern "C" {
 #include "Clock.h"
 #include "mpu_9250_driver.h"
-//TODO: update LED gpio drivers
+// TODO: update LED gpio drivers
 //#include "LED1.h"
 //#include "LED2.h"
 #include "RHRouter.h"
@@ -63,11 +63,11 @@ static uint32_t tx_time;
 static bool Initialized = false;
 
 ///prototypes //////////////////////////////////////////////////////
-//static void update_imu_leds(const mpu_values * remote_imu_data, RGB_Color colors[]); //TODO: unused
+//static void update_imu_leds(const mpu_values * remote_imu_data, RGB_Color colors[]); // TODO: unused
 static void upcount_hb_leds();
 static void update_mesh_mode(uint8_t * data, uint8_t len);
 static void mesh_update_imu_leds(uint8_t * data, uint8_t len);
-//static void complete_experiment_and_send(); //TODO: unused
+//static void complete_experiment_and_send(); // TODO: unused
 
 extern "C" {
 void MeshTestLoop() {
@@ -338,7 +338,7 @@ static void update_imu_leds(const mpu_values* remote_imu_data, Color_RGB colors[
 #endif
 
 static void upcount_hb_leds() {
-   //TODO: update LED gpio
+   // TODO: update LED gpio
 //    LED1_PutVal(LED1_DeviceData, !(hb_led_count & 0x02));
 //   LED2_PutVal(NULL, !(hb_led_count & 0x01));
    hb_led_count = (hb_led_count + 1) % 4;
@@ -350,7 +350,7 @@ static void update_mesh_mode(uint8_t * data, uint8_t len) {
 }
 
 static void mesh_update_imu_leds(uint8_t * data, uint8_t len) {
-   //TODO: update LED GPIO
+   // TODO: update LED GPIO
 //   LED1_PutVal(NULL, rx_led_toggle);
    rx_led_toggle = !rx_led_toggle;
 }

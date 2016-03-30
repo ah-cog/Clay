@@ -54,7 +54,7 @@ bool RH_Serial::waitAvailableTimeout(uint16_t timeout) {
 #else
    RHGenericDriver::waitAvailableTimeout(timeout);
 #endif
-   //TODO: return value
+   // TODO: return value
    return false;
 }
 

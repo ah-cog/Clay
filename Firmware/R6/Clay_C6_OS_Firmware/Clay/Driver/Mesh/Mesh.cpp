@@ -18,9 +18,9 @@
 
 extern "C" {
 #include "UUID.h"
-//#include "MESH_SPI.h" //TODO: update drivers
+//#include "MESH_SPI.h" // TODO: update SPI drivers
 #include "Clock.h"
-//#include "MESH_CE.h" //TODO: update drivers
+//#include "MESH_CE.h" // TODO: update SPI drivers
 //#include "MESH_CS.h"
 }
 
@@ -81,7 +81,7 @@ bool MeshRxEnabled;
 bool MeshTxEnabled;
 bool MeshMessagesAvailable;
 
-//TODO: Temp vars, used for remote button press demo.
+// TODO: Temp vars, used for remote button press demo.
 uint8_t ThisAddress;
 uint8_t RemoteAddress;
 
@@ -100,14 +100,14 @@ static found_mesh_node mesh_nodes[MAX_MESH_NODE_COUNT];
 static bool MeshStarted = false;
 static bool MeshPaused = false;
 
-//TODO: update drivers for SPI and mesh GPIOs
+// TODO: update SPI mesh GPIO drivers
 //static LDD_TEventMask SPI_EventMask;
 //LDD_TDeviceData* SPI_DeviceData;
 //LDD_TDeviceData* MESH_CE_DeviceData;
 //LDD_TDeviceData* MESH_CS_DeviceData;
 
 ///prototypes
-//static bool Find_Unused_Address_In_Routing_Table(); //TODO: unused
+//static bool Find_Unused_Address_In_Routing_Table(); // TODO: unused
 static void Clear_Mesh_Nodes();
 static void Send_Alive_Msg();
 static void Start_Mesh_Rx();
@@ -161,7 +161,7 @@ void Reset_Mesh() {
 
 //initialize the mesh objects.
 void Mesh_Init() {
-   //TODO: update spi and mesh gpios.
+   // TODO: update spi and mesh gpios.
 //   MESH_CE_DeviceData = MESH_CE_Init(MESH_CE_DeviceData);
 //   MESH_CS_DeviceData = MESH_CS_Init(MESH_CS_DeviceData);
 //   SPI_DeviceData = MESH_SPI_Init(SPI_DeviceData);
@@ -346,7 +346,7 @@ uint8_t Mesh_Tx_With_Retry(void * Data, uint8_t DataLength, uint8_t Destination)
 
    Send_Awaiting_Message(Add_Message_Awaiting_Response(&NewMessage));
 
-   //TODO: return value
+   // TODO: return value
    return 0;
 }
 
@@ -495,7 +495,7 @@ void Reinit_Mesh_Retries() {
 
 }
 
-//TODO: unused.
+// TODO: unused
 //looks for an address that hasn't been added to the routing table.
 //static bool Find_Unused_Address_In_Routing_Table()
 //{

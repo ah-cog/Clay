@@ -2,7 +2,7 @@
 
 int8_t LED_Enable() {
 
-   //TODO: update LED GPIO
+   // TODO: update LED GPIO
 //	(void) LED1_Init (NULL);
 //	(void) LED2_Init (NULL);
 //
@@ -27,7 +27,7 @@ void Set_LED_State(uint8_t number, uint8_t state) {     // i.e., set discrete st
 //		stateValue = false; // Set as input.
    }
 
-   //TODO: update LED GPIO
+   // TODO: update LED GPIO
    // Actually set the channel based on preparations above.
    if (number == LED1) {
 //		LED1_PutVal (NULL, stateValue);
@@ -38,7 +38,7 @@ void Set_LED_State(uint8_t number, uint8_t state) {     // i.e., set discrete st
 
 uint8_t Get_LED_State(uint8_t number) {     // i.e., get discrete input state
 
-   //TODO: update LED gpios
+   // TODO: update LED gpios
    // Actually set the channel based on preparations above.
    if (number == LED1) {
 //		return (uint8_t) LED1_GetVal (NULL);

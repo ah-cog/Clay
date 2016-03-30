@@ -10,7 +10,7 @@
 #include "stdlib.h"
 #include "stdint.h"
 #include "stdbool.h"
-//#include "I2C0.h" //TODO: update driver
+//#include "I2C0.h" // TODO: update I2c driver
 #include "I2C.h"
 
 ////defines
@@ -26,7 +26,7 @@ bool i2c_rx_complete;
 
 ////local function prototypes
 
-//TODO: init methods
+// TODO: init methods
 
 ////global function implementations
 //
@@ -35,7 +35,7 @@ bool i2c_rx_complete;
 //address is the I2C address of the device which is to be read
 bool I2C_Send_Message(uint8_t * message, int32_t size, uint8_t address) {
 
-   //TODO: Update driver.
+   // TODO: update I2c driver
    //   bool rval = I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, address);
 //
 //
@@ -61,7 +61,7 @@ bool I2C_Send_Message(uint8_t * message, int32_t size, uint8_t address) {
 //address is the I2C address of the device which is to be read
 bool I2C_Receive_Message(uint8_t * tx_buf, int32_t tx_size, uint8_t * rx_buf, int32_t rx_size, uint8_t address) {
 
-   //TODO: update driver.
+   // TODO: update I2c driver
 //   LDD_TError rval = I2C_Send_Message(tx_buf, tx_size, address);
 //
 //   if (!rval) {

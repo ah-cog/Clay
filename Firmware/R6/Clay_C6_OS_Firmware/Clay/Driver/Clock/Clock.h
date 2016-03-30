@@ -12,7 +12,7 @@ extern bool tick_500ms;
 extern bool tick_1000ms;
 extern bool tick_3000ms;
 
-//todo: configurable ticks
+// TODO: configurable ticks
 
 extern uint32_t Millis();
 extern void Wait(uint32_t wait_ms);

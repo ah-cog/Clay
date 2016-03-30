@@ -1,5 +1,5 @@
 ////Includes //////////////////////////////////////////////////////
-//TODO: update button GPIO driver.
+// TODO: update button GPIO driver.
 //#include "BUTTON_IN.h"
 #include "Button.h"
 #include "Clock.h"
@@ -28,7 +28,7 @@ static Button_Callback_Struct callbacks[BUTTON_CALLBACK_COUNT];
 static bool button_state;
 static uint32_t button_press_start_time;
 
-//TODO: update button GPIO driver
+// TODO: update button GPIO driver
 //static LDD_TDeviceData * button_in_data;
 
 ////Local Prototypes///////////////////////////////////////////////
@@ -42,7 +42,7 @@ bool Button_Enable() {
 
    bool rval = false;
 
-   //TODO: update button GPIO driver
+   // TODO: update button GPIO driver
 //   button_in_data = BUTTON_IN_Init(NULL);
 //   button_state = BUTTON_IN_GetPortValue(button_in_data);
 
@@ -51,7 +51,7 @@ bool Button_Enable() {
 
 void Button_Disable() {
 
-   //TODO: update button GPIO driver.
+   // TODO: update button GPIO driver.
 //   BUTTON_IN_Deinit(button_in_data);
 }
 
@@ -203,7 +203,7 @@ void Unregister_Callback(Button_Handler handler) {
 
 bool Read_Button_State() {
 
-   //TODO: update button GPIO driver
+   // TODO: update button GPIO driver
 //   return BUTTON_IN_GetPortValue(button_in_data) & BUTTON_IN_button_field_MASK;
    return false;
 }

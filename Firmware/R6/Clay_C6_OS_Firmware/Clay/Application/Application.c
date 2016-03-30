@@ -10,12 +10,12 @@
 #include "Clock.h"
 #include "MPU9250.h"
 #include "LEDs.h"
-//#include "Events.h"       //TODO: new interrupt library
+//#include "Events.h"       // TODO: new interrupt library
 //#include "RGBDemo.h"
-//#include "ADC0.h"         //TODO: update ADC driver
+//#include "ADC0.h"         // TODO: update ADC driver
 
 #include "Buzzer.h"
-//#include "PowerOn.h"      //TODO: update UVLO GPIO
+//#include "PowerOn.h"      // TODO: update UVLO GPIO
 #include "Button.h"
 
 //static bool led_1_state;
@@ -31,7 +31,7 @@ static double vBat;
 uint32_t Button_Press_Time;
 uint32_t adcRead = 0;
 
-//TODO: update ADC driver
+// TODO: update ADC driver
 //LDD_TDeviceDataPtr ADC0_DeviceData;
 
 void Monitor_Periodic_Events();
@@ -52,7 +52,7 @@ void Initialize() {
    Enable_Actions();
 
    // Initialize bootloader.
-   //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
+   // TODO: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //	bool is_update_available = false;
 //	Initialize_Bootloader (); // TODO: Make this work!
 
@@ -117,7 +117,7 @@ void Initialize() {
       // Failure
    }
 
-   //TODO: troubleshoot MPU start with invensense drivers.
+   // TODO: troubleshoot MPU start with invensense drivers.
    if ((status = Start_MPU9250()) != true) {
       // Failure
    }
@@ -135,8 +135,8 @@ void Initialize() {
       // Failure
    }
 
-   //TODO: update vbat ADC driver.
-   //TODO: move power monitor code into a library.
+   // TODO: update vbat ADC driver.
+   // TODO: move power monitor code into a library.
    // Initialize Power Monitor
 //   ADC0_DeviceData = ADC0_Init(NULL);
 //
@@ -164,7 +164,7 @@ void Application(void) {
       // Monitor communication message queues.
       if (Has_Messages(&incomingMessageQueue) == true) {
          message = Wifi_Receive();
-//         status = //TODO: unused
+//         status = // TODO: unused
          Process_Incoming_Message(message);
 
          if (message != NULL) {
@@ -195,7 +195,7 @@ void Application(void) {
 //		}
 
 //        // Perform operating system operations.
-//        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
+//        // TODO: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //		is_update_available = Update_Available ();
 //		//if (is_update_available) {
 //		if (SharedData.UpdateApplication) {
@@ -262,7 +262,7 @@ void Monitor_Periodic_Events() {
    if (tick_1ms) {
       tick_1ms = false;
 
-      //TODO: these would be good as tasks
+      // TODO: these would be good as tasks
       Buzzer_Stop_Check();
       Imu_Get_Data();
       Button_Periodic_Call();
@@ -279,7 +279,7 @@ void Monitor_Periodic_Events() {
    if (tick_500ms) {
       tick_500ms = false;
 
-      //TODO: update LED driver
+      // TODO: update LED driver
 //      LED2_PutVal(NULL, led_2_state);
 //      LED1_PutVal(NULL, led_2_state);
 //      led_2_state = !led_2_state;
@@ -287,7 +287,7 @@ void Monitor_Periodic_Events() {
 //      //monitor the input voltage line. We need to shut down on low battery ~3.2v. See schematic for resistor divider and input scaling.
 //      if ((vBat != 0 && vBat < 3.2) || Button_Press_Time > 0 && (Millis() - Button_Press_Time) > 1500) {
 //
-//         //TODO: We may need a watchdog or high priority timer interrupt, or task, that
+//         // TODO: We may need a watchdog or high priority timer interrupt, or task, that
 //         //      checks to see if the user is holding down the button. Perhaps we just
 //         //      make it a high priority double-edge
 //
@@ -295,9 +295,9 @@ void Monitor_Periodic_Events() {
 //         //      the module down. If the user releases the button, continue operation
 //         //      as usual. Otherwise:
 //
-//         //TODO: stop doing things, shut down gracefully,  and then:
+//         // TODO: stop doing things, shut down gracefully,  and then:
 //
-//         //TODO: Make it apparent that Clay is ready to turn off. Stop flashing things. The power LED will remain on.
+//         // TODO: Make it apparent that Clay is ready to turn off. Stop flashing things. The power LED will remain on.
 //         //We wait for the user to release the button so that they don't immediately turn the module back on again.
 //
 //         LED2_PutVal(NULL, false);

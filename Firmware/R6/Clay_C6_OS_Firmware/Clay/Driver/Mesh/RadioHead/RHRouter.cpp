@@ -183,7 +183,7 @@ uint8_t RHRouter::sendtoWait(uint8_t* buf, uint8_t len, uint8_t dest, uint8_t fl
 // Waits for delivery to the next hop (but not for delivery to the final destination)
 uint8_t RHRouter::sendtoFromSourceWait(uint8_t* buf, uint8_t len, uint8_t dest, uint8_t source, uint8_t flags)
 {
-//    uint32_t limit = //TODO: unused
+//    uint32_t limit = // TODO: unused
           _driver.maxMessageLength();
     if (((uint16_t) len + sizeof(RoutedMessageHeader)) > _driver.maxMessageLength())
         return RH_ROUTER_ERROR_INVALID_LENGTH;

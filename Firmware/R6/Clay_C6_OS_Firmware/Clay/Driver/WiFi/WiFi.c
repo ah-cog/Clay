@@ -46,7 +46,7 @@ static char temp_address_string[50];
 
 static const char * message_terminator = "\n";
 
-//TODO: update driver
+// TODO: update serial driver
 //static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
 
@@ -56,21 +56,21 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    Wifi_Message_Available = false;
 
    // Initialize the ESP8266 device data structure
-//   deviceData.handle = ESP8266_Serial_Init(&deviceData); //TODO: update this struct.
+//   deviceData.handle = ESP8266_Serial_Init(&deviceData); // TODO: update serial driver
    deviceData.isSent = false;
    deviceData.rxChar = '\0';
    deviceData.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
 
    // Read any pending data to "clear the line"
 
-   //TODO: update serial driver
+   // TODO: update serial driver
 //   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar)) != 0) {
 //
 //   }
 
    State = Idle;
 
-   //TODO: update WiFi GPIOs
+   // TODO: update WiFi GPIOs
 //   WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
 
@@ -100,7 +100,7 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 
 void Wifi_State_Step() {
 
-   //TODO: if a transmission was waiting, we'll lose it here. Look at pendingbytecount? Maybe we don't care?
+   // TODO: if a transmission was waiting, we'll lose it here. Look at pendingbytecount? Maybe we don't care?
    //      This may just be test code, actually. The button handler in events.c is setting WifiSetProgramMode
    if (State != Transmission_Wait && State != Programming && WifiSetProgramMode) {
       Wifi_Set_Programming_Mode();
@@ -139,14 +139,14 @@ void Wifi_State_Step() {
 
             interruptRxTime = Millis();
 
-            //TODO: update serial driver
+            // TODO: update serial driver
 //            while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar))
 //                   == 0) {
 //
 //            }
             Ring_Buffer_Init();
 
-            //TODO: update WIFI GPIO
+            // TODO: update WIFI GPIO
 //            WIFI_GPIO2_PutVal(NULL, 0);
          }
 //         else if (Peek_Message(&outgoingMessageQueue) != NULL)
@@ -162,7 +162,7 @@ void Wifi_State_Step() {
             Ring_Buffer_Get(inBuffer + Pending_Receive_Byte_Count);
 
             if (inBuffer[Pending_Receive_Byte_Count++] == address_terminator[0]) {
-               //TODO: update WiFi GPIO
+               // TODO: update WiFi GPIO
 //               WIFI_GPIO2_PutVal(NULL, 1);
                WifiInterruptReceived = false;
                Wifi_Message_Available = true;
@@ -170,7 +170,7 @@ void Wifi_State_Step() {
             }
          } else if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
 
-            //TODO: update WiFi GPIO
+            // TODO: update WiFi GPIO
 //            WIFI_GPIO2_PutVal(NULL, 1);
             WifiInterruptReceived = false;
             State = Idle;
@@ -225,7 +225,7 @@ void Wifi_State_Step() {
       case Start_Transmission: {
          //signal to the WiFi that we're ready to send something
 
-         //TODO: update wifi gpio
+         // TODO: update wifi gpio
 //         WIFI_GPIO2_PutVal(NULL, 0);
          State = Transmission_Wait;
          txStartTime = Millis();
@@ -238,10 +238,10 @@ void Wifi_State_Step() {
          if (WifiInterruptReceived) {
             WifiInterruptReceived = false;
             deviceData.isSent = false;
-//            ESP8266_Serial_SendBlock(deviceData.handle, outBuffer, pendingTransmitByteCount); //TODO: update driver
+//            ESP8266_Serial_SendBlock(deviceData.handle, outBuffer, pendingTransmitByteCount); // TODO: update serial driver
             State = Transmission_Sent;
          } else if (Millis() - txStartTime > INTERRUPT_TX_TIMEOUT_MS) {
-            //TODO: update wifi gpio
+            // TODO: update wifi gpio
 //            WIFI_GPIO2_PutVal(NULL, 1);
             State = Idle;
          }
@@ -252,7 +252,7 @@ void Wifi_State_Step() {
       case Transmission_Sent: {
          //transmission has been sent. back to idle for now, I guess
          if (deviceData.isSent) {
-            //TODO: update wifi gpio
+            // TODO: update wifi gpio
 //            WIFI_GPIO2_PutVal(NULL, 1);
             WifiInterruptReceived = false;
             State = Idle;
@@ -273,7 +273,7 @@ void Wifi_Set_Programming_Mode() {
    WifiInterruptReceived = true;
    programStartTime = Millis();
    Wait(1);
-   //TODO: update WiFi GPIOs
+   // TODO: update WiFi GPIOs
 
 //   WIFI_GPIO0_PutVal(NULL, 0);
 //   WIFI_GPIO2_PutVal(NULL, 1);
@@ -283,19 +283,19 @@ void Wifi_Set_Programming_Mode() {
 ///this may not be needed. The ESP seems to come out of programming mode automatically.
 void Wifi_Set_Operating_Mode() {
    State = Idle;
-   //TODO: update WiFi GPIOs
+   // TODO: update WiFi GPIOs
 //   WIFI_GPIO0_PutVal(NULL, 1);
    Wait(1);
-   //TODO: update WiFi GPIOs
+   // TODO: update WiFi GPIOs
 //   WIFI_GPIO2_PutVal(NULL, 1);
    Wifi_Do_Reset(true);
 }
 
 void Wifi_Do_Reset(bool StateMachineWaitForConnect) {
-   //TODO: update WiFi GPIOs
+   // TODO: update WiFi GPIOs
 //   WIFI_RESET_PutVal(NULL, 0);
    Wait(1);
-   //TODO: update WiFi GPIOs
+   // TODO: update WiFi GPIOs
 //   WIFI_RESET_PutVal(NULL, 1);
    Wait(100);
 
