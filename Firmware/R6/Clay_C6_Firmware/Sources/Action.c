@@ -9,6 +9,7 @@
 #define SIGNAL_ACTION_UUID  "bdb49750-9ead-466e-96a0-3aa88e7d246c"
 #define MESSAGE_ACTION_UUID "99ff8f6d-a0e7-4b6e-8033-ee3e0dc9a78e"
 #define PAUSE_ACTION_UUID   "56d0cf7d-ede6-4529-921c-ae9307d1afbc"
+#define BUZZER_ACTION_UUID  "16626b1e-cf41-413f-bdb4-0188e82803e2"
 #define SAY_ACTION_UUID     "269f2e19-1fc8-40f5-99b2-6ca67e828e70"
 
 uint32_t action_start_time = 0;
@@ -20,6 +21,7 @@ static int8_t Perform_Light_Action (char *state);
 static int8_t Perform_Signal_Action (char *state);
 static int8_t Perform_Pause_Action (char *state);
 static int8_t Perform_Message_Action (char *state);
+static int8_t Perform_Buzzer_Action (char *state);
 static int8_t Perform_Say_Action (char *state);
 
 uint8_t Initialize_Action_Cache () {
@@ -241,6 +243,11 @@ void Enable_Actions () {
 	// Pause
 	action = Create_Action (PAUSE_ACTION_UUID); // Create the action then cache it
 	Set_Action_Script (action, &Perform_Pause_Action);
+	Cache_Action (action);
+
+	// Buzzer
+	action = Create_Action (BUZZER_ACTION_UUID); // Create the action then cache it
+	Set_Action_Script (action, &Perform_Buzzer_Action);
 	Cache_Action (action);
 
 	// Say
@@ -500,6 +507,93 @@ static int8_t Perform_Pause_Action (char *state) {
 
 static int8_t Perform_Message_Action (char *state) {
 	// TODO: Make an action that queues a message.
+
+	// i.e., "<protocol> <destination> <message-content>"
+	// e.g., "UDP 192.168.1.30:8000 \"hello there\""
+	// e.g., "TCP 192.168.1.30:8000 \"hello there\""
+	// e.g., "MESH <device-uuid> \"hello there\""
+	// e.g., "HTTP POST service.com/smart/intelligence \"hello there\""
+
+	char param1[64] = { 0 };
+	char param2[64] = { 0 };
+	char param3[64] = { 0 };
+
+	// Only queue message if queue size is not exceeded.
+	if (Get_Message_Count (&outgoingMessageQueue) > 5) {
+		return TRUE;
+	}
+
+	// Extract parameters
+	Get_Token (state, param1, 0); // Get_Token_With_Delimiter(state, ' ', '\"', param1, 0);
+	Get_Token (state, param2, 1);
+	Get_Token (state, param3, 2);
+	Get_Token_With_Delimiter(state, ' ', '\'', param3, 2);
+
+	// Create message from state
+	Message *message = Create_Message (param3);
+	Set_Message_Type (message, param1);
+	Set_Message_Source (message, param2); // <HACK />
+	Set_Message_Destination (message, param2);
+
+	// Queue the outgoing message
+	Queue_Message (&outgoingMessageQueue, message);
+
+	return TRUE;
+}
+
+static int8_t Perform_Buzzer_Action (char *state) {
+	// TODO: Make an action that queues a message.
+
+	// i.e., "<note|frequency> <note|frequency> [<frequency-unit>] <duration> <duration-unit>"
+	// e.g., "note f# 3 ms"
+	// e.g., "frequency 160 hz 3 ms"
+
+	int8_t status = NULL;
+	int8_t result = NULL;
+
+	char param1[32] = { 0 };
+	char param2[32] = { 0 };
+	char param3[32] = { 0 };
+	char param4[32] = { 0 };
+	char param5[32] = { 0 };
+
+	uint32_t frequency = 0;
+	uint32_t duration = 0;
+
+	// Extract parameters
+	Get_Token (state, param1, 0);
+
+	if (strncmp (param1, "note", strlen ("note")) == 0) {
+		Get_Token (state, param2, 1);
+		Get_Token (state, param3, 2);
+		Get_Token (state, param4, 3);
+	} else if (strncmp (param1, "frequency", strlen ("frequency")) == 0) {
+		Get_Token (state, param2, 1);
+		Get_Token (state, param3, 2);
+		Get_Token (state, param4, 3);
+		Get_Token (state, param5, 4);
+	}
+
+	// Perform action
+	if (strncmp (param1, "note", strlen ("note")) == 0) {
+
+		// TODO: Buzzer_Play_Note ()
+
+		return TRUE;
+
+	} else if (strncmp (param1, "frequency", strlen ("frequency")) == 0) {
+
+		// Parse parameters
+		frequency = atoi (param2);
+		duration = atoi (param4);
+
+		// Call OS API with parameters
+		Buzzer_Play_Frequency (frequency, duration);
+
+		return TRUE;
+
+	}
+
 	return FALSE;
 }
 

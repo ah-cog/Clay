@@ -146,6 +146,20 @@ void Initialize() {
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
 }
 
+void Discovery_Broadcast_Presence () {
+
+	// TODO: Check if have IP address. Only broadcast if have IP address.
+
+	// Queue device discovery broadcast
+	char *uuid = Get_Unit_UUID();
+	sprintf(buffer2, "announce device %s", uuid);
+	Message *broadcastMessage = Create_Message(buffer2);
+	Set_Message_Type(broadcastMessage, "UDP");
+	Set_Message_Source(broadcastMessage, "192.168.43.255:4445");
+	Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
+	Queue_Message(&outgoingMessageQueue, broadcastMessage);
+}
+
 // TODO: Implement callback timer and timeout reset (like in JavaScript).
 
 int8_t button_mode = 0; // 0 = default, 1 = select channel
@@ -259,7 +273,7 @@ void Application(void) {
    */
 
    Button_Register_Release_Response (&Request_Change_Selected_Channel);
-   Button_Register_Hold_Response(1000, &Request_Change_Selected_Channel_Mode);
+   Button_Register_Hold_Response (1000, &Request_Change_Selected_Channel_Mode);
 
    for (;;) {
 
@@ -271,61 +285,27 @@ void Application(void) {
       Wifi_State_Step();
       Wifi_State_Step();
 
-      // Monitor incoming message queues and propagate them to the system's incoming queue.
-      // TODO: Check for Wi-Fi messages on the Wi-Fi queue, and put them onto the system incoming queue.
-      // Monitor communication message queues.
-      if (Has_Messages (&incomingWiFiMessageQueue) == TRUE) {
-      //if (Has_Messages(&incomingMessageQueue) == TRUE) {
-         //message = Wifi_Receive();
+      // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
+      if (Has_Messages (&incomingWiFiMessageQueue)) {
     	  message = Dequeue_Message (&incomingWiFiMessageQueue);
-//         status = Process_Incoming_Message(message);
-
-    	  // Move the message Wi-Fi message to the system's incoming message queue
-         if (message != NULL) {
-        	 Queue_Message (&incomingMessageQueue, message);
-         }
-
-         // TODO?: Queue_Message (&incomingMessageQueue, Dequeue_Message (&incomingWiFiMessageQueue));
+		  Queue_Message (&incomingMessageQueue, message);
       }
 
       // Process the next incoming message on the system queue
-      if (Has_Messages(&incomingMessageQueue) == TRUE) {
+      if (Has_Messages (&incomingMessageQueue)) {
          message = Dequeue_Message (&incomingMessageQueue);
-         if (message != NULL) {
-        	 status = Process_Incoming_Message (message);
-         }
+		 status = Process_Incoming_Message (message);
       }
-
-      // TODO: Fix Wi-Fi code to use outgoingWiFiMessageQueue (not outgoingMessageQueue), then enable transfering from system's outgoing queue to the Wi-Fi's outgoing message queue
 
       // Step state machine
       Wifi_State_Step();
       Wifi_State_Step();
 
-//		// Monitor communication message queues.
-//		if (Has_Messages (&incomingMessageQueue) == TRUE) {
-//			message = Dequeue_Message (&incomingMessageQueue);
-//			status = Process_Incoming_Message (message);
-////			if (status == TRUE) {
-////				Delete_Message (message);
-////			}
-//		}
-
-//		// Send the next message on the outgoing message queue.
-//		if (Has_Messages (&outgoingMessageQueue) == TRUE) {
-//			Message *message = Dequeue_Message (&outgoingMessageQueue);
-//			if ((status = Process_Outgoing_Message (message)) == TRUE) {
-//				// Delete_Message (message);
-//			}
-////			Delete_Message (message);
-//		}
-
+      // Forward messages on the outgoing system queue to the component-specific outgoing message queue.
       if (Has_Messages (&outgoingMessageQueue) == TRUE) {
-
-    	  // Dequeue message from system's outgoing message queue
     	  message = Dequeue_Message (&outgoingMessageQueue);
 
-    	  // Propagate to Wi-Fi message queue
+    	  // Propagate to Wi-Fi message queue (or other queue, if exists)
     	  if ((strncmp ((*message).type, "UDP", strlen ("UDP")) == 0) || (strncmp ((*message).type, "TCP", strlen ("TCP")) == 0)) {
 			  Queue_Message(&outgoingWiFiMessageQueue, message);
     	  }
@@ -345,19 +325,17 @@ void Application(void) {
 
       // Perform action.
       if ((*timeline).current_event != NULL) {
-         if (Process_Event(((*timeline).current_event)) != NULL) {
+         if (Process_Event (((*timeline).current_event)) != NULL) {
 
             // NOTE: Action was performed successfully.
 
             // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
 
-            // Go to the next action
+            // Go to the next action on the timeline
             if ((*((*timeline).current_event)).next != NULL) {
-               // Go to the next action.
-               (*timeline).current_event = (*((*timeline).current_event)).next;
+               (*timeline).current_event = (*((*timeline).current_event)).next; // Go to the next action.
             } else {
-               // Go to the start of the loop.
-               (*timeline).current_event = (*timeline).first_event;
+               (*timeline).current_event = (*timeline).first_event; // Go to the start of the loop.
             }
          }
       } else {
@@ -393,7 +371,7 @@ void Application(void) {
    }
 }
 
-bool io_state;
+//bool io_state;
 void Monitor_Periodic_Events() {
 
    // TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
@@ -476,18 +454,9 @@ void Monitor_Periodic_Events() {
    if (tick_3000ms) {
       tick_3000ms = FALSE;
 
-      // Queue device discovery broadcast
-      char *uuid = Get_Unit_UUID();
-      sprintf(buffer2, "announce device %s", uuid);
-      Message *broadcastMessage = Create_Message(buffer2);
-      Set_Message_Type(broadcastMessage, "UDP");
-      Set_Message_Source(broadcastMessage, "192.168.43.255:4445");
-      Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
-//      Set_Message_Source(broadcastMessage, "10.1.10.255:4445");
-//	  Set_Message_Destination(broadcastMessage, "10.1.10.255:4445");
-      Queue_Message(&outgoingMessageQueue, broadcastMessage);
-      //Queue_Message(&outgoingWiFiMessageQueue, broadcastMessage);
-//		Wifi_Send (broadcastMessage);
+//      WiFi_Request_Get_Internet_Address ();
+
+      Discovery_Broadcast_Presence ();
 
       // TODO: Perform any periodic actions (3000 ms).
    }

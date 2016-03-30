@@ -10,6 +10,9 @@
 
 #include "clayString.h"
 
+#include "Message.h"
+#include "Message_Queue.h"
+
 #ifndef DEFAULT_UUID_LENGTH
 #define DEFAULT_UUID_LENGTH 37
 #endif

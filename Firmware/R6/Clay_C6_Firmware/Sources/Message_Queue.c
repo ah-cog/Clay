@@ -14,6 +14,10 @@ int16_t Queue_Message (Message **messageQueue, Message *message) {
 	Message *lastMessage = NULL;
 	uint16_t messageCount = 0;
 
+	if (message == NULL) {
+		return NULL;
+	}
+
 	if ((*messageQueue) == NULL) {
 
 		// The queue is empty, so add it to the queue as the only element.
@@ -84,6 +88,30 @@ Message* Dequeue_Message (Message **messageQueue) {
 	}
 
 	return message;
+}
+
+int16_t Get_Message_Count (Message **messageQueue) {
+
+	Message *lastMessage = NULL;
+	uint16_t messageCount = 0;
+
+	if ((*messageQueue) == NULL) {
+
+		messageCount = 0;
+
+	} else {
+
+		// Search for the last element in the queue.
+		lastMessage = (*messageQueue); // Get the front of the queue.
+		messageCount++;
+		while ((*lastMessage).previous != NULL) {
+			lastMessage = (*lastMessage).previous;
+			messageCount++;
+		}
+
+	}
+
+	return messageCount;
 }
 
 int8_t Has_Messages (Message **messageQueue) {
