@@ -66,7 +66,7 @@ void Wifi_Test() {
       Wifi_State_Step();
 
       if (Wifi_Get_State() != Programming
-            && !Has_Messages(&outgoingMessageQueue)
+            && !Has_Messages(&outgoingWiFiMessageQueue)
             && Millis() - lastMessageSendTime > messageSendPeriod) {
          message = Create_Message(testMsg);
          Set_Message_Destination(message, addrStr);
@@ -92,7 +92,7 @@ void Wifi_Test() {
       Wifi_State_Step();
 
       //Monitor communication message queues.
-      if (Has_Messages(&incomingMessageQueue) == TRUE) {
+      if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
          message = Wifi_Receive();
          if (message != NULL && strcmp(message->type, "INFO")) {
             char * temp = message->destination;
