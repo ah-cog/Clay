@@ -38,6 +38,7 @@ int8_t Process_Incoming_Message (Message *message) {
 
 	// TODO: Handle messages from ESP8266:
 	// TODO: - INFO,CONNECTED
+	// TODO: - INFO,DISCONNECTED
 
 	if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "cache")) {
 		if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "action")) {

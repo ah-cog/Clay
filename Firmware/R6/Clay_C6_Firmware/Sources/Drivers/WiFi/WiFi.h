@@ -12,6 +12,9 @@
 #include "Message.h"
 #include "Message_Queue.h"
 
+extern Message *incomingWiFiMessageQueue;
+extern Message *outgoingWiFiMessageQueue;
+
 typedef enum {
 	Enable,
 	Programming,

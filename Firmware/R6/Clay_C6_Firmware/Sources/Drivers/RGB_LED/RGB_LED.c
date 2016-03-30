@@ -48,8 +48,22 @@ typedef struct {
 //CtrlReg= CHANNEL_INDEX + 0x25
 
 ////local vars
-static RGB_LED_Channel LED_Channels[RGB_MAX] = { { RGB1, 11, 12, 10 }, { RGB2, 14, 15, 13 }, { RGB3, 17, 18, 16 }, { RGB5, 23, 24, 22 }, { RGB4, 26, 27, 25 }, { RGB6, 20, 21, 19 }, { RGB7, 35, 36, 34 }, { RGB8, 32, 33, 31 }, { RGB9, 29, 30, 28 }, {
-		RGB10, 8, 9, 7 }, { RGB11, 5, 6, 4 }, { RGB12, 2, 3, 1 } };
+//static RGB_LED_Channel LED_Channels[RGB_MAX] = { { RGB1, 11, 12, 10 }, { RGB2, 14, 15, 13 }, { RGB3, 17, 18, 16 }, { RGB5, 23, 24, 22 }, { RGB4, 26, 27, 25 }, { RGB6, 20, 21, 19 }, { RGB7, 35, 36, 34 }, { RGB8, 32, 33, 31 }, { RGB9, 29, 30, 28 }, {
+//		RGB10, 8, 9, 7 }, { RGB11, 5, 6, 4 }, { RGB12, 2, 3, 1 } };
+static RGB_LED_Channel LED_Channels[RGB_MAX] = {
+		{ RGB1, 11, 12, 10 },
+		{ RGB2, 14, 15, 13 },
+		{ RGB3, 17, 18, 16 },
+		{ RGB4, 26, 27, 25 },
+		{ RGB5, 23, 24, 22 },
+		{ RGB6, 20, 21, 19 },
+		{ RGB7, 35, 36, 34 },
+		{ RGB8, 32, 33, 31 },
+		{ RGB9, 29, 30, 28 },
+		{ RGB12, 2, 3, 1 },
+		{ RGB11, 5, 6, 4 },
+		{ RGB10, 8, 9, 7 }
+};
 ////local function prototypes
 
 ////global function implementations
@@ -188,8 +202,10 @@ int8_t Apply_Channel_Lights () {
 				// Apply state.
 				Enable_Channel (channelLightProfiles[i].number, channelLightProfiles[i].enabled);
 
-//				// Check if the direction change. Apply the corresponding transform if it changed.
-//				if (updateChannelLightProfiles[i].color != channelLightProfiles[i].color)
+				// Check if the direction change. Apply the corresponding transform if it changed.
+//				if ((proposed_light_profiles[i].color.R != channelLightProfiles[i].color.R)
+//						|| (proposed_light_profiles[i].color.G != channelLightProfiles[i].color.G)
+//						|| (proposed_light_profiles[i].color.B != channelLightProfiles[i].color.B))
 //				{
 
 				// Update color.
