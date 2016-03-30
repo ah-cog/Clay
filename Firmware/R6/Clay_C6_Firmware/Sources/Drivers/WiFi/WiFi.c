@@ -1,6 +1,8 @@
 #include <Message.h>
 #include "stdint.h"
 #include "stdlib.h"
+#include "stdio.h"
+#include "stdbool.h"
 #include "string.h"
 
 #include "PE_Types.h"
@@ -12,7 +14,7 @@
 #include "WIFI_RESET.h"
 #include "Ring_Buffer.h"
 #include "Clock.h"
-#include "AddressSerialization.h"
+#include "Message_Info.h"
 
 Message *incomingWiFiMessageQueue = NULL;
 Message *outgoingWiFiMessageQueue = NULL;
@@ -73,7 +75,7 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 
    char addrStr[] = "\x12";
    char testMsg[64] = { '\0' };
-   sprintf (testMsg, "SETAP %s,%s", ssid, password);
+   sprintf(testMsg, "SETAP %s,%s", ssid, password);
 
    Wait(5000);
 
@@ -163,8 +165,7 @@ void Wifi_State_Step() {
                Wifi_Message_Available = TRUE;
                State = Deserialize_Received_Message;
             }
-         }
-         else if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
+         } else if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
             WIFI_GPIO2_PutVal(NULL, 1);
             WifiInterruptReceived = FALSE;
             State = Idle;
@@ -232,8 +233,7 @@ void Wifi_State_Step() {
             deviceData.isSent = FALSE;
             ESP8266_Serial_SendBlock(deviceData.handle, outBuffer, pendingTransmitByteCount);
             State = Transmission_Sent;
-         }
-         else if (Millis() - txStartTime > INTERRUPT_TX_TIMEOUT_MS) {
+         } else if (Millis() - txStartTime > INTERRUPT_TX_TIMEOUT_MS) {
             WIFI_GPIO2_PutVal(NULL, 1);
             State = Idle;
          }
@@ -307,4 +307,167 @@ Message* Wifi_Receive() {
 
 Wifi_States Wifi_Get_State() {
    return State;
+}
+
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//new API implemented below.
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+
+///macros
+
+///typedefs
+
+///local vars
+#define GET_IP_CMD_STR                "GET_IP"
+#define GET_GATEWAY_CMD_STR           "GET_GATEWAY"
+#define GET_SUBNET_CMD_STR            "GET_SUBNET"
+#define SET_AP_CMD_STR                "SETAP"
+
+///local prototypes
+static bool WiFi_Send_Command(char * command, char ** args, int arg_count);
+
+///global implementations
+bool WiFi_Enable() {
+   bool rval = FALSE;
+
+   Wifi_Message_Available = FALSE;
+
+   // Initialize the ESP8266 device data structure
+   deviceData.handle = ESP8266_Serial_Init(&deviceData);
+   deviceData.isSent = FALSE;
+   deviceData.rxChar = '\0';
+   deviceData.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
+
+   // Read any pending data to "clear the line"
+   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar)) != ERR_OK) {
+
+   }
+
+   State = Idle;
+
+   WIFI_CHIP_EN_PutVal(NULL, 1);
+   Wifi_Set_Operating_Mode();
+
+//   char addrStr[] = "\x12";
+//   char testMsg[64] = { '\0' };
+//   sprintf(testMsg, "SETAP %s,%s", ssid, password);
+
+//   Wait(5000);
+
+//   Message * message = Create_Message(testMsg);
+//   Set_Message_Type(message, "CMD");
+//   Set_Message_Destination(message, addrStr);
+//   Wifi_Send(message);
+
+   WifiInterruptReceived = FALSE;
+   WifiSetProgramMode = FALSE;
+
+   Initialize_Message_Queue(&incomingWiFiMessageQueue);
+   Initialize_Message_Queue(&outgoingWiFiMessageQueue);
+
+   pendingTransmitByteCount = 0;
+   interruptRxTime = 0;
+
+   rval = TRUE;
+
+   return rval;
+}
+
+bool WiFi_Disable() {
+   bool rval = false;
+   return rval;
+}
+
+// Requests the WiFi controller to connect to an access point with the specified SSID and password.
+// The WiFi controller will send a response in a "status" Message.
+bool WiFi_Request_Connect(char * ssid, char * password) {
+   char* args[] = { ssid, password };
+   return WiFi_Send_Command(SET_AP_CMD_STR, args, 2);
+}
+
+// Requests the WiFi controller to disconnect from the connected access point, if any.
+// The WiFi controller will send a response in a "status" Message.
+bool WiFi_Request_Disconnect() {
+   bool rval = false;
+   return rval;
+}
+
+// Requests connection status from WiFi controller. Connection status can be disconnected, connecting, connected, disconnecting, or unavailable.
+// The WiFi controller will send a response in a "status" Message with one of the statuses in a string formatted like "disconnected", "connecting", "connected", "disconnecting", or "unavailable".
+bool WiFi_Request_Get_Connection_Status() {
+   bool rval = false;
+   return rval;
+}
+
+// Requests the Internet (IP) address from the WiFi controller.
+// The WiFi controller will send a response in a "status" Message with the address in a string formatted like "192.168.1.10".
+bool WiFi_Request_Get_Internet_Address() {
+
+   return WiFi_Send_Command(GET_IP_CMD_STR, NULL, 0);
+}
+
+// Requests the WiFi controller to send the message. The message contains the messaging protocol (UDP, TCP, HTTP, or HTTPS),
+//  source address (IP string), destination address (IP string), and content (string).
+bool WiFi_Request_Send_Message(Message * message) {
+   bool rval = false;
+   return rval;
+}
+
+// Requests the WiFi controller to enable an access point with the specified SSID and password.
+// WiFi controller sends a response in a "status" Message with the AP connection status in a
+//   string formatted like "ap enable success" or "ap enable failure" or "ap disable success".
+bool WiFi_Request_Enable_Access_Point(char * ssid, char * password) {
+   bool rval = false;
+   return rval;
+}
+
+// Requests the WiFi controller to disable the access point, if enabled.
+bool WiFi_Request_Disable_Access_Point() {
+   bool rval = false;
+   return rval;
+}
+
+bool WiFi_Request_Start_Discovery_Service() {
+   bool rval = false;
+   return rval;
+}
+
+//TODO: capture command return values in this layer
+
+///local implementations
+static bool WiFi_Send_Command(char * command, char ** args, int arg_count) {
+
+   int buff_length = strlen(command) + 1;     //+1 for null.
+   Message * message;
+   char * send_buffer;
+
+   for (int i = 0; i < arg_count; ++i) {
+      buff_length += strlen(args[i]) + 1;     //+1 for comma;
+   }
+
+   send_buffer = calloc(buff_length, sizeof(char));
+
+   sprintf(send_buffer, "%s ", command);
+
+   for (int i = 0; i < arg_count; ++i) {
+
+      strcat(send_buffer, args[i]);
+
+      if (i < arg_count - 1) {
+         strcat(send_buffer, arg_delimiter);
+      }
+   }
+
+   message = Create_Message(send_buffer);
+   Set_Message_Destination(message, port_delimiter);
+   Set_Message_Source(message, port_delimiter);
+   Set_Message_Type(message, "CMD");
+
+   free(send_buffer);
+
+   return Wifi_Send(message);
 }
