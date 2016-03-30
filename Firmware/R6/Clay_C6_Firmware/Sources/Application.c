@@ -320,6 +320,17 @@ void Application(void) {
 ////			Delete_Message (message);
 //		}
 
+      if (Has_Messages (&outgoingMessageQueue) == TRUE) {
+
+    	  // Dequeue message from system's outgoing message queue
+    	  message = Dequeue_Message (&outgoingMessageQueue);
+
+    	  // Propagate to Wi-Fi message queue
+    	  if ((strncmp ((*message).type, "UDP", strlen ("UDP")) == 0) || (strncmp ((*message).type, "TCP", strlen ("TCP")) == 0)) {
+			  Queue_Message(&outgoingWiFiMessageQueue, message);
+    	  }
+      }
+
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //		is_update_available = Update_Available ();
@@ -474,8 +485,8 @@ void Monitor_Periodic_Events() {
       Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
 //      Set_Message_Source(broadcastMessage, "10.1.10.255:4445");
 //	  Set_Message_Destination(broadcastMessage, "10.1.10.255:4445");
-      //Queue_Message(&outgoingMessageQueue, broadcastMessage);
-      Queue_Message(&outgoingWiFiMessageQueue, broadcastMessage);
+      Queue_Message(&outgoingMessageQueue, broadcastMessage);
+      //Queue_Message(&outgoingWiFiMessageQueue, broadcastMessage);
 //		Wifi_Send (broadcastMessage);
 
       // TODO: Perform any periodic actions (3000 ms).
