@@ -9,11 +9,17 @@
 #include "WiFi.h"
 #include "Clock.h"
 #include "Ring_Buffer.h"
+#include "Button.h"
+#include "GPIO.h"
 //#include "Message.h"
-#include "AddressSerialization.h"
 
 void Wifi_Test() {
+
+   Enable_Channels();
+   Button_Enable();
    Enable_WiFi();
+
+   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
 
    Message *message = NULL;
    uint32_t lastMessageSendTime = 0;
@@ -24,13 +30,13 @@ void Wifi_Test() {
 
    memset(&DestinationAddr, 0, sizeof(DestinationAddr));
    char testMessageStr[] = "testacool";
-   char addrStr[] = "192.168.1.2";
+   char addr_string[] = "192.168.1.2";
    char serializedAddr[100];
    Message_Type mt;
 
    DestinationAddr.sin_family = AF_INET
    ;
-   inet_aton(addrStr, &DestinationAddr.sin_addr.s_addr);
+   inet_aton(addr_string, &DestinationAddr.sin_addr.s_addr);
    DestinationAddr.sin_port = htons(4445);
    DestinationAddr.sin_len = sizeof(DestinationAddr);
 
@@ -51,11 +57,11 @@ void Wifi_Test() {
 //   char addrStr[] = "UDP,192.168.1.1:1000";
 //   char testMsg[] = "SETAP hefnetm,dips00BOYNEdo$!&";
 
-   char addrStr[] = "CMD,\x12";
-   char testMsg[] = "SETAP hefnet,h3fn3r_is_better_than_me";
+   char addr_string[] = "CMD,\x12";
+   char commands[] = "SETAP hefnet,h3fn3r_is_better_than_me";
 
-   message = Create_Message(testMsg);
-   Set_Message_Destination(message, addrStr);
+   message = Create_Message(commands);
+   Set_Message_Destination(message, addr_string);
 #endif
 
 //echo and repeated send. include one of the blocks above.
@@ -68,8 +74,8 @@ void Wifi_Test() {
       if (Wifi_Get_State() != Programming
             && !Has_Messages(&outgoingWiFiMessageQueue)
             && Millis() - lastMessageSendTime > messageSendPeriod) {
-         message = Create_Message(testMsg);
-         Set_Message_Destination(message, addrStr);
+         message = Create_Message(commands);
+         Set_Message_Destination(message, addr_string);
          Wifi_Send(message);
          lastMessageSendTime = Millis();
       }
@@ -77,10 +83,10 @@ void Wifi_Test() {
 
 #endif
 
-#if 1
+#if 0
 
-   char addrStr[] = ":";
-   char testMsg[] = "GET_IP";
+   char addr_string[] = ":";
+   char commands[] = "GET_IP";
 
    Wait(5000);
 
@@ -113,6 +119,30 @@ void Wifi_Test() {
 //         last_ip_get = Millis();
 //      }
    }
+#endif
+
+   //command tests
+#if 1
+   char addr_string[] = ":";
+   char *commands[] = { "GET_IP", "GET_GATEWAY", "GET_SUBNET", "SETAP hefnetm, dips00BOYNEdo$!&", "", "", "", "", };
+   int command_count = 4;
+   int test_message_index = 0;
+   int period_ms = 5000;
+
+   int last_ip_get = 0;
+
+   for (;;) {
+
+      // Step state machine
+      Wifi_State_Step();
+
+      if (Millis() - lastMessageSendTime >= period_ms) {
+         WiFi_Request_Connect("hefnetm", "dips00BOYNEdo$!&");
+//         WiFi_Request_Get_Internet_Address();
+         lastMessageSendTime = Millis();
+      }
+   }
+
 #endif
 
 //serialization tests.

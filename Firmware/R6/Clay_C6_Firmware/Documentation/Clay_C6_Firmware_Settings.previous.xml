@@ -497,36 +497,57 @@
       <EmptySection_DummyValue />
     </Events>
   </Bean>
-  <Bean name="BuzzerSwitch" type="BitIO_LDD">
-    <Enabled v="N" />
+  <Bean name="BUZZER_PWM" type="PPG_LDD">
+    <Enabled v="Y" />
     <Properties>
-      <Component_name v="BuzzerSwitch" />
-      <Pin_for_I_O v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
-      <Direction v="Output" />
+      <Component_name v="BUZZER_PWM" />
+      <Module_name v="FTM0" />
+      <Counter v="FTM0_CNT" />
+      <Period_device v="FTM0_MOD" />
+      <Duty_device v="FTM0_C0V" />
+      <Output_pin v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
+      <boolgroup name="Interrupt service/event" v="Disabled" />
+      <Period init="7.152557 Hz" runtime_settings="interval" low="7.152557 Hz" high="15.625 kHz" />
+      <Starting_pulse_width v="70169.825 &amp;#181;s" />
+      <Initial_polarity v="low" />
       <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="1" />
-        <Auto_initialization v="yes" />
+        <Enabled_in_init__code v="yes" />
+        <group name="Event mask">
+          <OnEnd v="Disabled" />
+        </group>
       </group>
-      <Safe_mode v="no" />
     </Properties>
     <Methods>
       <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="don&amp;apos;t generate code" />
-      <SetInput v="don&amp;apos;t generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
+      <Deinit v="generate code" />
+      <Enable v="don&amp;apos;t generate code" />
+      <Disable v="don&amp;apos;t generate code" />
+      <SetEventMask v="don&amp;apos;t generate code" />
+      <GetEventMask v="don&amp;apos;t generate code" />
+      <GetEventStatus v="don&amp;apos;t generate code" />
+      <SelectPeriod v="don&amp;apos;t generate code" />
+      <SetPeriodUS v="don&amp;apos;t generate code" />
+      <SetPeriodMS v="generate code" />
+      <SetPeriodSec v="don&amp;apos;t generate code" />
+      <SetPeriodReal v="don&amp;apos;t generate code" />
+      <SetFrequencyHz v="generate code" />
+      <SetFrequencykHz v="don&amp;apos;t generate code" />
+      <SetFrequencyMHz v="don&amp;apos;t generate code" />
+      <SetRatio8 v="don&amp;apos;t generate code" />
+      <SetRatio16 v="generate code" />
+      <SetDutyUS v="don&amp;apos;t generate code" />
+      <SetDutyMS v="generate code" />
+      <SetDutySec v="don&amp;apos;t generate code" />
+      <SetDutyReal v="don&amp;apos;t generate code" />
+      <SetValue v="don&amp;apos;t generate code" />
+      <ClearValue v="don&amp;apos;t generate code" />
       <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
+      <SetOperationMode v="don&amp;apos;t generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
     </Methods>
     <Events>
-      <EmptySection_DummyValue />
+      <Event_module_name v="Events" />
+      <event name="OnEnd" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
   <Bean name="ADC0" type="ADC_LDD">
@@ -1415,405 +1436,357 @@ Autoselect
       <event name="OnError" v="don&amp;apos;t generate code" />
     </Events>
   </Bean>
-  <Bean name="IO_1" type="BitIO_LDD">
+  <Bean name="GPIO_PTB" type="GPIO_LDD">
     <Enabled v="Y" />
     <Properties>
-      <Component_name v="IO_1" />
-      <Pin_for_I_O v="PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28" />
-      <Direction v="Input/Output" />
+      <Component_name v="GPIO_PTB" />
+      <Port v="PTB" />
+      <Port_width v="32 bits" />
+      <Mask_of_allocated_pins v="15466497" />
+      <boolgroup name="Interrupt service/event" v="Enabled">
+        <Interrupt v="INT_PORTB" />
+        <Interrupt_priority v="medium priority" />
+      </boolgroup>
+      <list name="Bit fields" v="6">
+        <group name="Bit field">
+          <Field_name v="IO_4" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+        <group name="Bit field">
+          <Field_name v="IO_5" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+        <group name="Bit field">
+          <Field_name v="IO_6" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/RMII0_MDIO/MII0_MDIO/FTM1_QD_PHA" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+        <group name="Bit field">
+          <Field_name v="IO_7" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="PTB21/SPI2_SCK/FB_AD30/CMP1_OUT" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+        <group name="Bit field">
+          <Field_name v="IO_8" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+        <group name="Bit field">
+          <Field_name v="IO_9" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+      </list>
       <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
+        <group name="Event mask">
+          <OnPortEvent v="Enabled" />
+        </group>
       </group>
-      <Safe_mode v="no" />
     </Properties>
     <Methods>
       <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
+      <Deinit v="generate code" />
+      <SetEventMask v="generate code" />
+      <GetEventMask v="generate code" />
+      <SetPortEventCondition v="generate code" />
+      <GetPortEventStatus v="generate code" />
+      <SetPortValue v="generate code" />
+      <GetPortValue v="generate code" />
+      <ClearPortBits v="generate code" />
+      <SetPortBits v="generate code" />
+      <TogglePortBits v="generate code" />
+      <SetPortInputDirection v="generate code" />
+      <SetPortOutputDirection v="generate code" />
+      <SetFieldValue v="generate code" />
+      <GetFieldValue v="generate code" />
+      <ClearFieldBits v="generate code" />
+      <SetFieldBits v="generate code" />
+      <ToggleFieldBits v="generate code" />
+      <SetFieldInputDirection v="generate code" />
+      <SetFieldOutputDirection v="generate code" />
+      <SetOperationMode v="generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+      <ConnectPin v="generate code" />
     </Methods>
     <Events>
-      <EmptySection_DummyValue />
+      <Event_module_name v="Events" />
+      <event name="OnPortEvent" v="generate code">
+        <Event_procedure_name v="GPIO_PTB_OnPortEvent" />
+      </event>
     </Events>
   </Bean>
-  <Bean name="IO_2" type="BitIO_LDD">
+  <Bean name="GPIO_PTD" type="GPIO_LDD">
     <Enabled v="Y" />
     <Properties>
-      <Component_name v="IO_2" />
-      <Pin_for_I_O v="PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT" />
-      <Direction v="Input/Output" />
+      <Component_name v="GPIO_PTD" />
+      <Port v="PTD" />
+      <Port_width v="32 bits" />
+      <Mask_of_allocated_pins v="64" />
+      <boolgroup name="Interrupt service/event" v="Enabled">
+        <Interrupt v="INT_PORTD" />
+        <Interrupt_priority v="medium priority" />
+      </boolgroup>
+      <list name="Bit fields" v="1">
+        <group name="Bit field">
+          <Field_name v="IO_12" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+      </list>
       <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
+        <group name="Event mask">
+          <OnPortEvent v="Enabled" />
+        </group>
       </group>
-      <Safe_mode v="no" />
     </Properties>
     <Methods>
       <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
+      <Deinit v="generate code" />
+      <SetEventMask v="generate code" />
+      <GetEventMask v="generate code" />
+      <SetPortEventCondition v="generate code" />
+      <GetPortEventStatus v="generate code" />
+      <SetPortValue v="generate code" />
+      <GetPortValue v="generate code" />
+      <ClearPortBits v="generate code" />
+      <SetPortBits v="generate code" />
+      <TogglePortBits v="generate code" />
+      <SetPortInputDirection v="generate code" />
+      <SetPortOutputDirection v="generate code" />
+      <SetFieldValue v="generate code" />
+      <GetFieldValue v="generate code" />
+      <ClearFieldBits v="generate code" />
+      <SetFieldBits v="generate code" />
+      <ToggleFieldBits v="generate code" />
+      <SetFieldInputDirection v="generate code" />
+      <SetFieldOutputDirection v="generate code" />
+      <SetOperationMode v="generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+      <ConnectPin v="generate code" />
     </Methods>
     <Events>
-      <EmptySection_DummyValue />
+      <Event_module_name v="Events" />
+      <event name="OnPortEvent" v="generate code">
+        <Event_procedure_name v="GPIO_PTD_OnPortEvent" />
+      </event>
     </Events>
   </Bean>
-  <Bean name="IO_3" type="BitIO_LDD">
+  <Bean name="GPIO_PTC" type="GPIO_LDD">
     <Enabled v="Y" />
     <Properties>
-      <Component_name v="IO_3" />
-      <Pin_for_I_O v="PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28" />
-      <Direction v="Input/Output" />
+      <Component_name v="GPIO_PTC" />
+      <Port v="PTC" />
+      <Port_width v="32 bits" />
+      <Mask_of_allocated_pins v="196608" />
+      <boolgroup name="Interrupt service/event" v="Enabled">
+        <Interrupt v="INT_PORTC" />
+        <Interrupt_priority v="medium priority" />
+      </boolgroup>
+      <list name="Bit fields" v="2">
+        <group name="Bit field">
+          <Field_name v="IO_10" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+        <group name="Bit field">
+          <Field_name v="IO_11" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+      </list>
       <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
+        <group name="Event mask">
+          <OnPortEvent v="Enabled" />
+        </group>
       </group>
-      <Safe_mode v="no" />
     </Properties>
     <Methods>
       <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
+      <Deinit v="generate code" />
+      <SetEventMask v="generate code" />
+      <GetEventMask v="generate code" />
+      <SetPortEventCondition v="generate code" />
+      <GetPortEventStatus v="generate code" />
+      <SetPortValue v="generate code" />
+      <GetPortValue v="generate code" />
+      <ClearPortBits v="generate code" />
+      <SetPortBits v="generate code" />
+      <TogglePortBits v="generate code" />
+      <SetPortInputDirection v="generate code" />
+      <SetPortOutputDirection v="generate code" />
+      <SetFieldValue v="generate code" />
+      <GetFieldValue v="generate code" />
+      <ClearFieldBits v="generate code" />
+      <SetFieldBits v="generate code" />
+      <ToggleFieldBits v="generate code" />
+      <SetFieldInputDirection v="generate code" />
+      <SetFieldOutputDirection v="generate code" />
+      <SetOperationMode v="generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+      <ConnectPin v="generate code" />
     </Methods>
     <Events>
-      <EmptySection_DummyValue />
+      <Event_module_name v="Events" />
+      <event name="OnPortEvent" v="generate code">
+        <Event_procedure_name v="GPIO_PTC_OnPortEvent" />
+      </event>
     </Events>
   </Bean>
-  <Bean name="IO_4" type="BitIO_LDD">
+  <Bean name="GPIO_PTE" type="GPIO_LDD">
     <Enabled v="Y" />
     <Properties>
-      <Component_name v="IO_4" />
-      <Pin_for_I_O v="ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/RMII0_MDIO/MII0_MDIO/FTM1_QD_PHA" />
-      <Direction v="Input/Output" />
+      <Component_name v="GPIO_PTE" />
+      <Port v="PTE" />
+      <Port_width v="32 bits" />
+      <Mask_of_allocated_pins v="14" />
+      <boolgroup name="Interrupt service/event" v="Enabled">
+        <Interrupt v="INT_PORTE" />
+        <Interrupt_priority v="medium priority" />
+      </boolgroup>
+      <list name="Bit fields" v="3">
+        <group name="Bit field">
+          <Field_name v="IO_1" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/SDHC0_D0/TRACE_D3/I2C1_SCL/SPI1_SIN" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+        <group name="Bit field">
+          <Field_name v="IO_2" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="ADC0_DP2/ADC1_SE6a/PTE2/LLWU_P1/SPI1_SCK/UART1_CTS_b/SDHC0_DCLK/TRACE_D2" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+        <group name="Bit field">
+          <Field_name v="IO_3" />
+          <list name="Pins" v="1">
+            <group name="Pin">
+              <Pin v="ADC0_DM2/ADC1_SE7a/PTE3/SPI1_SIN/UART1_RTS_b/SDHC0_CMD/TRACE_D1/SPI1_SOUT" />
+              <boolgroup name="Initial pin direction" v="Input" />
+              <Initial_pin_event v="Disabled" />
+              <Lock_initialization_function v="no" />
+            </group>
+          </list>
+        </group>
+      </list>
       <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
+        <group name="Event mask">
+          <OnPortEvent v="Enabled" />
+        </group>
       </group>
-      <Safe_mode v="no" />
     </Properties>
     <Methods>
       <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
+      <Deinit v="generate code" />
+      <SetEventMask v="generate code" />
+      <GetEventMask v="generate code" />
+      <SetPortEventCondition v="generate code" />
+      <GetPortEventStatus v="generate code" />
+      <SetPortValue v="generate code" />
+      <GetPortValue v="generate code" />
+      <ClearPortBits v="generate code" />
+      <SetPortBits v="generate code" />
+      <TogglePortBits v="generate code" />
+      <SetPortInputDirection v="generate code" />
+      <SetPortOutputDirection v="generate code" />
+      <SetFieldValue v="generate code" />
+      <GetFieldValue v="generate code" />
+      <ClearFieldBits v="generate code" />
+      <SetFieldBits v="generate code" />
+      <ToggleFieldBits v="generate code" />
+      <SetFieldInputDirection v="generate code" />
+      <SetFieldOutputDirection v="generate code" />
+      <SetOperationMode v="generate code" />
+      <GetDriverState v="don&amp;apos;t generate code" />
+      <ConnectPin v="generate code" />
     </Methods>
     <Events>
-      <EmptySection_DummyValue />
+      <Event_module_name v="Events" />
+      <event name="OnPortEvent" v="generate code">
+        <Event_procedure_name v="GPIO_PTE_OnPortEvent" />
+      </event>
     </Events>
   </Bean>
-  <Bean name="IO_5" type="BitIO_LDD">
-    <Enabled v="Y" />
+  <Bean name="PPG1" type="PPG_LDD">
+    <Enabled v="N" />
     <Properties>
-      <Component_name v="IO_5" />
-      <Pin_for_I_O v="PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB" />
-      <Direction v="Input/Output" />
-      <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
-      </group>
-      <Safe_mode v="no" />
-    </Properties>
-    <Methods>
-      <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="IO_6" type="BitIO_LDD">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="IO_6" />
-      <Pin_for_I_O v="PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA" />
-      <Direction v="Input/Output" />
-      <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
-      </group>
-      <Safe_mode v="no" />
-    </Properties>
-    <Methods>
-      <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="IO_7" type="BitIO_LDD">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="IO_7" />
-      <Pin_for_I_O v="ADC0_DM2/ADC1_SE7a/PTE3/SPI1_SIN/UART1_RTS_b/SDHC0_CMD/TRACE_D1/SPI1_SOUT" />
-      <Direction v="Input/Output" />
-      <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
-      </group>
-      <Safe_mode v="no" />
-    </Properties>
-    <Methods>
-      <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="IO_8" type="BitIO_LDD">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="IO_8" />
-      <Pin_for_I_O v="ADC0_DP2/ADC1_SE6a/PTE2/LLWU_P1/SPI1_SCK/UART1_CTS_b/SDHC0_DCLK/TRACE_D2" />
-      <Direction v="Input/Output" />
-      <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
-      </group>
-      <Safe_mode v="no" />
-    </Properties>
-    <Methods>
-      <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="IO_9" type="BitIO_LDD">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="IO_9" />
-      <Pin_for_I_O v="ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/SDHC0_D0/TRACE_D3/I2C1_SCL/SPI1_SIN" />
-      <Direction v="Input/Output" />
-      <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
-      </group>
-      <Safe_mode v="no" />
-    </Properties>
-    <Methods>
-      <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="IO_10" type="BitIO_LDD">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="IO_10" />
-      <Pin_for_I_O v="ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT" />
-      <Direction v="Input/Output" />
-      <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
-      </group>
-      <Safe_mode v="no" />
-    </Properties>
-    <Methods>
-      <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="IO_11" type="BitIO_LDD">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="IO_11" />
-      <Pin_for_I_O v="PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b" />
-      <Direction v="Input/Output" />
-      <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
-      </group>
-      <Safe_mode v="no" />
-    </Properties>
-    <Methods>
-      <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="IO_12" type="BitIO_LDD">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="IO_12" />
-      <Pin_for_I_O v="PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b" />
-      <Direction v="Input/Output" />
-      <group name="Initialization">
-        <Init__direction v="Output" />
-        <Init__value v="0" />
-        <Auto_initialization v="no" />
-      </group>
-      <Safe_mode v="no" />
-    </Properties>
-    <Methods>
-      <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
-      <GetDir v="don&amp;apos;t generate code" />
-      <SetDir v="generate code" />
-      <SetInput v="generate code" />
-      <SetOutput v="don&amp;apos;t generate code" />
-      <GetVal v="generate code" />
-      <PutVal v="generate code" />
-      <ClrVal v="generate code" />
-      <SetVal v="generate code" />
-      <NegVal v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <GetRawVal v="don&amp;apos;t generate code" />
-    </Methods>
-    <Events>
-      <EmptySection_DummyValue />
-    </Events>
-  </Bean>
-  <Bean name="BUZZER_PWM" type="PPG_LDD">
-    <Enabled v="Y" />
-    <Properties>
-      <Component_name v="BUZZER_PWM" />
-      <Module_name v="FTM0" />
-      <Counter v="FTM0_CNT" />
-      <Period_device v="FTM0_MOD" />
-      <Duty_device v="FTM0_C0V" />
-      <Output_pin v="ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0" />
+      <Component_name v="PPG1" />
+      <Module_name v="FTM2" />
+      <Counter v="FTM2_CNT" />
+      <Period_device v="FTM2_MOD" />
+      <Duty_device v="FTM2_C0V" />
+      <Output_pin v="PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA" />
       <boolgroup name="Interrupt service/event" v="Disabled" />
-      <Period init="7.152557 Hz" runtime_settings="interval" low="7.152557 Hz" high="15.625 kHz" />
-      <Starting_pulse_width v="70169.825 &amp;#181;s" />
+      <Period init="1 ms" runtime_settings="interval" low="0.5 &amp;#181;s" high="1.092 ms" />
+      <Starting_pulse_width v="0.5 ms" />
       <Initial_polarity v="low" />
       <group name="Initialization">
-        <Enabled_in_init__code v="yes" />
+        <Enabled_in_init__code v="no" />
         <group name="Event mask">
           <OnEnd v="Disabled" />
         </group>
@@ -1822,8 +1795,8 @@ Autoselect
     <Methods>
       <Init v="generate code" />
       <Deinit v="generate code" />
-      <Enable v="don&amp;apos;t generate code" />
-      <Disable v="don&amp;apos;t generate code" />
+      <Enable v="generate code" />
+      <Disable v="generate code" />
       <SetEventMask v="don&amp;apos;t generate code" />
       <GetEventMask v="don&amp;apos;t generate code" />
       <GetEventStatus v="don&amp;apos;t generate code" />
@@ -1843,9 +1816,9 @@ Autoselect
       <SetDutyReal v="don&amp;apos;t generate code" />
       <SetValue v="don&amp;apos;t generate code" />
       <ClearValue v="don&amp;apos;t generate code" />
-      <ConnectPin v="don&amp;apos;t generate code" />
-      <SetOperationMode v="don&amp;apos;t generate code" />
-      <GetDriverState v="don&amp;apos;t generate code" />
+      <ConnectPin v="generate code" />
+      <SetOperationMode v="generate code" />
+      <GetDriverState v="generate code" />
     </Methods>
     <Events>
       <Event_module_name v="Events" />
