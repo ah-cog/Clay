@@ -131,7 +131,7 @@ void Initialize() {
       // Failure
    }
 
-   if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
+   if ((status = Enable_WiFi("hefnet", "h3fn3r_is_better_than_me")) != TRUE) { // if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
       // Failure
    }
 
@@ -146,8 +146,120 @@ void Initialize() {
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
 }
 
+// TODO: Implement callback timer and timeout reset (like in JavaScript).
+
+int8_t button_mode = 0; // 0 = default, 1 = select channel
+uint32_t button_mode_timeout = 0;
+int8_t selected_channel = -1;
+int8_t selected_channel_mode = -1;
+int8_t changed_channel_mode = FALSE;
+
+void Request_Reset_Button () {
+	int i;
+
+	// Reset button logic state
+	button_mode = 0;
+	button_mode_timeout = 0;
+	selected_channel--; // selected_channel = -1; // Michael likes the selected channel to be remembered. Allows picking up where left off.
+	selected_channel_mode = 0;
+	changed_channel_mode = FALSE;
+
+	// Reset the state of all lights
+	for (i = 0; i < 12; i++) {
+		proposed_light_profiles[i].enabled = TRUE;
+		Set_Light_Color (&proposed_light_profiles[i], 0, 0, 0);
+	}
+
+	// Apply the new light states
+	Apply_Channels ();
+	Apply_Channel_Lights ();
+}
+
+void Request_Change_Selected_Channel () {
+
+	if (button_mode == 0) {
+		button_mode = 1;
+	}
+
+	if (button_mode == 1) {
+
+		button_mode_timeout = 3000;
+
+		if (changed_channel_mode == TRUE) {
+			changed_channel_mode = FALSE;
+			return;
+		}
+
+		if (selected_channel_mode == -1) {
+			selected_channel_mode = 0;
+		}
+		Change_Selected_Channel ();
+	}
+}
+
+void Change_Selected_Channel () {
+	int i;
+	selected_channel = (selected_channel + 1) % 12;
+
+	if (selected_channel >= 0 && selected_channel < 12) {
+
+		// Reset the state of all lights
+		for (i = 0; i < 12; i++) {
+			proposed_light_profiles[i].enabled = TRUE;
+			Set_Light_Color (&proposed_light_profiles[i], 0, 0, 0);
+		}
+
+		// Set the state of the selected channel's light
+		proposed_light_profiles[selected_channel].enabled = TRUE;
+
+		if (selected_channel_mode == 0) {
+			Set_Light_Color (&proposed_light_profiles[selected_channel], 50, 160, 200);
+		} else if (selected_channel_mode == 1) {
+			Set_Light_Color (&proposed_light_profiles[selected_channel], 250, 90, 20);
+		}
+
+		// TODO: Set the selected channel as input (if first device)
+
+		// Apply the new light states
+		Apply_Channels ();
+		Apply_Channel_Lights ();
+	}
+}
+
+void Request_Change_Selected_Channel_Mode () {
+	if (changed_channel_mode == FALSE) {
+		selected_channel_mode = (selected_channel_mode + 1) % 2;
+		changed_channel_mode = TRUE;
+
+		if (selected_channel_mode == 0) {
+			Set_Light_Color (&proposed_light_profiles[selected_channel], 50, 160, 200);
+		} else if (selected_channel_mode == 1) {
+			Set_Light_Color (&proposed_light_profiles[selected_channel], 250, 90, 20);
+		}
+
+		// TODO: Set the selected channel as input (if first device)
+
+		// Apply the new light states
+		Apply_Channels ();
+		Apply_Channel_Lights ();
+	}
+}
+
 void Application(void) {
    Message *message = NULL;
+
+   /*
+   // Get the IP address
+   // TODO: Implement this in WiFi_Request_Get_Internet_Address() according to the interface specification.
+   message = Create_Message ("GET_IP");
+   Set_Message_Type (message, "CMD");
+   Set_Message_Destination (message, "\x12");
+   Wifi_Send (message);
+   message = NULL;
+   */
+
+   Button_Register_Release_Response (&Request_Change_Selected_Channel);
+   Button_Register_Hold_Response(1000, &Request_Change_Selected_Channel_Mode);
 
    for (;;) {
 
@@ -159,15 +271,32 @@ void Application(void) {
       Wifi_State_Step();
       Wifi_State_Step();
 
+      // Monitor incoming message queues and propagate them to the system's incoming queue.
       // TODO: Check for Wi-Fi messages on the Wi-Fi queue, and put them onto the system incoming queue.
       // Monitor communication message queues.
-      if (Has_Messages(&incomingMessageQueue) == TRUE) {
-         message = Wifi_Receive();
-         status = Process_Incoming_Message(message);
-         if (message != NULL) {
+      if (Has_Messages (&incomingWiFiMessageQueue) == TRUE) {
+      //if (Has_Messages(&incomingMessageQueue) == TRUE) {
+         //message = Wifi_Receive();
+    	  message = Dequeue_Message (&incomingWiFiMessageQueue);
+//         status = Process_Incoming_Message(message);
 
+    	  // Move the message Wi-Fi message to the system's incoming message queue
+         if (message != NULL) {
+        	 Queue_Message (&incomingMessageQueue, message);
+         }
+
+         // TODO?: Queue_Message (&incomingMessageQueue, Dequeue_Message (&incomingWiFiMessageQueue));
+      }
+
+      // Process the next incoming message on the system queue
+      if (Has_Messages(&incomingMessageQueue) == TRUE) {
+         message = Dequeue_Message (&incomingMessageQueue);
+         if (message != NULL) {
+        	 status = Process_Incoming_Message (message);
          }
       }
+
+      // TODO: Fix Wi-Fi code to use outgoingWiFiMessageQueue (not outgoingMessageQueue), then enable transfering from system's outgoing queue to the Wi-Fi's outgoing message queue
 
       // Step state machine
       Wifi_State_Step();
@@ -222,6 +351,7 @@ void Application(void) {
          }
       } else {
 
+    	  /*
          // Reset the channel states...
          Reset_Channels();
          Apply_Channels();
@@ -232,6 +362,7 @@ void Application(void) {
 
          // ...and the device states.
          // TODO: Reset any other device states.
+          */
       }
 
       // Step state machine
@@ -263,6 +394,16 @@ void Monitor_Periodic_Events() {
       Buzzer_Stop_Check();
       Imu_Get_Data();
       Button_Periodic_Call();
+
+      // TODO: Put this in a callback timer...
+      if (button_mode_timeout > 0) {
+    	  button_mode_timeout--;
+
+    	  // Check if the button mode timer expired
+    	  if (button_mode_timeout == 0) {
+    		  Request_Reset_Button ();
+    	  }
+      }
 
       // TODO: Perform any periodic actions (1 ms).
    }
@@ -331,7 +472,10 @@ void Monitor_Periodic_Events() {
       Set_Message_Type(broadcastMessage, "UDP");
       Set_Message_Source(broadcastMessage, "192.168.43.255:4445");
       Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
-      Queue_Message(&outgoingMessageQueue, broadcastMessage);
+//      Set_Message_Source(broadcastMessage, "10.1.10.255:4445");
+//	  Set_Message_Destination(broadcastMessage, "10.1.10.255:4445");
+      //Queue_Message(&outgoingMessageQueue, broadcastMessage);
+      Queue_Message(&outgoingWiFiMessageQueue, broadcastMessage);
 //		Wifi_Send (broadcastMessage);
 
       // TODO: Perform any periodic actions (3000 ms).

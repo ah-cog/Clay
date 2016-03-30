@@ -14,6 +14,9 @@
 #include "Clock.h"
 #include "AddressSerialization.h"
 
+Message *incomingWiFiMessageQueue = NULL;
+Message *outgoingWiFiMessageQueue = NULL;
+
 #define OUT_BUFFER_LENGTH           1024
 #define IN_BUFFER_LENGTH            1024
 #define INTERRUPT_RX_TIMEOUT_MS     1000
@@ -69,7 +72,8 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    Wifi_Set_Operating_Mode();
 
    char addrStr[] = "\x12";
-   char testMsg[] = "SETAP hefnet,h3fn3r_is_better_than_me";
+   char testMsg[64] = { '\0' };
+   sprintf (testMsg, "SETAP %s,%s", ssid, password);
 
    Wait(5000);
 
@@ -81,8 +85,8 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
 
-//   Initialize_Message_Queue(&incomingMessageQueue);
-//   Initialize_Message_Queue(&outgoingMessageQueue);
+   Initialize_Message_Queue(&incomingWiFiMessageQueue);
+   Initialize_Message_Queue(&outgoingWiFiMessageQueue);
 
    pendingTransmitByteCount = 0;
    interruptRxTime = 0;
@@ -141,8 +145,8 @@ void Wifi_State_Step() {
 
             WIFI_GPIO2_PutVal(NULL, 0);
          }
-//         else if (Peek_Message(&outgoingMessageQueue) != NULL)
-         else if (Has_Messages(&outgoingMessageQueue) == TRUE) {
+//         else if (Peek_Message(&outgoingWiFiMessageQueue) != NULL)
+         else if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
             State = Serialize_Transmission;
          }
 
@@ -186,7 +190,7 @@ void Wifi_State_Step() {
             Set_Message_Destination(message, temp_dest_address);
 
             // Queue the message
-            Queue_Message(&incomingMessageQueue, message);
+            Queue_Message(&incomingWiFiMessageQueue, message);
          }
 
          State = Idle;
@@ -194,7 +198,7 @@ void Wifi_State_Step() {
       }
 
       case Serialize_Transmission: {
-         Message *message = Dequeue_Message(&outgoingMessageQueue);
+         Message *message = Dequeue_Message(&outgoingWiFiMessageQueue);
 
          //	(*message).source = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
          //	strcpy ((*message).source, address);
@@ -288,14 +292,14 @@ void Wifi_Do_Reset(bool StateMachineWaitForConnect) {
 }
 
 bool Wifi_Send(Message *message) {
-   Queue_Message(&outgoingMessageQueue, message);
+   Queue_Message(&outgoingWiFiMessageQueue, message);
    return TRUE;
 }
 
 Message* Wifi_Receive() {
    Message *message = NULL;
-   if (Has_Messages(&incomingMessageQueue) == TRUE) {
-      message = Dequeue_Message(&incomingMessageQueue);
+   if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
+      message = Dequeue_Message(&incomingWiFiMessageQueue);
       return message;
    }
    return NULL;
