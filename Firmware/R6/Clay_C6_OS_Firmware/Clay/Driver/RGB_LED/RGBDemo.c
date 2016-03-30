@@ -8,8 +8,8 @@
 ////includes
 #include "Clock.h"
 #include "RGB_LED.h"
-//#include "LED1.h"   //TODO: GPIO LED library
-//#include "Events.h" //TODO: New interrupt library.
+//#include "LED1.h"   // TODO: GPIO LED library
+//#include "Events.h" // TODO: New interrupt library.
 
 ////defines
 
@@ -50,7 +50,7 @@ static bool gDescending = true;
 static bool bDescending = true;
 
 static bool LastState = false;
-static bool ButtonPressed;     //TODO: use button library for this demo.
+static bool ButtonPressed;     // TODO: use button library for this demo.
 
 void RGBDemoLoop() {
    r = rDescending ? rMax : rMin;

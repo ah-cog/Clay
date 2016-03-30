@@ -73,7 +73,7 @@
 #ifndef MLTYPES_H
 #define MLTYPES_H
 
-//TODO: add cosf/sinf/etc functions, just use the regular double versions of those functions.
+// TODO: add cosf/sinf/etc functions, just use the regular double versions of those functions.
 
 
 #ifndef MPU9250

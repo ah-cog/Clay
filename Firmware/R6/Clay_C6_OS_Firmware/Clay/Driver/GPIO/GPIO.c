@@ -4,7 +4,7 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-//TODO: update GPIO drivers.
+// TODO: update GPIO drivers.
 //#include "GPIO_PTB.h"
 //#include "GPIO_PTC.h"
 //#include "GPIO_PTD.h"
@@ -24,7 +24,7 @@ typedef struct
 {
    IO_PORT port;
    uint32_t mask;
-//   LDD_GPIO_TBitField field; //TODO: update GPIO driver.
+//   LDD_GPIO_TBitField field; // TODO: update GPIO driver.
 } Channel_Map;
 
 ////Globals   /////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ Channel channel_profile[CHANNEL_COUNT];
 
 ////Local vars/////////////////////////////////////////////////////
 
-//TODO: update GPIO driver.
+// TODO: update GPIO driver.
 //static Channel_Map channel_map[PORT_MAX] = { { IO_PTE, GPIO_PTE_IO_1_MASK },            //PTE1
 //                                             { IO_PTE, GPIO_PTE_IO_2_MASK },            //PTE2
 //                                             { IO_PTE, GPIO_PTE_IO_3_MASK },            //PTE3
@@ -338,7 +338,7 @@ int8_t Apply_Channels() {
 // TODO: Remove this? Just use the above one that does per-channel enabling?
 int8_t Enable_Channels() {
 
-   //TODO: update GPIO driver.
+   // TODO: update GPIO driver.
 //   PTB_data = GPIO_PTB_Init(NULL);
 //   PTC_data = GPIO_PTC_Init(NULL);
 //   PTD_data = GPIO_PTD_Init(NULL);
@@ -351,7 +351,7 @@ int8_t Enable_Channel(uint8_t number, uint8_t enabled) {
 
    channel_profile[(number - 1)].enabled = enabled;
 
-   //TODO: update GPIO driver
+   // TODO: update GPIO driver
 
 //   switch (channel_map[number].port) {
 //      case IO_PTB: {
@@ -393,7 +393,7 @@ int8_t Enable_Channel(uint8_t number, uint8_t enabled) {
 
 void Set_Channel(uint8_t number, uint8_t direction, uint8_t mode) {
 
-   //TODO: update GPIO driver.
+   // TODO: update GPIO driver.
 //   switch (channel_map[number].port) {
 //      case IO_PTB: {
 //
@@ -448,7 +448,7 @@ void Set_Channel(uint8_t number, uint8_t direction, uint8_t mode) {
 
 void Set_Channel_Value(uint8_t number, uint8_t value) {     // i.e., set discrete state of the channel (on or off)
 
-   //TODO: update GPIO driver
+   // TODO: update GPIO driver
 //   switch (channel_map[number].port) {
 //      case IO_PTB: {
 //
@@ -508,7 +508,7 @@ int8_t Get_Channel_Value(uint8_t number) {     // i.e., Get discrete input state
 
    uint8_t value = 0xFF;
 
-   //TODO: update GPIO driver
+   // TODO: update GPIO driver
 //   switch (channel_map[number].port) {
 //      case IO_PTB: {
 //

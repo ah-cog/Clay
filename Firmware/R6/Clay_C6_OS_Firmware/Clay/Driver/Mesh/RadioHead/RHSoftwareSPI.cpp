@@ -86,26 +86,26 @@ void RHSoftwareSPI::begin() {
    digitalWrite(_sck, _clockPolarity);
 
    // Caution: these counts assume that digitalWrite is very fast, which is usually not true
-//    uint8_t delayCounts; //TODO: unused
+//    uint8_t delayCounts; // TODO: unused
    switch (_frequency) {
       case Frequency1MHz:
-//	    delayCounts = 8;    //TODO: unused
+//	    delayCounts = 8;    // TODO: unused
          break;
 
       case Frequency2MHz:
-//	    delayCounts = 4;    //TODO: unused
+//	    delayCounts = 4;    // TODO: unused
          break;
 
       case Frequency4MHz:
-//	    delayCounts = 2;    //TODO: unused
+//	    delayCounts = 2;    // TODO: unused
          break;
 
       case Frequency8MHz:
-//	    delayCounts = 1;    //TODO: unused
+//	    delayCounts = 1;    // TODO: unused
          break;
 
       case Frequency16MHz:
-//	    delayCounts = 0;    //TODO: unused
+//	    delayCounts = 0;    // TODO: unused
          break;
    }
 }

@@ -70,7 +70,7 @@ static RGB_LED_Channel LED_Channels[RGB_MAX] = { { RGB1, 11, 12, 10 },     //sto
 bool RGB_LED_Enable() {
 
    (void) LED_Channels;
-   //TODO: update RGB GPIO
+   // TODO: update RGB GPIO
 //   LED_SDB_PutVal(NULL, 1);
 
 //reset all LEDs to off.
@@ -79,7 +79,7 @@ bool RGB_LED_Enable() {
 //   GLOBAL_CONTROL_ADDR,
 //                      0x00 };     //shutdown register needs to be 1 to operate.
 
-   //TODO: update I2C Driver
+   // TODO: update I2C Driver
 //	I2C_Send_Message (temp, 2, RGB_LED_ADDR);
    Wait(1);
 //	I2C_Send_Message (temp + 2, 2, RGB_LED_ADDR);
@@ -90,11 +90,11 @@ bool RGB_LED_Enable() {
       RGB_LED_SetState((RGB_LED) i, true, LED_CURRENT_QUARTER);
    }
 
-   //TODO: update return values
+   // TODO: update return values
    return false;
 }
 
-//TODO: implement these
+// TODO: implement these
 bool RGB_LED_Start() {
    return false;
 
@@ -118,7 +118,7 @@ void RGB_LED_SetState(RGB_LED LED, bool On, LED_Mode CurrentMax) {
 //   UPDATE_REGISTER,
 //                      0x00 };     //start at blue, they are the lowest index on all LEDs
 
-   //TODO: update I2C driver
+   // TODO: update I2C driver
 //   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
 //   I2C_Send_Message(temp, 4, RGB_LED_ADDR);
 //   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
@@ -134,7 +134,7 @@ void RGB_LED_SetColor(RGB_LED LED, RGB_Color* Color) {
 //   UPDATE_REGISTER,
 //                      0x00 };     //start at blue, lowest index on all LEDs. green is highest
 
-   //TODO: update I2c driver
+   // TODO: update I2c driver
 //   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
 //   I2C_Send_Message(temp, 4, RGB_LED_ADDR);
 //   I2C_Send_Message(temp + 4, 2, RGB_LED_ADDR);
@@ -143,12 +143,12 @@ void RGB_LED_SetColor(RGB_LED LED, RGB_Color* Color) {
 
 void RGB_LED_UpdateOutput() {
 //   uint8_t temp[] = { UPDATE_REGISTER, 0x00 };
-   //TODO: update I2c driver.
+   // TODO: update I2c driver.
 //   I2C_Send_Message(temp, 2, RGB_LED_ADDR);
 }
 
 int8_t Start_Light_Behavior() {
-   //todo: start light behavior
+   // TODO: start light behavior
    return 0;
 }
 

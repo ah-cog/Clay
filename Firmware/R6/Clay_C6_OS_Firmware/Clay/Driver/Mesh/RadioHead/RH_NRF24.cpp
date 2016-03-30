@@ -156,7 +156,7 @@ bool RH_NRF24::sleep() {
       digitalWrite(_chipEnablePin, LOW);
       _mode = RHModeSleep;
    }
-   //TODO: return value
+   // TODO: return value
    return false;
 }
 
@@ -310,7 +310,7 @@ bool RH_NRF24::available() {
       validateRxBuf();
       //NOTE set mode idle regardless. We're using interrupts now, and we can't handle the
       //     second interrupt in time if it is generated.
-      //TODO: is the operation below necessary for some other modes?
+      // TODO: is the operation below necessary for some other modes?
 //        if (_rxBufValid)
 //            setModeIdle();        // Got one
    }

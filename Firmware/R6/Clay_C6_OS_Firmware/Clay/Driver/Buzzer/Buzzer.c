@@ -8,7 +8,7 @@
 ////Includes //////////////////////////////////////////////////////
 #include "Clock.h"
 #include "Buzzer.h"
-//TODO: update PWM driver
+// TODO: update PWM driver
 //#include "BUZZER_PWM.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -16,7 +16,7 @@
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
-//TODO: update PWM driver
+// TODO: update PWM driver
 //static LDD_TDeviceData * buzzer_pwm_data;
 static uint32_t notes[] = { 2093,            //c
                             2217,            //c#/db
@@ -43,7 +43,7 @@ bool Buzzer_Enable() {
 
    bool rval = false;
 
-   //TODO: update PWM driver
+   // TODO: update PWM driver
 //   LDD_TError err;
 
 //   buzzer_pwm_data = BUZZER_PWM_Init(NULL);
@@ -56,7 +56,7 @@ bool Buzzer_Enable() {
 
 bool Buzzer_Disable() {
 
-   //TODO: update PWM driver
+   // TODO: update PWM driver
 //   BUZZER_PWM_Deinit(buzzer_pwm_data);
 
    return true;
@@ -68,7 +68,7 @@ void Buzzer_Play_Note(NOTE_INDEX note, uint32_t duration_ms) {
 
 void Buzzer_Play_Frequency(uint32_t frequency, uint32_t duration_ms) {
 
-   //TODO: update PWM driver.
+   // TODO: update PWM driver.
 //   if (frequency > 0) {
 //      BUZZER_PWM_SetFrequencyHz(buzzer_pwm_data, frequency);
 //      BUZZER_PWM_SetRatio16(buzzer_pwm_data, Scale_Percent(75));

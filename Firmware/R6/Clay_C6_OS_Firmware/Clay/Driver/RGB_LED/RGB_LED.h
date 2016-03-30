@@ -9,7 +9,7 @@
 int8_t Start_Light_Behavior();
 bool Perform_Channel_Light_Effect(bool reverse);
 
-//todo: #define several LED colors (RGB_Color){0xFF,0xFF,0xFF}
+// TODO: #define several LED colors (RGB_Color){0xFF,0xFF,0xFF}
 
 //these values are the values in the SL field of each channel control register
 typedef enum

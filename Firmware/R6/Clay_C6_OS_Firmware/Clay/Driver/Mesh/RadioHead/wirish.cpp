@@ -11,7 +11,7 @@
 extern "C" {
 #include "Clock.h"
 
-//TODO: update mesh GPIO drivers
+// TODO: update mesh GPIO drivers
 //#include "MESH_CE.h"
 //#include "MESH_IRQ.h"
 //#include "MESH_CS.h"
@@ -36,7 +36,7 @@ void digitalWrite(uint8_t pin, uint8_t val) {
       //irq is input only
       return;
    } else if (pin == MESH_CE_PIN_INDEX) {
-      //TODO: update mesh GPIO
+      // TODO: update mesh GPIO
 //      MESH_CE_PutVal(NULL, val_bool);
    } else if (pin == MESH_SELECT_PIN_INDEX) {
 //      MESH_CS_PutVal(NULL, val_bool);
@@ -49,7 +49,7 @@ uint8_t digitalRead(uint8_t pin) {
    uint8_t rval = 0;
 
    if (pin == MESH_IRQ_PIN_INDEX) {
-      //TODO: update mesh GPIO
+      // TODO: update mesh GPIO
 //      rval = MESH_IRQ_GetFieldValue(NULL, IRQ);
    } else if (pin == MESH_CE_PIN_INDEX) {
 //      rval = MESH_CE_GetVal(NULL);

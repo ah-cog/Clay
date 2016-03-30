@@ -99,7 +99,7 @@ void Initialize_Unit_UUID()
     unitUuidBytes[15] = (unitUuidRegisters[3] >>  0) & 0xFF;
     */
 
-   //TODO: update these register definitions
+   // TODO: update these register definitions
 //   unitUuidBytes[0] = (SIM_UIDH >> 24) & 0xFF;
 //   unitUuidBytes[1] = (SIM_UIDH >> 16) & 0xFF;
 //   unitUuidBytes[2] = (SIM_UIDH >> 8) & 0xFF;
@@ -134,7 +134,7 @@ char* Get_Unit_UUID()
    return unitUuid;
 }
 
-///TODO: this is a stub.
+/// TODO: this is a stub.
 char* Get_Random_UUID()
 {
    ++randomUuid[0];

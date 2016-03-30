@@ -9,7 +9,7 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-//TODO: update flash driver.
+// TODO: update flash driver.
 //#include "FLASH1.h"
 #include "program_flash.h"
 
@@ -50,7 +50,7 @@ uint16_t Erase_Program_Flash_Page(uint32_t address) {
 
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
-      //TODO: update flash driver
+      // TODO: update flash driver
 //      FLASH1_Main(FLASH1_DeviceData);
    }
 
@@ -64,14 +64,14 @@ uint16_t Write_Program_Block(uint32_t destination, uint8_t *data, uint32_t lengt
    // Set up flash operation
    uint16_t rval = 0;
 
-   //TODO: update flash driver.
+   // TODO: update flash driver.
 //   uint16_t rval = FLASH1_Write(FLASH1_DeviceData, data, destination, length);
 
    flash_operation_completed = false;
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
 
-      //TODO: update flash driver.
+      // TODO: update flash driver.
 //      FLASH1_Main(FLASH1_DeviceData);
    }
 
@@ -88,14 +88,14 @@ uint16_t Write_Program_Checksum(uint16_t checksum) {
 //   uint8_t *data = (uint8_t *) &checksum;
 
    // Set up flash operation
-   //TODO: update flash driver
+   // TODO: update flash driver
 //   uint16_t rval = FLASH1_Write(FLASH1_DeviceData, data, APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE);
    uint16_t rval = 0;
 
    flash_operation_completed = false;
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
-      //TODO: update flash driver
+      // TODO: update flash driver
 //      FLASH1_Main(FLASH1_DeviceData);
    }
 
@@ -125,14 +125,14 @@ uint16_t Write_Program_Size(uint32_t size) {
 //   uint8_t *data = (uint8_t *) &size;
 
    // Set up flash operation
-   //TODO: update flash driver
+   // TODO: update flash driver
 //	uint16_t rval = FLASH1_Write (FLASH1_DeviceData, data, APP_SIZE_ADDRESS, APP_SIZE_SIZE);
    uint16_t rval = 0;
 
    flash_operation_completed = false;
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
-      //TODO: update flash driver.
+      // TODO: update flash driver.
 //      FLASH1_Main(FLASH1_DeviceData);
    }
 

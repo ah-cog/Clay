@@ -26,7 +26,7 @@ typedef enum
 
 typedef struct
 {
-//      LDD_TDeviceData *handle; //TODO: Update this struct
+//      LDD_TDeviceData *handle; // TODO: Update serial driver
       volatile uint8_t isSent;
       uint8_t rxChar;
       uint8_t (*rxPutFct)(char);

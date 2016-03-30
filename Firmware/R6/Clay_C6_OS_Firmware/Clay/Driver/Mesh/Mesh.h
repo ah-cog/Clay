@@ -89,9 +89,9 @@ typedef struct
 extern bool MeshRxEnabled;
 extern bool MeshTxEnabled;
 extern bool MeshMessagesAvailable;
-//extern LDD_TDeviceData *SPI_DeviceData; //TODO: update drivers
+//extern LDD_TDeviceData *SPI_DeviceData; // TODO: update SPI driver
 
-//TODO: Temp vars, used for remote button press demo.
+// TODO: Temp vars, used for remote button press demo.
 extern uint8_t ThisAddress;
 extern uint8_t RemoteAddress;
 

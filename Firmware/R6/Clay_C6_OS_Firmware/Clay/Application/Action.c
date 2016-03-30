@@ -320,10 +320,10 @@ int8_t Perform_Action_2(Action *action, char *state) {
 
 static int8_t Perform_Light_Action(char *state) {
 
-//	int8_t status = NULL; //TODO: unused
+//	int8_t status = NULL; // TODO: unused
    int8_t result = NULL;
    char token[32] = { 0 };
-//	int tokenInt = 0; //TODO: unused.
+//	int tokenInt = 0; // TODO: unused
    int i;
 
    // e.g., FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
@@ -336,7 +336,7 @@ static int8_t Perform_Light_Action(char *state) {
       int green = 0;
       int blue = 0;
 
-//		status = //TODO: unused
+//		status = // TODO: unused
       Get_Token(state, token, 1 + i);
 
       // Convert hex-encoded color string to separate red, green, and blue color indices.
@@ -366,7 +366,7 @@ static int8_t Perform_Signal_Action(char *state) {
 //	int8_t status = NULL; // TODO: unused
    int8_t result = NULL;
    char token[32] = { 0 };
-//	int tokenInt = 0; //TODO: unused
+//	int tokenInt = 0; // TODO: unused
    int i;
 
    // e.g., TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL
@@ -375,7 +375,7 @@ static int8_t Perform_Signal_Action(char *state) {
    // TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
    for (i = 0; i < 12; i++) {
 
-//		status = //TODO: unused
+//		status = // TODO: unused
       Get_Token(state, token, 1 + i);
 
 //			// Set LED state
@@ -483,7 +483,7 @@ static int8_t Perform_Pause_Action(char *state) {
    int pause_duration_integer = 0;
 
    // Set the action wait time (i.e., the time after the action before proceeding to the next one)
-//   status = //TODO: unused
+//   status = // TODO: unused
          Get_Token(state, token, 1);     // TODO: This is redundant. Remove redundancy!
    if (action_wait_time == 0) {
       pause_duration_integer = atoi(token);

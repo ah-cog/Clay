@@ -14,7 +14,7 @@
 #include "mpu_9250_driver.h"
 
 
-//TODO: update IMU gpio driver
+// TODO: update IMU gpio driver
 //#include "IMU_IRQ.h"
 
 #include "inv_mpu.h"
@@ -73,9 +73,9 @@ uint8_t Start_MPU9250() {
    quat_count = 0;
    quat_tail = 0;
 
-   //TODO: is the CS necessary here?
+   // TODO: is the CS necessary here?
    //toggle these lines to ensure the bus is in an idle state.
-   //TODO: update IMU gpio driver
+   // TODO: update IMU gpio driver
 //   IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 1);
 //   Wait(5);
 //   IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 0);
@@ -171,14 +171,14 @@ void Imu_Get_Data() {
 }
 
 const quaternion * get_quaternion_history(uint8_t* count, uint8_t * head) {
-   //TODO: we'll need to know the size of the measurement array, otherwise we'll just walk off the end when we try to iterate.
+   // TODO: we'll need to know the size of the measurement array, otherwise we'll just walk off the end when we try to iterate.
    *count = quat_count;
    *head = quat_head;
    return quat_history;
 }
 
 const mpu_values * get_raw_history(uint8_t* count, uint8_t * head) {
-   //TODO: we'll need to know the size of the measurement array, otherwise we'll just walk off the end when we try to iterate.
+   // TODO: we'll need to know the size of the measurement array, otherwise we'll just walk off the end when we try to iterate.
    *count = raw_count;
    *head = raw_head;
    return raw_history;

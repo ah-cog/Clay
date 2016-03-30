@@ -7,7 +7,7 @@
 
 // includes //////////////////
 #include "mpu_9250_driver.h"
-//#include "I2C0.h"         //TODO: update IMU i2c drivers
+//#include "I2C0.h"         // TODO: update IMU i2c drivers
 #include "Clock.h"
 
 // defines ///////////////////
@@ -121,12 +121,12 @@ uint8_t read_mpu9250(uint8_t device_addr, uint8_t reg_addr, uint8_t length, uint
    return receive_message(&reg_addr, 1, data, length, device_addr);
 }
 
-//TODO: these live in I2C.c/h now
+// TODO: these live in I2C.c/h now
 //tx_buf contains data that will be sent to the device.
 //tx_size is the number of bytes in tx_buf
 //address is the I2C address of the device which is to be read
 static bool send_message(uint8_t * message, int32_t size, uint8_t address) {
-   //TODO: update I2C drivers
+   // TODO: update I2C drivers
 //   LDD_TError rval = I2C0_SelectSlaveDevice(I2C0_DeviceData, LDD_I2C_ADDRTYPE_7BITS, address);
 //
 //   if (!rval) {
@@ -143,7 +143,7 @@ static bool send_message(uint8_t * message, int32_t size, uint8_t address) {
    return false;
 }
 
-//TODO: these live in I2C.c/h now
+// TODO: these live in I2C.c/h now
 //tx_buf contains command that will prepare the device for the read
 //tx_size is the number of bytes in tx_buf
 //rx_buf is the location where the returned data will be stored
@@ -151,7 +151,7 @@ static bool send_message(uint8_t * message, int32_t size, uint8_t address) {
 //address is the I2C address of the device which is to be read
 static bool receive_message(uint8_t * tx_buf, int32_t tx_size, uint8_t * rx_buf, int32_t rx_size, uint8_t address) {
 
-   //TODO: update I2C drivers
+   // TODO: update I2C drivers
 //   bool rval = send_message(tx_buf, tx_size, address);
 //
 //   if (!rval) {
@@ -209,7 +209,7 @@ static void mpu9250_write_mag_bitfield(uint8_t reg_addr, uint8_t lsb_index, uint
 
 static bool mpu9250_write_bitfield(uint8_t reg_addr, uint8_t lsb_index, uint8_t field_length, uint8_t data, uint8_t address) {
 
-   //TODO: update I2C driver
+   // TODO: update I2C driver
 //   uint8_t current_value;
 //
 //   uint8_t mask = (1 << field_length) - 1;
@@ -228,7 +228,7 @@ static bool mpu9250_write_bitfield(uint8_t reg_addr, uint8_t lsb_index, uint8_t 
 
 static bool mpu9250_write_bit(uint8_t reg_addr, uint8_t bit_index, uint8_t data, uint8_t address) {
 
-   //TODO: update I2C driver.
+   // TODO: update I2C driver.
 //   uint8_t current_value;
 //
 //   receive_message(&reg_addr, 1, &current_value, 1, address);
@@ -237,6 +237,6 @@ static bool mpu9250_write_bit(uint8_t reg_addr, uint8_t bit_index, uint8_t data,
 //   outgoing_msg_buf[1] = (data ? (current_value | (1 << bit_index)) : (current_value & ~(1 << bit_index)));
 //
 //   return send_message(outgoing_msg_buf, 2, address);
-   //TODO: return value
+   // TODO: return value
    return false;
 }
