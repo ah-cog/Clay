@@ -12,7 +12,7 @@
 #include "TCP_Connection_Manager.h"
 #include "UART.h"
 
-int Open_Sockets[TCP_MAX_CONNECTIONS];
+int open_sockets[TCP_MAX_CONNECTIONS];
 int i;
 struct sockaddr_in temp_addr_list;
 struct sockaddr_in temp_addr_query;
@@ -21,6 +21,9 @@ Message_Type temp_message_type;
 
 uint32 temp_addr_length;
 volatile bool socket_list_lock;
+
+
+//TODO: (idea, anyway) update this class to actually open and close sockets. Live up to that 'Manager' name.
 
 //TODO: in add socket, check for inactive connections
 //		-add a time of last activity, updated when receiving from or sending to
@@ -33,7 +36,7 @@ void ICACHE_RODATA_ATTR SocketListInitialize()
 	socket_list_lock = false;
 	for (i = 0; i < TCP_MAX_CONNECTIONS; ++i)
 	{
-		Open_Sockets[i] = -1;
+		open_sockets[i] = -1;
 	}
 }
 
@@ -51,9 +54,9 @@ int ICACHE_RODATA_ATTR SocketListAdd(int newSocket)
 	taskENTER_CRITICAL();
 	for (i = 0; i < TCP_MAX_CONNECTIONS; ++i)
 	{
-		if (Open_Sockets[i] == -1)
+		if (open_sockets[i] == -1)
 		{
-			Open_Sockets[i] = newSocket;
+			open_sockets[i] = newSocket;
 			rval = i;
 			break;
 		}
@@ -86,7 +89,7 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 
 	for (i = 0; i < TCP_MAX_CONNECTIONS; ++i)
 	{
-		if (Open_Sockets[i] == -1)
+		if (open_sockets[i] == -1)
 		{
 			continue;
 		}
@@ -94,7 +97,7 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 		//
 
 		taskEXIT_CRITICAL();
-		getpeername(Open_Sockets[i], (struct sockaddr* )&temp_addr_list,
+		getpeername(open_sockets[i], (struct sockaddr* )&temp_addr_list,
 				&temp_addr_length);
 		taskENTER_CRITICAL();
 
@@ -112,7 +115,7 @@ int ICACHE_RODATA_ATTR SocketListQuery(uint8* addrStr)
 				&& temp_addr_list.sin_addr.s_addr
 						== temp_addr_query.sin_addr.s_addr)
 		{
-			rval = Open_Sockets[i];
+			rval = open_sockets[i];
 
 //			printf("found sock:%d\r\n", rval);
 
@@ -137,10 +140,10 @@ void ICACHE_RODATA_ATTR SocketListRemove(int targetSocket)
 	taskENTER_CRITICAL();
 	for (i = 0; i < TCP_MAX_CONNECTIONS; ++i)
 	{
-		if (Open_Sockets[i] == targetSocket)
+		if (open_sockets[i] == targetSocket)
 		{
 //			printf("removed sock:%d\r\n", targetSocket);
-			Open_Sockets[i] = -1;
+			open_sockets[i] = -1;
 		}
 	}
 	taskEXIT_CRITICAL();

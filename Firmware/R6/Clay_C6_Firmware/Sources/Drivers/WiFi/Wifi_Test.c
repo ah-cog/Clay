@@ -83,19 +83,21 @@ void Wifi_Test() {
 
 #endif
 
-#if 0
+#if 1
 
-   char addr_string[] = ":";
-   char commands[] = "GET_IP";
+   bool request_connect = FALSE;
 
+   char * ssid = "hefnet";
+   char * password = "h3fn3r_is_better_than_me";
    Wait(5000);
 
-   int last_ip_get = 0;
+   WiFi_Request_Connect(ssid, password);
 
    for (;;) {
 
       // Step state machine
       Wifi_State_Step();
+      Button_Periodic_Call();
 
       //Monitor communication message queues.
       if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
@@ -109,27 +111,16 @@ void Wifi_Test() {
          }
       }
 
-//      if (Millis() - last_ip_get > 5000) {
-//         Message * get_ip_message = Create_Message(testMsg);
-//         Set_Message_Type(get_ip_message, "CMD");
-//         Set_Message_Destination(get_ip_message, addrStr);
-//         Set_Message_Source(get_ip_message, addrStr);
-//
-//         Wifi_Send(get_ip_message);
-//         last_ip_get = Millis();
-//      }
+      if (request_connect) {
+         request_connect = FALSE;
+         WiFi_Request_Connect(ssid, password);
+      }
    }
 #endif
 
    //command tests
-#if 1
-   char addr_string[] = ":";
-   char *commands[] = { "GET_IP", "GET_GATEWAY", "GET_SUBNET", "SETAP hefnetm, dips00BOYNEdo$!&", "", "", "", "", };
-   int command_count = 4;
-   int test_message_index = 0;
+#if 0
    int period_ms = 5000;
-
-   int last_ip_get = 0;
 
    for (;;) {
 

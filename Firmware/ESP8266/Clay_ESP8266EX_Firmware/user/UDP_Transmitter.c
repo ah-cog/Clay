@@ -65,6 +65,7 @@ static int32 testCounter;
 static Message_Type tempIgnoredMessageType;
 
 static Message * m;
+static xTaskHandle udp_tx_task;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -76,12 +77,15 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
 	UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
+	Initialize_Message_Queue(&outgoing_UDP_message_queue);
+	taskEXIT_CRITICAL();
+
 	State = Disable;
 
-	Initialize_Message_Queue(&outgoing_UDP_message_queue);
-
-	xTaskCreate(UDP_Transmitter_State_Step, "udptx1", 512, NULL, 2, NULL);
+	xTaskCreate(UDP_Transmitter_State_Step, "udptx1", 512, NULL, 2,
+			udp_tx_task);
 
 	testCounter = 0;
 

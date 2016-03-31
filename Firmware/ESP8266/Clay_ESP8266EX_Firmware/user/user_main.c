@@ -56,8 +56,10 @@ void ICACHE_RODATA_ATTR user_init(void)
 #endif
 
 	{
+		taskENTER_CRITICAL();
 		struct station_config *config = (struct station_config *) zalloc(
 				sizeof(struct station_config));
+		taskEXIT_CRITICAL();
 
 		sprintf(config->ssid, "hefnet");
 		sprintf(config->password, "h3fn3r_is_better_than_me");
