@@ -64,6 +64,7 @@ static uint32 serial_tx_count;
 static Message * temp_message;
 
 static uint32 time_temp;
+static xTaskHandle serial_tx_task;
 
 ////Local Prototypes///////////////////////////////////////////////
 
@@ -72,12 +73,15 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 {
 	bool rval = true;
 
-	state = Idle;
+	taskENTER_CRITICAL();
 	serial_tx_buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
-
 	Initialize_Message_Queue(&incoming_message_queue);
+	taskEXIT_CRITICAL();
 
-	xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 300, NULL, 2, NULL);
+	state = Idle;
+
+	xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 128, NULL, 2,
+			serial_tx_task);
 
 	return rval;
 }
@@ -145,6 +149,17 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 		{
 			if (!GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
 			{
+#ifdef PRINT_HIGH_WATER
+				taskENTER_CRITICAL();
+				printf("stx send\r\n");
+				taskEXIT_CRITICAL();
+				portENTER_CRITICAL();
+				UART_WaitTxFifoEmpty(UART0);
+				portEXIT_CRITICAL();
+
+				DEBUG_Print_High_Water();
+#endif
+
 				taskENTER_CRITICAL();
 				printf(serial_tx_buffer);
 				taskEXIT_CRITICAL();

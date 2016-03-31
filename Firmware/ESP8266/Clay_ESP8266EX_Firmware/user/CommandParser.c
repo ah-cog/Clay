@@ -54,6 +54,7 @@ char args_delimiter = ',';
 int i;
 static Message * m;
 static Command_Parser_States state;
+static xTaskHandle command_parser_task;
 
 ////Local Prototypes///////////////////////////////////////////////
 static CLAY_ESP_COMMANDS Command_String_Parse(char * CommandStr, char ** ArgStr);
@@ -69,11 +70,14 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
+	Initialize_Message_Queue(&incoming_command_queue);
+	taskEXIT_CRITICAL();
+
 	state = Idle;
 
-	Initialize_Message_Queue(&incoming_command_queue);
-
-	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL, 2, NULL);
+	xTaskCreate(Command_Parser_State_Step, "cmdParser", 128, NULL, 2,
+			command_parser_task);
 
 	return rval;
 }
@@ -108,6 +112,18 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 
 		case ParseCommand:
 		{
+#ifdef PRINT_HIGH_WATER
+			taskENTER_CRITICAL();
+			printf("cmdparse\r\n");
+			taskEXIT_CRITICAL();
+
+			portENTER_CRITICAL();
+			UART_WaitTxFifoEmpty(UART0);
+			portEXIT_CRITICAL();
+
+			DEBUG_Print_High_Water();
+#endif
+
 			taskENTER_CRITICAL();
 			m = Dequeue_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
