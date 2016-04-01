@@ -15,4 +15,7 @@ extern int Get_Subnet_Mask();
 extern int Get_Gateway_Address();
 extern int Get_IP_Address();
 
+extern void ICACHE_RODATA_ATTR DEBUG_Print(char * msg);
+extern void ICACHE_RODATA_ATTR DEBUG_Print_High_Water();
+
 #endif /* INCLUDE_ESP_UTILITIES_H_ */

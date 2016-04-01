@@ -175,6 +175,10 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 
 			}
 
+			//dequeue alloc's a message.
+			free(m);
+			m = NULL;
+
 			state = Idle;
 			break;
 		}

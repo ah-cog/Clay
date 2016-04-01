@@ -145,6 +145,8 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_State_Step()
 					&tempIgnoredMessageType);
 			taskEXIT_CRITICAL();
 
+			free(m);
+
 			State = Send_Message;
 			break;
 		}

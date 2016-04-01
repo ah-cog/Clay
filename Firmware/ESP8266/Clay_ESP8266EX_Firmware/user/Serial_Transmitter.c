@@ -133,6 +133,10 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 					temp_message->destination, address_terminator);
 			taskEXIT_CRITICAL();
 
+			//dequeue alloc's a message.
+			free(temp_message);
+			temp_message = NULL;
+
 			time_temp = system_get_time();
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 			gpio16_output_set(0);

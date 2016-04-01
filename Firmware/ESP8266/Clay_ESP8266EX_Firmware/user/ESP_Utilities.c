@@ -72,6 +72,13 @@ int ICACHE_RODATA_ATTR Get_Subnet_Mask()
 	return ip.netmask.addr;
 }
 
+void ICACHE_RODATA_ATTR DEBUG_Print(char * msg)
+{
+	taskENTER_CRITICAL();
+	printf("%s\r\n",msg);
+	taskEXIT_CRITICAL();
+}
+
 void ICACHE_RODATA_ATTR DEBUG_Print_High_Water()
 {
 	xTaskHandle task_handle = xTaskGetCurrentTaskHandle();

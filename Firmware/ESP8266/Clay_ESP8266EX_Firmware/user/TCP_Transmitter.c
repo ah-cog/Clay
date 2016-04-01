@@ -48,7 +48,6 @@ Message_Type temp_ignored_message_type;
 static Message * m;
 static Message message_temp;
 
-
 ////Local Prototypes///////////////////////////////////////////////
 static int TCP_Connect_Socket(struct sockaddr_in * remote_addr);
 static bool TCP_Send(int tx_socket, uint8* data, uint32 length);
@@ -120,6 +119,9 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 			Initialize_Message(&message_temp,
 					message_type_strings[MESSAGE_TYPE_TCP], m->source,
 					m->destination, m->content);
+
+			//dequeue alloc's a message.
+			free(m);
 			m = &message_temp;
 			taskEXIT_CRITICAL();
 

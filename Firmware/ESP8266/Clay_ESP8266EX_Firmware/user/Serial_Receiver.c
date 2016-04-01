@@ -233,7 +233,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 					break;
 				}
 #endif
-#if ENABLE_TCP_SENDER
+#if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED
 				case MESSAGE_TYPE_TCP:
 				{
 					taskENTER_CRITICAL();

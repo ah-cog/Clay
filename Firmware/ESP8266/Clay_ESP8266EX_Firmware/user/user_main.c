@@ -25,6 +25,7 @@
 #include "Serial_Transmitter.h"
 #include "UDP_Receiver.h"
 #include "UDP_Transmitter.h"
+#include "TCP_Combined.h"
 #include "TCP_Receiver.h"
 #include "TCP_Transmitter.h"
 #include "Message_Queue.h"
@@ -160,6 +161,10 @@ void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
 
 #if ENABLE_TCP_RECEIVER
 		TCP_Receiver_Init();
+#endif
+
+#if ENABLE_TCP_COMBINED
+		TCP_Combined_Init();
 #endif
 
 		UART_WaitTxFifoEmpty(UART0);
