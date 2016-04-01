@@ -12,6 +12,7 @@
 
 #include "Message.h"
 #include "Message_Queue.h"
+#include "Services/Interactive_Assembly.h"
 
 #ifndef DEFAULT_UUID_LENGTH
 #define DEFAULT_UUID_LENGTH 37
@@ -42,6 +43,8 @@ typedef struct Event {
 	struct Event *previous;
 	struct Event *next;
 } Event;
+
+extern Event* cache;
 
 extern void Enable_Actions ();
 extern Action* Create_Action (char *uuid); // TODO: Add function pointer parameter

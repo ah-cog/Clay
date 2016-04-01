@@ -334,6 +334,11 @@ static int8_t Perform_Light_Action (char *state) {
 
 	// e.g., FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
 
+	// Check if lights are being used by interactive assembly service
+	if (button_mode != 0) {
+		return TRUE;
+	}
+
 	// Update the channels
 	// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
 	for (i = 0; i < 12; i++) {
@@ -374,23 +379,14 @@ static int8_t Perform_Signal_Action (char *state) {
 	int tokenInt = 0;
 	int i;
 
-	// e.g., TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL TTOTL
+	// e.g., TITL TOTL
 
 	// Update the channels
 	// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
 	for (i = 0; i < 12; i++) {
 
-		status = Get_Token (state, token, 1 + i);
-
-//			// Set LED state
-//			if (token[0] == 'T') {
-//				updateChannelLightProfiles[i].enabled = TRUE;
-////					updateChannelLightProfiles[i].color = &onColor;
-//				Set_Light_Color (&updateChannelLightProfiles[i], onColor.R, onColor.G, onColor.B);
-//			} else {
-//				updateChannelLightProfiles[i].enabled = TRUE;
-//				Set_Light_Color (&updateChannelLightProfiles[i], offColor.R, offColor.G, offColor.B);
-//			}
+		// Get state of channel at index i (number i + 1)
+		status = Get_Token (state, token, i);
 
 		// Update the GPIO states
 		// TODO: Update the intermediate data structure and only update the actual GPIO when the state changes.
@@ -400,25 +396,25 @@ static int8_t Perform_Signal_Action (char *state) {
 
 		// Enable. Is the channel enabled?
 		// TODO: Add an additional state to handle "no change" for channel
-		updated_channel_profile[i].enabled = (token[1] == 'T' ? TRUE : FALSE); // HACK
+		updated_channel_profile[i].enabled = (token[0] == 'T' ? TRUE : FALSE); // HACK
 
 		// Direction. Set channel direction. Is the channel an input or output?
-		if (token[2] == 'I') {
+		if (token[1] == 'I') {
 			updated_channel_profile[i].direction = CHANNEL_DIRECTION_INPUT;
-		} else if (token[2] == 'O') {
+		} else if (token[1] == 'O') {
 			updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
-		} else if (token[2] == '-') {
+		} else if (token[1] == '-') {
 			// NOTE: Don't change!
 		}
 
 		// Mode. Set channel mode. Is it a toggle (discrete switch), waveform (continuous analog signal), or pulse (e.g., PWM).
-		if (token[3] == 'T') {
+		if (token[2] == 'T') {
 			updated_channel_profile[i].mode = CHANNEL_MODE_TOGGLE; // TODO: Rename this to MODE_TOGGLE
-		} else if (token[3] == 'W') {
+		} else if (token[2] == 'W') {
 			updated_channel_profile[i].mode = CHANNEL_MODE_WAVEFORM;
-		} else if (token[3] == 'P') {
+		} else if (token[2] == 'P') {
 			updated_channel_profile[i].mode = CHANNEL_MODE_PULSE;
-		} else if (token[3] == '-') {
+		} else if (token[2] == '-') {
 			// NOTE: Don't change!
 		}
 
@@ -426,9 +422,9 @@ static int8_t Perform_Signal_Action (char *state) {
 		if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
 			if (updated_channel_profile[i].mode == CHANNEL_MODE_TOGGLE) {
 				// Assign the channel's value based on the received data.
-				if (token[4] == 'H') {
+				if (token[3] == 'H') {
 					updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_ON;
-				} else if (token[4] == 'L') {
+				} else if (token[3] == 'L') {
 					updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 				} else {
 					// ERROR: Error. An unrecognized toggle value was specified.
@@ -471,7 +467,7 @@ static int8_t Perform_Signal_Action (char *state) {
 	// Apply channel
 	// TODO: Move this to a common place, maybe in Application in the loop logic.
 	Apply_Channels ();
-	Apply_Channel_Lights ();
+//	Apply_Channel_Lights ();
 
 	result = TRUE;
 

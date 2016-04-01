@@ -10,7 +10,7 @@ int8_t changed_channel_mode = FALSE;
 
 int8_t Enable_Interactive_Assembly () {
 	Button_Register_Release_Response (&Request_Change_Selected_Channel);
-	Button_Register_Hold_Response (1000, &Request_Change_Selected_Channel_Mode);
+	Button_Register_Hold_Response (DEFAULT_BUTTON_HOLD_TIME, &Request_Change_Selected_Channel_Mode);
 
    return TRUE;
 }
@@ -44,7 +44,7 @@ void Request_Change_Selected_Channel () {
 
 	if (button_mode == 1) {
 
-		button_mode_timeout = 3000;
+		button_mode_timeout = DEFAULT_BUTTON_MODE_TIMEOUT;
 
 		if (changed_channel_mode == TRUE) {
 			changed_channel_mode = FALSE;

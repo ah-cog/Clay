@@ -145,7 +145,9 @@ void Initialize() {
       ;
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
 
-   Enable_Interactive_Assembly ();
+   if ((status = Enable_Interactive_Assembly ()) != TRUE) {
+	   // Failure
+   }
 }
 
 void Discovery_Broadcast_Presence () {
@@ -201,16 +203,6 @@ void Application(void) {
       Wifi_State_Step();
       Wifi_State_Step();
 
-      // Forward messages on the outgoing system queue to the component-specific outgoing message queue.
-      if (Has_Messages (&outgoingMessageQueue) == TRUE) {
-    	  message = Dequeue_Message (&outgoingMessageQueue);
-
-    	  // Propagate to Wi-Fi message queue (or other queue, if exists)
-    	  if ((strncmp ((*message).type, "UDP", strlen ("UDP")) == 0) || (strncmp ((*message).type, "TCP", strlen ("TCP")) == 0)) {
-			  Queue_Message(&outgoingWiFiMessageQueue, message);
-    	  }
-      }
-
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
 //		is_update_available = Update_Available ();
@@ -252,6 +244,16 @@ void Application(void) {
          // ...and the device states.
          // TODO: Reset any other device states.
           */
+      }
+
+      // Forward messages on the outgoing system queue to the component-specific outgoing message queue.
+      if (Has_Messages (&outgoingMessageQueue) == TRUE) {
+    	  message = Dequeue_Message (&outgoingMessageQueue);
+
+    	  // Propagate to Wi-Fi message queue (or other queue, if exists)
+    	  if ((strncmp ((*message).type, "UDP", strlen ("UDP")) == 0) || (strncmp ((*message).type, "TCP", strlen ("TCP")) == 0)) {
+			  Queue_Message(&outgoingWiFiMessageQueue, message);
+    	  }
       }
 
       // Step state machine

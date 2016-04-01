@@ -5,7 +5,10 @@
 #include "PE_Types.h"
 #endif
 
-#include "Application.h"
+#include "RGB_LED.h"
+
+#define DEFAULT_BUTTON_HOLD_TIME 1000
+#define DEFAULT_BUTTON_MODE_TIMEOUT 2000
 
 extern int8_t button_mode; // 0 = default, 1 = select channel
 extern uint32_t button_mode_timeout;
