@@ -21,6 +21,8 @@
 #include "Event.h"
 #include "Timeline.h"
 
+#include "Services/Interactive_Assembly.h"
+
 /**
  * Initializes the device.
  */

@@ -104,7 +104,7 @@ int8_t Process_Event (Event *event) {
 
 	// TODO: Check event condition, and only call script if it is met.
 
-	Perform_Action_2 ((*event).action, (*event).state);
+	Perform_Action ((*event).action, (*event).state);
 
 	return result;
 }

@@ -1,41 +1,28 @@
-/*
- * Buzzer.c
- *
- *  Created on: Mar 15, 2016
- *      Author: thebh_000
- */
-
-////Includes //////////////////////////////////////////////////////
 #include "Clock.h"
 #include "Buzzer.h"
 #include "BUZZER_PWM.h"
 
-////Typedefs  /////////////////////////////////////////////////////
+static LDD_TDeviceData *buzzer_pwm_data;
 
-////Globals   /////////////////////////////////////////////////////
-
-////Local vars/////////////////////////////////////////////////////
-static LDD_TDeviceData * buzzer_pwm_data;
-static uint32_t notes[] = { 2093,            //c
-                            2217,            //c#/db
-                            2349,            //d
-                            2489,            //d#/eb
-                            2637,            //e
-                            2794,            //f
-                            2960,            //f#/gb
-                            3136,            //g
-                            3322,            //g#/ab
-                            3520,            //a
-                            3729,            //a#/bb
-                            3951,            //b
-                            0 };
+static uint32_t notes[] = {
+	2093,            //c
+	2217,            //c#/db
+	2349,            //d
+	2489,            //d#/eb
+	2637,            //e
+	2794,            //f
+	2960,            //f#/gb
+	3136,            //g
+	3322,            //g#/ab
+	3520,            //a
+	3729,            //a#/bb
+	3951,            //b
+	0
+};
 
 static uint32_t buzzer_stop_time;
 
-////Local Prototypes///////////////////////////////////////////////
 uint16 Scale_Percent(uint8_t percent);
-
-////Global implementations ////////////////////////////////////////
 
 bool Buzzer_Enable() {
 
@@ -83,7 +70,6 @@ void Buzzer_Stop_Check() {
    }
 }
 
-////Local implementations ////////////////////////////////////////
 uint16 Scale_Percent(uint8_t percent) {
    return (uint16) (((double) percent / 100.0) * 0xFFFF);
 }

@@ -29,6 +29,11 @@ int8_t Process_Incoming_Message (Message *message) {
 	int token_count = 0;
 
 	char *message_content = NULL;
+
+	if (message == NULL) {
+		return FALSE;
+	}
+
 	message_content = (*message).content;
 
 	token_count = Get_Token_Count (message_content);
