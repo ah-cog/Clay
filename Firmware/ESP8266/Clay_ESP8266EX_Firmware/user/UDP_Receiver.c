@@ -77,9 +77,9 @@ static int32 sock_fd;
 static bool Connected;
 static int32 testCounter;
 
-Message tempMessage;
-char * source_addr;
-char * dest_addr;
+static Message tempMessage;
+static char * source_addr;
+static char * dest_addr;
 static xTaskHandle udp_rx_task;
 
 ////Local Prototypes///////////////////////////////////////////////

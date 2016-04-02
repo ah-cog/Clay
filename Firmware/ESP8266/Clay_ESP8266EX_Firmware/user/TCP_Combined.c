@@ -26,6 +26,10 @@
 #define RECEIVE_DATA_SIZE				256
 #define TRANSMIT_DATA_SIZE				RECEIVE_DATA_SIZE
 #define LOCAL_TCP_PORT					1002
+#define ADDR_STRING_SIZE 				50
+#define CONNECT_TIMEOUT_ms				100
+#define LISTEN_TIMEOUT_ms				100
+#define CONNECT_ATTEMPT_MAX				10
 
 ////Typedefs  /////////////////////////////////////////////////////
 
@@ -33,13 +37,14 @@
 
 ////Local vars/////////////////////////////////////////////////////
 static int32 listen_sock;
-static int32 listen_return_sock;
 static int32 data_sock;
-
-static int32 failure_count;
 
 static int32 receive_count;
 static int32 transmit_count;
+
+static int32 current_outgoing_fail_count;
+
+static bool connected;
 
 static char *receive_data;
 static char *transmit_data;
@@ -48,14 +53,26 @@ static char *message_ptr;
 static char * local_address_string;
 static char * remote_address_string;
 
+struct sockaddr_in local_address;
+struct sockaddr_in remote_address;
+
 static Message temp_message;
+static Message * temp_message_ptr;
+static Message_Type * ignored_message_type;
 
 static xTaskHandle TCP_combined_handle;
 
 ////Local Prototypes///////////////////////////////////////////////
-static int32 Open_Listen_Connection(char * local_addr_string);
-static int32 Listen(int32 listen_socket, char * remote_addr_string);
-static int32 Open_Data_Connection();
+static int32 Open_Listen_Connection(char * local_addr_string,
+		struct sockaddr_in * local_addr);
+static int32 Listen(int32 listen_socket, char * remote_addr_string,
+		struct sockaddr_in * remote_addr);
+static int32 Open_Data_Connection(struct sockaddr_in * remote_addr);
+
+static bool Initiate_Connection_For_Outgoing_Message();
+static bool Dequeue_And_Transmit(int32 data_sock);
+static bool Receive_And_Enqueue(int32 data_sock);
+
 static bool Send_Message(int32 destination_socket, Message * m);
 static int32 Receive(int32 source_socket, char * message,
 		uint32 message_length_max);
@@ -64,14 +81,15 @@ static int32 Receive(int32 source_socket, char * message,
 void ICACHE_RODATA_ATTR TCP_Combined_Init()
 {
 	taskENTER_CRITICAL();
-	local_address_string = zalloc(50);
-	remote_address_string = zalloc(50);
+	local_address_string = zalloc(ADDR_STRING_SIZE);
+	remote_address_string = zalloc(ADDR_STRING_SIZE);
 	receive_data = zalloc(RECEIVE_DATA_SIZE);
 	transmit_data = zalloc(TRANSMIT_DATA_SIZE);
 	taskEXIT_CRITICAL();
 
 	taskYIELD();
 
+	//TODO: print high water mark and revise stack size if necessary.
 	xTaskCreate(TCP_Combined_Task, "TCPall_1", 512, NULL, 2,
 			TCP_combined_handle);
 }
@@ -80,72 +98,38 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 {
 	for (;;)
 	{
-		//TODO: need to be able to initiate the connection as well
-
-		DEBUG_Print("tcp combined start");
+		connected = false;
+		current_outgoing_fail_count = 0;
 
 		//open listener
-		while ((listen_sock = Open_Listen_Connection(local_address_string)) < 0)
+		while ((listen_sock = Open_Listen_Connection(local_address_string,
+				&local_address)) < 0)
 		{
-			DEBUG_Print("open fail");
-			vTaskDelay(1 / portTICK_RATE_MS);
-		}
-
-		//listen for incoming connection.
-		while ((listen_return_sock = Listen(listen_sock, remote_address_string))
-				< 0)
-		{
+			//TODO: we may need to be able to initiate a connection and send from here
 			taskYIELD();
 		}
 
-		data_sock = listen_return_sock;
-
-		failure_count = 0;
-
-		while (data_sock > 0)
+		//listen for incoming connection, start a connection if we have an outgoing message.
+		while (!connected)
 		{
-			receive_count = Receive(data_sock, receive_data, RECEIVE_DATA_SIZE);
+			data_sock = Listen(listen_sock, remote_address_string,
+					&remote_address);
+			connected = data_sock > -1;
 
-			if (receive_count > 0)
+			if (!connected)
 			{
-				taskENTER_CRITICAL();
-				message_ptr = strtok(receive_data, message_delimiter);
-				taskEXIT_CRITICAL();
-
-				taskYIELD();
-
-				if (message_ptr != NULL)
-				{
-					//TODO: strtokn't.
-					//		receive into static buffer
-					//		put chars into ring buffer, watch for message delimiter
-					//		when a delimiter is found, read the message out of the ring buff, update indexes
-					//		init message and enqueue.
-
-					taskENTER_CRITICAL();
-					Initialize_Message(&temp_message,
-							message_type_strings[MESSAGE_TYPE_TCP],
-							local_address_string, remote_address_string,
-							receive_data);
-					taskEXIT_CRITICAL();
-
-					taskYIELD();
-
-					taskENTER_CRITICAL();
-					Queue_Message(&incoming_message_queue, &temp_message);
-					taskEXIT_CRITICAL();
-				}
+				connected = Initiate_Connection_For_Outgoing_Message();
 			}
-			else if (receive_count < 0)
-			{
-				DEBUG_Print("close socket");
 
-				lwip_close(data_sock);
-				lwip_close(listen_sock);
+			taskYIELD();
+		}
 
-				listen_sock = -1;
-				data_sock = -1;
-			}
+		while (connected)
+		{
+			//Dequeue_And_Transmit will not disconnect, but Receive_And_Enqueue
+			//	may, so we capture that return to exit the loop.
+			Dequeue_And_Transmit(data_sock);
+			connected = Receive_And_Enqueue(data_sock);
 
 			taskYIELD();
 		}
@@ -156,9 +140,9 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 
 ////Local implementations ////////////////////////////////////////
 //initialize listener socket. Set up timeout too.
-static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string)
+static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
+		struct sockaddr_in * local_addr)
 {
-	struct sockaddr_in server_addr;
 	uint16 server_port = LOCAL_TCP_PORT;
 
 	int32 listen_socket = -1;
@@ -166,16 +150,16 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string)
 	int32 listen_result;
 
 	taskENTER_CRITICAL();
-	memset(&server_addr, 0, sizeof(server_addr));
+	memset(local_addr, 0, sizeof(struct sockaddr_in));
 	taskEXIT_CRITICAL();
 
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = INADDR_ANY;
-	server_addr.sin_len = sizeof(server_addr);
-	server_addr.sin_port = htons(server_port);
+	local_addr->sin_family = AF_INET;
+	local_addr->sin_addr.s_addr = INADDR_ANY;
+	local_addr->sin_len = sizeof(*local_addr);
+	local_addr->sin_port = htons(server_port);
 
 	taskENTER_CRITICAL();
-	Serialize_Address(Get_IP_Address(), ntohs(server_addr.sin_port),
+	Serialize_Address(Get_IP_Address(), ntohs(local_addr->sin_port),
 			local_addr_string, 50);
 	taskEXIT_CRITICAL();
 
@@ -184,18 +168,17 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string)
 	if (listen_socket > -1)
 	{
 		/* Bind to the local port */
-		bind_result = lwip_bind(listen_socket, (struct sockaddr *) &server_addr,
-				sizeof(server_addr));
+		bind_result = lwip_bind(listen_socket, (struct sockaddr *) local_addr,
+				sizeof(*local_addr));
 
 		if (bind_result != 0)
 		{
-			vTaskDelay(1000 / portTICK_RATE_MS);
 			lwip_close(listen_socket);
 			listen_socket = -1;
 		}
 		else
 		{
-			int millis = 100;
+			int millis = LISTEN_TIMEOUT_ms;
 			lwip_setsockopt(listen_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
 					sizeof(millis));
 		}
@@ -207,7 +190,6 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string)
 
 		if (listen_result != 0)
 		{
-			vTaskDelay(1000 / portTICK_RATE_MS);
 			lwip_close(listen_socket);
 			listen_socket = -1;
 		}
@@ -218,24 +200,18 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string)
 
 //accepts connections
 static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
-		char * remote_addr_string)
+		char * remote_addr_string, struct sockaddr_in * remote_addr)
 {
-	struct sockaddr_in dest_addr;
 	int32 accepted_sock;
-	int32 len = sizeof(dest_addr);
+	int32 len = sizeof(struct sockaddr_in);
 
 	if ((accepted_sock = lwip_accept(listen_socket,
-			(struct sockaddr *) &dest_addr, (socklen_t *) &len)) < 0)
+			(struct sockaddr *) remote_addr, (socklen_t *) &len)) < 0)
 	{
 		int32 error = 0;
 		uint32 option_length = sizeof(error);
 		int getReturn = lwip_getsockopt(listen_socket, SOL_SOCKET, SO_ERROR,
 				&error, &option_length);
-
-//		taskENTER_CRITICAL();
-//		printf("listen fail: %d, listen:%d, accepted:%d\r\n", error,
-//				listen_sock, accepted_sock);
-//		taskEXIT_CRITICAL();
 
 		accepted_sock = -1;
 	}
@@ -247,21 +223,107 @@ static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
 				sizeof(millis));
 
 		taskENTER_CRITICAL();
-		Serialize_Address(dest_addr.sin_addr.s_addr, ntohs(dest_addr.sin_port),
-				remote_addr_string, 50);
+		Serialize_Address(remote_addr->sin_addr.s_addr,
+				ntohs(remote_addr->sin_port), remote_addr_string, 50);
 		taskEXIT_CRITICAL();
-
-		DEBUG_Print(remote_addr_string);
 	}
 
 	return accepted_sock;
 }
 
-//used to initiate connection.
-static ICACHE_RODATA_ATTR int32 Open_Data_Connection(int32 remote_socket)
+static bool Initiate_Connection_For_Outgoing_Message()
 {
-	int32 rval = -1;
+	bool rval = false;
+
+	taskENTER_CRITICAL();
+	//do not dequeue. leave the message in the queue to be processed below.
+	temp_message_ptr = Peek_Message(&outgoing_TCP_message_queue);
+
+	if (temp_message_ptr != NULL)
+	{
+		Initialize_Message(&temp_message, temp_message_ptr->message_type,
+				temp_message_ptr->source, temp_message_ptr->destination,
+				temp_message_ptr->content);
+	}
+	taskEXIT_CRITICAL();
+
+	if (temp_message_ptr != NULL)
+	{
+		//DEBUG_Print("outgoing message, new connection");
+		temp_message_ptr = NULL;
+
+		taskENTER_CRITICAL();
+		Deserialize_Address(temp_message.destination, &remote_address,
+				ignored_message_type);
+		taskEXIT_CRITICAL();
+
+		sprintf(remote_address_string, temp_message.destination);
+
+//		DEBUG_Print("remote");
+//		DEBUG_Print(remote_address_string);
+
+		data_sock = Open_Data_Connection(&remote_address);
+
+		rval = data_sock > -1;
+
+		if (rval)
+		{
+			socklen_t sockaddr_size = sizeof(local_address);
+			getsockname(data_sock, (struct sockaddr* )&local_address,
+					&sockaddr_size);
+
+			Serialize_Address(local_address.sin_addr.s_addr,
+					local_address.sin_port, local_address_string,
+					ADDR_STRING_SIZE);
+		}
+		else
+		{
+			//couldn't connect. drop this message
+			if (++current_outgoing_fail_count > CONNECT_ATTEMPT_MAX)
+			{
+				//DEBUG_Print("dumped a message");
+				Dequeue_Message(&outgoing_TCP_message_queue);
+				current_outgoing_fail_count = 0;
+			}
+		}
+
+	}
+
 	return rval;
+}
+
+//used to initiate connection.
+static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
+		struct sockaddr_in * remote_addr)
+{
+	int opened_socket = socket(PF_INET, SOCK_STREAM, 0);
+
+	if (opened_socket != -1)
+	{
+		int millis = CONNECT_TIMEOUT_ms;
+		setsockopt(opened_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
+				sizeof(millis));
+
+		if (connect(opened_socket, (struct sockaddr * )(remote_addr),
+				sizeof(struct sockaddr_in)) == 0)
+		{
+			millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
+			setsockopt(opened_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
+					sizeof(millis));
+		}
+		else
+		{
+			int32 error = 0;
+			uint32 optionLength = sizeof(error);
+			int getReturn = lwip_getsockopt(opened_socket, SOL_SOCKET, SO_ERROR,
+					&error, &optionLength);
+
+			lwip_close(opened_socket);
+			opened_socket = -1;
+		}
+	}
+
+	return opened_socket;
 }
 
 //send a message to the
@@ -269,6 +331,19 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 		Message * m)
 {
 	bool rval = false;
+	struct sockaddr_in message_dest;
+
+	taskENTER_CRITICAL();
+	Deserialize_Address(m->destination, &message_dest, ignored_message_type);
+	taskEXIT_CRITICAL();
+
+	if (message_dest.sin_addr.s_addr == remote_address.sin_addr.s_addr
+			&& message_dest.sin_port == remote_address.sin_port)
+	{
+		bool rval = write(destination_socket, m->content, strlen(m->content))
+				== strlen(m->content);
+	}
+
 	return rval;
 }
 
@@ -312,4 +387,75 @@ static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * message,
 	}
 
 	return rval;
+}
+
+static bool Dequeue_And_Transmit(int32 data_sock)
+{
+	bool rval = false;
+
+	if (Peek_Message(&outgoing_TCP_message_queue) != NULL)
+	{
+		taskENTER_CRITICAL();
+		temp_message_ptr = Dequeue_Message(&outgoing_TCP_message_queue);
+		taskEXIT_CRITICAL();
+
+		rval = Send_Message(data_sock, temp_message_ptr);
+
+		free(temp_message_ptr);   //dequeue alloc's a message.
+		temp_message_ptr = NULL;
+	}
+
+	return rval;
+}
+
+static bool Receive_And_Enqueue(int32 data_sock)
+{
+	bool rval = true;
+
+	receive_count = Receive(data_sock, receive_data, RECEIVE_DATA_SIZE);
+
+	if (receive_count > 0)
+	{
+		taskENTER_CRITICAL();
+		message_ptr = strtok(receive_data, message_delimiter);
+		taskEXIT_CRITICAL();
+
+		taskYIELD();
+
+		if (message_ptr != NULL)
+		{
+			//TODO: strtokn't.
+			//		receive into static buffer
+			//		put chars into ring buffer, watch for message delimiter
+			//		when a delimiter is found, read the message out of the ring buff, update indexes
+			//		init message and enqueue.
+
+			taskENTER_CRITICAL();
+			Initialize_Message(&temp_message,
+					message_type_strings[MESSAGE_TYPE_TCP],
+					remote_address_string, local_address_string, receive_data);
+			taskEXIT_CRITICAL();
+
+			taskYIELD();
+
+			taskENTER_CRITICAL();
+			Queue_Message(&incoming_message_queue, &temp_message);
+			taskEXIT_CRITICAL();
+		}
+	}
+	else if (receive_count < 0)
+	{
+		//DEBUG_Print("close socket");
+
+		lwip_close(data_sock);
+		lwip_close(listen_sock);
+
+		listen_sock = -1;
+		data_sock = -1;
+
+		rval = false;
+	}
+
+	return rval;
+
 }

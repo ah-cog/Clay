@@ -63,10 +63,12 @@ Message* ICACHE_RODATA_ATTR Peek_Message(Message_Queue *message_queue)
 
 Message* ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue)
 {
-	Message *message = (Message*) zalloc(sizeof(Message));
+	Message *message = NULL;
 
 	if ((*message_queue).count > 0)
 	{
+		message = (Message*) zalloc(sizeof(Message));
+
 		Initialize_Message(message,
 				message_queue->messages[message_queue->front].message_type,
 				message_queue->messages[message_queue->front].source,

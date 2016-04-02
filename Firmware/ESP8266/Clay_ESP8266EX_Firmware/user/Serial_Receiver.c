@@ -236,15 +236,15 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 #if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED
 				case MESSAGE_TYPE_TCP:
 				{
-					taskENTER_CRITICAL();
-					printf("\r\ngot tcp msg: %s,%s,%s,%s\r\n", temp_msg.content,
-							temp_msg.message_type, temp_msg.destination,
-							temp_msg.source);
-					taskEXIT_CRITICAL();
+//					taskENTER_CRITICAL();
+//					printf("\r\ngot tcp msg: %s,%s,%s,%s\r\n", temp_msg.content,
+//							temp_msg.message_type, temp_msg.destination,
+//							temp_msg.source);
+//					taskEXIT_CRITICAL();
 
-					portENTER_CRITICAL();
-					UART_WaitTxFifoEmpty(UART0);
-					portEXIT_CRITICAL();
+//					portENTER_CRITICAL();
+//					UART_WaitTxFifoEmpty(UART0);
+//					portEXIT_CRITICAL();
 
 					selected_message_queue = &outgoing_TCP_message_queue;
 					break;
@@ -265,10 +265,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 
 				if (selected_message_queue != NULL)
 				{
-					taskENTER_CRITICAL();
-					printf("nq msg");
-					taskEXIT_CRITICAL();
-
 					taskENTER_CRITICAL();
 					Queue_Message(selected_message_queue, &temp_msg);
 					taskEXIT_CRITICAL();
