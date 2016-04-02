@@ -77,9 +77,10 @@ static int32 sock_fd;
 static bool Connected;
 static int32 testCounter;
 
-Message tempMessage;
-char * source_addr;
-char * dest_addr;
+static Message tempMessage;
+static char * source_addr;
+static char * dest_addr;
+static xTaskHandle udp_rx_task;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -89,16 +90,18 @@ static bool Receive();
 bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 {
 	bool rval = false;
-	UDP_Rx_Buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
 	nNetTimeout = UDP_RX_TIMEOUT_MSEC;
 
 	State = Disable;
 
+	taskENTER_CRITICAL();
+	UDP_Rx_Buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
 	source_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 	dest_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 	Initialize_Message_Queue(&incoming_message_queue);
+	taskEXIT_CRITICAL();
 
-	xTaskCreate(UDP_Receiver_State_Step, "udprx1", 512, NULL, 2, NULL);
+	xTaskCreate(UDP_Receiver_State_Step, "udprx1", 512, NULL, 2, udp_rx_task);
 
 	testCounter = 0;
 
@@ -147,8 +150,9 @@ void ICACHE_RODATA_ATTR UDP_Receiver_State_Step()
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			Initialize_Message(&tempMessage, message_type_strings[MESSAGE_TYPE_UDP],
-					source_addr, dest_addr, UDP_Rx_Buffer);
+			Initialize_Message(&tempMessage,
+					message_type_strings[MESSAGE_TYPE_UDP], source_addr,
+					dest_addr, UDP_Rx_Buffer);
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();

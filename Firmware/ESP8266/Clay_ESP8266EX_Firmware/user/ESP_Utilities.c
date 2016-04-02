@@ -13,6 +13,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "uart.h"
+
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
@@ -25,19 +27,41 @@
 bool ICACHE_RODATA_ATTR Set_Access_Point(char * ssid, char * key)
 {
 
+	taskENTER_CRITICAL();
+	printf("setap:%s,%s\r\n", ssid, key);
+	taskEXIT_CRITICAL();
+
 	bool rval = wifi_station_disconnect();
 
+	DEBUG_Print("disconnect");
+
+	taskENTER_CRITICAL();
 	struct station_config *config = (struct station_config *) zalloc(
 			sizeof(struct station_config));
+	taskEXIT_CRITICAL();
 
+	DEBUG_Print("config created");
+
+	taskENTER_CRITICAL();
 	sprintf(config->ssid, ssid);
 	sprintf(config->password, key);
+	taskEXIT_CRITICAL();
+
+	DEBUG_Print("set ssid and key");
 
 	rval &= wifi_station_set_config(config);
 
+	DEBUG_Print("config set");
+
 	free(config);
 
+	DEBUG_Print("freed config");
+
 	rval &= wifi_station_connect();
+
+	taskENTER_CRITICAL();
+	printf("setap:%s\r\n", rval ? "ok" : "nfg");
+	taskEXIT_CRITICAL();
 
 	return rval;
 }
@@ -64,6 +88,27 @@ int ICACHE_RODATA_ATTR Get_Subnet_Mask()
 	wifi_get_ip_info(STATION_IF, &ip);
 
 	return ip.netmask.addr;
+}
+
+void ICACHE_RODATA_ATTR DEBUG_Print(char * msg)
+{
+	taskENTER_CRITICAL();
+	printf("%s\r\n", msg);
+	taskEXIT_CRITICAL();
+}
+
+void ICACHE_RODATA_ATTR DEBUG_Print_High_Water()
+{
+	xTaskHandle task_handle = xTaskGetCurrentTaskHandle();
+
+	taskENTER_CRITICAL();
+	printf("task %d: high water:%d\r\n\r\n\r\n", *((int*) task_handle),
+			uxTaskGetStackHighWaterMark(task_handle));
+	taskEXIT_CRITICAL();
+
+	portENTER_CRITICAL();
+	UART_WaitTxFifoEmpty(UART0);
+	portEXIT_CRITICAL();
 }
 
 ////Local implementations ////////////////////////////////////////

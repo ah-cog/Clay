@@ -58,11 +58,13 @@ bool ICACHE_RODATA_ATTR TCP_Transmitter_Init()
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
 	TCP_Tx_Buffer = zalloc(TCP_TX_BUFFER_SIZE_BYTES);
-	State = Disable;
-
 	SocketListInitialize();
 	Initialize_Message_Queue(&outgoing_TCP_message_queue);
+	taskEXIT_CRITICAL();
+
+	State = Disable;
 
 	xTaskCreate(TCP_Transmitter_State_Step, "TCPtx1", 512, NULL, 2, NULL);
 
@@ -105,13 +107,21 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 
 		case Buffer_Message:
 		{
+			taskENTER_CRITICAL();
+			printf("tcp message outgoing");
+			taskEXIT_CRITICAL();
+
 			memset(&destination_addr, 0, sizeof(destination_addr));
 
 			taskENTER_CRITICAL();
 			m = Dequeue_Message(&outgoing_TCP_message_queue);
 
-			Initialize_Message(&message_temp, message_type_strings[MESSAGE_TYPE_TCP],
-					m->source, m->destination, m->content);
+			Initialize_Message(&message_temp,
+					message_type_strings[MESSAGE_TYPE_TCP], m->source,
+					m->destination, m->content);
+
+			//dequeue alloc's a message.
+			free(m);
 			m = &message_temp;
 			taskEXIT_CRITICAL();
 
@@ -126,6 +136,10 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 			taskENTER_CRITICAL();
 			Deserialize_Address(message_temp.destination, &destination_addr,
 					&temp_ignored_message_type);
+			taskEXIT_CRITICAL();
+
+			taskENTER_CRITICAL();
+			printf("tcp message outgoing: %s", TCP_Tx_Buffer);
 			taskEXIT_CRITICAL();
 
 //			taskENTER_CRITICAL();
@@ -175,9 +189,9 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 			}
 			else
 			{
-//				taskENTER_CRITICAL();
-//				printf("sock already open\r\n");
-//				taskEXIT_CRITICAL();
+				taskENTER_CRITICAL();
+				printf("sock already open\r\n");
+				taskEXIT_CRITICAL();
 			}
 
 			if (sock_fd != -1)

@@ -39,7 +39,11 @@ int ICACHE_RODATA_ATTR Queue_Message(Message_Queue *message_queue,
 {
 	if ((*message_queue).count < MAXIMUM_MESSAGE_COUNT)
 	{
-		(*message_queue).messages[(*message_queue).back] = *message;
+		//must make a copy
+		Initialize_Message(message_queue->messages + (message_queue->back),
+				message->message_type, message->source, message->destination,
+				message->content);
+
 		(*message_queue).back = ((*message_queue).back + 1)
 				% MAXIMUM_MESSAGE_COUNT;
 		(*message_queue).count++;
@@ -60,9 +64,17 @@ Message* ICACHE_RODATA_ATTR Peek_Message(Message_Queue *message_queue)
 Message* ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue)
 {
 	Message *message = NULL;
+
 	if ((*message_queue).count > 0)
 	{
-		message = &((*message_queue).messages[(*message_queue).front]);
+		message = (Message*) zalloc(sizeof(Message));
+
+		Initialize_Message(message,
+				message_queue->messages[message_queue->front].message_type,
+				message_queue->messages[message_queue->front].source,
+				message_queue->messages[message_queue->front].destination,
+				message_queue->messages[message_queue->front].content);
+
 		(*message_queue).front = ((*message_queue).front + 1)
 				% MAXIMUM_MESSAGE_COUNT;
 		(*message_queue).count--;

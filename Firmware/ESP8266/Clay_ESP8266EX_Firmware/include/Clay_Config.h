@@ -31,8 +31,9 @@
 
 #define ENABLE_TCP_SENDER	0
 #define ENABLE_TCP_RECEIVER	0
-#define ENABLE_UDP_SENDER	1
-#define ENABLE_UDP_RECEIVER	1
+#define ENABLE_UDP_SENDER	0
+#define ENABLE_UDP_RECEIVER	0
+#define ENABLE_TCP_COMBINED 1
 
 
 //TODO: double-check this size...

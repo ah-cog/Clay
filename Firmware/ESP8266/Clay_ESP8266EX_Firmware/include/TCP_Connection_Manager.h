@@ -10,7 +10,7 @@
 
 #include "Clay_Config.h"
 
-extern int Open_Sockets[];
+extern int open_sockets[];
 
 extern void SocketListInitialize();
 

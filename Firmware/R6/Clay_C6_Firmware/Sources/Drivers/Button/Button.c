@@ -102,7 +102,7 @@ void Button_Event_Handler() {
       if (callbacks[i].handler != NULL) {
          switch (callbacks[i].type) {
 
-            case BUTTON_EVENT_PRESS: {
+            case BUTTON_EVENT_PRESS: {     //TODO: update button_event_press to require that the button not be held.
                if (button_state) {
                   callbacks[i].call_handler = TRUE;
                }

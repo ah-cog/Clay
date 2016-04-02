@@ -25,6 +25,7 @@
 #include "Serial_Transmitter.h"
 #include "UDP_Receiver.h"
 #include "UDP_Transmitter.h"
+#include "TCP_Combined.h"
 #include "TCP_Receiver.h"
 #include "TCP_Transmitter.h"
 #include "Message_Queue.h"
@@ -56,8 +57,10 @@ void ICACHE_RODATA_ATTR user_init(void)
 #endif
 
 	{
+		taskENTER_CRITICAL();
 		struct station_config *config = (struct station_config *) zalloc(
 				sizeof(struct station_config));
+		taskEXIT_CRITICAL();
 
 		sprintf(config->ssid, "hefnet");
 		sprintf(config->password, "h3fn3r_is_better_than_me");
@@ -158,6 +161,10 @@ void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
 
 #if ENABLE_TCP_RECEIVER
 		TCP_Receiver_Init();
+#endif
+
+#if ENABLE_TCP_COMBINED
+		TCP_Combined_Init();
 #endif
 
 		UART_WaitTxFifoEmpty(UART0);

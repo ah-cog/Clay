@@ -75,6 +75,7 @@ int i;
 Message_Queue * selected_message_queue;
 
 static Message_Type received_message_type;
+static xTaskHandle serial_rx_task;
 
 uint32 counter;
 
@@ -85,17 +86,19 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 {
 	bool rval = true;
 
+	taskENTER_CRITICAL();
 	serial_rx_buffer = zalloc(SERIAL_RX_BUFFER_SIZE_BYTES);
-
-	State = Idle;
 	Ring_Buffer_Init();
-
 	Initialize_Message_Queue(&outgoing_UDP_message_queue);
 	Initialize_Message_Queue(&outgoing_TCP_message_queue);
 	Initialize_Message_Queue(&incoming_command_queue);
 	Initialize_Message_Queue(&incoming_message_queue);
+	taskEXIT_CRITICAL();
 
-	xTaskCreate(Serial_Receiver_State_Step, "uartrx1", 256, NULL, 2, NULL);
+	State = Idle;
+
+	xTaskCreate(Serial_Receiver_State_Step, "uartrx1", 128, NULL, 2,
+			serial_rx_task);
 
 	return rval;
 }
@@ -165,10 +168,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 				{
 					serial_rx_buffer[bytes_received] = '\0';
 
-//					taskENTER_CRITICAL();
-//					printf("srx\r\n");
-//					taskEXIT_CRITICAL();
-
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 					gpio16_output_set(1);
 #else
@@ -193,9 +192,16 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 
 		case Parsing:
 		{
-//			taskENTER_CRITICAL();
-//			printf("srx parse\r\n");
-//			taskEXIT_CRITICAL();
+#ifdef PRINT_HIGH_WATER
+			taskENTER_CRITICAL();
+			printf("\r\nsrx parse\r\n");
+			taskEXIT_CRITICAL();
+			portENTER_CRITICAL();
+			UART_WaitTxFifoEmpty(UART0);
+			portEXIT_CRITICAL();
+
+			DEBUG_Print_High_Water();
+#endif
 
 			taskENTER_CRITICAL();
 			temp_content = strtok(serial_rx_buffer, message_delimiter);
@@ -227,15 +233,26 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 					break;
 				}
 #endif
-#if ENABLE_TCP_SENDER
+#if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED
 				case MESSAGE_TYPE_TCP:
 				{
+//					taskENTER_CRITICAL();
+//					printf("\r\ngot tcp msg: %s,%s,%s,%s\r\n", temp_msg.content,
+//							temp_msg.message_type, temp_msg.destination,
+//							temp_msg.source);
+//					taskEXIT_CRITICAL();
+
+//					portENTER_CRITICAL();
+//					UART_WaitTxFifoEmpty(UART0);
+//					portEXIT_CRITICAL();
+
 					selected_message_queue = &outgoing_TCP_message_queue;
 					break;
 				}
 #endif
 				case MESSAGE_TYPE_COMMAND:
 				{
+
 					selected_message_queue = &incoming_command_queue;
 					break;
 				}
@@ -271,7 +288,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 			break;
 		}
 		}
-
 		taskYIELD();
 	}
 }

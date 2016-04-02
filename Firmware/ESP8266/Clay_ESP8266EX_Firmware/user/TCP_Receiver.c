@@ -59,10 +59,10 @@ static struct sockaddr_in server_addr;
 
 static int32 listenfd;
 static int32 len;
-static int32 client_sock;
 static uint16 httpd_server_port = 1002;
 
 static volatile int32 task_count;
+static xTaskHandle tcp_listen_task;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool ConnectListener();
@@ -78,12 +78,16 @@ static bool ICACHE_RODATA_ATTR Enqueue(uint8 * buffer, char * source_address,
 bool ICACHE_RODATA_ATTR TCP_Receiver_Init()
 {
 	bool rval = false;
-	state = Disable;
 
+	taskENTER_CRITICAL();
 	SocketListInitialize();
 	Initialize_Message_Queue(&incoming_message_queue);
+	taskEXIT_CRITICAL();
 
-	xTaskCreate(TCP_Receiver_State_Step, "tcprx1", 512, NULL, 2, NULL);
+	state = Disable;
+
+	xTaskCreate(TCP_Receiver_State_Step, "tcprx1", 256, NULL, 2,
+			tcp_listen_task);
 
 	return rval;
 }
@@ -116,7 +120,22 @@ void ICACHE_RODATA_ATTR TCP_Receiver_State_Step()
 
 		case ListenForConnect:
 		{
+//#define PRINT_HIGH_WATER
+#ifndef PRINT_HIGH_WATER
 			Listen();
+#else
+			if (Listen())
+			{
+				taskENTER_CRITICAL();
+				printf("listen ok");
+				taskEXIT_CRITICAL();
+				portENTER_CRITICAL();
+				UART_WaitTxFifoEmpty(UART0);
+				portEXIT_CRITICAL();
+				DEBUG_Print_High_Water();
+			}
+#endif
+
 			break;
 		}
 
@@ -198,6 +217,9 @@ bool ICACHE_RODATA_ATTR ConnectListener()
 //listens for connections and accepts them
 static bool ICACHE_RODATA_ATTR Listen()
 {
+	int client_sock;
+	int sock_index;
+
 	bool rval = false;
 
 	//spawn new tasks as receivers.
@@ -207,8 +229,8 @@ static bool ICACHE_RODATA_ATTR Listen()
 
 	len = sizeof(struct sockaddr_in);
 	/*block here waiting remote connect request*/
-	if ((client_sock = accept(listenfd, (struct sockaddr * )&last_source_address,
-			(socklen_t * )&len)) < 0)
+	if ((client_sock = accept(listenfd,
+			(struct sockaddr * )&last_source_address, (socklen_t * )&len)) < 0)
 	{
 		rval = false; //no need to close -1 socket.
 	}
@@ -219,8 +241,9 @@ static bool ICACHE_RODATA_ATTR Listen()
 		setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, &millis,
 				sizeof(millis));
 
-		//NOTE: we may need to make a copy of client_sock to make sure it doesn't get corrupted.
-		if (TCP_Start_Task(&client_sock))
+		sock_index = SocketListAdd(client_sock);
+
+		if (sock_index > -1 && TCP_Start_Task(open_sockets + sock_index))
 		{
 //			taskENTER_CRITICAL();
 //			printf("opened sock:%d\r\n\r\n", client_sock);
@@ -251,38 +274,42 @@ static bool ICACHE_RODATA_ATTR Listen()
 
 bool ICACHE_RODATA_ATTR TCP_Start_Task(int32 * new_socket)
 {
-//	taskENTER_CRITICAL();
-//	printf("create task for sock:%d\r\n", *newSocket);
-//	taskEXIT_CRITICAL();
-
-	bool rval = (SocketListAdd(*new_socket) != -1);
+	taskENTER_CRITICAL();
+	printf("create task for sock:%d\r\n", *new_socket);
+	taskEXIT_CRITICAL();
 
 	int taskCount = uxTaskGetNumberOfTasks();
-
 	int fail_count = 0;
-	xTaskHandle handle;
+	int rval = false;
+	long create_return;
+
+	xTaskHandle handle = NULL;
 	xTaskHandle idle_handle;
 
-	if (rval)
-	{
 //		taskENTER_CRITICAL();
-//		printf("create task for sock:%d\r\n", *newSocket);
+//		printf("create task for sock:%d\r\n", newSocket);
 //		taskEXIT_CRITICAL();
 
-		rval = false;
-		while (!rval && fail_count < 10)
-		{
+	while (!rval && fail_count < 10)
+	{
 //			taskENTER_CRITICAL();
 //			printf("\r\ntask count reported:%d\r\n", taskCount);
 //			taskEXIT_CRITICAL();
 
-			//spawn new task to receive.
-			long create_return = xTaskCreate(ReceiveTask, "socket_rx", 512,
-					new_socket, 2, &handle);
+		//TODO: keep track of receiver tasks.
+		//spawn new task to receive.
+		create_return = xTaskCreate(ReceiveTask, "socket_rx", 256, new_socket,
+				2, &handle);
 
-			if (handle == NULL || create_return < 0)
-			{
-				++fail_count;
+		//handle is null if task is not created.
+		//	the example at http://www.freertos.org/a00125.html
+		//	only checks the handle, not the return value.
+		//
+		//return value is < 0 if an error is reported.
+		//	errors defined in ProjDefs.h
+		if (handle == NULL)
+		{
+			++fail_count;
 
 //				taskENTER_CRITICAL();
 //				printf("handle is null\r\n");
@@ -300,36 +327,29 @@ bool ICACHE_RODATA_ATTR TCP_Start_Task(int32 * new_socket)
 //				printf("raise idle priority.\r\n");
 //				taskEXIT_CRITICAL();
 
-				idle_handle = xTaskGetIdleTaskHandle();
+			idle_handle = xTaskGetIdleTaskHandle();
 
-				vTaskPrioritySet(idle_handle, 2);
-				vTaskDelay(100 / portTICK_RATE_MS);
-				vTaskPrioritySet(idle_handle, 0);
-			}
-			else
-			{
+			vTaskPrioritySet(idle_handle, 2);
+			vTaskDelay(100 / portTICK_RATE_MS);
+			vTaskPrioritySet(idle_handle, 0);
+		}
+		else
+		{
 //				taskENTER_CRITICAL();
 //				printf("handle:%d, return:%d \r\n", handle, create_return);
 //				taskEXIT_CRITICAL();
-				rval = true;
-			}
+			rval = true;
 		}
+	}
 
-		if (rval)
-		{
+	if (rval)
+	{
 //			taskENTER_CRITICAL();
 //			printf("created task for sock:%d", *newSocket);
 //			taskEXIT_CRITICAL();
 
-			++task_count;
-		}
+		++task_count;
 	}
-//	else
-//	{
-//		taskENTER_CRITICAL();
-//		printf("couldn't add socket to list.\r\n");
-//		taskEXIT_CRITICAL();
-//	}
 
 //	taskENTER_CRITICAL();
 //	printf("task create return\r\n");
@@ -340,58 +360,60 @@ bool ICACHE_RODATA_ATTR TCP_Start_Task(int32 * new_socket)
 
 static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 {
-	int32 rx_socket = *((int32*) pvParameters);
+	//This is a pointer because of the way tasks are created.
+	//	The pointer is to the TCP_Connection_Manager socket store, so it is valid
+	//	as long as the socket is open.
 	struct sockaddr_in source_address;
 	struct sockaddr_in local_address;
-	int32 addressSize = sizeof(source_address);
 
-//	taskENTER_CRITICAL();
-//	printf("\r\n\r\n\r\nsock:%d pvParameters:%d\r\n\r\n\r\n", rx_socket,
-//			*((int32*) pvParameters));
-//	taskEXIT_CRITICAL();
+	int32 rx_socket = *((int32*) pvParameters);
+
+	int32 addressSize = sizeof(source_address);
+	int32 length = 0;
+	int32 unprocessed_length = 0;
+	int32 unprocessed_buffer_size = 0;
+	int32 processed_message_length = 0;
+	int32 processed_message_index = 0;
+	int32 received_length = 0;
+	int32 indexOfMessageEnd;
+
+	uint8 fail_count = 0;
+
+	uint8 * data;
+	uint8 * temp;
+	uint8 * unprocessed_data = NULL;
+	uint8 * processed_message;
+	uint8 * source_addr_string_buf;
+	uint8 * dest_addr_string_buf;
+
+	bool found_message = false;
 
 	getpeername(rx_socket, (struct sockaddr* )&source_address, &addressSize);
 	getsockname(rx_socket, (struct sockaddr* )&local_address, &addressSize);
 
-	uint8 * data = zalloc(CLAY_MESSAGE_LENGTH_MAX_BYTES);
-	uint8 * temp;
-	uint8 * unprocessed_data = NULL;
-	uint8 * processed_message;
-	uint8 fail_count = 0;
-
-	uint8 addr_string[50];
-
 	taskENTER_CRITICAL();
-	uint8 * source_addr_string_buf = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
-	uint8 * dest_addr_string_buf = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
+	data = zalloc(CLAY_MESSAGE_LENGTH_MAX_BYTES);
+	source_addr_string_buf = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
+	dest_addr_string_buf = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
 	Serialize_Address(source_address.sin_addr.s_addr,
 			ntohs(source_address.sin_port), source_addr_string_buf,
 			CLAY_ADDR_STRING_BUF_LENGTH);
+	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
 	Serialize_Address(local_address.sin_addr.s_addr, TCP_RECEIVE_PORT,
 			dest_addr_string_buf,
 			CLAY_ADDR_STRING_BUF_LENGTH);
 	taskEXIT_CRITICAL();
 
-//	taskENTER_CRITICAL();
-//	Serialize_Address(sourceAddress.sin_addr.s_addr, sourceAddress.sin_port,
-//			addr_string, 50, MESSAGE_TYPE_TCP);
-//	printf("\r\nsock:%d\r\naddr:[%s]\r\n\r\n", rx_socket, addr_string);
-//	taskEXIT_CRITICAL();
-
-	bool found_message = false;
-
-	int32 length = 0;
-	int32 unprocessed_length = 0;
-	int32 unprocessed_buffer_size = 0;
-
-	int32 processed_message_length = 0;
-	int32 processed_message_index = 0;
-
-	int received_length = 0;
-	int indexOfMessageEnd;
+	//	taskENTER_CRITICAL();
+	//	Serialize_Address(sourceAddress.sin_addr.s_addr, sourceAddress.sin_port,
+	//			addr_string, 50, MESSAGE_TYPE_TCP);
+	//	printf("\r\nsock:%d\r\naddr:[%s]\r\n\r\n", rx_socket, dest_addr_string_buf);
+	//	taskEXIT_CRITICAL();
 
 	//listen until socket is closed.
 	while (rx_socket > 0)
@@ -403,18 +425,24 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 		{
 			fail_count = 0;
 
-			taskENTER_CRITICAL();
-			printf("rx'd %d\r\n", received_length);
-			taskEXIT_CRITICAL();
+//			taskENTER_CRITICAL();
+//			printf("rx'd %d\r\n", received_length);
+//			taskEXIT_CRITICAL();
 
 			//copy data into unprocessed_data
 			if (unprocessed_data == NULL)
 			{
+//				taskENTER_CRITICAL();
+//				printf("alloc:%d,free:%d\r\n",
+//						unprocessed_length + received_length,
+//						system_get_free_heap_size());
+//				taskEXIT_CRITICAL();
+
 				taskENTER_CRITICAL();
-				printf("alloc:%d,free:%d\r\n",
-						unprocessed_length + received_length,
-						system_get_free_heap_size());
 				unprocessed_data = zalloc(received_length + 1);
+				taskEXIT_CRITICAL();
+
+				taskENTER_CRITICAL();
 				memcpy(unprocessed_data, data, received_length);
 				taskEXIT_CRITICAL();
 
@@ -430,20 +458,31 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 			}
 			else
 			{
+//				taskENTER_CRITICAL();
+//				printf("alloc:%d,free:%d\r\n",
+//						unprocessed_length + received_length,
+//						system_get_free_heap_size());
+//				taskEXIT_CRITICAL();
+
 				taskENTER_CRITICAL();
-				printf("alloc:%d,free:%d\r\n",
-						unprocessed_length + received_length,
-						system_get_free_heap_size());
 				//already have space in the unprocessed buffer for a null
 				temp = zalloc(unprocessed_length + received_length);
-				memcpy(temp, unprocessed_data, unprocessed_length);
-				memcpy(temp + unprocessed_length - 1, data, received_length); //-1 to clobber null
+				taskEXIT_CRITICAL();
 
+				taskENTER_CRITICAL();
+				memcpy(temp, unprocessed_data, unprocessed_length);
+				taskEXIT_CRITICAL();
+
+				taskENTER_CRITICAL();
+				memcpy(temp + unprocessed_length - 1, data, received_length); //-1 to clobber null
+				taskEXIT_CRITICAL();
+
+//				taskENTER_CRITICAL();
 //				printf("before free unproc:%d\r\n",
 //						system_get_free_heap_size());
+//				taskEXIT_CRITICAL();
 
 				free(unprocessed_data);
-				taskEXIT_CRITICAL();
 
 //				taskENTER_CRITICAL();
 //				printf("free unproc:%d\r\n", system_get_free_heap_size());
@@ -492,16 +531,19 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 //				taskENTER_CRITICAL();
 //				printf("sock %d found message [%s] at %d\r\n", rx_socket,
 //						processed_message, processed_message_index);
-//				printf("free heap:%d\r\n", system_get_free_heap_size());
 //				taskEXIT_CRITICAL();
 
-				portENTER_CRITICAL();
-				UART_WaitTxFifoEmpty(UART0);
-				portEXIT_CRITICAL();
+//				taskENTER_CRITICAL();
+//				printf("free heap:%d\r\n", system_get_free_heap_size());
+//				taskEXIT_CRITICAL();
 
 				taskENTER_CRITICAL();
 				processed_message_length = strlen(processed_message) + 2; //+1 for null, +1 for newline
 				taskEXIT_CRITICAL();
+
+//				taskENTER_CRITICAL();
+//				printf("proccessed length:%d\r\n", processed_message_length);
+//				taskEXIT_CRITICAL();
 
 				//-1 to account for the null beoming a null and newline in processed_message
 				unprocessed_length -= processed_message_length - 1;
@@ -515,9 +557,7 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 				//enqueue if we received message end.
 				Enqueue(temp, source_addr_string_buf, dest_addr_string_buf);
 
-				taskENTER_CRITICAL();
 				free(temp);
-				taskEXIT_CRITICAL();
 
 				taskENTER_CRITICAL();
 				processed_message = strtok(
@@ -525,7 +565,7 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 						message_delimiter);
 				taskEXIT_CRITICAL();
 
-//				taskYIELD();
+				taskYIELD();
 
 				found_message = true;
 			}
@@ -536,6 +576,9 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 //					rx_socket, unprocessed_length + processed_message_index,
 //					unprocessed_buffer_size, unprocessed_length,
 //					processed_message_index);
+//			taskEXIT_CRITICAL();
+//
+//			taskENTER_CRITICAL();
 //			printf("leftover unproc: [%s]\r\n\r\n",
 //					unprocessed_data + processed_message_index);
 //			taskEXIT_CRITICAL();
@@ -543,6 +586,18 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 
 			if (found_message)
 			{
+
+#ifdef PRINT_HIGH_WATER
+				taskENTER_CRITICAL();
+				printf("sock %d: found\r\n", rx_socket);
+				taskEXIT_CRITICAL();
+
+				portENTER_CRITICAL();
+				UART_WaitTxFifoEmpty(UART0);
+				portEXIT_CRITICAL();
+				DEBUG_Print_High_Water();
+#endif
+
 				if (unprocessed_length > 1
 						&& unprocessed_length
 								< (2 * CLAY_MESSAGE_LENGTH_MAX_BYTES)
@@ -552,9 +607,9 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 					temp = zalloc(unprocessed_length);
 					memcpy(temp, unprocessed_data + processed_message_index,
 							unprocessed_length);
+					taskEXIT_CRITICAL();
 
 					free(unprocessed_data);
-					taskEXIT_CRITICAL();
 
 					unprocessed_data = temp;
 
@@ -570,9 +625,7 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 				}
 				else
 				{
-					taskENTER_CRITICAL();
 					free(unprocessed_data);
-					taskEXIT_CRITICAL();
 
 //					taskENTER_CRITICAL();
 //					printf("freed unproc:%d\r\n", system_get_free_heap_size());
@@ -597,16 +650,10 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 		taskYIELD();
 	}
 
-//	taskENTER_CRITICAL();
-//	printf("kill task for socket:%d\r\n", rx_socket);
-//	taskEXIT_CRITICAL();
-
-	taskENTER_CRITICAL();
-	free(unprocessed_data);
 	free(data);
+	free(unprocessed_data);
 	free(source_addr_string_buf);
 	free(dest_addr_string_buf);
-	taskEXIT_CRITICAL();
 
 	SocketListRemove(rx_socket);
 	lwip_close(rx_socket);
@@ -614,7 +661,7 @@ static void ICACHE_RODATA_ATTR ReceiveTask(void * pvParameters)
 	--task_count;
 
 	taskENTER_CRITICAL();
-	printf("\r\n\r\n\r\nkillin\r\n\r\n\r\n", rx_socket);
+	printf("\r\n\r\n\r\nkillin %d\r\n\r\n\r\n", rx_socket);
 	taskEXIT_CRITICAL();
 
 	vTaskDelete(NULL);
