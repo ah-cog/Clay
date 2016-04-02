@@ -1,12 +1,5 @@
-/*
- * meshTest.h
- *
- *  Created on: Dec 22, 2015
- *      Author: Ben
- */
-
-#ifndef MESHTEST_H_
-#define MESHTEST_H_
+#ifndef MESH_TEST_H
+#define MESH_TEST_H
 
 #ifdef __cplusplus
 extern "C"
@@ -20,4 +13,4 @@ extern void MeshTestLoopStep();
 }
 #endif
 
-#endif /* MESHTEST_H_ */
+#endif

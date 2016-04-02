@@ -1,12 +1,5 @@
-/*
- * Mesh.h
- *
- *  Created on: Nov 19, 2015
- *      Author: Ben
- */
-
-#ifndef MESH_H_
-#define MESH_H_
+#ifndef MESH_H
+#define MESH_H
 
 #include <stdint.h>
 #include "PE_Types.h"
@@ -131,4 +124,4 @@ extern void Reinit_Mesh_Retries();
 }
 #endif
 
-#endif /* MESH_H_ */
+#endif
