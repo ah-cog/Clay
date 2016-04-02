@@ -179,7 +179,8 @@ void Application(void) {
 
    for (;;) {
 
-//        mesh_process_commands();
+	  // Call periodically to parse received messages and to enable the radio to receive
+	  Mesh_Process_Commands ();
 
       // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 

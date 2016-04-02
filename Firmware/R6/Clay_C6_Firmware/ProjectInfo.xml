@@ -62,6 +62,7 @@
       <Path>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Drivers/Power_Manager/</Path>
       <Path>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Drivers/RGB_LED/</Path>
       <Path>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Drivers/WiFi/</Path>
+      <Path>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Services/</Path>
       <Path>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Utilities/</Path>
       <Path>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Static_Code/System/</Path>
     </SourceCodePaths>
@@ -134,6 +135,7 @@
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Message.c</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Message_Processor.c</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Message_Queue.c</PathName>
+      <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Services/Interactive_Assembly.c</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Timeline.c</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Utilities/Ring_Buffer.c</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Utilities/UUID.c</PathName>
@@ -259,6 +261,7 @@
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Message.h</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Message_Processor.h</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Message_Queue.h</PathName>
+      <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Services/Interactive_Assembly.h</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Timeline.h</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Utilities/Ring_Buffer.h</PathName>
       <PathName>/Users/mokogobo/Workspace/Checkouts/Clay/Firmware/R6/Clay_C6_Firmware/Sources/Utilities/UUID.h</PathName>

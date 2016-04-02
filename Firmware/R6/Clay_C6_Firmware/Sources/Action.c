@@ -309,7 +309,7 @@ int8_t Delete_Action (Action *action) {
 	return TRUE;
 }
 
-int8_t Perform_Action_2 (Action *action, char *state) {
+int8_t Perform_Action (Action *action, char *state) {
 
 	int8_t result = FALSE;
 
@@ -341,7 +341,7 @@ static int8_t Perform_Light_Action (char *state) {
 
 	// Update the channels
 	// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
-	for (i = 0; i < 12; i++) {
+	for (i = 0; i < CHANNEL_COUNT; i++) {
 		int hex_color = 0x000000;
 		int red = 0;
 		int green = 0;
@@ -379,14 +379,14 @@ static int8_t Perform_Signal_Action (char *state) {
 	int tokenInt = 0;
 	int i;
 
-	// e.g., TITL TOTL
+	// e.g., "TITL TOTL TITL TOTL TITL TOTL TITL TOTL TITL TOTL TITL TOTL"
 
 	// Update the channels
 	// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
-	for (i = 0; i < 12; i++) {
+	for (i = 0; i < CHANNEL_COUNT; i++) {
 
 		// Get state of channel at index i (number i + 1)
-		status = Get_Token (state, token, i);
+		status = Get_Token (state, token, i); // e.g., "TITL"
 
 		// Update the GPIO states
 		// TODO: Update the intermediate data structure and only update the actual GPIO when the state changes.
@@ -443,13 +443,6 @@ static int8_t Perform_Signal_Action (char *state) {
 			if (updated_channel_profile[i].mode == CHANNEL_MODE_TOGGLE) {
 				// Assign the channel value based on the physical pin state.
 				updated_channel_profile[i].value = Get_Channel_Value (updated_channel_profile[i].number);
-//						if (token[4] == 'H') {
-//							updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_ON;
-//						} else if (token[4] == 'L') {
-//							updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
-//						} else {
-//							// ERROR: Error. An unrecognized toggle value was specified.
-//						}
 			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_WAVEFORM) {
 				// TODO: Assign the value differently, depending on the specified channel direction and mode.
 				// TODO: Assign this based on the received data.
@@ -519,11 +512,17 @@ static int8_t Perform_Message_Action (char *state) {
 		return TRUE;
 	}
 
+	// <HACK>
+	if (Get_Message_Count (&outgoingWiFiMessageQueue) > 5) {
+		return TRUE;
+	}
+	// </HACK>
+
 	// Extract parameters
 	Get_Token (state, param1, 0); // Get_Token_With_Delimiter(state, ' ', '\"', param1, 0);
 	Get_Token (state, param2, 1);
 	Get_Token (state, param3, 2);
-	Get_Token_With_Delimiter(state, ' ', '\'', param3, 2);
+	Get_Token_With_Delimiter (state, ' ', '\'', param3, 2);
 
 	// Create message from state
 	Message *message = Create_Message (param3);
@@ -573,7 +572,36 @@ static int8_t Perform_Buzzer_Action (char *state) {
 	// Perform action
 	if (strncmp (param1, "note", strlen ("note")) == 0) {
 
-		// TODO: Buzzer_Play_Note ()
+		// Parse parameters
+		duration = atoi (param4);
+
+		if (strncmp (param2, "C", strlen ("C")) == 0) {
+			frequency = NOTE_C;
+		} else if (strncmp (param2, "Db", strlen ("Db")) == 0) {
+			frequency = NOTE_Db;
+		} else if (strncmp (param2, "D", strlen ("D")) == 0) {
+			frequency = NOTE_D;
+		} else if (strncmp (param2, "Eb", strlen ("Eb")) == 0) {
+			frequency = NOTE_Eb;
+		} else if (strncmp (param2, "F", strlen ("F")) == 0) {
+			frequency = NOTE_F;
+		} else if (strncmp (param2, "Gb", strlen ("Gb")) == 0) {
+			frequency = NOTE_Gb;
+		} else if (strncmp (param2, "G", strlen ("G")) == 0) {
+			frequency = NOTE_G;
+		} else if (strncmp (param2, "Ab", strlen ("Ab")) == 0) {
+			frequency = NOTE_Ab;
+		} else if (strncmp (param2, "A", strlen ("A")) == 0) {
+			frequency = NOTE_A;
+		} else if (strncmp (param2, "Bb", strlen ("Bb")) == 0) {
+			frequency = NOTE_Bb;
+		} else if (strncmp (param2, "B", strlen ("B")) == 0) {
+			frequency = NOTE_B;
+		} else {
+			frequency = NOTE_OFF;
+		}
+
+		Buzzer_Play_Frequency (frequency, duration);
 
 		return TRUE;
 
