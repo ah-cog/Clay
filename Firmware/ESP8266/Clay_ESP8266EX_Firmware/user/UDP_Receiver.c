@@ -149,17 +149,19 @@ void ICACHE_RODATA_ATTR UDP_Receiver_State_Step()
 					MAXIMUM_DESTINATION_LENGTH);
 			taskEXIT_CRITICAL();
 
+			taskYIELD();
+
 			taskENTER_CRITICAL();
 			Initialize_Message(&tempMessage,
 					message_type_strings[MESSAGE_TYPE_UDP], source_addr,
 					dest_addr, UDP_Rx_Buffer);
 			taskEXIT_CRITICAL();
 
+			taskYIELD();
+
 			taskENTER_CRITICAL();
 			Queue_Message(&incoming_message_queue, &tempMessage);
 			taskEXIT_CRITICAL();
-
-			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';
 
 			State = Idle;
 			break;
@@ -231,8 +233,12 @@ static bool ICACHE_RODATA_ATTR Receive()
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
 	memset(UDP_Rx_Buffer, 0, UDP_RX_BUFFER_SIZE_BYTES);
 	memset(&from, 0, sizeof(from));
+	taskEXIT_CRITICAL();
+
+	taskYIELD();
 
 	fromlen = sizeof(struct sockaddr_in);
 

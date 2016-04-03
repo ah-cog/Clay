@@ -156,13 +156,14 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 
 		case Receiving:
 		{
+			taskENTER_CRITICAL();
 			buffer_has_data = Ring_Buffer_Has_Data();
+			taskEXIT_CRITICAL();
 
 			if (buffer_has_data)
 			{
 				taskENTER_CRITICAL();
 				Ring_Buffer_Get(serial_rx_buffer + bytes_received);
-				taskEXIT_CRITICAL();
 
 				if (serial_rx_buffer[bytes_received++] == address_terminator[0])
 				{
@@ -176,6 +177,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
 
 					State = Parsing;
 				}
+				taskEXIT_CRITICAL();
 			}
 			else if ((system_get_time() - state_time) > 1000000) //GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
 			{

@@ -89,9 +89,6 @@ void Wifi_Test() {
 
    char * ssid = "hefnet";
    char * password = "h3fn3r_is_better_than_me";
-   Wait(5000);
-
-   WiFi_Request_Connect(ssid, password);
 
    for (;;) {
 

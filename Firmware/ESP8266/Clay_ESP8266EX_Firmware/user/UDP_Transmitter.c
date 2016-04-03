@@ -138,7 +138,7 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_State_Step()
 			UDP_Tx_Count = strlen(m->content);
 			taskEXIT_CRITICAL();
 
-			uint8* addrStr;
+			taskYIELD();
 
 			taskENTER_CRITICAL();
 			Deserialize_Address(m->destination, &DestinationAddr,

@@ -40,7 +40,6 @@ static int32 listen_sock;
 static int32 data_sock;
 
 static int32 receive_count;
-static int32 transmit_count;
 
 static int32 current_outgoing_fail_count;
 
@@ -90,7 +89,7 @@ void ICACHE_RODATA_ATTR TCP_Combined_Init()
 	taskYIELD();
 
 	//TODO: print high water mark and revise stack size if necessary.
-	xTaskCreate(TCP_Combined_Task, "TCPall_1", 512, NULL, 2,
+	xTaskCreate(TCP_Combined_Task, "TCPall_1", 256, NULL, 2,
 			TCP_combined_handle);
 }
 
@@ -412,6 +411,10 @@ static bool Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
 
+	taskENTER_CRITICAL();
+	memset(receive_data, 0, RECEIVE_DATA_SIZE);
+	taskEXIT_CRITICAL();
+
 	receive_count = Receive(data_sock, receive_data, RECEIVE_DATA_SIZE);
 
 	if (receive_count > 0)
@@ -429,6 +432,10 @@ static bool Receive_And_Enqueue(int32 data_sock)
 			//		put chars into ring buffer, watch for message delimiter
 			//		when a delimiter is found, read the message out of the ring buff, update indexes
 			//		init message and enqueue.
+
+//			taskENTER_CRITICAL();
+//			printf("found:[%s]", message_ptr);
+//			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
 			Initialize_Message(&temp_message,
