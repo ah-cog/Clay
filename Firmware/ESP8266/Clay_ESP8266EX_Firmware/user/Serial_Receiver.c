@@ -97,13 +97,13 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 
 	State = Idle;
 
-	xTaskCreate(Serial_Receiver_State_Step, "uartrx1", 128, NULL, 2,
+	xTaskCreate(Serial_Receiver_Task, "uartrx1", 128, NULL, 2,
 			serial_rx_task);
 
 	return rval;
 }
 
-void ICACHE_RODATA_ATTR Serial_Receiver_State_Step()
+void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 {
 	for (;;)
 	{

@@ -41,6 +41,7 @@
 #include "../include/AddressSerialization.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
+#include "ESP_Utilities.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -80,13 +81,13 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 
 	state = Idle;
 
-	xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 128, NULL, 2,
+	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 128, NULL, 2,
 			serial_tx_task);
 
 	return rval;
 }
 
-void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
+void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 {
 	for (;;)
 	{
@@ -124,9 +125,11 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 		{
 			taskENTER_CRITICAL();
 			temp_message = Dequeue_Message(&incoming_message_queue);
+			taskEXIT_CRITICAL();
 
 			serial_tx_count = strlen(temp_message->content);
 
+			taskENTER_CRITICAL();
 			sprintf(serial_tx_buffer, "%s%s%s%s%s%s%s%s", temp_message->content,
 					message_delimiter, temp_message->message_type,
 					type_delimiter, temp_message->source, address_delimiter,
@@ -211,6 +214,9 @@ void Send_Message_To_Master(char * message, Message_Type type)
 	Message m;
 	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
+	DEBUG_Print("send message");
+	DEBUG_Print(message);
+
 	taskENTER_CRITICAL();
 	Get_Message_Type_Str(type, type_string);
 	taskEXIT_CRITICAL();
@@ -222,6 +228,8 @@ void Send_Message_To_Master(char * message, Message_Type type)
 	taskENTER_CRITICAL();
 	Queue_Message(&incoming_message_queue, &m);
 	taskEXIT_CRITICAL();
+
+	DEBUG_Print("message enqueued");
 }
 
 ////Local implementations /////////////////////////////////////////

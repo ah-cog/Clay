@@ -18,6 +18,9 @@
 
 ////Prototypes/////////////////////////////////////////////////////
 extern bool UDP_Receiver_Init();
-extern void UDP_Receiver_State_Step();
+extern void UDP_Receiver_Deinit();
+extern void UDP_Receiver_Task();
+
+
 
 #endif /* INCLUDE_UDP_RECEIVER_H_ */

@@ -74,17 +74,26 @@ void ICACHE_RODATA_ATTR user_init(void)
 //added to allow 3+ TCP connections per ESP RTOS SDK API Reference 1.3.0 Chapter 1, page 2
 	TCP_WND = 2 * TCP_MSS;
 
-	//these state machines should be started immediately so that we
-	//		can process instructions from the micro.
-	Serial_Receiver_Init();
-	Command_Parser_Init();
-	Serial_Transmitter_Init();
-
 	//uncomment to generate an interrupt when we connect to the AP.
 	//	xTaskCreate(Signal_Power_On_Complete, "power_on_signal", 256, NULL, 2, NULL);
 
 	//Set up our event handler from above. this starts the tasks that talk over WiFi.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
+
+	//these state machines should be started immediately so that we
+	//		can process instructions from the micro.
+
+#if ENABLE_SERIAL_RX
+	Serial_Receiver_Init();
+#endif
+
+#if ENABLE_SERIAL_TX
+	Serial_Transmitter_Init();
+#endif
+
+#if ENABLE_COMMAND_PARSER
+	Command_Parser_Init();
+#endif
 }
 
 void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode)
@@ -118,7 +127,7 @@ void ICACHE_RODATA_ATTR GPIO_Init()
 	GPIO_AS_INPUT(BIT(CLAY_INTERRUPT_IN_PIN));
 }
 
-void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
+void wifi_handle_event_cb(System_Event_t *evt)
 {
 //	os_printf("event %x\n", evt->event_id);
 	switch (evt->event_id)
@@ -167,8 +176,9 @@ void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
 		TCP_Combined_Init();
 #endif
 
-		UART_WaitTxFifoEmpty(UART0);
 		Send_Message_To_Master(CONNECTED_MESSAGE, MESSAGE_TYPE_INFO);
+		int ip = Get_IP_Address();
+		Send_Message_To_Master(inet_ntoa(ip), MESSAGE_TYPE_INFO);
 
 		break;
 	}
