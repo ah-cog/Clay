@@ -86,6 +86,7 @@ void Wifi_Test() {
 #if 1
 
    bool request_connect = FALSE;
+   bool get_ip = FALSE;
 
    char * ssid = "hefnet";
    char * password = "h3fn3r_is_better_than_me";
@@ -111,6 +112,11 @@ void Wifi_Test() {
       if (request_connect) {
          request_connect = FALSE;
          WiFi_Request_Connect(ssid, password);
+      }
+
+      if (get_ip) {
+         get_ip = FALSE;
+         WiFi_Request_Get_Internet_Address();
       }
    }
 #endif

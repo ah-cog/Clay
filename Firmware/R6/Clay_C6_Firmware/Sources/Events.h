@@ -60,6 +60,8 @@
 #include "GPIO_PTD.h"
 #include "GPIO_PTC.h"
 #include "GPIO_PTE.h"
+#include "ADC1.h"
+#include "PWM_OUT_1.h"
 
 #include "PowerOn.h"
 #include "Buzzer.h"

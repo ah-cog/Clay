@@ -137,6 +137,8 @@ void Button_Event_Handler() {
 
 void Button_Periodic_Call() {
 
+   button_state = Read_Button_State();
+
    for (int i = 0; i < BUTTON_CALLBACK_COUNT; ++i) {
       if (callbacks[i].call_handler) {
          callbacks[i].handler();
@@ -198,5 +200,9 @@ void Unregister_Callback(Button_Handler handler) {
 
 bool Read_Button_State() {
 
-   return BUTTON_IN_GetPortValue(button_in_data) & BUTTON_IN_button_field_MASK;
+#ifdef C6R2
+   return BUTTON_IN_GetPortValue(button_in_data) & BUTTON_IN_button_field_MASK ? FALSE : TRUE;     //c6r2 -- button active low
+#else
+   return BUTTON_IN_GetPortValue(button_in_data) & BUTTON_IN_button_field_MASK ? TRUE : FALSE;     //c6r3 -- button active high
+#endif
 }

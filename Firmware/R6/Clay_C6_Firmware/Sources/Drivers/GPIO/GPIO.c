@@ -1,10 +1,28 @@
 ////Includes //////////////////////////////////////////////////////
 #include "GPIO.h"
 
+#include "PWM_Utils.h"
+
 #include "GPIO_PTB.h"
 #include "GPIO_PTC.h"
 #include "GPIO_PTD.h"
 #include "GPIO_PTE.h"
+
+#include "ADC1.h"
+#include "PWM_OUT_1.h"
+
+////Macros ////////////////////////////////////////////////////////
+#define GPIO_ADC_SLOPE          4.98344E-5F
+#define GPIO_ADC_OFFSET         0.0F
+
+//these are here to preserve the indexing when ptb4 and 6 are assigned to PWM and ADC
+#ifndef GPIO_PTB_IO_4_MASK
+#define GPIO_PTB_IO_4_MASK 0
+#endif
+
+#ifndef GPIO_PTB_IO_6_MASK
+#define GPIO_PTB_IO_6_MASK 0
+#endif
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -46,10 +64,19 @@ static LDD_TDeviceData * PTC_data;
 static LDD_TDeviceData * PTD_data;
 static LDD_TDeviceData * PTE_data;
 
+static LDD_TDeviceData * ADC1_data;
+static LDD_TDeviceData * PWM_OUT_1_data;
+
 ////Local Prototypes///////////////////////////////////////////////
 static bool Enable_Digital(PORT_NUMBER number);
 static bool Enable_Analog(PORT_NUMBER number);
 static bool Enable_PWM(PORT_NUMBER number);
+
+static int32_t Read_Digital(PORT_NUMBER number);
+static int32_t Read_Analog(PORT_NUMBER number);
+
+static int32_t Write_Digital(PORT_NUMBER number, int32_t data);
+static int32_t Write_PWM(PORT_NUMBER number, int32_t data);
 
 ////Global implementations ////////////////////////////////////////
 bool Port_Enable_All() {
@@ -106,16 +133,21 @@ bool Port_Enable(PORT_NUMBER number) {
 void Port_Disable(PORT_NUMBER number) {
 }
 
-bool Port_Set_Type(PORT_NUMBER number, PORT_TYPE type) {
+bool Port_Set_Type(PORT_NUMBER number, uint8_t type) {
 
    bool rval = FALSE;
+
+   channel_profile[number].mode = type;
+
+   //TODO: reinit as new type or disable -- we need to make sure the hardware is consistent with channel_profile
+
    return rval;
 }
 
 PORT_TYPE Port_Get_Type(PORT_NUMBER number) {
 
-   PORT_TYPE rval = PORT_TYPE_MAX;
-   return rval;
+   return channel_profile[number].mode;
+
 }
 
 bool Port_Set_Direction(PORT_NUMBER number, PORT_DIRECTION direction) {
@@ -130,13 +162,71 @@ PORT_DIRECTION Port_Get_Direction(PORT_NUMBER number) {
    return rval;
 }
 
-void Port_Set_Data(PORT_NUMBER number, int32_t data) {
+int32_t Port_Set_Data(PORT_NUMBER number, int32_t data) {
 
+   int32_t rval = -1;
+
+   switch (channel_profile[number].mode) {
+
+      case PORT_TYPE_DIGITAL: {
+
+         rval = Write_Digital(number, data);
+         break;
+      }
+
+      case PORT_TYPE_ANALOG: {
+
+         //only ADC is available in the hardware right now.
+         break;
+      }
+
+      case PORT_TYPE_PWM: {
+
+         rval = Write_PWM(number, data);
+         break;
+      }
+
+      case PORT_TYPE_MAX:
+      default: {
+         break;
+      }
+   }
+
+   return rval;
 }
 
-uint32_t Port_Get_Data(PORT_NUMBER number) {
+int32_t Port_Get_Data(PORT_NUMBER number) {
 
-   uint32_t rval = 0;
+   int32_t rval = -1;
+
+   //TODO: return the output data when in output mode?
+
+   switch (channel_profile[number].mode) {
+
+      case PORT_TYPE_DIGITAL: {
+
+         rval = Read_Digital(number);
+         break;
+      }
+
+      case PORT_TYPE_ANALOG: {
+
+         rval = Read_Analog(number);
+         break;
+      }
+
+      case PORT_TYPE_PWM: {
+
+         //TODO: hook up frequency read somewhere. Probably should call it a different pin type frequency_in or counter or something like that.
+         break;
+      }
+
+      case PORT_TYPE_MAX:
+      default: {
+         break;
+      }
+   }
+
    return rval;
 }
 
@@ -148,12 +238,187 @@ static bool Enable_Digital(PORT_NUMBER number) {
 }
 
 static bool Enable_Analog(PORT_NUMBER number) {
+
+   if (number != PORT_6) return FALSE;
+
    bool rval = FALSE;
+
+   ADC1_data = ADC1_Init(NULL);
+
+   ADC1_StartCalibration(ADC1_data);
+
+   while (!ADC1_GetMeasurementCompleteStatus(ADC1_data))
+      ;
+
+   LDD_TError adcCalOk = ADC1_GetCalibrationResultStatus(ADC1_data);
+
    return rval;
 }
 
 static bool Enable_PWM(PORT_NUMBER number) {
+
+   if (number != PORT_4) return FALSE;
+
    bool rval = FALSE;
+
+   LDD_TError err;
+
+   PWM_OUT_1_data = PWM_OUT_1_Init(NULL);
+
+   err = PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, 0);
+   PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(0));
+
+   return rval;
+}
+
+int32_t Read_Digital(PORT_NUMBER number) {
+
+   if (number == PORT_6 || number == PORT_4) return -1;
+
+   int32_t rval = -1;
+
+   switch (channel_map[number].port) {
+      case IO_PTB: {
+
+         rval = (GPIO_PTB_GetPortValue(PTB_data) & channel_map[number].mask) ? 1 : 0;
+
+         break;
+      }
+
+      case IO_PTC: {
+
+         rval = (GPIO_PTC_GetPortValue(PTC_data) & channel_map[number].mask) ? 1 : 0;
+
+         break;
+      }
+
+      case IO_PTD: {
+
+         rval = (GPIO_PTC_GetPortValue(PTC_data) & channel_map[number].mask) ? 1 : 0;
+
+         break;
+      }
+
+      case IO_PTE: {
+
+         rval = (GPIO_PTC_GetPortValue(PTC_data) & channel_map[number].mask) ? 1 : 0;
+
+         break;
+      }
+
+      case IO_MAX:
+      default: {
+         break;
+      }
+   }
+
+   return rval;
+}
+
+int32_t Read_Analog(PORT_NUMBER number) {
+
+   if (number != PORT_6) return -1;
+   //TODO: get adc1 or adc0 and sample group from channel_map. For now, we just have PORT_6 to worry about.
+
+   int32_t rval = -1;
+
+   //select sample group. This in preconfigured in processor expert. port 6 is in sample group 0
+   ADC1_SelectSampleGroup(ADC1_data, 0);
+
+   //tell the ADC to start a measurement.
+   ADC1_StartSingleMeasurement(ADC1_data);
+
+   //Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
+   while (!ADC1_GetMeasurementCompleteStatus(ADC1_data))
+      ;
+
+   //get the value
+   ADC1_GetMeasuredValues(ADC1_data, &rval);
+
+   //apply voltage slope and offset. Because we're returning an int32, this return value is in millivolts.
+   rval = (((double) rval * GPIO_ADC_SLOPE) + GPIO_ADC_OFFSET);
+
+   return rval;
+}
+
+int32_t Write_Digital(PORT_NUMBER number, int32_t data) {
+
+   if (number == PORT_6 || number == PORT_4) return -1;
+
+   int32_t rval = 0;
+
+   switch (channel_map[number].port) {
+      case IO_PTB: {
+
+         if (data) {
+            GPIO_PTB_SetPortBits(PTB_data, channel_map[number].mask);
+         } else {
+            GPIO_PTB_ClearPortBits(PTB_data, channel_map[number].mask);
+         }
+
+         break;
+      }
+
+      case IO_PTC: {
+
+         if (data) {
+            GPIO_PTC_SetPortBits(PTC_data, channel_map[number].mask);
+         } else {
+            GPIO_PTC_ClearPortBits(PTC_data, channel_map[number].mask);
+         }
+
+         break;
+      }
+
+      case IO_PTD: {
+
+         if (data) {
+            GPIO_PTD_SetPortBits(PTD_data, channel_map[number].mask);
+         } else {
+            GPIO_PTD_ClearPortBits(PTD_data, channel_map[number].mask);
+         }
+
+         break;
+      }
+
+      case IO_PTE: {
+
+         if (data) {
+            GPIO_PTE_SetPortBits(PTE_data, channel_map[number].mask);
+         } else {
+            GPIO_PTE_ClearPortBits(PTE_data, channel_map[number].mask);
+         }
+
+         break;
+      }
+
+      case IO_MAX:
+      default: {
+         break;
+      }
+   }
+
+   return rval;
+}
+
+int32_t Write_PWM(PORT_NUMBER number, int32_t data) {
+
+   if (number != PORT_4) return -1;
+
+   int32_t rval = 0;
+
+   if (data > 0) {
+
+      //set the frequency
+      PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, data);
+
+      //this is how we set the ratio. The ratio is set by a 16-bit value. We scale a percentage up to the full scale of that 16 bit value. example: 50% = 32768
+      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(75));
+   } else {
+
+      //if we set the ratio to 0, the output will never change states.
+      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, 0);
+   }
 
    return rval;
 }
@@ -535,3 +800,25 @@ int8_t Get_Channel_Value(uint8_t number) {     // i.e., Get discrete input state
    return value;
 }
 
+
+
+
+///test code for PWM and ADC.
+//Port_Set_Type(PORT_4, PORT_TYPE_PWM);
+//Port_Set_Type(PORT_6, PORT_TYPE_ANALOG);
+//
+//Port_Enable(PORT_4);
+//Port_Enable(PORT_6);
+//
+//int adc;
+//int pwm_freq_hz = 1000;
+//
+//for (;;) {
+//
+//   adc = Port_Get_Data(PORT_6);
+//   Port_Set_Data(PORT_4, pwm_freq_hz);
+//
+//   pwm_freq_hz = (pwm_freq_hz + 1000) % 10000;
+//
+//   Wait(1000);
+//}
