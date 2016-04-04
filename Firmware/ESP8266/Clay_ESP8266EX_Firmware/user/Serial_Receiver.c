@@ -9,31 +9,10 @@
  *
  */
 
-/*
- * States:
- *      Disable -- No receiving occurs.
- *          -Go to configure when enable received
- *      Configure -- set up serial port, interrupts, etc
- *          -Go to Idle upon completion
- *      Idle
- *          -Awaiting interrupt from uC with data to send.
- *          -When not transmitting serial data and uC interrupt received.
- *          -go to Interrupt_Received when interrupt comes, but put GPIO line low first so the data will start coming.
- *          -Disable sends us back to Disable state.
- *      Receiving
- *          -Read data until uC releases its interrupt line
- *          -Go to Receive_Complete
- *          -Disable sends us back to Disable state.
- *      Parsing
- *          -Parse message into message queue. Increment queue counters _after_ the data is valid.
- *          -Return to idle after message is parsed
- * */
-
 ////Includes //////////////////////////////////////////////////////
 #include "../include/AddressSerialization.h"
 
 #include "esp_common.h"
-#include "GPIO.h"
 #include "UART.h"
 
 #include "freertos/FreeRTOS.h"
@@ -55,6 +34,7 @@ typedef enum
 	Disable, Configure, Idle, Receiving, Parsing, UDP_STATE_MAX
 } Serial_Receiver_States;
 ////Globals   /////////////////////////////////////////////////////
+volatile bool master_interrupt_received;
 
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Receiver_States State;
@@ -85,6 +65,7 @@ uint32 counter;
 bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 {
 	bool rval = true;
+	master_interrupt_received = false;
 
 	taskENTER_CRITICAL();
 	serial_rx_buffer = zalloc(SERIAL_RX_BUFFER_SIZE_BYTES);
@@ -97,8 +78,7 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 
 	State = Idle;
 
-	xTaskCreate(Serial_Receiver_Task, "uartrx1", 128, NULL, 2,
-			serial_rx_task);
+	xTaskCreate(Serial_Receiver_Task, "uartrx1", 128, NULL, 2, serial_rx_task);
 
 	return rval;
 }
@@ -128,13 +108,11 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 		case Idle:
 		{
-			if (!GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
+			if (master_interrupt_received) //state transition
 			{
-				serial_rx_count = 0;
+				master_interrupt_received = false;
 
-				taskENTER_CRITICAL();
-				UART_ResetRxFifo(UART0);
-				taskEXIT_CRITICAL();
+				serial_rx_count = 0;
 
 				bytes_received = 0;
 
@@ -142,14 +120,14 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 				Ring_Buffer_Init();
 				taskEXIT_CRITICAL();
 
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-				gpio16_output_set(0);
-#else
-				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
-#endif
-
 				state_time = system_get_time();
 				State = Receiving;
+			}
+			else
+			{
+				taskENTER_CRITICAL();
+				UART_ResetRxFifo(UART0);
+				taskEXIT_CRITICAL();
 			}
 			break;
 		}
@@ -169,24 +147,12 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 				{
 					serial_rx_buffer[bytes_received] = '\0';
 
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-					gpio16_output_set(1);
-#else
-					GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
-#endif
-
 					State = Parsing;
 				}
 				taskEXIT_CRITICAL();
 			}
-			else if ((system_get_time() - state_time) > 1000000) //GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN)) //state transition
+			else if ((system_get_time() - state_time) > 1000000) //system_get_time returns us
 			{
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-				gpio16_output_set(1);
-#else
-				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
-#endif
-
 				State = Idle;
 			}
 			break;
@@ -247,7 +213,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 //					portENTER_CRITICAL();
 //					UART_WaitTxFifoEmpty(UART0);
 //					portEXIT_CRITICAL();
-
 					selected_message_queue = &outgoing_TCP_message_queue;
 					break;
 				}
@@ -272,11 +237,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					taskEXIT_CRITICAL();
 				}
 
-			}
-
-			while (GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
-			{
-				taskYIELD();
 			}
 
 			State = Idle;

@@ -20,12 +20,13 @@
 #define ENABLE_TCP_RECEIVER		0
 
 #define ENABLE_UDP_SENDER		1
-#define ENABLE_UDP_RECEIVER		1
+#define ENABLE_UDP_RECEIVER		0
 #define ENABLE_TCP_COMBINED 	1
 #define ENABLE_SERIAL_RX 		1
 #define ENABLE_SERIAL_TX 		1
 #define ENABLE_COMMAND_PARSER 	1
-#define ENABLE_DEBUG_PRINT		1
+
+#define ENABLE_DEBUG_PRINT      1
 
 
 ///Buffer size information below:

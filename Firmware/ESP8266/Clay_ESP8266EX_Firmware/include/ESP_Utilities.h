@@ -22,6 +22,7 @@ extern void ICACHE_RODATA_ATTR DEBUG_Print(char * msg);
 #define DEBUG_Print(x)	((void)(x))
 #endif
 
+extern void ICACHE_RODATA_ATTR DEBUG_Print_Address(struct sockaddr_in * addr, char * tag);
 extern void ICACHE_RODATA_ATTR DEBUG_Print_High_Water();
 
 #endif /* INCLUDE_ESP_UTILITIES_H_ */

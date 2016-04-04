@@ -100,6 +100,20 @@ void ICACHE_RODATA_ATTR DEBUG_Print(char * msg)
 }
 #endif
 
+void ICACHE_RODATA_ATTR DEBUG_Print_Address(struct sockaddr_in * addr,
+		char * tag)
+{
+	char addr_string[50];
+
+	taskENTER_CRITICAL();
+	Serialize_Address(addr->sin_addr.s_addr, addr->sin_port, addr_string, 50);
+	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
+	printf("%s: %s", tag, addr_string);
+	taskEXIT_CRITICAL();
+}
+
 void ICACHE_RODATA_ATTR DEBUG_Print_High_Water()
 {
 	xTaskHandle task_handle = xTaskGetCurrentTaskHandle();

@@ -101,8 +101,7 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 	Initialize_Message_Queue(&incoming_message_queue);
 	taskEXIT_CRITICAL();
 
-	xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL, 2,
-			UDP_receive_handle);
+	xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL, 2, UDP_receive_handle);
 
 	testCounter = 0;
 
@@ -201,7 +200,9 @@ static bool ICACHE_RODATA_ATTR Connect()
 {
 	Connected = false;
 
+	taskENTER_CRITICAL();
 	memset(&server_addr, 0, sizeof(server_addr));
+	taskEXIT_CRITICAL();
 
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;
@@ -248,6 +249,9 @@ static bool ICACHE_RODATA_ATTR Receive()
 
 	taskENTER_CRITICAL();
 	memset(UDP_Rx_Buffer, 0, UDP_RX_BUFFER_SIZE_BYTES);
+	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
 	memset(&from, 0, sizeof(from));
 	taskEXIT_CRITICAL();
 
@@ -259,6 +263,8 @@ static bool ICACHE_RODATA_ATTR Receive()
 	ret = recvfrom(receive_sock, (uint8 * ) UDP_Rx_Buffer,
 			UDP_RX_BUFFER_SIZE_BYTES, 0, (struct sockaddr * ) &from,
 			(socklen_t * ) &fromlen);
+
+	taskYIELD();
 
 	if (ret > 0)
 	{

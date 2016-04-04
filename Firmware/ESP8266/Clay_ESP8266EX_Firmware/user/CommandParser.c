@@ -152,7 +152,7 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			{
 			case CLAY_COMMAND_SET_AP:
 			{
-				DEBUG_Print("setap rx");
+				//DEBUG_Print("setap rx");
 				Set_AP_Command(command_args);
 				break;
 			}
@@ -196,12 +196,12 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 
 			}
 
-			DEBUG_Print("free command");
+			//DEBUG_Print("free command");
 			//dequeue alloc's a message.
 			free(m);
 			m = NULL;
 
-			DEBUG_Print("return to idle");
+			//DEBUG_Print("return to idle");
 
 			state = Idle;
 			break;
@@ -246,6 +246,8 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 {
 	bool rval = false;
 
+	Stop_Task(TASK_TYPE_TCP_RX | TASK_TYPE_UDP_RX | TASK_TYPE_UDP_TX);
+
 	taskENTER_CRITICAL();
 	char * ssid = strtok(args, &args_delimiter);
 	char * key = strtok(NULL, &args_delimiter);
@@ -260,7 +262,7 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 		Send_Message_To_Master("SETAP_FAIL", MESSAGE_TYPE_INFO);
 	}
 
-	DEBUG_Print(rval ? "setap ok" : "setap nfg");
+	//DEBUG_Print(rval ? "setap ok" : "setap nfg");
 
 	return rval;
 }

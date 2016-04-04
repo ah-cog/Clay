@@ -137,11 +137,15 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 
 		case Buffer_Message:
 		{
+			taskENTER_CRITICAL();
 			memset(&DestinationAddr, 0, sizeof(DestinationAddr));
+			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
 			m = Dequeue_Message(&outgoing_UDP_message_queue);
 			taskEXIT_CRITICAL();
+
+			taskYIELD();
 
 			taskENTER_CRITICAL();
 			strncpy(UDP_Tx_Buffer, m->content, UDP_TX_BUFFER_SIZE_BYTES);
@@ -154,6 +158,8 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 			Deserialize_Address(m->destination, &DestinationAddr,
 					&tempIgnoredMessageType);
 			taskEXIT_CRITICAL();
+
+			taskYIELD();
 
 			free(m);
 
@@ -187,7 +193,9 @@ static bool ICACHE_RODATA_ATTR Connect()
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
 	memset(&server_addr, 0, sizeof(server_addr));
+	taskEXIT_CRITICAL();
 
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;

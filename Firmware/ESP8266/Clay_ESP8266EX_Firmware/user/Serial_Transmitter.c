@@ -141,10 +141,23 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			temp_message = NULL;
 
 			time_temp = system_get_time();
+
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 			gpio16_output_set(0);
 #else
 			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
+#endif
+
+			//wait 1ms
+			while ((system_get_time() - time_temp) > 1000)
+			{
+				taskYIELD();
+			}
+
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+			gpio16_output_set(1);
+#else
+			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
 #endif
 
 			state = Wait_For_Transmit_Ok;
@@ -154,24 +167,22 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 
 		case Wait_For_Transmit_Ok:
 		{
-			if (!GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
-			{
 #ifdef PRINT_HIGH_WATER
-				taskENTER_CRITICAL();
-				printf("stx send\r\n");
-				taskEXIT_CRITICAL();
-				portENTER_CRITICAL();
-				UART_WaitTxFifoEmpty(UART0);
-				portEXIT_CRITICAL();
+			taskENTER_CRITICAL();
+			printf("stx send\r\n");
+			taskEXIT_CRITICAL();
+			portENTER_CRITICAL();
+			UART_WaitTxFifoEmpty(UART0);
+			portEXIT_CRITICAL();
 
-				DEBUG_Print_High_Water();
+			DEBUG_Print_High_Water();
 #endif
 
-				taskENTER_CRITICAL();
-				printf(serial_tx_buffer);
-				taskEXIT_CRITICAL();
-				state = Transmitting;
-			}
+			taskENTER_CRITICAL();
+			printf(serial_tx_buffer);
+			taskEXIT_CRITICAL();
+			state = Transmitting;
+
 			break;
 		}
 
@@ -180,13 +191,6 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			if (UART_CheckTxFifoEmpty(UART0))
 			{
 				state = Transmitting_Done;
-
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-				gpio16_output_set(1);
-#else
-				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
-#endif
-
 			}
 			break;
 		}
@@ -214,8 +218,8 @@ void Send_Message_To_Master(char * message, Message_Type type)
 	Message m;
 	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
-	DEBUG_Print("send message");
-	DEBUG_Print(message);
+//	DEBUG_Print("send message");
+//	DEBUG_Print(message);
 
 	taskENTER_CRITICAL();
 	Get_Message_Type_Str(type, type_string);
@@ -229,7 +233,7 @@ void Send_Message_To_Master(char * message, Message_Type type)
 	Queue_Message(&incoming_message_queue, &m);
 	taskEXIT_CRITICAL();
 
-	DEBUG_Print("message enqueued");
+//	DEBUG_Print("message enqueued");
 }
 
 ////Local implementations /////////////////////////////////////////

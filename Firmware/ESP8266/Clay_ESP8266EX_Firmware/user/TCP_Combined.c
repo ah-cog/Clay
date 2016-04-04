@@ -93,7 +93,7 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 	taskYIELD();
 
 	//TODO: print high water mark and revise stack size if necessary.
-	xTaskCreate(TCP_Combined_Task, "TCPall_1", 256, NULL, 2,
+	xTaskCreate(TCP_Combined_Task, "TCPall_1", 512, NULL, 3,
 			TCP_combined_handle);
 
 	return rval;
@@ -328,6 +328,10 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 			millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
 			setsockopt(opened_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
 					sizeof(millis));
+
+			//send timeout not supported in ESP8266
+//			setsockopt(opened_socket, SOL_SOCKET, SO_SNDTIMEO, &millis,
+//					sizeof(millis));
 		}
 		else
 		{
@@ -358,8 +362,13 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 	if (message_dest.sin_addr.s_addr == remote_address.sin_addr.s_addr
 			&& message_dest.sin_port == remote_address.sin_port)
 	{
-		bool rval = write(destination_socket, m->content, strlen(m->content))
-				== strlen(m->content);
+
+		taskENTER_CRITICAL();
+		size_t length = (size_t) (strlen(m->content) + 1);
+		taskEXIT_CRITICAL();
+
+		//this blocks forever. why?
+		rval = lwip_write(destination_socket, m->content, length) == length;
 	}
 
 	return rval;
@@ -451,10 +460,6 @@ static bool Receive_And_Enqueue(int32 data_sock)
 			//		put chars into ring buffer, watch for message delimiter
 			//		when a delimiter is found, read the message out of the ring buff, update indexes
 			//		init message and enqueue.
-
-//			taskENTER_CRITICAL();
-//			printf("found:[%s]", message_ptr);
-//			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
 			Initialize_Message(&temp_message,
