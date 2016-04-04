@@ -15,6 +15,10 @@
 
 #include "uart.h"
 
+#include "Clay_Config.h"
+
+////Defines	///////////////////////////////////////////////////////
+
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
@@ -26,10 +30,7 @@
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Set_Access_Point(char * ssid, char * key)
 {
-
-	taskENTER_CRITICAL();
-	printf("setap:%s,%s\r\n", ssid, key);
-	taskEXIT_CRITICAL();
+	DEBUG_Print("setap");
 
 	bool rval = wifi_station_disconnect();
 
@@ -90,10 +91,26 @@ int ICACHE_RODATA_ATTR Get_Subnet_Mask()
 	return ip.netmask.addr;
 }
 
+#if ENABLE_DEBUG_PRINT
 void ICACHE_RODATA_ATTR DEBUG_Print(char * msg)
 {
 	taskENTER_CRITICAL();
 	printf("%s\r\n", msg);
+	taskEXIT_CRITICAL();
+}
+#endif
+
+void ICACHE_RODATA_ATTR DEBUG_Print_Address(struct sockaddr_in * addr,
+		char * tag)
+{
+	char addr_string[50];
+
+	taskENTER_CRITICAL();
+	Serialize_Address(addr->sin_addr.s_addr, addr->sin_port, addr_string, 50);
+	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
+	printf("%s: %s", tag, addr_string);
 	taskEXIT_CRITICAL();
 }
 

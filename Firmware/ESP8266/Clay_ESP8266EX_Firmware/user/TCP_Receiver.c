@@ -157,7 +157,10 @@ bool ICACHE_RODATA_ATTR ConnectListener()
 	bool rval = false;
 
 	/* Construct local address structure */
+	taskENTER_CRITICAL();
 	memset(&server_addr, 0, sizeof(server_addr)); /* Zero out structure */
+	taskEXIT_CRITICAL();
+
 	server_addr.sin_family = AF_INET; /* Internet address family */
 	server_addr.sin_addr.s_addr = INADDR_ANY; /* Any incoming interface */
 	server_addr.sin_len = sizeof(server_addr);

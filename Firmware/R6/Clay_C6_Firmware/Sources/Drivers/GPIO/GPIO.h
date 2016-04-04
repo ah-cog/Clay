@@ -26,33 +26,33 @@
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-   PORT_TYPE_DIGITAL,
-   PORT_TYPE_ANALOG,
-   PORT_TYPE_PWM,
+   PORT_TYPE_DIGITAL = 0,
+   PORT_TYPE_ANALOG = 1,
+   PORT_TYPE_PWM = 2,
    PORT_TYPE_MAX
 } PORT_TYPE;
 
 typedef enum
 {
-   PORT_DIR_IN,
-   PORT_DIR_OUT,
+   PORT_DIR_IN = 0,
+   PORT_DIR_OUT = 1,
    PORT_DIR_MAX
 } PORT_DIRECTION;
 
 typedef enum
 {
-   PORT_1,
-   PORT_2,
-   PORT_3,
-   PORT_4,
-   PORT_5,
-   PORT_6,
-   PORT_7,
-   PORT_8,
-   PORT_9,
-   PORT_10,
-   PORT_11,
-   PORT_12,
+   PORT_1 = 0,
+   PORT_2 = 1,
+   PORT_3 = 2,
+   PORT_4 = 3,
+   PORT_5 = 4,
+   PORT_6 = 5,
+   PORT_7 = 6,
+   PORT_8 = 7,
+   PORT_9 = 8,
+   PORT_10 = 9,
+   PORT_11 = 10,
+   PORT_12 = 11,
    PORT_MAX
 } PORT_NUMBER;
 
@@ -84,14 +84,14 @@ extern void Port_Disable_All();
 extern bool Port_Enable(PORT_NUMBER number);
 extern void Port_Disable(PORT_NUMBER number);
 
-extern bool Port_Set_Type(PORT_NUMBER number, PORT_TYPE type);
-extern PORT_TYPE Port_Get_Type(PORT_NUMBER number);
+extern bool Port_Set_Type(PORT_NUMBER number, uint8_t type);
+extern uint8_t Port_Get_Type(PORT_NUMBER number);
 
 extern bool Port_Set_Direction(PORT_NUMBER number, PORT_DIRECTION direction);
 extern PORT_DIRECTION Port_Get_Direction(PORT_NUMBER number);
 
-extern void Port_Set_Data(PORT_NUMBER number, int32_t data);
-extern uint32 Port_Get_Data(PORT_NUMBER number);
+extern int32_t Port_Set_Data(PORT_NUMBER number, int32_t data);
+extern int32_t Port_Get_Data(PORT_NUMBER number);
 
 //old functions
 int8_t Initialize_Channels();

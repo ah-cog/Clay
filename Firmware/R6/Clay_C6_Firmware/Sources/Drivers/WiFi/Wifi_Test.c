@@ -23,75 +23,19 @@ void Wifi_Test() {
 
    Message *message = NULL;
    uint32_t lastMessageSendTime = 0;
-   uint32_t messageSendPeriod = 6000;
+   uint32_t messageSendPeriod = 100;
 
-#if 0
-   struct sockaddr_in DestinationAddr;
-
-   memset(&DestinationAddr, 0, sizeof(DestinationAddr));
-   char testMessageStr[] = "testacool";
-   char addr_string[] = "192.168.1.2";
-   char serializedAddr[100];
-   Message_Type mt;
-
-   DestinationAddr.sin_family = AF_INET
-   ;
-   inet_aton(addr_string, &DestinationAddr.sin_addr.s_addr);
-   DestinationAddr.sin_port = htons(4445);
-   DestinationAddr.sin_len = sizeof(DestinationAddr);
-
-   Serialize_Address(&DestinationAddr, serializedAddr, 100, MESSAGE_TYPE_UDP);
-   memset(&DestinationAddr, 0, sizeof(DestinationAddr));
-   Deserialize_Address(serializedAddr, 100, &DestinationAddr, &mt);
-   memset(&serializedAddr, 0, 100);
-   Serialize_Address(&DestinationAddr, serializedAddr, 100, MESSAGE_TYPE_UDP);
-
-   message = Create_Message(testMessageStr);
-
-   Set_Message_Destination(message, serializedAddr);
-#endif
-
-#if 0
-   //   Set_Access_Point();
-
-//   char addrStr[] = "UDP,192.168.1.1:1000";
-//   char testMsg[] = "SETAP hefnetm,dips00BOYNEdo$!&";
-
-   char addr_string[] = "CMD,\x12";
-   char commands[] = "SETAP hefnet,h3fn3r_is_better_than_me";
-
-   message = Create_Message(commands);
-   Set_Message_Destination(message, addr_string);
-#endif
-
-//echo and repeated send. include one of the blocks above.
-#if 0
-   for (;;) {
-
-      // Step state machine
-      Wifi_State_Step();
-
-      if (Wifi_Get_State() != Programming
-            && !Has_Messages(&outgoingWiFiMessageQueue)
-            && Millis() - lastMessageSendTime > messageSendPeriod) {
-         message = Create_Message(commands);
-         Set_Message_Destination(message, addr_string);
-         Wifi_Send(message);
-         lastMessageSendTime = Millis();
-      }
-   }
-
-#endif
-
-#if 1
-
+   bool repeat_send = FALSE;
    bool request_connect = FALSE;
+   bool get_ip = FALSE;
 
    char * ssid = "hefnet";
    char * password = "h3fn3r_is_better_than_me";
-   Wait(5000);
 
-   WiFi_Request_Connect(ssid, password);
+   char type_str[] = "UDP";
+   char dest_addr[] = "192.168.1.255:4446";
+   char source_addr[] = "192.168.1.16:4445";
+   char message_content[] = "broadcast message broadcast message broadcast message broadcast message broadcast message broadcast message e";
 
    for (;;) {
 
@@ -99,7 +43,8 @@ void Wifi_Test() {
       Wifi_State_Step();
       Button_Periodic_Call();
 
-      //Monitor communication message queues.
+#if 1
+      //echo received messages
       if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
          message = Wifi_Receive();
          if (message != NULL && strcmp(message->type, "INFO")) {
@@ -110,64 +55,47 @@ void Wifi_Test() {
             Wifi_Send(message);
          }
       }
+#endif
+
+#define TEST_COMMAND_REPEAT 0
+#if TEST_COMMAND_REPEAT
+      if(Has_Messages(&incomingWiFiMessageQueue))
+      {
+         message = Wifi_Receive();
+         Wait(1);
+      }
+#endif
+
+      //repeatedly send a message
+      if (repeat_send
+          && Wifi_Get_State() != Programming
+          && !Has_Messages(&outgoingWiFiMessageQueue)
+          && Millis() - lastMessageSendTime > messageSendPeriod) {
+
+#if TEST_COMMAND_REPEAT
+         WiFi_Request_Get_Internet_Address();
+#else
+         message = Create_Message(message_content);
+         Set_Message_Type(message, type_str);
+         Set_Message_Source(message, source_addr);
+         Set_Message_Destination(message, dest_addr);
+
+         Wifi_Send(message);
+#endif
+
+         lastMessageSendTime = Millis();
+      }
 
       if (request_connect) {
          request_connect = FALSE;
          WiFi_Request_Connect(ssid, password);
       }
-   }
-#endif
 
-   //command tests
-#if 0
-   int period_ms = 5000;
-
-   for (;;) {
-
-      // Step state machine
-      Wifi_State_Step();
-
-      if (Millis() - lastMessageSendTime >= period_ms) {
-         WiFi_Request_Connect("hefnetm", "dips00BOYNEdo$!&");
-//         WiFi_Request_Get_Internet_Address();
-         lastMessageSendTime = Millis();
+      if (get_ip) {
+         get_ip = FALSE;
+         WiFi_Request_Get_Internet_Address();
       }
    }
 
-#endif
-
-//serialization tests.
-#if 0
-   char testCmdContent[] = "AP";
-   char testTcpStr[] = "TCP,10.0.0.2:56012!";
-   char testUdpStr[] = "UDP,10.0.0.2:56012!";
-   char testCmdStr[] = "CMD";
-
-   struct sockaddr_in testTcpStruct;
-   struct sockaddr_in testUdpStruct;
-   struct sockaddr_in testCmdStruct;
-
-   Message_Type tcpType;
-   Message_Type udpType;
-   Message_Type cmdType;
-
-   Message * tcpMsg = Create_Message(testCmdContent);
-   Set_Message_Destination(tcpMsg, testTcpStr);
-
-   Message * udpMsg = Create_Message(testCmdContent);
-   Set_Message_Destination(udpMsg, testUdpStr);
-
-   Message * cmdMsg = Create_Message(testCmdContent);
-   Set_Message_Destination(cmdMsg, testCmdStr);
-
-   for (;;)
-   {
-      Deserialize_Address(testTcpStr, strlen(testTcpStr), &testTcpStruct, &tcpType);
-      Deserialize_Address(testUdpStr, strlen(testUdpStr), &testUdpStruct, &udpType);
-      Deserialize_Address(testCmdStr, strlen(testCmdStr), &testCmdStruct, &cmdType);
-
-      Wait(100);
-   }
-#endif
 }
 

@@ -54,6 +54,8 @@
 - \subpage GPIO_PTD
 - \subpage GPIO_PTC
 - \subpage GPIO_PTE
+- \subpage ADC1
+- \subpage PWM_OUT_1
 
 */
 
@@ -114,6 +116,8 @@
 - \subpage GPIO_PTD
 - \subpage GPIO_PTC
 - \subpage GPIO_PTE
+- \subpage ADC1
+- \subpage PWM_OUT_1
 
 */
 

@@ -16,9 +16,10 @@
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
+extern volatile bool master_interrupt_received;
 
 ////Prototypes/////////////////////////////////////////////////////
 extern bool Serial_Receiver_Init();
-extern void Serial_Receiver_State_Step();
+extern void Serial_Receiver_Task();
 
 #endif /* INCLUDE_SERIAL_RECEIVER_H_ */

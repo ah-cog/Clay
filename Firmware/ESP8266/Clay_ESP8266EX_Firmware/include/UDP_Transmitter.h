@@ -18,6 +18,8 @@
 
 ////Prototypes/////////////////////////////////////////////////////
 extern bool UDP_Transmitter_Init();
-extern void UDP_Transmitter_State_Step();
+extern void UDP_Transmitter_Deinit();
+extern void UDP_Transmitter_Task();
+
 
 #endif /* INCLUDE_UDP_TRANSMITTER_H_ */

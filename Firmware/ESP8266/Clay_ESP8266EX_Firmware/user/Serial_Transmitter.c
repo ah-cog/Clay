@@ -41,6 +41,7 @@
 #include "../include/AddressSerialization.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
+#include "ESP_Utilities.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -80,13 +81,13 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 
 	state = Idle;
 
-	xTaskCreate(Serial_Transmitter_State_Step, "uarttx1", 128, NULL, 2,
+	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 128, NULL, 2,
 			serial_tx_task);
 
 	return rval;
 }
 
-void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
+void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 {
 	for (;;)
 	{
@@ -124,9 +125,11 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 		{
 			taskENTER_CRITICAL();
 			temp_message = Dequeue_Message(&incoming_message_queue);
+			taskEXIT_CRITICAL();
 
 			serial_tx_count = strlen(temp_message->content);
 
+			taskENTER_CRITICAL();
 			sprintf(serial_tx_buffer, "%s%s%s%s%s%s%s%s", temp_message->content,
 					message_delimiter, temp_message->message_type,
 					type_delimiter, temp_message->source, address_delimiter,
@@ -138,10 +141,23 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 			temp_message = NULL;
 
 			time_temp = system_get_time();
+
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
 			gpio16_output_set(0);
 #else
 			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
+#endif
+
+			//wait 1ms
+			while ((system_get_time() - time_temp) > 1000)
+			{
+				taskYIELD();
+			}
+
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+			gpio16_output_set(1);
+#else
+			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
 #endif
 
 			state = Wait_For_Transmit_Ok;
@@ -151,24 +167,22 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 
 		case Wait_For_Transmit_Ok:
 		{
-			if (!GPIO_INPUT_GET(CLAY_INTERRUPT_IN_PIN))
-			{
 #ifdef PRINT_HIGH_WATER
-				taskENTER_CRITICAL();
-				printf("stx send\r\n");
-				taskEXIT_CRITICAL();
-				portENTER_CRITICAL();
-				UART_WaitTxFifoEmpty(UART0);
-				portEXIT_CRITICAL();
+			taskENTER_CRITICAL();
+			printf("stx send\r\n");
+			taskEXIT_CRITICAL();
+			portENTER_CRITICAL();
+			UART_WaitTxFifoEmpty(UART0);
+			portEXIT_CRITICAL();
 
-				DEBUG_Print_High_Water();
+			DEBUG_Print_High_Water();
 #endif
 
-				taskENTER_CRITICAL();
-				printf(serial_tx_buffer);
-				taskEXIT_CRITICAL();
-				state = Transmitting;
-			}
+			taskENTER_CRITICAL();
+			printf(serial_tx_buffer);
+			taskEXIT_CRITICAL();
+			state = Transmitting;
+
 			break;
 		}
 
@@ -177,13 +191,6 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_State_Step()
 			if (UART_CheckTxFifoEmpty(UART0))
 			{
 				state = Transmitting_Done;
-
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-				gpio16_output_set(1);
-#else
-				GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
-#endif
-
 			}
 			break;
 		}
@@ -211,6 +218,9 @@ void Send_Message_To_Master(char * message, Message_Type type)
 	Message m;
 	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
+//	DEBUG_Print("send message");
+//	DEBUG_Print(message);
+
 	taskENTER_CRITICAL();
 	Get_Message_Type_Str(type, type_string);
 	taskEXIT_CRITICAL();
@@ -222,6 +232,8 @@ void Send_Message_To_Master(char * message, Message_Type type)
 	taskENTER_CRITICAL();
 	Queue_Message(&incoming_message_queue, &m);
 	taskEXIT_CRITICAL();
+
+//	DEBUG_Print("message enqueued");
 }
 
 ////Local implementations /////////////////////////////////////////

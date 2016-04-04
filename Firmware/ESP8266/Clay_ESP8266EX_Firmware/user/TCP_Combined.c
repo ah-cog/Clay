@@ -16,6 +16,8 @@
 //	a working implementation...)
 //
 ////Includes //////////////////////////////////////////////////////
+#include "esp_common.h"
+
 #include "TCP_Combined.h"
 #include "Message_Queue.h"
 #include "Message.h"
@@ -40,7 +42,6 @@ static int32 listen_sock;
 static int32 data_sock;
 
 static int32 receive_count;
-static int32 transmit_count;
 
 static int32 current_outgoing_fail_count;
 
@@ -78,8 +79,10 @@ static int32 Receive(int32 source_socket, char * message,
 		uint32 message_length_max);
 
 ////Global implementations ////////////////////////////////////////
-void ICACHE_RODATA_ATTR TCP_Combined_Init()
+bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 {
+	bool rval = true;
+
 	taskENTER_CRITICAL();
 	local_address_string = zalloc(ADDR_STRING_SIZE);
 	remote_address_string = zalloc(ADDR_STRING_SIZE);
@@ -90,8 +93,28 @@ void ICACHE_RODATA_ATTR TCP_Combined_Init()
 	taskYIELD();
 
 	//TODO: print high water mark and revise stack size if necessary.
-	xTaskCreate(TCP_Combined_Task, "TCPall_1", 512, NULL, 2,
+	xTaskCreate(TCP_Combined_Task, "TCPall_1", 512, NULL, 3,
 			TCP_combined_handle);
+
+	return rval;
+}
+
+void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
+{
+	connected = false;
+
+	lwip_close(data_sock);
+	lwip_close(listen_sock);
+
+	listen_sock = -1;
+	data_sock = -1;
+
+	free(local_address_string);
+	free(remote_address_string);
+	free(receive_data);
+	free(transmit_data);
+
+	vTaskDelete(TCP_combined_handle);
 }
 
 void ICACHE_RODATA_ATTR TCP_Combined_Task()
@@ -236,7 +259,7 @@ static bool Initiate_Connection_For_Outgoing_Message()
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	//do not dequeue. leave the message in the queue to be processed below.
+//do not dequeue. leave the message in the queue to be processed below.
 	temp_message_ptr = Peek_Message(&outgoing_TCP_message_queue);
 
 	if (temp_message_ptr != NULL)
@@ -249,7 +272,6 @@ static bool Initiate_Connection_For_Outgoing_Message()
 
 	if (temp_message_ptr != NULL)
 	{
-		//DEBUG_Print("outgoing message, new connection");
 		temp_message_ptr = NULL;
 
 		taskENTER_CRITICAL();
@@ -258,9 +280,6 @@ static bool Initiate_Connection_For_Outgoing_Message()
 		taskEXIT_CRITICAL();
 
 		sprintf(remote_address_string, temp_message.destination);
-
-//		DEBUG_Print("remote");
-//		DEBUG_Print(remote_address_string);
 
 		data_sock = Open_Data_Connection(&remote_address);
 
@@ -281,7 +300,6 @@ static bool Initiate_Connection_For_Outgoing_Message()
 			//couldn't connect. drop this message
 			if (++current_outgoing_fail_count > CONNECT_ATTEMPT_MAX)
 			{
-				//DEBUG_Print("dumped a message");
 				Dequeue_Message(&outgoing_TCP_message_queue);
 				current_outgoing_fail_count = 0;
 			}
@@ -310,6 +328,10 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 			millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
 			setsockopt(opened_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
 					sizeof(millis));
+
+			//send timeout not supported in ESP8266
+//			setsockopt(opened_socket, SOL_SOCKET, SO_SNDTIMEO, &millis,
+//					sizeof(millis));
 		}
 		else
 		{
@@ -340,8 +362,13 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 	if (message_dest.sin_addr.s_addr == remote_address.sin_addr.s_addr
 			&& message_dest.sin_port == remote_address.sin_port)
 	{
-		bool rval = write(destination_socket, m->content, strlen(m->content))
-				== strlen(m->content);
+
+		taskENTER_CRITICAL();
+		size_t length = (size_t) (strlen(m->content) + 1);
+		taskEXIT_CRITICAL();
+
+		//this blocks forever. why?
+		rval = lwip_write(destination_socket, m->content, length) == length;
 	}
 
 	return rval;
@@ -412,6 +439,10 @@ static bool Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
 
+	taskENTER_CRITICAL();
+	memset(receive_data, 0, RECEIVE_DATA_SIZE);
+	taskEXIT_CRITICAL();
+
 	receive_count = Receive(data_sock, receive_data, RECEIVE_DATA_SIZE);
 
 	if (receive_count > 0)
@@ -445,8 +476,6 @@ static bool Receive_And_Enqueue(int32 data_sock)
 	}
 	else if (receive_count < 0)
 	{
-		//DEBUG_Print("close socket");
-
 		lwip_close(data_sock);
 		lwip_close(listen_sock);
 

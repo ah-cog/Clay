@@ -33,9 +33,11 @@
 #define DISCONNECTED_MESSAGE		"DISCONNECTED\n"
 #define CONNECTED_MESSAGE			"CONNECTED\n"
 
-void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode);
+void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
+		_xt_isr handler);
 void ICACHE_RODATA_ATTR GPIO_Init();
 void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt);
+void Master_Interrupt_Handler(void * arg);
 
 /******************************************************************************
  * FunctionName : user_init
@@ -74,22 +76,34 @@ void ICACHE_RODATA_ATTR user_init(void)
 //added to allow 3+ TCP connections per ESP RTOS SDK API Reference 1.3.0 Chapter 1, page 2
 	TCP_WND = 2 * TCP_MSS;
 
-	//these state machines should be started immediately so that we
-	//		can process instructions from the micro.
-	Serial_Receiver_Init();
-	Command_Parser_Init();
-	Serial_Transmitter_Init();
-
 	//uncomment to generate an interrupt when we connect to the AP.
 	//	xTaskCreate(Signal_Power_On_Complete, "power_on_signal", 256, NULL, 2, NULL);
 
 	//Set up our event handler from above. this starts the tasks that talk over WiFi.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
+
+	//these state machines should be started immediately so that we
+	//		can process instructions from the micro.
+
+#if ENABLE_SERIAL_RX
+	Serial_Receiver_Init();
+#endif
+
+#if ENABLE_SERIAL_TX
+	Serial_Transmitter_Init();
+#endif
+
+#if ENABLE_COMMAND_PARSER
+	Command_Parser_Init();
+#endif
 }
 
-void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode)
+void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
+		_xt_isr handler)
 {
 	portENTER_CRITICAL();
+
+	GPIO_AS_INPUT(BIT(pin));
 
 	//clear interrupt status
 	GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(pin));
@@ -97,11 +111,19 @@ void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode)
 	// set the mode
 	gpio_pin_intr_state_set(GPIO_ID_PIN(pin), mode);
 
-	portEXIT_CRITICAL();
+	_xt_isr_attach(ETS_GPIO_INUM, handler, NULL);
+	_xt_isr_unmask(1 << ETS_GPIO_INUM);
 
-	//	registerInterrupt(CLAY_INTERRUPT_IN_PIN, GPIO_PIN_INTR_NEGEDGE);
-	//	_xt_isr_attach(ETS_GPIO_INUM, (_xt_isr) main_int_handler, NULL);
-	//	_xt_isr_unmask(1 << ETS_GPIO_INUM);
+	portEXIT_CRITICAL();
+}
+
+void Master_Interrupt_Handler(void * args)
+{
+	uint32 gpio_status = GPIO_REG_READ(GPIO_STATUS_ADDRESS);
+
+	GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS,
+			gpio_status & BIT(CLAY_INTERRUPT_IN_PIN));
+	master_interrupt_received = true;
 }
 
 void ICACHE_RODATA_ATTR GPIO_Init()
@@ -115,10 +137,11 @@ void ICACHE_RODATA_ATTR GPIO_Init()
 	GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
 #endif
 
-	GPIO_AS_INPUT(BIT(CLAY_INTERRUPT_IN_PIN));
+	registerInterrupt(CLAY_INTERRUPT_IN_PIN, GPIO_PIN_INTR_NEGEDGE,
+			Master_Interrupt_Handler);
 }
 
-void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
+void wifi_handle_event_cb(System_Event_t *evt)
 {
 //	os_printf("event %x\n", evt->event_id);
 	switch (evt->event_id)
@@ -167,8 +190,9 @@ void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt)
 		TCP_Combined_Init();
 #endif
 
-		UART_WaitTxFifoEmpty(UART0);
 		Send_Message_To_Master(CONNECTED_MESSAGE, MESSAGE_TYPE_INFO);
+		int ip = Get_IP_Address();
+		Send_Message_To_Master(inet_ntoa(ip), MESSAGE_TYPE_INFO);
 
 		break;
 	}

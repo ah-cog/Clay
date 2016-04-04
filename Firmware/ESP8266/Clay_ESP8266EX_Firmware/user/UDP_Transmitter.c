@@ -59,13 +59,13 @@ static uint16_t UDP_Tx_Count;
 static struct sockaddr_in DestinationAddr;
 static struct sockaddr_in server_addr;
 
-static int32 sock_fd;
+static int32 transmit_sock;
 static int32 testCounter;
 
 static Message_Type tempIgnoredMessageType;
 
 static Message * m;
-static xTaskHandle udp_tx_task;
+static xTaskHandle UDP_transmit_handle;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -75,7 +75,7 @@ static bool Message_Available();
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 {
-	bool rval = false;
+	bool rval = true;
 
 	taskENTER_CRITICAL();
 	UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
@@ -84,15 +84,25 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 
 	State = Disable;
 
-	xTaskCreate(UDP_Transmitter_State_Step, "udptx1", 512, NULL, 2,
-			udp_tx_task);
+	xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL, 2,
+			UDP_transmit_handle);
 
 	testCounter = 0;
 
 	return rval;
 }
 
-void ICACHE_RODATA_ATTR UDP_Transmitter_State_Step()
+void ICACHE_RODATA_ATTR UDP_Transmitter_Deinit()
+{
+	lwip_close(transmit_sock);
+	transmit_sock = -1;
+
+	free(UDP_Tx_Buffer);
+
+	vTaskDelete(UDP_transmit_handle);
+}
+
+void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 {
 	for (;;)
 	{
@@ -127,23 +137,29 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_State_Step()
 
 		case Buffer_Message:
 		{
+			taskENTER_CRITICAL();
 			memset(&DestinationAddr, 0, sizeof(DestinationAddr));
+			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
 			m = Dequeue_Message(&outgoing_UDP_message_queue);
 			taskEXIT_CRITICAL();
+
+			taskYIELD();
 
 			taskENTER_CRITICAL();
 			strncpy(UDP_Tx_Buffer, m->content, UDP_TX_BUFFER_SIZE_BYTES);
 			UDP_Tx_Count = strlen(m->content);
 			taskEXIT_CRITICAL();
 
-			uint8* addrStr;
+			taskYIELD();
 
 			taskENTER_CRITICAL();
 			Deserialize_Address(m->destination, &DestinationAddr,
 					&tempIgnoredMessageType);
 			taskEXIT_CRITICAL();
+
+			taskYIELD();
 
 			free(m);
 
@@ -177,7 +193,9 @@ static bool ICACHE_RODATA_ATTR Connect()
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
 	memset(&server_addr, 0, sizeof(server_addr));
+	taskEXIT_CRITICAL();
 
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;
@@ -187,17 +205,17 @@ static bool ICACHE_RODATA_ATTR Connect()
 	///create the socket
 	do
 	{
-		sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
-		if (sock_fd == -1)
+		transmit_sock = socket(AF_INET, SOCK_DGRAM, 0);
+		if (transmit_sock == -1)
 		{
 			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
-	} while (sock_fd == -1);
+	} while (transmit_sock == -1);
 
 	//bind the socket
 	do
 	{
-		ret = bind(sock_fd, (struct sockaddr * ) &server_addr,
+		ret = bind(transmit_sock, (struct sockaddr * ) &server_addr,
 				sizeof(server_addr));
 		if (ret != 0)
 		{
@@ -213,7 +231,7 @@ static bool Transmit()
 {
 	bool rval = false;
 	rval = UDP_Tx_Count
-			== sendto(sock_fd, (uint8* ) UDP_Tx_Buffer, UDP_Tx_Count, 0,
+			== sendto(transmit_sock, (uint8* ) UDP_Tx_Buffer, UDP_Tx_Count, 0,
 					(struct sockaddr * ) &DestinationAddr,
 					sizeof(DestinationAddr));
 

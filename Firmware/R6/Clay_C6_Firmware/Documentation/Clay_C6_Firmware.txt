@@ -402,14 +402,14 @@ Module "FLASH1"    (component FLASH_LDD)
                 this case the Enable() method is not necessary and needn't to be generated. This method can be called only once.
                 Before the second call of Init() the Deinit() must be called first.
    - FLASH1_Read -This method sets up a flash memory read operation. The operation itself is performing by defined batches 
-                (property <Read batch size>) by periodical calling the componentâ€™s Main method in the user application (higher 
+                (property <Read batch size>) by periodical calling the component’s Main method in the user application (higher 
                 level OS service).
    - FLASH1_Write -This method sets up a flash memory write operation. The operation itself is performing by defined batches 
-                (property <Write batch size>) by periodical calling the componentâ€™s Main method in the user application (higher 
-                level OS service) or by the componentâ€™s ISR, if an componentâ€™s interrupt service is enabled.
+                (property <Write batch size>) by periodical calling the component’s Main method in the user application (higher 
+                level OS service) or by the component’s ISR, if an component’s interrupt service is enabled.
    - FLASH1_Erase -This method sets up a flash memory erase operation. The operation itself is performing by defined batches 
-                (property <Erase batch size>) by periodical calling the componentâ€™s Main method in the user application (higher 
-                level OS service) or by the componentâ€™s ISR, if an componentâ€™s interrupt service is enabled.
+                (property <Erase batch size>) by periodical calling the component’s Main method in the user application (higher 
+                level OS service) or by the component’s ISR, if an component’s interrupt service is enabled.
    - FLASH1_Main -This method is used to perform one batch of a flash memory operation. This method is used to perform batches 
                 of all flash memory operations (Write, Read, Erase, EraseBlock, VerifyErasedBlock) when the component works in 
                 the polled mode (interrupt service is disabled - property <Interrupt service>). This method performs batches of 
@@ -592,6 +592,66 @@ Module "GPIO_PTE"  (component GPIO_LDD)
    - GPIO_PTE_ConnectPin -This method reconnects the requested pin associated with the selected peripheral in this component. 
                 This method is only available for CPU derivatives and peripherals that support the runtime pin sharing with 
                 other internal on-chip peripherals.
+
+Module "ADC1"      (component ADC_LDD)
+   - ADC1_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and sets 
+                interrupt priority, sets pin routing, sets timing, etc.   If the "Enable in init. code" is set to "yes" value 
+                then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
+                is not necessary and needn't to be generated.    This method can be called only once. Before the second call of 
+                Init() the Deinit() must be called first.
+   - ADC1_StartSingleMeasurement -This method starts one measurement of the selected group of samples and exits immediately. 
+                This is ADC SW trigger method. The group of samples for measurement is specified by preceding call to 
+                <SelectSampleGroup()> or <CreateSampleGroup> method.     DMA disabled: The <OnMeasurementComplete() > event is 
+                invoked after the measurement is done and if the event is enabled. Results of the measurement can be read by 
+                the <GetMeasuredValues()> method.     DMA enabled: DMA request from configured ADC is enabled automatically. 
+                The <OnMeasurementComplete() > event is invoked after the requested number of results are transferred to 
+                destination buffer by DMA and if the event is enabled. <GetMeasuredValues()> method is not available if DMA 
+                mode is enabled. If the DMA transfer was completed before and DMA is not recofingured, DMA error can occur. See 
+                also <SetBuffer()> method.     The state of the measurement can be also polled by the 
+                <GetMeasurementCompleteStatus()> method. The <Discontinuous mode> doesn't support this method.
+   - ADC1_GetMeasuredValues -This method copies results of the last measurement to the user supplied buffer. Data size depends 
+                on the size of measured sample group (see <SelectSampleGroup()> or <CreateSampleGroup()> method). Data 
+                representation is defined by the <Result type> property. Typically this method is called from 
+                <OnMeasurementComplete> event to get results of the last measurement. This method is not available if DMA is 
+                enabled.
+   - ADC1_SelectSampleGroup -This method selects one of the (design-time) predefined <Static sample groups> for the next 
+                measurement. Each call rewrites the preceding setting. Once any group is selected, the measurement can be 
+                started multiple times. Note: This method works only with the sample groups defined at design time. For 
+                run-time defined groups use <CreateSampleGroup()> method.
+   - ADC1_CreateSampleGroup -This method prepares HW for next measurement according to array of samples defined during run-time.
+                The array of samples should be prepared prior to calling this method. Pointer to the array is passed into this 
+                method in parameter SampleGroupPtr. The number of samples is defined by parameter SampleCount. Once any group 
+                is prepared, the measurement can be started multiple times. Note: This method works only with the sample groups 
+                defined during run-time. For design-time defined groups use <SelectSampleGroup()> method.
+   - ADC1_GetMeasurementCompleteStatus -Returns whether the measurement is done and the results can be read by the user. It can 
+                be used to poll the state of measurement if <Interrupt service/event> is disabled or if <OnMeasurementComplete> 
+                event is disabled by the <SetEventMask()> methods.
+   - ADC1_StartCalibration -This method starts self calibration process. Calibration is typically used to remove the effects of 
+                the gain and offset from a specific reading.
+   - ADC1_GetCalibrationResultStatus -This method should be used for check the last calibration result. If calibration 
+                completed normally the method finish calibration process by writing gain calibration values.
+
+Module "PWM_OUT_1" (component PPG_LDD)
+   - PWM_OUT_1_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 
+                sets interrupt priority, sets pin routing, sets timing, etc. If the property <"Enable in init. code"> is set to 
+                "yes" value then the device is also enabled (see the description of the <Enable> method). In this case the 
+                <Enable> method is not necessary and needn't to be generated. This method can be called only once. Before the 
+                second call of Init the <Deinit> must be called first.
+   - PWM_OUT_1_Deinit -Deinitializes the device. Switches off the device, frees the device data structure memory, interrupts 
+                vectors, etc.
+   - PWM_OUT_1_SetPeriodMS -This method sets the new period of the output signal. The period is expressed in [milliseconds] as 
+                a 16-bit unsigned integer number. This method is available only if <"Runtime setting type"> property is set to 
+                "interval" .
+   - PWM_OUT_1_SetFrequencyHz -This method sets the new frequency of the output signal. The frequency is expressed in [Hz] as a 
+                16-bit unsigned integer number. This method is available only if <"Runtime setting type"> property is set to 
+                "interval" .
+   - PWM_OUT_1_SetRatio16 -This method sets a new duty-cycle ratio. Ratio is expressed as a 16-bit unsigned integer number. 0 - 
+                FFFF value is proportional to ratio 0 - 100%. The method is available only if it is not selected list of 
+                predefined values in <Starting pulse width> property.   Note: Calculated duty depends on the timer 
+                possibilities and on the selected period.
+   - PWM_OUT_1_SetDutyMS -This method sets the new duty value of the output signal. The duty is expressed in milliseconds as a 
+                16-bit unsigned integer number. The method is available only if it is not selected list of predefined values in 
+                <Starting pulse width> property.
 
 Module "Cpu"       (component MK64FN1M0LL12)
 

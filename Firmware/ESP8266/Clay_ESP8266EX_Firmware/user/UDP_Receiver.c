@@ -73,14 +73,14 @@ static struct sockaddr_in server_addr;
 
 static int nNetTimeout;
 
-static int32 sock_fd;
+static int32 receive_sock;
 static bool Connected;
 static int32 testCounter;
 
 static Message tempMessage;
 static char * source_addr;
 static char * dest_addr;
-static xTaskHandle udp_rx_task;
+static xTaskHandle UDP_receive_handle;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -89,7 +89,7 @@ static bool Receive();
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 {
-	bool rval = false;
+	bool rval = true;
 	nNetTimeout = UDP_RX_TIMEOUT_MSEC;
 
 	State = Disable;
@@ -101,14 +101,26 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 	Initialize_Message_Queue(&incoming_message_queue);
 	taskEXIT_CRITICAL();
 
-	xTaskCreate(UDP_Receiver_State_Step, "udprx1", 512, NULL, 2, udp_rx_task);
+	xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL, 2, UDP_receive_handle);
 
 	testCounter = 0;
 
 	return rval;
 }
 
-void ICACHE_RODATA_ATTR UDP_Receiver_State_Step()
+void ICACHE_RODATA_ATTR UDP_Receiver_Deinit()
+{
+	lwip_close(receive_sock);
+	receive_sock = -1;
+
+	free(UDP_Rx_Buffer);
+	free(source_addr);
+	free(dest_addr);
+
+	vTaskDelete(UDP_receive_handle);
+}
+
+void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 {
 	for (;;)
 	{
@@ -149,17 +161,19 @@ void ICACHE_RODATA_ATTR UDP_Receiver_State_Step()
 					MAXIMUM_DESTINATION_LENGTH);
 			taskEXIT_CRITICAL();
 
+			taskYIELD();
+
 			taskENTER_CRITICAL();
 			Initialize_Message(&tempMessage,
 					message_type_strings[MESSAGE_TYPE_UDP], source_addr,
 					dest_addr, UDP_Rx_Buffer);
 			taskEXIT_CRITICAL();
 
+			taskYIELD();
+
 			taskENTER_CRITICAL();
 			Queue_Message(&incoming_message_queue, &tempMessage);
 			taskEXIT_CRITICAL();
-
-			UDP_Rx_Buffer[UDP_Rx_Count] = '\0';
 
 			State = Idle;
 			break;
@@ -186,7 +200,9 @@ static bool ICACHE_RODATA_ATTR Connect()
 {
 	Connected = false;
 
+	taskENTER_CRITICAL();
 	memset(&server_addr, 0, sizeof(server_addr));
+	taskEXIT_CRITICAL();
 
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;
@@ -201,18 +217,18 @@ static bool ICACHE_RODATA_ATTR Connect()
 	///create the socket
 	do
 	{
-		sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
-		if (sock_fd == -1)
+		receive_sock = socket(AF_INET, SOCK_DGRAM, 0);
+		if (receive_sock == -1)
 		{
 			Connected = false;
 			vTaskDelay(1000 / portTICK_RATE_MS);
 		}
-	} while (sock_fd == -1);
+	} while (receive_sock == -1);
 
 	//bind the socket
 	do
 	{
-		ret = bind(sock_fd, (struct sockaddr * ) &server_addr,
+		ret = bind(receive_sock, (struct sockaddr * ) &server_addr,
 				sizeof(server_addr));
 		if (ret != 0)
 		{
@@ -221,7 +237,7 @@ static bool ICACHE_RODATA_ATTR Connect()
 	} while (ret != 0);
 	Connected = true;
 
-	setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (char * ) &nNetTimeout,
+	setsockopt(receive_sock, SOL_SOCKET, SO_RCVTIMEO, (char * ) &nNetTimeout,
 			sizeof(int));
 
 	return Connected;
@@ -231,14 +247,24 @@ static bool ICACHE_RODATA_ATTR Receive()
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
 	memset(UDP_Rx_Buffer, 0, UDP_RX_BUFFER_SIZE_BYTES);
+	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
 	memset(&from, 0, sizeof(from));
+	taskEXIT_CRITICAL();
+
+	taskYIELD();
 
 	fromlen = sizeof(struct sockaddr_in);
 
 	// attempt to receive
-	ret = recvfrom(sock_fd, (uint8 * ) UDP_Rx_Buffer, UDP_RX_BUFFER_SIZE_BYTES,
-			0, (struct sockaddr * ) &from, (socklen_t * ) &fromlen);
+	ret = recvfrom(receive_sock, (uint8 * ) UDP_Rx_Buffer,
+			UDP_RX_BUFFER_SIZE_BYTES, 0, (struct sockaddr * ) &from,
+			(socklen_t * ) &fromlen);
+
+	taskYIELD();
 
 	if (ret > 0)
 	{

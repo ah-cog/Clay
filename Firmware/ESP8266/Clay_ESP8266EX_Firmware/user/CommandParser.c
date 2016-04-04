@@ -25,6 +25,10 @@
 #include "Message.h"
 #include "ESP_Utilities.h"
 
+#include "UDP_Transmitter.h"
+#include "UDP_Receiver.h"
+#include "TCP_Combined.h"
+
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
@@ -39,13 +43,26 @@ typedef enum
 	CLAY_COMMAND_GET_IP,
 	CLAY_COMMAND_GET_GATEWAY,
 	CLAY_COMMAND_GET_SUBNET,
+	CLAY_COMMAND_STOP_TASK,
+	CLAY_COMMAND_START_TASK,
 	CLAY_COMMAND_MAX
 } CLAY_ESP_COMMANDS;
+
+typedef enum
+{
+	TASK_TYPE_UDP_TX = 1,
+	TASK_TYPE_UDP_RX = 2,
+	TASK_TYPE_TCP_TX = 4,
+	TASK_TYPE_TCP_RX = 8,
+	TASK_TYPE_MAX
+} TASK_TYPE;
+
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
 char* command_tokens[CLAY_COMMAND_MAX] =
-{ "SETAP", "GETAP", "SCANAP", "GET_IP", "GET_GATEWAY", "GET_SUBNET" };
+{ "SETAP", "GETAP", "SCANAP", "GET_IP", "GET_GATEWAY", "GET_SUBNET", "STOP",
+		"START" };
 
 char * command_args;
 char command_delimiter = ' ';
@@ -64,6 +81,7 @@ static bool Scan_AP_Command(char * args);
 static bool Get_Subnet_Command(char * args);
 static bool Get_Gateway_Command(char * args);
 static bool Get_IP_Command(char * args);
+static void Stop_Task(TASK_TYPE tt);
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Command_Parser_Init()
@@ -76,7 +94,7 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 
 	state = Idle;
 
-	xTaskCreate(Command_Parser_State_Step, "cmdParser", 128, NULL, 2,
+	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL, 2,
 			command_parser_task);
 
 	return rval;
@@ -128,10 +146,13 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			m = Dequeue_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
 
+			taskYIELD();
+
 			switch (Command_String_Parse(m->content, &command_args))
 			{
 			case CLAY_COMMAND_SET_AP:
 			{
+				//DEBUG_Print("setap rx");
 				Set_AP_Command(command_args);
 				break;
 			}
@@ -175,9 +196,12 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 
 			}
 
+			//DEBUG_Print("free command");
 			//dequeue alloc's a message.
 			free(m);
 			m = NULL;
+
+			//DEBUG_Print("return to idle");
 
 			state = Idle;
 			break;
@@ -222,6 +246,8 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 {
 	bool rval = false;
 
+	Stop_Task(TASK_TYPE_TCP_RX | TASK_TYPE_UDP_RX | TASK_TYPE_UDP_TX);
+
 	taskENTER_CRITICAL();
 	char * ssid = strtok(args, &args_delimiter);
 	char * key = strtok(NULL, &args_delimiter);
@@ -235,6 +261,8 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 	{
 		Send_Message_To_Master("SETAP_FAIL", MESSAGE_TYPE_INFO);
 	}
+
+	//DEBUG_Print(rval ? "setap ok" : "setap nfg");
 
 	return rval;
 }
@@ -286,4 +314,47 @@ bool Get_Subnet_Command(char * args)
 	rval = mask > 0;
 
 	return rval;
+}
+
+static void Stop_Task(TASK_TYPE tt)
+{
+	if (tt && TASK_TYPE_UDP_RX)
+	{
+		UDP_Receiver_Deinit();
+	}
+
+	if (tt && TASK_TYPE_UDP_TX)
+	{
+		UDP_Transmitter_Deinit();
+	}
+
+	if (tt && (TASK_TYPE_TCP_RX | TASK_TYPE_TCP_RX))
+	{
+		TCP_Combined_Deinit();
+	}
+
+	Send_Message_To_Master("STOP_OK", MESSAGE_TYPE_INFO);
+}
+
+static void Start_Task(TASK_TYPE tt)
+{
+	bool rval = false;
+
+	if (tt && TASK_TYPE_UDP_RX)
+	{
+		UDP_Receiver_Init();
+	}
+
+	if (tt && TASK_TYPE_UDP_TX)
+	{
+		UDP_Transmitter_Init();
+	}
+
+	if (tt && (TASK_TYPE_TCP_RX | TASK_TYPE_TCP_RX))
+	{
+		TCP_Combined_Init();
+	}
+
+	Send_Message_To_Master(rval ? "TASK_START_OK" : "TASK_START_FAIL",
+			MESSAGE_TYPE_INFO);
 }

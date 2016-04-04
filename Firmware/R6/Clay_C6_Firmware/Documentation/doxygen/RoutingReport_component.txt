@@ -311,9 +311,9 @@
 			</tr>
 			<tr>
 				<td rowspan='2'>53</td><td rowspan='2'>ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/RMII0_MDIO/MII0_MDIO/FTM1_QD_PHA</td><td rowspan='2'><small><i>same</i></small></td>
-				<td bgcolor='#F7DCFF'>PTB</td><td bgcolor='#F7DCFF'>port0</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Input</td>
+				<td bgcolor='#F8FF9A'>ADC0</td><td bgcolor='#F8FF9A'>adc_se8</td><td bgcolor='#F8FF9A'>alt0</td><td bgcolor='#F8FF9A'>Input</td>
 			</tr>
-			<tr bgcolor='#CCB6A0'><td>LLWU</td><td>llwu_wakeup5</td><td>alt1</td><td>Input</td></tr>
+			<tr bgcolor='#F8FF9A'><td>ADC1</td><td>adc_se8</td><td>alt0</td><td>Input</td></tr>
 			<tr>
 				<td>54</td><td>ADC0_SE9/ADC1_SE9/PTB1/I2C0_SDA/FTM1_CH1/RMII0_MDC/MII0_MDC/FTM1_QD_PHB</td><td><small><i>same</i></small></td>
 				<td bgcolor='#F7DCFF'>PTB</td><td bgcolor='#F7DCFF'>port1</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Output</td>
@@ -356,7 +356,7 @@
 			</tr>
 			<tr>
 				<td>64</td><td>PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA</td><td><small><i>same</i></small></td>
-				<td bgcolor='#F7DCFF'>PTB</td><td bgcolor='#F7DCFF'>port18</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Input</td>
+				<td bgcolor='#86DAFF'>FTM2</td><td bgcolor='#86DAFF'>tmr_ch0</td><td bgcolor='#86DAFF'>alt3</td><td bgcolor='#86DAFF'>Output</td>
 			</tr>
 			<tr>
 				<td>65</td><td>PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB</td><td><small><i>same</i></small></td>
@@ -2044,9 +2044,9 @@
 			</tr>
 			<tr>
 				<td rowspan='2'>53</td><td rowspan='2'>ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/RMII0_MDIO/MII0_MDIO/FTM1_QD_PHA</td><td rowspan='2'><small><i>same</i></small></td>
-				<td bgcolor='#F7DCFF'>PTB</td><td bgcolor='#F7DCFF'>port0</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Input</td>
+				<td bgcolor='#F8FF9A'>ADC0</td><td bgcolor='#F8FF9A'>adc_se8</td><td bgcolor='#F8FF9A'>alt0</td><td bgcolor='#F8FF9A'>Input</td>
 			</tr>
-			<tr bgcolor='#CCB6A0'><td>LLWU</td><td>llwu_wakeup5</td><td>alt1</td><td>Input</td></tr>
+			<tr bgcolor='#F8FF9A'><td>ADC1</td><td>adc_se8</td><td>alt0</td><td>Input</td></tr>
 			<tr>
 				<td>54</td><td>ADC0_SE9/ADC1_SE9/PTB1/I2C0_SDA/FTM1_CH1/RMII0_MDC/MII0_MDC/FTM1_QD_PHB</td><td><small><i>same</i></small></td>
 				<td bgcolor='#F7DCFF'>PTB</td><td bgcolor='#F7DCFF'>port1</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Output</td>
@@ -2089,7 +2089,7 @@
 			</tr>
 			<tr>
 				<td>64</td><td>PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA</td><td><small><i>same</i></small></td>
-				<td bgcolor='#F7DCFF'>PTB</td><td bgcolor='#F7DCFF'>port18</td><td bgcolor='#F7DCFF'>alt1</td><td bgcolor='#F7DCFF'>Input</td>
+				<td bgcolor='#86DAFF'>FTM2</td><td bgcolor='#86DAFF'>tmr_ch0</td><td bgcolor='#86DAFF'>alt3</td><td bgcolor='#86DAFF'>Output</td>
 			</tr>
 			<tr>
 				<td>65</td><td>PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB</td><td><small><i>same</i></small></td>

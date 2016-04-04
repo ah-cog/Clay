@@ -16,6 +16,19 @@
 #include "Clay_Config.h"
 
 ////Macros ////////////////////////////////////////////////////////
+#define ENABLE_TCP_SENDER		0
+#define ENABLE_TCP_RECEIVER		0
+
+#define ENABLE_UDP_SENDER		1
+#define ENABLE_UDP_RECEIVER		0
+#define ENABLE_TCP_COMBINED 	1
+#define ENABLE_SERIAL_RX 		1
+#define ENABLE_SERIAL_TX 		1
+#define ENABLE_COMMAND_PARSER 	1
+
+#define ENABLE_DEBUG_PRINT      1
+
+
 ///Buffer size information below:
 //           struct sockaddr_in {
 //             u8_t            sin_len;
@@ -28,13 +41,6 @@
 
 //sa_family is u8_t typedefs.
 //
-
-#define ENABLE_TCP_SENDER	0
-#define ENABLE_TCP_RECEIVER	0
-#define ENABLE_UDP_SENDER	0
-#define ENABLE_UDP_RECEIVER	0
-#define ENABLE_TCP_COMBINED 1
-
 
 //TODO: double-check this size...
 //sizes as they are printed

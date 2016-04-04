@@ -24,7 +24,6 @@ typedef enum
    Deserialize_Received_Message,
    Serialize_Transmission,
    Start_Transmission,
-   Transmission_Wait,
    Transmission_Sent
 } Wifi_States;
 

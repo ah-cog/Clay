@@ -111,7 +111,9 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 			printf("tcp message outgoing");
 			taskEXIT_CRITICAL();
 
+			taskENTER_CRITICAL();
 			memset(&destination_addr, 0, sizeof(destination_addr));
+			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
 			m = Dequeue_Message(&outgoing_TCP_message_queue);
