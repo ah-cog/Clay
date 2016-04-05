@@ -16,7 +16,7 @@ typedef struct Message
 	char source[MAXIMUM_SOURCE_LENGTH];
 	char destination[MAXIMUM_DESTINATION_LENGTH];
 	char content[MAXIMUM_MESSAGE_LENGTH];
-	char message_type[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
+	char type[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 } Message;
 
 // extern Message Create_Message (const char *content);

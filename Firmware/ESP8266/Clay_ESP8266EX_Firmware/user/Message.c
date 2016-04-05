@@ -8,8 +8,8 @@ void ICACHE_RODATA_ATTR Initialize_Message(Message *message,
 		char * message_type, char *source, char *destination, char *content)
 {
 	//set type
-	memcpy((*message).message_type, message_type, strlen(message_type) + 1);
-	message->message_type[strlen(message_type)] = '\0';
+	memcpy((*message).type, message_type, strlen(message_type) + 1);
+	message->type[strlen(message_type)] = '\0';
 
 	// Set source
 	memcpy((*message).source, source, strlen(source) + 1);

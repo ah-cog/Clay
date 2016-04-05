@@ -46,9 +46,9 @@ static uint32 serial_rx_count;
 static bool buffer_has_data;
 static Message temp_msg;
 static char * temp_content;
-static char * temp_source_ptr;
-static char * temp_type_ptr;
-static char * temp_dest_ptr;
+static char * temp_source_address;
+static char * temp_type;
+static char * temp_dest_address;
 static uint32 state_time;
 int i;
 
@@ -142,13 +142,21 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			{
 				taskENTER_CRITICAL();
 				Ring_Buffer_Get(serial_rx_buffer + bytes_received);
+//				taskEXIT_CRITICAL(); //moved from below
 
-				if (serial_rx_buffer[bytes_received++] == address_terminator[0])
+				if (bytes_received == 0
+						&& serial_rx_buffer[0] == message_start[0])
+				{
+					++bytes_received;
+				}
+				else if (bytes_received > 0
+						&& serial_rx_buffer[bytes_received++] == message_end[0])
 				{
 					serial_rx_buffer[bytes_received] = '\0';
-
 					State = Parsing;
 				}
+
+				//Moved this above.
 				taskEXIT_CRITICAL();
 			}
 			else if ((system_get_time() - state_time) > 1000000) //system_get_time returns us
@@ -171,25 +179,27 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			DEBUG_Print_High_Water();
 #endif
 
+			//New message format:
+			//!<type>\t<source>\t<destination>\t<content>\n
+
 			taskENTER_CRITICAL();
-			temp_content = strtok(serial_rx_buffer, message_delimiter);
-			temp_type_ptr = strtok(NULL, type_delimiter);
-			temp_source_ptr = strtok(NULL, address_delimiter);
-			temp_dest_ptr = strtok(NULL, address_terminator);
+			temp_type = strtok(serial_rx_buffer + 1, message_field_delimiter); //offset to skip start char
+			temp_source_address = strtok(NULL, message_field_delimiter);
+			temp_dest_address = strtok(NULL, message_field_delimiter);
+			temp_content = strtok(NULL, message_end);
 			taskEXIT_CRITICAL();
 
-			if (temp_content != NULL && temp_type_ptr != NULL
-					&& temp_source_ptr != NULL && temp_dest_ptr != NULL)
+			if (temp_content != NULL && temp_type != NULL
+					&& temp_source_address != NULL && temp_dest_address != NULL)
 			{
 				taskENTER_CRITICAL();
-				received_message_type = Get_Message_Type_From_Str(
-						temp_type_ptr);
+				received_message_type = Get_Message_Type_From_Str(temp_type);
 				taskEXIT_CRITICAL();
 
 				taskENTER_CRITICAL();
 				Initialize_Message(&temp_msg,
 						message_type_strings[received_message_type],
-						temp_source_ptr, temp_dest_ptr, temp_content);
+						temp_source_address, temp_dest_address, temp_content);
 				taskEXIT_CRITICAL();
 
 				switch (received_message_type)

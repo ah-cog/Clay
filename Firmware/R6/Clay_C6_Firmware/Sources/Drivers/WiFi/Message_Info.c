@@ -15,7 +15,7 @@
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
-char * message_strings[] = { "UDP", "TCP", "CMD", "INFO", "INVALID" };
+char * message_strings[] = { "udp", "tcp", "command", "status", "invalid" };
 const char * address_terminator = "\x12";
 const char * address_delimiter = ";";
 const char * type_delimiter = ",";

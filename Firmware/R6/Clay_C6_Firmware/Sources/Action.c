@@ -498,10 +498,10 @@ static int8_t Perform_Message_Action (char *state) {
 	// TODO: Make an action that queues a message.
 
 	// i.e., "<protocol> <destination> <message-content>"
-	// e.g., "UDP 192.168.1.30:8000 \"hello there\""
-	// e.g., "TCP 192.168.1.30:8000 \"hello there\""
-	// e.g., "MESH <device-uuid> \"hello there\""
-	// e.g., "HTTP POST service.com/smart/intelligence \"hello there\""
+	// e.g., "udp 192.168.1.30:8000 \"hello there\""
+	// e.g., "tcp 192.168.1.30:8000 \"hello there\""
+	// e.g., "mesh <device-uuid> \"hello there\""
+	// e.g., "http POST service.com/smart/intelligence \"hello there\""
 
 	char param1[64] = { 0 };
 	char param2[64] = { 0 };

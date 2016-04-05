@@ -264,7 +264,7 @@ static bool Initiate_Connection_For_Outgoing_Message()
 
 	if (temp_message_ptr != NULL)
 	{
-		Initialize_Message(&temp_message, temp_message_ptr->message_type,
+		Initialize_Message(&temp_message, temp_message_ptr->type,
 				temp_message_ptr->source, temp_message_ptr->destination,
 				temp_message_ptr->content);
 	}

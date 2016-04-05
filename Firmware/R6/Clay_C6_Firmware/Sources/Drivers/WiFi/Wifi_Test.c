@@ -32,7 +32,7 @@ void Wifi_Test() {
    char * ssid = "hefnet";
    char * password = "h3fn3r_is_better_than_me";
 
-   char type_str[] = "UDP";
+   char type_str[] = "udp";
    char dest_addr[] = "192.168.1.255:4446";
    char source_addr[] = "192.168.1.16:4445";
    char message_content[] = "broadcast message broadcast message broadcast message broadcast message broadcast message broadcast message e";

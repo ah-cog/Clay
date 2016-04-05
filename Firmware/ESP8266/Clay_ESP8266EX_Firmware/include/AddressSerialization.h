@@ -25,6 +25,10 @@ extern const char * type_delimiter;
 extern const char * message_delimiter;
 extern const char * port_delimiter;
 
+const char * message_start;
+const char * message_field_delimiter;
+const char * message_end;
+
 ////Prototypes/////////////////////////////////////////////////////
 extern void Deserialize_Address(uint8* Source, struct sockaddr_in * Destination,
 		Message_Type *type);

@@ -30,8 +30,15 @@
 #include "TCP_Transmitter.h"
 #include "Message_Queue.h"
 
-#define DISCONNECTED_MESSAGE		"DISCONNECTED\n"
-#define CONNECTED_MESSAGE			"CONNECTED\n"
+//#include "user_interface.h"
+//#include "eagle_soc.h"
+#include "stdint.h"
+#include "c_types.h"
+//#include "ets_sys.h"
+#include "stdarg.h"
+
+#define DISCONNECTED_MESSAGE		"disconnected\n"
+#define CONNECTED_MESSAGE			"connected\n"
 
 void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
 		_xt_isr handler);
@@ -47,9 +54,12 @@ void Master_Interrupt_Handler(void * arg);
  *******************************************************************************/
 void ICACHE_RODATA_ATTR user_init(void)
 {
+	// TODO: how do we stop the debug messages in the RTOS SDK?
+//	system_set_os_print(0);
+
 	GPIO_Init();
 
-//	printf("SDK version:%s\n", system_get_sdk_version());
+	printf("SDK version:%s\n", system_get_sdk_version());
 	/* need to set opmode before you set config */
 	wifi_set_opmode(STATIONAP_MODE);
 	uart_init_new();

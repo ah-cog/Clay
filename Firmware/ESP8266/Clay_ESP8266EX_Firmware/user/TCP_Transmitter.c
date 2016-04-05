@@ -77,8 +77,8 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 {
 //	Message test_message;
 
-//	Initialize_Message(&test_message, "TCP,10.0.0.6:1002\x12",
-//			"TCP,10.0.0.2:1002\x12", "a test\n");
+//	Initialize_Message(&test_message, "tcp,10.0.0.6:1002\x12",
+//			"tcp,10.0.0.2:1002\x12", "a test\n");
 
 	for (;;)
 	{
