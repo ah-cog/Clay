@@ -1,6 +1,7 @@
 #ifndef MESSAGE_PROCESSOR_H
 #define MESSAGE_PROCESSOR_H
 
+#include "Application.h"
 #include <Message.h>
 #include <Message_Queue.h>
 
