@@ -60,9 +60,11 @@ typedef enum
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
+
+// TODO: Implement these following example of Process_Event and Perform_Action in k64 code.
 char* command_tokens[CLAY_COMMAND_MAX] =
-{ "SETAP", "GETAP", "SCANAP", "GET_IP", "GET_GATEWAY", "GET_SUBNET", "STOP",
-		"START" };
+{ "setap", "getap", "scanap", "get_ip", "get_gateway", "get_subnet",
+		"stop_task", "start_task" };
 
 char * command_args;
 char command_delimiter = ' ';
@@ -255,11 +257,11 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 
 	if (Set_Access_Point(ssid, key))
 	{
-		Send_Message_To_Master("SETAP_OK", MESSAGE_TYPE_INFO);
+		Send_Message_To_Master("setap_ok", MESSAGE_TYPE_INFO);
 	}
 	else
 	{
-		Send_Message_To_Master("SETAP_FAIL", MESSAGE_TYPE_INFO);
+		Send_Message_To_Master("setap_fail", MESSAGE_TYPE_INFO);
 	}
 
 	//DEBUG_Print(rval ? "setap ok" : "setap nfg");
@@ -333,7 +335,7 @@ static void Stop_Task(TASK_TYPE tt)
 		TCP_Combined_Deinit();
 	}
 
-	Send_Message_To_Master("STOP_OK", MESSAGE_TYPE_INFO);
+	Send_Message_To_Master("stop_ok", MESSAGE_TYPE_INFO);
 }
 
 static void Start_Task(TASK_TYPE tt)
@@ -355,6 +357,6 @@ static void Start_Task(TASK_TYPE tt)
 		TCP_Combined_Init();
 	}
 
-	Send_Message_To_Master(rval ? "TASK_START_OK" : "TASK_START_FAIL",
+	Send_Message_To_Master(rval ? "task_start_ok" : "task_start_fail",
 			MESSAGE_TYPE_INFO);
 }

@@ -30,39 +30,39 @@
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Set_Access_Point(char * ssid, char * key)
 {
-	DEBUG_Print("setap");
+//	DEBUG_Print("setap");
 
 	bool rval = wifi_station_disconnect();
 
-	DEBUG_Print("disconnect");
+//	DEBUG_Print("disconnect");
 
 	taskENTER_CRITICAL();
 	struct station_config *config = (struct station_config *) zalloc(
 			sizeof(struct station_config));
 	taskEXIT_CRITICAL();
 
-	DEBUG_Print("config created");
+//	DEBUG_Print("config created");
 
 	taskENTER_CRITICAL();
 	sprintf(config->ssid, ssid);
 	sprintf(config->password, key);
 	taskEXIT_CRITICAL();
 
-	DEBUG_Print("set ssid and key");
+//	DEBUG_Print("set ssid and key");
 
 	rval &= wifi_station_set_config(config);
 
-	DEBUG_Print("config set");
+//	DEBUG_Print("config set");
 
 	free(config);
 
-	DEBUG_Print("freed config");
+//	DEBUG_Print("freed config");
 
 	rval &= wifi_station_connect();
 
-	taskENTER_CRITICAL();
-	printf("setap:%s\r\n", rval ? "ok" : "nfg");
-	taskEXIT_CRITICAL();
+//	taskENTER_CRITICAL();
+//	printf("setap:%s\r\n", rval ? "ok" : "nfg");
+//	taskEXIT_CRITICAL();
 
 	return rval;
 }

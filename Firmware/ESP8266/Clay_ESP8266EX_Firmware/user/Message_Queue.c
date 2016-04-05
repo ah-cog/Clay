@@ -41,7 +41,7 @@ int ICACHE_RODATA_ATTR Queue_Message(Message_Queue *message_queue,
 	{
 		//must make a copy
 		Initialize_Message(message_queue->messages + (message_queue->back),
-				message->message_type, message->source, message->destination,
+				message->type, message->source, message->destination,
 				message->content);
 
 		(*message_queue).back = ((*message_queue).back + 1)
@@ -70,7 +70,7 @@ Message* ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue)
 		message = (Message*) zalloc(sizeof(Message));
 
 		Initialize_Message(message,
-				message_queue->messages[message_queue->front].message_type,
+				message_queue->messages[message_queue->front].type,
 				message_queue->messages[message_queue->front].source,
 				message_queue->messages[message_queue->front].destination,
 				message_queue->messages[message_queue->front].content);

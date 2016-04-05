@@ -23,6 +23,10 @@ const char* type_delimiter = ",";
 const char * message_delimiter = "\n";
 const char* port_delimiter = ":";
 
+const char * message_start = "\f";
+const char * message_field_delimiter = "\t";
+const char * message_end = "\n";
+
 ////Local vars/////////////////////////////////////////////////////
 static uint8 deserialize_temp_str[50];
 

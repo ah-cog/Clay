@@ -21,7 +21,7 @@ Message *outgoingWiFiMessageQueue = NULL;
 
 #define OUT_BUFFER_LENGTH           1024
 #define IN_BUFFER_LENGTH            1024
-#define INTERRUPT_RX_TIMEOUT_MS     1000
+#define INTERRUPT_RX_TIMEOUT_MS     3000
 #define INTERRUPT_TX_TIMEOUT_MS     1000
 
 ESP8266_UART_Device deviceData;
@@ -29,11 +29,13 @@ volatile bool WifiInterruptReceived;
 volatile bool WifiSetProgramMode;
 bool Wifi_Message_Available;
 
-static uint32_t pendingTransmitByteCount;
-static uint32_t Pending_Receive_Byte_Count;
+static bool received_message_start;
 
-static uint8_t outBuffer[OUT_BUFFER_LENGTH] = "test message, yo\r\n";
-static uint8_t inBuffer[IN_BUFFER_LENGTH];
+static uint32_t pendingTransmitByteCount;
+static uint32_t message_bytes_received;
+
+static uint8_t serial_tx_buffer[OUT_BUFFER_LENGTH] = "test message, yo\r\n";
+static uint8_t serial_rx_buffer[IN_BUFFER_LENGTH];
 
 static Wifi_States State;
 static uint32_t interruptRxTime;
@@ -45,9 +47,10 @@ static uint8_t * temp_content;
 static uint8_t * temp_type;
 static uint8_t * temp_source_address;
 static uint8_t * temp_dest_address;
-static uint8_t temp_address_string[50];
 
-static const char * message_terminator = "\n";
+static const char * message_start = "\f";
+static const char * message_field_delimiter = "\t";
+static const char * message_end = "\n";
 
 static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
@@ -137,14 +140,16 @@ void Wifi_State_Step() {
 
             State = Receive_Message;
 
+            serial_tx_buffer[0] = '\0';     //we must do this or we'll find the message start immediately.
             WifiInterruptReceived = FALSE;
+            received_message_start = FALSE;
 
             Newline_Count = 0;
-            Pending_Receive_Byte_Count = 0;
+            message_bytes_received = 0;
 
             interruptRxTime = Millis();
 
-            Ring_Buffer_Init();
+//            Ring_Buffer_Init();
 
          } else {
             //flush any garbage data from the buffer.
@@ -158,12 +163,31 @@ void Wifi_State_Step() {
 
       case Receive_Message: {
 
+         // TODO: Look at this buffering. Reduce per-byte overhead.
+         //       When we send extra characters after the message end, we get the messages. Without it, we don't.
+         //         one theory for why this is happening is that the RX interrupt works on overflows, and there's
+         //         a newline left in the buffer.
          if (Ring_Buffer_Has_Data()) {
-            Ring_Buffer_Get(inBuffer + Pending_Receive_Byte_Count);
 
-            if (inBuffer[Pending_Receive_Byte_Count++] == address_terminator[0]) {
-               Wifi_Message_Available = TRUE;
-               State = Deserialize_Received_Message;
+            Ring_Buffer_Get(serial_rx_buffer + message_bytes_received);
+
+            if (message_bytes_received == 0 && serial_rx_buffer[0] == message_start[0]) {
+               ++message_bytes_received;
+            } else if (message_bytes_received > 0) {
+
+               if ((message_bytes_received + Ring_Buffer_NofElements()) >= 30) {
+                  Wait(0);
+               }
+
+               if (serial_rx_buffer[message_bytes_received] == message_end[0]) {
+
+                  serial_rx_buffer[message_bytes_received + 1] = '\0';
+                  State = Deserialize_Received_Message;
+               } else {
+                  ++message_bytes_received;
+               }
+            } else {
+               Wait(0);
             }
          } else if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
             State = Idle;
@@ -174,14 +198,14 @@ void Wifi_State_Step() {
 
       case Deserialize_Received_Message: {
 
-         temp_content = strtok(inBuffer, message_terminator);
-         temp_type = strtok(NULL, type_delimiter);
-         temp_source_address = strtok(NULL, address_delimiter);
-         temp_dest_address = strtok(NULL, address_terminator);
+
+         //TODO: We're getting an extra space at the end of message->source.
+         temp_type = strtok(serial_rx_buffer + 1, message_field_delimiter);     //offset for start character.
+         temp_source_address = strtok(NULL, message_field_delimiter);
+         temp_dest_address = strtok(NULL, message_field_delimiter);
+         temp_content = strtok(NULL, message_end);
 
          if (temp_content != NULL && temp_type != NULL && temp_source_address != NULL && temp_dest_address != NULL) {
-
-            sprintf(temp_address_string, "%s", temp_source_address);
 
             // Create message object
             Message *message = Create_Message(temp_content);
@@ -205,11 +229,21 @@ void Wifi_State_Step() {
 
          //	sprintf ((*message).source, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
 
-         snprintf(outBuffer,
-         OUT_BUFFER_LENGTH,
-                  "%s\n%s,%s;%s\x12\n", message->content, message->type, message->source, message->destination);
+         //HACK: Padding added because it seems to lessen the likelihood that we miss a \n
+         snprintf(serial_tx_buffer,
+                  OUT_BUFFER_LENGTH,
+                  "  %s%s%s%s%s%s%s%s%s  ",
+                  message_start,
+                  message->type,
+                  message_field_delimiter,
+                  message->source,
+                  message_field_delimiter,
+                  message->destination,
+                  message_field_delimiter,
+                  message->content,
+                  message_end);
 
-         pendingTransmitByteCount = strlen(outBuffer);
+         pendingTransmitByteCount = strlen(serial_tx_buffer);
          Delete_Message(message);
 
          State = Start_Transmission;
@@ -223,7 +257,7 @@ void Wifi_State_Step() {
          WIFI_GPIO2_PutVal(NULL, 1);
 
          deviceData.isSent = FALSE;
-         ESP8266_Serial_SendBlock(deviceData.handle, outBuffer, pendingTransmitByteCount);
+         ESP8266_Serial_SendBlock(deviceData.handle, serial_tx_buffer, pendingTransmitByteCount);
          State = Transmission_Sent;
 
          break;
@@ -308,10 +342,10 @@ Wifi_States Wifi_Get_State() {
 ///typedefs
 
 ///local vars
-#define GET_IP_CMD_STR                "GET_IP"
-#define GET_GATEWAY_CMD_STR           "GET_GATEWAY"
-#define GET_SUBNET_CMD_STR            "GET_SUBNET"
-#define SET_AP_CMD_STR                "SETAP"
+#define GET_IP_CMD_STR                "get_ip"
+#define GET_GATEWAY_CMD_STR           "get_gateway"
+#define GET_SUBNET_CMD_STR            "get_subnet"
+#define SET_AP_CMD_STR                "setap"
 
 ///local prototypes
 static bool WiFi_Send_Command(char * command, char ** args, int arg_count);
@@ -396,7 +430,7 @@ bool WiFi_Request_Get_Internet_Address() {
    return WiFi_Send_Command(GET_IP_CMD_STR, NULL, 0);
 }
 
-// Requests the WiFi controller to send the message. The message contains the messaging protocol (UDP, TCP, HTTP, or HTTPS),
+// Requests the WiFi controller to send the message. The message contains the messaging protocol (udp, tcp, http, or https),
 //  source address (IP string), destination address (IP string), and content (string).
 bool WiFi_Request_Send_Message(Message * message) {
    bool rval = false;
@@ -449,9 +483,9 @@ static bool WiFi_Send_Command(char * command, char ** args, int arg_count) {
    }
 
    message = Create_Message(send_buffer);
-   Set_Message_Destination(message, port_delimiter);
-   Set_Message_Source(message, port_delimiter);
-   Set_Message_Type(message, "CMD");
+   Set_Message_Destination(message, "none");
+   Set_Message_Source(message, "none");
+   Set_Message_Type(message, "command");
 
    free(send_buffer);
 

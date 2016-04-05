@@ -129,12 +129,25 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 
 			serial_tx_count = strlen(temp_message->content);
 
+			//New message format:
+			//!<type>\t<source>\t<destination>\t<content>\n
+
+			//HACK: Padding added because it seems to lessen the likelihood that we miss a \n
+
 			taskENTER_CRITICAL();
-			sprintf(serial_tx_buffer, "%s%s%s%s%s%s%s%s", temp_message->content,
-					message_delimiter, temp_message->message_type,
-					type_delimiter, temp_message->source, address_delimiter,
-					temp_message->destination, address_terminator);
+			sprintf(serial_tx_buffer, "  %s%s%s%s%s%s%s%s%s  ", message_start,
+					temp_message->type, message_field_delimiter,
+					temp_message->source, message_field_delimiter,
+					temp_message->destination, message_field_delimiter,
+					temp_message->content, message_end);
 			taskEXIT_CRITICAL();
+
+//			taskENTER_CRITICAL();
+//			sprintf(serial_tx_buffer, "%s%s%s%s%s%s%s%s", temp_message->content,
+//					message_delimiter, temp_message->message_type,
+//					type_delimiter, temp_message->source, address_delimiter,
+//					temp_message->destination, address_terminator);
+//			taskEXIT_CRITICAL();
 
 			//dequeue alloc's a message.
 			free(temp_message);
@@ -149,7 +162,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 #endif
 
 			//wait 1ms
-			while ((system_get_time() - time_temp) > 1000)
+			while ((system_get_time() - time_temp) < 1000)
 			{
 				taskYIELD();
 			}
@@ -226,7 +239,7 @@ void Send_Message_To_Master(char * message, Message_Type type)
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
-	Initialize_Message(&m, type_string, ":", ":", message);
+	Initialize_Message(&m, type_string, "none", "none", message);
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();

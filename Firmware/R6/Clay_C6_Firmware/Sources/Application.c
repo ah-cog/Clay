@@ -45,11 +45,13 @@ void Initialize() {
 
    // Initialize Clay
 
+   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+
    Initialize_Unit_UUID();
 
    timeline = Create_Timeline("timeline-uuid");
 
-   Enable_Actions ();
+   Enable_Actions();
 
    // Initialize bootloader.
    //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
@@ -131,7 +133,7 @@ void Initialize() {
       // Failure
    }
 
-   if ((status = Enable_WiFi("hefnet", "h3fn3r_is_better_than_me")) != TRUE) { // if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
+   if ((status = Enable_WiFi("hefnet", "h3fn3r_is_better_than_me")) != TRUE) {     // if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
       // Failure
    }
 
@@ -145,42 +147,56 @@ void Initialize() {
       ;
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
 
-   if ((status = Enable_Interactive_Assembly ()) != TRUE) {
-	   // Failure
+   if ((status = Enable_Interactive_Assembly()) != TRUE) {
+      // Failure
    }
 }
 
-void Discovery_Broadcast_Presence () {
+void Discovery_Broadcast_Presence() {
 
-	// TODO: Check if have IP address. Only broadcast if have IP address.
+   // TODO: Check if have IP address. Only broadcast if have IP address.
 
-	// Queue device discovery broadcast
-	char *uuid = Get_Unit_UUID();
-	sprintf(buffer2, "announce device %s", uuid);
-	Message *broadcastMessage = Create_Message(buffer2);
-	Set_Message_Type(broadcastMessage, "UDP");
-	Set_Message_Source(broadcastMessage, "192.168.43.255:4445");
-	Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
-	Queue_Message(&outgoingMessageQueue, broadcastMessage);
+   // Queue device discovery broadcast
+   char *uuid = Get_Unit_UUID();
+   sprintf(buffer2, "announce device %s", uuid);
+   Message *broadcastMessage = Create_Message(buffer2);
+   Set_Message_Type(broadcastMessage, "udp");
+   Set_Message_Source(broadcastMessage, "192.168.1.255:4445");
+   Set_Message_Destination(broadcastMessage, "192.168.1.255:4445");
+   Queue_Message(&outgoingMessageQueue, broadcastMessage);
+}
+
+void Send_Test_TCP_Message() {
+
+   // TODO: Check if have IP address. Only broadcast if have IP address.
+
+   // Queue device discovery broadcast
+   char *uuid = Get_Unit_UUID();
+   sprintf(buffer2, "announce device %s", uuid);
+   Message *broadcastMessage = Create_Message(buffer2);
+   Set_Message_Type(broadcastMessage, "tcp");
+   Set_Message_Source(broadcastMessage, "192.168.1.6:1002");
+   Set_Message_Destination(broadcastMessage, "192.168.1.3:1002");
+   Queue_Message(&outgoingMessageQueue, broadcastMessage);
 }
 
 void Application(void) {
    Message *message = NULL;
 
    /*
-   // Get the IP address
-   // TODO: Implement this in WiFi_Request_Get_Internet_Address() according to the interface specification.
-   message = Create_Message ("GET_IP");
-   Set_Message_Type (message, "CMD");
-   Set_Message_Destination (message, "\x12");
-   Wifi_Send (message);
-   message = NULL;
-   */
+    // Get the IP address
+    // TODO: Implement this in WiFi_Request_Get_Internet_Address() according to the interface specification.
+    message = Create_Message ("GET_IP");
+    Set_Message_Type (message, "CMD");
+    Set_Message_Destination (message, "\x12");
+    Wifi_Send (message);
+    message = NULL;
+    */
 
    for (;;) {
 
-	  // Call periodically to parse received messages and to enable the radio to receive
-	  Mesh_Process_Commands ();
+      // Call periodically to parse received messages and to enable the radio to receive
+      Mesh_Process_Commands();
 
       // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 
@@ -189,15 +205,15 @@ void Application(void) {
       Wifi_State_Step();
 
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
-      if (Has_Messages (&incomingWiFiMessageQueue)) {
-    	  message = Dequeue_Message (&incomingWiFiMessageQueue);
-		  Queue_Message (&incomingMessageQueue, message);
+      if (Has_Messages(&incomingWiFiMessageQueue)) {
+         message = Dequeue_Message(&incomingWiFiMessageQueue);
+         Queue_Message(&incomingMessageQueue, message);
       }
 
       // Process the next incoming message on the system queue
-      if (Has_Messages (&incomingMessageQueue)) {
-         message = Dequeue_Message (&incomingMessageQueue);
-		 status = Process_Incoming_Message (message);
+      if (Has_Messages(&incomingMessageQueue)) {
+         message = Dequeue_Message(&incomingMessageQueue);
+         status = Process_Incoming_Message(message);
       }
 
       // Step state machine
@@ -218,7 +234,7 @@ void Application(void) {
 
       // Perform action.
       if ((*timeline).current_event != NULL) {
-         if (Process_Event (((*timeline).current_event)) != NULL) {
+         if (Process_Event(((*timeline).current_event)) != NULL) {
 
             // NOTE: Action was performed successfully.
 
@@ -226,35 +242,35 @@ void Application(void) {
 
             // Go to the next action on the timeline
             if ((*((*timeline).current_event)).next != NULL) {
-               (*timeline).current_event = (*((*timeline).current_event)).next; // Go to the next action.
+               (*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
             } else {
-               (*timeline).current_event = (*timeline).first_event; // Go to the start of the loop.
+               (*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
             }
          }
       } else {
 
-    	  /*
-         // Reset the channel states...
-         Reset_Channels();
-         Apply_Channels();
+         /*
+          // Reset the channel states...
+          Reset_Channels();
+          Apply_Channels();
 
-         // ...the channel light states...
-         Reset_Channel_Lights();
-         Apply_Channel_Lights();
+          // ...the channel light states...
+          Reset_Channel_Lights();
+          Apply_Channel_Lights();
 
-         // ...and the device states.
-         // TODO: Reset any other device states.
+          // ...and the device states.
+          // TODO: Reset any other device states.
           */
       }
 
       // Forward messages on the outgoing system queue to the component-specific outgoing message queue.
-      if (Has_Messages (&outgoingMessageQueue) == TRUE) {
-    	  message = Dequeue_Message (&outgoingMessageQueue);
+      if (Has_Messages(&outgoingMessageQueue) == TRUE) {
+         message = Dequeue_Message(&outgoingMessageQueue);
 
-    	  // Propagate to Wi-Fi message queue (or other queue, if exists)
-    	  if ((strncmp ((*message).type, "UDP", strlen ("UDP")) == 0) || (strncmp ((*message).type, "TCP", strlen ("TCP")) == 0)) {
-			  Queue_Message(&outgoingWiFiMessageQueue, message);
-    	  }
+         // Propagate to Wi-Fi message queue (or other queue, if exists)
+         if ((strncmp((*message).type, "udp", strlen("udp")) == 0) || (strncmp((*message).type, "tcp", strlen("tcp")) == 0)) {
+            Queue_Message(&outgoingWiFiMessageQueue, message);
+         }
       }
 
       // Step state machine
@@ -289,12 +305,12 @@ void Monitor_Periodic_Events() {
 
       // TODO: Put this in a callback timer...
       if (button_mode_timeout > 0) {
-    	  button_mode_timeout--;
+         button_mode_timeout--;
 
-    	  // Check if the button mode timer expired
-    	  if (button_mode_timeout == 0) {
-    		  Request_Reset_Button ();
-    	  }
+         // Check if the button mode timer expired
+         if (button_mode_timeout == 0) {
+            Request_Reset_Button();
+         }
       }
 
       // TODO: Perform any periodic actions (1 ms).
@@ -357,9 +373,10 @@ void Monitor_Periodic_Events() {
    if (tick_3000ms) {
       tick_3000ms = FALSE;
 
-//      WiFi_Request_Get_Internet_Address ();
+      WiFi_Request_Get_Internet_Address();
 
-      Discovery_Broadcast_Presence ();
+      Send_Test_TCP_Message();
+      Discovery_Broadcast_Presence();
 
       // TODO: Perform any periodic actions (3000 ms).
    }
