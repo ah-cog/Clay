@@ -43,7 +43,77 @@ int8_t Process_Incoming_Message (Message *message) {
 
 	// TODO: Handle messages from ESP8266:
 	// TODO: - INFO,CONNECTED
+	// TODO: - INFO,192.168.1.1 (for example)
 	// TODO: - INFO,DISCONNECTED
+
+	if (strncmp((*message).type, "status", strlen ("status")) == 0) {
+
+		// <HACK>
+		if (has_connection_to_wifi == FALSE) {
+			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "connected")) {
+				has_connection_to_wifi = TRUE;
+
+				Delete_Message (message);
+				return TRUE;
+			}
+		}
+
+		if (has_connection_to_wifi == TRUE && has_received_internet_address == FALSE) {
+			if (strncmp((*message).content, "192.", strlen ("192.")) == 0) {
+				has_received_internet_address = TRUE;
+
+				// Extract address
+				// e.g., "192.168.43.6"
+
+				// Find the beginning of the fourth octet
+				char *fourth_octet = (*message).content; // First start of first octet (start of string)...
+				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the second...
+				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the third...
+				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the fourth.
+
+				// e.g., "192.168.43.255:4445"
+
+				// i.e., Copy "192.168.43." into broadcast_address
+				strncpy (broadcast_address, (*message).content, (fourth_octet - (*message).content));
+				strcat (broadcast_address, "255:4445");
+
+				has_generated_discovery_broadcast_address = TRUE;
+			}
+		}
+
+		if (has_connection_to_wifi == TRUE && has_received_internet_address == TRUE && has_generated_discovery_broadcast_address == TRUE && has_enabled_broadcast == FALSE) {
+			has_enabled_broadcast = TRUE;
+
+			Delete_Message (message);
+			return TRUE;
+		}
+		// </HACK>
+
+		/*
+		if (has_connection_to_wifi == FALSE) {
+			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "wifi")) {
+				if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "connected")) {
+					has_connection_to_wifi = TRUE;
+				}
+			}
+		}
+
+		if (has_connection_to_wifi == TRUE && has_received_internet_address == FALSE) {
+			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "wifi")) {
+				if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "address")) {
+					// TODO: Parse address (THIRD_PARAMTER)
+					has_received_internet_address = TRUE;
+				}
+			}
+		}
+
+		if (has_connection_to_wifi == TRUE && has_received_internet_address == TRUE && has_enabled_broadcast == FALSE) {
+			if (strncmp((*message).content, "online", strlen ("online")) == 0) {
+				has_enabled_broadcast = TRUE;
+			}
+		}
+		*/
+	}
 
 	if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "cache")) {
 		if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "action")) {

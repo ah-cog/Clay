@@ -23,6 +23,13 @@
 
 #include "Services/Interactive_Assembly.h"
 
+// TODO: Move these into Device_Status.h
+extern int8_t has_connection_to_wifi;
+extern int8_t has_received_internet_address;
+extern int8_t has_generated_discovery_broadcast_address;
+extern int8_t has_enabled_broadcast;
+extern char broadcast_address[32];
+
 /**
  * Initializes the device.
  */

@@ -152,6 +152,13 @@ void Initialize() {
    }
 }
 
+// TODO: Move these into Device_Status.h
+int8_t has_connection_to_wifi = FALSE;
+int8_t has_received_internet_address = FALSE;
+int8_t has_generated_discovery_broadcast_address = FALSE;
+int8_t has_enabled_broadcast = FALSE;
+char broadcast_address[32];
+
 void Discovery_Broadcast_Presence() {
 
    // TODO: Check if have IP address. Only broadcast if have IP address.
@@ -161,8 +168,10 @@ void Discovery_Broadcast_Presence() {
    sprintf(buffer2, "announce device %s", uuid);
    Message *broadcastMessage = Create_Message(buffer2);
    Set_Message_Type(broadcastMessage, "udp");
-   Set_Message_Source(broadcastMessage, "192.168.1.255:4445");
-   Set_Message_Destination(broadcastMessage, "192.168.1.255:4445");
+//   Set_Message_Source(broadcastMessage, "192.168.43.255:4445");
+//   Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
+   Set_Message_Source(broadcastMessage, broadcast_address);
+      Set_Message_Destination(broadcastMessage, broadcast_address);
    Queue_Message(&outgoingMessageQueue, broadcastMessage);
 }
 
@@ -373,10 +382,24 @@ void Monitor_Periodic_Events() {
    if (tick_3000ms) {
       tick_3000ms = FALSE;
 
-      WiFi_Request_Get_Internet_Address();
+      // Request Wi-Fi status
+      if (!has_connection_to_wifi) {
+    	  WiFi_Request_Get_Internet_Address(); // <HACK />
+    	  // WiFi_Request_Get_Connection_Status ();
+      }
 
-      Send_Test_TCP_Message();
-      Discovery_Broadcast_Presence();
+      if (has_connection_to_wifi) {
+    	  WiFi_Request_Get_Internet_Address ();
+      }
+
+//      Send_Test_TCP_Message();
+      if (has_received_internet_address) {
+    	  // TODO: Generate broadcast address based on received address
+      }
+
+	  if (has_generated_discovery_broadcast_address && has_enabled_broadcast) {
+    	  Discovery_Broadcast_Presence ();
+      }
 
       // TODO: Perform any periodic actions (3000 ms).
    }
