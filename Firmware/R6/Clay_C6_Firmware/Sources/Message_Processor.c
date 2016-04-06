@@ -423,6 +423,22 @@ static int8_t Process_Set_Event_State (Message *message) {
 
 void Send_Acknowledgment (char *token, char *messageContent) {
 
+//	// Send the acknowledgment (i.e., "got <message-uuid> <message-content>")
+//	sprintf (token, "got %s\n", messageContent);
+//
+//	// Queue the outgoing acknowledgment message!
+//	Message *responseMessage;
+//
+//	responseMessage = Create_Message (token);
+//	Set_Message_Type(responseMessage, "tcp");
+//	Set_Message_Source(responseMessage, "192.168.1.6:1002");
+//	Set_Message_Destination(responseMessage, "192.168.1.3:1002");
+//	Queue_Message(&outgoingMessageQueue, responseMessage);
+}
+
+// TODO: Combine this with other Send_Acknowledgment_ functions, and add logic for choosing protocol, socket, device, etc.
+void Send_Acknowledgment_UDP (char *token, char *messageContent) {
+
 	// Send the acknowledgment (i.e., "got <message-uuid> <message-content>")
 	sprintf (token, "got %s\n", messageContent);
 
