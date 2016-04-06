@@ -29,6 +29,18 @@
 #include "UDP_Receiver.h"
 #include "TCP_Combined.h"
 
+////Defines ///////////////////////////////////////////////////////
+#define WIFI_DISCONNECTED_RESPONSE		"wifi disconnected"
+#define WIFI_CONNECTED_RESPONSE			"wifi connected"
+#define SETAP_OK_RESPONSE			    "setap ok"
+#define SETAP_FAIL_RESPONSE			    "setap fail"
+#define WIFI_IP_RESPONSE			    "wifi address"
+#define WIFI_GATEWAY_RESPONSE		    "wifi gateway"
+#define WIFI_SUBNET_RESPONSE		    "wifi subnet mask"
+#define TASK_START_OK_RESPONSE		    "task start ok"
+#define TASK_START_FAIL_RESPONSE	    "task start fail"
+#define TASK_STOP_OK_RESPONSE		    "task stop ok"
+
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
@@ -45,6 +57,7 @@ typedef enum
 	CLAY_COMMAND_GET_SUBNET,
 	CLAY_COMMAND_STOP_TASK,
 	CLAY_COMMAND_START_TASK,
+	CLAY_COMMAND_GET_CONNECTION_STATUS,
 	CLAY_COMMAND_MAX
 } CLAY_ESP_COMMANDS;
 
@@ -63,8 +76,16 @@ typedef enum
 
 // TODO: Implement these following example of Process_Event and Perform_Action in k64 code.
 char* command_tokens[CLAY_COMMAND_MAX] =
-{ "setap", "getap", "scanap", "get_ip", "get_gateway", "get_subnet",
-		"stop_task", "start_task" };
+{ "setap",        //
+		"getap",        //
+		"scanap",       //
+		"get_ip",       //
+		"get_gateway",  //
+		"get_subnet",   //
+		"stop_task",    //
+		"start_task",   //
+		"get_status"    //
+		};
 
 char * command_args;
 char command_delimiter = ' ';
@@ -80,10 +101,10 @@ static CLAY_ESP_COMMANDS Command_String_Parse(char * CommandStr, char ** ArgStr)
 static bool Set_AP_Command(char * args);
 static bool Get_AP_Command(char * args);
 static bool Scan_AP_Command(char * args);
-static bool Get_Subnet_Command(char * args);
-static bool Get_Gateway_Command(char * args);
-static bool Get_IP_Command(char * args);
-static void Stop_Task(TASK_TYPE tt);
+
+//TODO: these are both supposed to take char * and return bool;
+static void Stop_Task_Command(TASK_TYPE tt);
+static void Start_Task_Command(TASK_TYPE tt);
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Command_Parser_Init()
@@ -189,10 +210,17 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 				break;
 			}
 
+			case CLAY_COMMAND_GET_CONNECTION_STATUS:
+			{
+				Get_Wifi_Status_Command(command_args);
+				break;
+			}
+
+			case CLAY_COMMAND_START_TASK:
+			case CLAY_COMMAND_STOP_TASK:
 			case CLAY_COMMAND_MAX:
 			default:
 			{
-				state = Idle;
 				break;
 			}
 
@@ -228,13 +256,23 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 static ICACHE_RODATA_ATTR CLAY_ESP_COMMANDS Command_String_Parse(
 		char * commandStr, char ** argStr)
 {
+	char * cmd_str_ptr;
 	CLAY_ESP_COMMANDS rval = CLAY_COMMAND_MAX;
 
+	taskENTER_CRITICAL();
 	*argStr = strchr(commandStr, command_delimiter);
+	taskEXIT_CRITICAL();
 
 	for (i = 0; i < CLAY_COMMAND_MAX; ++i)
 	{
-		if (strstr(commandStr, command_tokens[i]) != NULL)
+		//NOTE: The RTOS is pretty touchy about the length of critical sections.
+		//		I tried putting the strstr in the if statement, with the entire block
+		//		as a crit section, and it would crash every time.
+		taskENTER_CRITICAL();
+		cmd_str_ptr = strstr(commandStr, command_tokens[i]);
+		taskEXIT_CRITICAL();
+
+		if (cmd_str_ptr != NULL)
 		{
 			rval = (CLAY_ESP_COMMANDS) i;
 			break;
@@ -248,7 +286,7 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 {
 	bool rval = false;
 
-	Stop_Task(TASK_TYPE_TCP_RX | TASK_TYPE_UDP_RX | TASK_TYPE_UDP_TX);
+	Stop_Task_Command(TASK_TYPE_TCP_RX | TASK_TYPE_UDP_RX | TASK_TYPE_UDP_TX);
 
 	taskENTER_CRITICAL();
 	char * ssid = strtok(args, &args_delimiter);
@@ -257,11 +295,11 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 
 	if (Set_Access_Point(ssid, key))
 	{
-		Send_Message_To_Master("setap_ok", MESSAGE_TYPE_INFO);
+		Send_Message_To_Master(SETAP_OK_RESPONSE, MESSAGE_TYPE_INFO);
 	}
 	else
 	{
-		Send_Message_To_Master("setap_fail", MESSAGE_TYPE_INFO);
+		Send_Message_To_Master(SETAP_FAIL_RESPONSE, MESSAGE_TYPE_INFO);
 	}
 
 	return rval;
@@ -281,7 +319,7 @@ static ICACHE_RODATA_ATTR bool Scan_AP_Command(char * args)
 	return rval;
 }
 
-static ICACHE_RODATA_ATTR bool Get_IP_Command(char * args)
+bool ICACHE_RODATA_ATTR Get_IP_Command(char * args)
 {
 	bool rval = false;
 
@@ -292,7 +330,7 @@ static ICACHE_RODATA_ATTR bool Get_IP_Command(char * args)
 	int ip = Get_IP_Address();
 
 	taskENTER_CRITICAL();
-	sprintf(response_buffer, "ip %s", inet_ntoa(ip));
+	sprintf(response_buffer, "%s %s", WIFI_IP_RESPONSE, inet_ntoa(ip));
 	taskEXIT_CRITICAL();
 
 	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
@@ -304,7 +342,7 @@ static ICACHE_RODATA_ATTR bool Get_IP_Command(char * args)
 	return rval;
 }
 
-bool Get_Gateway_Command(char * args)
+bool ICACHE_RODATA_ATTR Get_Gateway_Command(char * args)
 {
 	bool rval = false;
 
@@ -315,7 +353,7 @@ bool Get_Gateway_Command(char * args)
 	int gw = Get_Gateway_Address();
 
 	taskENTER_CRITICAL();
-	sprintf(response_buffer, "gateway %s", inet_ntoa(gw));
+	sprintf(response_buffer, "%s %s", WIFI_GATEWAY_RESPONSE, inet_ntoa(gw));
 	taskEXIT_CRITICAL();
 
 	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
@@ -327,7 +365,7 @@ bool Get_Gateway_Command(char * args)
 	return rval;
 }
 
-bool Get_Subnet_Command(char * args)
+bool ICACHE_RODATA_ATTR Get_Subnet_Command(char * args)
 {
 	bool rval = false;
 
@@ -338,7 +376,7 @@ bool Get_Subnet_Command(char * args)
 	int mask = Get_Subnet_Mask();
 
 	taskENTER_CRITICAL();
-	sprintf(response_buffer, "mask %s", inet_ntoa(mask));
+	sprintf(response_buffer, "%s %s", WIFI_SUBNET_RESPONSE, inet_ntoa(mask));
 	taskEXIT_CRITICAL();
 
 	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
@@ -350,8 +388,10 @@ bool Get_Subnet_Command(char * args)
 	return rval;
 }
 
-static void Stop_Task(TASK_TYPE tt)
+static void Stop_Task_Command(TASK_TYPE tt)
 {
+	//TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
+
 	if (tt && TASK_TYPE_UDP_RX)
 	{
 		UDP_Receiver_Deinit();
@@ -367,11 +407,13 @@ static void Stop_Task(TASK_TYPE tt)
 		TCP_Combined_Deinit();
 	}
 
-	Send_Message_To_Master("stop_ok", MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(TASK_STOP_OK_RESPONSE, MESSAGE_TYPE_INFO);
 }
 
-static void Start_Task(TASK_TYPE tt)
+static void Start_Task_Command(TASK_TYPE tt)
 {
+	//TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
+
 	bool rval = false;
 
 	if (tt && TASK_TYPE_UDP_RX)
@@ -389,6 +431,18 @@ static void Start_Task(TASK_TYPE tt)
 		TCP_Combined_Init();
 	}
 
-	Send_Message_To_Master(rval ? "task_start_ok" : "task_start_fail",
+	Send_Message_To_Master(
+			rval ? TASK_START_OK_RESPONSE : TASK_START_FAIL_RESPONSE,
 			MESSAGE_TYPE_INFO);
+}
+
+bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
+{
+	bool connected = (wifi_station_get_connect_status() == STATION_GOT_IP);
+
+	Send_Message_To_Master(
+			connected ? WIFI_CONNECTED_RESPONSE : WIFI_DISCONNECTED_RESPONSE,
+			MESSAGE_TYPE_INFO);
+
+	return connected;
 }

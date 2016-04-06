@@ -81,7 +81,7 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 
 	state = Idle;
 
-	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 128, NULL, 2,
+	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL, 2,
 			serial_tx_task);
 
 	return rval;

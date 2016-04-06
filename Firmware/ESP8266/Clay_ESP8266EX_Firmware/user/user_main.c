@@ -37,9 +37,6 @@
 //#include "ets_sys.h"
 #include "stdarg.h"
 
-#define DISCONNECTED_MESSAGE		"disconnected\n"
-#define CONNECTED_MESSAGE			"connected\n"
-
 void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
 		_xt_isr handler);
 void ICACHE_RODATA_ATTR GPIO_Init();
@@ -169,7 +166,7 @@ void wifi_handle_event_cb(System_Event_t *evt)
 //				evt->event_info.disconnected.ssid,
 //				evt->event_info.disconnected.reason);
 
-		Send_Message_To_Master(DISCONNECTED_MESSAGE, MESSAGE_TYPE_INFO);
+		Get_Wifi_Status_Command(NULL);
 		break;
 	}
 	case EVENT_STAMODE_AUTHMODE_CHANGE:
@@ -200,9 +197,8 @@ void wifi_handle_event_cb(System_Event_t *evt)
 		TCP_Combined_Init();
 #endif
 
-		Send_Message_To_Master(CONNECTED_MESSAGE, MESSAGE_TYPE_INFO);
-		int ip = Get_IP_Address();
-		Send_Message_To_Master(inet_ntoa(ip), MESSAGE_TYPE_INFO);
+		Get_Wifi_Status_Command(NULL);
+		Get_IP_Command(NULL);
 
 		break;
 	}

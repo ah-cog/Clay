@@ -19,4 +19,9 @@
 extern bool Command_Parser_Init();
 extern void Command_Parser_State_Step();
 
+extern bool Get_Wifi_Status_Command(char * args);
+extern bool Get_Subnet_Command(char * args);
+extern bool Get_Gateway_Command(char * args);
+extern bool Get_IP_Command(char * args);
+
 #endif /* INCLUDE_COMMANDPARSER_H_ */
