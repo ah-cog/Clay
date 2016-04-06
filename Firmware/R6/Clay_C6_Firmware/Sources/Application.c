@@ -382,23 +382,22 @@ void Monitor_Periodic_Events() {
    if (tick_3000ms) {
       tick_3000ms = FALSE;
 
-      WiFi_Request_Get_Connection_Status();
-
       // Request Wi-Fi status
       if (!has_connection_to_wifi) {
-         WiFi_Request_Get_Internet_Address();     // <HACK />
-         // WiFi_Request_Get_Connection_Status ();
+         WiFi_Request_Get_Connection_Status ();
       }
 
-      if (has_connection_to_wifi) {
+      // Once connected, get Internet address.
+      if (has_connection_to_wifi && !has_received_internet_address) {
          WiFi_Request_Get_Internet_Address();
       }
 
-//      Send_Test_TCP_Message();
-      if (has_received_internet_address) {
+      // Once retreived address, generate broadcast address.
+      if (has_received_internet_address && !has_generated_discovery_broadcast_address) {
          // TODO: Generate broadcast address based on received address
       }
 
+      // Once discovery broadcast address is generated and discovery is enabled, send discovery broadcast.
       if (has_generated_discovery_broadcast_address && has_enabled_broadcast) {
          Discovery_Broadcast_Presence();
       }
