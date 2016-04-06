@@ -264,8 +264,6 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 		Send_Message_To_Master("setap_fail", MESSAGE_TYPE_INFO);
 	}
 
-	//DEBUG_Print(rval ? "setap ok" : "setap nfg");
-
 	return rval;
 }
 
@@ -287,10 +285,21 @@ static ICACHE_RODATA_ATTR bool Get_IP_Command(char * args)
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
+	char * response_buffer = zalloc(30);
+	taskEXIT_CRITICAL();
+
 	int ip = Get_IP_Address();
-	Send_Message_To_Master(inet_ntoa(ip), MESSAGE_TYPE_INFO);
+
+	taskENTER_CRITICAL();
+	sprintf(response_buffer, "ip %s", inet_ntoa(ip));
+	taskEXIT_CRITICAL();
+
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
 
 	rval = ip > 0;
+
+	free(response_buffer);
 
 	return rval;
 }
@@ -299,10 +308,21 @@ bool Get_Gateway_Command(char * args)
 {
 	bool rval = false;
 
+	taskENTER_CRITICAL();
+	char * response_buffer = zalloc(30);
+	taskEXIT_CRITICAL();
+
 	int gw = Get_Gateway_Address();
-	Send_Message_To_Master(inet_ntoa(gw), MESSAGE_TYPE_INFO);
+
+	taskENTER_CRITICAL();
+	sprintf(response_buffer, "gateway %s", inet_ntoa(gw));
+	taskEXIT_CRITICAL();
+
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
 
 	rval = gw > 0;
+
+	free(response_buffer);
 
 	return rval;
 }
@@ -310,10 +330,22 @@ bool Get_Gateway_Command(char * args)
 bool Get_Subnet_Command(char * args)
 {
 	bool rval = false;
+
+	taskENTER_CRITICAL();
+	char * response_buffer = zalloc(30);
+	taskEXIT_CRITICAL();
+
 	int mask = Get_Subnet_Mask();
-	Send_Message_To_Master(inet_ntoa(mask), MESSAGE_TYPE_INFO);
+
+	taskENTER_CRITICAL();
+	sprintf(response_buffer, "mask %s", inet_ntoa(mask));
+	taskEXIT_CRITICAL();
+
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
 
 	rval = mask > 0;
+
+	free(response_buffer);
 
 	return rval;
 }
