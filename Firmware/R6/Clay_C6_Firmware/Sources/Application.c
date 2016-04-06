@@ -45,7 +45,7 @@ void Initialize() {
 
    // Initialize Clay
 
-   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+   //   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
 
    Initialize_Unit_UUID();
 
@@ -171,7 +171,7 @@ void Discovery_Broadcast_Presence() {
 //   Set_Message_Source(broadcastMessage, "192.168.43.255:4445");
 //   Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
    Set_Message_Source(broadcastMessage, broadcast_address);
-      Set_Message_Destination(broadcastMessage, broadcast_address);
+   Set_Message_Destination(broadcastMessage, broadcast_address);
    Queue_Message(&outgoingMessageQueue, broadcastMessage);
 }
 
@@ -382,23 +382,25 @@ void Monitor_Periodic_Events() {
    if (tick_3000ms) {
       tick_3000ms = FALSE;
 
+      WiFi_Request_Get_Connection_Status();
+
       // Request Wi-Fi status
       if (!has_connection_to_wifi) {
-    	  WiFi_Request_Get_Internet_Address(); // <HACK />
-    	  // WiFi_Request_Get_Connection_Status ();
+         WiFi_Request_Get_Internet_Address();     // <HACK />
+         // WiFi_Request_Get_Connection_Status ();
       }
 
       if (has_connection_to_wifi) {
-    	  WiFi_Request_Get_Internet_Address ();
+         WiFi_Request_Get_Internet_Address();
       }
 
 //      Send_Test_TCP_Message();
       if (has_received_internet_address) {
-    	  // TODO: Generate broadcast address based on received address
+         // TODO: Generate broadcast address based on received address
       }
 
-	  if (has_generated_discovery_broadcast_address && has_enabled_broadcast) {
-    	  Discovery_Broadcast_Presence ();
+      if (has_generated_discovery_broadcast_address && has_enabled_broadcast) {
+         Discovery_Broadcast_Presence();
       }
 
       // TODO: Perform any periodic actions (3000 ms).

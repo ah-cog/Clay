@@ -198,7 +198,6 @@ void Wifi_State_Step() {
 
       case Deserialize_Received_Message: {
 
-
          //TODO: We're getting an extra space at the end of message->source.
          temp_type = strtok(serial_rx_buffer + 1, message_field_delimiter);     //offset for start character.
          temp_source_address = strtok(NULL, message_field_delimiter);
@@ -346,6 +345,7 @@ Wifi_States Wifi_Get_State() {
 #define GET_GATEWAY_CMD_STR           "get_gateway"
 #define GET_SUBNET_CMD_STR            "get_subnet"
 #define SET_AP_CMD_STR                "setap"
+#define GET_WIFI_STATUS_CMD_STR       "get_status"
 
 ///local prototypes
 static bool WiFi_Send_Command(char * command, char ** args, int arg_count);
@@ -419,8 +419,7 @@ bool WiFi_Request_Disconnect() {
 // Requests connection status from WiFi controller. Connection status can be disconnected, connecting, connected, disconnecting, or unavailable.
 // The WiFi controller will send a response in a "status" Message with one of the statuses in a string formatted like "disconnected", "connecting", "connected", "disconnecting", or "unavailable".
 bool WiFi_Request_Get_Connection_Status() {
-   bool rval = false;
-   return rval;
+   return WiFi_Send_Command(GET_WIFI_STATUS_CMD_STR, NULL, 0);
 }
 
 // Requests the Internet (IP) address from the WiFi controller.
