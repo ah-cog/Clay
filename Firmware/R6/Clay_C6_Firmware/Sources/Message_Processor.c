@@ -49,35 +49,84 @@ int8_t Process_Incoming_Message (Message *message) {
 	if (strncmp((*message).type, "status", strlen ("status")) == 0) {
 
 		// <HACK>
-		if (has_connection_to_wifi == FALSE) {
-			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "connected")) {
-				has_connection_to_wifi = TRUE;
+//		if (has_connection_to_wifi == FALSE) {
+//			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "connected")) {
+//				has_connection_to_wifi = TRUE;
+//
+//				Delete_Message (message);
+//				return TRUE;
+//			}
+//		}
 
-				Delete_Message (message);
-				return TRUE;
+//		if (has_connection_to_wifi == TRUE && has_received_internet_address == FALSE) {
+//			if (strncmp((*message).content, "192.", strlen ("192.")) == 0) {
+//				has_received_internet_address = TRUE;
+//
+//				// Extract address
+//				// e.g., "192.168.43.6"
+//
+//				// Find the beginning of the fourth octet
+//				char *fourth_octet = (*message).content; // First start of first octet (start of string)...
+//				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the second...
+//				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the third...
+//				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the fourth.
+//
+//				// e.g., "192.168.43.255:4445"
+//
+//				// i.e., Copy "192.168.43." into broadcast_address
+//				strncpy (broadcast_address, (*message).content, (fourth_octet - (*message).content));
+//				strcat (broadcast_address, "255:4445");
+//
+//				has_generated_discovery_broadcast_address = TRUE;
+//			}
+//		}
+
+//		if (has_connection_to_wifi == TRUE && has_received_internet_address == TRUE && has_generated_discovery_broadcast_address == TRUE && has_enabled_broadcast == FALSE) {
+//			has_enabled_broadcast = TRUE;
+//
+//			Delete_Message (message);
+//			return TRUE;
+//		}
+		// </HACK>
+
+
+
+		if (has_connection_to_wifi == FALSE) {
+			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "wifi")) {
+				if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "connected")) {
+					has_connection_to_wifi = TRUE;
+
+					Delete_Message (message);
+					return TRUE;
+				}
 			}
 		}
 
 		if (has_connection_to_wifi == TRUE && has_received_internet_address == FALSE) {
-			if (strncmp((*message).content, "192.", strlen ("192.")) == 0) {
-				has_received_internet_address = TRUE;
+			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "wifi")) {
+				if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "address")) {
+					has_received_internet_address = TRUE;
 
-				// Extract address
-				// e.g., "192.168.43.6"
+					// Extract address
+					// e.g., "wifi address 192.168.43.6"
 
-				// Find the beginning of the fourth octet
-				char *fourth_octet = (*message).content; // First start of first octet (start of string)...
-				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the second...
-				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the third...
-				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the fourth.
+					// Find the beginning of the fourth octet
+					char *internet_address = NULL;
+					internet_address = (*message).content; // Start at the beginning of the message content (first token)...
+					internet_address = strchr (internet_address, ' ') + 1; // ...then jump to "address" (second token)...
+					internet_address = strchr (internet_address, ' ') + 1; // ...then jump to start of first address octet (third token)...
+					char *fourth_octet = strchr (internet_address, '.') + 1; // ...then the second...
+					fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the third...
+					fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the fourth.
 
-				// e.g., "192.168.43.255:4445"
+					// e.g., "192.168.43.255:4445"
 
-				// i.e., Copy "192.168.43." into broadcast_address
-				strncpy (broadcast_address, (*message).content, (fourth_octet - (*message).content));
-				strcat (broadcast_address, "255:4445");
+					// i.e., Copy "192.168.43." into broadcast_address
+					strncpy (broadcast_address, internet_address, (fourth_octet - internet_address));
+					strcat (broadcast_address, "255:4445");
 
-				has_generated_discovery_broadcast_address = TRUE;
+					has_generated_discovery_broadcast_address = TRUE;
+				}
 			}
 		}
 
@@ -87,32 +136,6 @@ int8_t Process_Incoming_Message (Message *message) {
 			Delete_Message (message);
 			return TRUE;
 		}
-		// </HACK>
-
-		/*
-		if (has_connection_to_wifi == FALSE) {
-			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "wifi")) {
-				if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "connected")) {
-					has_connection_to_wifi = TRUE;
-				}
-			}
-		}
-
-		if (has_connection_to_wifi == TRUE && has_received_internet_address == FALSE) {
-			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "wifi")) {
-				if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "address")) {
-					// TODO: Parse address (THIRD_PARAMTER)
-					has_received_internet_address = TRUE;
-				}
-			}
-		}
-
-		if (has_connection_to_wifi == TRUE && has_received_internet_address == TRUE && has_enabled_broadcast == FALSE) {
-			if (strncmp((*message).content, "online", strlen ("online")) == 0) {
-				has_enabled_broadcast = TRUE;
-			}
-		}
-		*/
 	}
 
 	if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "cache")) {
