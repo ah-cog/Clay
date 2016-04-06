@@ -117,9 +117,9 @@ int16_t Get_Message_Count (Message **messageQueue) {
 int8_t Has_Messages (Message **messageQueue) {
 
 	if ((*messageQueue) != NULL) {
-		if ((*(*messageQueue)).content != NULL) {
+//		if ((*(*messageQueue)).content != NULL) {
 			return TRUE;
-		}
+//		}
 	}
 
 	return FALSE;
