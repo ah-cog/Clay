@@ -17,6 +17,8 @@
 #include "PowerOn.h"
 #include "Button.h"
 
+#include "Power_Manager.h"
+
 static bool led_1_state;
 static bool led_2_state;
 Message *outMessage = NULL;
@@ -36,6 +38,7 @@ LDD_TDeviceDataPtr ADC0_DeviceData;
 
 void Monitor_Periodic_Events();
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
+void Send_Mesh_Test_Message();
 
 void Initialize() {
 
@@ -45,7 +48,9 @@ void Initialize() {
 
    // Initialize Clay
 
-   //   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+//   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+   Button_Register_Press_Response(Send_Mesh_Test_Message);
+   Button_Register_Release_Response(Send_Mesh_Test_Message);
 
    Initialize_Unit_UUID();
 
@@ -58,6 +63,14 @@ void Initialize() {
 //	bool is_update_available = FALSE;
 //	Initialize_Bootloader (); // TODO: Make this work!
 
+   if ((status = Button_Enable()) != TRUE) {
+      // Failure
+   }
+
+   if ((status = Power_Manager_Enable()) != TRUE) {
+      // Failure
+   }
+
    // Clock.
    if ((status = Enable_Clock()) != TRUE) {
       // Failure
@@ -67,9 +80,7 @@ void Initialize() {
       // Failure
    }
 
-   if ((status = Button_Enable()) != TRUE) {
-      // Failure
-   }
+   Power_Manager_Check_Startup();
 
    // Status LEDs.
 
@@ -192,6 +203,8 @@ void Send_Test_TCP_Message() {
 void Application(void) {
    Message *message = NULL;
 
+   Buzzer_Play_Frequency(1000, 1000);
+
    /*
     // Get the IP address
     // TODO: Implement this in WiFi_Request_Get_Internet_Address() according to the interface specification.
@@ -201,6 +214,12 @@ void Application(void) {
     Wifi_Send (message);
     message = NULL;
     */
+
+   Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
+
+   for (;;) {
+      Mesh_Process_Commands();
+   }
 
    for (;;) {
 
@@ -338,38 +357,6 @@ void Monitor_Periodic_Events() {
       LED1_PutVal(NULL, led_2_state);
       led_2_state = !led_2_state;
 
-//      //monitor the input voltage line. We need to shut down on low battery ~3.2v. See schematic for resistor divider and input scaling.
-//      if ((vBat != 0 && vBat < 3.2) || Button_Press_Time > 0 && (Millis() - Button_Press_Time) > 1500) {
-//
-//         //TODO: We may need a watchdog or high priority timer interrupt, or task, that
-//         //      checks to see if the user is holding down the button. Perhaps we just
-//         //      make it a high priority double-edge
-//
-//         //IDEA: start flashing LEDs to signal to the user that they are about to shut
-//         //      the module down. If the user releases the button, continue operation
-//         //      as usual. Otherwise:
-//
-//         //TODO: stop doing things, shut down gracefully,  and then:
-//
-//         //TODO: Make it apparent that Clay is ready to turn off. Stop flashing things. The power LED will remain on.
-//         //We wait for the user to release the button so that they don't immediately turn the module back on again.
-//
-//         LED2_PutVal(NULL, FALSE);
-//         LED1_PutVal(NULL, FALSE);
-//         while (Read_Button_In()) {
-//            Wait(1);
-//         }
-//
-//         //Pull the PowerOn line low. Regulator's UVLO will drop below 0 and shut off the board.
-//         PowerOn_PutVal(NULL, 0);
-//         for (;;)
-//            ;
-//      } else if (Button_Press_Time == 0 && Read_Button_In()) {
-//         Button_Press_Time = Millis();
-//      } else if (Button_Press_Time > 0 && !Read_Button_In()) {
-//         Button_Press_Time = 0;
-//      }
-
       // TODO: Perform any periodic actions (500 ms).
    }
 
@@ -384,7 +371,7 @@ void Monitor_Periodic_Events() {
 
       // Request Wi-Fi status
       if (!has_connection_to_wifi) {
-         WiFi_Request_Get_Connection_Status ();
+         WiFi_Request_Get_Connection_Status();
       }
 
       // Once connected, get Internet address.
@@ -426,4 +413,11 @@ void Remote_Button_Pressed(uint8_t * data, uint8_t len) {
       RGB_LED_SetColor((RGB_LED) i, &c);
       Wait(2);
    }
+}
+
+void Send_Mesh_Test_Message() {
+
+   uint8_t data[2] = { MESH_CMD_BUTTON_PRESSED, Button_Get_Status() };
+//   Mesh_Tx(data, 2, 1);
+   Mesh_Tx(data, 2, 2);
 }
