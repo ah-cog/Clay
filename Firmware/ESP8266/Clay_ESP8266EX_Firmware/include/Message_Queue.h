@@ -41,5 +41,6 @@ extern int Queue_Message(Message_Queue *message_queue, Message *message);
 extern Message* Peek_Message(Message_Queue *message_queue);
 extern Message* Dequeue_Message(Message_Queue *message_queue);
 extern bool Has_Messages(Message_Queue *message_queue);
+extern int Get_Message_Count(Message_Queue * message_queue);
 
 #endif
