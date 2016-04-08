@@ -24,6 +24,9 @@ Event* Create_Event (char *uuid, Action *action, char *state) {
 	strncpy ((*event).uuid, uuid, strlen (uuid)); // Copy the action construct's UUID
 	(*event).uuid[strlen (uuid)] = NULL;
 
+	// Initialize repeat condition
+	(*event).repeat_period = 0;
+
 	// Assign the action construct to the specified action (or NULL).
 	(*event).action = (Action *) action;
 
@@ -39,6 +42,9 @@ Event* Create_Event (char *uuid, Action *action, char *state) {
 	// Set up links for queue
 	(*event).previous = NULL;
 	(*event).next = NULL;
+
+	// Set up bookkeeping
+	(*event).start_time = 0;
 
 	return event;
 }
@@ -98,13 +104,30 @@ int8_t Process_Event (Event *event) {
 		return TRUE;
 	}
 
+	// Record event start time.
+	if ((*event).start_time == 0) {
+		(*event).start_time = Millis ();
+	}
+
 	// TODO: Queue the message rather than executing it immediately (unless specified)
 	// TODO: Parse the message rather than brute force like this.
 	// TODO: Decompose the action into atomic actions and perform them!
 
 	// TODO: Check event condition, and only call script if it is met.
 
-	Perform_Action ((*event).action, (*event).state);
+//	if (action_wait_time == 0) {
+//		pause_duration_integer = atoi (token);
+//		action_wait_time = pause_duration_integer;
+//	}
+
+	// Check if the action's wait time has expired
+	if ((Millis () - (*event).start_time) >= (*event).repeat_period) {
+		(*event).start_time = 0;
+//		(*event).repeat_period = 0;
+		result = Perform_Action ((*event).action, (*event).state);
+	} else {
+		result = FALSE;
+	}
 
 	return result;
 }
