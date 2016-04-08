@@ -42,6 +42,7 @@
 #include "Clay_Config.h"
 
 #include "Message_Queue.h"
+#include "Priority_Manager.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -80,11 +81,11 @@ static int32 testCounter;
 static Message tempMessage;
 static char * source_addr;
 static char * dest_addr;
-static xTaskHandle UDP_receive_handle;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static bool Receive();
+static bool Check_Needs_Promotion();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
@@ -101,7 +102,12 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 	Initialize_Message_Queue(&incoming_message_queue);
 	taskEXIT_CRITICAL();
 
-	xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL, 2, UDP_receive_handle);
+	xTaskHandle UDP_receive_handle;
+
+	xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL,
+			Get_Task_Priority(TASK_TYPE_UDP_RX), UDP_receive_handle);
+
+	Register_Task(TASK_TYPE_UDP_RX, UDP_receive_handle, Check_Needs_Promotion);
 
 	testCounter = 0;
 
@@ -117,13 +123,15 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Deinit()
 	free(source_addr);
 	free(dest_addr);
 
-	vTaskDelete(UDP_receive_handle);
+	Stop_Task(TASK_TYPE_UDP_RX);
 }
 
 void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 {
 	for (;;)
 	{
+		Priority_Check(TASK_TYPE_UDP_RX);
+
 		switch (State)
 		{
 		case Disable:
@@ -282,6 +290,17 @@ static bool ICACHE_RODATA_ATTR Receive()
 			lastSourceAddress.sin_zero[i] = from.sin_zero[i];
 		}
 	}
+
+	return rval;
+}
+
+static bool Check_Needs_Promotion()
+{
+	bool rval = false;
+
+	//TODO: how to get this elevated?
+	//		keep track of last time we ran here?
+	//		default in the priority manager?
 
 	return rval;
 }

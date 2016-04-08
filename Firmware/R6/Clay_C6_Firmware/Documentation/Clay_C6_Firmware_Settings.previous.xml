@@ -2035,7 +2035,7 @@ Autoselect
       <Duty_device v="FTM2_C0V" />
       <Output_pin v="PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA" />
       <boolgroup name="Interrupt service/event" v="Disabled" />
-      <Period init="100 ms" runtime_settings="interval" low="0.033333 &amp;#181;s" high="100 ms" />
+      <Period init="139 ms" runtime_settings="interval" low="0.533333 &amp;#181;s" high="139 ms" />
       <Starting_pulse_width v="70 ms" />
       <Initial_polarity v="low" />
       <group name="Initialization">

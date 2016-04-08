@@ -40,6 +40,10 @@
 
 #include "Message_Queue.h"
 #include "Message.h"
+#include "Priority_Manager.h"
+
+////Macros  ///////////////////////////////////////////////////////
+#define MESSAGE_TRIGGER_LEVEL			5
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -56,6 +60,8 @@ static int ret;
 static uint8_t *UDP_Tx_Buffer;
 static uint16_t UDP_Tx_Count;
 
+static bool promoted;
+
 static struct sockaddr_in DestinationAddr;
 static struct sockaddr_in server_addr;
 
@@ -65,17 +71,18 @@ static int32 testCounter;
 static Message_Type tempIgnoredMessageType;
 
 static Message * m;
-static xTaskHandle UDP_transmit_handle;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static bool Transmit();
 static bool Message_Available();
+static bool Check_Needs_Promotion();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 {
 	bool rval = true;
+	promoted = false;
 
 	taskENTER_CRITICAL();
 	UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
@@ -84,8 +91,13 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 
 	State = Disable;
 
-	xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL, 2,
+	xTaskHandle UDP_transmit_handle;
+
+	xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL,
+			Get_Task_Priority(TASK_TYPE_UDP_TX), //TODO: globals for each task's priority
 			UDP_transmit_handle);
+
+	Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle, Check_Needs_Promotion);
 
 	testCounter = 0;
 
@@ -99,13 +111,15 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Deinit()
 
 	free(UDP_Tx_Buffer);
 
-	vTaskDelete(UDP_transmit_handle);
+	Stop_Task(TASK_TYPE_UDP_TX);
 }
 
 void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 {
 	for (;;)
 	{
+		Priority_Check(TASK_TYPE_UDP_TX);
+
 		switch (State)
 		{
 		case Disable:
@@ -250,6 +264,20 @@ static bool Message_Available()
 	{
 		rval = true;
 	}
+
+	return rval;
+}
+
+static bool Check_Needs_Promotion()
+{
+	bool rval = false;
+
+	taskENTER_CRITICAL();
+	rval = (Get_Message_Count(&outgoing_UDP_message_queue)
+			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	taskEXIT_CRITICAL();
+
+	promoted = rval;
 
 	return rval;
 }

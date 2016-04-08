@@ -28,18 +28,24 @@
 #include "UDP_Transmitter.h"
 #include "UDP_Receiver.h"
 #include "TCP_Combined.h"
+#include "Priority_Manager.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define WIFI_DISCONNECTED_RESPONSE		"wifi disconnected"
 #define WIFI_CONNECTED_RESPONSE			"wifi connected"
+
 #define SETAP_OK_RESPONSE			    "setap ok"
 #define SETAP_FAIL_RESPONSE			    "setap fail"
+
 #define WIFI_IP_RESPONSE			    "wifi address"
 #define WIFI_GATEWAY_RESPONSE		    "wifi gateway"
 #define WIFI_SUBNET_RESPONSE		    "wifi subnet mask"
+
 #define TASK_START_OK_RESPONSE		    "task start ok"
 #define TASK_START_FAIL_RESPONSE	    "task start fail"
 #define TASK_STOP_OK_RESPONSE		    "task stop ok"
+
+#define MESSAGE_TRIGGER_LEVEL			5
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -60,15 +66,6 @@ typedef enum
 	CLAY_COMMAND_GET_CONNECTION_STATUS,
 	CLAY_COMMAND_MAX
 } CLAY_ESP_COMMANDS;
-
-typedef enum
-{
-	TASK_TYPE_UDP_TX = 1,
-	TASK_TYPE_UDP_RX = 2,
-	TASK_TYPE_TCP_TX = 4,
-	TASK_TYPE_TCP_RX = 8,
-	TASK_TYPE_MAX
-} TASK_TYPE;
 
 ////Globals   /////////////////////////////////////////////////////
 
@@ -94,13 +91,15 @@ char args_delimiter = ',';
 int i;
 static Message * m;
 static Command_Parser_States state;
-static xTaskHandle command_parser_task;
+
+static bool promoted;
 
 ////Local Prototypes///////////////////////////////////////////////
 static CLAY_ESP_COMMANDS Command_String_Parse(char * CommandStr, char ** ArgStr);
 static bool Set_AP_Command(char * args);
 static bool Get_AP_Command(char * args);
 static bool Scan_AP_Command(char * args);
+static bool Check_Needs_Promotion();
 
 //TODO: these are both supposed to take char * and return bool;
 static void Stop_Task_Command(TASK_TYPE tt);
@@ -110,6 +109,7 @@ static void Start_Task_Command(TASK_TYPE tt);
 bool ICACHE_RODATA_ATTR Command_Parser_Init()
 {
 	bool rval = false;
+	promoted = false;
 
 	taskENTER_CRITICAL();
 	Initialize_Message_Queue(&incoming_command_queue);
@@ -117,8 +117,13 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 
 	state = Idle;
 
-	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL, 2,
-			command_parser_task);
+	xTaskHandle command_parser_handle;
+
+	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL,
+			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER), command_parser_handle);
+
+	Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
+			Check_Needs_Promotion);
 
 	return rval;
 }
@@ -127,6 +132,8 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 {
 	for (;;)
 	{
+		Priority_Check(TASK_TYPE_COMMAND_PARSER);
+
 		switch (state)
 		{
 		case Disable:
@@ -390,21 +397,27 @@ bool ICACHE_RODATA_ATTR Get_Subnet_Command(char * args)
 
 static void Stop_Task_Command(TASK_TYPE tt)
 {
-	//TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
+//TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
 
-	if (tt && TASK_TYPE_UDP_RX)
+	switch (tt)
+	{
+	case TASK_TYPE_UDP_RX:
 	{
 		UDP_Receiver_Deinit();
+		break;
 	}
 
-	if (tt && TASK_TYPE_UDP_TX)
+	case TASK_TYPE_UDP_TX:
 	{
 		UDP_Transmitter_Deinit();
+		break;
 	}
 
-	if (tt && (TASK_TYPE_TCP_RX | TASK_TYPE_TCP_RX))
+	case TASK_TYPE_TCP_RX:
 	{
 		TCP_Combined_Deinit();
+		break;
+	}
 	}
 
 	Send_Message_To_Master(TASK_STOP_OK_RESPONSE, MESSAGE_TYPE_INFO);
@@ -412,23 +425,29 @@ static void Stop_Task_Command(TASK_TYPE tt)
 
 static void Start_Task_Command(TASK_TYPE tt)
 {
-	//TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
+//TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
 
 	bool rval = false;
 
-	if (tt && TASK_TYPE_UDP_RX)
+	switch (tt)
+	{
+	case TASK_TYPE_UDP_RX:
 	{
 		UDP_Receiver_Init();
+		break;
 	}
 
-	if (tt && TASK_TYPE_UDP_TX)
+	case TASK_TYPE_UDP_TX:
 	{
 		UDP_Transmitter_Init();
+		break;
 	}
 
-	if (tt && (TASK_TYPE_TCP_RX | TASK_TYPE_TCP_RX))
+	case TASK_TYPE_TCP_RX:
 	{
 		TCP_Combined_Init();
+		break;
+	}
 	}
 
 	Send_Message_To_Master(
@@ -446,3 +465,19 @@ bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
 
 	return connected;
 }
+
+static bool Check_Needs_Promotion()
+{
+	bool rval = false;
+
+	//remain promoted until we empty the queue.
+	taskENTER_CRITICAL();
+	rval = (Get_Message_Count(&incoming_command_queue)
+			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	taskEXIT_CRITICAL();
+
+	promoted = rval;
+
+	return rval;
+}
+

@@ -52,6 +52,12 @@ void Button_Disable() {
 
 bool Button_Get_Status() {
 
+#ifdef C6R2
+   button_state = (BUTTON_IN_GetPortValue(button_in_data) & BUTTON_IN_button_field_MASK) ? FALSE : TRUE;     //c6r2 -- button active low
+#else
+   button_state = (BUTTON_IN_GetPortValue(button_in_data) & BUTTON_IN_button_field_MASK) ? TRUE : FALSE;     //c6r3 -- button active high
+#endif
+
    return button_state;
 }
 
@@ -87,8 +93,8 @@ void Button_Unregister_Release_Response(Button_Handler handler) {
 
 void Button_Event_Handler() {
 
-   //read button state
-   button_state = Read_Button_State();
+   //get_status updates button_state.
+   Button_Get_Status();
 
    if (button_state) {
       if (button_press_start_time == 0) {
@@ -137,7 +143,8 @@ void Button_Event_Handler() {
 
 void Button_Periodic_Call() {
 
-   button_state = Read_Button_State();
+   //get_status updates button_state.
+   Button_Get_Status();
 
    for (int i = 0; i < BUTTON_CALLBACK_COUNT; ++i) {
       if (callbacks[i].call_handler) {
@@ -196,13 +203,4 @@ void Unregister_Callback(Button_Handler handler) {
    if (open_index > 0) {
       callbacks[open_index].handler = NULL;
    }
-}
-
-bool Read_Button_State() {
-
-#ifdef C6R2
-   return BUTTON_IN_GetPortValue(button_in_data) & BUTTON_IN_button_field_MASK ? FALSE : TRUE;     //c6r2 -- button active low
-#else
-   return BUTTON_IN_GetPortValue(button_in_data) & BUTTON_IN_button_field_MASK ? TRUE : FALSE;     //c6r3 -- button active high
-#endif
 }

@@ -86,3 +86,8 @@ bool ICACHE_RODATA_ATTR Has_Messages(Message_Queue *message_queue)
 {
 	return ((*message_queue).count > 0);
 }
+
+extern int Get_Message_Count(Message_Queue * message_queue)
+{
+	return message_queue->count;
+}

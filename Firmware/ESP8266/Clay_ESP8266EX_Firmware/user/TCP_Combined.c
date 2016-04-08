@@ -22,6 +22,7 @@
 #include "Message_Queue.h"
 #include "Message.h"
 #include "AddressSerialization.h"
+#include "Priority_Manager.h"
 
 ////Macros ////////////////////////////////////////////////////////
 #define DATA_CONNECT_ATTEMPT_MAX 		10
@@ -32,6 +33,8 @@
 #define CONNECT_TIMEOUT_ms				100
 #define LISTEN_TIMEOUT_ms				100
 #define CONNECT_ATTEMPT_MAX				10
+
+#define MESSAGE_TRIGGER_LEVEL			5
 
 ////Typedefs  /////////////////////////////////////////////////////
 
@@ -46,6 +49,7 @@ static int32 receive_count;
 static int32 current_outgoing_fail_count;
 
 static bool connected;
+static bool promoted;
 
 static char *receive_data;
 static char *transmit_data;
@@ -60,8 +64,6 @@ struct sockaddr_in remote_address;
 static Message temp_message;
 static Message * temp_message_ptr;
 static Message_Type * ignored_message_type;
-
-static xTaskHandle TCP_combined_handle;
 
 ////Local Prototypes///////////////////////////////////////////////
 static int32 Open_Listen_Connection(char * local_addr_string,
@@ -78,10 +80,13 @@ static bool Send_Message(int32 destination_socket, Message * m);
 static int32 Receive(int32 source_socket, char * message,
 		uint32 message_length_max);
 
+static bool Check_Needs_Promotion();
+
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 {
 	bool rval = true;
+	promoted = false;
 
 	taskENTER_CRITICAL();
 	local_address_string = zalloc(ADDR_STRING_SIZE);
@@ -92,9 +97,13 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 
 	taskYIELD();
 
+	xTaskHandle TCP_combined_handle;
+
 	//TODO: print high water mark and revise stack size if necessary.
-	xTaskCreate(TCP_Combined_Task, "TCPall_1", 512, NULL, 3,
-			TCP_combined_handle);
+	xTaskCreate(TCP_Combined_Task, "TCPall_1", 512, NULL,
+			Get_Task_Priority(TASK_TYPE_TCP_RX), TCP_combined_handle);
+
+	Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle, Check_Needs_Promotion);
 
 	return rval;
 }
@@ -114,13 +123,15 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 	free(receive_data);
 	free(transmit_data);
 
-	vTaskDelete(TCP_combined_handle);
+	Stop_Task(TASK_TYPE_TCP_RX);
 }
 
 void ICACHE_RODATA_ATTR TCP_Combined_Task()
 {
 	for (;;)
 	{
+		Priority_Check(TASK_TYPE_TCP_RX);
+
 		connected = false;
 		current_outgoing_fail_count = 0;
 
@@ -476,6 +487,14 @@ static bool Receive_And_Enqueue(int32 data_sock)
 	}
 	else if (receive_count < 0)
 	{
+		//Assume tcp queue has messages for the open socket. We clear
+		//	it so we don't waste a bunch of cpu trying to reopen the
+		//	connection.
+
+		taskENTER_CRITICAL();
+		Initialize_Message_Queue(&outgoing_TCP_message_queue);
+		taskEXIT_CRITICAL();
+
 		lwip_close(data_sock);
 		lwip_close(listen_sock);
 
@@ -487,4 +506,19 @@ static bool Receive_And_Enqueue(int32 data_sock)
 
 	return rval;
 
+}
+
+static bool Check_Needs_Promotion()
+{
+	bool rval = false;
+
+	//remain promoted until we empty the queue.
+	taskENTER_CRITICAL();
+	rval = (Get_Message_Count(&outgoing_TCP_message_queue)
+			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	taskEXIT_CRITICAL();
+
+	promoted = rval;
+
+	return rval;
 }

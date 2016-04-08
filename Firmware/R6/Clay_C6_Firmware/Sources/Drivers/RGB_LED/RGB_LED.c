@@ -235,7 +235,7 @@ bool Perform_Channel_Light_Effect (bool reverse) {
 	for (c.R = 0; c.R <= 200; c.R += 70) {
 		for (c.G = 0; c.G <= 200; c.G += 70) {
 			for (c.B = 0; c.B <= 200; c.B += 70) {
-				for (int i = reverse ? RGB_MAX : 0; reverse ? i > 0 : i < RGB_MAX; i += (reverse ? -1 : 1)) {
+				for (int i = reverse ? RGB_MAX : 0; reverse ? i >= 0 : i < RGB_MAX; i += (reverse ? -1 : 1)) {
 					RGB_LED_SetColor ((RGB_LED) i, &c);
 					Wait (1);
 				}

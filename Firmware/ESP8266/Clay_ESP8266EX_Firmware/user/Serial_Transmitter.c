@@ -42,6 +42,10 @@
 #include "Clay_Config.h"
 #include "Message_Queue.h"
 #include "ESP_Utilities.h"
+#include "Priority_Manager.h"
+
+////Macros ////////////////////////////////////////////////////////
+#define MESSAGE_TRIGGER_LEVEL			5
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -65,14 +69,16 @@ static uint32 serial_tx_count;
 static Message * temp_message;
 
 static uint32 time_temp;
-static xTaskHandle serial_tx_task;
+static bool promoted;
 
 ////Local Prototypes///////////////////////////////////////////////
+static bool Check_Needs_Promotion();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 {
 	bool rval = true;
+	promoted = false;
 
 	taskENTER_CRITICAL();
 	serial_tx_buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
@@ -81,16 +87,24 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 
 	state = Idle;
 
-	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL, 2,
-			serial_tx_task);
+	xTaskHandle serial_tx_handle;
+
+	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL,
+			Get_Task_Priority(TASK_TYPE_SERIAL_TX), serial_tx_handle);
+
+	Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle, Check_Needs_Promotion);
 
 	return rval;
 }
 
 void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 {
+	Priority_Check(TASK_TYPE_SERIAL_TX);
+
 	for (;;)
 	{
+		Priority_Check(TASK_TYPE_SERIAL_TX);
+
 		switch (state)
 		{
 		case Disable:
@@ -250,4 +264,16 @@ void Send_Message_To_Master(char * message, Message_Type type)
 }
 
 ////Local implementations /////////////////////////////////////////
+static bool Check_Needs_Promotion()
+{
+	bool rval = false;
 
+	taskENTER_CRITICAL();
+	rval = (Get_Message_Count(&incoming_message_queue)
+			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	taskEXIT_CRITICAL();
+
+	promoted = rval;
+
+	return rval;
+}

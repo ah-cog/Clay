@@ -25,8 +25,10 @@
 #include "Message_Queue.h"
 #include "Message.h"
 #include "Ring_Buffer.h"
+#include "Priority_Manager.h"
 
 ////Defines ///////////////////////////////////////////////////////
+#define RING_BUFFER_PROMOTION_THRESHOLD		30
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -55,11 +57,11 @@ int i;
 Message_Queue * selected_message_queue;
 
 static Message_Type received_message_type;
-static xTaskHandle serial_rx_task;
 
 uint32 counter;
 
 ////Local Prototypes///////////////////////////////////////////////
+static bool Check_Needs_Promotion();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
@@ -78,7 +80,12 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 
 	State = Idle;
 
-	xTaskCreate(Serial_Receiver_Task, "uartrx1", 128, NULL, 2, serial_rx_task);
+	xTaskHandle serial_rx_handle;
+
+	xTaskCreate(Serial_Receiver_Task, "uartrx1", 128, NULL,
+			Get_Task_Priority(TASK_TYPE_SERIAL_RX), serial_rx_handle);
+
+	Register_Task(TASK_TYPE_SERIAL_RX, serial_rx_handle, Check_Needs_Promotion);
 
 	return rval;
 }
@@ -87,6 +94,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 {
 	for (;;)
 	{
+		Priority_Check(TASK_TYPE_SERIAL_RX);
+
 		switch (State)
 		{
 		case Disable:
@@ -265,3 +274,9 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 }
 
 ////Local implementations /////////////////////////////////////////
+static bool Check_Needs_Promotion()
+{
+//	return false;
+	return Ring_Buffer_NofElements() > RING_BUFFER_PROMOTION_THRESHOLD
+			&& State == Idle;
+}

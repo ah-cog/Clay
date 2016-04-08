@@ -127,7 +127,8 @@
       (Path "Design Resources" ".\clayr6.dsn")
       (Path "Design Resources" ".\clayr6.dsn" "SCHEMATIC1")
       (Path "Design Resources" ".\clayr6.dsn" "Design Cache")
-      (Path "Outputs"))
+      (Path "Outputs")
+      (Select "Design Resources" ".\clayr6.dsn" "Design Cache" "LED"))
     (HierarchyView)
     (Doc
       (Type "COrCapturePMDoc")
@@ -148,10 +149,10 @@
       (Type "COrSchematicDoc")
       (Frame
         (Placement "44 2 3 -1 -1 -8 -31 52 1658 52 531")
-        (Scroll "-423 0")
+        (Scroll "-419 0")
         (Zoom "100")
-        (Occurrence "/VREG"))
-      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\VREG_3.3V_FIXED\TPS61201.DSN")
+        (Occurrence "/SOFT_PWR_SW"))
+      (Path "E:\GIT\CLAY\CIRCUIT\R6_1\SOFT_PWR_SW\SOFT_PWR_SW.DSN")
       (Schematic "SCHEMATIC1")
       (Page "PAGE1")))
   (MPSSessionName "thebh_000")
