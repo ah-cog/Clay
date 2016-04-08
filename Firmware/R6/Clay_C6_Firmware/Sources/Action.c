@@ -476,14 +476,14 @@ static int8_t Perform_Pause_Action (char *state) {
 	int pause_duration_integer = 0;
 
 	// Set the action wait time (i.e., the time after the action before proceeding to the next one)
-	status = Get_Token (state, token, 1); // TODO: This is redundant. Remove redundancy!
+	status = Get_Token (state, token, 0); // TODO: This is redundant. Remove redundancy!
 	if (action_wait_time == 0) {
 		pause_duration_integer = atoi (token);
 		action_wait_time = pause_duration_integer;
 	}
 
 	// Check if the action's wait time has expired
-	if ((Millis () - action_start_time) > action_wait_time) {
+	if ((Millis () - action_start_time) >= action_wait_time) {
 		action_start_time = 0;
 		action_wait_time = 0;
 		result = TRUE;
@@ -521,13 +521,14 @@ static int8_t Perform_Message_Action (char *state) {
 	// Extract parameters
 	Get_Token (state, param1, 0); // Get_Token_With_Delimiter(state, ' ', '\"', param1, 0);
 	Get_Token (state, param2, 1);
-	Get_Token (state, param3, 2);
+//	Get_Token (state, param3, 2);
 	Get_Token_With_Delimiter (state, ' ', '\'', param3, 2);
 
 	// Create message from state
 	Message *message = Create_Message (param3);
 	Set_Message_Type (message, param1);
 	Set_Message_Source (message, param2); // <HACK />
+//	Set_Message_Destination (message, "192.168.1.255:4445");
 	Set_Message_Destination (message, param2);
 
 	// Queue the outgoing message

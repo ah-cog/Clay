@@ -266,11 +266,17 @@ static int8_t Process_Start_Event (Message *message) {
 
 	} else if (token_count > 3) {
 
-		// i.e., "start event <event-uuid> at <index>"
+		// i.e., "start event <event-uuid> before event <event-uuid>"
+
+//	} else if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "start")) {
+//			if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "event")) {
+//				return Process_Start_Event (message);
+//			}
+//		}
 
 		// Extract parameters
 		status = Get_Token (message_content, uuid_buffer, 2); // Get UUID of action being added (parameter index 2)
-		status = Get_Token (message_content, uuid_buffer2, 4); // Get UUID of action already on the loop (parameter index 4)
+		status = Get_Token (message_content, uuid_buffer2, 5); // Get UUID of action already on the loop (parameter index 4)
 
 		// Send message to sender to acknowledge receipt
 		Send_Acknowledgment (token, message_content);
@@ -283,10 +289,11 @@ static int8_t Process_Start_Event (Message *message) {
 		//						if (Has_Cached_Action_By_UUID (uuid_buffer) == TRUE && Has_Cached_Action_By_UUID (uuid_buffer2) == TRUE ) {
 
 		Event *event = Create_Event (uuid_buffer, NULL, NULL);
-//		Event *event = Get_Cached_Action_By_UUID (uuid_buffer);
-		uint16_t event_index = atoi (uuid_buffer2);
+		Event *next_event = Get_Event_By_UUID(timeline, uuid_buffer2);
+//		uint16_t event_index = atoi (uuid_buffer2);
 		if (event != NULL) {
-			result = Insert_Event (timeline, event, event_index);
+			//result = Insert_Event (timeline, event, event_index);
+			result = Add_Before_Event (timeline, event, next_event);
 		} else {
 			result = FALSE;
 		}
@@ -306,7 +313,7 @@ static int8_t Process_Stop_Event (Message *message) {
 
 	// stop event <event-uuid> [on <timeline-uuid>]
 	//      ^
-	if (strncmp (token, "event", strlen ("event")) == 0) {
+//	if (strncmp (token, "event", strlen ("event")) == 0) {
 
 		// Get UUID (parameter index 2)
 		status = Get_Token (message_content, uuid_buffer, 2);
@@ -331,7 +338,7 @@ static int8_t Process_Stop_Event (Message *message) {
 			// TODO: The action is not in the cache! Return response indicating this! Or request it from the cloud!
 			result = FALSE;
 		}
-	}
+//	}
 	return result;
 }
 
@@ -367,6 +374,12 @@ static int8_t Process_Set_Event_Action (Message *message) {
 		if (event != NULL && action != NULL) {
 			(*event).action = action;
 			result = TRUE;
+
+			// <HACK>
+			if (strncmp (uuid_buffer2, "99ff8f6d-a0e7-4b6e-8033-ee3e0dc9a78e", strlen ("99ff8f6d-a0e7-4b6e-8033-ee3e0dc9a78e")) == 0) {
+				(*event).repeat_period = 1000;
+			}
+			// </HACK>
 		} else {
 			// TODO: If action or nextAction are NULL, stream them in over the Internet.
 		}
