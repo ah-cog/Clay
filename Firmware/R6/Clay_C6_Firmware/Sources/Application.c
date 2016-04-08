@@ -49,8 +49,8 @@ void Initialize() {
    // Initialize Clay
 
 //   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
-   Button_Register_Press_Response(Send_Mesh_Test_Message);
-   Button_Register_Release_Response(Send_Mesh_Test_Message);
+//   Button_Register_Press_Response(Send_Mesh_Test_Message);
+//   Button_Register_Release_Response(Send_Mesh_Test_Message);
 
    Initialize_Unit_UUID();
 
@@ -215,12 +215,6 @@ void Application(void) {
     message = NULL;
     */
 
-   Mesh_Register_Callback(MESH_CMD_BUTTON_PRESSED, Remote_Button_Pressed);
-
-   for (;;) {
-      Mesh_Process_Commands();
-   }
-
    for (;;) {
 
       // Call periodically to parse received messages and to enable the radio to receive
@@ -233,12 +227,12 @@ void Application(void) {
       Wifi_State_Step();
 
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
-      /* if */ while (Has_Messages (&incomingWiFiMessageQueue)) {
-         message = Dequeue_Message (&incomingWiFiMessageQueue);
+      /* if */while (Has_Messages(&incomingWiFiMessageQueue)) {
+         message = Dequeue_Message(&incomingWiFiMessageQueue);
 //         Queue_Message (&incomingMessageQueue, message);
 
 //         message = Dequeue_Message (&incomingMessageQueue);
-	  status = Process_Incoming_Message (message);
+         status = Process_Incoming_Message(message);
       }
 
 //      // Process the next incoming message on the system queue
@@ -248,8 +242,8 @@ void Application(void) {
 //      }
 
       // Step state machine
-      Wifi_State_Step ();
-      Wifi_State_Step ();
+      Wifi_State_Step();
+      Wifi_State_Step();
 
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
