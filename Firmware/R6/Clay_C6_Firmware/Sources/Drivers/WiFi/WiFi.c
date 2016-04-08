@@ -83,7 +83,7 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 //   char testMsg[64] = { '\0' };
 //   sprintf(testMsg, "SETAP %s,%s", ssid, password);
 
-   Wait(5000);
+   Wait(2000); // was 5000
 
 //   Message * message = Create_Message(testMsg);
 //   Set_Message_Type(message, "command");

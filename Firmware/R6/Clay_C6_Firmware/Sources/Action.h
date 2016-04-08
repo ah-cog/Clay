@@ -40,11 +40,19 @@ typedef struct Action {
  */
 typedef struct Event {
 	char *uuid; // The UUID of the action.
-	// TODO: Add condition. Check it before calling Perform_Action(action, state)
+	// TODO: Add start condition. Check it before calling Perform_Action(action, state)
+	// TODO: Add repeat condition. Default is none. If none, does not repeat. Can be number (guaranteed), number (up to), number (no less than). Optionally, can add repeat period (repeat every T ms). Defaults to 0 ms.
+	uint32_t repeat_period;
+	// TODO: Add stop condition. Default is none. If none, proceeds to next event right away.
 	Action *action; // The pointer to the action (if it's present in memory) or NULL (if it's not present in memory).
 	char *state;
+
+	// Bookkeeping: Linked list (i.e., timeline)
 	struct Event *previous;
 	struct Event *next;
+
+	// Bookkeeping: for repeat condition
+	uint32_t start_time;
 } Event;
 
 extern Event* cache;
