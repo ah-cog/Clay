@@ -203,8 +203,6 @@ void Send_Test_TCP_Message() {
 void Application(void) {
    Message *message = NULL;
 
-   Buzzer_Play_Frequency(1000, 1000);
-
    /*
     // Get the IP address
     // TODO: Implement this in WiFi_Request_Get_Internet_Address() according to the interface specification.
