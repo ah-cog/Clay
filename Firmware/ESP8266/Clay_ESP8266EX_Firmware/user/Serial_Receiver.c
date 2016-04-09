@@ -273,10 +273,21 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 	}
 }
 
+static int loops = 0;
+
 ////Local implementations /////////////////////////////////////////
 static bool Check_Needs_Promotion()
 {
 //	return false;
-	return Ring_Buffer_NofElements() > RING_BUFFER_PROMOTION_THRESHOLD
-			&& State == Idle;
+	int elts = Ring_Buffer_NofElements();
+
+//	if (++loops > LOOPS_BEFORE_PRINT || elts > RING_BUFFER_PROMOTION_THRESHOLD)
+//	{
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("srx count:%d\r\n", elts);
+//		taskEXIT_CRITICAL();
+//	}
+
+	return elts > RING_BUFFER_PROMOTION_THRESHOLD && State == Idle;
 }

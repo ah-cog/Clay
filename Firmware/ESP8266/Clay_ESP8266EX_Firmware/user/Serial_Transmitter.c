@@ -45,7 +45,7 @@
 #include "Priority_Manager.h"
 
 ////Macros ////////////////////////////////////////////////////////
-#define MESSAGE_TRIGGER_LEVEL			5
+#define MESSAGE_TRIGGER_LEVEL			10
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -99,8 +99,6 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 
 void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 {
-	Priority_Check(TASK_TYPE_SERIAL_TX);
-
 	for (;;)
 	{
 		Priority_Check(TASK_TYPE_SERIAL_TX);
@@ -140,8 +138,6 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			taskENTER_CRITICAL();
 			temp_message = Dequeue_Message(&incoming_message_queue);
 			taskEXIT_CRITICAL();
-
-			serial_tx_count = strlen(temp_message->content);
 
 			//New message format:
 			//!<type>\t<source>\t<destination>\t<content>\n
@@ -263,15 +259,30 @@ void Send_Message_To_Master(char * message, Message_Type type)
 //	DEBUG_Print("message enqueued");
 }
 
+static int loops = 0;
+
 ////Local implementations /////////////////////////////////////////
 static bool Check_Needs_Promotion()
 {
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	rval = (Get_Message_Count(&incoming_message_queue)
+	rval = (incoming_message_queue.count
 			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
 	taskEXIT_CRITICAL();
+
+//	if (++loops > LOOPS_BEFORE_PRINT || incoming_message_queue.count)
+//	{
+//		rval = false;
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("stx count:%d\r\n", incoming_message_queue.count);
+//		taskEXIT_CRITICAL();
+//
+//		portENTER_CRITICAL();
+//		UART_WaitTxFifoEmpty(UART0);
+//		portEXIT_CRITICAL();
+//	}
 
 	promoted = rval;
 

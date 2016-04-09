@@ -45,7 +45,7 @@
 #define TASK_START_FAIL_RESPONSE	    "task start fail"
 #define TASK_STOP_OK_RESPONSE		    "task stop ok"
 
-#define MESSAGE_TRIGGER_LEVEL			5
+#define MESSAGE_TRIGGER_LEVEL			10
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -466,16 +466,25 @@ bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
 	return connected;
 }
 
+static int loops = 0;
+
 static bool Check_Needs_Promotion()
 {
 	bool rval = false;
 
 	//remain promoted until we empty the queue.
 	taskENTER_CRITICAL();
-	rval = (Get_Message_Count(&incoming_command_queue)
+	rval = (incoming_command_queue.count
 			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
 	taskEXIT_CRITICAL();
 
+//	if (++loops > LOOPS_BEFORE_PRINT || incoming_command_queue.count)
+//	{
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("cmd count:%d\r\n", incoming_command_queue.count);
+//		taskEXIT_CRITICAL();
+//	}
 	promoted = rval;
 
 	return rval;

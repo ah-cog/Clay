@@ -18,6 +18,9 @@
 ////Includes //////////////////////////////////////////////////////
 #include "esp_common.h"
 
+#include "stdio.h"
+#include "string.h"
+
 #include "TCP_Combined.h"
 #include "Message_Queue.h"
 #include "Message.h"
@@ -26,15 +29,15 @@
 
 ////Macros ////////////////////////////////////////////////////////
 #define DATA_CONNECT_ATTEMPT_MAX 		10
-#define RECEIVE_DATA_SIZE				256
-#define TRANSMIT_DATA_SIZE				RECEIVE_DATA_SIZE
+#define RECEIVE_DATA_SIZE				1024
+#define TRANSMIT_DATA_SIZE				256
 #define LOCAL_TCP_PORT					1002
 #define ADDR_STRING_SIZE 				50
 #define CONNECT_TIMEOUT_ms				100
 #define LISTEN_TIMEOUT_ms				100
 #define CONNECT_ATTEMPT_MAX				10
 
-#define MESSAGE_TRIGGER_LEVEL			5
+#define MESSAGE_TRIGGER_LEVEL			10
 
 ////Typedefs  /////////////////////////////////////////////////////
 
@@ -44,7 +47,7 @@
 static int32 listen_sock;
 static int32 data_sock;
 
-static int32 receive_count;
+static int32 received_count;
 
 static int32 current_outgoing_fail_count;
 
@@ -65,6 +68,10 @@ static Message temp_message;
 static Message * temp_message_ptr;
 static Message_Type * ignored_message_type;
 
+static int receive_head;
+static int receive_tail;
+static int receive_size;
+
 ////Local Prototypes///////////////////////////////////////////////
 static int32 Open_Listen_Connection(char * local_addr_string,
 		struct sockaddr_in * local_addr);
@@ -81,6 +88,7 @@ static int32 Receive(int32 source_socket, char * message,
 		uint32 message_length_max);
 
 static bool Check_Needs_Promotion();
+static uint8_t * memchr2(uint8_t * ptr, uint8_t ch, size_t size);
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Combined_Init()
@@ -100,7 +108,7 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 	xTaskHandle TCP_combined_handle;
 
 	//TODO: print high water mark and revise stack size if necessary.
-	xTaskCreate(TCP_Combined_Task, "TCPall_1", 512, NULL,
+	xTaskCreate(TCP_Combined_Task, "TCPall_1", 600, NULL,
 			Get_Task_Priority(TASK_TYPE_TCP_RX), TCP_combined_handle);
 
 	Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle, Check_Needs_Promotion);
@@ -130,8 +138,6 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_TCP_RX);
-
 		connected = false;
 		current_outgoing_fail_count = 0;
 
@@ -139,6 +145,8 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 		while ((listen_sock = Open_Listen_Connection(local_address_string,
 				&local_address)) < 0)
 		{
+			Priority_Check(TASK_TYPE_TCP_RX);
+
 			//TODO: we may need to be able to initiate a connection and send from here
 			taskYIELD();
 		}
@@ -150,6 +158,8 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 					&remote_address);
 			connected = data_sock > -1;
 
+			Priority_Check(TASK_TYPE_TCP_RX);
+
 			if (!connected)
 			{
 				connected = Initiate_Connection_For_Outgoing_Message();
@@ -158,10 +168,17 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 			taskYIELD();
 		}
 
+		receive_head = 0;
+		receive_tail = 0;
+		receive_size = 0;
+
 		while (connected)
 		{
 			//Dequeue_And_Transmit will not disconnect, but Receive_And_Enqueue
 			//	may, so we capture that return to exit the loop.
+
+			Priority_Check(TASK_TYPE_TCP_RX);
+
 			Dequeue_And_Transmit(data_sock);
 			connected = Receive_And_Enqueue(data_sock);
 
@@ -450,32 +467,98 @@ static bool Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
 
-	taskENTER_CRITICAL();
-	memset(receive_data, 0, RECEIVE_DATA_SIZE);
-	taskEXIT_CRITICAL();
+	//offset into receive_data based on
+	received_count = Receive(data_sock, receive_data + receive_tail,
+			(RECEIVE_DATA_SIZE - receive_size));
 
-	receive_count = Receive(data_sock, receive_data, RECEIVE_DATA_SIZE);
+//	taskENTER_CRITICAL();
+//	printf("rx c%d,h%d,t%d,s%d\r\n", received_count, receive_head, receive_tail,
+//			receive_size);
+//	taskEXIT_CRITICAL();
 
-	if (receive_count > 0)
+	if (received_count > 0 || (receive_size > 0 && received_count > -1))
 	{
+		receive_tail = (receive_tail + received_count) % RECEIVE_DATA_SIZE;
+		receive_size += received_count;
+
+//		taskENTER_CRITICAL();
+//		printf("hd c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+//				receive_tail, receive_size);
+//		taskEXIT_CRITICAL();
+
 		taskENTER_CRITICAL();
-		message_ptr = strtok(receive_data, message_delimiter);
+		message_ptr = memchr2(receive_data + receive_head, message_delimiter[0],
+				(RECEIVE_DATA_SIZE - receive_size));
 		taskEXIT_CRITICAL();
 
-		taskYIELD();
+		//if we didn't find the end and the tail is before the head of the queue, look up until the tail.
+		if (message_ptr == NULL
+				&& (receive_tail < receive_head
+						|| (receive_tail == receive_head
+								&& receive_size == RECEIVE_DATA_SIZE)))
+		{
+			taskENTER_CRITICAL();
+			message_ptr = memchr2(receive_data, message_delimiter[0],
+					receive_tail);
+			taskEXIT_CRITICAL();
+
+//			taskENTER_CRITICAL();
+//			printf("wa c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+//					receive_tail, receive_size);
+//			taskEXIT_CRITICAL();
+
+			if (message_ptr != NULL)
+			{
+//				taskENTER_CRITICAL();
+//				printf("fm c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+//						receive_tail, receive_size);
+//				taskEXIT_CRITICAL();
+
+				*message_ptr = '\0';
+				char * swap = zalloc(strlen(message_ptr) + 1);
+				strcpy(swap, receive_data);
+				strncpy(receive_data, receive_data + receive_head,
+				RECEIVE_DATA_SIZE - receive_head + 1);
+				strcat(receive_data, swap);
+				free(swap);
+
+				receive_head = 0;
+				receive_tail = (strlen(receive_data) + 1);
+				receive_size = receive_tail;
+
+				message_ptr = receive_data;
+			}
+			else if (receive_size == RECEIVE_DATA_SIZE)
+			{
+				//buffer's full and no terminator was found.
+				receive_head = 0;
+				receive_tail = 0;
+				receive_size = 0;
+			}
+		}
+		else if (message_ptr != NULL)
+		{
+			*message_ptr = '\0';
+			message_ptr = receive_data + receive_head;
+		}
 
 		if (message_ptr != NULL)
 		{
-			//TODO: strtokn't.
-			//		receive into static buffer
-			//		put chars into ring buffer, watch for message delimiter
-			//		when a delimiter is found, read the message out of the ring buff, update indexes
-			//		init message and enqueue.
+			taskENTER_CRITICAL();
+			receive_size -= strlen(message_ptr);
+			receive_head = (receive_head + strlen(message_ptr))
+					% RECEIVE_DATA_SIZE;
+			taskEXIT_CRITICAL();
+
+//			taskENTER_CRITICAL();
+//			printf("po c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+//					receive_tail, receive_size);
+//			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
 			Initialize_Message(&temp_message,
 					message_type_strings[MESSAGE_TYPE_TCP],
-					remote_address_string, local_address_string, receive_data);
+					remote_address_string, local_address_string, message_ptr);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
@@ -485,7 +568,7 @@ static bool Receive_And_Enqueue(int32 data_sock)
 			taskEXIT_CRITICAL();
 		}
 	}
-	else if (receive_count < 0)
+	else if (received_count < 0)
 	{
 		//Assume tcp queue has messages for the open socket. We clear
 		//	it so we don't waste a bunch of cpu trying to reopen the
@@ -508,17 +591,40 @@ static bool Receive_And_Enqueue(int32 data_sock)
 
 }
 
+static int loops = 0;
+
 static bool Check_Needs_Promotion()
 {
 	bool rval = false;
 
-	//remain promoted until we empty the queue.
+//remain promoted until we empty the queue.
 	taskENTER_CRITICAL();
-	rval = (Get_Message_Count(&outgoing_TCP_message_queue)
-			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	rval = outgoing_TCP_message_queue.count
+			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL);
 	taskEXIT_CRITICAL();
+
+//	if (++loops > LOOPS_BEFORE_PRINT || outgoing_TCP_message_queue.count)
+//	{
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("tcp count:%d\r\n", outgoing_TCP_message_queue.count);
+//		taskEXIT_CRITICAL();
+//
+//		portENTER_CRITICAL();
+//		UART_WaitTxFifoEmpty();
+//		portEXIT_CRITICAL();
+//	}
 
 	promoted = rval;
 
 	return rval;
+}
+
+uint8_t *memchr2(uint8_t *ptr, uint8_t ch, size_t size)
+{
+	int i;
+	for (i = 0; i < size; i++)
+		if (*ptr++ == ch)
+			return ptr;
+	return NULL;
 }

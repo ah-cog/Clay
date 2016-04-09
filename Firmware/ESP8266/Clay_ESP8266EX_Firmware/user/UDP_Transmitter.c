@@ -43,7 +43,7 @@
 #include "Priority_Manager.h"
 
 ////Macros  ///////////////////////////////////////////////////////
-#define MESSAGE_TRIGGER_LEVEL			5
+#define MESSAGE_TRIGGER_LEVEL			10
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -268,14 +268,24 @@ static bool Message_Available()
 	return rval;
 }
 
+static int loops = 0;
+
 static bool Check_Needs_Promotion()
 {
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	rval = (Get_Message_Count(&outgoing_UDP_message_queue)
+	rval = (outgoing_UDP_message_queue.count
 			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
 	taskEXIT_CRITICAL();
+
+//	if (++loops > LOOPS_BEFORE_PRINT || outgoing_UDP_message_queue.count)
+//	{
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("udp tx count:%d\r\n", outgoing_UDP_message_queue.count);
+//		taskEXIT_CRITICAL();
+//	}
 
 	promoted = rval;
 

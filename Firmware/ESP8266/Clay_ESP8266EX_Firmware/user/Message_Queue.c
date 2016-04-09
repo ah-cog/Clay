@@ -29,7 +29,7 @@ Message* ICACHE_RODATA_ATTR Get_Next_Message(Message_Queue *message_queue)
 	Message *message = NULL;
 	if ((*message_queue).count < MAXIMUM_MESSAGE_COUNT)
 	{
-		message = &(incoming_message_queue.messages[(*message_queue).back]);
+		message = &(message_queue->messages[(*message_queue).back]);
 	}
 	return message;
 }
@@ -85,9 +85,4 @@ Message* ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue)
 bool ICACHE_RODATA_ATTR Has_Messages(Message_Queue *message_queue)
 {
 	return ((*message_queue).count > 0);
-}
-
-extern int Get_Message_Count(Message_Queue * message_queue)
-{
-	return message_queue->count;
 }
