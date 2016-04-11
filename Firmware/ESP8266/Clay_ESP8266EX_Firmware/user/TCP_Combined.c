@@ -35,11 +35,19 @@
 #define ADDR_STRING_SIZE 				50
 #define CONNECT_TIMEOUT_ms				100
 #define LISTEN_TIMEOUT_ms				100
-#define CONNECT_ATTEMPT_MAX				10
+#define CONNECT_ATTEMPT_MAX				5
 
 #define MESSAGE_TRIGGER_LEVEL			10
+#define RECEIVE_BYTES_TRIGGER_LEVEL		512
 
+#define CONNECT_RETRY_TIME				100000
 ////Typedefs  /////////////////////////////////////////////////////
+typedef struct
+{
+	int socket;
+	struct sockaddr_in * address;
+	volatile bool connected;
+} Connect_Task_Args;
 
 ////Globals   /////////////////////////////////////////////////////
 
@@ -48,8 +56,6 @@ static int32 listen_sock;
 static int32 data_sock;
 
 static int32 received_count;
-
-static int32 current_outgoing_fail_count;
 
 static bool connected;
 static bool promoted;
@@ -89,6 +95,8 @@ static int32 Receive(int32 source_socket, char * message,
 
 static bool Check_Needs_Promotion();
 static uint8_t * memchr2(uint8_t * ptr, uint8_t ch, size_t size);
+static ICACHE_RODATA_ATTR void Connect_Task(void * PvParams);
+static void TCP_Disconnect();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Combined_Init()
@@ -109,7 +117,7 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 
 	//TODO: print high water mark and revise stack size if necessary.
 	xTaskCreate(TCP_Combined_Task, "TCPall_1", 600, NULL,
-			Get_Task_Priority(TASK_TYPE_TCP_RX), TCP_combined_handle);
+			Get_Task_Priority(TASK_TYPE_TCP_RX), &TCP_combined_handle);
 
 	Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle, Check_Needs_Promotion);
 
@@ -126,6 +134,10 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 	listen_sock = -1;
 	data_sock = -1;
 
+	receive_head = 0;
+	receive_tail = 0;
+	receive_size = 0;
+
 	free(local_address_string);
 	free(remote_address_string);
 	free(receive_data);
@@ -134,36 +146,58 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 	Stop_Task(TASK_TYPE_TCP_RX);
 }
 
+static int tcpLoops = 0;
+
 void ICACHE_RODATA_ATTR TCP_Combined_Task()
 {
 	for (;;)
 	{
+		DEBUG_Print("top of combined");
 		connected = false;
-		current_outgoing_fail_count = 0;
 
+		//we should reconsider recreating the listen socket every time.
+
+#if ENABLE_TCP_COMBINED_RX
 		//open listener
 		while ((listen_sock = Open_Listen_Connection(local_address_string,
-				&local_address)) < 0)
+								&local_address)) < 0)
 		{
+//			if (++tcpLoops > 30)
+//			{
+//				tcpLoops = 0;
+//				DEBUG_Print("opening listen");
+//			}
+
 			Priority_Check(TASK_TYPE_TCP_RX);
 
-			//TODO: we may need to be able to initiate a connection and send from here
+//TODO: we may need to be able to initiate a connection and send from here
 			taskYIELD();
 		}
+#endif
 
 		//listen for incoming connection, start a connection if we have an outgoing message.
 		while (!connected)
 		{
-			data_sock = Listen(listen_sock, remote_address_string,
-					&remote_address);
-			connected = data_sock > -1;
+//			if (++tcpLoops > 50)
+//			{
+//				tcpLoops = 0;
+//				DEBUG_Print("listening");
+//			}
 
 			Priority_Check(TASK_TYPE_TCP_RX);
 
+#if ENABLE_TCP_COMBINED_RX
+			data_sock = Listen(listen_sock, remote_address_string,
+					&remote_address);
+			connected = data_sock > -1;
+#endif
+
+#if ENABLE_TCP_COMBINED_TX
 			if (!connected)
 			{
 				connected = Initiate_Connection_For_Outgoing_Message();
 			}
+#endif
 
 			taskYIELD();
 		}
@@ -174,13 +208,26 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 
 		while (connected)
 		{
-			//Dequeue_And_Transmit will not disconnect, but Receive_And_Enqueue
-			//	may, so we capture that return to exit the loop.
+//			if (++tcpLoops > 30)
+//			{
+//				tcpLoops = 0;
+//				DEBUG_Print("connected");
+//			}
 
 			Priority_Check(TASK_TYPE_TCP_RX);
 
-			Dequeue_And_Transmit(data_sock);
-			connected = Receive_And_Enqueue(data_sock);
+#if ENABLE_TCP_COMBINED_TX
+			connected = Dequeue_And_Transmit(data_sock);
+
+			if (!connected)
+			{
+				DEBUG_Print("dqt disconnect");
+			}
+#endif
+
+#if ENABLE_TCP_COMBINED_RX
+			connected &= Receive_And_Enqueue(data_sock);
+#endif
 
 			taskYIELD();
 		}
@@ -204,6 +251,8 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 	memset(local_addr, 0, sizeof(struct sockaddr_in));
 	taskEXIT_CRITICAL();
 
+	taskYIELD();
+
 	local_addr->sin_family = AF_INET;
 	local_addr->sin_addr.s_addr = INADDR_ANY;
 	local_addr->sin_len = sizeof(*local_addr);
@@ -214,13 +263,17 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 			local_addr_string, 50);
 	taskEXIT_CRITICAL();
 
-	listen_socket = socket(AF_INET, SOCK_STREAM, 0);
+	taskYIELD();
+
+	listen_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	if (listen_socket > -1)
 	{
 		/* Bind to the local port */
 		bind_result = lwip_bind(listen_socket, (struct sockaddr *) local_addr,
 				sizeof(*local_addr));
+
+		taskYIELD();
 
 		if (bind_result != 0)
 		{
@@ -235,6 +288,8 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 		}
 	}
 
+	taskYIELD();
+
 	if (listen_socket > -1)
 	{
 		listen_result = lwip_listen(listen_socket, TCP_MAX_CONNECTIONS);
@@ -245,6 +300,8 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 			listen_socket = -1;
 		}
 	}
+
+	taskYIELD();
 
 	return listen_socket;
 }
@@ -273,11 +330,15 @@ static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
 		lwip_setsockopt(accepted_sock, SOL_SOCKET, SO_RCVTIMEO, &millis,
 				sizeof(millis));
 
+		taskYIELD();
+
 		taskENTER_CRITICAL();
 		Serialize_Address(remote_addr->sin_addr.s_addr,
 				ntohs(remote_addr->sin_port), remote_addr_string, 50);
 		taskEXIT_CRITICAL();
 	}
+
+	taskYIELD();
 
 	return accepted_sock;
 }
@@ -287,7 +348,7 @@ static bool Initiate_Connection_For_Outgoing_Message()
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-//do not dequeue. leave the message in the queue to be processed below.
+	//do not dequeue. leave the message in the queue to be processed by the send function..
 	temp_message_ptr = Peek_Message(&outgoing_TCP_message_queue);
 
 	if (temp_message_ptr != NULL)
@@ -298,6 +359,8 @@ static bool Initiate_Connection_For_Outgoing_Message()
 	}
 	taskEXIT_CRITICAL();
 
+	taskYIELD();
+
 	if (temp_message_ptr != NULL)
 	{
 		temp_message_ptr = NULL;
@@ -307,31 +370,53 @@ static bool Initiate_Connection_For_Outgoing_Message()
 				ignored_message_type);
 		taskEXIT_CRITICAL();
 
+		taskYIELD();
+
+		taskENTER_CRITICAL();
 		sprintf(remote_address_string, temp_message.destination);
+		printf("message for %s\r\n", remote_address_string);
+		taskEXIT_CRITICAL();
 
 		data_sock = Open_Data_Connection(&remote_address);
+
+		taskENTER_CRITICAL();
+		printf("odc:%d\r\n", data_sock);
+		taskEXIT_CRITICAL();
+
+		taskYIELD();
 
 		rval = data_sock > -1;
 
 		if (rval)
 		{
+			DEBUG_Print("connected");
+
 			socklen_t sockaddr_size = sizeof(local_address);
 			getsockname(data_sock, (struct sockaddr* )&local_address,
 					&sockaddr_size);
 
+			taskYIELD();
+
+			taskENTER_CRITICAL();
 			Serialize_Address(local_address.sin_addr.s_addr,
 					local_address.sin_port, local_address_string,
 					ADDR_STRING_SIZE);
+			taskEXIT_CRITICAL();
+
+			DEBUG_Print(local_address_string);
 		}
 		else
 		{
 			//couldn't connect. drop this message
-			if (++current_outgoing_fail_count > CONNECT_ATTEMPT_MAX)
-			{
-				Dequeue_Message(&outgoing_TCP_message_queue);
-				current_outgoing_fail_count = 0;
-			}
+			taskENTER_CRITICAL();
+			free(Dequeue_Message(&outgoing_TCP_message_queue));
+			taskEXIT_CRITICAL();
+
+			DEBUG_Print("dropped message");
 		}
+		taskYIELD();
+
+		DEBUG_Print("returning\r\n\r\n");
 
 	}
 
@@ -342,38 +427,98 @@ static bool Initiate_Connection_For_Outgoing_Message()
 static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 		struct sockaddr_in * remote_addr)
 {
-	int opened_socket = socket(PF_INET, SOCK_STREAM, 0);
+	int opened_socket;
+
+	opened_socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	if (opened_socket != -1)
 	{
+		int retries = 0;
 		int millis = CONNECT_TIMEOUT_ms;
 		setsockopt(opened_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
 				sizeof(millis));
 
-		if (connect(opened_socket, (struct sockaddr * )(remote_addr),
-				sizeof(struct sockaddr_in)) == 0)
+		taskYIELD();
+
+		DEBUG_Print("sock opt done");
+
+		Connect_Task_Args connect_args =
+		{ opened_socket, remote_addr, false };
+		xTaskHandle connect_task_handle = NULL;
+		while (connect_task_handle == NULL)
 		{
+			//start new task to connect
+
+			DEBUG_Print("create connect task");
+
+			xTaskCreate(Connect_Task, "tcp connect task", 128, &connect_args,
+					Get_Task_Priority(TASK_TYPE_TCP_TX), &connect_task_handle);
+
+			if (connect_task_handle == NULL)
+			{
+				//raise priority so we make sure connect task gets cleaned up.
+				xTaskHandle idle_handle = xTaskGetIdleTaskHandle();
+
+				vTaskPrioritySet(idle_handle,
+						Get_Task_Priority(TASK_TYPE_TCP_TX));
+				vTaskDelay(250 / portTICK_RATE_MS);
+				vTaskPrioritySet(idle_handle, 0);
+			}
+		}
+
+		if (connect_task_handle != NULL)
+		{
+			uint32 connect_start_time_us = system_get_time();
+
+			while (!connect_args.connected
+					&& (system_get_time() - connect_start_time_us)
+							< CONNECT_RETRY_TIME)
+			{
+				vTaskDelay(10 / portTICK_RATE_MS);
+			}
+		}
+
+		if (connect_args.connected)
+		{
+			//task doesn't need to be deleted in this case. if we connected
+			//		by now, then the task has deleted itself.
+
 			millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
 			setsockopt(opened_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
 					sizeof(millis));
-
-			//send timeout not supported in ESP8266
-//			setsockopt(opened_socket, SOL_SOCKET, SO_SNDTIMEO, &millis,
-//					sizeof(millis));
 		}
 		else
 		{
-			int32 error = 0;
-			uint32 optionLength = sizeof(error);
-			int getReturn = lwip_getsockopt(opened_socket, SOL_SOCKET, SO_ERROR,
-					&error, &optionLength);
+			taskENTER_CRITICAL();
+			printf("delete handle: %d\r\n", (int32) connect_task_handle);
+			taskEXIT_CRITICAL();
+
+			vTaskDelete(connect_task_handle);
+
+			taskYIELD();
+
+			DEBUG_Print("deleted handle");
+
+			DEBUG_Print("close sock");
 
 			lwip_close(opened_socket);
 			opened_socket = -1;
+
+			DEBUG_Print("sock closed");
 		}
 	}
 
 	return opened_socket;
+}
+
+static ICACHE_RODATA_ATTR void Connect_Task(void * PvParams)
+{
+	((Connect_Task_Args*) PvParams)->connected =
+			connect(((Connect_Task_Args* )PvParams)->socket,
+					(struct sockaddr * )(((Connect_Task_Args* )PvParams)->address),
+					sizeof(struct sockaddr_in)) == 0;
+
+	vTaskDelete(NULL);
 }
 
 //send a message to the
@@ -383,21 +528,78 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 	bool rval = false;
 	struct sockaddr_in message_dest;
 
+	DEBUG_Print("sending message");
+
 	taskENTER_CRITICAL();
 	Deserialize_Address(m->destination, &message_dest, ignored_message_type);
 	taskEXIT_CRITICAL();
 
+	taskYIELD();
+
 	if (message_dest.sin_addr.s_addr == remote_address.sin_addr.s_addr
 			&& message_dest.sin_port == remote_address.sin_port)
 	{
+		DEBUG_Print("message matches");
 
 		taskENTER_CRITICAL();
 		size_t length = (size_t) (strlen(m->content) + 1);
 		taskEXIT_CRITICAL();
 
-		//this blocks forever. why?
+		taskYIELD();
+
+		taskENTER_CRITICAL();
+		printf("sock:%d,size:%d,msg:%s\r\n", destination_socket, length,
+				m->content);
+		taskEXIT_CRITICAL();
+
+		taskYIELD();
+
 		rval = lwip_write(destination_socket, m->content, length) == length;
+
+		taskYIELD();
+
+		taskENTER_CRITICAL();
+		printf("send:%s\r\n", rval ? "ok" : "nfg");
+		taskEXIT_CRITICAL();
+
+		if (!rval)
+		{
+			int32 error = 0;
+			uint32 optionLength = sizeof(error);
+			int getReturn = lwip_getsockopt(destination_socket, SOL_SOCKET,
+			SO_ERROR, &error, &optionLength);
+
+			taskENTER_CRITICAL();
+			printf("error:%d\r\n", error);
+			taskEXIT_CRITICAL();
+
+			switch (error)
+			{
+			case ECONNRESET:
+			{
+				//we disconnected. return false.
+				TCP_Disconnect();
+				break;
+			}
+			case EAGAIN:
+			{
+				rval = true;
+
+				break;
+			}
+			default:
+			{
+				rval = true;
+				break;
+			}
+			}
+		}
+
 	}
+//	else
+//	{
+//		DEBUG_Print("dropped");
+//	}
 
 	return rval;
 }
@@ -448,16 +650,29 @@ static bool Dequeue_And_Transmit(int32 data_sock)
 {
 	bool rval = false;
 
-	if (Peek_Message(&outgoing_TCP_message_queue) != NULL)
+	taskENTER_CRITICAL();
+	temp_message_ptr = Dequeue_Message(&outgoing_TCP_message_queue);
+	taskEXIT_CRITICAL();
+
+	if (temp_message_ptr != NULL)
 	{
-		taskENTER_CRITICAL();
-		temp_message_ptr = Dequeue_Message(&outgoing_TCP_message_queue);
-		taskEXIT_CRITICAL();
+		taskYIELD();
 
 		rval = Send_Message(data_sock, temp_message_ptr);
 
+		taskYIELD();
+
+		DEBUG_Print(rval ? "send ok" : "send nfg");
+
 		free(temp_message_ptr);   //dequeue alloc's a message.
 		temp_message_ptr = NULL;
+
+		DEBUG_Print("freed outgoing");
+	}
+	else
+	{
+		//we have no reason to think we've been disconnected.
+		rval = true;
 	}
 
 	return rval;
@@ -467,7 +682,7 @@ static bool Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
 
-	//offset into receive_data based on
+//offset into receive_data based on
 	received_count = Receive(data_sock, receive_data + receive_tail,
 			(RECEIVE_DATA_SIZE - receive_size));
 
@@ -514,13 +729,24 @@ static bool Receive_And_Enqueue(int32 data_sock)
 //						receive_tail, receive_size);
 //				taskEXIT_CRITICAL();
 
+				//TODO: added these critical sections and yield but haven't tested. It
+				//		seemed to be working ok without them.
+
 				*message_ptr = '\0';
+//				taskENTER_CRITICAL();
 				char * swap = zalloc(strlen(message_ptr) + 1);
+//				taskEXIT_CRITICAL();
+
+//				taskENTER_CRITICAL();
 				strcpy(swap, receive_data);
 				strncpy(receive_data, receive_data + receive_head,
 				RECEIVE_DATA_SIZE - receive_head + 1);
 				strcat(receive_data, swap);
+//				taskEXIT_CRITICAL();
+
 				free(swap);
+
+//				taskYIELD();
 
 				receive_head = 0;
 				receive_tail = (strlen(receive_data) + 1);
@@ -550,6 +776,8 @@ static bool Receive_And_Enqueue(int32 data_sock)
 					% RECEIVE_DATA_SIZE;
 			taskEXIT_CRITICAL();
 
+			taskYIELD();
+
 //			taskENTER_CRITICAL();
 //			printf("po c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
 //					receive_tail, receive_size);
@@ -574,15 +802,7 @@ static bool Receive_And_Enqueue(int32 data_sock)
 		//	it so we don't waste a bunch of cpu trying to reopen the
 		//	connection.
 
-		taskENTER_CRITICAL();
-		Initialize_Message_Queue(&outgoing_TCP_message_queue);
-		taskEXIT_CRITICAL();
-
-		lwip_close(data_sock);
-		lwip_close(listen_sock);
-
-		listen_sock = -1;
-		data_sock = -1;
+		TCP_Disconnect();
 
 		rval = false;
 	}
@@ -591,29 +811,57 @@ static bool Receive_And_Enqueue(int32 data_sock)
 
 }
 
+static void TCP_Disconnect()
+{
+	taskENTER_CRITICAL();
+	Initialize_Message_Queue(&outgoing_TCP_message_queue);
+	taskEXIT_CRITICAL();
+
+	lwip_close(data_sock);
+	lwip_close(listen_sock); //TODO: this probably isn't necessary. review main loop
+
+	listen_sock = -1;
+	data_sock = -1;
+}
+
 static int loops = 0;
 
 static bool Check_Needs_Promotion()
 {
 	bool rval = false;
 
-//remain promoted until we empty the queue.
+	//remain promoted until we empty the queue.
 	taskENTER_CRITICAL();
-	rval = outgoing_TCP_message_queue.count
-			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL);
+	rval =
+			outgoing_TCP_message_queue.count
+					> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL)|| receive_size > RECEIVE_BYTES_TRIGGER_LEVEL;
 	taskEXIT_CRITICAL();
 
-//	if (++loops > LOOPS_BEFORE_PRINT || outgoing_TCP_message_queue.count)
-//	{
-//		loops = 0;
-//		taskENTER_CRITICAL();
-//		printf("tcp count:%d\r\n", outgoing_TCP_message_queue.count);
-//		taskEXIT_CRITICAL();
-//
-//		portENTER_CRITICAL();
-//		UART_WaitTxFifoEmpty();
-//		portEXIT_CRITICAL();
-//	}
+	if (++loops > LOOPS_BEFORE_PRINT || rval
+			|| outgoing_TCP_message_queue.count)
+	{
+		loops = 0;
+
+#if ENABLE_TCP_COMBINED_TX
+		taskENTER_CRITICAL();
+		printf("\r\ntcp count:%d\r\n", outgoing_TCP_message_queue.count,
+				receive_size);
+		taskEXIT_CRITICAL();
+		taskYIELD();
+#endif
+
+#if ENABLE_TCP_COMBINED_RX
+		taskENTER_CRITICAL();
+		printf("rxbytes:%d\r\n", receive_size);
+		taskEXIT_CRITICAL();
+		taskYIELD();
+#endif
+		taskENTER_CRITICAL();
+		printf("tcp %s\r\n", connected ? "connected" : "nc");
+		taskEXIT_CRITICAL();
+		taskYIELD();
+
+	}
 
 	promoted = rval;
 

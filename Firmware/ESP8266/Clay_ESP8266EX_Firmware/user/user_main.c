@@ -59,6 +59,7 @@ void ICACHE_RODATA_ATTR user_init(void)
 	printf("SDK version:%s\n", system_get_sdk_version());
 	/* need to set opmode before you set config */
 	wifi_set_opmode(STATIONAP_MODE);
+
 	uart_init_new();
 
 #if 0
@@ -193,7 +194,7 @@ void wifi_handle_event_cb(System_Event_t *evt)
 		TCP_Receiver_Init();
 #endif
 
-#if ENABLE_TCP_COMBINED
+#if ENABLE_TCP_COMBINED_TX || ENABLE_TCP_COMBINED_RX
 		TCP_Combined_Init();
 #endif
 

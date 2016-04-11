@@ -94,8 +94,7 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 	xTaskHandle UDP_transmit_handle;
 
 	xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_UDP_TX), //TODO: globals for each task's priority
-			UDP_transmit_handle);
+			Get_Task_Priority(TASK_TYPE_UDP_TX), &UDP_transmit_handle);
 
 	Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle, Check_Needs_Promotion);
 
@@ -219,7 +218,7 @@ static bool ICACHE_RODATA_ATTR Connect()
 	///create the socket
 	do
 	{
-		transmit_sock = socket(AF_INET, SOCK_DGRAM, 0);
+		transmit_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 		if (transmit_sock == -1)
 		{
 			vTaskDelay(1000 / portTICK_RATE_MS);

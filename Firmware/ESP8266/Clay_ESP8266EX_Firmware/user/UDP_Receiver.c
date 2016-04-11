@@ -105,7 +105,7 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 	xTaskHandle UDP_receive_handle;
 
 	xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_UDP_RX), UDP_receive_handle);
+			Get_Task_Priority(TASK_TYPE_UDP_RX), &UDP_receive_handle);
 
 	Register_Task(TASK_TYPE_UDP_RX, UDP_receive_handle, Check_Needs_Promotion);
 
@@ -225,7 +225,7 @@ static bool ICACHE_RODATA_ATTR Connect()
 	///create the socket
 	do
 	{
-		receive_sock = socket(AF_INET, SOCK_DGRAM, 0);
+		receive_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 		if (receive_sock == -1)
 		{
 			Connected = false;

@@ -60,23 +60,7 @@ void Priority_Check(TASK_TYPE calling_task)
 
 	if (task->task_needs_promotion != NULL && task->task_needs_promotion())
 	{
-		if (calling_task
-				== TASK_TYPE_SERIAL_TX&& incoming_message_queue.count == MAXIMUM_MESSAGE_COUNT)
-		{
-			if (++consecutive_serial_promoted_count > 10)
-			{
-				consecutive_serial_promoted_count = 0;
-				DEBUG_Print("reset tcp");
-				taskENTER_CRITICAL();
-				Stop_Task(TASK_TYPE_TCP_RX);
-				TCP_Combined_Deinit();
-				TCP_Combined_Init();
-				taskEXIT_CRITICAL();
-			}
-
-		}
-
-//		if (++loops > LOOPS_BEFORE_PRINT)
+		if (++loops > LOOPS_BEFORE_PRINT)
 		{
 			loops = 0;
 			taskENTER_CRITICAL();

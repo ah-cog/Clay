@@ -83,7 +83,7 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 	xTaskHandle serial_rx_handle;
 
 	xTaskCreate(Serial_Receiver_Task, "uartrx1", 128, NULL,
-			Get_Task_Priority(TASK_TYPE_SERIAL_RX), serial_rx_handle);
+			Get_Task_Priority(TASK_TYPE_SERIAL_RX), &serial_rx_handle);
 
 	Register_Task(TASK_TYPE_SERIAL_RX, serial_rx_handle, Check_Needs_Promotion);
 
@@ -151,7 +151,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			{
 				taskENTER_CRITICAL();
 				Ring_Buffer_Get(serial_rx_buffer + bytes_received);
-//				taskEXIT_CRITICAL(); //moved from below
+				taskEXIT_CRITICAL();
 
 				if (bytes_received == 0
 						&& serial_rx_buffer[0] == message_start[0])
@@ -164,9 +164,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					serial_rx_buffer[bytes_received] = '\0';
 					State = Parsing;
 				}
-
-				//Moved this above.
-				taskEXIT_CRITICAL();
 			}
 			else if ((system_get_time() - state_time) > 1000000) //system_get_time returns us
 			{
@@ -181,9 +178,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			taskENTER_CRITICAL();
 			printf("\r\nsrx parse\r\n");
 			taskEXIT_CRITICAL();
-			portENTER_CRITICAL();
+
 			UART_WaitTxFifoEmpty(UART0);
-			portEXIT_CRITICAL();
 
 			DEBUG_Print_High_Water();
 #endif
@@ -220,7 +216,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					break;
 				}
 #endif
-#if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED
+#if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED_TX
 				case MESSAGE_TYPE_TCP:
 				{
 //					taskENTER_CRITICAL();
@@ -229,9 +225,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 //							temp_msg.source);
 //					taskEXIT_CRITICAL();
 
-//					portENTER_CRITICAL();
 //					UART_WaitTxFifoEmpty(UART0);
-//					portEXIT_CRITICAL();
 					selected_message_queue = &outgoing_TCP_message_queue;
 					break;
 				}

@@ -731,7 +731,7 @@ Autoselect
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="1" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>

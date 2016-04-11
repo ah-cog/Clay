@@ -90,7 +90,7 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 	xTaskHandle serial_tx_handle;
 
 	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL,
-			Get_Task_Priority(TASK_TYPE_SERIAL_TX), serial_tx_handle);
+			Get_Task_Priority(TASK_TYPE_SERIAL_TX), &serial_tx_handle);
 
 	Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle, Check_Needs_Promotion);
 
@@ -123,6 +123,13 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		{
 			taskENTER_CRITICAL();
 			temp_message = Peek_Message(&incoming_message_queue);
+
+			//I think this is masking a larger issue with the TCP receive. We'll leave it out for now.
+//			if (temp_message != NULL && (strlen(temp_message->content) < 1))
+//			{
+//				free(Dequeue_Message(&incoming_message_queue));
+//				temp_message = NULL;
+//			}
 			taskEXIT_CRITICAL();
 
 			if (temp_message != NULL)
@@ -194,9 +201,8 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			taskENTER_CRITICAL();
 			printf("stx send\r\n");
 			taskEXIT_CRITICAL();
-			portENTER_CRITICAL();
+
 			UART_WaitTxFifoEmpty(UART0);
-			portEXIT_CRITICAL();
 
 			DEBUG_Print_High_Water();
 #endif
@@ -279,9 +285,7 @@ static bool Check_Needs_Promotion()
 //		printf("stx count:%d\r\n", incoming_message_queue.count);
 //		taskEXIT_CRITICAL();
 //
-//		portENTER_CRITICAL();
 //		UART_WaitTxFifoEmpty(UART0);
-//		portEXIT_CRITICAL();
 //	}
 
 	promoted = rval;

@@ -120,7 +120,7 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 	xTaskHandle command_parser_handle;
 
 	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER), command_parser_handle);
+			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER), &command_parser_handle);
 
 	Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
 			Check_Needs_Promotion);
@@ -165,9 +165,7 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			printf("cmdparse\r\n");
 			taskEXIT_CRITICAL();
 
-			portENTER_CRITICAL();
 			UART_WaitTxFifoEmpty(UART0);
-			portEXIT_CRITICAL();
 
 			DEBUG_Print_High_Water();
 #endif
