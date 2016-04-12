@@ -66,7 +66,8 @@ static Serial_Transmitter_States state;
 
 static uint8 * serial_tx_buffer;
 static uint32 serial_tx_count;
-static Message * temp_message;
+static Message * temp_message_ptr;
+static Message temp_message;
 
 static uint32 time_temp;
 static bool promoted;
@@ -122,7 +123,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		case Idle:
 		{
 			taskENTER_CRITICAL();
-			temp_message = Peek_Message(&incoming_message_queue);
+			temp_message_ptr = Peek_Message(&incoming_message_queue);
 
 			//I think this is masking a larger issue with the TCP receive. We'll leave it out for now.
 //			if (temp_message != NULL && (strlen(temp_message->content) < 1))
@@ -132,7 +133,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 //			}
 			taskEXIT_CRITICAL();
 
-			if (temp_message != NULL)
+			if (temp_message_ptr != NULL)
 			{
 				state = Message_Available;
 				UART_ResetTxFifo(UART0);
@@ -143,7 +144,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		case Message_Available:
 		{
 			taskENTER_CRITICAL();
-			temp_message = Dequeue_Message(&incoming_message_queue);
+			Dequeue_Message(&incoming_message_queue, &temp_message);
 			taskEXIT_CRITICAL();
 
 			//New message format:
@@ -153,10 +154,10 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 
 			taskENTER_CRITICAL();
 			sprintf(serial_tx_buffer, "  %s%s%s%s%s%s%s%s%s  ", message_start,
-					temp_message->type, message_field_delimiter,
-					temp_message->source, message_field_delimiter,
-					temp_message->destination, message_field_delimiter,
-					temp_message->content, message_end);
+					temp_message.type, message_field_delimiter,
+					temp_message.source, message_field_delimiter,
+					temp_message.destination, message_field_delimiter,
+					temp_message.content, message_end);
 			taskEXIT_CRITICAL();
 
 //			taskENTER_CRITICAL();
@@ -165,10 +166,6 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 //					type_delimiter, temp_message->source, address_delimiter,
 //					temp_message->destination, address_terminator);
 //			taskEXIT_CRITICAL();
-
-			//dequeue alloc's a message.
-			free(temp_message);
-			temp_message = NULL;
 
 			time_temp = system_get_time();
 

@@ -61,25 +61,29 @@ Message* ICACHE_RODATA_ATTR Peek_Message(Message_Queue *message_queue)
 	return message;
 }
 
-Message* ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue)
+bool ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue,
+		Message * destination)
 {
-	Message *message = NULL;
-
+	bool rval = false;
 	if ((*message_queue).count > 0)
 	{
-		message = (Message*) zalloc(sizeof(Message));
-
-		Initialize_Message(message,
-				message_queue->messages[message_queue->front].type,
-				message_queue->messages[message_queue->front].source,
-				message_queue->messages[message_queue->front].destination,
-				message_queue->messages[message_queue->front].content);
+		if (destination != NULL)
+		{
+			Initialize_Message(destination,
+					message_queue->messages[message_queue->front].type,
+					message_queue->messages[message_queue->front].source,
+					message_queue->messages[message_queue->front].destination,
+					message_queue->messages[message_queue->front].content);
+		}
 
 		(*message_queue).front = ((*message_queue).front + 1)
 				% MAXIMUM_MESSAGE_COUNT;
 		(*message_queue).count--;
+
+		rval = true;
 	}
-	return message;
+
+	return rval;
 }
 
 bool ICACHE_RODATA_ATTR Has_Messages(Message_Queue *message_queue)

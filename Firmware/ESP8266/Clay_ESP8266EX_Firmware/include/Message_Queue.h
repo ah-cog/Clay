@@ -39,6 +39,6 @@ extern bool Initialize_Message_Queue(Message_Queue *message_queue);
 extern Message* Get_Next_Message(Message_Queue *message_queue);
 extern int Queue_Message(Message_Queue *message_queue, Message *message);
 extern Message* Peek_Message(Message_Queue *message_queue);
-extern Message* Dequeue_Message(Message_Queue *message_queue);
+extern bool Dequeue_Message(Message_Queue *message_queue, Message * destination);
 extern bool Has_Messages(Message_Queue *message_queue);
 #endif

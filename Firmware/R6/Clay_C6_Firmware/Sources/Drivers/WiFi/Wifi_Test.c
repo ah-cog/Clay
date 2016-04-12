@@ -20,6 +20,7 @@ void Wifi_Test() {
    Enable_WiFi();
 
    Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+   Button_Register_Hold_Response(1000, Wifi_Set_Operating_Mode);
 
    Message *message = NULL;
    Message * outgoing_message = NULL;

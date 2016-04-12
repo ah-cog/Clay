@@ -71,6 +71,7 @@ static int32 testCounter;
 static Message_Type tempIgnoredMessageType;
 
 static Message * m;
+static Message temp_message;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -155,26 +156,25 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&outgoing_UDP_message_queue);
+			Dequeue_Message(&outgoing_UDP_message_queue, &temp_message);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
 			taskENTER_CRITICAL();
-			strncpy(UDP_Tx_Buffer, m->content, UDP_TX_BUFFER_SIZE_BYTES);
-			UDP_Tx_Count = strlen(m->content);
+			strncpy(UDP_Tx_Buffer, temp_message.content,
+			UDP_TX_BUFFER_SIZE_BYTES);
+			UDP_Tx_Count = strlen(temp_message.content);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
 			taskENTER_CRITICAL();
-			Deserialize_Address(m->destination, &DestinationAddr,
+			Deserialize_Address(temp_message.destination, &DestinationAddr,
 					&tempIgnoredMessageType);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
-
-			free(m);
 
 			State = Send_Message;
 			break;

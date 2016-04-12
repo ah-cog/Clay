@@ -197,6 +197,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			if (temp_content != NULL && temp_type != NULL
 					&& temp_source_address != NULL && temp_dest_address != NULL)
 			{
+				//TODO: mas yields
 				taskENTER_CRITICAL();
 				received_message_type = Get_Message_Type_From_Str(temp_type);
 				taskEXIT_CRITICAL();

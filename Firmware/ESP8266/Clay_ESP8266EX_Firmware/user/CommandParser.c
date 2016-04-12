@@ -90,6 +90,7 @@ char args_delimiter = ',';
 
 int i;
 static Message * m;
+static Message temp_message;
 static Command_Parser_States state;
 
 static bool promoted;
@@ -120,7 +121,8 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 	xTaskHandle command_parser_handle;
 
 	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER), &command_parser_handle);
+			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER),
+			&command_parser_handle);
 
 	Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
 			Check_Needs_Promotion);
@@ -171,12 +173,12 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 #endif
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&incoming_command_queue);
+			Dequeue_Message(&incoming_command_queue, &temp_message);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
-			switch (Command_String_Parse(m->content, &command_args))
+			switch (Command_String_Parse(temp_message.content, &command_args))
 			{
 			case CLAY_COMMAND_SET_AP:
 			{
@@ -230,11 +232,6 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			}
 
 			}
-
-			//DEBUG_Print("free command");
-			//dequeue alloc's a message.
-			free(m);
-			m = NULL;
 
 			//DEBUG_Print("return to idle");
 

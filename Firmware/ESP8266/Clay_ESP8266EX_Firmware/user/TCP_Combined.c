@@ -73,6 +73,7 @@ struct sockaddr_in remote_address;
 static Message temp_message;
 static Message * temp_message_ptr;
 static Message_Type * ignored_message_type;
+static Message temp_tx_message;
 
 static int receive_head;
 static int receive_tail;
@@ -152,7 +153,7 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 {
 	for (;;)
 	{
-		DEBUG_Print("top of combined");
+//		DEBUG_Print("top of combined");
 		connected = false;
 
 		//we should reconsider recreating the listen socket every time.
@@ -199,6 +200,11 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 			}
 #endif
 
+//			if (connected)
+//			{
+//				DEBUG_Print("connected, now yield, then go to sending.");
+//			}
+
 			taskYIELD();
 		}
 
@@ -219,10 +225,10 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 #if ENABLE_TCP_COMBINED_TX
 			connected = Dequeue_And_Transmit(data_sock);
 
-			if (!connected)
-			{
-				DEBUG_Print("dqt disconnect");
-			}
+//			if (!connected)
+//			{
+//				DEBUG_Print("dqt disconnect\r\n\r\n");
+//			}
 #endif
 
 #if ENABLE_TCP_COMBINED_RX
@@ -343,13 +349,24 @@ static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
 	return accepted_sock;
 }
 
+Message peek_message =
+		{ "192.168.1.21:3000", "192.168.1.3:1002",
+				"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d",
+				"tcp" };
+Message * Peeker()
+{
+	vTaskDelay(1000 / portTICK_RATE_MS);
+	return &peek_message;
+}
+
 static bool Initiate_Connection_For_Outgoing_Message()
 {
 	bool rval = false;
 
 	taskENTER_CRITICAL();
 	//do not dequeue. leave the message in the queue to be processed by the send function..
-	temp_message_ptr = Peek_Message(&outgoing_TCP_message_queue);
+//	temp_message_ptr = Peek_Message(&outgoing_TCP_message_queue);
+	temp_message_ptr = Peeker();
 
 	if (temp_message_ptr != NULL)
 	{
@@ -374,14 +391,16 @@ static bool Initiate_Connection_For_Outgoing_Message()
 
 		taskENTER_CRITICAL();
 		sprintf(remote_address_string, temp_message.destination);
-		printf("message for %s\r\n", remote_address_string);
+//		printf("message for %s\r\n", remote_address_string);
 		taskEXIT_CRITICAL();
+
+		taskYIELD();
 
 		data_sock = Open_Data_Connection(&remote_address);
 
-		taskENTER_CRITICAL();
-		printf("odc:%d\r\n", data_sock);
-		taskEXIT_CRITICAL();
+//		taskENTER_CRITICAL();
+//		printf("odc:%d\r\n", data_sock);
+//		taskEXIT_CRITICAL();
 
 		taskYIELD();
 
@@ -389,7 +408,7 @@ static bool Initiate_Connection_For_Outgoing_Message()
 
 		if (rval)
 		{
-			DEBUG_Print("connected");
+//			DEBUG_Print("connected");
 
 			socklen_t sockaddr_size = sizeof(local_address);
 			getsockname(data_sock, (struct sockaddr* )&local_address,
@@ -403,20 +422,20 @@ static bool Initiate_Connection_For_Outgoing_Message()
 					ADDR_STRING_SIZE);
 			taskEXIT_CRITICAL();
 
-			DEBUG_Print(local_address_string);
+//			DEBUG_Print(local_address_string);
 		}
 		else
 		{
 			//couldn't connect. drop this message
 			taskENTER_CRITICAL();
-			free(Dequeue_Message(&outgoing_TCP_message_queue));
+			Dequeue_Message(&outgoing_TCP_message_queue, NULL);
 			taskEXIT_CRITICAL();
 
-			DEBUG_Print("dropped message");
+//			DEBUG_Print("dropped message");
 		}
 		taskYIELD();
 
-		DEBUG_Print("returning\r\n\r\n");
+//		DEBUG_Print("returning\r\n\r\n");
 
 	}
 
@@ -438,9 +457,11 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 		setsockopt(opened_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
 				sizeof(millis));
 
+//		DEBUG_Print("sock opt done");
+
 		taskYIELD();
 
-		DEBUG_Print("sock opt done");
+//		DEBUG_Print("create connect args");
 
 		Connect_Task_Args connect_args =
 		{ opened_socket, remote_addr, false };
@@ -449,7 +470,7 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 		{
 			//start new task to connect
 
-			DEBUG_Print("create connect task");
+//			DEBUG_Print("create connect task");
 
 			xTaskCreate(Connect_Task, "tcp connect task", 128, &connect_args,
 					Get_Task_Priority(TASK_TYPE_TCP_TX), &connect_task_handle);
@@ -486,25 +507,34 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 			millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
 			setsockopt(opened_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
 					sizeof(millis));
+
+			vTaskDelay(25 / portTICK_RATE_MS);
 		}
 		else
 		{
-			taskENTER_CRITICAL();
-			printf("delete handle: %d\r\n", (int32) connect_task_handle);
-			taskEXIT_CRITICAL();
+//			taskENTER_CRITICAL();
+//			printf("delete handle: %d\r\n", (int32) connect_task_handle);
+//			taskEXIT_CRITICAL();
 
 			vTaskDelete(connect_task_handle);
 
 			taskYIELD();
 
-			DEBUG_Print("deleted handle");
+			//raise priority so we make sure connect task gets cleaned up.
+			xTaskHandle idle_handle = xTaskGetIdleTaskHandle();
 
-			DEBUG_Print("close sock");
+			vTaskPrioritySet(idle_handle, Get_Task_Priority(TASK_TYPE_TCP_TX));
+			vTaskDelay(250 / portTICK_RATE_MS);
+			vTaskPrioritySet(idle_handle, 0);
+
+//			DEBUG_Print("deleted handle");
+
+//			DEBUG_Print("close sock");
 
 			lwip_close(opened_socket);
 			opened_socket = -1;
 
-			DEBUG_Print("sock closed");
+//			DEBUG_Print("sock closed");
 		}
 	}
 
@@ -528,7 +558,9 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 	bool rval = false;
 	struct sockaddr_in message_dest;
 
-	DEBUG_Print("sending message");
+//	DEBUG_Print("sending message");
+//	DEBUG_Print(m->destination);
+//	DEBUG_Print(remote_address_string);
 
 	taskENTER_CRITICAL();
 	Deserialize_Address(m->destination, &message_dest, ignored_message_type);
@@ -536,10 +568,11 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 
 	taskYIELD();
 
+	//TODO: shouldn't a strcmp work here instead? save ourselves the deserialization.
 	if (message_dest.sin_addr.s_addr == remote_address.sin_addr.s_addr
 			&& message_dest.sin_port == remote_address.sin_port)
 	{
-		DEBUG_Print("message matches");
+//		DEBUG_Print("message matches");
 
 		taskENTER_CRITICAL();
 		size_t length = (size_t) (strlen(m->content) + 1);
@@ -547,10 +580,10 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 
 		taskYIELD();
 
-		taskENTER_CRITICAL();
-		printf("sock:%d,size:%d,msg:%s\r\n", destination_socket, length,
-				m->content);
-		taskEXIT_CRITICAL();
+//		taskENTER_CRITICAL();
+//		printf("sock:%d,size:%d,msg:%s\r\n", destination_socket, length,
+//				m->content);
+//		taskEXIT_CRITICAL();
 
 		taskYIELD();
 
@@ -558,9 +591,9 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 
 		taskYIELD();
 
-		taskENTER_CRITICAL();
-		printf("send:%s\r\n", rval ? "ok" : "nfg");
-		taskEXIT_CRITICAL();
+//		taskENTER_CRITICAL();
+//		printf("send:%s\r\n", rval ? "ok" : "nfg");
+//		taskEXIT_CRITICAL();
 
 		if (!rval)
 		{
@@ -569,9 +602,9 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 			int getReturn = lwip_getsockopt(destination_socket, SOL_SOCKET,
 			SO_ERROR, &error, &optionLength);
 
-			taskENTER_CRITICAL();
-			printf("error:%d\r\n", error);
-			taskEXIT_CRITICAL();
+//			taskENTER_CRITICAL();
+//			printf("error:%d\r\n", error);
+//			taskEXIT_CRITICAL();
 
 			switch (error)
 			{
@@ -598,7 +631,7 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 	}
 //	else
 //	{
-//		DEBUG_Print("dropped");
+//		DEBUG_Print("dest didn't match");
 //	}
 
 	return rval;
@@ -646,15 +679,53 @@ static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * message,
 	return rval;
 }
 
+static char type_str[] = "tcp";
+static char dest_addr[] = "192.168.1.3:1002";
+static char source_addr[] = "192.168.1.21:1002";
+static char message_content_template[] =
+		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d";
+static char message_content[256];
+
+static int message_counter = 0;
+
+static bool Create_Test_Message(Message * destination)
+{
+	bool rval = true;
+
+	vTaskDelay(100 / portTICK_RATE_MS);
+
+	taskENTER_CRITICAL();
+
+//	printf("alloc test message");
+
+//	printf("print message content");
+
+	sprintf(message_content, message_content_template, ++message_counter);
+
+//	printf("init message");
+
+	Initialize_Message(destination, type_str, local_address_string, dest_addr,
+			message_content);
+
+//	printf("return");
+
+	taskEXIT_CRITICAL();
+	taskYIELD();
+
+	return rval;
+}
+
 static bool Dequeue_And_Transmit(int32 data_sock)
 {
 	bool rval = false;
 
-	taskENTER_CRITICAL();
-	temp_message_ptr = Dequeue_Message(&outgoing_TCP_message_queue);
-	taskEXIT_CRITICAL();
+	rval = Create_Test_Message(&temp_tx_message);
 
-	if (temp_message_ptr != NULL)
+//	taskENTER_CRITICAL();
+//	rval = Dequeue_Message(&outgoing_TCP_message_queue, &temp_tx_message);
+//	taskEXIT_CRITICAL();
+
+	if (rval)
 	{
 		taskYIELD();
 
@@ -662,12 +733,9 @@ static bool Dequeue_And_Transmit(int32 data_sock)
 
 		taskYIELD();
 
-		DEBUG_Print(rval ? "send ok" : "send nfg");
+//		DEBUG_Print(rval ? "send ok" : "send nfg");
 
-		free(temp_message_ptr);   //dequeue alloc's a message.
-		temp_message_ptr = NULL;
-
-		DEBUG_Print("freed outgoing");
+//		DEBUG_Print("freed outgoing");
 	}
 	else
 	{
@@ -837,31 +905,30 @@ static bool Check_Needs_Promotion()
 					> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL)|| receive_size > RECEIVE_BYTES_TRIGGER_LEVEL;
 	taskEXIT_CRITICAL();
 
-	if (++loops > LOOPS_BEFORE_PRINT || rval
-			|| outgoing_TCP_message_queue.count)
-	{
-		loops = 0;
-
-#if ENABLE_TCP_COMBINED_TX
-		taskENTER_CRITICAL();
-		printf("\r\ntcp count:%d\r\n", outgoing_TCP_message_queue.count,
-				receive_size);
-		taskEXIT_CRITICAL();
-		taskYIELD();
-#endif
-
-#if ENABLE_TCP_COMBINED_RX
-		taskENTER_CRITICAL();
-		printf("rxbytes:%d\r\n", receive_size);
-		taskEXIT_CRITICAL();
-		taskYIELD();
-#endif
-		taskENTER_CRITICAL();
-		printf("tcp %s\r\n", connected ? "connected" : "nc");
-		taskEXIT_CRITICAL();
-		taskYIELD();
-
-	}
+//	if (++loops > LOOPS_BEFORE_PRINT || rval
+//			|| outgoing_TCP_message_queue.count)
+//	{
+//		loops = 0;
+//
+//#if ENABLE_TCP_COMBINED_TX
+//		taskENTER_CRITICAL();
+//		printf("\r\ntcp count:%d\r\n", outgoing_TCP_message_queue.count);
+//		taskEXIT_CRITICAL();
+//		taskYIELD();
+//#endif
+//
+//#if ENABLE_TCP_COMBINED_RX
+//		taskENTER_CRITICAL();
+//		printf("rxbytes:%d\r\n", receive_size);
+//		taskEXIT_CRITICAL();
+//		taskYIELD();
+//#endif
+//		taskENTER_CRITICAL();
+//		printf("tcp %s\r\n", connected ? "connected" : "nc");
+//		taskEXIT_CRITICAL();
+//		taskYIELD();
+//
+//	}
 
 	promoted = rval;
 
