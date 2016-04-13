@@ -102,8 +102,6 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_SERIAL_TX);
-
 		switch (state)
 		{
 		case Disable:
@@ -128,7 +126,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			//I think this is masking a larger issue with the TCP receive. We'll leave it out for now.
 //			if (temp_message != NULL && (strlen(temp_message->content) < 1))
 //			{
-//				free(Dequeue_Message(&incoming_message_queue));
+//				Dequeue_Message(&incoming_message_queue);
 //				temp_message = NULL;
 //			}
 			taskEXIT_CRITICAL();

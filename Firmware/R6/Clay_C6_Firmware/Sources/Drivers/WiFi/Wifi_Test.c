@@ -53,6 +53,14 @@ void Wifi_Test() {
       if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
          message = Wifi_Receive();
          if (message != NULL && strcmp(message->type, "status")) {
+
+//            sprintf(message_content, message_content_template, ++message_index);
+//
+//            outgoing_message = Create_Message(message_content);
+//            Set_Message_Type(outgoing_message, type_str);
+//            Set_Message_Source(outgoing_message, source_addr);
+//            Set_Message_Destination(outgoing_message, dest_addr);
+
             char * temp = message->destination;
             message->destination = message->source;
             message->source = temp;
@@ -92,9 +100,7 @@ void Wifi_Test() {
 #endif
 
          lastMessageSendTime = Millis();
-      }
-      else if (Wifi_Get_State() == Programming)
-      {
+      } else if (Wifi_Get_State() == Programming) {
          repeat_send = FALSE;
       }
 

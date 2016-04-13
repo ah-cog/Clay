@@ -130,8 +130,6 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_UDP_RX);
-
 		switch (State)
 		{
 		case Disable:

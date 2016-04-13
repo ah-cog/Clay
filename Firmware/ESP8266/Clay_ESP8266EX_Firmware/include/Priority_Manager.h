@@ -11,7 +11,7 @@
 ////Includes //////////////////////////////////////////////////////
 
 ////Macros ////////////////////////////////////////////////////////
-#define LOOPS_BEFORE_PRINT		  5000
+#define LOOPS_BEFORE_PRINT		  10
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -35,7 +35,7 @@ extern uint32 default_priority;
 ////Global Prototypes /////////////////////////////////////////////
 void Register_Task(TASK_TYPE calling_task, xTaskHandle task_handle,
 		Check_Task_Needs_Promotion promotion_callback);
-void Priority_Check(TASK_TYPE calling_task);
+void Priority_Check_Task();
 int32 Get_Task_Priority(TASK_TYPE requested_task);
 void Stop_Task(TASK_TYPE kill_task);
 

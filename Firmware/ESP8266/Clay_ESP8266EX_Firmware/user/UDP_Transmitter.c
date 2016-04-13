@@ -118,8 +118,6 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_UDP_TX);
-
 		switch (State)
 		{
 		case Disable:

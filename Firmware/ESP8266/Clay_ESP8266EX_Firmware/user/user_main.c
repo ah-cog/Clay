@@ -81,7 +81,6 @@ void ICACHE_RODATA_ATTR user_init(void)
 		wifi_station_set_config(config);
 		free(config);
 	}
-
 //added to allow 3+ TCP connections per ESP RTOS SDK API Reference 1.3.0 Chapter 1, page 2
 	TCP_WND = 2 * TCP_MSS;
 
@@ -90,12 +89,13 @@ void ICACHE_RODATA_ATTR user_init(void)
 #endif
 
 #if 1
-	//Set up our event handler from above. this starts the tasks that talk over WiFi.
+	//set up our callback handler. this will start the networking tasks on connect.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
+
+	Start_Priority_Monitor();
 
 	//these state machines should be started immediately so that we
 	//		can process instructions from the micro.
-
 #if ENABLE_SERIAL_RX
 	Serial_Receiver_Init();
 #endif
@@ -108,6 +108,9 @@ void ICACHE_RODATA_ATTR user_init(void)
 	Command_Parser_Init();
 #endif
 #endif
+
+	//TODO: wait for uC to respond to this. Probably means another task. "start device wifi" Don't even connect until we get the message.
+	Send_Startup_Message();
 }
 
 void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
@@ -242,7 +245,7 @@ static char type_str[] = "tcp";
 static char dest_addr[] = "192.168.1.3:1002";
 static char source_addr[] = "192.168.1.21:1002";
 static char message_content_template[] =
-		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d";
+"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d";
 static char message_content[256];
 
 void Run_Queue_Test()

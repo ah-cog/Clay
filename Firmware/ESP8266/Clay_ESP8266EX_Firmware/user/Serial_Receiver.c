@@ -94,8 +94,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_SERIAL_RX);
-
 		switch (State)
 		{
 		case Disable:
@@ -192,11 +190,24 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			temp_source_address = strtok(NULL, message_field_delimiter);
 			temp_dest_address = strtok(NULL, message_field_delimiter);
 			temp_content = strtok(NULL, message_end);
+
+			if (strlen(temp_content) > CLAY_MESSAGE_LENGTH_MAX_BYTES)
+			{
+				temp_content = NULL;
+			}
 			taskEXIT_CRITICAL();
+			taskYIELD();
 
 			if (temp_content != NULL && temp_type != NULL
 					&& temp_source_address != NULL && temp_dest_address != NULL)
 			{
+//				taskENTER_CRITICAL();
+//				printf("srx msg: %s,%s,%s,%s,%d\r\n", temp_type,
+//						temp_source_address, temp_dest_address, temp_content,
+//						strlen(temp_content));
+//				taskEXIT_CRITICAL();
+//				taskYIELD();
+
 				//TODO: mas yields
 				taskENTER_CRITICAL();
 				received_message_type = Get_Message_Type_From_Str(temp_type);
@@ -207,6 +218,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 						message_type_strings[received_message_type],
 						temp_source_address, temp_dest_address, temp_content);
 				taskEXIT_CRITICAL();
+
+				taskYIELD();
 
 				switch (received_message_type)
 				{
@@ -249,6 +262,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					taskENTER_CRITICAL();
 					Queue_Message(selected_message_queue, &temp_msg);
 					taskEXIT_CRITICAL();
+
+//					DEBUG_Print("nq'd");
 				}
 
 			}

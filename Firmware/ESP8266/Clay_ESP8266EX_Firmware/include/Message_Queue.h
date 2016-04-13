@@ -20,7 +20,7 @@ enum
  * Message Queue
  */
 
-#define MAXIMUM_MESSAGE_COUNT 20
+#define MAXIMUM_MESSAGE_COUNT 5
 
 typedef struct Message_Queue
 {

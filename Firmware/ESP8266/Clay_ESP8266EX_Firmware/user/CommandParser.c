@@ -45,6 +45,8 @@
 #define TASK_START_FAIL_RESPONSE	    "task start fail"
 #define TASK_STOP_OK_RESPONSE		    "task stop ok"
 
+#define STARTUP_MESSAGE					"announce device wifi"
+
 #define MESSAGE_TRIGGER_LEVEL			10
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -134,8 +136,6 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_COMMAND_PARSER);
-
 		switch (state)
 		{
 		case Disable:
@@ -297,11 +297,11 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 
 	if (Set_Access_Point(ssid, key))
 	{
-		Send_Message_To_Master(SETAP_OK_RESPONSE, MESSAGE_TYPE_INFO);
+		Send_Message_To_Master(SETAP_OK_RESPONSE, MESSAGE_TYPE_STATUS);
 	}
 	else
 	{
-		Send_Message_To_Master(SETAP_FAIL_RESPONSE, MESSAGE_TYPE_INFO);
+		Send_Message_To_Master(SETAP_FAIL_RESPONSE, MESSAGE_TYPE_STATUS);
 	}
 
 	return rval;
@@ -335,7 +335,7 @@ bool ICACHE_RODATA_ATTR Get_IP_Command(char * args)
 	sprintf(response_buffer, "%s %s", WIFI_IP_RESPONSE, inet_ntoa(ip));
 	taskEXIT_CRITICAL();
 
-	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_STATUS);
 
 	rval = ip > 0;
 
@@ -358,7 +358,7 @@ bool ICACHE_RODATA_ATTR Get_Gateway_Command(char * args)
 	sprintf(response_buffer, "%s %s", WIFI_GATEWAY_RESPONSE, inet_ntoa(gw));
 	taskEXIT_CRITICAL();
 
-	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_STATUS);
 
 	rval = gw > 0;
 
@@ -381,7 +381,7 @@ bool ICACHE_RODATA_ATTR Get_Subnet_Command(char * args)
 	sprintf(response_buffer, "%s %s", WIFI_SUBNET_RESPONSE, inet_ntoa(mask));
 	taskEXIT_CRITICAL();
 
-	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_STATUS);
 
 	rval = mask > 0;
 
@@ -415,7 +415,7 @@ static void Stop_Task_Command(TASK_TYPE tt)
 	}
 	}
 
-	Send_Message_To_Master(TASK_STOP_OK_RESPONSE, MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(TASK_STOP_OK_RESPONSE, MESSAGE_TYPE_STATUS);
 }
 
 static void Start_Task_Command(TASK_TYPE tt)
@@ -447,7 +447,7 @@ static void Start_Task_Command(TASK_TYPE tt)
 
 	Send_Message_To_Master(
 			rval ? TASK_START_OK_RESPONSE : TASK_START_FAIL_RESPONSE,
-			MESSAGE_TYPE_INFO);
+			MESSAGE_TYPE_STATUS);
 }
 
 bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
@@ -456,9 +456,14 @@ bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
 
 	Send_Message_To_Master(
 			connected ? WIFI_CONNECTED_RESPONSE : WIFI_DISCONNECTED_RESPONSE,
-			MESSAGE_TYPE_INFO);
+			MESSAGE_TYPE_STATUS);
 
 	return connected;
+}
+
+void ICACHE_RODATA_ATTR Send_Startup_Message()
+{
+	Send_Message_To_Master(STARTUP_MESSAGE, MESSAGE_TYPE_STATUS);
 }
 
 static int loops = 0;
