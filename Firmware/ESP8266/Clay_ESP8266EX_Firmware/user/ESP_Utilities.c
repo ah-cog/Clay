@@ -96,7 +96,7 @@ void ICACHE_RODATA_ATTR DEBUG_Print(char * msg)
 {
 	taskENTER_CRITICAL();
 	printf("%s\r\n", msg);
-	UART_WaitTxFifoEmpty(UART0);
+//	UART_WaitTxFifoEmpty(UART0);
 	taskEXIT_CRITICAL();
 	taskYIELD();
 }
@@ -125,7 +125,7 @@ void ICACHE_RODATA_ATTR DEBUG_Print_High_Water()
 			uxTaskGetStackHighWaterMark(task_handle));
 	taskEXIT_CRITICAL();
 
-	UART_WaitTxFifoEmpty(UART0);
+//	UART_WaitTxFifoEmpty(UART0);
 }
 
 ////Local implementations ////////////////////////////////////////

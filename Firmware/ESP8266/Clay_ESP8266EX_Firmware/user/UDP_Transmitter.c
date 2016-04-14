@@ -36,11 +36,12 @@
 #include "lwip/netdb.h"
 
 #include "UDP_Transmitter.h"
+
+#include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 
 #include "Message_Queue.h"
 #include "Message.h"
-#include "Priority_Manager.h"
 
 ////Macros  ///////////////////////////////////////////////////////
 #define MESSAGE_TRIGGER_LEVEL			10
@@ -97,7 +98,7 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 	xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL,
 			Get_Task_Priority(TASK_TYPE_UDP_TX), &UDP_transmit_handle);
 
-	Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle, Check_Needs_Promotion);
 
 	testCounter = 0;
 

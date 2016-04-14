@@ -19,6 +19,7 @@
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
 
+#include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 
 #include "Message_Queue.h"
@@ -28,7 +29,6 @@
 #include "UDP_Transmitter.h"
 #include "UDP_Receiver.h"
 #include "TCP_Combined.h"
-#include "Priority_Manager.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define WIFI_DISCONNECTED_RESPONSE		"wifi disconnected"
@@ -126,7 +126,7 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER),
 			&command_parser_handle);
 
-	Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
+	System_Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
 			Check_Needs_Promotion);
 
 	return rval;
@@ -167,7 +167,7 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			printf("cmdparse\r\n");
 			taskEXIT_CRITICAL();
 
-			UART_WaitTxFifoEmpty(UART0);
+//			UART_WaitTxFifoEmpty(UART0);
 
 			DEBUG_Print_High_Water();
 #endif

@@ -7,9 +7,9 @@
 
 ////Includes //////////////////////////////////////////////////////
 #include "esp_common.h"
-#include "Priority_Manager.h"
 #include "Message_Queue.h"
 #include "queue.h"
+#include "../include/System_Monitor.h"
 
 ////Macros ////////////////////////////////////////////////////////
 #define DEFAULT_PRIORITY 		           2
@@ -41,7 +41,7 @@ static TASK_INFO tasks[TASK_TYPE_MAX] =
 };
 
 static xTaskHandle idle_handle;
-static xTaskHandle priority_check_handle;
+static xTaskHandle system_monitor_handle;
 
 static uint32 free_heap_size;
 static int loops = 0;
@@ -56,18 +56,17 @@ static TASK_INFO * current_task_ptr;
 ////Local Prototypes///////////////////////////////////////////////
 static void Monitor_Priority();
 static void Monitor_Memory();
-static void Monitor_TCP_Timeout();
 
 ////Global implementations ////////////////////////////////////////
-void ICACHE_RODATA_ATTR Start_Priority_Monitor()
+void ICACHE_RODATA_ATTR Start_System_Monitor()
 {
 	idle_handle = xTaskGetIdleTaskHandle();
 	current_task = TASK_TYPE_UDP_TX;
-	xTaskCreate(Priority_Check_Task, "priority monitor", 128, NULL,
-			SYSTEM_MONITOR_PRIORITY, &priority_check_handle);
+	xTaskCreate(System_Monitor_Task, "system monitor", configMINIMAL_STACK_SIZE, NULL,
+			SYSTEM_MONITOR_PRIORITY, &system_monitor_handle);
 }
 
-void ICACHE_RODATA_ATTR Register_Task(TASK_TYPE calling_task,
+void ICACHE_RODATA_ATTR System_Register_Task(TASK_TYPE calling_task,
 		xTaskHandle task_handle, Check_Task_Needs_Promotion promotion_callback)
 {
 	tasks[calling_task].task_handle = task_handle;
@@ -75,7 +74,7 @@ void ICACHE_RODATA_ATTR Register_Task(TASK_TYPE calling_task,
 	tasks[calling_task].task_needs_promotion = promotion_callback;
 }
 
-void ICACHE_RODATA_ATTR Priority_Check_Task()
+void ICACHE_RODATA_ATTR System_Monitor_Task()
 {
 	previous_run_time = xTaskGetTickCount();
 
@@ -85,7 +84,6 @@ void ICACHE_RODATA_ATTR Priority_Check_Task()
 
 		Monitor_Priority();
 		Monitor_Memory();
-		Monitor_TCP_Timeout();
 
 		//run every priority_monitor_interval ticks.
 		vTaskDelayUntil(&previous_run_time, priority_monitor_interval);
@@ -168,9 +166,4 @@ static void ICACHE_RODATA_ATTR Monitor_Memory()
 		vTaskDelay(25 / portTICK_RATE_MS);
 		vTaskPrioritySet(idle_handle, 0);
 	}
-}
-
-static void ICACHE_RODATA_ATTR Monitor_TCP_Timeout()
-{
-	//TODO: check to see if tcp tx is hanging.
 }

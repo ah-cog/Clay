@@ -39,10 +39,10 @@
 #include "UDP_Receiver.h"
 
 #include "../include/AddressSerialization.h"
+#include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 
 #include "Message_Queue.h"
-#include "Priority_Manager.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -107,7 +107,7 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 	xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL,
 			Get_Task_Priority(TASK_TYPE_UDP_RX), &UDP_receive_handle);
 
-	Register_Task(TASK_TYPE_UDP_RX, UDP_receive_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_UDP_RX, UDP_receive_handle, Check_Needs_Promotion);
 
 	testCounter = 0;
 

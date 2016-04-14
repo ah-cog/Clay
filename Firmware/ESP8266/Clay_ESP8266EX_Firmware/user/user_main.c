@@ -92,7 +92,7 @@ void ICACHE_RODATA_ATTR user_init(void)
 	//set up our callback handler. this will start the networking tasks on connect.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
 
-	Start_Priority_Monitor();
+	Start_System_Monitor();
 
 	//these state machines should be started immediately so that we
 	//		can process instructions from the micro.
@@ -282,7 +282,7 @@ void Run_Queue_Test()
 			printf("nq:%s,%s,%s,%s\r\n", temp_message.type, temp_message.source,
 					temp_message.destination, temp_message.content);
 			Queue_Message(&incoming_message_queue, &temp_message);
-			UART_WaitTxFifoEmpty(UART0);
+//			UART_WaitTxFifoEmpty(UART0);
 			taskEXIT_CRITICAL();
 			taskYIELD();
 		}
@@ -308,7 +308,7 @@ void Run_Queue_Test()
 				printf("dq:%s,%s,%s,%s\r\n", dequeued_message.type,
 						dequeued_message.source, dequeued_message.destination,
 						dequeued_message.content);
-				UART_WaitTxFifoEmpty(UART0);
+//				UART_WaitTxFifoEmpty(UART0);
 				taskEXIT_CRITICAL();
 
 				taskYIELD();

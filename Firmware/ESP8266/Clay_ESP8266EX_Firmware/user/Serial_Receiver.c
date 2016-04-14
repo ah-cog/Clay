@@ -20,12 +20,13 @@
 
 #include "UDP_Transmitter.h"
 #include "Serial_Receiver.h"
+
+#include "../include/System_Monitor.h"
 #include "Serial_Transmitter.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
 #include "Message.h"
 #include "Ring_Buffer.h"
-#include "Priority_Manager.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define RING_BUFFER_PROMOTION_THRESHOLD		30
@@ -82,10 +83,11 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 
 	xTaskHandle serial_rx_handle;
 
-	xTaskCreate(Serial_Receiver_Task, "uartrx1", 128, NULL,
+	xTaskCreate(Serial_Receiver_Task, "uartrx1", configMINIMAL_STACK_SIZE, NULL,
 			Get_Task_Priority(TASK_TYPE_SERIAL_RX), &serial_rx_handle);
 
-	Register_Task(TASK_TYPE_SERIAL_RX, serial_rx_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_SERIAL_RX, serial_rx_handle,
+			Check_Needs_Promotion);
 
 	return rval;
 }
@@ -177,7 +179,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			printf("\r\nsrx parse\r\n");
 			taskEXIT_CRITICAL();
 
-			UART_WaitTxFifoEmpty(UART0);
+//			UART_WaitTxFifoEmpty(UART0);
 
 			DEBUG_Print_High_Water();
 #endif

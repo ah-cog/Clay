@@ -39,10 +39,10 @@
 #include "Serial_Transmitter.h"
 
 #include "../include/AddressSerialization.h"
+#include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
 #include "ESP_Utilities.h"
-#include "Priority_Manager.h"
 
 ////Macros ////////////////////////////////////////////////////////
 #define MESSAGE_TRIGGER_LEVEL			10
@@ -93,7 +93,7 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL,
 			Get_Task_Priority(TASK_TYPE_SERIAL_TX), &serial_tx_handle);
 
-	Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle, Check_Needs_Promotion);
 
 	return rval;
 }
@@ -197,7 +197,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			printf("stx send\r\n");
 			taskEXIT_CRITICAL();
 
-			UART_WaitTxFifoEmpty(UART0);
+//			UART_WaitTxFifoEmpty(UART0);
 
 			DEBUG_Print_High_Water();
 #endif

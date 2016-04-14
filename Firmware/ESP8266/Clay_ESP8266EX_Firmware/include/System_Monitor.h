@@ -5,8 +5,8 @@
  *      Author: thebh_000
  */
 
-#ifndef INCLUDE_PRIORITY_MANAGER_H_
-#define INCLUDE_PRIORITY_MANAGER_H_
+#ifndef INCLUDE_SYSTEM_MONITOR_H_
+#define INCLUDE_SYSTEM_MONITOR_H_
 
 ////Includes //////////////////////////////////////////////////////
 
@@ -33,10 +33,10 @@ typedef bool (*Check_Task_Needs_Promotion)();
 extern uint32 default_priority;
 
 ////Global Prototypes /////////////////////////////////////////////
-void Register_Task(TASK_TYPE calling_task, xTaskHandle task_handle,
+void System_Register_Task(TASK_TYPE calling_task, xTaskHandle task_handle,
 		Check_Task_Needs_Promotion promotion_callback);
-void Priority_Check_Task();
+void System_Monitor_Task();
 int32 Get_Task_Priority(TASK_TYPE requested_task);
 void Stop_Task(TASK_TYPE kill_task);
 
-#endif /* INCLUDE_PRIORITY_MANAGER_H_ */
+#endif /* INCLUDE_SYSTEM_MONITOR_H_ */

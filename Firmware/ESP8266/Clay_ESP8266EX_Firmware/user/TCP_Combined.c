@@ -21,11 +21,13 @@
 #include "stdio.h"
 #include "string.h"
 
+#include "UART.h"
 #include "TCP_Combined.h"
+
+#include "../include/System_Monitor.h"
 #include "Message_Queue.h"
 #include "Message.h"
 #include "AddressSerialization.h"
-#include "Priority_Manager.h"
 
 ////Macros ////////////////////////////////////////////////////////
 #define DATA_CONNECT_ATTEMPT_MAX 		10
@@ -93,12 +95,12 @@ static bool Dequeue_And_Transmit(int32 data_sock);
 static bool Receive_And_Enqueue(int32 data_sock);
 
 static bool Send_Message(int32 destination_socket, Message * m);
-static int32 Receive(int32 source_socket, char * message,
-		uint32 message_length_max);
+static int32 Receive(int32 source_socket, char * destination,
+		uint32 receive_length_max);
 
 static bool Check_Needs_Promotion();
 static uint8_t * memchr2(uint8_t * ptr, uint8_t ch, size_t size);
-static ICACHE_RODATA_ATTR void Connect_Task(void * PvParams);
+static void Connect_Task(void * PvParams);
 static void TCP_Disconnect();
 
 ////Global implementations ////////////////////////////////////////
@@ -122,10 +124,11 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 	xTaskHandle TCP_combined_handle;
 
 	//TODO: print high water mark and revise stack size if necessary.
-	xTaskCreate(TCP_Combined_Task, "TCPall_1", 600, NULL,
+	xTaskCreate(TCP_Combined_Task, "TCP combined", 256, NULL,
 			Get_Task_Priority(TASK_TYPE_TCP_RX), &TCP_combined_handle);
 
-	Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle,
+			Check_Needs_Promotion);
 
 	return rval;
 }
@@ -381,7 +384,7 @@ static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
 //	return &peek_message;
 //}
 
-static bool Initiate_Connection_For_Outgoing_Message()
+static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 {
 	bool rval = false;
 
@@ -495,7 +498,8 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 //			DEBUG_Print("create connect task");
 
 //high water mark recorded as 28 bytes. Leaving this stack at 128 for safety.
-			xTaskCreate(Connect_Task, "tcp connect task", 128, &connect_args,
+			xTaskCreate(Connect_Task, "tcp connect task",
+					configMINIMAL_STACK_SIZE, &connect_args,
 					Get_Task_Priority(TASK_TYPE_TCP_TX), &connect_task_handle);
 
 			if (connect_task_handle == NULL)
@@ -659,19 +663,31 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 }
 
 //returns size of data put into message, or -1 if the connection was reset.
-static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * message,
-		uint32 message_length_max)
+static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
+		uint32 receive_length_max)
 {
-	int32 rval = lwip_recv(source_socket, (void*) message,
-			(size_t) message_length_max,
-			MSG_PEEK);
+//	taskENTER_CRITICAL();
+//	printf("rx up to %d. write to %d\r\n", receive_length_max,
+//			(uint32) destination);
+//	taskEXIT_CRITICAL();
+
+	int rval = lwip_recv(source_socket, destination, receive_length_max, 0);
+
+//	taskENTER_CRITICAL();
+//	printf("rx'd %d\r\n", rval);
+//	taskEXIT_CRITICAL();
 
 	if (rval < 0)
 	{
+
 		int32 error = 0;
 		uint32 optionLength = sizeof(error);
 		int getReturn = lwip_getsockopt(source_socket, SOL_SOCKET, SO_ERROR,
 				&error, &optionLength);
+
+//		taskENTER_CRITICAL();
+//		printf("error:%d\r\n", error);
+//		taskEXIT_CRITICAL();
 
 		switch (error)
 		{
@@ -691,10 +707,6 @@ static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * message,
 			break;
 		}
 		}
-	}
-	else if (rval > 0 && rval < message_length_max)
-	{
-		rval = lwip_recv(source_socket, message, message_length_max, 0);
 	}
 
 	return rval;
@@ -728,7 +740,7 @@ static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * message,
 //	return rval;
 //}
 
-static bool Dequeue_And_Transmit(int32 data_sock)
+static bool ICACHE_RODATA_ATTR Dequeue_And_Transmit(int32 data_sock)
 {
 	bool rval = false;
 
@@ -757,13 +769,24 @@ static bool Dequeue_And_Transmit(int32 data_sock)
 	return rval;
 }
 
-static bool Receive_And_Enqueue(int32 data_sock)
+static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
 
+//	taskENTER_CRITICAL();
+//	printf("rx params: t:%d,s:%d\r\n", receive_tail,
+//			((receive_tail > receive_head
+//					|| (receive_tail == receive_head && receive_size == 0)) ?
+//					(RECEIVE_DATA_SIZE - receive_tail) :
+//					RECEIVE_DATA_SIZE - receive_size));
+//	taskEXIT_CRITICAL();
+
 //offset into receive_data based on
 	received_count = Receive(data_sock, receive_data + receive_tail,
-			(RECEIVE_DATA_SIZE - receive_size));
+			((receive_tail > receive_head
+					|| (receive_tail == receive_head && receive_size == 0)) ?
+					(RECEIVE_DATA_SIZE - receive_tail) :
+					RECEIVE_DATA_SIZE - receive_size));
 
 //	taskENTER_CRITICAL();
 //	printf("rx c%d,h%d,t%d,s%d\r\n", received_count, receive_head, receive_tail,
@@ -780,25 +803,33 @@ static bool Receive_And_Enqueue(int32 data_sock)
 //				receive_tail, receive_size);
 //		taskEXIT_CRITICAL();
 
+		taskYIELD();
+
+		//if head is not less than tail, only search until end of buffer.
 		taskENTER_CRITICAL();
-		message_ptr = memchr2(receive_data + receive_head, message_delimiter[0],
-				(RECEIVE_DATA_SIZE - receive_size));
+		message_ptr = memchr2(receive_data + receive_head, message_end[0],
+				(receive_head < receive_tail ?
+						receive_size : RECEIVE_DATA_SIZE - receive_head));
 		taskEXIT_CRITICAL();
 
-		//if we didn't find the end and the tail is before the head of the queue, look up until the tail.
+		taskYIELD();
+
+		//if we didn't find the end and the queue has wrapped, then search before the head for the terminator.
 		if (message_ptr == NULL
 				&& (receive_tail < receive_head
 						|| (receive_tail == receive_head
 								&& receive_size == RECEIVE_DATA_SIZE)))
 		{
 			taskENTER_CRITICAL();
-			message_ptr = memchr2(receive_data, message_delimiter[0],
-					receive_tail);
+			message_ptr = memchr2(receive_data, message_end[0], receive_tail);
 			taskEXIT_CRITICAL();
+
+			taskYIELD();
 
 //			taskENTER_CRITICAL();
 //			printf("wa c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
 //					receive_tail, receive_size);
+//			UART_WaitTxFifoEmpty(UART0);
 //			taskEXIT_CRITICAL();
 
 			if (message_ptr != NULL)
@@ -806,33 +837,50 @@ static bool Receive_And_Enqueue(int32 data_sock)
 //				taskENTER_CRITICAL();
 //				printf("fm c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
 //						receive_tail, receive_size);
+//				UART_WaitTxFifoEmpty(UART0);
 //				taskEXIT_CRITICAL();
 
-				//TODO: added these critical sections and yield but haven't tested. It
-				//		seemed to be working ok without them.
-
 				*message_ptr = '\0';
+				taskYIELD();
+
+//				DEBUG_Print("swap");
+
 				taskENTER_CRITICAL();
 				char * swap = zalloc(strlen(message_ptr) + 1);
+				strcpy(swap, receive_data);
 				taskEXIT_CRITICAL();
 
+				taskYIELD();
+
 				taskENTER_CRITICAL();
-				strcpy(swap, receive_data);
 				strncpy(receive_data, receive_data + receive_head,
 				RECEIVE_DATA_SIZE - receive_head + 1);
+				taskEXIT_CRITICAL();
+
+				taskYIELD();
+
+				taskENTER_CRITICAL();
 				strcat(receive_data, swap);
 				taskEXIT_CRITICAL();
 
 				free(swap);
 
+//				DEBUG_Print("swap done");
+
 				taskYIELD();
 
 				taskENTER_CRITICAL();
-				receive_tail = (strlen(receive_data) + 1);
+				receive_tail = (strlen(receive_data) + 1); //had a newline on it when we received it.
 				taskEXIT_CRITICAL();
 
 				receive_head = 0;
 				receive_size = receive_tail;
+
+//				taskENTER_CRITICAL();
+//				printf("pd c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+//						receive_tail, receive_size);
+//				UART_WaitTxFifoEmpty(UART0);
+//				taskEXIT_CRITICAL();
 
 				message_ptr = receive_data;
 			}
@@ -846,23 +894,35 @@ static bool Receive_And_Enqueue(int32 data_sock)
 		}
 		else if (message_ptr != NULL)
 		{
+//			taskENTER_CRITICAL();
+//			printf("found msg at %d\r\n",
+//					(uint32) (message_ptr - receive_data));
+//			UART_WaitTxFifoEmpty(UART0);
+//			taskEXIT_CRITICAL();
+
 			*message_ptr = '\0';
 			message_ptr = receive_data + receive_head;
 		}
 
 		if (message_ptr != NULL)
 		{
+//			taskENTER_CRITICAL();
+//			printf("msg:[%s]\r\n", message_ptr);
+//			taskEXIT_CRITICAL();
+
 			taskENTER_CRITICAL();
-			receive_size -= strlen(message_ptr);
-			receive_head = (receive_head + strlen(message_ptr))
+			//+ 1 because the message had a newline on it when we received it.
+			receive_size -= (strlen(message_ptr) + 1);
+			receive_head = (receive_head + strlen(message_ptr) + 1)
 					% RECEIVE_DATA_SIZE;
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
 //			taskENTER_CRITICAL();
-//			printf("po c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+//			printf("nq c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
 //					receive_tail, receive_size);
+//			UART_WaitTxFifoEmpty(UART0);
 //			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
@@ -876,6 +936,8 @@ static bool Receive_And_Enqueue(int32 data_sock)
 			taskENTER_CRITICAL();
 			Queue_Message(&incoming_message_queue, &temp_message);
 			taskEXIT_CRITICAL();
+
+			taskYIELD();
 		}
 	}
 	else if (received_count < 0)
@@ -883,6 +945,8 @@ static bool Receive_And_Enqueue(int32 data_sock)
 		//Assume tcp queue has messages for the open socket. We clear
 		//	it so we don't waste a bunch of cpu trying to reopen the
 		//	connection.
+
+//		DEBUG_Print("rx closed");
 
 		TCP_Disconnect();
 
@@ -893,7 +957,7 @@ static bool Receive_And_Enqueue(int32 data_sock)
 
 }
 
-static void TCP_Disconnect()
+static void ICACHE_RODATA_ATTR TCP_Disconnect()
 {
 	taskENTER_CRITICAL();
 	Initialize_Message_Queue(&outgoing_TCP_message_queue);
@@ -908,7 +972,7 @@ static void TCP_Disconnect()
 
 static int loops = 0;
 
-static bool Check_Needs_Promotion()
+static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
@@ -949,11 +1013,21 @@ static bool Check_Needs_Promotion()
 	return rval;
 }
 
-uint8_t *memchr2(uint8_t *ptr, uint8_t ch, size_t size)
+uint8_t ICACHE_RODATA_ATTR *memchr2(uint8_t *ptr, uint8_t ch, size_t size)
 {
 	int i;
+
 	for (i = 0; i < size; i++)
-		if (*ptr++ == ch)
+	{
+		if (*ptr == ch)
+		{
 			return ptr;
+		}
+		else
+		{
+			++ptr;
+		}
+	}
+
 	return NULL;
 }
