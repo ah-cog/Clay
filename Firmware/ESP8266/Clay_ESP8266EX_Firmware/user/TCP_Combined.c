@@ -102,6 +102,7 @@ static bool Check_Needs_Promotion();
 static uint8_t * memchr2(uint8_t * ptr, uint8_t ch, size_t size);
 static void Connect_Task(void * PvParams);
 static void TCP_Disconnect();
+static void Listen_Disconnect();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Combined_Init()
@@ -118,6 +119,15 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 	receive_data = zalloc(RECEIVE_DATA_SIZE);
 	transmit_data = zalloc(TRANSMIT_DATA_SIZE);
 	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
+	printf("\r\n\r\nla:%08x\r\nra:%08x\r\nrx:%08x\r\ntx:%08x\r\n\r\n",
+			(uint32) local_address_string, (uint32) remote_address_string,
+			(uint32) receive_data, (uint32) transmit_data);
+	UART_WaitTxFifoEmpty(UART0);
+	taskEXIT_CRITICAL();
+
+	vTaskDelay(5000 / portTICK_RATE_MS);
 
 	taskYIELD();
 
@@ -171,11 +181,11 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 		while ((listen_sock = Open_Listen_Connection(local_address_string,
 				&local_address)) < 0)
 		{
-//			if (++tcpLoops > 30)
-//			{
-//				tcpLoops = 0;
-//				DEBUG_Print("opening listen");
-//			}
+			if (++tcpLoops > 30)
+			{
+				tcpLoops = 0;
+				DEBUG_Print("opening listen");
+			}
 
 			taskYIELD();
 		}
@@ -203,10 +213,11 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 			}
 #endif
 
-//			if (connected)
-//			{
+			if (connected)
+			{
+				Listen_Disconnect();
 //				DEBUG_Print("connected, now yield, then go to sending.");
-//			}
+			}
 
 			taskYIELD();
 		}
@@ -662,56 +673,6 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 	return rval;
 }
 
-//returns size of data put into message, or -1 if the connection was reset.
-static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
-		uint32 receive_length_max)
-{
-//	taskENTER_CRITICAL();
-//	printf("rx up to %d. write to %d\r\n", receive_length_max,
-//			(uint32) destination);
-//	taskEXIT_CRITICAL();
-
-	int rval = lwip_recv(source_socket, destination, receive_length_max, 0);
-
-//	taskENTER_CRITICAL();
-//	printf("rx'd %d\r\n", rval);
-//	taskEXIT_CRITICAL();
-
-	if (rval < 0)
-	{
-
-		int32 error = 0;
-		uint32 optionLength = sizeof(error);
-		int getReturn = lwip_getsockopt(source_socket, SOL_SOCKET, SO_ERROR,
-				&error, &optionLength);
-
-//		taskENTER_CRITICAL();
-//		printf("error:%d\r\n", error);
-//		taskEXIT_CRITICAL();
-
-		switch (error)
-		{
-		case ECONNRESET:
-		{
-			rval = -1;
-			break;
-		}
-		case EAGAIN:
-		{
-			rval = 0;
-
-			break;
-		}
-		default:
-		{
-			break;
-		}
-		}
-	}
-
-	return rval;
-}
-
 //static char type_str[] = "tcp";
 //static char dest_addr[] = "192.168.1.3:1002";
 //static char source_addr[] = "192.168.1.21:1002";
@@ -781,12 +742,50 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 //					RECEIVE_DATA_SIZE - receive_size));
 //	taskEXIT_CRITICAL();
 
-//offset into receive_data based on
+//	DEBUG_Print("call rx");
+
+	//test code
+
+//	received_count = Receive(data_sock, receive_data, RECEIVE_DATA_SIZE);
+//
+//	if (received_count == -1)
+//	{
+//		DEBUG_Print("dc");
+//		TCP_Disconnect();
+//		return false;
+//	}
+//	else
+//	{
+//		receive_data[received_count] = '\0';
+//
+//		taskENTER_CRITICAL();
+//		printf("rx'd %d: [%s]\r\n\r\n", received_count, receive_data);
+//		taskEXIT_CRITICAL();
+//
+//		*receive_data = '\0';
+//
+//		return true;
+//	}
+
+	//end test code
+
+	taskENTER_CRITICAL();
+	printf("rc: [%s]\r\n", local_address_string);
+	taskEXIT_CRITICAL();
+
 	received_count = Receive(data_sock, receive_data + receive_tail,
 			((receive_tail > receive_head
 					|| (receive_tail == receive_head && receive_size == 0)) ?
 					(RECEIVE_DATA_SIZE - receive_tail) :
 					RECEIVE_DATA_SIZE - receive_size));
+
+	taskENTER_CRITICAL();
+	printf("rr: [%s]\r\n", local_address_string);
+	taskEXIT_CRITICAL();
+
+//	DEBUG_Print("rx back");
+
+	taskYIELD();
 
 //	taskENTER_CRITICAL();
 //	printf("rx c%d,h%d,t%d,s%d\r\n", received_count, receive_head, receive_tail,
@@ -832,18 +831,27 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 //			UART_WaitTxFifoEmpty(UART0);
 //			taskEXIT_CRITICAL();
 
+			taskYIELD();
+
 			if (message_ptr != NULL)
 			{
-//				taskENTER_CRITICAL();
-//				printf("fm c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
-//						receive_tail, receive_size);
-//				UART_WaitTxFifoEmpty(UART0);
-//				taskEXIT_CRITICAL();
-
-				*message_ptr = '\0';
-				taskYIELD();
+				taskENTER_CRITICAL();
+				printf("ss c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+						receive_tail, receive_size);
+				UART_WaitTxFifoEmpty(UART0);
+				taskEXIT_CRITICAL();
 
 //				DEBUG_Print("swap");
+
+				taskENTER_CRITICAL();
+				printf("ss: [%s]\r\n", local_address_string);
+				taskEXIT_CRITICAL();
+
+				*message_ptr = '\0';
+
+				message_ptr = receive_data + receive_head;
+
+				taskYIELD();
 
 				taskENTER_CRITICAL();
 				char * swap = zalloc(strlen(message_ptr) + 1);
@@ -853,17 +861,22 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 				taskYIELD();
 
 				taskENTER_CRITICAL();
-				strncpy(receive_data, receive_data + receive_head,
-				RECEIVE_DATA_SIZE - receive_head + 1);
+				//+1 because we replaced a newline with a null.
+				//	 We also need the null in there for the string operations to come
+				strncpy(receive_data, message_ptr,
+						(RECEIVE_DATA_SIZE - receive_head) + 1);
 				taskEXIT_CRITICAL();
 
 				taskYIELD();
 
 				taskENTER_CRITICAL();
 				strcat(receive_data, swap);
+				free(swap);
 				taskEXIT_CRITICAL();
 
-				free(swap);
+				taskENTER_CRITICAL();
+				printf("sd: [%s]\r\n", local_address_string);
+				taskEXIT_CRITICAL();
 
 //				DEBUG_Print("swap done");
 
@@ -882,10 +895,18 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 //				UART_WaitTxFifoEmpty(UART0);
 //				taskEXIT_CRITICAL();
 
+				taskYIELD();
+
 				message_ptr = receive_data;
 			}
-			else if (receive_size == RECEIVE_DATA_SIZE)
+			else if (receive_size >= MAXIMUM_MESSAGE_LENGTH)
 			{
+				taskENTER_CRITICAL();
+				printf("rst c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+						receive_tail, receive_size);
+				UART_WaitTxFifoEmpty(UART0);
+				taskEXIT_CRITICAL();
+
 				//buffer's full and no terminator was found.
 				receive_head = 0;
 				receive_tail = 0;
@@ -907,8 +928,13 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 		if (message_ptr != NULL)
 		{
 //			taskENTER_CRITICAL();
-//			printf("msg:[%s]\r\n", message_ptr);
+//			printf("size:%d, msg:[%s]\r\n", strlen(message_ptr), message_ptr);
+//			UART_WaitTxFifoEmpty(UART0);
 //			taskEXIT_CRITICAL();
+
+//			DEBUG_Print("mpnn");
+
+			taskYIELD();
 
 			taskENTER_CRITICAL();
 			//+ 1 because the message had a newline on it when we received it.
@@ -917,35 +943,61 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 					% RECEIVE_DATA_SIZE;
 			taskEXIT_CRITICAL();
 
-			taskYIELD();
-
-//			taskENTER_CRITICAL();
-//			printf("nq c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
-//					receive_tail, receive_size);
-//			UART_WaitTxFifoEmpty(UART0);
-//			taskEXIT_CRITICAL();
-
-			taskENTER_CRITICAL();
-			Initialize_Message(&temp_message,
-					message_type_strings[MESSAGE_TYPE_TCP],
-					remote_address_string, local_address_string, message_ptr);
-			taskEXIT_CRITICAL();
+//			DEBUG_Print("updidx");
 
 			taskYIELD();
 
+//			DEBUG_Print("mtlset");
+
 			taskENTER_CRITICAL();
-			Queue_Message(&incoming_message_queue, &temp_message);
+			bool message_too_long = strlen(message_ptr) > MAXIMUM_MESSAGE_LENGTH;
 			taskEXIT_CRITICAL();
+
+//			DEBUG_Print("mtl");
+
+			taskYIELD();
+
+			if (!message_too_long)
+			{
+				taskENTER_CRITICAL();
+				printf(
+						"size:%d,type:[%s]\r\nsource:[%s]\r\ndest:[%s]\r\nmsg[%s]\r\n",
+						strlen(message_ptr),
+						message_type_strings[MESSAGE_TYPE_TCP],
+						remote_address_string, local_address_string,
+						message_ptr);
+				UART_WaitTxFifoEmpty(UART0);
+				taskEXIT_CRITICAL();
+
+				taskENTER_CRITICAL();
+				Initialize_Message(&temp_message,
+						message_type_strings[MESSAGE_TYPE_TCP],
+						remote_address_string, local_address_string,
+						message_ptr);
+				taskEXIT_CRITICAL();
+
+				taskYIELD();
+
+				taskENTER_CRITICAL();
+				Queue_Message(&incoming_message_queue, &temp_message);
+				taskEXIT_CRITICAL();
+
+//				DEBUG_Print("nq");
+
+				taskENTER_CRITICAL();
+				printf("nq c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
+						receive_tail, receive_size);
+				UART_WaitTxFifoEmpty(UART0);
+				taskEXIT_CRITICAL();
+
+				taskYIELD();
+			}
 
 			taskYIELD();
 		}
 	}
 	else if (received_count < 0)
 	{
-		//Assume tcp queue has messages for the open socket. We clear
-		//	it so we don't waste a bunch of cpu trying to reopen the
-		//	connection.
-
 //		DEBUG_Print("rx closed");
 
 		TCP_Disconnect();
@@ -953,8 +1005,123 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 		rval = false;
 	}
 
+//	DEBUG_Print("return");
+
 	return rval;
 
+}
+
+#if 0
+//TCP Receive defeat/test code
+static int last_send = 0;
+//281 chars including newline.
+static char test_msg[] =
+"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
+
+//20 chars, no newline
+//static char test_msg[] = "mmmmmmmmmmmmmmmmmmmm";
+
+//510 chars, 10 messages
+//static char test_msg[] =
+//		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
+//256 chars, including newline
+//static char test_msg[] =
+//		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
+
+//161 chars, including newline
+//static char test_msg[] =
+//		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
+
+//	taskENTER_CRITICAL();
+//	strncpy(destination, test_msg + last_send, receive_length_max);
+//	int x = (
+//			receive_length_max >= strlen(test_msg) ?
+//					strlen(test_msg + last_send) : receive_length_max);
+//	taskEXIT_CRITICAL();
+//
+//	taskENTER_CRITICAL();
+//	last_send = (receive_length_max >= strlen(test_msg) ? 0 : x);
+//	taskEXIT_CRITICAL();
+//
+//	taskYIELD();
+//
+//	return x;
+//End of defeat/test code.
+
+//returns size of data put into message, or -1 if the connection was reset.
+static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
+		uint32 receive_length_max)
+{
+	taskENTER_CRITICAL();
+	strncpy(destination, test_msg + last_send, receive_length_max);
+	int x = (
+			receive_length_max >= strlen(test_msg) ?
+			strlen(test_msg + last_send) : receive_length_max);
+	taskEXIT_CRITICAL();
+
+	taskENTER_CRITICAL();
+	last_send = (receive_length_max >= strlen(test_msg) ? 0 : x);
+	taskEXIT_CRITICAL();
+
+	taskYIELD();
+
+	if (last_send > 0)
+	{
+		DEBUG_Print("ls>0");
+	}
+
+	return x;
+#else
+
+static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
+		uint32 receive_length_max)
+{
+#endif
+	taskENTER_CRITICAL();
+	printf("sock:%d rx up to %d into %d\r\n", source_socket, receive_length_max,
+			(uint32) destination);
+	UART_WaitTxFifoEmpty(UART0);
+	taskEXIT_CRITICAL();
+
+	int rval = lwip_recv(source_socket, destination, receive_length_max, 0);
+
+//	taskENTER_CRITICAL();
+//	printf("rx'd %d\r\n", rval);
+//	taskEXIT_CRITICAL();
+
+	if (rval < 0)
+	{
+
+		int32 error = 0;
+		uint32 optionLength = sizeof(error);
+		int getReturn = lwip_getsockopt(source_socket, SOL_SOCKET, SO_ERROR,
+				&error, &optionLength);
+
+		taskENTER_CRITICAL();
+		printf("error:%d\r\n", error);
+		taskEXIT_CRITICAL();
+
+		switch (error)
+		{
+		case ECONNRESET:
+		{
+			rval = -1;
+			break;
+		}
+		case EAGAIN:
+		{
+			rval = 0;
+
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
+	}
+
+	return rval;
 }
 
 static void ICACHE_RODATA_ATTR TCP_Disconnect()
@@ -964,10 +1131,18 @@ static void ICACHE_RODATA_ATTR TCP_Disconnect()
 	taskEXIT_CRITICAL();
 
 	lwip_close(data_sock);
-	lwip_close(listen_sock); //TODO: this probably isn't necessary. review main loop
-
-	listen_sock = -1;
 	data_sock = -1;
+
+	Listen_Disconnect();
+}
+
+static void ICACHE_RODATA_ATTR Listen_Disconnect()
+{
+	if (listen_sock >= 0)
+	{
+		lwip_close(listen_sock);
+		listen_sock = -1;
+	}
 }
 
 static int loops = 0;
@@ -976,7 +1151,7 @@ static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-	//remain promoted until we empty the queue.
+//remain promoted until we empty the queue.
 	taskENTER_CRITICAL();
 	rval =
 			outgoing_TCP_message_queue.count

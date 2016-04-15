@@ -62,8 +62,8 @@ void ICACHE_RODATA_ATTR Start_System_Monitor()
 {
 	idle_handle = xTaskGetIdleTaskHandle();
 	current_task = TASK_TYPE_UDP_TX;
-	xTaskCreate(System_Monitor_Task, "system monitor", configMINIMAL_STACK_SIZE, NULL,
-			SYSTEM_MONITOR_PRIORITY, &system_monitor_handle);
+	xTaskCreate(System_Monitor_Task, "system monitor", configMINIMAL_STACK_SIZE,
+			NULL, SYSTEM_MONITOR_PRIORITY, &system_monitor_handle);
 }
 
 void ICACHE_RODATA_ATTR System_Register_Task(TASK_TYPE calling_task,
@@ -116,13 +116,13 @@ static void ICACHE_RODATA_ATTR Monitor_Priority()
 		if (current_task_ptr->task_needs_promotion != NULL
 				&& current_task_ptr->task_needs_promotion())
 		{
-//			if (++loops > LOOPS_BEFORE_PRINT)
-//			{
-//				loops = 0;
-//				taskENTER_CRITICAL();
-//				printf("%d promoted\r\n", (int) current_task);
-//				taskEXIT_CRITICAL();
-//			}
+			if (++loops > LOOPS_BEFORE_PRINT)
+			{
+				loops = 0;
+				taskENTER_CRITICAL();
+				printf("%d promoted\r\n", (int) current_task);
+				taskEXIT_CRITICAL();
+			}
 
 			if (current_task_ptr->current_priority
 					<= current_task_ptr->default_priority)
@@ -153,9 +153,9 @@ static void ICACHE_RODATA_ATTR Monitor_Memory()
 {
 	free_heap_size = system_get_free_heap_size();
 
-//	taskENTER_CRITICAL();
-//	printf("heap free: %d\r\n", free_heap_size);
-//	taskEXIT_CRITICAL();
+	taskENTER_CRITICAL();
+	printf("heap free: %d\r\n", free_heap_size);
+	taskEXIT_CRITICAL();
 
 	if (free_heap_size < FREE_HEAP_MINIMUM_LEVEL)
 	{

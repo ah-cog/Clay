@@ -27,6 +27,7 @@ void Wifi_Test() {
    uint32_t lastMessageSendTime = 0;
    uint32_t messageSendPeriod = 250;
 
+   bool echo = FALSE;
    bool repeat_send = FALSE;
    bool request_connect = FALSE;
    bool get_ip = FALSE;
@@ -50,7 +51,7 @@ void Wifi_Test() {
 
 #if 1
       //echo received messages
-      if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
+      if (echo && Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
          message = Wifi_Receive();
          if (message != NULL && strcmp(message->type, "status")) {
 
