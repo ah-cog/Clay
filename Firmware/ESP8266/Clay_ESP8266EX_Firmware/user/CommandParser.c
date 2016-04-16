@@ -19,6 +19,7 @@
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
 
+#include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 
 #include "Message_Queue.h"
@@ -28,7 +29,6 @@
 #include "UDP_Transmitter.h"
 #include "UDP_Receiver.h"
 #include "TCP_Combined.h"
-#include "Priority_Manager.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define WIFI_DISCONNECTED_RESPONSE		"wifi disconnected"
@@ -45,7 +45,9 @@
 #define TASK_START_FAIL_RESPONSE	    "task start fail"
 #define TASK_STOP_OK_RESPONSE		    "task stop ok"
 
-#define MESSAGE_TRIGGER_LEVEL			5
+#define STARTUP_MESSAGE					"announce device wifi"
+
+#define MESSAGE_TRIGGER_LEVEL			10
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -90,6 +92,7 @@ char args_delimiter = ',';
 
 int i;
 static Message * m;
+static Message temp_message;
 static Command_Parser_States state;
 
 static bool promoted;
@@ -120,9 +123,10 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 	xTaskHandle command_parser_handle;
 
 	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER), command_parser_handle);
+			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER),
+			&command_parser_handle);
 
-	Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
+	System_Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
 			Check_Needs_Promotion);
 
 	return rval;
@@ -132,8 +136,6 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_COMMAND_PARSER);
-
 		switch (state)
 		{
 		case Disable:
@@ -165,20 +167,18 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			printf("cmdparse\r\n");
 			taskEXIT_CRITICAL();
 
-			portENTER_CRITICAL();
-			UART_WaitTxFifoEmpty(UART0);
-			portEXIT_CRITICAL();
+//			UART_WaitTxFifoEmpty(UART0);
 
 			DEBUG_Print_High_Water();
 #endif
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&incoming_command_queue);
+			Dequeue_Message(&incoming_command_queue, &temp_message);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
-			switch (Command_String_Parse(m->content, &command_args))
+			switch (Command_String_Parse(temp_message.content, &command_args))
 			{
 			case CLAY_COMMAND_SET_AP:
 			{
@@ -232,11 +232,6 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			}
 
 			}
-
-			//DEBUG_Print("free command");
-			//dequeue alloc's a message.
-			free(m);
-			m = NULL;
 
 			//DEBUG_Print("return to idle");
 
@@ -302,11 +297,11 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 
 	if (Set_Access_Point(ssid, key))
 	{
-		Send_Message_To_Master(SETAP_OK_RESPONSE, MESSAGE_TYPE_INFO);
+		Send_Message_To_Master(SETAP_OK_RESPONSE, MESSAGE_TYPE_STATUS);
 	}
 	else
 	{
-		Send_Message_To_Master(SETAP_FAIL_RESPONSE, MESSAGE_TYPE_INFO);
+		Send_Message_To_Master(SETAP_FAIL_RESPONSE, MESSAGE_TYPE_STATUS);
 	}
 
 	return rval;
@@ -340,7 +335,7 @@ bool ICACHE_RODATA_ATTR Get_IP_Command(char * args)
 	sprintf(response_buffer, "%s %s", WIFI_IP_RESPONSE, inet_ntoa(ip));
 	taskEXIT_CRITICAL();
 
-	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_STATUS);
 
 	rval = ip > 0;
 
@@ -363,7 +358,7 @@ bool ICACHE_RODATA_ATTR Get_Gateway_Command(char * args)
 	sprintf(response_buffer, "%s %s", WIFI_GATEWAY_RESPONSE, inet_ntoa(gw));
 	taskEXIT_CRITICAL();
 
-	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_STATUS);
 
 	rval = gw > 0;
 
@@ -386,7 +381,7 @@ bool ICACHE_RODATA_ATTR Get_Subnet_Command(char * args)
 	sprintf(response_buffer, "%s %s", WIFI_SUBNET_RESPONSE, inet_ntoa(mask));
 	taskEXIT_CRITICAL();
 
-	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(response_buffer, MESSAGE_TYPE_STATUS);
 
 	rval = mask > 0;
 
@@ -420,7 +415,7 @@ static void Stop_Task_Command(TASK_TYPE tt)
 	}
 	}
 
-	Send_Message_To_Master(TASK_STOP_OK_RESPONSE, MESSAGE_TYPE_INFO);
+	Send_Message_To_Master(TASK_STOP_OK_RESPONSE, MESSAGE_TYPE_STATUS);
 }
 
 static void Start_Task_Command(TASK_TYPE tt)
@@ -452,7 +447,7 @@ static void Start_Task_Command(TASK_TYPE tt)
 
 	Send_Message_To_Master(
 			rval ? TASK_START_OK_RESPONSE : TASK_START_FAIL_RESPONSE,
-			MESSAGE_TYPE_INFO);
+			MESSAGE_TYPE_STATUS);
 }
 
 bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
@@ -461,10 +456,17 @@ bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
 
 	Send_Message_To_Master(
 			connected ? WIFI_CONNECTED_RESPONSE : WIFI_DISCONNECTED_RESPONSE,
-			MESSAGE_TYPE_INFO);
+			MESSAGE_TYPE_STATUS);
 
 	return connected;
 }
+
+void ICACHE_RODATA_ATTR Send_Startup_Message()
+{
+	Send_Message_To_Master(STARTUP_MESSAGE, MESSAGE_TYPE_STATUS);
+}
+
+static int loops = 0;
 
 static bool Check_Needs_Promotion()
 {
@@ -472,10 +474,17 @@ static bool Check_Needs_Promotion()
 
 	//remain promoted until we empty the queue.
 	taskENTER_CRITICAL();
-	rval = (Get_Message_Count(&incoming_command_queue)
+	rval = (incoming_command_queue.count
 			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
 	taskEXIT_CRITICAL();
 
+//	if (++loops > LOOPS_BEFORE_PRINT || incoming_command_queue.count)
+//	{
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("cmd count:%d\r\n", incoming_command_queue.count);
+//		taskEXIT_CRITICAL();
+//	}
 	promoted = rval;
 
 	return rval;

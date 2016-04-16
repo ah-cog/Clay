@@ -39,13 +39,13 @@
 #include "Serial_Transmitter.h"
 
 #include "../include/AddressSerialization.h"
+#include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
 #include "ESP_Utilities.h"
-#include "Priority_Manager.h"
 
 ////Macros ////////////////////////////////////////////////////////
-#define MESSAGE_TRIGGER_LEVEL			5
+#define MESSAGE_TRIGGER_LEVEL			10
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -66,7 +66,8 @@ static Serial_Transmitter_States state;
 
 static uint8 * serial_tx_buffer;
 static uint32 serial_tx_count;
-static Message * temp_message;
+static Message * temp_message_ptr;
+static Message temp_message;
 
 static uint32 time_temp;
 static bool promoted;
@@ -90,21 +91,17 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 	xTaskHandle serial_tx_handle;
 
 	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL,
-			Get_Task_Priority(TASK_TYPE_SERIAL_TX), serial_tx_handle);
+			Get_Task_Priority(TASK_TYPE_SERIAL_TX), &serial_tx_handle);
 
-	Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle, Check_Needs_Promotion);
 
 	return rval;
 }
 
 void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 {
-	Priority_Check(TASK_TYPE_SERIAL_TX);
-
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_SERIAL_TX);
-
 		switch (state)
 		{
 		case Disable:
@@ -124,10 +121,17 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		case Idle:
 		{
 			taskENTER_CRITICAL();
-			temp_message = Peek_Message(&incoming_message_queue);
+			temp_message_ptr = Peek_Message(&incoming_message_queue);
+
+			//I think this is masking a larger issue with the TCP receive. We'll leave it out for now.
+//			if (temp_message != NULL && (strlen(temp_message->content) < 1))
+//			{
+//				Dequeue_Message(&incoming_message_queue);
+//				temp_message = NULL;
+//			}
 			taskEXIT_CRITICAL();
 
-			if (temp_message != NULL)
+			if (temp_message_ptr != NULL)
 			{
 				state = Message_Available;
 				UART_ResetTxFifo(UART0);
@@ -138,10 +142,8 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		case Message_Available:
 		{
 			taskENTER_CRITICAL();
-			temp_message = Dequeue_Message(&incoming_message_queue);
+			Dequeue_Message(&incoming_message_queue, &temp_message);
 			taskEXIT_CRITICAL();
-
-			serial_tx_count = strlen(temp_message->content);
 
 			//New message format:
 			//!<type>\t<source>\t<destination>\t<content>\n
@@ -150,10 +152,10 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 
 			taskENTER_CRITICAL();
 			sprintf(serial_tx_buffer, "  %s%s%s%s%s%s%s%s%s  ", message_start,
-					temp_message->type, message_field_delimiter,
-					temp_message->source, message_field_delimiter,
-					temp_message->destination, message_field_delimiter,
-					temp_message->content, message_end);
+					temp_message.type, message_field_delimiter,
+					temp_message.source, message_field_delimiter,
+					temp_message.destination, message_field_delimiter,
+					temp_message.content, message_end);
 			taskEXIT_CRITICAL();
 
 //			taskENTER_CRITICAL();
@@ -162,10 +164,6 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 //					type_delimiter, temp_message->source, address_delimiter,
 //					temp_message->destination, address_terminator);
 //			taskEXIT_CRITICAL();
-
-			//dequeue alloc's a message.
-			free(temp_message);
-			temp_message = NULL;
 
 			time_temp = system_get_time();
 
@@ -198,9 +196,8 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			taskENTER_CRITICAL();
 			printf("stx send\r\n");
 			taskEXIT_CRITICAL();
-			portENTER_CRITICAL();
-			UART_WaitTxFifoEmpty(UART0);
-			portEXIT_CRITICAL();
+
+//			UART_WaitTxFifoEmpty(UART0);
 
 			DEBUG_Print_High_Water();
 #endif
@@ -263,15 +260,28 @@ void Send_Message_To_Master(char * message, Message_Type type)
 //	DEBUG_Print("message enqueued");
 }
 
+static int loops = 0;
+
 ////Local implementations /////////////////////////////////////////
 static bool Check_Needs_Promotion()
 {
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	rval = (Get_Message_Count(&incoming_message_queue)
+	rval = (incoming_message_queue.count
 			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
 	taskEXIT_CRITICAL();
+
+//	if (++loops > LOOPS_BEFORE_PRINT || incoming_message_queue.count)
+//	{
+//		rval = false;
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("stx count:%d\r\n", incoming_message_queue.count);
+//		taskEXIT_CRITICAL();
+//
+//		UART_WaitTxFifoEmpty(UART0);
+//	}
 
 	promoted = rval;
 

@@ -36,14 +36,15 @@
 #include "lwip/netdb.h"
 
 #include "UDP_Transmitter.h"
+
+#include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 
 #include "Message_Queue.h"
 #include "Message.h"
-#include "Priority_Manager.h"
 
 ////Macros  ///////////////////////////////////////////////////////
-#define MESSAGE_TRIGGER_LEVEL			5
+#define MESSAGE_TRIGGER_LEVEL			10
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -71,6 +72,7 @@ static int32 testCounter;
 static Message_Type tempIgnoredMessageType;
 
 static Message * m;
+static Message temp_message;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -94,10 +96,9 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 	xTaskHandle UDP_transmit_handle;
 
 	xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_UDP_TX), //TODO: globals for each task's priority
-			UDP_transmit_handle);
+			Get_Task_Priority(TASK_TYPE_UDP_TX), &UDP_transmit_handle);
 
-	Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle, Check_Needs_Promotion);
 
 	testCounter = 0;
 
@@ -118,8 +119,6 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_UDP_TX);
-
 		switch (State)
 		{
 		case Disable:
@@ -156,26 +155,25 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&outgoing_UDP_message_queue);
+			Dequeue_Message(&outgoing_UDP_message_queue, &temp_message);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
 			taskENTER_CRITICAL();
-			strncpy(UDP_Tx_Buffer, m->content, UDP_TX_BUFFER_SIZE_BYTES);
-			UDP_Tx_Count = strlen(m->content);
+			strncpy(UDP_Tx_Buffer, temp_message.content,
+			UDP_TX_BUFFER_SIZE_BYTES);
+			UDP_Tx_Count = strlen(temp_message.content);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
 			taskENTER_CRITICAL();
-			Deserialize_Address(m->destination, &DestinationAddr,
+			Deserialize_Address(temp_message.destination, &DestinationAddr,
 					&tempIgnoredMessageType);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
-
-			free(m);
 
 			State = Send_Message;
 			break;
@@ -219,7 +217,7 @@ static bool ICACHE_RODATA_ATTR Connect()
 	///create the socket
 	do
 	{
-		transmit_sock = socket(AF_INET, SOCK_DGRAM, 0);
+		transmit_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 		if (transmit_sock == -1)
 		{
 			vTaskDelay(1000 / portTICK_RATE_MS);
@@ -268,14 +266,24 @@ static bool Message_Available()
 	return rval;
 }
 
+static int loops = 0;
+
 static bool Check_Needs_Promotion()
 {
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	rval = (Get_Message_Count(&outgoing_UDP_message_queue)
+	rval = (outgoing_UDP_message_queue.count
 			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
 	taskEXIT_CRITICAL();
+
+//	if (++loops > LOOPS_BEFORE_PRINT || outgoing_UDP_message_queue.count)
+//	{
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("udp tx count:%d\r\n", outgoing_UDP_message_queue.count);
+//		taskEXIT_CRITICAL();
+//	}
 
 	promoted = rval;
 

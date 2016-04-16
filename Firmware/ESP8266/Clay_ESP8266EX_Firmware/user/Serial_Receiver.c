@@ -20,12 +20,13 @@
 
 #include "UDP_Transmitter.h"
 #include "Serial_Receiver.h"
+
+#include "../include/System_Monitor.h"
 #include "Serial_Transmitter.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
 #include "Message.h"
 #include "Ring_Buffer.h"
-#include "Priority_Manager.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define RING_BUFFER_PROMOTION_THRESHOLD		30
@@ -82,10 +83,11 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 
 	xTaskHandle serial_rx_handle;
 
-	xTaskCreate(Serial_Receiver_Task, "uartrx1", 128, NULL,
-			Get_Task_Priority(TASK_TYPE_SERIAL_RX), serial_rx_handle);
+	xTaskCreate(Serial_Receiver_Task, "uartrx1", configMINIMAL_STACK_SIZE, NULL,
+			Get_Task_Priority(TASK_TYPE_SERIAL_RX), &serial_rx_handle);
 
-	Register_Task(TASK_TYPE_SERIAL_RX, serial_rx_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_SERIAL_RX, serial_rx_handle,
+			Check_Needs_Promotion);
 
 	return rval;
 }
@@ -94,8 +96,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 {
 	for (;;)
 	{
-		Priority_Check(TASK_TYPE_SERIAL_RX);
-
 		switch (State)
 		{
 		case Disable:
@@ -151,7 +151,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			{
 				taskENTER_CRITICAL();
 				Ring_Buffer_Get(serial_rx_buffer + bytes_received);
-//				taskEXIT_CRITICAL(); //moved from below
+				taskEXIT_CRITICAL();
 
 				if (bytes_received == 0
 						&& serial_rx_buffer[0] == message_start[0])
@@ -164,9 +164,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					serial_rx_buffer[bytes_received] = '\0';
 					State = Parsing;
 				}
-
-				//Moved this above.
-				taskEXIT_CRITICAL();
 			}
 			else if ((system_get_time() - state_time) > 1000000) //system_get_time returns us
 			{
@@ -181,9 +178,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			taskENTER_CRITICAL();
 			printf("\r\nsrx parse\r\n");
 			taskEXIT_CRITICAL();
-			portENTER_CRITICAL();
-			UART_WaitTxFifoEmpty(UART0);
-			portEXIT_CRITICAL();
+
+//			UART_WaitTxFifoEmpty(UART0);
 
 			DEBUG_Print_High_Water();
 #endif
@@ -196,11 +192,25 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			temp_source_address = strtok(NULL, message_field_delimiter);
 			temp_dest_address = strtok(NULL, message_field_delimiter);
 			temp_content = strtok(NULL, message_end);
+
+			if (strlen(temp_content) > CLAY_MESSAGE_LENGTH_MAX_BYTES)
+			{
+				temp_content = NULL;
+			}
 			taskEXIT_CRITICAL();
+			taskYIELD();
 
 			if (temp_content != NULL && temp_type != NULL
 					&& temp_source_address != NULL && temp_dest_address != NULL)
 			{
+//				taskENTER_CRITICAL();
+//				printf("srx msg: %s,%s,%s,%s,%d\r\n", temp_type,
+//						temp_source_address, temp_dest_address, temp_content,
+//						strlen(temp_content));
+//				taskEXIT_CRITICAL();
+//				taskYIELD();
+
+				//TODO: mas yields
 				taskENTER_CRITICAL();
 				received_message_type = Get_Message_Type_From_Str(temp_type);
 				taskEXIT_CRITICAL();
@@ -211,6 +221,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 						temp_source_address, temp_dest_address, temp_content);
 				taskEXIT_CRITICAL();
 
+				taskYIELD();
+
 				switch (received_message_type)
 				{
 #if ENABLE_UDP_SENDER
@@ -220,7 +232,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					break;
 				}
 #endif
-#if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED
+#if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED_TX
 				case MESSAGE_TYPE_TCP:
 				{
 //					taskENTER_CRITICAL();
@@ -229,9 +241,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 //							temp_msg.source);
 //					taskEXIT_CRITICAL();
 
-//					portENTER_CRITICAL();
 //					UART_WaitTxFifoEmpty(UART0);
-//					portEXIT_CRITICAL();
 					selected_message_queue = &outgoing_TCP_message_queue;
 					break;
 				}
@@ -254,6 +264,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					taskENTER_CRITICAL();
 					Queue_Message(selected_message_queue, &temp_msg);
 					taskEXIT_CRITICAL();
+
+//					DEBUG_Print("nq'd");
 				}
 
 			}
@@ -273,10 +285,21 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 	}
 }
 
+static int loops = 0;
+
 ////Local implementations /////////////////////////////////////////
 static bool Check_Needs_Promotion()
 {
 //	return false;
-	return Ring_Buffer_NofElements() > RING_BUFFER_PROMOTION_THRESHOLD
-			&& State == Idle;
+	int elts = Ring_Buffer_NofElements();
+
+//	if (++loops > LOOPS_BEFORE_PRINT || elts > RING_BUFFER_PROMOTION_THRESHOLD)
+//	{
+//		loops = 0;
+//		taskENTER_CRITICAL();
+//		printf("srx count:%d\r\n", elts);
+//		taskEXIT_CRITICAL();
+//	}
+
+	return elts > RING_BUFFER_PROMOTION_THRESHOLD && State == Idle;
 }

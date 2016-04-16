@@ -42,6 +42,7 @@ void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
 void ICACHE_RODATA_ATTR GPIO_Init();
 void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt);
 void Master_Interrupt_Handler(void * arg);
+void Run_Queue_Test();
 
 /******************************************************************************
  * FunctionName : user_init
@@ -59,6 +60,7 @@ void ICACHE_RODATA_ATTR user_init(void)
 	printf("SDK version:%s\n", system_get_sdk_version());
 	/* need to set opmode before you set config */
 	wifi_set_opmode(STATIONAP_MODE);
+
 	uart_init_new();
 
 #if 0
@@ -79,19 +81,21 @@ void ICACHE_RODATA_ATTR user_init(void)
 		wifi_station_set_config(config);
 		free(config);
 	}
-
 //added to allow 3+ TCP connections per ESP RTOS SDK API Reference 1.3.0 Chapter 1, page 2
 	TCP_WND = 2 * TCP_MSS;
 
-	//uncomment to generate an interrupt when we connect to the AP.
-	//	xTaskCreate(Signal_Power_On_Complete, "power_on_signal", 256, NULL, 2, NULL);
+#if 0
+	xTaskCreate(Run_Queue_Test, "power_on_signal", 256, NULL, 2, NULL);
+#endif
 
-	//Set up our event handler from above. this starts the tasks that talk over WiFi.
+#if 1
+	//set up our callback handler. this will start the networking tasks on connect.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
+
+	Start_System_Monitor();
 
 	//these state machines should be started immediately so that we
 	//		can process instructions from the micro.
-
 #if ENABLE_SERIAL_RX
 	Serial_Receiver_Init();
 #endif
@@ -103,6 +107,10 @@ void ICACHE_RODATA_ATTR user_init(void)
 #if ENABLE_COMMAND_PARSER
 	Command_Parser_Init();
 #endif
+#endif
+
+	//TODO: wait for uC to respond to this. Probably means another task. "start device wifi" Don't even connect until we get the message.
+	Send_Startup_Message();
 }
 
 void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
@@ -193,7 +201,7 @@ void wifi_handle_event_cb(System_Event_t *evt)
 		TCP_Receiver_Init();
 #endif
 
-#if ENABLE_TCP_COMBINED
+#if ENABLE_TCP_COMBINED_TX || ENABLE_TCP_COMBINED_RX
 		TCP_Combined_Init();
 #endif
 
@@ -223,21 +231,102 @@ void wifi_handle_event_cb(System_Event_t *evt)
 	}
 }
 
-//TODO: still need to be able to set the SSID and PW.
-//void Signal_Power_On_Complete()
-//{
-//	UART_SetPrintPort(UART1);
-//	//wait for wifi to connect, then
-//	while (wifi_station_get_connect_status() != STATION_GOT_IP)
-//	{
-//		vTaskDelay(500 / portTICK_RATE_MS);
-//	}
-//
-//	gpio16_output_set(0);
-//	vTaskDelay(500 / portTICK_RATE_MS);
-//	gpio16_output_set(1);
-//
-//	UART_SetPrintPort(UART0);
-//
-//	vTaskDelete(NULL);
-//}
+#if 0
+static Message temp_message;
+static Message dequeued_message;
+
+static int i;
+static int current_max;
+static int message_counter;
+
+static bool dequeue_ok;
+
+static char type_str[] = "tcp";
+static char dest_addr[] = "192.168.1.3:1002";
+static char source_addr[] = "192.168.1.21:1002";
+static char message_content_template[] =
+"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d";
+static char message_content[256];
+
+void Run_Queue_Test()
+{
+	message_counter = 0;
+	current_max = 1;
+
+	taskENTER_CRITICAL();
+	Initialize_Message_Queue(&incoming_message_queue);
+	taskEXIT_CRITICAL();
+
+	for (;;)
+	{
+		for (i = 0;
+				(i
+						< ((current_max == MAXIMUM_MESSAGE_COUNT) ?
+								current_max * 20 : current_max)); ++i)
+		{
+			taskENTER_CRITICAL();
+			sprintf(message_content, message_content_template,
+					++message_counter);
+			taskEXIT_CRITICAL();
+
+			taskYIELD();
+
+			taskENTER_CRITICAL();
+			Initialize_Message(&temp_message, type_str, source_addr, dest_addr,
+					message_content);
+			taskEXIT_CRITICAL();
+
+			taskYIELD();
+
+			taskENTER_CRITICAL();
+			printf("nq:%s,%s,%s,%s\r\n", temp_message.type, temp_message.source,
+					temp_message.destination, temp_message.content);
+			Queue_Message(&incoming_message_queue, &temp_message);
+//			UART_WaitTxFifoEmpty(UART0);
+			taskEXIT_CRITICAL();
+			taskYIELD();
+		}
+
+		taskENTER_CRITICAL();
+		printf("nq'd %d. queue size: %d\r\n", current_max,
+				incoming_message_queue.count);
+		taskEXIT_CRITICAL();
+		taskYIELD();
+
+		for (i = 0;
+				(i
+						< ((current_max == MAXIMUM_MESSAGE_COUNT) ?
+								current_max * 20 : current_max)); ++i)
+		{
+			taskENTER_CRITICAL();
+			dequeue_ok = Dequeue_Message(&incoming_message_queue,
+					&dequeued_message);
+			taskEXIT_CRITICAL();
+			if (dequeue_ok)
+			{
+				taskENTER_CRITICAL();
+				printf("dq:%s,%s,%s,%s\r\n", dequeued_message.type,
+						dequeued_message.source, dequeued_message.destination,
+						dequeued_message.content);
+//				UART_WaitTxFifoEmpty(UART0);
+				taskEXIT_CRITICAL();
+
+				taskYIELD();
+			}
+			else
+			{
+				DEBUG_Print("no data");
+			}
+
+			taskYIELD();
+		}
+
+		taskENTER_CRITICAL();
+		printf("dq'd %d\r\n", current_max);
+		taskEXIT_CRITICAL();
+		taskYIELD();
+
+		current_max = ((current_max + 1) % (MAXIMUM_MESSAGE_COUNT + 1));
+	}
+}
+#endif

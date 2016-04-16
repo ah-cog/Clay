@@ -20,14 +20,14 @@
 #define ENABLE_TCP_RECEIVER		0
 
 #define ENABLE_UDP_SENDER		1
-#define ENABLE_UDP_RECEIVER		0
-#define ENABLE_TCP_COMBINED 	1
+#define ENABLE_UDP_RECEIVER		1
+#define ENABLE_TCP_COMBINED_RX 	1
+#define ENABLE_TCP_COMBINED_TX 	1
 #define ENABLE_SERIAL_RX 		1
 #define ENABLE_SERIAL_TX 		1
 #define ENABLE_COMMAND_PARSER 	1
 
 #define ENABLE_DEBUG_PRINT      1
-
 
 ///Buffer size information below:
 //           struct sockaddr_in {
@@ -89,14 +89,13 @@
 #define CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH 	     16
 
 #define TCP_RECEIVE_CONNECTION_TIMEOUT_ms			 20
-#define TCP_RECEIVE_PORT							 1002
+#define TCP_RECEIVE_PORT							 3000
 #define TCP_MAX_CONNECTIONS    						 5
 #define TCP_RECEIVE_TASK_BUFFER_SIZE 				 256
-#define CLAY_ADDR_STRING_BUF_LENGTH 				 64
+#define CLAY_ADDR_STRING_BUF_LENGTH 				 25   //xxx.xxx.xxx.xxx:xxxxx
 
 #define TCP_TRANSMIT_CONNECT_TIMEOUT_ms				 20
 #define TCP_TX_BUFFER_SIZE_BYTES					 256
-#define TCP_TRANSMIT_PORT					         1001
 
 //TODO: define SSID/PW here.
 //TODO: timeouts on serial comms?
@@ -111,7 +110,7 @@ typedef enum
 	MESSAGE_TYPE_UDP,
 	MESSAGE_TYPE_TCP,
 	MESSAGE_TYPE_COMMAND,
-	MESSAGE_TYPE_INFO,
+	MESSAGE_TYPE_STATUS,
 	MESSAGE_TYPE_MAX
 } Message_Type;
 

@@ -246,10 +246,11 @@ void Application(void) {
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
       /* if */while (Has_Messages(&incomingWiFiMessageQueue)) {
          message = Dequeue_Message(&incomingWiFiMessageQueue);
+
 //         Queue_Message (&incomingMessageQueue, message);
 
 //         message = Dequeue_Message (&incomingMessageQueue);
-         status = Process_Incoming_Message(message);
+	status = Process_Incoming_Message(message);
       }
 
 //      // Process the next incoming message on the system queue

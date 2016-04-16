@@ -9,7 +9,7 @@
 typedef int bool;
 enum
 {
-false, true};
+	false, true};
 #endif
 
 #ifndef NULL
@@ -20,14 +20,14 @@ false, true};
  * Message Queue
  */
 
-#define MAXIMUM_MESSAGE_COUNT 20
+#define MAXIMUM_MESSAGE_COUNT 5
 
 typedef struct Message_Queue
 {
-Message messages[MAXIMUM_MESSAGE_COUNT];
-int front;
-int back;
-int count;
+	Message messages[MAXIMUM_MESSAGE_COUNT];
+	volatile int front;
+	volatile int back;
+	volatile int count;
 } Message_Queue;
 
 extern Message_Queue incoming_message_queue;
@@ -39,8 +39,6 @@ extern bool Initialize_Message_Queue(Message_Queue *message_queue);
 extern Message* Get_Next_Message(Message_Queue *message_queue);
 extern int Queue_Message(Message_Queue *message_queue, Message *message);
 extern Message* Peek_Message(Message_Queue *message_queue);
-extern Message* Dequeue_Message(Message_Queue *message_queue);
+extern bool Dequeue_Message(Message_Queue *message_queue, Message * destination);
 extern bool Has_Messages(Message_Queue *message_queue);
-extern int Get_Message_Count(Message_Queue * message_queue);
-
 #endif

@@ -23,5 +23,5 @@ extern bool Get_Wifi_Status_Command(char * args);
 extern bool Get_Subnet_Command(char * args);
 extern bool Get_Gateway_Command(char * args);
 extern bool Get_IP_Command(char * args);
-
+extern void Send_Startup_Message();
 #endif /* INCLUDE_COMMANDPARSER_H_ */

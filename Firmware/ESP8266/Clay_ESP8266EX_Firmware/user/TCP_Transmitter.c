@@ -116,7 +116,9 @@ void ICACHE_RODATA_ATTR TCP_Transmitter_State_Step()
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			m = Dequeue_Message(&outgoing_TCP_message_queue);
+#if ENABLE_TCP_SENDER
+			Dequeue_Message(&outgoing_TCP_message_queue);
+#endif
 
 			Initialize_Message(&message_temp,
 					message_type_strings[MESSAGE_TYPE_TCP], m->source,

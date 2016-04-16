@@ -74,7 +74,7 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    State = Idle;
 
    Initialize_Message_Queue(&incomingWiFiMessageQueue);
-  Initialize_Message_Queue(&outgoingWiFiMessageQueue);
+   Initialize_Message_Queue(&outgoingWiFiMessageQueue);
 
    WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
@@ -83,14 +83,14 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 //   char testMsg[64] = { '\0' };
 //   sprintf(testMsg, "SETAP %s,%s", ssid, password);
 
-   Wait(2000); // was 5000
+   Wait(2000);     // was 5000
 
 //   Message * message = Create_Message(testMsg);
 //   Set_Message_Type(message, "command");
 //   Set_Message_Destination(message, addrStr);
 //   Wifi_Send(message);
 
-   WiFi_Request_Connect (ssid, password);
+   WiFi_Request_Connect(ssid, password);
 
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
