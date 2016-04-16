@@ -250,7 +250,7 @@ void Application(void) {
 //         Queue_Message (&incomingMessageQueue, message);
 
 //         message = Dequeue_Message (&incomingMessageQueue);
-
+	status = Process_Incoming_Message(message);
       }
 
 //      // Process the next incoming message on the system queue
