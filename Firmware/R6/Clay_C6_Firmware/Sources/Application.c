@@ -48,7 +48,7 @@ void Initialize() {
 
    // Initialize Clay
 
-   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+//   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
 //   Button_Register_Press_Response(Send_Mesh_Test_Message);
 //   Button_Register_Release_Response(Send_Mesh_Test_Message);
 
@@ -246,17 +246,6 @@ void Application(void) {
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
       /* if */while (Has_Messages(&incomingWiFiMessageQueue)) {
          message = Dequeue_Message(&incomingWiFiMessageQueue);
-
-         if (strcmp(message->type, "status")) {
-
-            char * temp = message->source;
-            message->source = message->destination;
-            message->destination = temp;
-
-            Wifi_Send(message);
-         } else {
-            status = Process_Incoming_Message(message);
-         }
 
 //         Queue_Message (&incomingMessageQueue, message);
 
