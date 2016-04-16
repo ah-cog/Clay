@@ -202,16 +202,35 @@ void Send_Test_TCP_Message() {
 
 void Application(void) {
    Message *message = NULL;
+   int i;
 
-   /*
-    // Get the IP address
-    // TODO: Implement this in WiFi_Request_Get_Internet_Address() according to the interface specification.
-    message = Create_Message ("GET_IP");
-    Set_Message_Type (message, "CMD");
-    Set_Message_Destination (message, "\x12");
-    Wifi_Send (message);
-    message = NULL;
-    */
+//	Message *signalMessage;
+//	signalMessage = Create_Message("start event 89d87141-01f7-4812-a358-3892cf2f5a70");
+//	Set_Message_Type(signalMessage, "tcp");
+//	Set_Message_Source(signalMessage, "192.168.1.6:1002");
+//	Set_Message_Destination(signalMessage, "192.168.1.3:1002");
+//	Queue_Message(&incomingWiFiMessageQueue, signalMessage);
+//
+//	signalMessage = Create_Message("set event 89d87141-01f7-4812-a358-3892cf2f5a70 action bdb49750-9ead-466e-96a0-3aa88e7d246c");
+//	Set_Message_Type(signalMessage, "tcp");
+//	Set_Message_Source(signalMessage, "192.168.1.6:1002");
+//	Set_Message_Destination(signalMessage, "192.168.1.3:1002");
+//	Queue_Message(&incomingWiFiMessageQueue, signalMessage);
+//
+//	signalMessage = Create_Message("set event 89d87141-01f7-4812-a358-3892cf2f5a70 state \"TITL TOTH TITL TOTH TITL TOTH TITL TOTH TITL TOTH TITL TOTH\"");
+//	Set_Message_Type(signalMessage, "tcp");
+//	Set_Message_Source(signalMessage, "192.168.1.6:1002");
+//	Set_Message_Destination(signalMessage, "192.168.1.3:1002");
+//	Queue_Message(&incomingWiFiMessageQueue, signalMessage);
+
+   Enable_Channels ();
+//   Initialize_Channels();
+
+   for (i = 0; i < 12; i++) {
+	   // Set_Channel_Value(i, 1);
+	   Channel_Set_Data (i, 1);
+   }
+
 
    for (;;) {
 
