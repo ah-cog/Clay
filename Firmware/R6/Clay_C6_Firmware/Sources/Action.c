@@ -380,6 +380,7 @@ static int8_t Perform_Signal_Action (char *state) {
 	int i;
 
 	// e.g., "TITL TOTL TITL TOTL TITL TOTL TITL TOTL TITL TOTL TITL TOTL"
+	// e.g., "F--- TI-L F--- F--- F--- TO-L F--- F--- F--- TO-- F--- F---"
 
 	// Update the channels
 	// TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
@@ -409,18 +410,18 @@ static int8_t Perform_Signal_Action (char *state) {
 
 		// Mode. Set channel mode. Is it a toggle (discrete switch), waveform (continuous analog signal), or pulse (e.g., PWM).
 		if (token[2] == 'T') {
-			updated_channel_profile[i].mode = CHANNEL_MODE_TOGGLE; // TODO: Rename this to MODE_TOGGLE
+			updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE; // TODO: Rename this to MODE_TOGGLE
 		} else if (token[2] == 'W') {
-			updated_channel_profile[i].mode = CHANNEL_MODE_WAVEFORM;
+			updated_channel_profile[i].type = CHANNEL_TYPE_WAVEFORM;
 		} else if (token[2] == 'P') {
-			updated_channel_profile[i].mode = CHANNEL_MODE_PULSE;
+			updated_channel_profile[i].type = CHANNEL_TYPE_PULSE;
 		} else if (token[2] == '-') {
 			// NOTE: Don't change!
 		}
 
 		// Value. Set channel value. This depends on the direction and mode of the channel.
 		if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
-			if (updated_channel_profile[i].mode == CHANNEL_MODE_TOGGLE) {
+			if (updated_channel_profile[i].type == CHANNEL_TYPE_TOGGLE) {
 				// Assign the channel's value based on the received data.
 				if (token[3] == 'H') {
 					updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_ON;
@@ -429,10 +430,10 @@ static int8_t Perform_Signal_Action (char *state) {
 				} else {
 					// ERROR: Error. An unrecognized toggle value was specified.
 				}
-			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_WAVEFORM) {
+			} else if (updated_channel_profile[i].type == CHANNEL_TYPE_WAVEFORM) {
 				// TODO: Assign the value differently, depending on the specified channel direction and mode.
 				// TODO: Assign this based on the received data.
-			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_PULSE) {
+			} else if (updated_channel_profile[i].type == CHANNEL_TYPE_PULSE) {
 				// TODO: Assign the value differently, depending on the specified channel direction and mode.
 				// TODO: Assign this based on the received data.
 			} else {
@@ -440,13 +441,13 @@ static int8_t Perform_Signal_Action (char *state) {
 			}
 		} else if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
 			// NOTE: The channel direction is input, so its value is set by the pin's voltage state.
-			if (updated_channel_profile[i].mode == CHANNEL_MODE_TOGGLE) {
+			if (updated_channel_profile[i].type == CHANNEL_TYPE_TOGGLE) {
 				// Assign the channel value based on the physical pin state.
 				updated_channel_profile[i].value = Get_Channel_Value (updated_channel_profile[i].number);
-			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_WAVEFORM) {
+			} else if (updated_channel_profile[i].type == CHANNEL_TYPE_WAVEFORM) {
 				// TODO: Assign the value differently, depending on the specified channel direction and mode.
 				// TODO: Assign this based on the received data.
-			} else if (updated_channel_profile[i].mode == CHANNEL_MODE_PULSE) {
+			} else if (updated_channel_profile[i].type == CHANNEL_TYPE_PULSE) {
 				// TODO: Assign the value differently, depending on the specified channel direction and mode.
 				// TODO: Assign this based on the received data.
 			} else {
