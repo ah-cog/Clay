@@ -71,8 +71,6 @@ extern "C"
 {
 #endif 
 
-extern volatile bool ButtonPressed;
-
 /*
  ** ===================================================================
  **     Event       :  TI1_OnInterrupt (module Events)

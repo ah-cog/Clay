@@ -599,6 +599,8 @@ Module "ADC1"      (component ADC_LDD)
                 then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
                 is not necessary and needn't to be generated.    This method can be called only once. Before the second call of 
                 Init() the Deinit() must be called first.
+   - ADC1_Deinit -Deinitializes the device. Switches off the device, frees the device data structure memory, interrupts vectors,
+                etc.
    - ADC1_StartSingleMeasurement -This method starts one measurement of the selected group of samples and exits immediately. 
                 This is ADC SW trigger method. The group of samples for measurement is specified by preceding call to 
                 <SelectSampleGroup()> or <CreateSampleGroup> method.     DMA disabled: The <OnMeasurementComplete() > event is 

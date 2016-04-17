@@ -15,8 +15,12 @@
 
 void Wifi_Test() {
 
+   char * ssid = "hefnet";
+   char * password = "h3fn3r_is_better_than_me";
+
+   Channel_Enable_All();
    Button_Enable();
-   Enable_WiFi();
+   Enable_WiFi(ssid, password);
 
    Button_Register_Press_Response(Wifi_Set_Programming_Mode);
    Button_Register_Hold_Response(1000, Wifi_Set_Operating_Mode);
@@ -26,13 +30,10 @@ void Wifi_Test() {
    uint32_t lastMessageSendTime = 0;
    uint32_t messageSendPeriod = 250;
 
-   bool echo = FALSE;
+   bool echo = TRUE;
    bool repeat_send = FALSE;
    bool request_connect = FALSE;
    bool get_ip = FALSE;
-
-   char * ssid = "hefnet";
-   char * password = "h3fn3r_is_better_than_me";
 
    char type_str[] = "tcp";
    char dest_addr[] = "192.168.1.3:1002";
