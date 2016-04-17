@@ -83,6 +83,11 @@ static int receive_head;
 static int receive_tail;
 static int receive_size;
 
+static uint32 last_tcp_activity_time;
+static uint32 tcp_connection_timeout_us = 1500000;
+
+static bool listening;
+
 ////Local Prototypes///////////////////////////////////////////////
 static int32 Open_Listen_Connection(char * local_addr_string,
 		struct sockaddr_in * local_addr);
@@ -101,8 +106,9 @@ static int32 Receive(int32 source_socket, char * destination,
 static bool Check_Needs_Promotion();
 static uint8_t * memchr2(uint8_t * ptr, uint8_t ch, size_t size);
 static void Connect_Task(void * PvParams);
-static void TCP_Disconnect();
+static void Data_Disconnect();
 static void Listen_Disconnect();
+static bool TCP_Timeout_Check();
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Combined_Init()
@@ -145,9 +151,6 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 
 void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 {
-	DEBUG_Print(
-			"deinit---------------------------------------------------------------------------------");
-
 	connected = false;
 
 	lwip_close(data_sock);
@@ -181,15 +184,10 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 
 #if ENABLE_TCP_COMBINED_RX
 		//open listener
-		while ((listen_sock = Open_Listen_Connection(local_address_string,
-				&local_address)) < 0)
+		while (!listening
+				&& (listen_sock = Open_Listen_Connection(local_address_string,
+						&local_address)) < 0)
 		{
-			if (++tcpLoops > 30)
-			{
-				tcpLoops = 0;
-				DEBUG_Print("opening listen");
-			}
-
 			taskYIELD();
 		}
 #endif
@@ -209,18 +207,17 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 			connected = data_sock > -1;
 #endif
 
+//			if(connected)
+//			{
+//				DEBUG_Print("accepted incoming connection.");
+//			}
+
 #if ENABLE_TCP_COMBINED_TX
 			if (!connected)
 			{
 				connected = Initiate_Connection_For_Outgoing_Message();
 			}
 #endif
-
-			if (connected)
-			{
-				Listen_Disconnect();
-//				DEBUG_Print("connected, now yield, then go to sending.");
-			}
 
 			taskYIELD();
 		}
@@ -249,6 +246,8 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 #if ENABLE_TCP_COMBINED_RX
 			connected &= Receive_And_Enqueue(data_sock);
 #endif
+
+			connected &= TCP_Timeout_Check();
 
 			taskYIELD();
 		}
@@ -298,8 +297,6 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 
 	if (listen_socket > -1)
 	{
-//		DEBUG_Print("sock open ok");
-
 		/* Bind to the local port */
 		bind_result = lwip_bind(listen_socket, (struct sockaddr *) local_addr,
 				sizeof(*local_addr));
@@ -308,16 +305,16 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 
 		if (bind_result != 0)
 		{
+			int32 error = 0;
+			uint32 optionLength = sizeof(error);
+			int getReturn = lwip_getsockopt(listen_socket, SOL_SOCKET,
+			SO_ERROR, &error, &optionLength);
+
 			lwip_close(listen_socket);
 			listen_socket = -1;
-
-//			DEBUG_Print("bind fail");
-
 		}
 		else
 		{
-//			DEBUG_Print("bind ok");
-
 			int millis = LISTEN_TIMEOUT_ms;
 			lwip_setsockopt(listen_socket, SOL_SOCKET, SO_RCVTIMEO, &millis,
 					sizeof(millis));
@@ -337,12 +334,12 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 			int getReturn = lwip_getsockopt(listen_socket, SOL_SOCKET,
 			SO_ERROR, &error, &optionLength);
 
-//			taskENTER_CRITICAL();
-//			printf("listen fail:%d", error);
-//			taskEXIT_CRITICAL();
-
 			lwip_close(listen_socket);
 			listen_socket = -1;
+		}
+		else
+		{
+			listening = true;
 		}
 	}
 
@@ -374,6 +371,8 @@ static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
 		int millis = TCP_RECEIVE_CONNECTION_TIMEOUT_ms;
 		lwip_setsockopt(accepted_sock, SOL_SOCKET, SO_RCVTIMEO, &millis,
 				sizeof(millis));
+
+		last_tcp_activity_time = system_get_time();
 
 		taskYIELD();
 
@@ -452,6 +451,8 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 			socklen_t sockaddr_size = sizeof(local_address);
 			getsockname(data_sock, (struct sockaddr* )&local_address,
 					&sockaddr_size);
+
+			last_tcp_activity_time = system_get_time();
 
 			taskYIELD();
 
@@ -650,7 +651,7 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 			case ECONNRESET:
 			{
 				//we disconnected. return false.
-				TCP_Disconnect();
+				Data_Disconnect();
 				break;
 			}
 			case EAGAIN:
@@ -665,6 +666,10 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 				break;
 			}
 			}
+		}
+		else
+		{
+			last_tcp_activity_time = system_get_time();
 		}
 	}
 	else
@@ -800,6 +805,11 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 	if (received_count > 0 || (receive_size > 0 && received_count > -1))
 	{
+		if (received_count > 0)
+		{
+			last_tcp_activity_time = system_get_time();
+		}
+
 		receive_tail = (receive_tail + received_count) % RECEIVE_DATA_SIZE;
 		receive_size += received_count;
 
@@ -1024,7 +1034,7 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 	{
 //		DEBUG_Print("rx closed");
 
-		TCP_Disconnect();
+		Data_Disconnect();
 
 		rval = false;
 	}
@@ -1159,24 +1169,30 @@ static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
 	return rval;
 }
 
-static void ICACHE_RODATA_ATTR TCP_Disconnect()
+static void ICACHE_RODATA_ATTR Data_Disconnect()
 {
+//	DEBUG_Print("disconnect");
+
 	taskENTER_CRITICAL();
 	Initialize_Message_Queue(&outgoing_TCP_message_queue);
 	taskEXIT_CRITICAL();
 
-	lwip_close(data_sock);
-	data_sock = -1;
-
-	Listen_Disconnect();
+	if (data_sock > -1)
+	{
+		shutdown(data_sock, 2);
+		lwip_close(data_sock);
+		data_sock = -1;
+	}
 }
 
 static void ICACHE_RODATA_ATTR Listen_Disconnect()
 {
-	if (listen_sock >= 0)
+	if (listening || listen_sock > -1)
 	{
+		shutdown(listen_sock, 2);
 		lwip_close(listen_sock);
 		listen_sock = -1;
+		listening = false;
 	}
 }
 
@@ -1242,3 +1258,17 @@ uint8_t ICACHE_RODATA_ATTR *memchr2(uint8_t *ptr, uint8_t ch, size_t size)
 
 	return NULL;
 }
+
+static bool TCP_Timeout_Check()
+{
+	bool rval = true;
+
+	if (system_get_time() - last_tcp_activity_time > tcp_connection_timeout_us)
+	{
+		Data_Disconnect();
+		rval = false;
+	}
+
+	return rval;
+}
+
