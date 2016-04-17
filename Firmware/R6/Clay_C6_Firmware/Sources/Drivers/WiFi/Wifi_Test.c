@@ -15,7 +15,6 @@
 
 void Wifi_Test() {
 
-   Enable_Channels();
    Button_Enable();
    Enable_WiFi();
 

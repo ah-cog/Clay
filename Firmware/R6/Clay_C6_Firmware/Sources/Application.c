@@ -99,7 +99,7 @@ void Initialize() {
 
    // Channels.
 
-   if ((status = Enable_Channels()) != TRUE) {
+   if ((status = Channel_Enable_All()) != TRUE) {
       // Failure
    }
 
@@ -222,14 +222,6 @@ void Application(void) {
 //	Set_Message_Source(signalMessage, "192.168.1.6:1002");
 //	Set_Message_Destination(signalMessage, "192.168.1.3:1002");
 //	Queue_Message(&incomingWiFiMessageQueue, signalMessage);
-
-   Enable_Channels ();
-//   Initialize_Channels();
-
-   for (i = 0; i < 12; i++) {
-	   // Set_Channel_Value(i, 1);
-	   Channel_Set_Data (i, 1);
-   }
 
 
    for (;;) {
