@@ -443,7 +443,7 @@ static int8_t Perform_Signal_Action (char *state) {
 			// NOTE: The channel direction is input, so its value is set by the pin's voltage state.
 			if (updated_channel_profile[i].type == CHANNEL_TYPE_TOGGLE) {
 				// Assign the channel value based on the physical pin state.
-				updated_channel_profile[i].value = Get_Channel_Value (updated_channel_profile[i].number);
+				updated_channel_profile[i].value = Channel_Get_Data(updated_channel_profile[i].number);
 			} else if (updated_channel_profile[i].type == CHANNEL_TYPE_WAVEFORM) {
 				// TODO: Assign the value differently, depending on the specified channel direction and mode.
 				// TODO: Assign this based on the received data.
