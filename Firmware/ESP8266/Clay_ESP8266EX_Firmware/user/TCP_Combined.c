@@ -207,6 +207,11 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 			connected = data_sock > -1;
 #endif
 
+//			if(connected)
+//			{
+//				DEBUG_Print("accepted incoming connection.");
+//			}
+
 #if ENABLE_TCP_COMBINED_TX
 			if (!connected)
 			{
@@ -1166,6 +1171,8 @@ static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
 
 static void ICACHE_RODATA_ATTR Data_Disconnect()
 {
+//	DEBUG_Print("disconnect");
+
 	taskENTER_CRITICAL();
 	Initialize_Message_Queue(&outgoing_TCP_message_queue);
 	taskEXIT_CRITICAL();
