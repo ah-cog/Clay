@@ -79,14 +79,14 @@ int8_t Initialize_Channels() {
 
    for (i = 0; i < CHANNEL_COUNT; i++) {
       // Initialize update channel profile
-      updated_channel_profile[i].number = (Channel_Number)i;
+      updated_channel_profile[i].number = (Channel_Number) i;
       updated_channel_profile[i].enabled = FALSE;
       updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
       updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 
       // Initialize channel profile
-      channel_profile[i].number = (Channel_Number)i;
+      channel_profile[i].number = (Channel_Number) i;
       channel_profile[i].enabled = FALSE;
       channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
@@ -105,7 +105,7 @@ int8_t Reset_Channels() {
    for (i = 0; i < CHANNEL_COUNT; i++) {
 
       // Initialize update channel profile
-      updated_channel_profile[i].number = (Channel_Number)i;
+      updated_channel_profile[i].number = (Channel_Number) i;
       updated_channel_profile[i].enabled = FALSE;
       updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
@@ -129,23 +129,7 @@ int8_t Apply_Channels() {
 
    for (i = 0; i < CHANNEL_COUNT; i++) {
 
-      // Check if the enable state changed. Apply the corresponding transform.
-      if (updated_channel_profile[i].enabled != channel_profile[i].enabled) {
-         if (channel_profile[i].enabled) {
-            Channel_Enable(channel_profile[i].number);
-         } else {
-            Channel_Disable(channel_profile[i].number);
-         }
-      }
-
-      // Update state.
-      channel_profile[i].enabled = updated_channel_profile[i].enabled;
-
-      if (channel_profile[i].enabled == TRUE) {
-
-         // Apply state.
-         Channel_Enable(channel_profile[i].number);
-
+      if (updated_channel_profile[i].enabled = TRUE) {
          // Check if the direction changed. Apply the corresponding transform if it changed.
          if (updated_channel_profile[i].direction != channel_profile[i].direction) {
 
@@ -169,14 +153,16 @@ int8_t Apply_Channels() {
          // Check if the value change. Apply the corresponding transform if it changed.
          if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT
              && updated_channel_profile[i].value != channel_profile[i].value) {
-
             // Apply value.
             if (channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
                Channel_Set_Data(channel_profile[i].number, updated_channel_profile[i].value);
             }
+         } else if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
+            channel_profile[i].value = updated_channel_profile[i].value;
          }
 
-      } else if (channel_profile[i].enabled == FALSE) {
+      } else if (updated_channel_profile[i].enabled == FALSE
+                 && updated_channel_profile[i].enabled != channel_profile[i].enabled) {
 
          // Apply direction and mode.
          Channel_Set_Direction(channel_profile[i].number, CHANNEL_DIRECTION_OUTPUT);
@@ -188,7 +174,15 @@ int8_t Apply_Channels() {
          Channel_Set_Data(channel_profile[i].number, CHANNEL_VALUE_TOGGLE_OFF);
 
       }
-//      }
+
+      // Check if the enable state changed. Apply the corresponding transform.
+      if (updated_channel_profile[i].enabled != channel_profile[i].enabled) {
+         if (updated_channel_profile[i].enabled) {
+            Channel_Enable(channel_profile[i].number);
+         } else {
+            Channel_Disable(channel_profile[i].number);
+         }
+      }
    }
 
    return TRUE;
@@ -252,6 +246,8 @@ bool Channel_Enable(Channel_Number number) {
 
 void Channel_Disable(Channel_Number number) {
 
+   channel_profile[number].enabled = FALSE;
+
    switch (channel_profile[number].type) {
 
       case CHANNEL_TYPE_TOGGLE: {
@@ -278,7 +274,7 @@ void Channel_Disable(Channel_Number number) {
       }
    }
 
-   channel_profile[number].enabled = FALSE;
+//   channel_profile[number].enabled = FALSE;
 }
 
 bool Channel_Set_Type(Channel_Number number, Channel_Type type) {
@@ -398,6 +394,18 @@ int32_t Channel_Get_Data(Channel_Number number) {
    }
 
    return result;
+}
+
+void Channel_Periodic_Call() {
+   for (int i = 0; i < CHANNEL_COUNT; ++i) {
+      if (channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
+         updated_channel_profile[i].value = Channel_Get_Data(i);
+      }
+   }
+
+   // <HACK>
+   Apply_Channels();
+   // </HACK>
 }
 
 ////Local implementations /////////////////////////////////////////

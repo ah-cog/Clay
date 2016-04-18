@@ -18,6 +18,7 @@ void Wifi_Test() {
    char * ssid = "hefnet";
    char * password = "h3fn3r_is_better_than_me";
 
+   Power_Manager_Enable();
    Channel_Enable_All();
    Button_Enable();
    Enable_WiFi(ssid, password);
@@ -47,7 +48,6 @@ void Wifi_Test() {
       // Step state machine
       Wifi_State_Step();
       Button_Periodic_Call();
-      Power_Manager_Enable();
 
 #if 1
       //echo received messages

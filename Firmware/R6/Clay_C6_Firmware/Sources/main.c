@@ -68,8 +68,7 @@
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
-#include "Wifi_Test.h"
-#include "Multibyte_Ring_Buffer.h"
+#include "IR_Range.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -82,8 +81,8 @@ int main(void)
    PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
-//   Multibyte_Ring_Buffer_Test();
 //   Wifi_Test();
+   IR_Range_Demo();
    Initialize();
 
    Application();
