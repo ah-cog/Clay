@@ -139,6 +139,8 @@ extern Channel_Direction Channel_Get_Direction(Channel_Number number);
 extern int32_t Channel_Set_Data(Channel_Number number, int32_t data);
 extern int32_t Channel_Get_Data(Channel_Number number);
 
+extern void Channel_Periodic_Call();
+
 int8_t Initialize_Channels();
 int8_t Reset_Channels();
 //int8_t Update_Channels ();

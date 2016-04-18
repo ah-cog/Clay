@@ -49,6 +49,7 @@
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Project_Settings\Startup_Code\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\</Path>
+      <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Button\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Buzzer\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Clock\</Path>
@@ -106,6 +107,7 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Application.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\Bootloader.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\program_flash.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\IR_Range.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Button\Button.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Buzzer\Buzzer.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Clock\Clock.c</PathName>
@@ -193,6 +195,7 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Application.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\Bootloader.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\program_flash.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\IR_Range.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Button\Button.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Buzzer\Buzzer.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Clock\Clock.h</PathName>
