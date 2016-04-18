@@ -281,6 +281,7 @@ Module "ESP8266_Serial" (component Serial_LDD)
                 event). This method finishes immediately after calling it - it doesn't wait the end of data reception. Use 
                 event <OnBlockReceived> to check the end of data reception or method GetReceivedDataNum to check the state of 
                 receiving.
+   - ESP8266_Serial_GetReceivedDataNum -Returns the number of received characters in the receive buffer.
 
 Module "WIFI_GPIO0" (component BitIO_LDD)
    - WIFI_GPIO0_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 
@@ -599,6 +600,8 @@ Module "ADC1"      (component ADC_LDD)
                 then the device is also enabled(see the description of the Enable() method). In this case the Enable() method 
                 is not necessary and needn't to be generated.    This method can be called only once. Before the second call of 
                 Init() the Deinit() must be called first.
+   - ADC1_Deinit -Deinitializes the device. Switches off the device, frees the device data structure memory, interrupts vectors,
+                etc.
    - ADC1_StartSingleMeasurement -This method starts one measurement of the selected group of samples and exits immediately. 
                 This is ADC SW trigger method. The group of samples for measurement is specified by preceding call to 
                 <SelectSampleGroup()> or <CreateSampleGroup> method.     DMA disabled: The <OnMeasurementComplete() > event is 

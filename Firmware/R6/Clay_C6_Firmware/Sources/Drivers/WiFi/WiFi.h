@@ -11,9 +11,10 @@
 
 #include "Message.h"
 #include "Message_Queue.h"
+#include "Multibyte_Ring_Buffer.h"
 
-extern Message *incomingWiFiMessageQueue;
-extern Message *outgoingWiFiMessageQueue;
+#define WIFI_SERIAL_OUT_BUFFER_LENGTH           1024
+#define WIFI_SERIAL_IN_BUFFER_LENGTH            1024
 
 typedef enum
 {
@@ -21,7 +22,6 @@ typedef enum
    Programming,
    Idle,
    Receive_Message,
-   Deserialize_Received_Message,
    Serialize_Transmission,
    Start_Transmission,
    Transmission_Sent
@@ -39,6 +39,11 @@ extern ESP8266_UART_Device deviceData;
 extern volatile bool WifiInterruptReceived;
 extern volatile bool WifiSetProgramMode;
 extern bool Wifi_Message_Available;
+
+extern Message *incomingWiFiMessageQueue;
+extern Message *outgoingWiFiMessageQueue;
+
+extern Multibyte_Ring_Buffer wifi_multibyte_ring;
 
 extern bool Enable_WiFi();
 ;

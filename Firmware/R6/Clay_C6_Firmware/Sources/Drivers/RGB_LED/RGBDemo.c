@@ -86,12 +86,12 @@ void RGBDemoLoop()
       {
          if (rDescending)
          {
-            if (LastState != ButtonPressed || (r -= rStep) <= rMin)
+            if (LastState != Button_Get_Status()|| (r -= rStep) <= rMin)
             {
                rDescending = FALSE;
                if (!gDescending && !bDescending)
                {
-                  LastState = ButtonPressed;
+                  LastState = Button_Get_Status();
                }
             }
          }
@@ -108,12 +108,12 @@ void RGBDemoLoop()
       {
          if (gDescending)
          {
-            if (LastState != ButtonPressed || (g -= gStep) <= gMin)
+            if (LastState != Button_Get_Status()|| (g -= gStep) <= gMin)
             {
                gDescending = FALSE;
                if (!rDescending && !bDescending)
                {
-                  LastState = ButtonPressed;
+                  LastState = Button_Get_Status();
                }
             }
          }
@@ -130,12 +130,12 @@ void RGBDemoLoop()
       {
          if (bDescending)
          {
-            if (LastState != ButtonPressed || (b -= bStep) <= bMin)
+            if (LastState != Button_Get_Status() || (b -= bStep) <= bMin)
             {
                bDescending = FALSE;
                if (!gDescending && !rDescending)
                {
-                  LastState = ButtonPressed;
+                  LastState = Button_Get_Status();
                }
             }
          }

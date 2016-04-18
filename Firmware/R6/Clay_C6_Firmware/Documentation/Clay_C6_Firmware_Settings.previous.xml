@@ -993,7 +993,7 @@ Autoselect
         <Parity v="None" />
         <Stop_bits v="1" />
         <Loop_mode v="Normal" />
-        <Baud_rate v="78440 baud" />
+        <Baud_rate v="230400 baud" />
         <Wakeup_condition v="Idle line wakeup" />
         <Stop_in_wait_mode v="no" />
         <Idle_line_mode v="Starts after start bit" />
@@ -1877,7 +1877,7 @@ Autoselect
     </Properties>
     <Methods>
       <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
+      <Deinit v="generate code" />
       <Enable v="don&amp;apos;t generate code" />
       <Disable v="don&amp;apos;t generate code" />
       <GetEventMask v="don&amp;apos;t generate code" />

@@ -15,12 +15,15 @@
 #include "Ring_Buffer.h"
 #include "Clock.h"
 #include "Message_Info.h"
+#include "Multibyte_Ring_Buffer.h"
+
+Multibyte_Ring_Buffer wifi_multibyte_ring;
 
 Message *incomingWiFiMessageQueue = NULL;
 Message *outgoingWiFiMessageQueue = NULL;
 
-#define OUT_BUFFER_LENGTH           1024
-#define IN_BUFFER_LENGTH            1024
+#define WIFI_SERIAL_OUT_BUFFER_LENGTH           1024
+#define WIFI_SERIAL_IN_BUFFER_LENGTH            1024
 #define INTERRUPT_RX_TIMEOUT_MS     3000
 #define INTERRUPT_TX_TIMEOUT_MS     1000
 
@@ -32,21 +35,22 @@ bool Wifi_Message_Available;
 static bool received_message_start;
 
 static uint32_t pendingTransmitByteCount;
-static uint32_t message_bytes_received;
+static uint32_t bytes_received;
 
-static uint8_t serial_tx_buffer[OUT_BUFFER_LENGTH] = "test message, yo\r\n";
-static uint8_t serial_rx_buffer[IN_BUFFER_LENGTH];
+static uint8_t serial_tx_buffer[WIFI_SERIAL_OUT_BUFFER_LENGTH] = "test message, yo\r\n";
+static uint8_t serial_rx_buffer[WIFI_SERIAL_IN_BUFFER_LENGTH];
 
 static Wifi_States State;
 static uint32_t interruptRxTime;
 static uint32_t txStartTime;
 static uint32_t programStartTime;
 
-static uint8_t Newline_Count;
 static uint8_t * temp_content;
 static uint8_t * temp_type;
 static uint8_t * temp_source_address;
 static uint8_t * temp_dest_address;
+static uint8_t * message_end_ptr;
+static uint8_t * message_start_ptr;
 
 static const char * message_start = "\f";
 static const char * message_field_delimiter = "\t";
@@ -67,7 +71,7 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    deviceData.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
 
    // Read any pending data to "clear the line"
-   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar)) != ERR_OK) {
+   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count) != ERR_OK) {
 
    }
 
@@ -79,18 +83,11 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
 
-//   char addrStr[] = "\x12";
-//   char testMsg[64] = { '\0' };
-//   sprintf(testMsg, "SETAP %s,%s", ssid, password);
-
-   Wait(2000);     // was 5000
-
-//   Message * message = Create_Message(testMsg);
-//   Set_Message_Type(message, "command");
-//   Set_Message_Destination(message, addrStr);
-//   Wifi_Send(message);
+   Wait(2000);
 
    WiFi_Request_Connect(ssid, password);
+
+   Multibyte_Ring_Buffer_Init(&wifi_multibyte_ring, WIFI_SERIAL_IN_BUFFER_LENGTH);
 
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
@@ -134,7 +131,10 @@ void Wifi_State_Step() {
 
       case Idle: {
          //waiting for an interrupt, no tranmission pending
-         if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
+
+         if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_end[0]) > 0) {
+            State = Receive_Message;
+         } else if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
 
             State = Serialize_Transmission;
 
@@ -142,22 +142,10 @@ void Wifi_State_Step() {
 
             State = Receive_Message;
 
-            serial_tx_buffer[0] = '\0';     //we must do this or we'll find the message start immediately.
             WifiInterruptReceived = FALSE;
             received_message_start = FALSE;
 
-            Newline_Count = 0;
-            message_bytes_received = 0;
-
             interruptRxTime = Millis();
-
-//            Ring_Buffer_Init();
-
-         } else {
-            //flush any garbage data from the buffer.
-            while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar))
-                   == ERR_OK)
-               ;
          }
 
          break;
@@ -165,60 +153,43 @@ void Wifi_State_Step() {
 
       case Receive_Message: {
 
-         // TODO: Look at this buffering. Reduce per-byte overhead.
-         //       When we send extra characters after the message end, we get the messages. Without it, we don't.
-         //         one theory for why this is happening is that the RX interrupt works on overflows, and there's
-         //         a newline left in the buffer.
-         if (Ring_Buffer_Has_Data()) {
+//         if (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring,
+//                                                               serial_rx_buffer,
+//                                                               WIFI_SERIAL_IN_BUFFER_LENGTH,
+//                                                               message_start[0])     //throw away data up until the start of a message
 
-            Ring_Buffer_Get(serial_rx_buffer + message_bytes_received);
+         while (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring, serial_rx_buffer,
+         WIFI_SERIAL_IN_BUFFER_LENGTH,
+                                                         message_end[0])) {
 
-            if (message_bytes_received == 0 && serial_rx_buffer[0] == message_start[0]) {
-               ++message_bytes_received;
-            } else if (message_bytes_received > 0) {
+            temp_type = strtok(serial_rx_buffer, message_start);     //throw out the start character
+            temp_type = strtok(NULL, message_field_delimiter);
+            temp_source_address = strtok(NULL, message_field_delimiter);
+            temp_dest_address = strtok(NULL, message_field_delimiter);
+            temp_content = strtok(NULL, message_end);
 
-               if ((message_bytes_received + Ring_Buffer_NofElements()) >= 30) {
-                  Wait(0);
+            if (temp_content != NULL && temp_type != NULL && temp_source_address != NULL && temp_dest_address != NULL) {
+
+               // Create message object
+               Message *message = Create_Message(temp_content);
+               Set_Message_Type(message, temp_type);
+               Set_Message_Source(message, temp_source_address);
+               Set_Message_Destination(message, temp_dest_address);
+
+               // Queue the message
+               Queue_Message(&incomingWiFiMessageQueue, message);
+
+               if (Multibyte_Ring_Buffer_Get_Count(&wifi_multibyte_ring) < 10) {
+                  interruptRxTime = Millis();
+                  State = Idle;
                }
-
-               if (serial_rx_buffer[message_bytes_received] == message_end[0]) {
-
-                  serial_rx_buffer[message_bytes_received + 1] = '\0';
-                  State = Deserialize_Received_Message;
-               } else {
-                  ++message_bytes_received;
-               }
-            } else {
-               Wait(0);
             }
-         } else if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
+         }
+
+         if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
             State = Idle;
          }
 
-         break;
-      }
-
-      case Deserialize_Received_Message: {
-
-         //TODO: We're getting an extra space at the end of message->source.
-         temp_type = strtok(serial_rx_buffer + 1, message_field_delimiter);     //offset for start character.
-         temp_source_address = strtok(NULL, message_field_delimiter);
-         temp_dest_address = strtok(NULL, message_field_delimiter);
-         temp_content = strtok(NULL, message_end);
-
-         if (temp_content != NULL && temp_type != NULL && temp_source_address != NULL && temp_dest_address != NULL) {
-
-            // Create message object
-            Message *message = Create_Message(temp_content);
-            Set_Message_Type(message, temp_type);
-            Set_Message_Source(message, temp_source_address);
-            Set_Message_Destination(message, temp_dest_address);
-
-            // Queue the message
-            Queue_Message(&incomingWiFiMessageQueue, message);
-         }
-
-         State = Idle;
          break;
       }
 
@@ -232,7 +203,7 @@ void Wifi_State_Step() {
 
          //HACK: Padding added because it seems to lessen the likelihood that we miss a \n
          snprintf(serial_tx_buffer,
-                  OUT_BUFFER_LENGTH,
+                  WIFI_SERIAL_OUT_BUFFER_LENGTH,
                   "  %s%s%s%s%s%s%s%s%s  ",
                   message_start,
                   message->type,
