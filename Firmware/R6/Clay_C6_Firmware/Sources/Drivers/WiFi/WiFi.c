@@ -35,7 +35,6 @@ bool Wifi_Message_Available;
 static bool received_message_start;
 
 static uint32_t pendingTransmitByteCount;
-static uint32_t message_bytes_received;
 static uint32_t bytes_received;
 
 static uint8_t serial_tx_buffer[WIFI_SERIAL_OUT_BUFFER_LENGTH] = "test message, yo\r\n";
@@ -72,7 +71,7 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    deviceData.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
 
    // Read any pending data to "clear the line"
-   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar)) != ERR_OK) {
+   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count) != ERR_OK) {
 
    }
 
@@ -133,7 +132,9 @@ void Wifi_State_Step() {
       case Idle: {
          //waiting for an interrupt, no tranmission pending
 
-         if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
+         if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_end[0]) > 0) {
+            State = Receive_Message;
+         } else if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
 
             State = Serialize_Transmission;
 
@@ -141,22 +142,10 @@ void Wifi_State_Step() {
 
             State = Receive_Message;
 
-            serial_tx_buffer[0] = '\0';     //we must do this or we'll find the message start immediately.
-
             WifiInterruptReceived = FALSE;
             received_message_start = FALSE;
 
-            message_bytes_received = 0;
-
             interruptRxTime = Millis();
-
-//            Ring_Buffer_Init();
-
-         } else {
-            //flush any garbage data from the buffer.
-            while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar))
-                   == ERR_OK)
-               ;
          }
 
          break;
@@ -164,16 +153,17 @@ void Wifi_State_Step() {
 
       case Receive_Message: {
 
-         if (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring,
-                                                      serial_rx_buffer,
-                                                      WIFI_SERIAL_IN_BUFFER_LENGTH,
-                                                      message_start[0])     //throw away data up until the start of a message
-             && Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring, serial_rx_buffer,
-             WIFI_SERIAL_IN_BUFFER_LENGTH,
+//         if (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring,
+//                                                               serial_rx_buffer,
+//                                                               WIFI_SERIAL_IN_BUFFER_LENGTH,
+//                                                               message_start[0])     //throw away data up until the start of a message
+
+         while (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring, serial_rx_buffer,
+         WIFI_SERIAL_IN_BUFFER_LENGTH,
                                                          message_end[0])) {
 
-            //TODO: We're getting an extra space at the end of message->source.
-            temp_type = strtok(serial_rx_buffer, message_field_delimiter);     //offset for start character.
+            temp_type = strtok(serial_rx_buffer, message_start);     //throw out the start character
+            temp_type = strtok(NULL, message_field_delimiter);
             temp_source_address = strtok(NULL, message_field_delimiter);
             temp_dest_address = strtok(NULL, message_field_delimiter);
             temp_content = strtok(NULL, message_end);
@@ -189,18 +179,17 @@ void Wifi_State_Step() {
                // Queue the message
                Queue_Message(&incomingWiFiMessageQueue, message);
 
-               message_bytes_received = 0;
-               if (!Ring_Buffer_Has_Data()) {
+               if (Multibyte_Ring_Buffer_Get_Count(&wifi_multibyte_ring) < 10) {
+                  interruptRxTime = Millis();
                   State = Idle;
-                  break;
                }
-
             }
-         } else if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
+         }
+
+         if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
             State = Idle;
          }
 
-         State = Idle;
          break;
       }
 

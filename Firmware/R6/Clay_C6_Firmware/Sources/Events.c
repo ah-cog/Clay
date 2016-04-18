@@ -38,10 +38,10 @@
 #include "MPU9250.h"
 #include "WiFi.h"
 
-#define WIFI_INTERRUPT_RX_BUF_SIZE              20
+#define WIFI_INTERRUPT_RX_BUF_SIZE              1
 
-static uint8_t wifi_serial_interrupt_rx_buf[WIFI_INTERRUPT_RX_BUF_SIZE];
-static uint32_t wifi_rx_interrupt_count = WIFI_INTERRUPT_RX_BUF_SIZE;
+uint8_t wifi_serial_interrupt_rx_buf[WIFI_INTERRUPT_RX_BUF_SIZE];
+uint32_t wifi_rx_interrupt_count = WIFI_INTERRUPT_RX_BUF_SIZE;
 
 #ifdef __cplusplus
 extern "C"
@@ -289,11 +289,13 @@ void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr) {
 /* ===================================================================*/
 void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr) {
 
+   //receive block sets up the count and the location to store the data
+   //   this interrupt is fired when the count has been met.
+
    ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
 
-   (void) ESP8266_Serial_ReceiveBlock(ptr->handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count);
-
    Multibyte_Ring_Buffer_Enqueue(&wifi_multibyte_ring, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count);
+   (void) ESP8266_Serial_ReceiveBlock(ptr->handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count);
 }
 
 /*

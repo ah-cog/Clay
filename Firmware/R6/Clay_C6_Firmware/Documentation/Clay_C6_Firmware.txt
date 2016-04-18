@@ -281,6 +281,7 @@ Module "ESP8266_Serial" (component Serial_LDD)
                 event). This method finishes immediately after calling it - it doesn't wait the end of data reception. Use 
                 event <OnBlockReceived> to check the end of data reception or method GetReceivedDataNum to check the state of 
                 receiving.
+   - ESP8266_Serial_GetReceivedDataNum -Returns the number of received characters in the receive buffer.
 
 Module "WIFI_GPIO0" (component BitIO_LDD)
    - WIFI_GPIO0_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 

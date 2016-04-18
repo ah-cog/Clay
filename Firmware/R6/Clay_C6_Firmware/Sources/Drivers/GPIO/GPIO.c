@@ -79,14 +79,14 @@ int8_t Initialize_Channels() {
 
    for (i = 0; i < CHANNEL_COUNT; i++) {
       // Initialize update channel profile
-      updated_channel_profile[i].number = (i + 1);
+      updated_channel_profile[i].number = (Channel_Number)i;
       updated_channel_profile[i].enabled = FALSE;
       updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
       updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
 
       // Initialize channel profile
-      channel_profile[i].number = (i + 1);
+      channel_profile[i].number = (Channel_Number)i;
       channel_profile[i].enabled = FALSE;
       channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
@@ -105,7 +105,7 @@ int8_t Reset_Channels() {
    for (i = 0; i < CHANNEL_COUNT; i++) {
 
       // Initialize update channel profile
-      updated_channel_profile[i].number = (i + 1);
+      updated_channel_profile[i].number = (Channel_Number)i;
       updated_channel_profile[i].enabled = FALSE;
       updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;

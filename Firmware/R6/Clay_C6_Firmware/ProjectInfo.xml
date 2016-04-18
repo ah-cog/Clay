@@ -139,6 +139,7 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Message_Queue.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Services\Interactive_Assembly.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Timeline.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\Multibyte_Ring_Buffer.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\PWM_Utils.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\Ring_Buffer.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\UUID.c</PathName>
@@ -268,6 +269,7 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Message_Queue.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Services\Interactive_Assembly.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Timeline.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\Multibyte_Ring_Buffer.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\PWM_Utils.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\Ring_Buffer.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\UUID.h</PathName>

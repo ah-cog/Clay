@@ -34,6 +34,8 @@ void Multibyte_Ring_Buffer_Init(Multibyte_Ring_Buffer * buffer, uint32_t size) {
    buffer->head = 0;
    buffer->tail = 0;
    buffer->count = 0;
+
+   memset(buffer->data, 0, buffer->max_count);
 }
 
 void Multibyte_Ring_Buffer_Free(Multibyte_Ring_Buffer * buffer) {
@@ -88,9 +90,11 @@ uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t *
 
       } else {
          memcpy(data, BUFFER_HEAD(buffer), bytes_after_head);
+         memset(BUFFER_HEAD(buffer), 0, bytes_after_head);
          buffer->head = (buffer->head + bytes_after_head) % buffer->max_count;
 
          memcpy(data + bytes_after_head, BUFFER_HEAD(buffer), rval - bytes_after_head);
+         memset(BUFFER_HEAD(buffer), 0, rval - bytes_after_head);
          buffer->head = (buffer->head + (rval - bytes_after_head)) % buffer->max_count;
       }
 
@@ -102,6 +106,19 @@ uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t *
 
 uint32_t Multibyte_Ring_Buffer_Dequeue_Until_Char(Multibyte_Ring_Buffer * buffer, uint8_t * data, uint32_t size, char end_char) {
 
+   uint32_t rval = Multibyte_Ring_Buffer_Get_Bytes_Before_Char(buffer, end_char);
+
+   if (rval > 0 && rval <= size) {
+      rval = Multibyte_Ring_Buffer_Dequeue(buffer, data, rval);
+   } else {
+      rval = 0;
+   }
+
+   return rval;
+}
+
+uint32_t Multibyte_Ring_Buffer_Get_Bytes_Before_Char(Multibyte_Ring_Buffer * buffer, char end_char) {
+
    uint32_t bytes_after_head = (buffer->head < buffer->tail ? buffer->count : buffer->max_count - buffer->head);
    uint32_t rval = 0;
 
@@ -112,16 +129,12 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Until_Char(Multibyte_Ring_Buffer * buffer
 
       if (char_location != NULL) {
          rval = bytes_after_head + (char_location - buffer->data) + 1;
+      } else {
+         rval = 0;
       }
 
-   } else {
+   } else if (char_location != NULL) {
       rval = char_location - BUFFER_HEAD(buffer) + 1;
-   }
-
-   if (char_location != NULL && rval <= size) {
-      rval = Multibyte_Ring_Buffer_Dequeue(buffer, data, rval);
-   } else {
-      rval = 0;
    }
 
    return rval;
