@@ -634,10 +634,13 @@ static int32_t Channel_Write_Pulse(Channel_Number number, int32_t data) {
    if (data > 0) {
 
       //set the frequency
-      PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, data);
+//      PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, data);     //to change frequency
+      PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, 40);     //50 hz for motor drive
 
       //this is how we set the ratio. The ratio is set by a 16-bit value. We scale a percentage up to the full scale of that 16 bit value. example: 50% = 32768
-      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(75));
+//      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(75));     //when changing frequency, fix the ratio
+//      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(data < 100 && data > -1 ? data : 0));
+      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, data < 65535 && data > -1 ? data : 0);
    } else {
 
       //if we set the ratio to 0, the output will never change states.
