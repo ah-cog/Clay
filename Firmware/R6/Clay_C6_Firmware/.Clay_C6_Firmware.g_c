@@ -76,10 +76,10 @@
       <GenExtraFileSrcDir39>Repositories\lib\doxygen\</GenExtraFileSrcDir39>
       <GenExtraFileSrcDir32>lib\Kinetis\startup\</GenExtraFileSrcDir32>
       <XtraAge29>1216578792</XtraAge29>
-      <XtraAge30>1217637713</XtraAge30>
+      <XtraAge30>1217706550</XtraAge30>
       <XtraAge32>1213771170</XtraAge32>
       <XtraAge33>1216578792</XtraAge33>
-      <XtraAge34>1217637712</XtraAge34>
+      <XtraAge34>1217725140</XtraAge34>
       <XtraAge35>1216511859</XtraAge35>
       <GenExtraFileType39>5</GenExtraFileType39>
       <GenExtraFileType38>4</GenExtraFileType38>
@@ -641,7 +641,7 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>120</ProjectModificationStamp>
+    <ProjectModificationStamp>121</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -716,7 +716,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1216574804</HeaderAge>
-    <CodeAge>1216787362</CodeAge>
+    <CodeAge>1217725141</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>10</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -2127,8 +2127,8 @@
     <GenComponentVersion>01.111</GenComponentVersion>
     <GenDriverVersion>01.08</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1216511860</HeaderAge>
-    <CodeAge>1216511860</CodeAge>
+    <HeaderAge>1217725141</HeaderAge>
+    <CodeAge>1217725141</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>25</GenNumMethods>
     <Init>true</Init>
@@ -2176,36 +2176,36 @@
       <MethodPos0>Init</MethodPos0>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>159</LineBeg>
-      <LineEnd>183</LineEnd>
+      <LineBeg>156</LineBeg>
+      <LineEnd>180</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos1>ReceiveBlock</MethodPos1>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>184</LineBeg>
-      <LineEnd>223</LineEnd>
+      <LineBeg>181</LineBeg>
+      <LineEnd>220</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos2>SendBlock</MethodPos2>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>224</LineBeg>
-      <LineEnd>257</LineEnd>
+      <LineBeg>221</LineBeg>
+      <LineEnd>254</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos3>GetBlockReceivedStatus</MethodPos3>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>258</LineBeg>
-      <LineEnd>279</LineEnd>
+      <LineBeg>255</LineBeg>
+      <LineEnd>276</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos4>Interrupt</MethodPos4>
       <MethodType>internal_method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>280</LineBeg>
-      <LineEnd>292</LineEnd>
+      <LineBeg>277</LineBeg>
+      <LineEnd>289</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos5>Init</MethodPos5>
@@ -2453,8 +2453,8 @@
     <GenComponentVersion>01.128</GenComponentVersion>
     <GenDriverVersion>01.08</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1216511859</HeaderAge>
-    <CodeAge>1216511859</CodeAge>
+    <HeaderAge>1217725141</HeaderAge>
+    <CodeAge>1217725141</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>27</GenNumMethods>
     <Init>true</Init>
@@ -2500,50 +2500,50 @@
       <MethodPos0>Init</MethodPos0>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>158</LineBeg>
-      <LineEnd>178</LineEnd>
+      <LineBeg>155</LineBeg>
+      <LineEnd>175</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos1>SetFieldValue</MethodPos1>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>179</LineBeg>
-      <LineEnd>204</LineEnd>
+      <LineBeg>176</LineBeg>
+      <LineEnd>201</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos2>GetFieldValue</MethodPos2>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>205</LineBeg>
-      <LineEnd>230</LineEnd>
+      <LineBeg>202</LineBeg>
+      <LineEnd>227</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos3>ClearFieldBits</MethodPos3>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>231</LineBeg>
-      <LineEnd>259</LineEnd>
+      <LineBeg>228</LineBeg>
+      <LineEnd>256</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos4>SetFieldBits</MethodPos4>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>260</LineBeg>
-      <LineEnd>288</LineEnd>
+      <LineBeg>257</LineBeg>
+      <LineEnd>285</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos5>ToggleFieldBits</MethodPos5>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>289</LineBeg>
-      <LineEnd>317</LineEnd>
+      <LineBeg>286</LineBeg>
+      <LineEnd>314</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos6>Interrupt</MethodPos6>
       <MethodType>internal_method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>318</LineBeg>
-      <LineEnd>330</LineEnd>
+      <LineBeg>315</LineBeg>
+      <LineEnd>327</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos7>Init</MethodPos7>

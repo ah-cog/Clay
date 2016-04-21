@@ -60,6 +60,7 @@
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\IMU\libmplmpu\core\eMPL-hal\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\IMU\libmplmpu\core\mllite\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\LEDs\</Path>
+      <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Power_Manager\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\</Path>
@@ -129,6 +130,7 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\IMU\libmplmpu\core\mllite\storage_manager.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\IMU\mpu_9250_driver.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\LEDs\LEDs.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_Simple.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Power_Manager\Power_Manager.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\RGBDemo.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\RGB_LED.c</PathName>
@@ -239,28 +241,29 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\IMU\libmplmpu\core\mpl\quaternion_supervisor.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\IMU\mpu_9250_driver.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\LEDs\LEDs.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\MeshTest.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\HardwareSPI.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\HardwareSerial.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHCRC.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHDatagram.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHGenericDriver.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHGenericSPI.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHHardwareSPI.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHMesh.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHNRFSPIDriver.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHReliableDatagram.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHRouter.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHSPIDriver.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHSoftwareSPI.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RHTcpProtocol.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RH_NRF24.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RH_Serial.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RH_TCP.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\RadioHead.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\RadioHead\wirish.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\mesh_stastistics.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\Mesh.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\MeshTest.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\HardwareSPI.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\HardwareSerial.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHCRC.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHDatagram.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHGenericDriver.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHGenericSPI.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHHardwareSPI.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHMesh.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHNRFSPIDriver.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHReliableDatagram.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHRouter.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHSPIDriver.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHSoftwareSPI.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RHTcpProtocol.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RH_NRF24.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RH_Serial.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RH_TCP.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\RadioHead.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\RadioHead\wirish.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\mesh_stastistics.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_Simple.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Power_Manager\Power_Manager.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\RGBDemo.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\RGB_LED.h</PathName>

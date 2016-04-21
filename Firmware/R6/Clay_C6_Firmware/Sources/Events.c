@@ -33,7 +33,8 @@
 #include "PDD_Includes.h"
 
 #include "Clock.h"
-#include "Mesh.h"
+//#include "Mesh.h"
+#include "Mesh_Simple.h"
 #include "I2C.h"
 #include "MPU9250.h"
 #include "WiFi.h"
@@ -163,9 +164,7 @@ void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr) {
 /* ===================================================================*/
 void MESH_IRQ_OnPortEvent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
-   if (MeshRxEnabled) {
-      Mesh_Irq_Handler();
-   }
+   Mesh_Interrupt_Handler();
 }
 
 /*

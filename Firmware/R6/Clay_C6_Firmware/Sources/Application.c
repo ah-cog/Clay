@@ -3,7 +3,7 @@
 
 //#include "meshTest.h"
 #include "Bootloader.h"
-#include "Mesh.h"
+#include "Mesh_Simple.h"
 #include "RGB_LED.h"
 #include "GPIO.h"
 #include "Clock.h"
@@ -89,11 +89,7 @@ void Initialize() {
    }
    Perform_Status_LED_Effect();
 
-   if ((status = Enable_Mesh()) != TRUE) {
-      // Failure
-   }
-
-   if ((status = Start_Mesh()) != TRUE) {
+   if ((status = Mesh_Enable()) != TRUE) {
       // Failure
    }
 
@@ -223,11 +219,10 @@ void Application(void) {
 //	Set_Message_Destination(signalMessage, "192.168.1.3:1002");
 //	Queue_Message(&incomingWiFiMessageQueue, signalMessage);
 
-
    for (;;) {
 
       // Call periodically to parse received messages and to enable the radio to receive
-      Mesh_Process_Commands();
+      Mesh_Periodic();
 
       // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 
@@ -242,7 +237,7 @@ void Application(void) {
 //         Queue_Message (&incomingMessageQueue, message);
 
 //         message = Dequeue_Message (&incomingMessageQueue);
-	status = Process_Incoming_Message(message);
+         status = Process_Incoming_Message(message);
       }
 
 //      // Process the next incoming message on the system queue
@@ -422,9 +417,9 @@ void Remote_Button_Pressed(uint8_t * data, uint8_t len) {
    }
 }
 
-void Send_Mesh_Test_Message() {
-
-   uint8_t data[2] = { MESH_CMD_BUTTON_PRESSED, Button_Get_Status() };
-//   Mesh_Tx(data, 2, 1);
-   Mesh_Tx(data, 2, 2);
-}
+//void Send_Mesh_Test_Message() {
+//
+//   uint8_t data[2] = { MESH_CMD_BUTTON_PRESSED, Button_Get_Status() };
+////   Mesh_Tx(data, 2, 1);
+//   Mesh_Tx(data, 2, 2);
+//}

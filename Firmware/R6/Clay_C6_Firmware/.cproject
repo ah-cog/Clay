@@ -187,9 +187,12 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.693725023.23422023" name="mesh_stastistics.h" rcbsApplicability="disable" resourcePath="Sources/Drivers/Mesh/Mesh_RH/mesh_stastistics.h" toolsToInvoke=""/>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.693725023.500078795" name="MeshTest.h" rcbsApplicability="disable" resourcePath="Sources/Drivers/Mesh/Mesh_RH/MeshTest.h" toolsToInvoke=""/>
+					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.693725023.895561271" name="Mesh.h" rcbsApplicability="disable" resourcePath="Sources/Drivers/Mesh/Mesh_RH/Mesh.h" toolsToInvoke=""/>
 					<fileInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.693725023..settings/com.freescale.processorexpert.core.prefs" name="com.freescale.processorexpert.core.prefs" rcbsApplicability="disable" resourcePath=".settings/com.freescale.processorexpert.core.prefs" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="Sources/Bootloader|Sources/Message/Message_Queue|Sources/Message/Message.c|Sources/Message/Message_Queue.c|.settings/com.freescale.processorexpert.core.prefs" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="Sources/Drivers/Mesh/Mesh_RH|Sources/Message/Message.c|.settings/com.freescale.processorexpert.core.prefs|Sources/Message/Message_Queue.c|Sources/Message/Message_Queue|Sources/Bootloader" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
