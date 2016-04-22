@@ -20,8 +20,8 @@
 ////Local Prototypes///////////////////////////////////////////////
 
 ////Global implementations ////////////////////////////////////////
-uint16_t Scale_Percent_Uint16(uint8_t percent) {
-   return (uint16_t) (((double) percent / 100.0) * 0xFFFF);
+uint16_t Scale_Percent_Uint16(double percent) {
+   return (uint16_t) ((percent / 100.0) * 0xFFFF);
 }
 
 ////Local implementations /////////////////////////////////////////

@@ -68,7 +68,6 @@
 #include "Init_Config.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
 #include "Application.h"
-#include "IR_Range.h"
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
@@ -82,7 +81,8 @@ int main(void)
    /*** End of Processor Expert internal initialization.                    ***/
 
 //   Wifi_Test();
-   IR_Range_Demo();
+//      IR_Range_Demo();
+//   Voltage_Controlled_Servo_Demo();
    Initialize();
 
    Application();
