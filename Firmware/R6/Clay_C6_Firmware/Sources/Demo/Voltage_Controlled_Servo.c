@@ -15,6 +15,8 @@
 #include "MPU9250.h"
 
 ////Macros ////////////////////////////////////////////////////////
+#define VOLTAGE_TO_POSITION_SLOPE       0.00343f
+#define VOLTAGE_TO_POSITION_OFFSET      86.8f
 
 ////Typedefs  /////////////////////////////////////////////////////
 
@@ -27,11 +29,18 @@ static uint32_t scale_factor = 100;
 static uint32_t color_set;
 static uint32_t wait_time = 50;
 
+static double channel_ratio = 90.0f;
+static double min_ratio = 86.8f;
+static double max_ratio = 98.0f;
+static double range;
+static double increment = 0.1f;
+
 ////Local Prototypes///////////////////////////////////////////////
 static void Toggle_Scale();
+static double Scale_Voltage_To_Position(uint32_t voltage_mv);
 
 ////Global implementations ////////////////////////////////////////
-extern void Servo_Demo() {
+void Voltage_Controlled_Servo_Demo() {
 
    Power_Manager_Enable();
    Button_Enable();
@@ -58,23 +67,14 @@ extern void Servo_Demo() {
 
    Channel_Enable_All();     //or the IMU won't initialize, which fucks with the RGB LEDs.
 
-
-
    for (int i = 0; i < RGB_MAX; ++i) {
       RGB_LED_SetState((RGB_LED) i, TRUE, LED_CURRENT_QUARTER);
    }
 
    Button_Register_Press_Response(Toggle_Scale);
 
-   scale_mv_up = TRUE;
-
-   double channel_ratio = 90.0f;
-
-   double min_ratio = 87.0f;
-   double max_ratio = 98.2f;
-
-   double range = max_ratio - min_ratio;
-   double increment = 0.1f;
+   range = max_ratio - min_ratio;
+   scale_mv_up = FALSE;
 
    for (;;) {
       Channel_Periodic_Call();
@@ -89,14 +89,10 @@ extern void Servo_Demo() {
          channel_ratio = min_ratio;
       }
 
-      updated_channel_profile[CHANNEL_4].pulse_duty = channel_ratio;
+      color_set = channel_profile[CHANNEL_6].waveform_value * (scale_mv_up ? scale_factor : 1);
+      updated_channel_profile[CHANNEL_4].pulse_duty = Scale_Voltage_To_Position(color_set);
 
       Apply_Channels();
-
-//      channel_ratio = (channel_ratio + 1) % 100;
-//      channel_ratio = (channel_ratio + 100) % 65535;
-
-      color_set = channel_profile[CHANNEL_6].waveform_value * (scale_mv_up ? scale_factor : 1);
 
       color.R = color_set & 0xFF;
       color.G = (color_set >> 8) & 0xFF;
@@ -116,4 +112,18 @@ extern void Servo_Demo() {
 ////Local implementations /////////////////////////////////////////
 static void Toggle_Scale() {
    wait_time = (wait_time + 25) % 1000;
+}
+
+static double Scale_Voltage_To_Position(uint32_t voltage_mv) {
+   //voltage range is 0 - 3265 mv
+   //(98.0 - 86.8) / 3265 = .00343 slope. 86.8 is offset.
+   //.00343x + 86.8 = y
+
+   //limiting to keep in range.
+   if(voltage_mv > 2820)
+   {
+      voltage_mv = 2820;
+   }
+
+   return voltage_mv * VOLTAGE_TO_POSITION_SLOPE + VOLTAGE_TO_POSITION_OFFSET;
 }

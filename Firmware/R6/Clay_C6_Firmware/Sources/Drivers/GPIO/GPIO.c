@@ -66,11 +66,13 @@ static int32_t Channel_Read_Toggle(Channel_Number number);
 static int32_t Channel_Read_Waveform(Channel_Number number);
 
 static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data);
-static int32_t Channel_Write_Pulse(Channel_Number number, int32_t data);
+static int32_t Channel_Write_Pulse(Channel_Number number, int32_t frequency, double ratio);
 
 static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direction direction);
 static int32_t Channel_Set_Direction_Waveform(Channel_Number number, Channel_Direction direction);
 static int32_t Channel_Set_Direction_Pulse(Channel_Number number, Channel_Direction direction);
+
+static void Channel_Apply_Output(Channel_Number number);
 
 ////Global implementations ////////////////////////////////////////
 // Profile
@@ -83,14 +85,21 @@ int8_t Initialize_Channels() {
       updated_channel_profile[i].enabled = FALSE;
       updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
-      updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+      updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+      updated_channel_profile[i].waveform_value = -1;
+      updated_channel_profile[i].pulse_frequency = 0;
+      updated_channel_profile[i].pulse_duty = 0;
 
       // Initialize channel profile
       channel_profile[i].number = (Channel_Number) i;
       channel_profile[i].enabled = FALSE;
       channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
-      channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+      channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+      channel_profile[i].waveform_value = -1;
+      channel_profile[i].pulse_frequency = 0;
+      channel_profile[i].pulse_duty = 0;
+
    }
 
 //   Initialize_Channel_Hardware_Profile();
@@ -109,7 +118,10 @@ int8_t Reset_Channels() {
       updated_channel_profile[i].enabled = FALSE;
       updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
-      updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+      updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+      updated_channel_profile[i].waveform_value = -1;
+      updated_channel_profile[i].pulse_frequency = 0;
+      updated_channel_profile[i].pulse_duty = 0;
 
 //      // Initialize channel profile
 //      channelProfile[i].number = (i + 1);
@@ -147,18 +159,38 @@ int8_t Apply_Channels() {
             channel_profile[i].type = updated_channel_profile[i].type;
 
             // Apply mode.
-            Channel_Set_Direction(channel_profile[i].number, channel_profile[i].direction);
+            Channel_Set_Type(channel_profile[i].number, channel_profile[i].type);
+         }
+
+         // Check if the enable state changed. Apply the corresponding transform.
+         if (updated_channel_profile[i].enabled != channel_profile[i].enabled) {
+            if (updated_channel_profile[i].enabled) {
+               Channel_Enable(channel_profile[i].number);
+            } else {
+               Channel_Disable(channel_profile[i].number);
+            }
          }
 
          // Check if the value change. Apply the corresponding transform if it changed.
          if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT
-             && updated_channel_profile[i].value != channel_profile[i].value) {
+             && (channel_profile[i].toggle_value != updated_channel_profile[i].toggle_value
+                 || channel_profile[i].waveform_value != updated_channel_profile[i].waveform_value
+                 || channel_profile[i].pulse_frequency != updated_channel_profile[i].pulse_frequency
+                 || channel_profile[i].pulse_duty != updated_channel_profile[i].pulse_duty)) {
+
+            channel_profile[i].toggle_value = updated_channel_profile[i].toggle_value;
+            channel_profile[i].waveform_value = updated_channel_profile[i].waveform_value;
+            channel_profile[i].pulse_frequency = updated_channel_profile[i].pulse_frequency;
+            channel_profile[i].pulse_duty = updated_channel_profile[i].pulse_duty;
+
             // Apply value.
-            if (channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
-               Channel_Set_Data(channel_profile[i].number, updated_channel_profile[i].value);
-            }
+            Channel_Apply_Output((Channel_Number) i);
+
          } else if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
-            channel_profile[i].value = updated_channel_profile[i].value;
+            channel_profile[i].toggle_value = updated_channel_profile[i].toggle_value;
+            channel_profile[i].waveform_value = updated_channel_profile[i].waveform_value;
+            channel_profile[i].pulse_frequency = updated_channel_profile[i].pulse_frequency;
+            channel_profile[i].pulse_duty = updated_channel_profile[i].pulse_duty;
          }
 
       } else if (updated_channel_profile[i].enabled == FALSE
@@ -173,15 +205,6 @@ int8_t Apply_Channels() {
          // Apply value.
          Channel_Set_Data(channel_profile[i].number, CHANNEL_VALUE_TOGGLE_OFF);
 
-      }
-
-      // Check if the enable state changed. Apply the corresponding transform.
-      if (updated_channel_profile[i].enabled != channel_profile[i].enabled) {
-         if (updated_channel_profile[i].enabled) {
-            Channel_Enable(channel_profile[i].number);
-         } else {
-            Channel_Disable(channel_profile[i].number);
-         }
       }
    }
 
@@ -283,7 +306,7 @@ bool Channel_Set_Type(Channel_Number number, Channel_Type type) {
 
    channel_profile[number].type = type;
 
-   //TODO: reinit as new type or disable -- we need to make sure the hardware is consistent with channel_profile
+//TODO: reinit as new type or disable -- we need to make sure the hardware is consistent with channel_profile
 
    return result;
 }
@@ -297,7 +320,7 @@ int32_t Channel_Set_Direction(Channel_Number number, Channel_Direction direction
 
    int32_t rval = -1;
 
-   // Update Hardware
+// Update Hardware
    switch (channel_profile[number].type) {
       case CHANNEL_TYPE_TOGGLE: {
          rval = Channel_Set_Direction_Toggle(number, direction);
@@ -338,6 +361,11 @@ int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
          // channel_profile[number].value = data;
          // result = Write_Digital(number, channel_profile[number]);
          result = Channel_Write_Toggle(number, data);
+
+         if (result != -1) {
+            channel_profile[number].toggle_value = data;
+         }
+
          break;
       }
 
@@ -347,7 +375,12 @@ int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
       }
 
       case CHANNEL_TYPE_PULSE: {
-         result = Channel_Write_Pulse(number, data);
+         result = Channel_Write_Pulse(number, data, channel_profile[number].pulse_duty);
+
+         if (result != -1) {
+            channel_profile[number].pulse_frequency = data;
+         }
+
          break;
       }
 
@@ -357,10 +390,6 @@ int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
       }
    }
 
-   if (result != -1) {
-      channel_profile[number].value = data;
-   }
-
    return result;
 }
 
@@ -368,7 +397,7 @@ int32_t Channel_Get_Data(Channel_Number number) {
 
    int32_t result = -1;
 
-   //TODO: return the output data when in output mode?
+//TODO: return the output data when in output mode?
 
    switch (channel_profile[number].type) {
 
@@ -397,15 +426,28 @@ int32_t Channel_Get_Data(Channel_Number number) {
 }
 
 void Channel_Periodic_Call() {
+
    for (int i = 0; i < CHANNEL_COUNT; ++i) {
       if (channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
-         updated_channel_profile[i].value = Channel_Get_Data(i);
+         switch (channel_profile[i].type) {
+            case CHANNEL_TYPE_WAVEFORM: {
+               updated_channel_profile[i].waveform_value = Channel_Get_Data((Channel_Number) i);
+               break;
+            }
+            case CHANNEL_TYPE_TOGGLE: {
+               updated_channel_profile[i].toggle_value = Channel_Get_Data((Channel_Number) i);
+               break;
+            }
+            default: {
+               break;
+            }
+         }
       }
    }
 
-   // <HACK>
+// <HACK>
    Apply_Channels();
-   // </HACK>
+// </HACK>
 }
 
 ////Local implementations /////////////////////////////////////////
@@ -456,9 +498,9 @@ static bool Channel_Enable_Toggle(Channel_Number number) {
 // i.e., Analog
 static bool Channel_Enable_Waveform(Channel_Number number) {
 
-   // <HACK>
+// <HACK>
    if (number != CHANNEL_6) return FALSE;
-   // </HACK>
+// </HACK>
 
    ADC1_data = ADC1_Init(NULL);
 
@@ -475,9 +517,9 @@ static bool Channel_Enable_Waveform(Channel_Number number) {
 // i.e., PWM
 static bool Channel_Enable_Pulse(Channel_Number number) {
 
-   // <HACK>
+// <HACK>
    if (number != CHANNEL_4) return FALSE;
-   // </HACK>
+// </HACK>
 
    LDD_TError err;
 
@@ -492,9 +534,9 @@ static bool Channel_Enable_Pulse(Channel_Number number) {
 // Hardware. General-purpose GPIO control.
 static int32_t Channel_Read_Toggle(Channel_Number number) {
 
-   // <HACK>
+// <HACK>
    if (number == CHANNEL_6 || number == CHANNEL_4) return -1;
-   // </HACK>
+// </HACK>
 
    int32_t result = -1;
 
@@ -540,24 +582,24 @@ static int32_t Channel_Read_Toggle(Channel_Number number) {
 static int32_t Channel_Read_Waveform(Channel_Number number) {
 
    if (number != CHANNEL_6) return -1;
-   //TODO: get adc1 or adc0 and sample group from channel_map. For now, we just have CHANNEL_6 to worry about.
+//TODO: get adc1 or adc0 and sample group from channel_map. For now, we just have CHANNEL_6 to worry about.
 
    int32_t result = -1;
 
-   //select sample group. This in preconfigured in processor expert. port 6 is in sample group 0
+//select sample group. This in preconfigured in processor expert. port 6 is in sample group 0
    ADC1_SelectSampleGroup(ADC1_data, 0);
 
-   //tell the ADC to start a measurement.
+//tell the ADC to start a measurement.
    ADC1_StartSingleMeasurement(ADC1_data);
 
-   //Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
+//Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
    while (!ADC1_GetMeasurementCompleteStatus(ADC1_data))
       ;
 
-   //get the value
+//get the value
    ADC1_GetMeasuredValues(ADC1_data, &result);
 
-   //apply voltage slope and offset. Because we're returning an int32, this return value is in millivolts.
+//apply voltage slope and offset. Because we're returning an int32, this return value is in millivolts.
    result = (((double) result * GPIO_ADC_SLOPE) + GPIO_ADC_OFFSET) * 1000;
 
    return result;
@@ -625,22 +667,19 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
 }
 
 // Hardware. General-purpose GPIO control.
-static int32_t Channel_Write_Pulse(Channel_Number number, int32_t data) {
+static int32_t Channel_Write_Pulse(Channel_Number number, int32_t frequency, double ratio) {
 
    if (number != CHANNEL_4) return -1;
 
    int32_t result = 0;
 
-   if (data > 0) {
+   if (frequency > 0 && ratio > 0) {
 
       //set the frequency
-//      PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, data);     //to change frequency
-      PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, 40);     //50 hz for motor drive
+      PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, frequency);     //50 hz for motor drive
 
       //this is how we set the ratio. The ratio is set by a 16-bit value. We scale a percentage up to the full scale of that 16 bit value. example: 50% = 32768
-//      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(75));     //when changing frequency, fix the ratio
-//      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(data < 100 && data > -1 ? data : 0));
-      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, data < 65535 && data > -1 ? data : 0);
+      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(ratio));     //when changing frequency, fix the ratio
    } else {
 
       //if we set the ratio to 0, the output will never change states.
@@ -710,7 +749,7 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
 
 static int32_t Channel_Set_Direction_Waveform(Channel_Number number, Channel_Direction direction) {
 
-   //HACK
+//HACK
    if (direction == CHANNEL_DIRECTION_INPUT) {
       return 0;
    } else {
@@ -720,7 +759,7 @@ static int32_t Channel_Set_Direction_Waveform(Channel_Number number, Channel_Dir
 
 static int32_t Channel_Set_Direction_Pulse(Channel_Number number, Channel_Direction direction) {
 
-   //HACK
+//HACK
    if (direction == CHANNEL_DIRECTION_OUTPUT) {
       return 0;
    } else {
@@ -730,8 +769,8 @@ static int32_t Channel_Set_Direction_Pulse(Channel_Number number, Channel_Direct
 
 static void Channel_Disable_Toggle(Channel_Number number) {
 
-   //TODO: this needs some more work when we get to the point where we're able to reconfig pins for different operations.
-   //      the code below would disable the ports, but the ports are currently shared between I/O pins.
+//TODO: this needs some more work when we get to the point where we're able to reconfig pins for different operations.
+//      the code below would disable the ports, but the ports are currently shared between I/O pins.
    return;
 
    if (number == CHANNEL_6 || number == CHANNEL_4) return;
@@ -788,6 +827,23 @@ static void Channel_Disable_Pulse(Channel_Number number) {
    if (number != CHANNEL_4) return;
    PWM_OUT_1_Deinit(PWM_OUT_1_data);
    PWM_OUT_1_data = NULL;
+}
+
+static void Channel_Apply_Output(Channel_Number number) {
+   switch (channel_profile[number].type) {
+      case CHANNEL_TYPE_PULSE: {
+         Channel_Write_Pulse(number, channel_profile[number].pulse_frequency, channel_profile[number].pulse_duty);
+         break;
+      }
+      case CHANNEL_TYPE_TOGGLE: {
+         Channel_Write_Toggle(number, channel_profile[number].toggle_value);
+         break;
+      }
+      default: {
+         break;
+      }
+   }
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

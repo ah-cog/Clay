@@ -110,7 +110,12 @@ typedef struct
       Channel_Direction direction;     // input or output
       Channel_Type type;     // (output) digital, pwm, (input) digital, analog, pwm
 
-      uint32_t value;     // The raw value of the channel.
+      //HACK
+      uint32_t toggle_value;
+      uint32_t waveform_value;
+      uint32_t pulse_frequency;
+      double pulse_duty;
+      //HACK
 
       MCU_GPIO_Profile hardware_map;
 

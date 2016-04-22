@@ -20,6 +20,6 @@
 
 ////Global Prototypes ////////////////////////////////////////
 //takes a uint8_t as a percent value 0-99
-extern uint16_t Scale_Percent_Uint16(uint8_t percent);
+extern uint16_t Scale_Percent_Uint16(double percent);
 
 #endif /* SOURCES_UTILITIES_PWM_UTILS_H_ */

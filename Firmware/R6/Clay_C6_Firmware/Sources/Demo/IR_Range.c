@@ -54,7 +54,7 @@ void IR_Range_Demo() {
       Channel_Periodic_Call();
       Button_Periodic_Call();
 
-      color_set = channel_profile[CHANNEL_6].value * (scale_mv_up ? scale_factor : 1);
+      color_set = channel_profile[CHANNEL_6].waveform_value * (scale_mv_up ? scale_factor : 1);
 
       color.R = color_set & 0xFF;
       color.G = (color_set >> 8) & 0xFF;

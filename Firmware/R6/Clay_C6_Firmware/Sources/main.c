@@ -82,8 +82,8 @@ int main(void)
    /*** End of Processor Expert internal initialization.                    ***/
 
 //   Wifi_Test();
-   //   IR_Range_Demo();
-   Servo_Demo();
+//      IR_Range_Demo();
+   Voltage_Controlled_Servo_Demo();
    Initialize();
 
    Application();
