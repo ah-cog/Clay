@@ -15,7 +15,7 @@
 #include "MPU9250.h"
 
 ////Macros ////////////////////////////////////////////////////////
-#define VOLTAGE_TO_POSITION_SLOPE       0.00343f
+#define VOLTAGE_TO_POSITION_SLOPE       0.0001709f
 #define VOLTAGE_TO_POSITION_OFFSET      86.8f
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -26,7 +26,7 @@
 static RGB_Color color;
 static bool scale_mv_up;
 static uint32_t scale_factor = 100;
-static uint32_t color_set;
+static uint32_t input_voltage;
 static uint32_t wait_time = 50;
 
 static double channel_ratio = 90.0f;
@@ -74,29 +74,24 @@ void Voltage_Controlled_Servo_Demo() {
    Button_Register_Press_Response(Toggle_Scale);
 
    range = max_ratio - min_ratio;
-   scale_mv_up = FALSE;
 
    for (;;) {
       Channel_Periodic_Call();
       Button_Periodic_Call();
 
-      range = max_ratio - min_ratio;
+      //this value is set in channel_periodic_call
+      input_voltage = channel_profile[CHANNEL_6].waveform_value;
 
-      //the steppers I have tried work at 59200-63850 (90.3% - 98.4%). Make sure you connect your ground well!
-      //
-      channel_ratio = channel_ratio + increment;
-      if (channel_ratio > max_ratio) {
-         channel_ratio = min_ratio;
-      }
+      //this value is an output, we need to call apply_channels to update the output.
+      updated_channel_profile[CHANNEL_4].pulse_duty = Scale_Voltage_To_Position(input_voltage);
 
-      color_set = channel_profile[CHANNEL_6].waveform_value * (scale_mv_up ? scale_factor : 1);
-      updated_channel_profile[CHANNEL_4].pulse_duty = Scale_Voltage_To_Position(color_set);
-
+      //set the output.
       Apply_Channels();
 
-      color.R = color_set & 0xFF;
-      color.G = (color_set >> 8) & 0xFF;
-      color.B = (color_set >> 16) & 0xFF;
+      //just LED output for fun.
+      color.R = input_voltage & 0xFF;
+      color.G = (input_voltage >> 8) & 0xFF;
+      color.B = (input_voltage >> 16) & 0xFF;
 
       for (int i = 0; i < RGB_MAX; ++i) {
          RGB_LED_SetColor((RGB_LED) i, &color);
@@ -115,14 +110,18 @@ static void Toggle_Scale() {
 }
 
 static double Scale_Voltage_To_Position(uint32_t voltage_mv) {
-   //voltage range is 0 - 3265 mv
-   //(98.0 - 86.8) / 3265 = .00343 slope. 86.8 is offset.
-   //.00343x + 86.8 = y
+
+   //ADC count range is 0 - 65535
+   //(98.0 - 86.8) / 65535 = .0001709 slope. 86.8 is offset.
+   //.0001709x + 86.8 = y
+
+   ///we clipped the voltage input range because the ratio we get out from
+   ///   any voltage greater than this value will drive the servo beyond its end stop.
+   int servo_max_voltage_before_end_stop = 56645;
 
    //limiting to keep in range.
-   if(voltage_mv > 2820)
-   {
-      voltage_mv = 2820;
+   if (voltage_mv > servo_max_voltage_before_end_stop) {
+      voltage_mv = servo_max_voltage_before_end_stop;
    }
 
    return voltage_mv * VOLTAGE_TO_POSITION_SLOPE + VOLTAGE_TO_POSITION_OFFSET;

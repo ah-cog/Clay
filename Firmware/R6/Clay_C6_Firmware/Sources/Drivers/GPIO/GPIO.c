@@ -11,9 +11,11 @@
 #include "ADC1.h"
 #include "PWM_OUT_1.h"
 
+//TODO: lose ADC calibration
+//      get channel hardware put into this code
+//      document channel hardware on notion
+
 ////Macros ////////////////////////////////////////////////////////
-#define GPIO_ADC_SLOPE          ((double)4.98344E-5F)
-#define GPIO_ADC_OFFSET         0.0F
 
 //these are here to preserve the indexing when ptb4 and 6 are assigned to PWM and ADC
 #ifndef GPIO_PTB_IO_4_MASK
@@ -582,25 +584,22 @@ static int32_t Channel_Read_Toggle(Channel_Number number) {
 static int32_t Channel_Read_Waveform(Channel_Number number) {
 
    if (number != CHANNEL_6) return -1;
-//TODO: get adc1 or adc0 and sample group from channel_map. For now, we just have CHANNEL_6 to worry about.
+   //TODO: get adc1 or adc0 and sample group from channel_map. For now, we just have CHANNEL_6 to worry about.
 
    int32_t result = -1;
 
-//select sample group. This in preconfigured in processor expert. port 6 is in sample group 0
+   //select sample group. This in preconfigured in processor expert. port 6 is in sample group 0
    ADC1_SelectSampleGroup(ADC1_data, 0);
 
-//tell the ADC to start a measurement.
+   //tell the ADC to start a measurement.
    ADC1_StartSingleMeasurement(ADC1_data);
 
-//Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
+   //Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
    while (!ADC1_GetMeasurementCompleteStatus(ADC1_data))
       ;
 
-//get the value
+   //get the value
    ADC1_GetMeasuredValues(ADC1_data, &result);
-
-//apply voltage slope and offset. Because we're returning an int32, this return value is in millivolts.
-   result = (((double) result * GPIO_ADC_SLOPE) + GPIO_ADC_OFFSET) * 1000;
 
    return result;
 }
