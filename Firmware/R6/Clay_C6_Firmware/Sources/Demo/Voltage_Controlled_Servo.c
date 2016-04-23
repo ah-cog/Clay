@@ -67,9 +67,7 @@ void Voltage_Controlled_Servo_Demo() {
 
    Channel_Enable_All();     //or the IMU won't initialize, which fucks with the RGB LEDs.
 
-   for (int i = 0; i < RGB_MAX; ++i) {
-      RGB_LED_SetState((RGB_LED) i, TRUE, LED_CURRENT_QUARTER);
-   }
+   Perform_Channel_Light_Effect(TRUE);
 
    Button_Register_Press_Response(Toggle_Scale);
 

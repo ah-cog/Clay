@@ -29,11 +29,11 @@ char buffer2[128] = { 0 };
 #define VBAT_ADC_OFFSET         3.20144E-2
 static double vBat;
 
-//   char * ssid = "hefnet";
-//   char * password = "h3fn3r_is_better_than_me";
+char * ssid = "hefnet";
+char * password = "h3fn3r_is_better_than_me";
 
-char * ssid = "Clay";
-char * password = "redgreenblue";
+//char * ssid = "Clay";
+//char * password = "redgreenblue";
 
 static uint16_t buzzerRatio = 6500;
 static uint16_t buzzerPeriod_us = 240;
@@ -93,19 +93,25 @@ void Initialize() {
    if ((status = LED_Enable()) != TRUE) {
       // Failure
    }
+
    Perform_Status_LED_Effect();
 
-//   if ((status = Enable_Mesh()) != TRUE) {
-//      // Failure
-//   }
-//
-//   if ((status = Start_Mesh()) != TRUE) {
-//      // Failure
-//   }
+   //TODO: troubleshoot MPU start with invensense drivers.
+   if ((status = Start_MPU9250()) != TRUE) {
+      // Failure
+   }
 
-   // Channels.
+   Initialize_Color_Palette();
 
-   if ((status = Channel_Enable_All()) != TRUE) {
+   if ((Initialize_Channel_Lights()) != TRUE) {
+      // Failure
+   }
+
+   if ((status = Start_Light_Behavior()) != TRUE) {
+      // Failure
+   }
+
+   if ((status = RGB_LED_Enable()) != TRUE) {
       // Failure
    }
 
@@ -113,31 +119,18 @@ void Initialize() {
       // Failure
    }
 
-   Initialize_Color_Palette();
+   //HACK -- need this to get the RGB, IMU, and GPIO to play nice.
+   Apply_Channels();
 
-   if ((status = RGB_LED_Enable()) != TRUE) {
-      // Failure
-   }
-
-   if (status == Buzzer_Enable() != TRUE) {
-      // Failure
-   }
-   // RGBDemoLoop();
-
-   if ((status = Start_Light_Behavior()) != TRUE) {
-      // Failure
-   }
-
-   //TODO: troubleshoot MPU start with invensense drivers.
-   if ((status = Start_MPU9250()) != TRUE) {
-      // Failure
-   }
-
-   if ((Initialize_Channel_Lights()) != TRUE) {
+   if ((status = Channel_Enable_All()) != TRUE) {
       // Failure
    }
 
    if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE) {
+      // Failure
+   }
+
+   if ((status == Buzzer_Enable()) != TRUE) {
       // Failure
    }
 
@@ -233,7 +226,6 @@ void Application(void) {
 //	Set_Message_Destination(signalMessage, "192.168.1.3:1002");
 //	Queue_Message(&incomingWiFiMessageQueue, signalMessage);
 
-
    for (;;) {
 
       // Call periodically to parse received messages and to enable the radio to receive
@@ -242,75 +234,72 @@ void Application(void) {
       // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 
       // Step state machine
-      Wifi_State_Step ();
+      Wifi_State_Step();
 
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
       if (Has_Messages(&incomingWiFiMessageQueue)) {
-         message = Dequeue_Message (&incomingWiFiMessageQueue);
+         message = Dequeue_Message(&incomingWiFiMessageQueue);
 
-         message_status = Process_Incoming_Message (message);
+         message_status = Process_Incoming_Message(message);
 
          // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
          if (message_status == TRUE) {
-        	 Delete_Message (message);
-         } else if (message_status == FALSE) { // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
-        	 // TODO: Process events on the timeline with the message, before dequeueing...
-        	 Queue_Message (&incomingMessageQueue, message);
+            Delete_Message(message);
+         } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
+            // TODO: Process events on the timeline with the message, before dequeueing...
+            Queue_Message(&incomingMessageQueue, message);
          }
       }
 
       // Process the next incoming message on the system queue
       if (lock_timeline == FALSE) {
-		  if (Has_Messages (&incomingMessageQueue)) {
-			 message = Peek_Message (&incomingMessageQueue);
-			 lock_timeline = TRUE;
-		  }
+         if (Has_Messages(&incomingMessageQueue)) {
+            message = Peek_Message(&incomingMessageQueue);
+            lock_timeline = TRUE;
+         }
       }
 
-
       // Perform action.
-		if ((*timeline).current_event != NULL) {
-		  if (Process_Event(((*timeline).current_event)) != NULL) {
+      if ((*timeline).current_event != NULL) {
+         if (Process_Event(((*timeline).current_event)) != NULL) {
 
-			 // NOTE: Action was performed successfully.
+            // NOTE: Action was performed successfully.
 
-			 // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
-		  }
+            // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
+         }
 
-		  // Go to the next action on the timeline
-		 if ((*((*timeline).current_event)).next != NULL) {
-			(*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
-		 } else {
+         // Go to the next action on the timeline
+         if ((*((*timeline).current_event)).next != NULL) {
+            (*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
+         } else {
 
+            // TODO: Remove message from the queue (if it was not a basic message)
+            if (lock_timeline == TRUE) {
+               if (Has_Messages(&incomingMessageQueue)) {
+                  Dequeue_Message(&incomingMessageQueue);
+                  Delete_Message(message);
+                  lock_timeline = FALSE;
+               }
+            }
 
-			 // TODO: Remove message from the queue (if it was not a basic message)
-			 if (lock_timeline == TRUE) {
-				 if (Has_Messages (&incomingMessageQueue)) {
-					 Dequeue_Message (&incomingMessageQueue);
-					 Delete_Message (message);
-					 lock_timeline = FALSE;
-				 }
-			 }
+            (*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
+         }
 
+      } else {
 
-			 (*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
-		 }
+         /*
+          // Reset the channel states...
+          Reset_Channels();
+          Apply_Channels();
 
-		} else {
+          // ...the channel light states...
+          Reset_Channel_Lights();
+          Apply_Channel_Lights();
 
-		  /*
-		   // Reset the channel states...
-		   Reset_Channels();
-		   Apply_Channels();
-
-		   // ...the channel light states...
-		   Reset_Channel_Lights();
-		   Apply_Channel_Lights();
-
-		   // ...and the device states.
-		   // TODO: Reset any other device states.
-		   */
-		}
+          // ...and the device states.
+          // TODO: Reset any other device states.
+          */
+      }
 
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
@@ -361,12 +350,13 @@ void Application(void) {
          message = Dequeue_Message(&outgoingMessageQueue);
 
          if (strncmp((*message).type, "device", strlen("device")) == 0) {
-        	 // Device
-        	 Queue_Message (&incomingMessageQueue, message);
-         } else if ((strncmp((*message).type, "udp", strlen("udp")) == 0) || (strncmp((*message).type, "tcp", strlen("tcp")) == 0)) {
-        	 // Wi-Fi (UDP or TCP). Propagate to Wi-Fi message queue (or other queue, if exists)
-             Queue_Message (&outgoingWiFiMessageQueue, message);
-          }
+            // Device
+            Queue_Message(&incomingMessageQueue, message);
+         } else if ((strncmp((*message).type, "udp", strlen("udp")) == 0)
+                    || (strncmp((*message).type, "tcp", strlen("tcp")) == 0)) {
+            // Wi-Fi (UDP or TCP). Propagate to Wi-Fi message queue (or other queue, if exists)
+            Queue_Message(&outgoingWiFiMessageQueue, message);
+         }
       }
 
       // TODO: Monitor_Orientation ();
@@ -374,7 +364,7 @@ void Application(void) {
       // TODO: Monitor_Action (); // TODO: In this function, Consider_Action (), Engage_Action (), Perform_Action ().
 
       // Check and perform "scheduled" periodic events
-      Monitor_Periodic_Events ();
+      Monitor_Periodic_Events();
    }
 }
 
