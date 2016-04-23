@@ -1,4 +1,5 @@
 #include "Message_Processor.h"
+#include "Trigger.h"
 #include "Action.h"
 #include "Event.h"
 #include "Timeline.h"
@@ -20,6 +21,7 @@ static int8_t Process_Start_Event (Message *message);
 static int8_t Process_Stop_Event (Message *message);
 static int8_t Process_Set_Event_Action (Message *message);
 static int8_t Process_Set_Event_State (Message *message);
+static int8_t Process_Set_Event_Trigger (Message *message);
 
 int8_t Process_Incoming_Message (Message *message) {
 
@@ -28,75 +30,28 @@ int8_t Process_Incoming_Message (Message *message) {
 	char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 	int token_count = 0;
 
-	char *message_content = NULL;
-
 	if (message == NULL) {
 		return FALSE;
 	}
 
-	message_content = (*message).content;
-
-	token_count = Get_Token_Count (message_content);
+	token_count = Get_Token_Count ((*message).content);
 
 	// Reset the buffer
 	memset (uuid_buffer2, '\0', DEFAULT_UUID_LENGTH);
 
+	// <HACK>
 	// TODO: Handle messages from ESP8266:
 	// TODO: - INFO,CONNECTED
 	// TODO: - INFO,192.168.1.1 (for example)
 	// TODO: - INFO,DISCONNECTED
-
 	if (strncmp((*message).type, "status", strlen ("status")) == 0) {
-
-		// <HACK>
-//		if (has_connection_to_wifi == FALSE) {
-//			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "connected")) {
-//				has_connection_to_wifi = TRUE;
-//
-//				Delete_Message (message);
-//				return TRUE;
-//			}
-//		}
-
-//		if (has_connection_to_wifi == TRUE && has_received_internet_address == FALSE) {
-//			if (strncmp((*message).content, "192.", strlen ("192.")) == 0) {
-//				has_received_internet_address = TRUE;
-//
-//				// Extract address
-//				// e.g., "192.168.43.6"
-//
-//				// Find the beginning of the fourth octet
-//				char *fourth_octet = (*message).content; // First start of first octet (start of string)...
-//				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the second...
-//				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the third...
-//				fourth_octet = strchr (fourth_octet, '.') + 1; // ...then the fourth.
-//
-//				// e.g., "192.168.43.255:4445"
-//
-//				// i.e., Copy "192.168.43." into broadcast_address
-//				strncpy (broadcast_address, (*message).content, (fourth_octet - (*message).content));
-//				strcat (broadcast_address, "255:4445");
-//
-//				has_generated_discovery_broadcast_address = TRUE;
-//			}
-//		}
-
-//		if (has_connection_to_wifi == TRUE && has_received_internet_address == TRUE && has_generated_discovery_broadcast_address == TRUE && has_enabled_broadcast == FALSE) {
-//			has_enabled_broadcast = TRUE;
-//
-//			Delete_Message (message);
-//			return TRUE;
-//		}
-		// </HACK>
-
-
 
 		if (has_connection_to_wifi == FALSE) {
 			if (Message_Content_Parameter_Equals (message, FIRST_PARAMETER, "wifi")) {
 				if (Message_Content_Parameter_Equals (message, SECOND_PARAMETER, "connected")) {
 					has_connection_to_wifi = TRUE;
 
-					Delete_Message (message);
+//					Delete_Message (message);
 					return TRUE;
 				}
 			}
@@ -133,10 +88,11 @@ int8_t Process_Incoming_Message (Message *message) {
 		if (has_connection_to_wifi == TRUE && has_received_internet_address == TRUE && has_generated_discovery_broadcast_address == TRUE && has_enabled_broadcast == FALSE) {
 			has_enabled_broadcast = TRUE;
 
-			Delete_Message (message);
+//			Delete_Message (message);
 			return TRUE;
 		}
 	}
+	// </HACK>
 
 
 
@@ -159,15 +115,22 @@ int8_t Process_Incoming_Message (Message *message) {
 				return Process_Set_Event_Action (message);
 			} else if (Message_Content_Parameter_Equals (message, FOURTH_PARAMETER, "state")) {
 				return Process_Set_Event_State (message);
+			} else if (Message_Content_Parameter_Equals (message, FOURTH_PARAMETER, "trigger")) {
+				return Process_Set_Event_Trigger (message);
 			}
 		}
 	} else {
-		Delete_Message (message);
+		// TODO: Don't delete the message until after executing the entire timeline of events.
+		// TODO: (cont'd) Do if any message trigger dependencies are present on events in the timeline.
+		// TODO: (cont'd) Can delete message if no triggers depend on it.
+		// TODO: (cont'd) Perform_Timeline for Timeline, without changing its state, for each message. Process all timeline messages until custom message is recognized, then run the timeline with each custom message, one by one, until all processed.
+		//Delete_Message (message);
+		return FALSE;
 	}
 
 	// TODO: Store message UUID for use in message acknowledgment protocol. If it has been received, then don't apply it again, just send the acknowledgment packet.
 
-	return NULL;
+//	return FALSE;
 }
 
 int8_t Process_Outgoing_Message (Message *message) {
@@ -216,7 +179,7 @@ static int8_t Process_Cache_Action (Message *message) {
 	Send_Acknowledgment (token, message_content);
 
 	// Delete the message
-	Delete_Message (message);
+//	Delete_Message (message);
 
 	// Check if the action is already in the cache. If nay, cache it!
 	// TODO: Get available memory and only create the action if there's enough memory. Otherwise, move something out of memory to make room for it (and stream the moved thing back in when it's needed).
@@ -253,7 +216,7 @@ static int8_t Process_Start_Event (Message *message) {
 		Send_Acknowledgment (token, message_content);
 
 		// Delete the message
-		Delete_Message (message);
+//		Delete_Message (message);
 
 		// Check if the action is already in the cache. If nay, cache it!
 		// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
@@ -325,7 +288,7 @@ static int8_t Process_Stop_Event (Message *message) {
 		Send_Acknowledgment (token, message_content);
 
 		// Delete the message
-		Delete_Message (message);
+//		Delete_Message (message);
 
 		// Check if the action is already in the cache. If nay, cache it!
 		// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
@@ -365,7 +328,7 @@ static int8_t Process_Set_Event_Action (Message *message) {
 	Send_Acknowledgment (token, message_content);
 
 	// Delete the message
-	Delete_Message (message);
+//	Delete_Message (message);
 
 	// Check if the action is already in the cache. If nay, cache it!
 	// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
@@ -414,7 +377,7 @@ static int8_t Process_Set_Event_State (Message *message) {
 	Send_Acknowledgment (token, message_content);
 
 	// Delete the message
-	Delete_Message (message);
+//	Delete_Message (message);
 
 	// Check if the action is already in the cache. If nay, cache it!
 	// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
@@ -425,6 +388,56 @@ static int8_t Process_Set_Event_State (Message *message) {
 	//	Action *action = Get_Cached_Action_By_UUID (uuid_buffer2);
 		if (event != NULL) {
 			Set_Event_State (event, uuid_buffer2);
+			result = TRUE;
+		} else {
+			// TODO: If action or nextAction are NULL, stream them in over the Internet.
+		}
+	} else {
+		// TODO: The action is not in the cache! Return response indicating this! Or request it from the cloud!
+		result = FALSE;
+	}
+
+	return result;
+}
+
+static int8_t Process_Set_Event_Trigger (Message *message) {
+
+	int8_t status = NULL;
+	int8_t result = NULL;
+
+	int token_count = 0;
+
+	char *message_content = (*message).content;
+	char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+
+	// i.e., "set event <event-uuid> trigger \"<message-content>\""
+	// TODO: "set event <event-uuid> trigger <trigger-uuid>"
+
+	// Extract parameters
+	status = Get_Token (message_content, uuid_buffer, 2); // Get UUID of event (parameter index 2)
+	status = Get_Token (message_content, uuid_buffer2, 4); // Get state of action (parameter index 4)
+
+	// Send message to sender to acknowledge receipt
+	Send_Acknowledgment (token, message_content);
+
+	// Delete the message
+//	Delete_Message (message);
+
+	// Check if the action is already in the cache. If nay, cache it!
+	// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
+	if (Has_Event_By_UUID (timeline, uuid_buffer) == TRUE) {
+
+		// Get the event with the UUID and assign the action with the UUID.
+		Event *event = Get_Event_By_UUID (timeline, uuid_buffer);
+		if (event != NULL) {
+
+			// start trigger
+			Trigger *trigger = Create_Trigger ();
+			Trigger_Set_Message (trigger, uuid_buffer2);
+
+			// set trigger
+			Set_Event_Trigger (event, trigger);
+
 			result = TRUE;
 		} else {
 			// TODO: If action or nextAction are NULL, stream them in over the Internet.

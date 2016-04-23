@@ -52,6 +52,18 @@ int16_t Queue_Message (Message **messageQueue, Message *message) {
 	return messageCount;
 }
 
+Message* Peek_Message (Message **messageQueue) {
+
+	Message *message = NULL;
+
+	// Reference the message at the front of the queue.
+	if ((*messageQueue) != NULL) {
+		message = (*messageQueue);
+	}
+
+	return message;
+}
+
 Message* Dequeue_Message (Message **messageQueue) {
 
 	Message *message = NULL;

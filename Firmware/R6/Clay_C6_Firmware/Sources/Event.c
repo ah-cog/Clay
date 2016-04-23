@@ -19,18 +19,21 @@ Event* Create_Event (char *uuid, Action *action, char *state) {
 	// TODO: (*actionConstruct).uuid = (char *) malloc (strlen (uuid));
 	// TODO: strcpy ((*actionConstruct).uuid, uuid); // Copy action construct content
 
-	// Allocate memory for the UUID for this action.
+	// UUID
 	(*event).uuid = (char *) malloc (strlen (uuid) + 1);
 	strncpy ((*event).uuid, uuid, strlen (uuid)); // Copy the action construct's UUID
 	(*event).uuid[strlen (uuid)] = NULL;
 
-	// Initialize repeat condition
+	// Trigger: Initialize trigger
+	(*event).trigger = NULL;
+
+	// Repetition: Initialize repetition type
 	(*event).repeat_period = 0;
 
-	// Assign the action construct to the specified action (or NULL).
+	// Action: Assign the action construct to the specified action (or NULL).
 	(*event).action = (Action *) action;
 
-	// Allocate memory for the content (i.e., the starting symbol to the grammar defining Clay's action).
+	// State. Allocate memory for the content (i.e., the starting symbol to the grammar defining Clay's action).
 	if (state != NULL) {
 		(*event).state = (char *) malloc (strlen (state) + 1);
 		strncpy ((*event).state, state, strlen (state)); // Copy action construct content
@@ -89,6 +92,12 @@ void Set_Event_State (Event *event, char *state) {
 	}
 }
 
+void Set_Event_Trigger (Event *event, Trigger *trigger) {
+	if (event != NULL) {
+		(*event).trigger = trigger;
+	}
+}
+
 /**
  * Performs the physical action for the specified action as it is defined
  * by the formal grammar that defines the capabilities of Clay.
@@ -97,36 +106,52 @@ void Set_Event_State (Event *event, char *state) {
  */
 int8_t Process_Event (Event *event) {
 
-	int8_t result = NULL;
+	int8_t result = FALSE;
+
+	uint8_t is_triggered = FALSE;
 
 	// Check if event's action or state are not yet assigned.
 	if ((*event).action == NULL || (*event).state == NULL) {
 		return TRUE;
 	}
 
-	// Record event start time.
-	if ((*event).start_time == 0) {
-		(*event).start_time = Millis ();
+	// Trigger. Check event trigger, and only call script if it is met.
+	if ((*event).trigger != NULL) {
+		// TODO: Check if condition was met. If so, perform action. If not, proceed to next action.
+		Message *msg = Peek_Message (&incomingMessageQueue);
+		if (msg != NULL) {
+			if (strncmp ((*msg).content, (*((*event).trigger)).message_content, strlen ((*((*event).trigger)).message_content)) == 0) {
+				is_triggered = TRUE;
+			}
+		}
+	} else {
+		is_triggered = TRUE;
 	}
 
-	// TODO: Queue the message rather than executing it immediately (unless specified)
-	// TODO: Parse the message rather than brute force like this.
-	// TODO: Decompose the action into atomic actions and perform them!
+	if (is_triggered == TRUE) {
 
-	// TODO: Check event condition, and only call script if it is met.
+		// Record event start time.
+		if ((*event).start_time == 0) {
+			(*event).start_time = Millis ();
+		}
 
-//	if (action_wait_time == 0) {
-//		pause_duration_integer = atoi (token);
-//		action_wait_time = pause_duration_integer;
-//	}
+		// TODO: Queue the message rather than executing it immediately (unless specified)
+		// TODO: Parse the message rather than brute force like this.
+		// TODO: Decompose the action into atomic actions and perform them!
 
-	// Check if the action's wait time has expired
-	if ((Millis () - (*event).start_time) >= (*event).repeat_period) {
-		(*event).start_time = 0;
-//		(*event).repeat_period = 0;
-		result = Perform_Action ((*event).action, (*event).state);
-	} else {
-		result = FALSE;
+	//	if (action_wait_time == 0) {
+	//		pause_duration_integer = atoi (token);
+	//		action_wait_time = pause_duration_integer;
+	//	}
+
+		// Check if the action's wait time has expired
+		if ((Millis () - (*event).start_time) >= (*event).repeat_period) {
+			(*event).start_time = 0;
+	//		(*event).repeat_period = 0;
+			result = Perform_Action ((*event).action, (*event).state);
+		} else {
+			result = FALSE;
+		}
 	}
 
 	return result;
