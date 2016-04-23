@@ -62,7 +62,7 @@ int8_t Process_Incoming_Message(Message *message) {
          has_received_internet_address = FALSE;
          has_generated_discovery_broadcast_address = FALSE;
          has_enabled_broadcast = FALSE;
-         Delete_Message(message);
+//         Delete_Message(message);
          return TRUE;
       }
 
