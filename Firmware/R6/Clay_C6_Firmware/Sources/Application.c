@@ -3,7 +3,7 @@
 
 //#include "meshTest.h"
 #include "Bootloader.h"
-#include "Mesh_Simple.h"
+//#include "Mesh.h"
 #include "RGB_LED.h"
 #include "GPIO.h"
 #include "Clock.h"
@@ -89,9 +89,13 @@ void Initialize() {
    }
    Perform_Status_LED_Effect();
 
-   if ((status = Mesh_Enable()) != TRUE) {
-      // Failure
-   }
+//   if ((status = Enable_Mesh()) != TRUE) {
+//      // Failure
+//   }
+//
+//   if ((status = Start_Mesh()) != TRUE) {
+//      // Failure
+//   }
 
    // Channels.
 
@@ -196,6 +200,10 @@ void Send_Test_TCP_Message() {
    Queue_Message(&outgoingMessageQueue, broadcastMessage);
 }
 
+int8_t message_status = FALSE;
+uint8_t lock_timeline = FALSE;
+uint8_t pause_timeline = FALSE;
+
 void Application(void) {
    Message *message = NULL;
    int i;
@@ -219,36 +227,84 @@ void Application(void) {
 //	Set_Message_Destination(signalMessage, "192.168.1.3:1002");
 //	Queue_Message(&incomingWiFiMessageQueue, signalMessage);
 
+
    for (;;) {
 
       // Call periodically to parse received messages and to enable the radio to receive
-      Mesh_Periodic();
+//      Mesh_Process_Commands();
 
       // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 
       // Step state machine
-      Wifi_State_Step();
-      Wifi_State_Step();
+      Wifi_State_Step ();
 
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
-      /* if */while (Has_Messages(&incomingWiFiMessageQueue)) {
-         message = Dequeue_Message(&incomingWiFiMessageQueue);
+      if (Has_Messages(&incomingWiFiMessageQueue)) {
+         message = Dequeue_Message (&incomingWiFiMessageQueue);
 
-//         Queue_Message (&incomingMessageQueue, message);
+         message_status = Process_Incoming_Message (message);
 
-//         message = Dequeue_Message (&incomingMessageQueue);
-         status = Process_Incoming_Message(message);
+         // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
+         if (message_status == TRUE) {
+        	 Delete_Message (message);
+         } else if (message_status == FALSE) { // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
+        	 // TODO: Process events on the timeline with the message, before dequeueing...
+        	 Queue_Message (&incomingMessageQueue, message);
+         }
       }
 
-//      // Process the next incoming message on the system queue
-//      /* if */ while (Has_Messages (&incomingMessageQueue)) {
-//         message = Dequeue_Message (&incomingMessageQueue);
-//         status = Process_Incoming_Message (message);
-//      }
+      // Process the next incoming message on the system queue
+      if (lock_timeline == FALSE) {
+		  if (Has_Messages (&incomingMessageQueue)) {
+			 message = Peek_Message (&incomingMessageQueue);
+			 lock_timeline = TRUE;
+		  }
+      }
 
-      // Step state machine
-      Wifi_State_Step();
-      Wifi_State_Step();
+
+      // Perform action.
+		if ((*timeline).current_event != NULL) {
+		  if (Process_Event(((*timeline).current_event)) != NULL) {
+
+			 // NOTE: Action was performed successfully.
+
+			 // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
+		  }
+
+		  // Go to the next action on the timeline
+		 if ((*((*timeline).current_event)).next != NULL) {
+			(*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
+		 } else {
+
+
+			 // TODO: Remove message from the queue (if it was not a basic message)
+			 if (lock_timeline == TRUE) {
+				 if (Has_Messages (&incomingMessageQueue)) {
+					 Dequeue_Message (&incomingMessageQueue);
+					 Delete_Message (message);
+					 lock_timeline = FALSE;
+				 }
+			 }
+
+
+			 (*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
+		 }
+
+		} else {
+
+		  /*
+		   // Reset the channel states...
+		   Reset_Channels();
+		   Apply_Channels();
+
+		   // ...the channel light states...
+		   Reset_Channel_Lights();
+		   Apply_Channel_Lights();
+
+		   // ...and the device states.
+		   // TODO: Reset any other device states.
+		   */
+		}
 
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
@@ -262,61 +318,57 @@ void Application(void) {
 //			Jump_To_Bootloader_And_Update_Application ();
 //		}
 
-      // Perform action.
-      if ((*timeline).current_event != NULL) {
-         if (Process_Event(((*timeline).current_event)) != NULL) {
-
-            // NOTE: Action was performed successfully.
-
-            // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
-
-            // Go to the next action on the timeline
-            if ((*((*timeline).current_event)).next != NULL) {
-               (*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
-            } else {
-               (*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
-            }
-         }
-      } else {
-
-         /*
-          // Reset the channel states...
-          Reset_Channels();
-          Apply_Channels();
-
-          // ...the channel light states...
-          Reset_Channel_Lights();
-          Apply_Channel_Lights();
-
-          // ...and the device states.
-          // TODO: Reset any other device states.
-          */
-      }
+//      // Perform action.
+//      if ((*timeline).current_event != NULL) {
+//         if (Process_Event(((*timeline).current_event)) != NULL) {
+//
+//            // NOTE: Action was performed successfully.
+//
+//            // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
+//
+//            // Go to the next action on the timeline
+//            if ((*((*timeline).current_event)).next != NULL) {
+//            	(*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
+//            } else {
+//            	// TODO: Remove message from the queue (if it was not a basic message)
+//            	(*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
+//            }
+//         }
+//      } else {
+//
+//         /*
+//          // Reset the channel states...
+//          Reset_Channels();
+//          Apply_Channels();
+//
+//          // ...the channel light states...
+//          Reset_Channel_Lights();
+//          Apply_Channel_Lights();
+//
+//          // ...and the device states.
+//          // TODO: Reset any other device states.
+//          */
+//      }
 
       // Forward messages on the outgoing system queue to the component-specific outgoing message queue.
       if (Has_Messages(&outgoingMessageQueue) == TRUE) {
          message = Dequeue_Message(&outgoingMessageQueue);
 
-         // Propagate to Wi-Fi message queue (or other queue, if exists)
-         if ((strncmp((*message).type, "udp", strlen("udp")) == 0) || (strncmp((*message).type, "tcp", strlen("tcp")) == 0)) {
-            Queue_Message(&outgoingWiFiMessageQueue, message);
-         }
+         if (strncmp((*message).type, "device", strlen("device")) == 0) {
+        	 // Device
+        	 Queue_Message (&incomingMessageQueue, message);
+         } else if ((strncmp((*message).type, "udp", strlen("udp")) == 0) || (strncmp((*message).type, "tcp", strlen("tcp")) == 0)) {
+        	 // Wi-Fi (UDP or TCP). Propagate to Wi-Fi message queue (or other queue, if exists)
+             Queue_Message (&outgoingWiFiMessageQueue, message);
+          }
       }
-
-      // Step state machine
-      Wifi_State_Step();
-      Wifi_State_Step();
 
       // TODO: Monitor_Orientation ();
 
       // TODO: Monitor_Action (); // TODO: In this function, Consider_Action (), Engage_Action (), Perform_Action ().
 
       // Check and perform "scheduled" periodic events
-      Monitor_Periodic_Events();
-
-      // Step state machine
-      Wifi_State_Step();
-      Wifi_State_Step();
+      Monitor_Periodic_Events ();
    }
 }
 

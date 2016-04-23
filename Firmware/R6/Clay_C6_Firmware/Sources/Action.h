@@ -15,6 +15,7 @@
 #include "Buzzer.h"
 #include "Message.h"
 #include "Message_Queue.h"
+#include "Trigger.h"
 #include "Services/Interactive_Assembly.h"
 
 #ifndef DEFAULT_UUID_LENGTH
@@ -40,8 +41,12 @@ typedef struct Action {
  */
 typedef struct Event {
 	char *uuid; // The UUID of the action.
+
 	// TODO: Add start condition. Check it before calling Perform_Action(action, state)
+	Trigger *trigger;
+
 	// TODO: Add repeat condition. Default is none. If none, does not repeat. Can be number (guaranteed), number (up to), number (no less than). Optionally, can add repeat period (repeat every T ms). Defaults to 0 ms.
+
 	uint32_t repeat_period;
 	// TODO: Add stop condition. Default is none. If none, proceeds to next event right away.
 	Action *action; // The pointer to the action (if it's present in memory) or NULL (if it's not present in memory).
