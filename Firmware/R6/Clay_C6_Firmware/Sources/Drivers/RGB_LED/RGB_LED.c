@@ -20,8 +20,7 @@
 Channel_Light proposed_light_profiles[CHANNEL_COUNT];
 Channel_Light channelLightProfiles[CHANNEL_COUNT];
 
-typedef struct
-{
+typedef struct {
    RGB_LED RGB_Index;     //the LED's clay-specific port index
    uint8_t R_Index;     //the LED driver output driving the red for this LED
    uint8_t G_Index;     //the LED driver output driving the green for this LED
@@ -51,15 +50,20 @@ typedef struct
 ////local vars
 //static RGB_LED_Channel LED_Channels[RGB_MAX] = { { RGB1, 11, 12, 10 }, { RGB2, 14, 15, 13 }, { RGB3, 17, 18, 16 }, { RGB5, 23, 24, 22 }, { RGB4, 26, 27, 25 }, { RGB6, 20, 21, 19 }, { RGB7, 35, 36, 34 }, { RGB8, 32, 33, 31 }, { RGB9, 29, 30, 28 }, {
 //		RGB10, 8, 9, 7 }, { RGB11, 5, 6, 4 }, { RGB12, 2, 3, 1 } };
-static RGB_LED_Channel LED_Channels[RGB_MAX] = { { RGB1, 11, 12, 10 }, { RGB2, 14, 15, 13 }, { RGB3, 17, 18, 16 }, { RGB4,
-                                                                                                                     26,
-                                                                                                                     27,
-                                                                                                                     25 },
-                                                 { RGB5, 23, 24, 22 }, { RGB6, 20, 21, 19 }, { RGB7, 35, 36, 34 }, { RGB8,
-                                                                                                                     32,
-                                                                                                                     33,
-                                                                                                                     31 },
-                                                 { RGB9, 29, 30, 28 }, { RGB12, 2, 3, 1 }, { RGB11, 5, 6, 4 }, { RGB10, 8, 9, 7 } };
+static RGB_LED_Channel LED_Channels[RGB_MAX] = {
+		{ RGB1, 11, 12, 10 },
+		{ RGB2, 14, 15, 13 },
+		{ RGB3, 17, 18, 16 },
+		{ RGB4, 26, 27, 25 },
+		{ RGB5, 23, 24, 22 },
+		{ RGB6, 20, 21, 19 },
+		{ RGB7, 35, 36, 34 },
+		{ RGB8, 32, 33, 31 },
+		{ RGB9, 29, 30, 28 },
+		{ RGB12, 2, 3, 1 },
+		{ RGB11, 5, 6, 4 },
+		{ RGB10, 8, 9, 7 }
+};
 ////local function prototypes
 
 ////global function implementations
@@ -70,8 +74,7 @@ bool RGB_LED_Enable() {
 //reset all LEDs to off.
 
    uint8_t temp[] = { RESET_REG_ADDR, 0x00, SHUTDOWN_REG_ADDR, 0x01,
-   GLOBAL_CONTROL_ADDR,
-                      0x00 };     //shutdown register needs to be 1 to operate.
+	GLOBAL_CONTROL_ADDR, 0x00 }; //shutdown register needs to be 1 to operate.
 
    I2C_Send_Message(temp, 2, RGB_LED_ADDR);
    Wait(1);
@@ -191,7 +194,7 @@ int8_t Apply_Channel_Lights() {
    for (i = 0; i < CHANNEL_COUNT; i++) {
 
       // Check if the enable state changed. Apply the corresponding transform.
-      if (proposed_light_profiles[i].enabled != channel_profile[i].enabled) {
+//		if (proposed_light_profiles[i].enabled != channel_profile[i].enabled) {
 
          // Update state.
          channelLightProfiles[i].enabled = proposed_light_profiles[i].enabled;
@@ -222,7 +225,7 @@ int8_t Apply_Channel_Lights() {
             RGB_LED_SetColor((RGB_LED) (channelLightProfiles[i].number - 1), &offColor);
 
          }
-      }
+//		}
    }
 
    return TRUE;
