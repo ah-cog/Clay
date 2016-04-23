@@ -74,6 +74,8 @@ static Message_Type tempIgnoredMessageType;
 static Message * m;
 static Message temp_message;
 
+static bool task_running = false;
+
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static bool Transmit();
@@ -84,36 +86,50 @@ static bool Check_Needs_Promotion();
 bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 {
 	bool rval = true;
-	promoted = false;
 
-	taskENTER_CRITICAL();
-	UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
-	Initialize_Message_Queue(&outgoing_UDP_message_queue);
-	taskEXIT_CRITICAL();
+	if (!task_running)
+	{
+		promoted = false;
 
-	State = Disable;
+		taskENTER_CRITICAL();
+		UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
+		Initialize_Message_Queue(&outgoing_UDP_message_queue);
+		taskEXIT_CRITICAL();
 
-	xTaskHandle UDP_transmit_handle;
+		State = Disable;
 
-	xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_UDP_TX), &UDP_transmit_handle);
+		xTaskHandle UDP_transmit_handle;
 
-	System_Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle,
-			Check_Needs_Promotion);
+		xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL,
+				Get_Task_Priority(TASK_TYPE_UDP_TX), &UDP_transmit_handle);
 
-	testCounter = 0;
+		System_Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle,
+				Check_Needs_Promotion);
+
+		testCounter = 0;
+
+		task_running = true;
+	}
+	else
+	{
+		rval = false;
+	}
 
 	return rval;
 }
 
 void ICACHE_RODATA_ATTR UDP_Transmitter_Deinit()
 {
-	lwip_close(transmit_sock);
-	transmit_sock = -1;
+	if (task_running)
+	{
+		lwip_close(transmit_sock);
+		transmit_sock = -1;
 
-	free(UDP_Tx_Buffer);
+		free(UDP_Tx_Buffer);
 
-	Stop_Task(TASK_TYPE_UDP_TX);
+		task_running = false;
+		Stop_Task(TASK_TYPE_UDP_TX);
+	}
 }
 
 void ICACHE_RODATA_ATTR UDP_Transmitter_Task()

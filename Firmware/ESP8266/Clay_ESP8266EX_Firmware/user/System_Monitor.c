@@ -98,11 +98,14 @@ int32 ICACHE_RODATA_ATTR Get_Task_Priority(TASK_TYPE requested_task)
 void ICACHE_RODATA_ATTR Stop_Task(TASK_TYPE kill_task)
 {
 	TASK_INFO * task = (tasks + ((int) kill_task));
-	vTaskDelete(task->task_handle);
-	task->task_handle = NULL;
-	task->current_priority = task->default_priority;
-	task->task_needs_promotion = NULL;
-	task->last_ran_time_us = 0;
+	if (task->task_handle != NULL)
+	{
+		vTaskDelete(task->task_handle);
+		task->task_handle = NULL;
+		task->current_priority = task->default_priority;
+		task->task_needs_promotion = NULL;
+		task->last_ran_time_us = 0;
+	}
 }
 
 ////Local implementations /////////////////////////////////////////

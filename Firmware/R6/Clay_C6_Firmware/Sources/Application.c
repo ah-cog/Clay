@@ -29,6 +29,12 @@ char buffer2[128] = { 0 };
 #define VBAT_ADC_OFFSET         3.20144E-2
 static double vBat;
 
+//   char * ssid = "hefnet";
+//   char * password = "h3fn3r_is_better_than_me";
+
+char * ssid = "Clay";
+char * password = "redgreenblue";
+
 static uint16_t buzzerRatio = 6500;
 static uint16_t buzzerPeriod_us = 240;
 static uint16_t buzzerDuty_us = 120;
@@ -118,7 +124,8 @@ void Initialize() {
       // Failure
    }
 
-   if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE) {
+   //TODO: troubleshoot MPU start with invensense drivers.
+   if ((status = Start_MPU9250()) != TRUE) {
       // Failure
    }
 
@@ -126,8 +133,7 @@ void Initialize() {
       // Failure
    }
 
-   //TODO: troubleshoot MPU start with invensense drivers.
-   if ((status = Start_MPU9250()) != TRUE) {
+   if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE) {
       // Failure
    }
 
@@ -140,7 +146,7 @@ void Initialize() {
       // Failure
    }
 
-   if ((status = Enable_WiFi("hefnet", "h3fn3r_is_better_than_me")) != TRUE) {     // if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
+   if ((status = Enable_WiFi(ssid, password)) != TRUE) {     // if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
       // Failure
    }
 

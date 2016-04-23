@@ -87,6 +87,7 @@ static uint32 last_tcp_activity_time;
 static uint32 tcp_connection_timeout_us = 1500000;
 
 static bool listening;
+static bool task_running = false;
 
 ////Local Prototypes///////////////////////////////////////////////
 static int32 Open_Listen_Connection(char * local_addr_string,
@@ -113,58 +114,74 @@ static bool TCP_Timeout_Check();
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 {
-	idle_handle = xTaskGetIdleTaskHandle();
-
 	bool rval = true;
-	promoted = false;
 
-	taskENTER_CRITICAL();
-	local_address_string = zalloc(ADDR_STRING_SIZE);
-	remote_address_string = zalloc(ADDR_STRING_SIZE);
-	receive_data = zalloc(RECEIVE_DATA_SIZE);
-	transmit_data = zalloc(TRANSMIT_DATA_SIZE);
-	taskEXIT_CRITICAL();
+	if (!task_running)
+	{
 
-//	taskENTER_CRITICAL();
-//	printf("\r\n\r\nla:%08x\r\nra:%08x\r\nrx:%08x\r\ntx:%08x\r\n\r\n",
-//			(uint32) local_address_string, (uint32) remote_address_string,
-//			(uint32) receive_data, (uint32) transmit_data);
-//	UART_WaitTxFifoEmpty(UART0);
-//	taskEXIT_CRITICAL();
+		idle_handle = xTaskGetIdleTaskHandle();
 
-//	vTaskDelay(5000 / portTICK_RATE_MS);
+		promoted = false;
 
-	taskYIELD();
+		taskENTER_CRITICAL();
+		local_address_string = zalloc(ADDR_STRING_SIZE);
+		remote_address_string = zalloc(ADDR_STRING_SIZE);
+		receive_data = zalloc(RECEIVE_DATA_SIZE);
+		transmit_data = zalloc(TRANSMIT_DATA_SIZE);
+		taskEXIT_CRITICAL();
 
-	xTaskHandle TCP_combined_handle;
+		//	taskENTER_CRITICAL();
+		//	printf("\r\n\r\nla:%08x\r\nra:%08x\r\nrx:%08x\r\ntx:%08x\r\n\r\n",
+		//			(uint32) local_address_string, (uint32) remote_address_string,
+		//			(uint32) receive_data, (uint32) transmit_data);
+		//	UART_WaitTxFifoEmpty(UART0);
+		//	taskEXIT_CRITICAL();
 
-	//TODO: print high water mark and revise stack size if necessary.
-	xTaskCreate(TCP_Combined_Task, "TCP combined", 256, NULL,
-			Get_Task_Priority(TASK_TYPE_TCP_RX), &TCP_combined_handle);
+		//	vTaskDelay(5000 / portTICK_RATE_MS);
 
-	System_Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle,
-			Check_Needs_Promotion);
+		taskYIELD();
+
+		xTaskHandle TCP_combined_handle;
+
+		//TODO: print high water mark and revise stack size if necessary.
+		xTaskCreate(TCP_Combined_Task, "TCP combined", 256, NULL,
+				Get_Task_Priority(TASK_TYPE_TCP_RX), &TCP_combined_handle);
+
+		System_Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle,
+				Check_Needs_Promotion);
+
+		task_running = true;
+	}
+	else
+	{
+		rval = false;
+	}
 
 	return rval;
 }
 
 void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 {
-	connected = false;
+	if (task_running)
+	{
+		connected = false;
 
-	Data_Disconnect();
-	Listen_Disconnect();
+		Data_Disconnect();
+		Listen_Disconnect();
 
-	receive_head = 0;
-	receive_tail = 0;
-	receive_size = 0;
+		receive_head = 0;
+		receive_tail = 0;
+		receive_size = 0;
 
-	free(local_address_string);
-	free(remote_address_string);
-	free(receive_data);
-	free(transmit_data);
+		free(local_address_string);
+		free(remote_address_string);
+		free(receive_data);
+		free(transmit_data);
 
-	Stop_Task(TASK_TYPE_TCP_RX);
+		task_running = false;
+
+		Stop_Task(TASK_TYPE_TCP_RX);
+	}
 }
 
 static int tcpLoops = 0;

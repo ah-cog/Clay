@@ -297,6 +297,10 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 	char * key = strtok(NULL, &args_delimiter);
 	taskEXIT_CRITICAL();
 
+//	taskENTER_CRITICAL();
+//	printf("\r\n\r\nsetap:%s,%s\r\n\r\n", ssid, key);
+//	taskEXIT_CRITICAL();
+
 	if (Set_Access_Point(ssid, key))
 	{
 		Send_Message_To_Master(SETAP_OK_RESPONSE, MESSAGE_TYPE_STATUS);
