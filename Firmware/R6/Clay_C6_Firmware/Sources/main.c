@@ -80,9 +80,6 @@ int main(void)
    PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
-   Wifi_Test();
-//      IR_Range_Demo();
-//   Voltage_Controlled_Servo_Demo();
    Initialize();
 
    Application();
