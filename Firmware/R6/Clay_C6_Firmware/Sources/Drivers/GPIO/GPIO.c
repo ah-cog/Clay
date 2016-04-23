@@ -227,7 +227,7 @@ bool Channel_Enable_All() {
 void Channel_Disable_All() {
 
    for (int i = 0; i < CHANNEL_COUNT; ++i) {
-      Disable_Enable((Channel_Number) i);
+      Channel_Disable((Channel_Number) i);
    }
 }
 

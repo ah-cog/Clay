@@ -82,6 +82,8 @@ static Message tempMessage;
 static char * source_addr;
 static char * dest_addr;
 
+static bool task_running = false;
+
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static bool Receive();
@@ -91,39 +93,54 @@ static bool Check_Needs_Promotion();
 bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 {
 	bool rval = true;
-	nNetTimeout = UDP_RX_TIMEOUT_MSEC;
 
-	State = Disable;
+	if (!task_running)
+	{
+		nNetTimeout = UDP_RX_TIMEOUT_MSEC;
 
-	taskENTER_CRITICAL();
-	UDP_Rx_Buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
-	source_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
-	dest_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
-	Initialize_Message_Queue(&incoming_message_queue);
-	taskEXIT_CRITICAL();
+		State = Disable;
 
-	xTaskHandle UDP_receive_handle;
+		taskENTER_CRITICAL();
+		UDP_Rx_Buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
+		source_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
+		dest_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
+		Initialize_Message_Queue(&incoming_message_queue);
+		taskEXIT_CRITICAL();
 
-	xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_UDP_RX), &UDP_receive_handle);
+		xTaskHandle UDP_receive_handle;
 
-	System_Register_Task(TASK_TYPE_UDP_RX, UDP_receive_handle, Check_Needs_Promotion);
+		xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL,
+				Get_Task_Priority(TASK_TYPE_UDP_RX), &UDP_receive_handle);
 
-	testCounter = 0;
+		System_Register_Task(TASK_TYPE_UDP_RX, UDP_receive_handle,
+				Check_Needs_Promotion);
+
+		testCounter = 0;
+
+		task_running = true;
+	}
+	else
+	{
+		rval = false;
+	}
 
 	return rval;
 }
 
 void ICACHE_RODATA_ATTR UDP_Receiver_Deinit()
 {
-	lwip_close(receive_sock);
-	receive_sock = -1;
+	if (task_running)
+	{
+		lwip_close(receive_sock);
+		receive_sock = -1;
 
-	free(UDP_Rx_Buffer);
-	free(source_addr);
-	free(dest_addr);
+		free(UDP_Rx_Buffer);
+		free(source_addr);
+		free(dest_addr);
 
-	Stop_Task(TASK_TYPE_UDP_RX);
+		task_running = false;
+		Stop_Task(TASK_TYPE_UDP_RX);
+	}
 }
 
 void ICACHE_RODATA_ATTR UDP_Receiver_Task()

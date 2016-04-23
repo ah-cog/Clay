@@ -80,6 +80,7 @@ int main(void)
    PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
+//   Voltage_Controlled_Servo_Demo();
    Initialize();
 
    Application();
