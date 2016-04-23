@@ -18,10 +18,13 @@ void Wifi_Test() {
    char * ssid = "hefnet";
    char * password = "h3fn3r_is_better_than_me";
 
-   char * ssid_m = "hefnetm";
-   char * password_m = "dips00BOYNEdo$!&";
+   char * ssid_m = "Clay";
+   char * password_m = "redgreenblue";
 
    bool use_mobile = false;
+//   char * ssid_m = "hefnetm";
+//   char * password_m = "dips00BOYNEdo$!&";
+
 
    Power_Manager_Enable();
    Channel_Enable_All();
@@ -129,3 +132,26 @@ void Wifi_Test() {
 
 }
 
+
+
+///setap test code.
+//   char * ssid = "hefnet";
+//   char * password = "h3fn3r_is_better_than_me";
+//
+//   //   char * ssid_m = "Clay";
+//   //   char * password_m = "redgreenblue";
+//
+//   char * ssid_m = "hefnetm";
+//   char * password_m = "dips00BOYNEdo$!&";
+//
+//   bool use_mobile = false;
+//   bool request_connect = false;
+//
+//   if (request_connect) {
+//      request_connect = FALSE;
+//      if (use_mobile) {
+//         WiFi_Request_Connect(ssid_m, password_m);
+//      } else {
+//         WiFi_Request_Connect(ssid, password);
+//      }
+//   }
