@@ -179,24 +179,8 @@ void Discovery_Broadcast_Presence() {
    sprintf(buffer2, "announce device %s", uuid);
    Message *broadcastMessage = Create_Message(buffer2);
    Set_Message_Type(broadcastMessage, "udp");
-//   Set_Message_Source(broadcastMessage, "192.168.43.255:4445");
-//   Set_Message_Destination(broadcastMessage, "192.168.43.255:4445");
    Set_Message_Source(broadcastMessage, broadcast_address);
    Set_Message_Destination(broadcastMessage, broadcast_address);
-   Queue_Message(&outgoingMessageQueue, broadcastMessage);
-}
-
-void Send_Test_TCP_Message() {
-
-   // TODO: Check if have IP address. Only broadcast if have IP address.
-
-   // Queue device discovery broadcast
-   char *uuid = Get_Unit_UUID();
-   sprintf(buffer2, "announce device %s", uuid);
-   Message *broadcastMessage = Create_Message(buffer2);
-   Set_Message_Type(broadcastMessage, "tcp");
-   Set_Message_Source(broadcastMessage, "192.168.1.6:1002");
-   Set_Message_Destination(broadcastMessage, "192.168.1.3:1002");
    Queue_Message(&outgoingMessageQueue, broadcastMessage);
 }
 
@@ -260,7 +244,6 @@ void Application(void) {
 			 lock_timeline = TRUE;
 		  }
       }
-
 
       // Perform action.
 		if ((*timeline).current_event != NULL) {
