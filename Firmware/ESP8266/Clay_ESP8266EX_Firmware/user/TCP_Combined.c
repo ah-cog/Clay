@@ -113,7 +113,6 @@ static bool TCP_Timeout_Check();
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 {
-
 	idle_handle = xTaskGetIdleTaskHandle();
 
 	bool rval = true;
@@ -153,11 +152,8 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 {
 	connected = false;
 
-	lwip_close(data_sock);
-	lwip_close(listen_sock);
-
-	listen_sock = -1;
-	data_sock = -1;
+	Data_Disconnect();
+	Listen_Disconnect();
 
 	receive_head = 0;
 	receive_tail = 0;
@@ -198,7 +194,10 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 //			if (++tcpLoops > 50)
 //			{
 //				tcpLoops = 0;
-//				DEBUG_Print("listening");
+//				taskENTER_CRITICAL();
+//				printf("listen on sock:%d, %s\r\n", listen_sock,
+//						local_address_string);
+//				taskEXIT_CRITICAL();
 //			}
 
 #if ENABLE_TCP_COMBINED_RX
@@ -309,6 +308,10 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 			uint32 optionLength = sizeof(error);
 			int getReturn = lwip_getsockopt(listen_socket, SOL_SOCKET,
 			SO_ERROR, &error, &optionLength);
+
+//			taskENTER_CRITICAL();
+//			printf("bind fail:%d\r\n", error);
+//			taskEXIT_CRITICAL();
 
 			lwip_close(listen_socket);
 			listen_socket = -1;
@@ -1182,6 +1185,7 @@ static void ICACHE_RODATA_ATTR Data_Disconnect()
 		shutdown(data_sock, 2);
 		lwip_close(data_sock);
 		data_sock = -1;
+		connected = false;
 	}
 }
 

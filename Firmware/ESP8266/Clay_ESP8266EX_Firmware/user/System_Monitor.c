@@ -119,9 +119,9 @@ static void ICACHE_RODATA_ATTR Monitor_Priority()
 			if (++loops > LOOPS_BEFORE_PRINT)
 			{
 				loops = 0;
-				taskENTER_CRITICAL();
-				printf("%d promoted\r\n", (int) current_task);
-				taskEXIT_CRITICAL();
+//				taskENTER_CRITICAL();
+//				printf("%d promoted\r\n", (int) current_task);
+//				taskEXIT_CRITICAL();
 			}
 
 			if (current_task_ptr->current_priority

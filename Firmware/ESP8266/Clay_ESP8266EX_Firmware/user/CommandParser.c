@@ -288,7 +288,9 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 {
 	bool rval = false;
 
-	Stop_Task_Command(TASK_TYPE_TCP_RX | TASK_TYPE_UDP_RX | TASK_TYPE_UDP_TX);
+	Stop_Task_Command(TASK_TYPE_TCP_RX);
+	Stop_Task_Command(TASK_TYPE_UDP_RX);
+	Stop_Task_Command(TASK_TYPE_UDP_TX);
 
 	taskENTER_CRITICAL();
 	char * ssid = strtok(args, &args_delimiter);
