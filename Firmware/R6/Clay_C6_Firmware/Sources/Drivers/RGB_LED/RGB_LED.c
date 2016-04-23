@@ -192,7 +192,7 @@ int8_t Apply_Channel_Lights () {
 	for (i = 0; i < CHANNEL_COUNT; i++) {
 
 		// Check if the enable state changed. Apply the corresponding transform.
-		if (proposed_light_profiles[i].enabled != channel_profile[i].enabled) {
+//		if (proposed_light_profiles[i].enabled != channel_profile[i].enabled) {
 
 			// Update state.
 			channelLightProfiles[i].enabled = proposed_light_profiles[i].enabled;
@@ -223,7 +223,7 @@ int8_t Apply_Channel_Lights () {
 				RGB_LED_SetColor ((RGB_LED) (channelLightProfiles[i].number - 1), &offColor);
 
 			}
-		}
+//		}
 	}
 
 	return TRUE;
