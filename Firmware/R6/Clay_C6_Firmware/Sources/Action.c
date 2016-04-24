@@ -442,14 +442,14 @@ static int8_t Perform_Signal_Action(char *state) {
 
             //token will look like this: TOP:20,62000
             // don't care about TOP:
-            // 20 is the frequency in seconds, as a double (for now I'm treating it like ms, because the app doesn't allow for setting a decimal)
+            // 20 is the frequency in seconds, as a double (for now I'm treating it like us, because the app doesn't allow for setting a decimal)
             // 62000 is the counts for the duty cycle ratio.
 
             char * frequency_str = token + 4;
             char * duty_str = strchr(token, DEFAULT_TOKEN_PARAMETER_DELIMITER) + 1;
             *(duty_str - 1) = '\0';     //do this so we can use atoi
 
-            updated_channel_profile[i].pulse_period_s = ((float) atoi(frequency_str) / 1000);
+            updated_channel_profile[i].pulse_period_s = ((float) atoi(frequency_str) / 1000000);
             updated_channel_profile[i].pulse_duty = atoi(duty_str);
 
             //restore the delimiter in case it's needed later.
