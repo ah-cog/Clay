@@ -348,7 +348,7 @@ static int8_t Perform_Light_Action(char *state) {
       int blue = 0;
 
       //index 0 isn't getting the correct token parsed, it's getting the value for 2
-      status = Get_Token(state, token, 1 + i);
+      status = Get_Token(state, token, i);
 
       // Convert hex-encoded color string to separate red, green, and blue color indices.
       hex_color = Hex_String_To_UInt(token);
