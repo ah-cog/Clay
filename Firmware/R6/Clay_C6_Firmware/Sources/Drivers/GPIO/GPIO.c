@@ -151,15 +151,6 @@ int8_t Apply_Channels() {
    for (i = 0; i < CHANNEL_COUNT; i++) {
 
       if (updated_channel_profile[i].enabled = TRUE) {
-         // Check if the direction changed. Apply the corresponding transform if it changed.
-         if (updated_channel_profile[i].direction != channel_profile[i].direction) {
-
-            // Update direction.
-            channel_profile[i].direction = updated_channel_profile[i].direction;
-
-            // Apply direction.
-            Channel_Set_Direction(channel_profile[i].number, channel_profile[i].direction);
-         }
 
          // Check if the mode change. Apply the corresponding transform if it changed.
          if (updated_channel_profile[i].type != channel_profile[i].type) {
@@ -169,6 +160,16 @@ int8_t Apply_Channels() {
 
             // Apply mode.
             Channel_Set_Type(channel_profile[i].number, channel_profile[i].type);
+         }
+
+         // Check if the direction changed. Apply the corresponding transform if it changed.
+         if (updated_channel_profile[i].direction != channel_profile[i].direction) {
+
+            // Update direction.
+            channel_profile[i].direction = updated_channel_profile[i].direction;
+
+            // Apply direction.
+            Channel_Set_Direction(channel_profile[i].number, channel_profile[i].direction);
          }
 
          // Check if the enable state changed. Apply the corresponding transform.
@@ -313,9 +314,11 @@ bool Channel_Set_Type(Channel_Number number, Channel_Type type) {
 
    bool result = FALSE;
 
+   Channel_Disable(number);
+
    channel_profile[number].type = type;
 
-//TODO: reinit as new type or disable -- we need to make sure the hardware is consistent with channel_profile
+   Channel_Enable(number);
 
    return result;
 }
