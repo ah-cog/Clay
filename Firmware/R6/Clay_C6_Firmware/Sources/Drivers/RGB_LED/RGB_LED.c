@@ -202,7 +202,7 @@ int8_t Apply_Channel_Lights() {
          if (channelLightProfiles[i].enabled == TRUE) {
 
             // Apply state.
-            Channel_Enable(channelLightProfiles[i].number);
+//            Channel_Enable(channelLightProfiles[i].number - 1);
 
             // Check if the direction change. Apply the corresponding transform if it changed.
 //				if ((proposed_light_profiles[i].color.R != channelLightProfiles[i].color.R)

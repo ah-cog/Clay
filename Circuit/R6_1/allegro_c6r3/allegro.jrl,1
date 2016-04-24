@@ -1,0 +1,69 @@
+\t (00:00:00) allegro 16.6 P004 (v16-6-112G) Windows 32
+\t (00:00:00)     Journal start - Sat Apr 23 13:17:49 2016
+\t (00:00:00)         Host=STEELGIANT User=thebh_000 Pid=4472 CPUs=8
+\t (00:00:00) 
+\t (00:00:02) Opening existing design...
+\d (00:00:02) Database opened: E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd
+\t (00:00:02) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:00:02) trapsize 190
+\i (00:00:02) trapsize 186
+\i (00:00:02) trapsize 190
+\i (00:00:02) trapsize 192
+\i (00:00:02) trapsize 163
+\i (00:00:02) trapsize 163
+\i (00:00:03) etchedit 
+\i (00:00:09) setwindow form.vf_vis
+\i (00:00:09) FORM vf_vis colorview_list File: pin_via_silk_soldermask 
+\i (00:00:09) color -globvis off 
+\i (00:00:09) color -vis 'BOARD GEOMETRY/SILKSCREEN_TOP' 
+\i (00:00:09) color -vis 'BOARD GEOMETRY/OUTLINE' 
+\i (00:00:09) color -vis 'PACKAGE GEOMETRY/SOLDERMASK_TOP' 
+\i (00:00:09) color -vis 'PACKAGE GEOMETRY/SILKSCREEN_TOP' 
+\i (00:00:09) color -vis PIN/TOP 
+\i (00:00:09) color -vis PIN/GND 
+\i (00:00:09) color -vis PIN/PWR 
+\i (00:00:09) color -vis PIN/BOTTOM 
+\i (00:00:09) color -vis PIN/FILMMASKBOTTOM 
+\i (00:00:09) color -vis PIN/FILMMASKTOP 
+\i (00:00:09) color -vis PIN/PASTEMASK_BOTTOM 
+\i (00:00:09) color -vis PIN/PASTEMASK_TOP 
+\i (00:00:09) color -vis PIN/SOLDERMASK_BOTTOM 
+\i (00:00:09) color -vis PIN/SOLDERMASK_TOP 
+\i (00:00:09) color -vis 'REF DES/SILKSCREEN_TOP' 
+\i (00:00:09) color -vis 'VIA CLASS/TOP' 
+\i (00:00:09) color -vis 'VIA CLASS/GND' 
+\i (00:00:09) color -vis 'VIA CLASS/PWR' 
+\i (00:00:09) color -vis 'VIA CLASS/BOTTOM' 
+\i (00:00:09) color -vis 'VIA CLASS/FILMMASKBOTTOM' 
+\i (00:00:09) color -vis 'VIA CLASS/FILMMASKTOP' 
+\i (00:00:09) color -vis 'VIA CLASS/PASTEMASK_BOTTOM' 
+\i (00:00:09) color -vis 'VIA CLASS/PASTEMASK_TOP' 
+\i (00:00:09) color -vis 'VIA CLASS/SOLDERMASK_BOTTOM' 
+\i (00:00:09) color -vis 'VIA CLASS/SOLDERMASK_TOP' 
+\i (00:00:09) setwindow pcb
+\i (00:00:09) trapsize 163
+\i (00:00:09) etchedit 
+\i (00:00:11) zoom out 1 
+\i (00:00:11) setwindow pcb
+\i (00:00:11) zoom out -255.65 604.76
+\i (00:00:11) trapsize 327
+\i (00:00:11) zoom out 1 
+\i (00:00:11) setwindow pcb
+\i (00:00:11) zoom out -255.65 604.75
+\t (00:00:11) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:00:11) trapsize 653
+\i (00:00:11) zoom out 1 
+\i (00:00:11) setwindow pcb
+\i (00:00:11) zoom out -255.66 604.76
+\i (00:00:11) trapsize 1307
+\i (00:00:15) zoom in 1 
+\i (00:00:15) setwindow pcb
+\i (00:00:15) zoom in -17.80 -785.77
+\i (00:00:15) trapsize 653
+\i (00:00:15) zoom in 1 
+\i (00:00:15) setwindow pcb
+\i (00:00:15) zoom in -0.81 -781.84
+\t (00:00:15) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:00:15) trapsize 327
+\i (00:00:52) exit 
+\t (00:00:53)     Journal end - Sat Apr 23 13:18:41 2016

@@ -7,6 +7,7 @@
 
 #define DEFAULT_TOKEN_DELIMIETER ' '
 #define DEFAULT_TOKEN_SECONDARY_DELIMIETER '"'
+#define DEFAULT_TOKEN_PARAMETER_DELIMITER   ','
 
 extern int Get_Token_Count (const char *string);
 

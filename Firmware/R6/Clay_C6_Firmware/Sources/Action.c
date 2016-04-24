@@ -347,7 +347,8 @@ static int8_t Perform_Light_Action(char *state) {
       int green = 0;
       int blue = 0;
 
-      status = Get_Token(state, token, 1 + i);
+      //index 0 isn't getting the correct token parsed, it's getting the value for 2
+      status = Get_Token(state, token, i);
 
       // Convert hex-encoded color string to separate red, green, and blue color indices.
       hex_color = Hex_String_To_UInt(token);
@@ -355,7 +356,7 @@ static int8_t Perform_Light_Action(char *state) {
       green = (hex_color & 0x00FF00) >> 8;
       blue = (hex_color & 0x0000FF) >> 0;
 
-//				// Set LED state
+      // Set LED state
       proposed_light_profiles[i].enabled = TRUE;
       Set_Light_Color(&proposed_light_profiles[i], red, green, blue);
 
@@ -438,6 +439,22 @@ static int8_t Perform_Signal_Action(char *state) {
          } else if (updated_channel_profile[i].type == CHANNEL_TYPE_PULSE) {
             // TODO: Assign the value differently, depending on the specified channel direction and mode.
             // TODO: Assign this based on the received data.
+
+            //token will look like this: TOP:20,62000
+            // don't care about TOP:
+            // 20 is the frequency in seconds, as a double (for now I'm treating it like ms, because the app doesn't allow for setting a decimal)
+            // 62000 is the counts for the duty cycle ratio.
+
+            char * frequency_str = token + 4;
+            char * duty_str = strchr(token, DEFAULT_TOKEN_PARAMETER_DELIMITER) + 1;
+            *(duty_str - 1) = '\0';     //do this so we can use atoi
+
+            updated_channel_profile[i].pulse_period_s = ((float) atoi(frequency_str) / 1000);
+            updated_channel_profile[i].pulse_duty = atoi(duty_str);
+
+            //restore the delimiter in case it's needed later.
+            *(duty_str - 1) = DEFAULT_TOKEN_PARAMETER_DELIMITER;
+
          } else {
             // ERROR: Error. An invalid mode was specified.
          }

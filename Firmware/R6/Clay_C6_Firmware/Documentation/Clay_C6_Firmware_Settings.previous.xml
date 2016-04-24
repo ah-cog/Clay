@@ -1033,7 +1033,7 @@ Autoselect
       <CancelBlockReception v="don&amp;apos;t generate code" />
       <GetError v="don&amp;apos;t generate code" />
       <GetSentDataNum v="don&amp;apos;t generate code" />
-      <GetReceivedDataNum v="don&amp;apos;t generate code" />
+      <GetReceivedDataNum v="generate code" />
       <GetTxCompleteStatus v="don&amp;apos;t generate code" />
       <SetEventMask v="don&amp;apos;t generate code" />
       <GetEventMask v="don&amp;apos;t generate code" />
