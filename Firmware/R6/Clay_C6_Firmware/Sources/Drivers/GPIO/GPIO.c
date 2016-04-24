@@ -80,8 +80,8 @@ static int32_t Channel_Set_Direction_Pulse(Channel_Number number, Channel_Direct
 
 static void Channel_Apply_Output(Channel_Number number);
 
-static void Initialize_Hardware_Profile();
-static void Initialize_Channel_Hardware_Profile(Channel_Number number);
+static void Initialize_Hardware_Interface();
+static void Initialize_Channel_Hardware_Interface(Channel_Number number);
 
 ////Global implementations ////////////////////////////////////////
 // Profile
@@ -111,7 +111,7 @@ int8_t Initialize_Channels() {
 
    }
 
-   Initialize_Hardware_Profile();
+   Initialize_Hardware_Interface();
 
    return TRUE;
 }
@@ -989,8 +989,6 @@ static void Channel_Disable_Waveform(Channel_Number number) {
    if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
        || channel_profile[number].type != CHANNEL_TYPE_PULSE) return;
 
-   int rval;
-
    switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
       case MCU_ADC0: {
 
@@ -1005,8 +1003,10 @@ static void Channel_Disable_Waveform(Channel_Number number) {
       case MCU_ADC1: {
 
          //TODO: check for other ADC's still live before de-init. We'll have to figure out how to free the pin back up for reassignment.
-         ADC1_Deinit(ADC1_data);
-         ADC1_data = NULL;
+         if (ADC1_data != NULL) {
+            ADC1_Deinit(ADC1_data);
+            ADC1_data = NULL;
+         }
 
          break;
       }
@@ -1015,8 +1015,6 @@ static void Channel_Disable_Waveform(Channel_Number number) {
          break;
       }
    }
-
-   return rval;
 }
 
 static void Channel_Disable_Pulse(Channel_Number number) {
@@ -1024,8 +1022,33 @@ static void Channel_Disable_Pulse(Channel_Number number) {
    if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
        || channel_profile[number].type != CHANNEL_TYPE_PULSE) return;
 
-   PWM_OUT_1_Deinit(PWM_OUT_1_data);
-   PWM_OUT_1_data = NULL;
+   switch (channel_profile[number].mcu_hardware_profile.pwm_interface->pwm_channel) {
+      case MCU_PWM_OUT_1: {
+
+         if (PWM_OUT_1_data != NULL) {
+            PWM_OUT_1_Deinit(PWM_OUT_1_data);
+            PWM_OUT_1_data = NULL;
+         }
+
+         break;
+      }
+
+      case MCU_PWM_OUT_2: {
+         break;
+      }
+
+      case MCU_PWM_OUT_3: {
+         break;
+      }
+
+      case MCU_PWM_OUT_4: {
+         break;
+      }
+
+      default: {
+         break;
+      }
+   }
 }
 
 static void Channel_Apply_Output(Channel_Number number) {
@@ -1046,14 +1069,14 @@ static void Channel_Apply_Output(Channel_Number number) {
 
 }
 
-static void Initialize_Hardware_Profile() {
+static void Initialize_Hardware_Interface() {
 
    for (int i = 0; i < CHANNEL_COUNT; ++i) {
-      Initialize_Channel_Hardware_Profile((Channel_Number) i);
+      Initialize_Channel_Hardware_Interface((Channel_Number) i);
    }
 }
 
-static void Initialize_Channel_Hardware_Profile(Channel_Number number) {
+static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
 
    MCU_GPIO_Profile * profile = &channel_profile[number].mcu_hardware_profile;
 
