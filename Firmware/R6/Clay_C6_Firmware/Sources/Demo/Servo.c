@@ -51,7 +51,7 @@ extern void Servo_Demo() {
    updated_channel_profile[CHANNEL_4].enabled = TRUE;
    updated_channel_profile[CHANNEL_4].type = CHANNEL_TYPE_PULSE;
    updated_channel_profile[CHANNEL_4].direction = CHANNEL_DIRECTION_OUTPUT;
-   updated_channel_profile[CHANNEL_4].pulse_frequency = 50;
+   updated_channel_profile[CHANNEL_4].pulse_period_s = 0.02;
    updated_channel_profile[CHANNEL_4].pulse_duty = 90;
 
    Apply_Channels();

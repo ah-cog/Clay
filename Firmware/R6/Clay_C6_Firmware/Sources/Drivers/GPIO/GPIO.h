@@ -50,9 +50,9 @@ typedef enum
 
 typedef enum
 {
-   CHANNEL_TYPE_TOGGLE = 0,
-   CHANNEL_TYPE_WAVEFORM = 1,
-   CHANNEL_TYPE_PULSE = 2,
+   CHANNEL_TYPE_TOGGLE = 1,
+   CHANNEL_TYPE_WAVEFORM = 2,
+   CHANNEL_TYPE_PULSE = 4,
    CHANNEL_TYPE_COUNT
 } Channel_Type;
 
@@ -67,15 +67,19 @@ typedef enum
 
 typedef enum
 {
+   MCU_ADC0,
    MCU_ADC1,
    MCU_ADC_COUNT
 } MCU_ADC_Channel;
 
 typedef enum
 {
-   MCU_FTM2,
+   MCU_PWM_OUT_1,
+   MCU_PWM_OUT_2,
+   MCU_PWM_OUT_3,
+   MCU_PWM_OUT_4,
    MCU_PULSE_COUNT
-} MCU_FTM_Channel;
+} MCU_PWM_Channel;
 
 typedef struct
 {
@@ -91,7 +95,7 @@ typedef struct
 
 typedef struct
 {
-      MCU_FTM_Channel ftm_channel;
+      MCU_PWM_Channel pwm_channel;
 } MCU_GPIO_PWM_Interface;
 
 typedef struct
@@ -113,11 +117,11 @@ typedef struct
       //HACK
       uint32_t toggle_value;
       uint32_t waveform_value;
-      uint32_t pulse_frequency;
-      double pulse_duty;
+      LDD_PPG_Tfloat pulse_period_s;
+      uint16_t pulse_duty;
       //HACK
 
-      MCU_GPIO_Profile hardware_map;
+      MCU_GPIO_Profile mcu_hardware_profile;
 
       // TODO: Expected value. Set this to monitor the channel and look for a value. This will be used to set the LED state (maybe green or red, depending on correct or incorrect)
       // TODO: UUID for port. Used to record data and use it to submit data and request data.

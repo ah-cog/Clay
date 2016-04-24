@@ -1,133 +1,118 @@
 \t (00:00:00) allegro 16.6 P004 (v16-6-112G) Windows 32
-\t (00:00:00)     Journal start - Sat Mar 19 14:07:02 2016
-\t (00:00:00)         Host=STEELGIANT User=thebh_000 Pid=16176 CPUs=8
+\t (00:00:00)     Journal start - Sat Apr 23 20:23:46 2016
+\t (00:00:00)         Host=STEELGIANT User=thebh_000 Pid=7920 CPUs=8
 \t (00:00:00) 
 \t (00:00:02) Opening existing design...
-\i (00:00:04) fillin yes 
-\d (00:00:04) Database opened: E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd
-\t (00:00:04) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
-\i (00:00:04) trapsize 190
-\i (00:00:04) trapsize 186
-\i (00:00:04) trapsize 190
-\i (00:00:04) trapsize 192
-\i (00:00:05) trapsize 163
-\i (00:00:05) trapsize 163
-\i (00:00:05) generaledit 
-\i (00:00:07) zoom out 1 
-\i (00:00:07) setwindow pcb
-\i (00:00:07) zoom out -391.57 598.88
-\i (00:00:07) trapsize 327
-\i (00:00:07) zoom out 1 
-\i (00:00:07) setwindow pcb
-\i (00:00:07) zoom out -382.42 615.21
-\t (00:00:07) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
-\i (00:00:07) trapsize 653
-\i (00:00:27) pick grid -1178.31 427.02
-\t (00:00:27) last pick:  -1178.00  427.00
-\i (00:00:30) roam x 96 
-\i (00:00:30) roam x 96
-\i (00:00:30) roam y 96 
-\i (00:00:30) roam y 96
-\i (00:00:31) roam y 96 
-\i (00:00:31) roam y 96
-\i (00:00:31) roam y 96 
-\i (00:00:31) roam y 96
-\i (00:00:31) roam y 96 
-\i (00:00:31) roam y 96
-\i (00:00:31) roam x 96 
-\i (00:00:31) roam x 96
-\i (00:00:31) roam y 96 
-\i (00:00:31) roam y 96
-\i (00:00:31) roam x 96 
-\i (00:00:31) roam x 96
-\i (00:01:09) setwindow form.find
-\i (00:01:09) FORM find all_off  
-\i (00:01:13) FORM find nets YES 
-\i (00:01:14) setwindow pcb
-\i (00:01:14) trapsize 890
-\i (00:01:15) trapsize 653
-\i (00:01:18) pick grid -596.09 128.07
-\t (00:01:18) last pick:  -596.00  128.00
-\i (00:01:21) pick grid tgl -586.94 109.78
-\t (00:01:21) last pick:  -587.00  110.00
-\i (00:01:22) pick grid tgl -605.24 86.25
-\t (00:01:22) last pick:  -605.00  86.00
-\i (00:01:23) roam x 96 
-\i (00:01:23) roam x 96
-\i (00:01:23) roam x 96 
-\i (00:01:23) roam x 96
-\i (00:01:23) roam y 96 
-\i (00:01:23) roam y 96
-\i (00:01:23) roam y 96 
-\i (00:01:23) roam y 96
-\i (00:01:24) roam y 96 
-\i (00:01:24) roam y 96
-\i (00:01:24) roam x 96 
-\i (00:01:24) roam x 96
-\i (00:01:24) roam y 96 
-\i (00:01:24) roam y 96
-\i (00:01:24) roam y 96 
-\i (00:01:24) roam y 96
-\i (00:01:24) roam x 96 
-\i (00:01:24) roam x 96
-\i (00:31:47) roam y -96 
-\i (00:31:47) roam y -96
-\i (00:31:47) roam y -96 
-\i (00:31:47) roam y -96
-\i (00:31:47) roam y -96 
-\i (00:31:47) roam y -96
-\i (00:31:48) roam y -96 
-\i (00:31:48) roam y -96
-\i (00:31:48) roam y -96 
-\i (00:31:48) roam y -96
-\i (00:31:48) roam y -96 
-\i (00:31:48) roam y -96
-\i (00:31:48) roam y -96 
-\i (00:31:48) roam y -96
-\i (00:31:48) roam y -96 
-\i (00:31:48) roam y -96
-\i (00:31:48) roam y -96 
-\i (00:31:48) roam y -96
-\i (00:31:50) pick grid 1434.81 514.91
-\t (00:31:50) last pick:  1435.00  515.00
-\i (00:31:50) zoom in 1 
-\i (00:31:50) setwindow pcb
-\i (00:31:50) zoom in 1196.95 418.20
-\t (00:31:50) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
-\i (00:31:50) trapsize 327
-\i (00:31:53) show measure 
-\i (00:31:54) setwindow form.find
-\i (00:31:54) FORM find all_off  
-\i (00:31:55) setwindow pcb
-\i (00:31:55) pick grid 1139.45 446.30
-\t (00:31:55) last pick:  1139.00  446.00
-\i (00:31:56) zoom in 1 
-\i (00:31:56) setwindow pcb
-\i (00:31:56) zoom in 965.63 393.38
-\i (00:31:56) trapsize 163
-\i (00:31:56) zoom in 1 
-\i (00:31:56) setwindow pcb
-\i (00:31:56) zoom in 965.64 393.38
-\i (00:31:56) trapsize 82
-\i (00:31:56) zoom in 1 
-\i (00:31:56) setwindow pcb
-\i (00:31:56) zoom in 966.78 394.53
-\i (00:31:56) trapsize 41
-\i (00:31:57) zoom in 1 
-\i (00:31:57) setwindow pcb
-\i (00:31:57) zoom in 965.39 394.86
-\i (00:31:57) trapsize 20
-\i (00:31:57) zoom in 1 
-\i (00:31:57) setwindow pcb
-\i (00:31:57) zoom in 965.39 394.86
-\i (00:31:57) trapsize 10
-\i (00:31:58) pick grid 966.23 394.92
-\t (00:31:58) last pick:  966.00  395.00
-\i (00:31:58) zoom out 1 
-\i (00:31:58) setwindow pcb
-\i (00:31:58) zoom out 968.66 394.27
-\i (00:31:58) trapsize 20
-\i (00:31:58) zoom out 1 
-\i (00:31:58) setwindow pcb
-\i (00:31:58) zoom out 969.22 395.00
-\i (00:31:58) trapsize 41
+\d (00:00:02) Database opened: E:/git/clay/Circuit/R6_1/allegro_c6r3/CLAYc6r3.brd
+\t (00:00:02) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:00:02) trapsize 190
+\i (00:00:02) trapsize 186
+\i (00:00:02) trapsize 190
+\i (00:00:02) trapsize 192
+\i (00:00:02) trapsize 163
+\i (00:00:02) trapsize 163
+\i (00:00:03) etchedit 
+\i (00:00:08) setwindow form.vf_vis
+\i (00:00:08) FORM vf_vis colorview_list File: pin_via_silk_soldermask 
+\i (00:00:08) color -globvis off 
+\i (00:00:08) color -vis 'BOARD GEOMETRY/SILKSCREEN_TOP' 
+\i (00:00:08) color -vis 'BOARD GEOMETRY/OUTLINE' 
+\i (00:00:08) color -vis 'PACKAGE GEOMETRY/SOLDERMASK_TOP' 
+\i (00:00:08) color -vis 'PACKAGE GEOMETRY/SILKSCREEN_TOP' 
+\i (00:00:08) color -vis PIN/TOP 
+\i (00:00:08) color -vis PIN/GND 
+\i (00:00:08) color -vis PIN/PWR 
+\i (00:00:08) color -vis PIN/BOTTOM 
+\i (00:00:08) color -vis PIN/FILMMASKBOTTOM 
+\i (00:00:08) color -vis PIN/FILMMASKTOP 
+\i (00:00:08) color -vis PIN/PASTEMASK_BOTTOM 
+\i (00:00:08) color -vis PIN/PASTEMASK_TOP 
+\i (00:00:08) color -vis PIN/SOLDERMASK_BOTTOM 
+\i (00:00:08) color -vis PIN/SOLDERMASK_TOP 
+\i (00:00:08) color -vis 'REF DES/SILKSCREEN_TOP' 
+\i (00:00:08) color -vis 'VIA CLASS/TOP' 
+\i (00:00:08) color -vis 'VIA CLASS/GND' 
+\i (00:00:08) color -vis 'VIA CLASS/PWR' 
+\i (00:00:08) color -vis 'VIA CLASS/BOTTOM' 
+\i (00:00:08) color -vis 'VIA CLASS/FILMMASKBOTTOM' 
+\i (00:00:08) color -vis 'VIA CLASS/FILMMASKTOP' 
+\i (00:00:08) color -vis 'VIA CLASS/PASTEMASK_BOTTOM' 
+\i (00:00:08) color -vis 'VIA CLASS/PASTEMASK_TOP' 
+\i (00:00:08) color -vis 'VIA CLASS/SOLDERMASK_BOTTOM' 
+\i (00:00:08) color -vis 'VIA CLASS/SOLDERMASK_TOP' 
+\i (00:00:08) setwindow pcb
+\i (00:00:08) trapsize 163
+\i (00:00:08) etchedit 
+\i (00:00:09) zoom out 1 
+\i (00:00:09) setwindow pcb
+\i (00:00:09) zoom out -368.04 578.62
+\i (00:00:09) trapsize 327
+\i (00:00:09) zoom out 1 
+\i (00:00:09) setwindow pcb
+\i (00:00:09) zoom out -368.05 578.62
+\t (00:00:09) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:00:09) trapsize 653
+\i (00:00:11) zoom out 1 
+\i (00:00:11) setwindow pcb
+\i (00:00:11) zoom out -249.12 619.13
+\i (00:00:11) trapsize 1307
+\i (00:00:13) zoom in 1 
+\i (00:00:13) setwindow pcb
+\i (00:00:13) zoom in -84.45 -679.91
+\i (00:00:13) trapsize 653
+\i (00:00:13) zoom in 1 
+\i (00:00:13) setwindow pcb
+\i (00:00:13) zoom in -25.64 -579.28
+\t (00:00:13) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:00:13) trapsize 327
+\i (00:00:14) roam y 96 
+\i (00:00:14) roam y 96
+\i (00:00:14) roam y 96 
+\i (00:00:14) roam y 96
+\i (00:00:15) roam y 96 
+\i (00:00:15) roam y 96
+\i (00:00:15) roam y 96 
+\i (00:00:15) roam y 96
+\i (00:00:15) roam x 96 
+\i (00:00:15) roam x 96
+\i (00:00:15) roam y -96 
+\i (00:00:15) roam y -96
+\i (00:00:18) setwindow form.find
+\i (00:00:18) FORM find symbols YES 
+\i (00:00:23) setwindow pcb
+\i (00:00:23) zoom out 1 
+\i (00:00:23) setwindow pcb
+\i (00:00:23) zoom out -106.66 -490.74
+\t (00:00:23) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:00:23) trapsize 653
+\i (00:00:23) zoom out 1 
+\i (00:00:23) setwindow pcb
+\i (00:00:23) zoom out -119.73 -554.78
+\i (00:00:23) trapsize 1307
+\i (00:00:23) zoom out 1 
+\i (00:00:23) setwindow pcb
+\i (00:00:23) zoom out -119.73 -554.78
+\t (00:00:23) Grids are drawn 64.00, 64.00 apart for enhanced viewability.
+\i (00:00:23) trapsize 2614
+\i (00:00:24) zoom in 1 
+\i (00:00:24) setwindow pcb
+\i (00:00:24) zoom in -1100.55 281.64
+\t (00:00:24) Grids are drawn 16.00, 16.00 apart for enhanced viewability.
+\i (00:00:24) trapsize 1307
+\i (00:00:25) zoom in 1 
+\i (00:00:25) setwindow pcb
+\i (00:00:25) zoom in -799.96 336.53
+\i (00:00:25) trapsize 653
+\i (00:00:25) zoom in 1 
+\i (00:00:25) setwindow pcb
+\i (00:00:25) zoom in -781.66 109.13
+\t (00:00:25) Grids are drawn 4.00, 4.00 apart for enhanced viewability.
+\i (00:00:25) trapsize 327
+\i (00:00:25) zoom in 1 
+\i (00:00:25) setwindow pcb
+\i (00:00:25) zoom in -781.65 109.14
+\i (00:00:25) trapsize 163
+\i (00:00:30) exit 
+\e (00:00:30) Do you want to save the changes you made to CLAYc6r3.brd?
+\i (00:00:32) fillin yes 
+\t (00:00:33)     Journal end - Sat Apr 23 20:24:19 2016

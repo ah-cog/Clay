@@ -1,4 +1,8 @@
 ////Includes //////////////////////////////////////////////////////
+#include "stdlib.h"
+#include "string.h"
+#include "stdint.h"
+
 #include "GPIO.h"
 
 #include "PWM_Utils.h"
@@ -33,19 +37,19 @@ Channel updated_channel_profile[CHANNEL_COUNT];
 Channel channel_profile[CHANNEL_COUNT];
 
 ////Local vars/////////////////////////////////////////////////////
-static MCU_GPIO_Digital_Interface channel_map[CHANNEL_COUNT] = { { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_1_MASK },            // PTE1
-                                                                 { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_2_MASK },            // PTE2
-                                                                 { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_3_MASK },            // PTE3
-                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_4_MASK },            // PTB18
-                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_5_MASK },            // PTB19
-                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_6_MASK },            // PTB0
-                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_7_MASK },            // PTB21
-                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_8_MASK },            // PTB22
-                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_9_MASK },            // PTB23
-                                                                 { MCU_GPIO_PORT_PTC, GPIO_PTC_IO_10_MASK },           // PTC16
-                                                                 { MCU_GPIO_PORT_PTC, GPIO_PTC_IO_11_MASK },           // PTC17
-                                                                 { MCU_GPIO_PORT_PTD, GPIO_PTD_IO_12_MASK }            // PTD6
-};
+//static MCU_GPIO_Digital_Interface channel_map[CHANNEL_COUNT] = { { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_1_MASK },            // PTE1
+//                                                                 { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_2_MASK },            // PTE2
+//                                                                 { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_3_MASK },            // PTE3
+//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_4_MASK },            // PTB18
+//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_5_MASK },            // PTB19
+//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_6_MASK },            // PTB0
+//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_7_MASK },            // PTB21
+//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_8_MASK },            // PTB22
+//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_9_MASK },            // PTB23
+//                                                                 { MCU_GPIO_PORT_PTC, GPIO_PTC_IO_10_MASK },           // PTC16
+//                                                                 { MCU_GPIO_PORT_PTC, GPIO_PTC_IO_11_MASK },           // PTC17
+//                                                                 { MCU_GPIO_PORT_PTD, GPIO_PTD_IO_12_MASK }            // PTD6
+//};
 
 static LDD_TDeviceData * PTB_data;
 static LDD_TDeviceData * PTC_data;
@@ -68,13 +72,16 @@ static int32_t Channel_Read_Toggle(Channel_Number number);
 static int32_t Channel_Read_Waveform(Channel_Number number);
 
 static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data);
-static int32_t Channel_Write_Pulse(Channel_Number number, int32_t frequency, double ratio);
+static int32_t Channel_Write_Pulse(Channel_Number number, LDD_PPG_Tfloat period_s, uint16_t ratio);
 
 static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direction direction);
 static int32_t Channel_Set_Direction_Waveform(Channel_Number number, Channel_Direction direction);
 static int32_t Channel_Set_Direction_Pulse(Channel_Number number, Channel_Direction direction);
 
 static void Channel_Apply_Output(Channel_Number number);
+
+static void Initialize_Hardware_Profile();
+static void Initialize_Channel_Hardware_Profile(Channel_Number number);
 
 ////Global implementations ////////////////////////////////////////
 // Profile
@@ -89,7 +96,7 @@ int8_t Initialize_Channels() {
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
       updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
       updated_channel_profile[i].waveform_value = -1;
-      updated_channel_profile[i].pulse_frequency = 0;
+      updated_channel_profile[i].pulse_period_s = 0;
       updated_channel_profile[i].pulse_duty = 0;
 
       // Initialize channel profile
@@ -99,12 +106,12 @@ int8_t Initialize_Channels() {
       channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
       channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
       channel_profile[i].waveform_value = -1;
-      channel_profile[i].pulse_frequency = 0;
+      channel_profile[i].pulse_period_s = 0;
       channel_profile[i].pulse_duty = 0;
 
    }
 
-//   Initialize_Channel_Hardware_Profile();
+   Initialize_Hardware_Profile();
 
    return TRUE;
 }
@@ -122,7 +129,7 @@ int8_t Reset_Channels() {
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
       updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
       updated_channel_profile[i].waveform_value = -1;
-      updated_channel_profile[i].pulse_frequency = 0;
+      updated_channel_profile[i].pulse_period_s = 0;
       updated_channel_profile[i].pulse_duty = 0;
 
 //      // Initialize channel profile
@@ -177,12 +184,12 @@ int8_t Apply_Channels() {
          if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT
              && (channel_profile[i].toggle_value != updated_channel_profile[i].toggle_value
                  || channel_profile[i].waveform_value != updated_channel_profile[i].waveform_value
-                 || channel_profile[i].pulse_frequency != updated_channel_profile[i].pulse_frequency
+                 || channel_profile[i].pulse_period_s != updated_channel_profile[i].pulse_period_s
                  || channel_profile[i].pulse_duty != updated_channel_profile[i].pulse_duty)) {
 
             channel_profile[i].toggle_value = updated_channel_profile[i].toggle_value;
             channel_profile[i].waveform_value = updated_channel_profile[i].waveform_value;
-            channel_profile[i].pulse_frequency = updated_channel_profile[i].pulse_frequency;
+            channel_profile[i].pulse_period_s = updated_channel_profile[i].pulse_period_s;
             channel_profile[i].pulse_duty = updated_channel_profile[i].pulse_duty;
 
             // Apply value.
@@ -191,7 +198,7 @@ int8_t Apply_Channels() {
          } else if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
             channel_profile[i].toggle_value = updated_channel_profile[i].toggle_value;
             channel_profile[i].waveform_value = updated_channel_profile[i].waveform_value;
-            channel_profile[i].pulse_frequency = updated_channel_profile[i].pulse_frequency;
+            channel_profile[i].pulse_period_s = updated_channel_profile[i].pulse_period_s;
             channel_profile[i].pulse_duty = updated_channel_profile[i].pulse_duty;
          }
 
@@ -360,8 +367,7 @@ int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
    switch (channel_profile[number].type) {
 
       case CHANNEL_TYPE_TOGGLE: {
-         // channel_profile[number].value = data;
-         // result = Write_Digital(number, channel_profile[number]);
+
          result = Channel_Write_Toggle(number, data);
 
          if (result != -1) {
@@ -380,7 +386,7 @@ int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
          result = Channel_Write_Pulse(number, data, channel_profile[number].pulse_duty);
 
          if (result != -1) {
-            channel_profile[number].pulse_frequency = data;
+            channel_profile[number].pulse_period_s = data;
          }
 
          break;
@@ -398,8 +404,6 @@ int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
 int32_t Channel_Get_Data(Channel_Number number) {
 
    int32_t result = -1;
-
-//TODO: return the output data when in output mode?
 
    switch (channel_profile[number].type) {
 
@@ -457,9 +461,10 @@ void Channel_Periodic_Call() {
 // i.e., Digital
 static bool Channel_Enable_Toggle(Channel_Number number) {
 
-   if (number == CHANNEL_6 || number == CHANNEL_4) return FALSE;
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+       || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return FALSE;
 
-   switch (channel_map[number].port) {
+   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
          if (PTB_data == NULL) {
             PTB_data = GPIO_PTB_Init(NULL);
@@ -500,73 +505,166 @@ static bool Channel_Enable_Toggle(Channel_Number number) {
 // i.e., Analog
 static bool Channel_Enable_Waveform(Channel_Number number) {
 
-// <HACK>
-   if (number != CHANNEL_6) return FALSE;
-// </HACK>
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
+       || channel_profile[number].type != CHANNEL_TYPE_WAVEFORM) return FALSE;
 
-   ADC1_data = ADC1_Init(NULL);
+   bool rval = FALSE;
 
-   ADC1_StartCalibration(ADC1_data);
+   switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
+      case MCU_ADC0: {
 
-   while (!ADC1_GetMeasurementCompleteStatus(ADC1_data))
-      ;
+         //TODO: Config ADC0 . we'll have to share it with the vbat adc line.
 
-   LDD_TError adcCalOk = ADC1_GetCalibrationResultStatus(ADC1_data);
+//            ADC0_data = ADC0_Init(NULL);
+//
+//            ADC0_StartCalibration(ADC0_data);
+//
+//            while (!ADC0_GetMeasurementCompleteStatus(ADC0_data))
+//               ;
+//
+//            LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_data);
+//            rval = TRUE;
 
-   return TRUE;
+         break;
+      }
+
+      case MCU_ADC1: {
+
+         ADC1_data = ADC1_Init(NULL);
+
+         ADC1_StartCalibration(ADC1_data);
+
+         while (!ADC1_GetMeasurementCompleteStatus(ADC1_data))
+            ;
+
+         LDD_TError adcCalOk = ADC1_GetCalibrationResultStatus(ADC1_data);
+
+         rval = TRUE;
+         break;
+      }
+
+      default: {
+         break;
+      }
+   }
+
+   return rval;
 }
 
 // i.e., PWM
 static bool Channel_Enable_Pulse(Channel_Number number) {
 
-// <HACK>
-   if (number != CHANNEL_4) return FALSE;
-// </HACK>
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+       || channel_profile[number].type != CHANNEL_TYPE_PULSE) return FALSE;
 
-   LDD_TError err;
+   bool rval = FALSE;
 
-   PWM_OUT_1_data = PWM_OUT_1_Init(NULL);
+   switch (channel_profile[number].mcu_hardware_profile.pwm_interface->pwm_channel) {
+      case MCU_PWM_OUT_1: {
 
-   err = PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, 0);
-   PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(0));
+         LDD_TError err;
 
-   return TRUE;
+         PWM_OUT_1_data = PWM_OUT_1_Init(NULL);
+
+         err = PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, 0);
+         PWM_OUT_1_SetRatio16(PWM_OUT_1_data, 0);
+
+         rval = TRUE;
+
+         break;
+      }
+
+      case MCU_PWM_OUT_2: {
+
+         //PWM_OUT_2 not implemented
+//         LDD_TError err;
+//
+//         PWM_OUT_2_data = PWM_OUT_2_Init(NULL);
+//
+//         err = PWM_OUT_2_SetFrequencyHz(PWM_OUT_2_data, 0);
+//         PWM_OUT_2_SetRatio16(PWM_OUT_2_data, 0);
+//
+//         rval = TRUE;
+
+         break;
+      }
+
+      case MCU_PWM_OUT_3: {
+
+         //PWM_OUT_3 not implemented
+//         LDD_TError err;
+//
+//         PWM_OUT_3_data = PWM_OUT_3_Init(NULL);
+//
+//         err = PWM_OUT_3_SetFrequencyHz(PWM_OUT_3_data, 0);
+//         PWM_OUT_3_SetRatio16(PWM_OUT_3_data, 0);
+//
+//         rval = TRUE;
+
+         break;
+      }
+
+      case MCU_PWM_OUT_4: {
+
+         //PWM_OUT_3 not implemented
+//         LDD_TError err;
+//
+//         PWM_OUT_4_data = PWM_OUT_4_Init(NULL);
+//
+//         err = PWM_OUT_4_SetFrequencyHz(PWM_OUT_4_data, 0);
+//         PWM_OUT_4_SetRatio16(PWM_OUT_4_data, 0);
+//
+//         rval = TRUE;
+
+         break;
+      }
+
+      default: {
+         break;
+      }
+   }
+
+   return rval;
+
 }
 
 // Hardware. General-purpose GPIO control.
 static int32_t Channel_Read_Toggle(Channel_Number number) {
 
-// <HACK>
-   if (number == CHANNEL_6 || number == CHANNEL_4) return -1;
-// </HACK>
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+       || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return -1;
 
    int32_t result = -1;
 
-   switch (channel_map[number].port) {
+   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
 
-         result = (GPIO_PTB_GetPortValue(PTB_data) & channel_map[number].mask) ? 1 : 0;
+         result =
+               (GPIO_PTB_GetPortValue(PTB_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
 
       case MCU_GPIO_PORT_PTC: {
 
-         result = (GPIO_PTC_GetPortValue(PTC_data) & channel_map[number].mask) ? 1 : 0;
+         result =
+               (GPIO_PTC_GetPortValue(PTC_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
 
       case MCU_GPIO_PORT_PTD: {
 
-         result = (GPIO_PTC_GetPortValue(PTC_data) & channel_map[number].mask) ? 1 : 0;
+         result =
+               (GPIO_PTC_GetPortValue(PTC_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
 
       case MCU_GPIO_PORT_PTE: {
 
-         result = (GPIO_PTC_GetPortValue(PTC_data) & channel_map[number].mask) ? 1 : 0;
+         result =
+               (GPIO_PTC_GetPortValue(PTC_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
@@ -583,41 +681,68 @@ static int32_t Channel_Read_Toggle(Channel_Number number) {
 // Hardware. General-purpose GPIO control.
 static int32_t Channel_Read_Waveform(Channel_Number number) {
 
-   if (number != CHANNEL_6) return -1;
-   //TODO: get adc1 or adc0 and sample group from channel_map. For now, we just have CHANNEL_6 to worry about.
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
+       || channel_profile[number].type != CHANNEL_TYPE_WAVEFORM) return -1;
 
-   int32_t result = -1;
+   int rval;
 
-   //select sample group. This in preconfigured in processor expert. port 6 is in sample group 0
-   ADC1_SelectSampleGroup(ADC1_data, 0);
+   switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
+      case MCU_ADC0: {
+         //TODO: Config ADC0 . we'll have to share it with the vbat adc line.
+//         ADC0_SelectSampleGroup(ADC0_data, channel_profile[number].mcu_hardware_profile.adc_interface->sample_group);
 
-   //tell the ADC to start a measurement.
-   ADC1_StartSingleMeasurement(ADC1_data);
+//tell the ADC to start a measurement.
+//         ADC0_StartSingleMeasurement(ADC0_data);
+//
+//         //Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
+//         while (!ADC0_GetMeasurementCompleteStatus(ADC0_data))
+//            ;
+//
+//         //get the value
+//         ADC0_GetMeasuredValues(ADC0_data, &rval);
 
-   //Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
-   while (!ADC1_GetMeasurementCompleteStatus(ADC1_data))
-      ;
+         break;
+      }
 
-   //get the value
-   ADC1_GetMeasuredValues(ADC1_data, &result);
+      case MCU_ADC1: {
+         ADC1_SelectSampleGroup(ADC1_data, channel_profile[number].mcu_hardware_profile.adc_interface->sample_group);
 
-   return result;
+         //tell the ADC to start a measurement.
+         ADC1_StartSingleMeasurement(ADC1_data);
+
+         //Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
+         while (!ADC1_GetMeasurementCompleteStatus(ADC1_data))
+            ;
+
+         //get the value
+         ADC1_GetMeasuredValues(ADC1_data, &rval);
+
+         break;
+      }
+
+      default: {
+         break;
+      }
+   }
+
+   return rval;
 }
 
 // Hardware. General-purpose GPIO control.
 static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
 
-   if (number == CHANNEL_6 || number == CHANNEL_4) return -1;
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+       || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return -1;
 
    int32_t result = 0;
 
-   switch (channel_map[number].port) {
+   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
 
          if (data) {
-            GPIO_PTB_SetPortBits(PTB_data, channel_map[number].mask);
+            GPIO_PTB_SetPortBits(PTB_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTB_ClearPortBits(PTB_data, channel_map[number].mask);
+            GPIO_PTB_ClearPortBits(PTB_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          }
 
          break;
@@ -626,9 +751,9 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
       case MCU_GPIO_PORT_PTC: {
 
          if (data) {
-            GPIO_PTC_SetPortBits(PTC_data, channel_map[number].mask);
+            GPIO_PTC_SetPortBits(PTC_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTC_ClearPortBits(PTC_data, channel_map[number].mask);
+            GPIO_PTC_ClearPortBits(PTC_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          }
 
          break;
@@ -637,9 +762,9 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
       case MCU_GPIO_PORT_PTD: {
 
          if (data) {
-            GPIO_PTD_SetPortBits(PTD_data, channel_map[number].mask);
+            GPIO_PTD_SetPortBits(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTD_ClearPortBits(PTD_data, channel_map[number].mask);
+            GPIO_PTD_ClearPortBits(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          }
 
          break;
@@ -648,9 +773,9 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
       case MCU_GPIO_PORT_PTE: {
 
          if (data) {
-            GPIO_PTE_SetPortBits(PTE_data, channel_map[number].mask);
+            GPIO_PTE_SetPortBits(PTE_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTE_ClearPortBits(PTE_data, channel_map[number].mask);
+            GPIO_PTE_ClearPortBits(PTE_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          }
 
          break;
@@ -666,39 +791,68 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
 }
 
 // Hardware. General-purpose GPIO control.
-static int32_t Channel_Write_Pulse(Channel_Number number, int32_t frequency, double ratio) {
+static int32_t Channel_Write_Pulse(Channel_Number number, LDD_PPG_Tfloat period_s, uint16_t ratio) {
 
-   if (number != CHANNEL_4) return -1;
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+       || channel_profile[number].type != CHANNEL_TYPE_PULSE) return -1;
 
-   int32_t result = 0;
+   int32_t rval = 0;
 
-   if (frequency > 0 && ratio > 0) {
+   switch (channel_profile[number].mcu_hardware_profile.pwm_interface->pwm_channel) {
+      case MCU_PWM_OUT_1: {
 
-      //set the frequency
-      PWM_OUT_1_SetFrequencyHz(PWM_OUT_1_data, frequency);     //50 hz for motor drive
+         if (period_s > 0 && ratio > 0) {
 
-      //this is how we set the ratio. The ratio is set by a 16-bit value. We scale a percentage up to the full scale of that 16 bit value. example: 50% = 32768
-      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, Scale_Percent_Uint16(ratio));     //when changing frequency, fix the ratio
-   } else {
+            //set the frequency
+            PWM_OUT_1_SetPeriodReal(PWM_OUT_1_data, period_s);     //50 hz for motor drive
 
-      //if we set the ratio to 0, the output will never change states.
-      PWM_OUT_1_SetRatio16(PWM_OUT_1_data, 0);
+            //this is how we set the ratio. The ratio is set by a 16-bit value. We scale a percentage up to the full scale of that 16 bit value. example: 50% = 32768
+            PWM_OUT_1_SetRatio16(PWM_OUT_1_data, ratio);     //when changing frequency, fix the ratio
+         } else {
+
+            //if we set the ratio to 0, the output will never change states.
+            PWM_OUT_1_SetRatio16(PWM_OUT_1_data, 0);
+         }
+
+         break;
+      }
+
+      case MCU_PWM_OUT_2: {
+         break;
+      }
+
+      case MCU_PWM_OUT_3: {
+         break;
+      }
+
+      case MCU_PWM_OUT_4: {
+         break;
+      }
+
+      default: {
+         break;
+      }
    }
 
-   return result;
+   return rval;
 }
 
 static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direction direction) {
 
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+       || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return -1;
+
    int rval = 0;
 
-   switch (channel_map[number].port) {
+   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
 
          if (direction == CHANNEL_DIRECTION_INPUT) {
-            GPIO_PTB_SetPortInputDirection(PTB_data, channel_map[number].mask);
+            GPIO_PTB_SetPortInputDirection(PTB_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTB_SetPortOutputDirection(PTB_data, channel_map[number].mask, 0);
+            GPIO_PTB_SetPortOutputDirection(PTB_data,
+                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
+                                            channel_profile[number].toggle_value);
          }
 
          break;
@@ -707,9 +861,11 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
       case MCU_GPIO_PORT_PTC: {
 
          if (direction == CHANNEL_DIRECTION_INPUT) {
-            GPIO_PTC_SetPortInputDirection(PTC_data, channel_map[number].mask);
+            GPIO_PTC_SetPortInputDirection(PTC_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTC_SetPortOutputDirection(PTC_data, channel_map[number].mask, 0);
+            GPIO_PTC_SetPortOutputDirection(PTC_data,
+                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
+                                            channel_profile[number].toggle_value);
          }
 
          break;
@@ -718,9 +874,11 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
       case MCU_GPIO_PORT_PTD: {
 
          if (direction == CHANNEL_DIRECTION_INPUT) {
-            GPIO_PTD_SetPortInputDirection(PTD_data, channel_map[number].mask);
+            GPIO_PTD_SetPortInputDirection(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTD_SetPortOutputDirection(PTD_data, channel_map[number].mask, 0);
+            GPIO_PTD_SetPortOutputDirection(PTD_data,
+                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
+                                            channel_profile[number].toggle_value);
          }
 
          break;
@@ -729,9 +887,11 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
       case MCU_GPIO_PORT_PTE: {
 
          if (direction == CHANNEL_DIRECTION_INPUT) {
-            GPIO_PTE_SetPortInputDirection(PTE_data, channel_map[number].mask);
+            GPIO_PTE_SetPortInputDirection(PTE_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTE_SetPortOutputDirection(PTE_data, channel_map[number].mask, 0);
+            GPIO_PTE_SetPortOutputDirection(PTE_data,
+                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
+                                            channel_profile[number].toggle_value);
          }
 
          break;
@@ -748,6 +908,9 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
 
 static int32_t Channel_Set_Direction_Waveform(Channel_Number number, Channel_Direction direction) {
 
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
+       || channel_profile[number].type != CHANNEL_TYPE_WAVEFORM) return -1;
+
 //HACK
    if (direction == CHANNEL_DIRECTION_INPUT) {
       return 0;
@@ -757,6 +920,9 @@ static int32_t Channel_Set_Direction_Waveform(Channel_Number number, Channel_Dir
 }
 
 static int32_t Channel_Set_Direction_Pulse(Channel_Number number, Channel_Direction direction) {
+
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+       || channel_profile[number].type != CHANNEL_TYPE_PULSE) return -1;
 
 //HACK
    if (direction == CHANNEL_DIRECTION_OUTPUT) {
@@ -772,9 +938,10 @@ static void Channel_Disable_Toggle(Channel_Number number) {
 //      the code below would disable the ports, but the ports are currently shared between I/O pins.
    return;
 
-   if (number == CHANNEL_6 || number == CHANNEL_4) return;
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+       || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return;
 
-   switch (channel_map[number].port) {
+   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
          if (PTB_data != NULL) {
             GPIO_PTB_Deinit(PTB_data);
@@ -816,22 +983,53 @@ static void Channel_Disable_Toggle(Channel_Number number) {
 
 static void Channel_Disable_Waveform(Channel_Number number) {
 
-   if (number != CHANNEL_6) return;
-   ADC1_Deinit(ADC1_data);
-   ADC1_data = NULL;
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+       || channel_profile[number].type != CHANNEL_TYPE_PULSE) return;
+
+   int rval;
+
+   switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
+      case MCU_ADC0: {
+
+         //TODO: check for other ADC's still live before de-init. We'll have to figure out how to free the pin back up for reassignment.
+         //ADC 0 not config'd yet.
+//         ADC0_Deinit(ADC0_data);
+//         ADC0_data = NULL;
+
+         break;
+      }
+
+      case MCU_ADC1: {
+
+         //TODO: check for other ADC's still live before de-init. We'll have to figure out how to free the pin back up for reassignment.
+         ADC1_Deinit(ADC1_data);
+         ADC1_data = NULL;
+
+         break;
+      }
+
+      default: {
+         break;
+      }
+   }
+
+   return rval;
 }
 
 static void Channel_Disable_Pulse(Channel_Number number) {
 
-   if (number != CHANNEL_4) return;
+   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+       || channel_profile[number].type != CHANNEL_TYPE_PULSE) return;
+
    PWM_OUT_1_Deinit(PWM_OUT_1_data);
    PWM_OUT_1_data = NULL;
 }
 
 static void Channel_Apply_Output(Channel_Number number) {
+
    switch (channel_profile[number].type) {
       case CHANNEL_TYPE_PULSE: {
-         Channel_Write_Pulse(number, channel_profile[number].pulse_frequency, channel_profile[number].pulse_duty);
+         Channel_Write_Pulse(number, channel_profile[number].pulse_period_s, channel_profile[number].pulse_duty);
          break;
       }
       case CHANNEL_TYPE_TOGGLE: {
@@ -841,6 +1039,232 @@ static void Channel_Apply_Output(Channel_Number number) {
       default: {
          break;
       }
+   }
+
+}
+
+static void Initialize_Hardware_Profile() {
+
+   for (int i = 0; i < CHANNEL_COUNT; ++i) {
+      Initialize_Channel_Hardware_Profile((Channel_Number) i);
+   }
+}
+
+static void Initialize_Channel_Hardware_Profile(Channel_Number number) {
+
+   MCU_GPIO_Profile * profile = &channel_profile[number].mcu_hardware_profile;
+
+   switch (number) {
+
+      case CHANNEL_1: {
+         //      1,PTE1,LLWU_P0,ADC1_SE5a,SPI1_SOUT,UART1_RX,SDHC_D0,I2C1_SCL,SPI1_SIN
+
+         profile->adc_interface = calloc(1, sizeof(MCU_GPIO_ADC_Interface));
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = NULL;
+
+         profile->adc_interface->adc_channel = MCU_ADC1;
+         profile->adc_interface->sample_group = 0;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTE;
+         profile->digital_interface->mask = GPIO_PTE_IO_1_MASK;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+
+         break;
+      }
+
+      case CHANNEL_2: {
+         //      2,PTE2,LLWU_P1,ADC0_DP2,ADC1_SE6a,SPI1_SCK,UART1_CTS_b,SDHC0_DCLK
+
+         profile->adc_interface = calloc(1, sizeof(MCU_GPIO_ADC_Interface));
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = NULL;
+
+         profile->adc_interface->adc_channel = MCU_ADC1;
+         profile->adc_interface->sample_group = 0;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTE;
+         profile->digital_interface->mask = GPIO_PTE_IO_2_MASK;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+
+         break;
+      }
+
+      case CHANNEL_3: {
+         //      3,PTE3,ADC0_DM2,ADC1_SE7a,SPI1_SIN,UART1_RTS_b,SDHC0_CMD,SPI1_SOUT
+
+         profile->adc_interface = calloc(1, sizeof(MCU_GPIO_ADC_Interface));
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = NULL;
+
+         profile->adc_interface->adc_channel = MCU_ADC1;
+         profile->adc_interface->sample_group = 0;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTE;
+         profile->digital_interface->mask = GPIO_PTE_IO_3_MASK;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+
+         break;
+      }
+
+      case CHANNEL_4: {
+
+         //      4,PTB18,CAN0_TX,FTM2_CH0,I2S0_TX_BCLK,FTM2_QD_PHA7,PTB21,SPI2_SCK,CMP1_OUT
+
+         profile->adc_interface = NULL;
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = calloc(1, sizeof(MCU_GPIO_PWM_Interface));
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTB;
+         profile->digital_interface->mask = GPIO_PTB_IO_4_MASK;
+
+         profile->pwm_interface->pwm_channel = MCU_PWM_OUT_1;
+
+         profile->supported_interfaces = CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+
+         break;
+      }
+
+      case CHANNEL_5: {
+         //      5,PTB19,CAN0_RX,FTM2_CH1,I2S0_TX_FS,FTM2_QD_PHA
+
+         profile->adc_interface = NULL;
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = calloc(1, sizeof(MCU_GPIO_PWM_Interface));
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTB;
+         profile->digital_interface->mask = GPIO_PTB_IO_5_MASK;
+
+         profile->pwm_interface->pwm_channel = MCU_PWM_OUT_2;
+
+         profile->supported_interfaces = CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+
+         break;
+      }
+
+      case CHANNEL_6: {
+
+         //      6,PTB0,LLWU_P5,ADC0_SE8,ADC1_SE8,I2C0_SCL,FTM1_CH0,FTM1_QD_PHA
+
+         profile->adc_interface = calloc(1, sizeof(MCU_GPIO_ADC_Interface));
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = calloc(1, sizeof(MCU_GPIO_PWM_Interface));
+
+         profile->adc_interface->adc_channel = MCU_ADC1;
+         profile->adc_interface->sample_group = 0;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTB;
+         profile->digital_interface->mask = GPIO_PTB_IO_6_MASK;
+
+         profile->pwm_interface->pwm_channel = MCU_PWM_OUT_3;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+
+         break;
+      }
+
+      case CHANNEL_7: {
+         //      7,PTB21,SPI2_SCK,CMP1_OUT
+
+         profile->adc_interface = NULL;
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = NULL;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTB;
+         profile->digital_interface->mask = GPIO_PTB_IO_7_MASK;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE;
+
+         break;
+      }
+
+      case CHANNEL_8: {
+         //      8,PTB22,SPI2_SOUT,CMP2_OUT
+
+         profile->adc_interface = NULL;
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = NULL;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTB;
+         profile->digital_interface->mask = GPIO_PTB_IO_8_MASK;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE;
+
+         break;
+      }
+
+      case CHANNEL_9: {
+         //      9,PTB23,SPI2_SIN,SPI0_PCS5
+
+         profile->adc_interface = NULL;
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = NULL;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTB;
+         profile->digital_interface->mask = GPIO_PTB_IO_9_MASK;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE;
+
+         break;
+      }
+
+      case CHANNEL_10: {
+         //      10,PTC16,UART3_RX
+
+         profile->adc_interface = NULL;
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = NULL;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTC;
+         profile->digital_interface->mask = GPIO_PTC_IO_10_MASK;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE;
+
+         break;
+      }
+
+      case CHANNEL_11: {
+         //      11,PTC17,UART3_TX
+
+         profile->adc_interface = NULL;
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = NULL;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTC;
+         profile->digital_interface->mask = GPIO_PTC_IO_11_MASK;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE;
+
+         break;
+      }
+
+      case CHANNEL_12: {
+         //      12,PTD6,LLWU_P16,ADC0_SE7b,SPI0_PCS3,UART0_RX,FTM0_CH6,FTM0_FLT0,SPI1_SOUT
+
+         profile->adc_interface = calloc(1, sizeof(MCU_GPIO_ADC_Interface));
+         profile->digital_interface = calloc(1, sizeof(MCU_GPIO_Digital_Interface));
+         profile->pwm_interface = calloc(1, sizeof(MCU_GPIO_PWM_Interface));
+
+         profile->adc_interface->adc_channel = MCU_ADC0;
+         profile->adc_interface->sample_group = 0;
+
+         profile->digital_interface->port = MCU_GPIO_PORT_PTD;
+         profile->digital_interface->mask = GPIO_PTD_IO_12_MASK;
+
+         profile->pwm_interface->pwm_channel = MCU_PWM_OUT_4;
+
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+
+         break;
+      }
+
+      default: {
+         break;
+      }
+
    }
 
 }
