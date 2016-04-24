@@ -260,7 +260,7 @@ void Application(void) {
             // TODO: Remove message from the queue (if it was not a basic message)
             if (lock_timeline == TRUE) {
                if (Has_Messages(&incomingMessageQueue)) {
-                  Dequeue_Message(&incomingMessageQueue);
+                  message = Dequeue_Message(&incomingMessageQueue);
                   Delete_Message(message);
                   lock_timeline = FALSE;
                }
@@ -364,6 +364,7 @@ void Monitor_Periodic_Events() {
       Buzzer_Stop_Check();
       Imu_Get_Data();
       Button_Periodic_Call();
+      Channel_Periodic_Call();
 
       // TODO: Put this in a callback timer...
       if (button_mode_timeout > 0) {
