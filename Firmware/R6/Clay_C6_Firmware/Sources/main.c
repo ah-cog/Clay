@@ -53,11 +53,11 @@
 #include "FLASH1.h"
 #include "BUZZER_PWM.h"
 #include "GPIO_PTB.h"
-#include "GPIO_PTD.h"
 #include "GPIO_PTC.h"
 #include "GPIO_PTE.h"
 #include "ADC1.h"
 #include "PWM_OUT_1.h"
+#include "PWM_OUT_3.h"
 #include "PowerOn.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"

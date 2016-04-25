@@ -19,7 +19,7 @@
         <Line>PE_Const</Line>
         <Line>IO_Map</Line>
       </GenSharedModules>
-      <ShrdHeaderAge0>1216578792</ShrdHeaderAge0>
+      <ShrdHeaderAge0>1217957177</ShrdHeaderAge0>
       <ShrdCodeAge0>-1</ShrdCodeAge0>
       <ShrdAsemblAge0>-1</ShrdAsemblAge0>
       <ShrdHeaderAge1>1216511859</ShrdHeaderAge1>
@@ -56,11 +56,11 @@
         <Line>Documentation\doxygen\IMU_IRQ_component.txt</Line>
         <Line>Documentation\doxygen\FLASH1_component.txt</Line>
         <Line>Documentation\doxygen\GPIO_PTB_component.txt</Line>
-        <Line>Documentation\doxygen\GPIO_PTD_component.txt</Line>
         <Line>Documentation\doxygen\GPIO_PTC_component.txt</Line>
         <Line>Documentation\doxygen\GPIO_PTE_component.txt</Line>
         <Line>Documentation\doxygen\ADC1_component.txt</Line>
         <Line>Documentation\doxygen\PWM_OUT_1_component.txt</Line>
+        <Line>Documentation\doxygen\PWM_OUT_3_component.txt</Line>
         <Line>Generated_Code\PE_LDD.c</Line>
         <Line>Generated_Code\PE_LDD.h</Line>
         <Line>Project_Settings\Linker_Files\ProcessorExpert.ld</Line>
@@ -75,11 +75,11 @@
       </GenExtraFiles>
       <GenExtraFileSrcDir39>Repositories\lib\doxygen\</GenExtraFileSrcDir39>
       <GenExtraFileSrcDir32>lib\Kinetis\startup\</GenExtraFileSrcDir32>
-      <XtraAge29>1216578792</XtraAge29>
-      <XtraAge30>1217706550</XtraAge30>
+      <XtraAge29>1217957177</XtraAge29>
+      <XtraAge30>1217957177</XtraAge30>
       <XtraAge32>1213771170</XtraAge32>
-      <XtraAge33>1216578792</XtraAge33>
-      <XtraAge34>1217900246</XtraAge34>
+      <XtraAge33>1217957177</XtraAge33>
+      <XtraAge34>1217957499</XtraAge34>
       <XtraAge35>1216511859</XtraAge35>
       <GenExtraFileType39>5</GenExtraFileType39>
       <GenExtraFileType38>4</GenExtraFileType38>
@@ -548,10 +548,9 @@
       <GenEventModules lines_count="1">
         <Line>Events</Line>
       </GenEventModules>
-      <GenMethodsInEvents lines_count="17">
+      <GenMethodsInEvents lines_count="16">
         <Line>GPIO_PTE_OnPortEvent</Line>
         <Line>GPIO_PTC_OnPortEvent</Line>
-        <Line>GPIO_PTD_OnPortEvent</Line>
         <Line>GPIO_PTB_OnPortEvent</Line>
         <Line>FLASH1_OnOperationComplete</Line>
         <Line>IMU_IRQ_OnPortEvent</Line>
@@ -578,7 +577,6 @@
         <Line>FLASH1</Line>
         <Line>GPIO_PTB</Line>
         <Line>GPIO_PTC</Line>
-        <Line>GPIO_PTD</Line>
         <Line>GPIO_PTE</Line>
         <Line>I2C0</Line>
         <Line>IMU_FSYNC</Line>
@@ -597,6 +595,7 @@
         <Line>Pins1</Line>
         <Line>PowerOn</Line>
         <Line>PWM_OUT_1</Line>
+        <Line>PWM_OUT_3</Line>
         <Line>TI1</Line>
         <Line>TU1</Line>
         <Line>WIFI_CHIP_EN</Line>
@@ -632,16 +631,16 @@
         <Line>IMU_IRQ</Line>
         <Line>FLASH1</Line>
         <Line>GPIO_PTB</Line>
-        <Line>GPIO_PTD</Line>
         <Line>GPIO_PTC</Line>
         <Line>GPIO_PTE</Line>
         <Line>ADC1</Line>
         <Line>PWM_OUT_1</Line>
+        <Line>PWM_OUT_3</Line>
       </GenBeanModules>
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>122</ProjectModificationStamp>
+    <ProjectModificationStamp>127</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>
@@ -716,7 +715,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
     <HeaderAge>1216574804</HeaderAge>
-    <CodeAge>1217725141</CodeAge>
+    <CodeAge>1217957177</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>10</GenNumMethods>
     <SetClockConfiguration>false</SetClockConfiguration>
@@ -800,8 +799,8 @@
     <GenComponentVersion>01.100</GenComponentVersion>
     <GenDriverVersion>1.1</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1216511860</HeaderAge>
-    <CodeAge>1216511860</CodeAge>
+    <HeaderAge>1217957177</HeaderAge>
+    <CodeAge>1217957177</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>1</GenNumMethods>
     <Init>false</Init>
@@ -1083,8 +1082,8 @@
     <GenComponentVersion>01.018</GenComponentVersion>
     <GenDriverVersion>01.02</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1216511860</HeaderAge>
-    <CodeAge>1216511860</CodeAge>
+    <HeaderAge>1217957177</HeaderAge>
+    <CodeAge>1217957177</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>17</GenNumMethods>
     <Init>true</Init>
@@ -1149,8 +1148,8 @@
     <GenComponentVersion>01.164</GenComponentVersion>
     <GenDriverVersion>01.11</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1216511860</HeaderAge>
-    <CodeAge>1216511860</CodeAge>
+    <HeaderAge>1217957177</HeaderAge>
+    <CodeAge>1217957177</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>22</GenNumMethods>
     <Init>true</Init>
@@ -1228,14 +1227,14 @@
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
       <LineBeg>121</LineBeg>
-      <LineEnd>197</LineEnd>
+      <LineEnd>209</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos3>Interrupt</MethodPos3>
       <MethodType>internal_method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>198</LineBeg>
-      <LineEnd>224</LineEnd>
+      <LineBeg>210</LineBeg>
+      <LineEnd>236</LineEnd>
     </MethodPos>
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\TU1_component.txt</ExtraFile0>
@@ -1657,8 +1656,8 @@
     <GenComponentVersion>01.183</GenComponentVersion>
     <GenDriverVersion>01.08</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1216511860</HeaderAge>
-    <CodeAge>1216511860</CodeAge>
+    <HeaderAge>1217957177</HeaderAge>
+    <CodeAge>1217957177</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>25</GenNumMethods>
     <Init>true</Init>
@@ -1703,113 +1702,113 @@
       <MethodPos0>Init</MethodPos0>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>218</LineBeg>
-      <LineEnd>242</LineEnd>
+      <LineBeg>227</LineBeg>
+      <LineEnd>251</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos1>StartSingleMeasurement</MethodPos1>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>243</LineBeg>
-      <LineEnd>282</LineEnd>
+      <LineBeg>252</LineBeg>
+      <LineEnd>291</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos2>SelectSampleGroup</MethodPos2>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>283</LineBeg>
-      <LineEnd>313</LineEnd>
+      <LineBeg>292</LineBeg>
+      <LineEnd>322</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos3>CreateSampleGroup</MethodPos3>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>314</LineBeg>
-      <LineEnd>356</LineEnd>
+      <LineBeg>323</LineBeg>
+      <LineEnd>365</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos4>GetMeasuredValues</MethodPos4>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>357</LineBeg>
-      <LineEnd>390</LineEnd>
+      <LineBeg>366</LineBeg>
+      <LineEnd>399</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos5>GetMeasurementCompleteStatus</MethodPos5>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>391</LineBeg>
-      <LineEnd>412</LineEnd>
+      <LineBeg>400</LineBeg>
+      <LineEnd>421</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos6>StartCalibration</MethodPos6>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>413</LineBeg>
-      <LineEnd>435</LineEnd>
+      <LineBeg>422</LineBeg>
+      <LineEnd>444</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos7>GetCalibrationResultStatus</MethodPos7>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>436</LineBeg>
-      <LineEnd>456</LineEnd>
+      <LineBeg>445</LineBeg>
+      <LineEnd>465</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos8>Init</MethodPos8>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>177</LineBeg>
-      <LineEnd>246</LineEnd>
+      <LineBeg>194</LineBeg>
+      <LineEnd>265</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos9>StartSingleMeasurement</MethodPos9>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>247</LineBeg>
-      <LineEnd>296</LineEnd>
+      <LineBeg>266</LineBeg>
+      <LineEnd>315</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos10>SelectSampleGroup</MethodPos10>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>297</LineBeg>
-      <LineEnd>344</LineEnd>
+      <LineBeg>316</LineBeg>
+      <LineEnd>363</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos11>CreateSampleGroup</MethodPos11>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>345</LineBeg>
-      <LineEnd>407</LineEnd>
+      <LineBeg>364</LineBeg>
+      <LineEnd>426</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos12>GetMeasuredValues</MethodPos12>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>408</LineBeg>
-      <LineEnd>452</LineEnd>
+      <LineBeg>427</LineBeg>
+      <LineEnd>471</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos13>GetMeasurementCompleteStatus</MethodPos13>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>453</LineBeg>
-      <LineEnd>484</LineEnd>
+      <LineBeg>472</LineBeg>
+      <LineEnd>503</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos14>StartCalibration</MethodPos14>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>485</LineBeg>
-      <LineEnd>517</LineEnd>
+      <LineBeg>504</LineBeg>
+      <LineEnd>536</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos15>GetCalibrationResultStatus</MethodPos15>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>518</LineBeg>
-      <LineEnd>565</LineEnd>
+      <LineBeg>537</LineBeg>
+      <LineEnd>584</LineEnd>
     </MethodPos>
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\ADC0_component.txt</ExtraFile0>
@@ -4120,13 +4119,13 @@
     <ExtraFile0>Documentation\doxygen\GPIO_PTB_component.txt</ExtraFile0>
   </ComponentID_86>
   <ComponentID_87>
-    <Generated>true</Generated>
+    <Generated>false</Generated>
     <GenCompName>GPIO_PTD</GenCompName>
     <GenComponentVersion>01.128</GenComponentVersion>
     <GenDriverVersion>01.08</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1216511859</HeaderAge>
-    <CodeAge>1216511859</CodeAge>
+    <HeaderAge>-1</HeaderAge>
+    <CodeAge>-1</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>27</GenNumMethods>
     <Init>true</Init>
@@ -4873,8 +4872,8 @@
     <GenComponentVersion>01.128</GenComponentVersion>
     <GenDriverVersion>01.08</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1216511859</HeaderAge>
-    <CodeAge>1216511859</CodeAge>
+    <HeaderAge>1217957177</HeaderAge>
+    <CodeAge>1217957177</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>27</GenNumMethods>
     <Init>true</Init>
@@ -4920,323 +4919,323 @@
       <MethodPos0>Init</MethodPos0>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>211</LineBeg>
-      <LineEnd>231</LineEnd>
+      <LineBeg>187</LineBeg>
+      <LineEnd>207</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos1>Deinit</MethodPos1>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>232</LineBeg>
-      <LineEnd>246</LineEnd>
+      <LineBeg>208</LineBeg>
+      <LineEnd>222</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos2>SetEventMask</MethodPos2>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>247</LineBeg>
-      <LineEnd>275</LineEnd>
+      <LineBeg>223</LineBeg>
+      <LineEnd>251</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos3>GetEventMask</MethodPos3>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>276</LineBeg>
-      <LineEnd>295</LineEnd>
+      <LineBeg>252</LineBeg>
+      <LineEnd>271</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos4>SetPortEventCondition</MethodPos4>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>296</LineBeg>
-      <LineEnd>334</LineEnd>
+      <LineBeg>272</LineBeg>
+      <LineEnd>310</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos5>GetPortEventStatus</MethodPos5>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>335</LineBeg>
-      <LineEnd>363</LineEnd>
+      <LineBeg>311</LineBeg>
+      <LineEnd>339</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos6>SetPortValue</MethodPos6>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>364</LineBeg>
-      <LineEnd>387</LineEnd>
+      <LineBeg>340</LineBeg>
+      <LineEnd>363</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos7>GetPortValue</MethodPos7>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>388</LineBeg>
-      <LineEnd>413</LineEnd>
+      <LineBeg>364</LineBeg>
+      <LineEnd>389</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos8>ClearPortBits</MethodPos8>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>414</LineBeg>
-      <LineEnd>440</LineEnd>
+      <LineBeg>390</LineBeg>
+      <LineEnd>416</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos9>SetPortBits</MethodPos9>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>441</LineBeg>
-      <LineEnd>467</LineEnd>
+      <LineBeg>417</LineBeg>
+      <LineEnd>443</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos10>TogglePortBits</MethodPos10>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>468</LineBeg>
-      <LineEnd>494</LineEnd>
+      <LineBeg>444</LineBeg>
+      <LineEnd>470</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos11>SetPortInputDirection</MethodPos11>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>495</LineBeg>
-      <LineEnd>521</LineEnd>
+      <LineBeg>471</LineBeg>
+      <LineEnd>497</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos12>SetPortOutputDirection</MethodPos12>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>522</LineBeg>
-      <LineEnd>553</LineEnd>
+      <LineBeg>498</LineBeg>
+      <LineEnd>529</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos13>SetFieldValue</MethodPos13>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>554</LineBeg>
-      <LineEnd>579</LineEnd>
+      <LineBeg>530</LineBeg>
+      <LineEnd>555</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos14>GetFieldValue</MethodPos14>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>580</LineBeg>
-      <LineEnd>605</LineEnd>
+      <LineBeg>556</LineBeg>
+      <LineEnd>581</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos15>ClearFieldBits</MethodPos15>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>606</LineBeg>
-      <LineEnd>634</LineEnd>
+      <LineBeg>582</LineBeg>
+      <LineEnd>610</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos16>SetFieldBits</MethodPos16>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>635</LineBeg>
-      <LineEnd>663</LineEnd>
+      <LineBeg>611</LineBeg>
+      <LineEnd>639</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos17>ToggleFieldBits</MethodPos17>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>664</LineBeg>
-      <LineEnd>692</LineEnd>
+      <LineBeg>640</LineBeg>
+      <LineEnd>668</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos18>SetFieldInputDirection</MethodPos18>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>693</LineBeg>
-      <LineEnd>711</LineEnd>
+      <LineBeg>669</LineBeg>
+      <LineEnd>687</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos19>SetFieldOutputDirection</MethodPos19>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>712</LineBeg>
-      <LineEnd>735</LineEnd>
+      <LineBeg>688</LineBeg>
+      <LineEnd>711</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos20>ConnectPin</MethodPos20>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>736</LineBeg>
-      <LineEnd>761</LineEnd>
+      <LineBeg>712</LineBeg>
+      <LineEnd>737</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos21>Interrupt</MethodPos21>
       <MethodType>internal_method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>762</LineBeg>
-      <LineEnd>774</LineEnd>
+      <LineBeg>738</LineBeg>
+      <LineEnd>750</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos22>SetOperationMode</MethodPos22>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>775</LineBeg>
-      <LineEnd>811</LineEnd>
+      <LineBeg>751</LineBeg>
+      <LineEnd>787</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos23>Init</MethodPos23>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>141</LineBeg>
-      <LineEnd>213</LineEnd>
+      <LineBeg>125</LineBeg>
+      <LineEnd>183</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos24>Deinit</MethodPos24>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>214</LineBeg>
-      <LineEnd>245</LineEnd>
+      <LineBeg>184</LineBeg>
+      <LineEnd>211</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos25>SetEventMask</MethodPos25>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>246</LineBeg>
-      <LineEnd>283</LineEnd>
+      <LineBeg>212</LineBeg>
+      <LineEnd>249</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos26>GetEventMask</MethodPos26>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>284</LineBeg>
-      <LineEnd>306</LineEnd>
+      <LineBeg>250</LineBeg>
+      <LineEnd>272</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos27>SetPortEventCondition</MethodPos27>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>307</LineBeg>
-      <LineEnd>368</LineEnd>
+      <LineBeg>273</LineBeg>
+      <LineEnd>334</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos28>GetPortEventStatus</MethodPos28>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>369</LineBeg>
-      <LineEnd>409</LineEnd>
+      <LineBeg>335</LineBeg>
+      <LineEnd>375</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos29>SetPortValue</MethodPos29>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>410</LineBeg>
-      <LineEnd>440</LineEnd>
+      <LineBeg>376</LineBeg>
+      <LineEnd>406</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos30>GetPortValue</MethodPos30>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>441</LineBeg>
-      <LineEnd>471</LineEnd>
+      <LineBeg>407</LineBeg>
+      <LineEnd>437</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos31>ClearPortBits</MethodPos31>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>472</LineBeg>
-      <LineEnd>503</LineEnd>
+      <LineBeg>438</LineBeg>
+      <LineEnd>469</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos32>SetPortBits</MethodPos32>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>504</LineBeg>
-      <LineEnd>535</LineEnd>
+      <LineBeg>470</LineBeg>
+      <LineEnd>501</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos33>TogglePortBits</MethodPos33>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>536</LineBeg>
-      <LineEnd>567</LineEnd>
+      <LineBeg>502</LineBeg>
+      <LineEnd>533</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos34>SetPortInputDirection</MethodPos34>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>568</LineBeg>
-      <LineEnd>599</LineEnd>
+      <LineBeg>534</LineBeg>
+      <LineEnd>565</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos35>SetPortOutputDirection</MethodPos35>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>600</LineBeg>
-      <LineEnd>642</LineEnd>
+      <LineBeg>566</LineBeg>
+      <LineEnd>608</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos36>SetFieldValue</MethodPos36>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>643</LineBeg>
-      <LineEnd>714</LineEnd>
+      <LineBeg>609</LineBeg>
+      <LineEnd>654</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos37>GetFieldValue</MethodPos37>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>715</LineBeg>
-      <LineEnd>778</LineEnd>
+      <LineBeg>655</LineBeg>
+      <LineEnd>698</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos38>ClearFieldBits</MethodPos38>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>779</LineBeg>
-      <LineEnd>835</LineEnd>
+      <LineBeg>699</LineBeg>
+      <LineEnd>741</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos39>SetFieldBits</MethodPos39>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>836</LineBeg>
-      <LineEnd>892</LineEnd>
+      <LineBeg>742</LineBeg>
+      <LineEnd>784</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos40>ToggleFieldBits</MethodPos40>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>893</LineBeg>
-      <LineEnd>949</LineEnd>
+      <LineBeg>785</LineBeg>
+      <LineEnd>827</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos41>SetFieldInputDirection</MethodPos41>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>950</LineBeg>
-      <LineEnd>993</LineEnd>
+      <LineBeg>828</LineBeg>
+      <LineEnd>859</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos42>SetFieldOutputDirection</MethodPos42>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>994</LineBeg>
-      <LineEnd>1078</LineEnd>
+      <LineBeg>860</LineBeg>
+      <LineEnd>908</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos43>ConnectPin</MethodPos43>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>1079</LineBeg>
-      <LineEnd>1140</LineEnd>
+      <LineBeg>909</LineBeg>
+      <LineEnd>952</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos44>Interrupt</MethodPos44>
       <MethodType>internal_method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>1141</LineBeg>
-      <LineEnd>1167</LineEnd>
+      <LineBeg>953</LineBeg>
+      <LineEnd>979</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos45>SetOperationMode</MethodPos45>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>1168</LineBeg>
-      <LineEnd>1222</LineEnd>
+      <LineBeg>980</LineBeg>
+      <LineEnd>1034</LineEnd>
     </MethodPos>
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\GPIO_PTE_component.txt</ExtraFile0>
@@ -5425,8 +5424,8 @@
     <GenComponentVersion>01.183</GenComponentVersion>
     <GenDriverVersion>01.08</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1217436792</HeaderAge>
-    <CodeAge>1217436792</CodeAge>
+    <HeaderAge>1217957177</HeaderAge>
+    <CodeAge>1217957177</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>25</GenNumMethods>
     <Init>true</Init>
@@ -5471,127 +5470,127 @@
       <MethodPos0>Init</MethodPos0>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>211</LineBeg>
-      <LineEnd>235</LineEnd>
+      <LineBeg>220</LineBeg>
+      <LineEnd>244</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos1>Deinit</MethodPos1>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>236</LineBeg>
-      <LineEnd>250</LineEnd>
+      <LineBeg>245</LineBeg>
+      <LineEnd>259</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos2>StartSingleMeasurement</MethodPos2>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>251</LineBeg>
-      <LineEnd>290</LineEnd>
+      <LineBeg>260</LineBeg>
+      <LineEnd>299</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos3>SelectSampleGroup</MethodPos3>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>291</LineBeg>
-      <LineEnd>321</LineEnd>
+      <LineBeg>300</LineBeg>
+      <LineEnd>330</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos4>CreateSampleGroup</MethodPos4>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>322</LineBeg>
-      <LineEnd>364</LineEnd>
+      <LineBeg>331</LineBeg>
+      <LineEnd>373</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos5>GetMeasuredValues</MethodPos5>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>365</LineBeg>
-      <LineEnd>398</LineEnd>
+      <LineBeg>374</LineBeg>
+      <LineEnd>407</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos6>GetMeasurementCompleteStatus</MethodPos6>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>399</LineBeg>
-      <LineEnd>420</LineEnd>
+      <LineBeg>408</LineBeg>
+      <LineEnd>429</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos7>StartCalibration</MethodPos7>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>421</LineBeg>
-      <LineEnd>443</LineEnd>
+      <LineBeg>430</LineBeg>
+      <LineEnd>452</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos8>GetCalibrationResultStatus</MethodPos8>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>444</LineBeg>
-      <LineEnd>464</LineEnd>
+      <LineBeg>453</LineBeg>
+      <LineEnd>473</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos9>Init</MethodPos9>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>161</LineBeg>
-      <LineEnd>230</LineEnd>
+      <LineBeg>178</LineBeg>
+      <LineEnd>249</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos10>Deinit</MethodPos10>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>231</LineBeg>
-      <LineEnd>256</LineEnd>
+      <LineBeg>250</LineBeg>
+      <LineEnd>275</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos11>StartSingleMeasurement</MethodPos11>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>257</LineBeg>
-      <LineEnd>306</LineEnd>
+      <LineBeg>276</LineBeg>
+      <LineEnd>325</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos12>SelectSampleGroup</MethodPos12>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>307</LineBeg>
-      <LineEnd>354</LineEnd>
+      <LineBeg>326</LineBeg>
+      <LineEnd>373</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos13>CreateSampleGroup</MethodPos13>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>355</LineBeg>
-      <LineEnd>417</LineEnd>
+      <LineBeg>374</LineBeg>
+      <LineEnd>436</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos14>GetMeasuredValues</MethodPos14>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>418</LineBeg>
-      <LineEnd>462</LineEnd>
+      <LineBeg>437</LineBeg>
+      <LineEnd>481</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos15>GetMeasurementCompleteStatus</MethodPos15>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>463</LineBeg>
-      <LineEnd>494</LineEnd>
+      <LineBeg>482</LineBeg>
+      <LineEnd>513</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos16>StartCalibration</MethodPos16>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>495</LineBeg>
-      <LineEnd>527</LineEnd>
+      <LineBeg>514</LineBeg>
+      <LineEnd>546</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos17>GetCalibrationResultStatus</MethodPos17>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>528</LineBeg>
-      <LineEnd>575</LineEnd>
+      <LineBeg>547</LineBeg>
+      <LineEnd>594</LineEnd>
     </MethodPos>
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\ADC1_component.txt</ExtraFile0>
@@ -5807,6 +5806,166 @@
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\PWM_OUT_1_component.txt</ExtraFile0>
   </ComponentID_94>
+  <ComponentID_97>
+    <Generated>true</Generated>
+    <GenCompName>PWM_OUT_3</GenCompName>
+    <GenComponentVersion>01.015</GenComponentVersion>
+    <GenDriverVersion>01.03</GenDriverVersion>
+    <GenEventModule>Events</GenEventModule>
+    <HeaderAge>1217957499</HeaderAge>
+    <CodeAge>1217957499</CodeAge>
+    <AsemblAge>-1</AsemblAge>
+    <GenNumMethods>26</GenNumMethods>
+    <Init>true</Init>
+    <Deinit>true</Deinit>
+    <Enable>false</Enable>
+    <Disable>false</Disable>
+    <SetEventMask>false</SetEventMask>
+    <GetEventMask>false</GetEventMask>
+    <GetEventStatus>false</GetEventStatus>
+    <SelectPeriod>false</SelectPeriod>
+    <SetPeriodUS>false</SetPeriodUS>
+    <SetPeriodMS>true</SetPeriodMS>
+    <SetPeriodSec>false</SetPeriodSec>
+    <SetPeriodReal>true</SetPeriodReal>
+    <SetFrequencyHz>true</SetFrequencyHz>
+    <SetFrequencykHz>false</SetFrequencykHz>
+    <SetFrequencyMHz>false</SetFrequencyMHz>
+    <SetRatio8>false</SetRatio8>
+    <SetRatio16>true</SetRatio16>
+    <SetDutyUS>false</SetDutyUS>
+    <SetDutyMS>true</SetDutyMS>
+    <SetDutySec>false</SetDutySec>
+    <SetDutyReal>false</SetDutyReal>
+    <SetValue>false</SetValue>
+    <ClearValue>false</ClearValue>
+    <ConnectPin>false</ConnectPin>
+    <SetOperationMode>false</SetOperationMode>
+    <GetDriverState>false</GetDriverState>
+    <GenNumEvents>1</GenNumEvents>
+    <OnEnd_Selected>0</OnEnd_Selected>
+    <OnEnd_Name>PWM_OUT_3_OnEnd</OnEnd_Name>
+    <OnEnd_Priority>interrupts disabled</OnEnd_Priority>
+    <ISR_CmpIntISRHandle />
+    <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
+    <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
+    <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
+    <GenMethodPos>16</GenMethodPos>
+    <MethodPos>
+      <MethodPos0>Init</MethodPos0>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>133</LineBeg>
+      <LineEnd>158</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos1>Deinit</MethodPos1>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>159</LineBeg>
+      <LineEnd>173</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos2>SetPeriodMS</MethodPos2>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>174</LineBeg>
+      <LineEnd>200</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos3>SetPeriodReal</MethodPos3>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>201</LineBeg>
+      <LineEnd>227</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos4>SetFrequencyHz</MethodPos4>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>228</LineBeg>
+      <LineEnd>254</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos5>SetRatio16</MethodPos5>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>255</LineBeg>
+      <LineEnd>282</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos6>SetDutyMS</MethodPos6>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>283</LineBeg>
+      <LineEnd>309</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos7>SetRatio</MethodPos7>
+      <MethodType>internal_method_declaration</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>112</LineBeg>
+      <LineEnd>112</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos8>Init</MethodPos8>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>113</LineBeg>
+      <LineEnd>186</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos9>Deinit</MethodPos9>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>187</LineBeg>
+      <LineEnd>213</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos10>SetPeriodMS</MethodPos10>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>214</LineBeg>
+      <LineEnd>259</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos11>SetPeriodReal</MethodPos11>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>260</LineBeg>
+      <LineEnd>305</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos12>SetFrequencyHz</MethodPos12>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>306</LineBeg>
+      <LineEnd>351</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos13>SetRatio16</MethodPos13>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>352</LineBeg>
+      <LineEnd>386</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos14>SetDutyMS</MethodPos14>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>387</LineBeg>
+      <LineEnd>427</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos15>SetRatio</MethodPos15>
+      <MethodType>internal_method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>428</LineBeg>
+      <LineEnd>446</LineEnd>
+    </MethodPos>
+    <GenExtraFilesCount>1</GenExtraFilesCount>
+    <ExtraFile0>Documentation\doxygen\PWM_OUT_3_component.txt</ExtraFile0>
+  </ComponentID_97>
   <UsedSrcFiles>
     <SrcFile0>Drivers\I2C_LDD.src=-1</SrcFile0>
     <SrcFile1>Drivers\Common\ADC_LDDInit.inc=-1</SrcFile1>
