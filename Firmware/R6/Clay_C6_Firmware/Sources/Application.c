@@ -217,73 +217,77 @@ void Application(void) {
 
       // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 
-      // Step state machine
-      Wifi_State_Step();
+	   // Step state machine
+	         Wifi_State_Step();
 
-      // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
-      if (Has_Messages(&incomingWiFiMessageQueue)) {
-         message = Dequeue_Message(&incomingWiFiMessageQueue);
+	         // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
+	         if (Has_Messages(&incomingWiFiMessageQueue)) {
+	            message = Dequeue_Message(&incomingWiFiMessageQueue);
 
-         message_status = Process_Incoming_Message(message);
+	            message_status = Process_Incoming_Message(message);
 
-         // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
-         if (message_status == TRUE) {
-            Delete_Message(message);
-         } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
-            // TODO: Process events on the timeline with the message, before dequeueing...
-            Queue_Message(&incomingMessageQueue, message);
-         }
-      }
+	            // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
+	            if (message_status == TRUE) {
+	               Delete_Message(message);
+	            } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
+	               // TODO: Process events on the timeline with the message, before dequeueing...
+	               Queue_Message(&incomingMessageQueue, message);
+	            }
+	         }
 
-      // Process the next incoming message on the system queue
-      if (lock_timeline == FALSE) {
-         if (Has_Messages(&incomingMessageQueue)) {
-            message = Peek_Message(&incomingMessageQueue);
-            lock_timeline = TRUE;
-         }
-      }
+	         // Process the next incoming message on the system queue
+	         if (lock_timeline == FALSE) {
+	            if (Has_Messages(&incomingMessageQueue)) {
+	               message = Peek_Message(&incomingMessageQueue);
+	               lock_timeline = TRUE;
+	            }
+	         }
 
-      // Perform action.
-      if ((*timeline).current_event != NULL) {
-         if (Process_Event(((*timeline).current_event)) != NULL) {
+	         // Perform action.
+	         if ((*timeline).current_event != NULL) {
+	       	 message_status = Process_Event (((*timeline).current_event));
 
-            // NOTE: Action was performed successfully.
+	            if (message_status != FALSE) {
 
-            // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
-         }
+	               // NOTE: Action was performed successfully.
 
-         // Go to the next action on the timeline
-         if ((*((*timeline).current_event)).next != NULL) {
-            (*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
-         } else {
+	               // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
+	            }
 
-            // TODO: Remove message from the queue (if it was not a basic message)
-            if (lock_timeline == TRUE) {
-               if (Has_Messages(&incomingMessageQueue)) {
-                  message = Dequeue_Message(&incomingMessageQueue);
-                  Delete_Message(message);
-                  lock_timeline = FALSE;
-               }
-            }
+	            if (message_status != 2) {
+	           	 // Go to the next action on the timeline
+	   			 if ((*((*timeline).current_event)).next != NULL) {
+	   				(*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
+	   			 } else {
 
-            (*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
-         }
+	   				// TODO: Remove message from the queue (if it was not a basic message)
+	   				if (lock_timeline == TRUE) {
+	   				   if (Has_Messages(&incomingMessageQueue)) {
+	   					  message = Dequeue_Message(&incomingMessageQueue);
+	   					  Delete_Message(message);
+	   					  lock_timeline = FALSE;
+	   				   }
+	   				}
 
-      } else {
+	   				(*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
+	   			 }
+	            }
 
-         /*
-          // Reset the channel states...
-          Reset_Channels();
-          Apply_Channels();
+	         } else {
 
-          // ...the channel light states...
-          Reset_Channel_Lights();
-          Apply_Channel_Lights();
+	            /*
+	             // Reset the channel states...
+	             Reset_Channels();
+	             Apply_Channels();
 
-          // ...and the device states.
-          // TODO: Reset any other device states.
-          */
-      }
+	             // ...the channel light states...
+	             Reset_Channel_Lights();
+	             Apply_Channel_Lights();
+
+	             // ...and the device states.
+	             // TODO: Reset any other device states.
+	             */
+	         }
 
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.

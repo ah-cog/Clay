@@ -110,6 +110,8 @@ int8_t Process_Event (Event *event) {
 
 	uint8_t is_triggered = FALSE;
 
+	uint32_t millis;
+
 	// Check if event's action or state are not yet assigned.
 	if ((*event).action == NULL || (*event).state == NULL) {
 		return TRUE;
@@ -145,13 +147,16 @@ int8_t Process_Event (Event *event) {
 	//	}
 
 		// Check if the action's wait time has expired
-		if ((Millis () - (*event).start_time) >= (*event).repeat_period) {
+		millis = Millis ();
+		if ((millis - (*event).start_time) >= (*event).repeat_period) {
 			(*event).start_time = 0;
-	//		(*event).repeat_period = 0;
 			result = Perform_Action ((*event).action, (*event).state);
-		} else {
-			result = FALSE;
+		} else if ((millis - (*event).start_time) < (*event).repeat_period) {
+			result = 2; // 2 means waiting... (pausing on event...)
 		}
+//		else {
+//			result = FALSE;
+//		}
 	}
 
 	return result;
