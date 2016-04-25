@@ -19,7 +19,7 @@
         <Line>PE_Const</Line>
         <Line>IO_Map</Line>
       </GenSharedModules>
-      <ShrdHeaderAge0>1217957177</ShrdHeaderAge0>
+      <ShrdHeaderAge0>1217969427</ShrdHeaderAge0>
       <ShrdCodeAge0>-1</ShrdCodeAge0>
       <ShrdAsemblAge0>-1</ShrdAsemblAge0>
       <ShrdHeaderAge1>1216511859</ShrdHeaderAge1>
@@ -76,10 +76,10 @@
       <GenExtraFileSrcDir39>Repositories\lib\doxygen\</GenExtraFileSrcDir39>
       <GenExtraFileSrcDir32>lib\Kinetis\startup\</GenExtraFileSrcDir32>
       <XtraAge29>1217957177</XtraAge29>
-      <XtraAge30>1217957177</XtraAge30>
+      <XtraAge30>1217969427</XtraAge30>
       <XtraAge32>1213771170</XtraAge32>
-      <XtraAge33>1217957177</XtraAge33>
-      <XtraAge34>1217957499</XtraAge34>
+      <XtraAge33>1217969427</XtraAge33>
+      <XtraAge34>1217969455</XtraAge34>
       <XtraAge35>1216511859</XtraAge35>
       <GenExtraFileType39>5</GenExtraFileType39>
       <GenExtraFileType38>4</GenExtraFileType38>
@@ -640,74 +640,8 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>127</ProjectModificationStamp>
+    <ProjectModificationStamp>131</ProjectModificationStamp>
   </Options>
-  <CpuID_2>
-    <Generated>false</Generated>
-    <GenCompName />
-    <GenComponentVersion>??.???</GenComponentVersion>
-    <GenDriverVersion>??.??</GenDriverVersion>
-    <GenEventModule />
-    <HeaderAge>-1</HeaderAge>
-    <CodeAge>-1</CodeAge>
-    <AsemblAge>-1</AsemblAge>
-    <GenNumMethods>10</GenNumMethods>
-    <SetClockConfiguration>false</SetClockConfiguration>
-    <GetClockConfiguration>false</GetClockConfiguration>
-    <SetOperationMode>false</SetOperationMode>
-    <EnableInt>false</EnableInt>
-    <DisableInt>false</DisableInt>
-    <OpenBackDoor>false</OpenBackDoor>
-    <MCGAutoTrim>false</MCGAutoTrim>
-    <VLPModeEnable>false</VLPModeEnable>
-    <VLPModeDisable>false</VLPModeDisable>
-    <SystemReset>false</SystemReset>
-    <GenNumEvents>6</GenNumEvents>
-    <OnReset_Selected>1</OnReset_Selected>
-    <OnReset_Name>Cpu_OnReset</OnReset_Name>
-    <OnReset_Priority>interrupts disabled</OnReset_Priority>
-    <OnNMI_Selected>1</OnNMI_Selected>
-    <OnNMI_Name>Cpu_OnNMI</OnNMI_Name>
-    <OnNMI_Priority>interrupts disabled</OnNMI_Priority>
-    <OnHardFault_Selected>1</OnHardFault_Selected>
-    <OnHardFault_Name>Cpu_OnHardFault</OnHardFault_Name>
-    <OnHardFault_Priority>interrupts disabled</OnHardFault_Priority>
-    <OnSupervisorCall_Selected>1</OnSupervisorCall_Selected>
-    <OnSupervisorCall_Name>Cpu_OnSupervisorCall</OnSupervisorCall_Name>
-    <OnSupervisorCall_Priority>interrupts disabled</OnSupervisorCall_Priority>
-    <OnPendableService_Selected>1</OnPendableService_Selected>
-    <OnPendableService_Name>Cpu_OnPendableService</OnPendableService_Name>
-    <OnPendableService_Priority>interrupts disabled</OnPendableService_Priority>
-    <OnLossOfLock_Selected>1</OnLossOfLock_Selected>
-    <OnLossOfLock_Name>Cpu_OnLossOfLock</OnLossOfLock_Name>
-    <OnLossOfLock_Priority>interrupts disabled</OnLossOfLock_Priority>
-    <ISR_IntNMIISRHandle />
-    <ISR_ISRnameNMI />
-    <ISR_ISRDefaultName />
-    <ISR_ISRnameINITPC />
-    <ISR_IntHardFaultISRHandle />
-    <ISR_ISRnameHardfault />
-    <ISR_IntMPUISRHandle />
-    <ISR_ISRnameMPU />
-    <ISR_IntMemManageFaultISRHandle />
-    <ISR_ISRnameMemManageFault />
-    <ISR_IntBusFaultISRHandle />
-    <ISR_ISRnameBusFault />
-    <ISR_IntUsageFaultISRHandle />
-    <ISR_ISRnameUsageFault />
-    <ISR_IntSVCallISRHandle />
-    <ISR_ISRnameSVCall />
-    <ISR_IntPendSVISRHandle />
-    <ISR_ISRnamePendSV />
-    <ISR_IntLossOfLockISRHandle />
-    <ISR_ISRnameLossOfLock />
-    <ISR_IntICSLossOfLockISRHandle />
-    <ISR_ISRnameICSLossOfLock />
-    <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
-    <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
-    <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
-    <GenExtraFilesCount>0</GenExtraFilesCount>
-  </CpuID_2>
   <CpuID_12>
     <Generated>true</Generated>
     <GenCompName>Cpu</GenCompName>
@@ -5812,8 +5746,8 @@
     <GenComponentVersion>01.015</GenComponentVersion>
     <GenDriverVersion>01.03</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1217957499</HeaderAge>
-    <CodeAge>1217957499</CodeAge>
+    <HeaderAge>1217969455</HeaderAge>
+    <CodeAge>1217969455</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>26</GenNumMethods>
     <Init>true</Init>

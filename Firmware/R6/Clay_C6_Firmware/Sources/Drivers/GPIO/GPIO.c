@@ -49,31 +49,18 @@ Channel updated_channel_profile[CHANNEL_COUNT];
 Channel channel_profile[CHANNEL_COUNT];
 
 ////Local vars/////////////////////////////////////////////////////
-//static MCU_GPIO_Digital_Interface channel_map[CHANNEL_COUNT] = { { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_1_MASK },            // PTE1
-//                                                                 { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_2_MASK },            // PTE2
-//                                                                 { MCU_GPIO_PORT_PTE, GPIO_PTE_IO_3_MASK },            // PTE3
-//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_4_MASK },            // PTB18
-//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_5_MASK },            // PTB19
-//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_6_MASK },            // PTB0
-//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_7_MASK },            // PTB21
-//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_8_MASK },            // PTB22
-//                                                                 { MCU_GPIO_PORT_PTB, GPIO_PTB_IO_9_MASK },            // PTB23
-//                                                                 { MCU_GPIO_PORT_PTC, GPIO_PTC_IO_10_MASK },           // PTC16
-//                                                                 { MCU_GPIO_PORT_PTC, GPIO_PTC_IO_11_MASK },           // PTC17
-//                                                                 { MCU_GPIO_PORT_PTD, GPIO_PTD_IO_12_MASK }            // PTD6
-//};
 
-static LDD_TDeviceData * PTB_data;
-static LDD_TDeviceData * PTC_data;
-static LDD_TDeviceData * PTD_data;
-static LDD_TDeviceData * PTE_data;
+static LDD_TDeviceData * PTB_data = NULL;
+static LDD_TDeviceData * PTC_data = NULL;
+static LDD_TDeviceData * PTD_data = NULL;
+static LDD_TDeviceData * PTE_data = NULL;
 
-static LDD_TDeviceData * ADC0_data;
-static LDD_TDeviceData * ADC1_data;
-static LDD_TDeviceData * PWM_OUT_1_data;
-static LDD_TDeviceData * PWM_OUT_2_data;
-static LDD_TDeviceData * PWM_OUT_3_data;
-static LDD_TDeviceData * PWM_OUT_4_data;
+static LDD_TDeviceData * ADC0_data = NULL;
+static LDD_TDeviceData * ADC1_data = NULL;
+static LDD_TDeviceData * PWM_OUT_1_data = NULL;
+static LDD_TDeviceData * PWM_OUT_2_data = NULL;
+static LDD_TDeviceData * PWM_OUT_3_data = NULL;
+static LDD_TDeviceData * PWM_OUT_4_data = NULL;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Channel_Enable_Toggle(Channel_Number number);
@@ -625,7 +612,7 @@ static bool Channel_Enable_Pulse(Channel_Number number) {
 
       case MCU_PWM_OUT_4: {
 
-         //PWM_OUT_3 not implemented
+         //PWM_OUT_4 not implemented
 //         LDD_TError err;
 //
 //         PWM_OUT_4_data = PWM_OUT_4_Init(NULL);
