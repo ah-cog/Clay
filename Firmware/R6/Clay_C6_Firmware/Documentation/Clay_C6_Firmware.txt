@@ -462,50 +462,6 @@ Module "GPIO_PTB"  (component GPIO_LDD)
                 This method is only available for CPU derivatives and peripherals that support the runtime pin sharing with 
                 other internal on-chip peripherals.
 
-Module "GPIO_PTD"  (component GPIO_LDD)
-   - GPIO_PTD_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
-                called automatically as a part of the application initialization code.
-   - GPIO_PTD_Deinit -This method disables the device and frees the device data structure memory.
-   - GPIO_PTD_SetEventMask -This method enables/disables event(s) of the port. The events contained within the mask are enabled.
-                Events not contained within the mask are disabled. The component event masks are defined in the PE_Types.h file.
-                Note: Event that are not generated (See the "Events" tab in the Component inspector) are not handled by this 
-                method. In this case the method returns ERR_PARAM_MASK error code.   Pair method to GetEventMask().
-   - GPIO_PTD_GetEventMask -This method returns current events mask of the port.    Note: Event that are not generated (See the 
-                "Events" tab in the Component inspector) are not handled by this method.   Pair method to SetEventMask().
-   - GPIO_PTD_SetPortEventCondition -This method defines condition of the <OnPortEvent> for required pins of the port.
-   - GPIO_PTD_GetPortEventStatus -Returns a set of asserted flags. The flags are accumulated in the set. After calling this 
-                method the set is returned and cleared.   Note: Some type of "Port" device requires enabling "Interrupt 
-                service/event" property for a pin edge detect function.
-   - GPIO_PTD_SetPortValue -This method writes the output data value to the port. Only configured pins (through all of bit 
-                fields in this component) are affected.
-   - GPIO_PTD_GetPortValue -This method returns the current port input data value. Only configured pins (through all of bit 
-                fields in this component) are returned.
-   - GPIO_PTD_ClearPortBits -This method drives the specified bits of the port to the inactive level. Only configured pins 
-                (through all of bit fields in this component) are affected.
-   - GPIO_PTD_SetPortBits -This method drives the specified bits of the port to the active level. Only configured pins (through 
-                all of bit fields in this component) are affected.
-   - GPIO_PTD_TogglePortBits -This method inverts the specified bits of the port to another level. Only configured pins 
-                (through all of bit fields in this component) are affected.
-   - GPIO_PTD_SetPortInputDirection -This method sets the specified pins of the port to the input direction. Only configured 
-                pins (through all of bit fields in this component) are affected.
-   - GPIO_PTD_SetPortOutputDirection -This method sets the specified pins of the port to the output direction. The specified 
-                pins of the port will be driven to specified states. Only configured pins (through all of bit fields in this 
-                component) are affected.
-   - GPIO_PTD_SetFieldValue -This method sets the output data value of the specified bit field.
-   - GPIO_PTD_GetFieldValue -This method returns the current input data of the specified field.
-   - GPIO_PTD_ClearFieldBits -This method drives the specified bits of the specified bit field to the inactive level.
-   - GPIO_PTD_SetFieldBits -This method drives the specified bits of the specified bit field to the active level.
-   - GPIO_PTD_ToggleFieldBits -This method inverts the specified bits of the specified bit field to other level.
-   - GPIO_PTD_SetFieldInputDirection -This method sets all pins of the field to the input direction.
-   - GPIO_PTD_SetFieldOutputDirection -This method sets all pins of the field to the output direction.
-   - GPIO_PTD_SetOperationMode -This method requests to change the component's operation mode. Upon a request to change the 
-                operation mode, the component will finish a pending job first and then notify a caller that an operation mode 
-                has been changed. When no job is pending (ERR_OK), the component changes an operation mode immediately and 
-                notify a caller about this change.
-   - GPIO_PTD_ConnectPin -This method reconnects the requested pin associated with the selected peripheral in this component. 
-                This method is only available for CPU derivatives and peripherals that support the runtime pin sharing with 
-                other internal on-chip peripherals.
-
 Module "GPIO_PTC"  (component GPIO_LDD)
    - GPIO_PTC_Init -This method initializes the associated peripheral(s) and the component internal variables. The method is 
                 called automatically as a part of the application initialization code.
@@ -656,6 +612,31 @@ Module "PWM_OUT_1" (component PPG_LDD)
                 predefined values in <Starting pulse width> property.   Note: Calculated duty depends on the timer 
                 possibilities and on the selected period.
    - PWM_OUT_1_SetDutyMS -This method sets the new duty value of the output signal. The duty is expressed in milliseconds as a 
+                16-bit unsigned integer number. The method is available only if it is not selected list of predefined values in 
+                <Starting pulse width> property.
+
+Module "PWM_OUT_3" (component PPG_LDD)
+   - PWM_OUT_3_Init -Initializes the device. Allocates memory for the device data structure, allocates interrupt vectors and 
+                sets interrupt priority, sets pin routing, sets timing, etc. If the property <"Enable in init. code"> is set to 
+                "yes" value then the device is also enabled (see the description of the <Enable> method). In this case the 
+                <Enable> method is not necessary and needn't to be generated. This method can be called only once. Before the 
+                second call of Init the <Deinit> must be called first.
+   - PWM_OUT_3_Deinit -Deinitializes the device. Switches off the device, frees the device data structure memory, interrupts 
+                vectors, etc.
+   - PWM_OUT_3_SetPeriodMS -This method sets the new period of the output signal. The period is expressed in [milliseconds] as 
+                a 16-bit unsigned integer number. This method is available only if <"Runtime setting type"> property is set to 
+                "interval" .
+   - PWM_OUT_3_SetPeriodReal -This method sets the new period of the output signal. The period is expressed in [seconds] as a 
+                real number. To use this method the compiler have to support floating point operations. This method is 
+                available only if <"Runtime setting type"> property is set to "interval" .
+   - PWM_OUT_3_SetFrequencyHz -This method sets the new frequency of the output signal. The frequency is expressed in [Hz] as a 
+                16-bit unsigned integer number. This method is available only if <"Runtime setting type"> property is set to 
+                "interval" .
+   - PWM_OUT_3_SetRatio16 -This method sets a new duty-cycle ratio. Ratio is expressed as a 16-bit unsigned integer number. 0 - 
+                FFFF value is proportional to ratio 0 - 100%. The method is available only if it is not selected list of 
+                predefined values in <Starting pulse width> property.   Note: Calculated duty depends on the timer 
+                possibilities and on the selected period.
+   - PWM_OUT_3_SetDutyMS -This method sets the new duty value of the output signal. The duty is expressed in milliseconds as a 
                 16-bit unsigned integer number. The method is available only if it is not selected list of predefined values in 
                 <Starting pulse width> property.
 

@@ -51,11 +51,11 @@
 - \subpage FLASH1
 - \subpage FLASH1
 - \subpage GPIO_PTB
-- \subpage GPIO_PTD
 - \subpage GPIO_PTC
 - \subpage GPIO_PTE
 - \subpage ADC1
 - \subpage PWM_OUT_1
+- \subpage PWM_OUT_3
 
 */
 
@@ -113,11 +113,11 @@
 - \subpage FLASH1
 - \subpage FLASH1
 - \subpage GPIO_PTB
-- \subpage GPIO_PTD
 - \subpage GPIO_PTC
 - \subpage GPIO_PTE
 - \subpage ADC1
 - \subpage PWM_OUT_1
+- \subpage PWM_OUT_3
 
 */
 

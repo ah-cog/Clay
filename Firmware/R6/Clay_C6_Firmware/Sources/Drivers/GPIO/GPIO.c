@@ -9,7 +9,7 @@
 
 #include "GPIO_PTB.h"
 #include "GPIO_PTC.h"
-#include "GPIO_PTD.h"
+//#include "GPIO_PTD.h"
 #include "GPIO_PTE.h"
 
 #include "ADC1.h"
@@ -28,6 +28,18 @@
 
 #ifndef GPIO_PTB_IO_6_MASK
 #define GPIO_PTB_IO_6_MASK 0
+#endif
+
+#ifndef GPIO_PTD_IO_12_MASK
+#define GPIO_PTD_IO_12_MASK 0
+#endif
+
+#ifndef GPIO_PTE_IO_2_MASK
+#define GPIO_PTE_IO_2_MASK 0
+#endif
+
+#ifndef GPIO_PTE_IO_3_MASK
+#define GPIO_PTE_IO_3_MASK 0
 #endif
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -56,8 +68,12 @@ static LDD_TDeviceData * PTC_data;
 static LDD_TDeviceData * PTD_data;
 static LDD_TDeviceData * PTE_data;
 
+static LDD_TDeviceData * ADC0_data;
 static LDD_TDeviceData * ADC1_data;
 static LDD_TDeviceData * PWM_OUT_1_data;
+static LDD_TDeviceData * PWM_OUT_2_data;
+static LDD_TDeviceData * PWM_OUT_3_data;
+static LDD_TDeviceData * PWM_OUT_4_data;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Channel_Enable_Toggle(Channel_Number number);
@@ -332,7 +348,7 @@ int32_t Channel_Set_Direction(Channel_Number number, Channel_Direction direction
 
    int32_t rval = -1;
 
-// Update Hardware
+   // Update Hardware
    switch (channel_profile[number].type) {
       case CHANNEL_TYPE_TOGGLE: {
          rval = Channel_Set_Direction_Toggle(number, direction);
@@ -483,9 +499,9 @@ static bool Channel_Enable_Toggle(Channel_Number number) {
       }
 
       case MCU_GPIO_PORT_PTD: {
-         if (PTD_data == NULL) {
-            PTD_data = GPIO_PTD_Init(NULL);
-         }
+//         if (PTD_data == NULL) {
+//            PTD_data = GPIO_PTD_Init(NULL);
+//         }
          break;
       }
 
@@ -518,15 +534,15 @@ static bool Channel_Enable_Waveform(Channel_Number number) {
 
          //TODO: Config ADC0 . we'll have to share it with the vbat adc line.
 
-//            ADC0_data = ADC0_Init(NULL);
-//
-//            ADC0_StartCalibration(ADC0_data);
-//
-//            while (!ADC0_GetMeasurementCompleteStatus(ADC0_data))
-//               ;
-//
-//            LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_data);
-//            rval = TRUE;
+         ADC0_data = ADC0_Init(NULL);
+
+         ADC0_StartCalibration(ADC0_data);
+
+         while (!ADC0_GetMeasurementCompleteStatus(ADC0_data))
+            ;
+
+         LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_data);
+         rval = TRUE;
 
          break;
       }
@@ -595,14 +611,14 @@ static bool Channel_Enable_Pulse(Channel_Number number) {
       case MCU_PWM_OUT_3: {
 
          //PWM_OUT_3 not implemented
-//         LDD_TError err;
-//
-//         PWM_OUT_3_data = PWM_OUT_3_Init(NULL);
-//
-//         err = PWM_OUT_3_SetFrequencyHz(PWM_OUT_3_data, 0);
-//         PWM_OUT_3_SetRatio16(PWM_OUT_3_data, 0);
-//
-//         rval = TRUE;
+         LDD_TError err;
+
+         PWM_OUT_3_data = PWM_OUT_3_Init(NULL);
+
+         err = PWM_OUT_3_SetFrequencyHz(PWM_OUT_3_data, 0);
+         PWM_OUT_3_SetRatio16(PWM_OUT_3_data, 0);
+
+         rval = TRUE;
 
          break;
       }
@@ -658,8 +674,8 @@ static int32_t Channel_Read_Toggle(Channel_Number number) {
 
       case MCU_GPIO_PORT_PTD: {
 
-         result =
-               (GPIO_PTC_GetPortValue(PTC_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
+//         result =
+//               (GPIO_PTD_GetPortValue(PTD_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
@@ -667,7 +683,7 @@ static int32_t Channel_Read_Toggle(Channel_Number number) {
       case MCU_GPIO_PORT_PTE: {
 
          result =
-               (GPIO_PTC_GetPortValue(PTC_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
+               (GPIO_PTE_GetPortValue(PTE_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
@@ -691,18 +707,18 @@ static int32_t Channel_Read_Waveform(Channel_Number number) {
 
    switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
       case MCU_ADC0: {
-         //TODO: Config ADC0 . we'll have to share it with the vbat adc line.
-//         ADC0_SelectSampleGroup(ADC0_data, channel_profile[number].mcu_hardware_profile.adc_interface->sample_group);
 
-//tell the ADC to start a measurement.
-//         ADC0_StartSingleMeasurement(ADC0_data);
-//
-//         //Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
-//         while (!ADC0_GetMeasurementCompleteStatus(ADC0_data))
-//            ;
-//
-//         //get the value
-//         ADC0_GetMeasuredValues(ADC0_data, &rval);
+         ADC0_SelectSampleGroup(ADC0_data, channel_profile[number].mcu_hardware_profile.adc_interface->sample_group);
+
+         //tell the ADC to start a measurement.
+         ADC0_StartSingleMeasurement(ADC0_data);
+
+         //Block while it measures. You could alternatively do this elsewhere. We may want to periodically read and cache the adc value for each active channel to avoid this
+         while (!ADC0_GetMeasurementCompleteStatus(ADC0_data))
+            ;
+
+         //get the value
+         ADC0_GetMeasuredValues(ADC0_data, &rval);
 
          break;
       }
@@ -764,11 +780,11 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
 
       case MCU_GPIO_PORT_PTD: {
 
-         if (data) {
-            GPIO_PTD_SetPortBits(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
-         } else {
-            GPIO_PTD_ClearPortBits(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
-         }
+//         if (data) {
+//            GPIO_PTD_SetPortBits(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+//         } else {
+//            GPIO_PTD_ClearPortBits(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+//         }
 
          break;
       }
@@ -825,6 +841,20 @@ static int32_t Channel_Write_Pulse(Channel_Number number, LDD_PPG_Tfloat period_
       }
 
       case MCU_PWM_OUT_3: {
+
+         if (period_s > 0 && ratio > 0) {
+
+            //set the frequency
+            PWM_OUT_3_SetPeriodReal(PWM_OUT_1_data, period_s);     //50 hz for motor drive
+
+            //this is how we set the ratio. The ratio is set by a 16-bit value. We scale a percentage up to the full scale of that 16 bit value. example: 50% = 32768
+            PWM_OUT_3_SetRatio16(PWM_OUT_1_data, ratio);     //when changing frequency, fix the ratio
+         } else {
+
+            //if we set the ratio to 0, the output will never change states.
+            PWM_OUT_3_SetRatio16(PWM_OUT_1_data, 0);
+         }
+
          break;
       }
 
@@ -876,13 +906,13 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
 
       case MCU_GPIO_PORT_PTD: {
 
-         if (direction == CHANNEL_DIRECTION_INPUT) {
-            GPIO_PTD_SetPortInputDirection(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
-         } else {
-            GPIO_PTD_SetPortOutputDirection(PTD_data,
-                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
-                                            channel_profile[number].toggle_value);
-         }
+//         if (direction == CHANNEL_DIRECTION_INPUT) {
+//            GPIO_PTD_SetPortInputDirection(PTD_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+//         } else {
+//            GPIO_PTD_SetPortOutputDirection(PTD_data,
+//                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
+//                                            channel_profile[number].toggle_value);
+//         }
 
          break;
       }
@@ -962,10 +992,10 @@ static void Channel_Disable_Toggle(Channel_Number number) {
       }
 
       case MCU_GPIO_PORT_PTD: {
-         if (PTD_data != NULL) {
-            GPIO_PTD_Deinit(PTD_data);
-            PTD_data = NULL;
-         }
+//         if (PTD_data != NULL) {
+//            GPIO_PTD_Deinit(PTD_data);
+//            PTD_data = NULL;
+//         }
          break;
       }
 
@@ -992,10 +1022,7 @@ static void Channel_Disable_Waveform(Channel_Number number) {
    switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
       case MCU_ADC0: {
 
-         //TODO: check for other ADC's still live before de-init. We'll have to figure out how to free the pin back up for reassignment.
-         //ADC 0 not config'd yet.
-//         ADC0_Deinit(ADC0_data);
-//         ADC0_data = NULL;
+         //ADC0 doesn't get de-initialized. we use it for other things.
 
          break;
       }
@@ -1038,6 +1065,12 @@ static void Channel_Disable_Pulse(Channel_Number number) {
       }
 
       case MCU_PWM_OUT_3: {
+
+         if (PWM_OUT_3_data != NULL) {
+            PWM_OUT_3_Deinit(PWM_OUT_3_data);
+            PWM_OUT_3_data = NULL;
+         }
+
          break;
       }
 
@@ -1095,7 +1128,8 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
          profile->digital_interface->port = MCU_GPIO_PORT_PTE;
          profile->digital_interface->mask = GPIO_PTE_IO_1_MASK;
 
-         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+         //         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE;
 
          break;
       }
@@ -1108,12 +1142,13 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
          profile->pwm_interface = NULL;
 
          profile->adc_interface->adc_channel = MCU_ADC1;
-         profile->adc_interface->sample_group = 0;
+         profile->adc_interface->sample_group = 1;
 
          profile->digital_interface->port = MCU_GPIO_PORT_PTE;
          profile->digital_interface->mask = GPIO_PTE_IO_2_MASK;
 
-         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+//         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+         profile->supported_interfaces = CHANNEL_TYPE_WAVEFORM;
 
          break;
       }
@@ -1131,7 +1166,8 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
          profile->digital_interface->port = MCU_GPIO_PORT_PTE;
          profile->digital_interface->mask = GPIO_PTE_IO_3_MASK;
 
-         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+//         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM;
+         profile->supported_interfaces = CHANNEL_TYPE_WAVEFORM;
 
          break;
       }
@@ -1149,7 +1185,8 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
 
          profile->pwm_interface->pwm_channel = MCU_PWM_OUT_1;
 
-         profile->supported_interfaces = CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+//         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_PULSE;
+         profile->supported_interfaces = CHANNEL_TYPE_PULSE;
 
          break;
       }
@@ -1166,7 +1203,8 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
 
          profile->pwm_interface->pwm_channel = MCU_PWM_OUT_2;
 
-         profile->supported_interfaces = CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+         //         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_PULSE;
+         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE;
 
          break;
       }
@@ -1187,7 +1225,8 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
 
          profile->pwm_interface->pwm_channel = MCU_PWM_OUT_3;
 
-         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+//         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+         profile->supported_interfaces = CHANNEL_TYPE_PULSE;
 
          break;
       }
@@ -1275,14 +1314,15 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
          profile->pwm_interface = calloc(1, sizeof(MCU_GPIO_PWM_Interface));
 
          profile->adc_interface->adc_channel = MCU_ADC0;
-         profile->adc_interface->sample_group = 0;
+         profile->adc_interface->sample_group = 2;
 
          profile->digital_interface->port = MCU_GPIO_PORT_PTD;
          profile->digital_interface->mask = GPIO_PTD_IO_12_MASK;
 
          profile->pwm_interface->pwm_channel = MCU_PWM_OUT_4;
 
-         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+//         profile->supported_interfaces = CHANNEL_TYPE_TOGGLE | CHANNEL_TYPE_WAVEFORM | CHANNEL_TYPE_PULSE;
+         profile->supported_interfaces = CHANNEL_TYPE_WAVEFORM;
 
          break;
       }
@@ -1294,32 +1334,3 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
    }
 
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//test code for digital, adc, pwm.
-//Channel_Set_Type(CHANNEL_4, CHANNEL_TYPE_PULSE);
-//Channel_Set_Type(CHANNEL_6, CHANNEL_TYPE_WAVEFORM);
-//Channel_Enable_All();
-//
-//for (i = 0; i < CHANNEL_COUNT; ++i) {
-//   Channel_Set_Direction(i, CHANNEL_DIRECTION_OUTPUT);
-//}
-//
-//int adc;
-//int pwm_freq_hz = 1000;
-//bool on = FALSE;
-//
-//for (;;) {
-//
-//   adc = Channel_Get_Data(CHANNEL_6);
-//   Channel_Set_Data(CHANNEL_4, pwm_freq_hz);
-//
-//   pwm_freq_hz = (pwm_freq_hz + 1000) % 10000;
-//
-//   Wait(1000);
-//
-//   for (i = 0; i < 12; i++) {
-//      Channel_Set_Data(i, on);
-//   }
-//   on = !on;
-//}

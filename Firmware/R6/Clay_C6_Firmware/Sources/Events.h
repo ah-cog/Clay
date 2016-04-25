@@ -57,11 +57,11 @@
 #include "FLASH1.h"
 #include "BUZZER_PWM.h"
 #include "GPIO_PTB.h"
-#include "GPIO_PTD.h"
 #include "GPIO_PTC.h"
 #include "GPIO_PTE.h"
 #include "ADC1.h"
 #include "PWM_OUT_1.h"
+#include "PWM_OUT_3.h"
 
 #include "PowerOn.h"
 #include "Buzzer.h"
@@ -380,26 +380,6 @@ void GPIO_PTE_OnPortEvent(LDD_TUserData *UserDataPtr);
  */
 /* ===================================================================*/
 void GPIO_PTC_OnPortEvent(LDD_TUserData *UserDataPtr);
-
-/*
- ** ===================================================================
- **     Event       :  GPIO_PTD_OnPortEvent (module Events)
- **
- **     Component   :  GPIO_PTD [GPIO_LDD]
- */
-/*!
- **     @brief
- **         Called if defined event on any pin of the port occured.
- **         OnPortEvent event and GPIO interrupt must be enabled. See
- **         SetEventMask() and GetEventMask() methods. This event is
- **         enabled if [Interrupt service/event] is Enabled and disabled
- **         if [Interrupt service/event] is Disabled.
- **     @param
- **         UserDataPtr     - Pointer to RTOS device
- **                           data structure pointer.
- */
-/* ===================================================================*/
-void GPIO_PTD_OnPortEvent(LDD_TUserData *UserDataPtr);
 
 /*
  ** ===================================================================
