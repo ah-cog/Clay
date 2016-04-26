@@ -377,8 +377,8 @@ bool WiFi_Disable() {
 
 // Requests the WiFi controller to connect to an access point with the specified SSID and password.
 // The WiFi controller will send a response in a "status" Message.
-bool WiFi_Request_Connect(char * ssid, char * password) {
-   char* args[] = { ssid, password };
+bool WiFi_Request_Connect(const char * ssid, const char * password) {
+   char* args[] = { (char *) ssid, (char *) password };
    return WiFi_Send_Command(SET_AP_CMD_STR, args, 2);
 }
 

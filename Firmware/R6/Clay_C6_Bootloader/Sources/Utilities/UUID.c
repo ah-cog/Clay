@@ -1,3 +1,8 @@
+#include "stdlib.h"
+#include "stdint.h"
+#include "string.h"
+#include "stdio.h"
+
 #include "MK64F12.h"
 #include "UUID.h"
 
@@ -53,39 +58,6 @@ void Initialize_Unit_UUID () {
 	
 	unsigned char unitUuidBytes[16] = { 0 };
 	
-	/*
-	uint32_t unitUuidRegisters[4] = { 0 };
-	unsigned char unitUuidBytes[16] = { 0 };
-	char unitUuid[37] = { 0 };
-	
-	// printf( "CPU Unique Identifier:\n" );
-	// sprintf (unitUuidBytes, "0x%08X 0x%08X 0x%08X 0x%08X", SIM_UIDH, SIM_UIDMH, SIM_UIDML, SIM_UIDL);
-	unitUuidRegisters[0] = SIM_UIDH;
-	unitUuidRegisters[1] = SIM_UIDMH;
-	unitUuidRegisters[2] = SIM_UIDML;
-	unitUuidRegisters[3] = SIM_UIDL;
-	
-	unitUuidBytes[0]  = (unitUuidRegisters[0] >> 24) & 0xFF;
-	unitUuidBytes[1]  = (unitUuidRegisters[0] >> 16) & 0xFF;
-	unitUuidBytes[2]  = (unitUuidRegisters[0] >>  8) & 0xFF;
-	unitUuidBytes[3]  = (unitUuidRegisters[0] >>  0) & 0xFF;
-	
-	unitUuidBytes[4]  = (unitUuidRegisters[1] >> 24) & 0xFF;
-	unitUuidBytes[5]  = (unitUuidRegisters[1] >> 16) & 0xFF;
-	unitUuidBytes[6]  = (unitUuidRegisters[1] >>  8) & 0xFF;
-	unitUuidBytes[7]  = (unitUuidRegisters[1] >>  0) & 0xFF;
-	
-	unitUuidBytes[8]  = (unitUuidRegisters[2] >> 24) & 0xFF;
-	unitUuidBytes[9]  = (unitUuidRegisters[2] >> 16) & 0xFF;
-	unitUuidBytes[10] = (unitUuidRegisters[2] >>  8) & 0xFF;
-	unitUuidBytes[11] = (unitUuidRegisters[2] >>  0) & 0xFF;
-	
-	unitUuidBytes[12] = (unitUuidRegisters[3] >> 24) & 0xFF;
-	unitUuidBytes[13] = (unitUuidRegisters[3] >> 16) & 0xFF;
-	unitUuidBytes[14] = (unitUuidRegisters[3] >>  8) & 0xFF;
-	unitUuidBytes[15] = (unitUuidRegisters[3] >>  0) & 0xFF;
-	*/
-	
 	unitUuidBytes[0]  = (SIM_UIDH >> 24) & 0xFF;
 	unitUuidBytes[1]  = (SIM_UIDH >> 16) & 0xFF;
 	unitUuidBytes[2]  = (SIM_UIDH >>  8) & 0xFF;
@@ -106,12 +78,6 @@ void Initialize_Unit_UUID () {
 	unitUuidBytes[14] = (SIM_UIDL >>  8) & 0xFF;
 	unitUuidBytes[15] = (SIM_UIDL >>  0) & 0xFF;
 	
-	//sprintf (unitUuidBytes, "%08X 0x%08X 0x%08X 0x%08X", SIM_UIDH, SIM_UIDMH, SIM_UIDML, SIM_UIDL);
-	
-	// int x = 123;
-	// int low = x & 0x0F;
-	// int high = (x & 0xF0) >> 4; // Or, for a byte, the following can be used: "int high = x >> 4;"
-//	sprintf (unitUuid, "%08X-%04X-%04X-%04X-%04X%08X", SIM_UIDH, (SIM_UIDMH & 0xF0) >> 4, (SIM_UIDMH & 0x0F), (SIM_UIDML & 0xF0) >> 4, (SIM_UIDML & 0x0F), SIM_UIDL);
 	uuid_unparse (unitUuidBytes, unitUuid);
 }
 

@@ -1,3 +1,5 @@
+#include "string.h"
+#include "stdlib.h"
 #include "Message_Queue.h"
 
 Message *incomingMessageQueue = NULL;
@@ -15,7 +17,7 @@ int16_t Queue_Message (Message **messageQueue, Message *message) {
 	uint16_t messageCount = 0;
 
 	if (message == NULL) {
-		return NULL;
+		return 0;
 	}
 
 	if ((*messageQueue) == NULL) {

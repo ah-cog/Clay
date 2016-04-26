@@ -26,7 +26,7 @@ extern uint16_t Erase_Program_Flash ();
 extern uint16_t Erase_Program_Flash_Page (uint32_t addr);
 
 // Writes data to the program flash
-extern uint16_t Write_Program_Block (uint32_t destination, uint8_t *data, uint32_t length);
+extern uint16_t Write_Program_Block (uint32_t destination, const uint8_t *data, uint32_t length);
 
 // Writes the specified data to flash memory.
 extern uint16_t Write_Program_Checksum (uint16_t checksum);

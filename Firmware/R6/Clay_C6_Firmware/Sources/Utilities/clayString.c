@@ -181,11 +181,10 @@ unsigned int Hex_String_To_UInt(char const* hexstring) {
          add = thisC - ASCII_0_VALU;
       else if (thisC >= ASCII_A_VALU && thisC <= ASCII_F_VALU)
          add = thisC - ASCII_A_VALU + 10;
-      else {
-         Wait(0);
+//      else {
 //            printf("Unrecognised hex character \"%c\"\n", thisC);
 //            exit(-1);
-      }
+//      }
 
       result += add;
       ++c;

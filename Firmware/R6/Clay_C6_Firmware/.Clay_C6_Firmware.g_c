@@ -31,7 +31,7 @@
       <ShrdHeaderAge3>1216511859</ShrdHeaderAge3>
       <ShrdCodeAge3>-1</ShrdCodeAge3>
       <ShrdAsemblAge3>-1</ShrdAsemblAge3>
-      <GenExtraFiles lines_count="40">
+      <GenExtraFiles lines_count="39">
         <Line>Documentation\doxygen\LED1_component.txt</Line>
         <Line>Documentation\doxygen\LED2_component.txt</Line>
         <Line>Documentation\doxygen\TU1_component.txt</Line>
@@ -63,7 +63,6 @@
         <Line>Documentation\doxygen\PWM_OUT_3_component.txt</Line>
         <Line>Generated_Code\PE_LDD.c</Line>
         <Line>Generated_Code\PE_LDD.h</Line>
-        <Line>Project_Settings\Linker_Files\ProcessorExpert.ld</Line>
         <Line>Project_Settings\Startup_Code\startup.c</Line>
         <Line>Generated_Code\Vectors_Config.h</Line>
         <Line>Generated_Code\CPU_Config.h</Line>
@@ -73,23 +72,22 @@
         <Line>Documentation\doxygen\pex.doxyfile</Line>
         <Line>Documentation\doxygen\pex.css</Line>
       </GenExtraFiles>
-      <GenExtraFileSrcDir39>Repositories\lib\doxygen\</GenExtraFileSrcDir39>
-      <GenExtraFileSrcDir32>lib\Kinetis\startup\</GenExtraFileSrcDir32>
+      <GenExtraFileSrcDir38>Repositories\lib\doxygen\</GenExtraFileSrcDir38>
+      <GenExtraFileSrcDir31>lib\Kinetis\startup\</GenExtraFileSrcDir31>
       <XtraAge29>1217957177</XtraAge29>
       <XtraAge30>1217969427</XtraAge30>
-      <XtraAge32>1213771170</XtraAge32>
-      <XtraAge33>1217969427</XtraAge33>
-      <XtraAge34>1217969455</XtraAge34>
-      <XtraAge35>1216511859</XtraAge35>
-      <GenExtraFileType39>5</GenExtraFileType39>
-      <GenExtraFileType38>4</GenExtraFileType38>
+      <XtraAge31>1213771170</XtraAge31>
+      <XtraAge32>1217969427</XtraAge32>
+      <XtraAge33>1218055242</XtraAge33>
+      <XtraAge34>1216511859</XtraAge34>
+      <GenExtraFileType38>5</GenExtraFileType38>
       <GenExtraFileType37>4</GenExtraFileType37>
       <GenExtraFileType36>4</GenExtraFileType36>
       <GenExtraFileType35>4</GenExtraFileType35>
       <GenExtraFileType34>4</GenExtraFileType34>
       <GenExtraFileType33>4</GenExtraFileType33>
-      <GenExtraFileType32>5</GenExtraFileType32>
-      <GenExtraFileType31>4</GenExtraFileType31>
+      <GenExtraFileType32>4</GenExtraFileType32>
+      <GenExtraFileType31>5</GenExtraFileType31>
       <GenExtraFileType30>4</GenExtraFileType30>
       <GenExtraFileType29>4</GenExtraFileType29>
       <GenExtraFileType28>4</GenExtraFileType28>
@@ -640,7 +638,7 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>131</ProjectModificationStamp>
+    <ProjectModificationStamp>135</ProjectModificationStamp>
   </Options>
   <CpuID_12>
     <Generated>true</Generated>
@@ -706,26 +704,25 @@
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
     <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
-    <GenExtraFilesCount>19</GenExtraFilesCount>
+    <GenExtraFilesCount>18</GenExtraFilesCount>
     <ExtraFile0>Generated_Code\PE_LDD.c</ExtraFile0>
     <ExtraFile1>Generated_Code\PE_LDD.h</ExtraFile1>
-    <ExtraFile2>Project_Settings\Linker_Files\ProcessorExpert.ld</ExtraFile2>
-    <ExtraFile3>Project_Settings\Startup_Code\startup.c</ExtraFile3>
-    <ExtraFile4>Generated_Code\Vectors_Config.h</ExtraFile4>
-    <ExtraFile5>Static_Code\PDD\PDD_Types.h</ExtraFile5>
-    <ExtraFile6>Static_Code\IO_Map\MK64F12.h</ExtraFile6>
-    <ExtraFile7>Static_Code\System\Vectors.c</ExtraFile7>
-    <ExtraFile8>Static_Code\System\Peripherals_Init.h</ExtraFile8>
-    <ExtraFile9>Static_Code\System\Peripherals_Init.c</ExtraFile9>
-    <ExtraFile10>Static_Code\System\PDD_Includes.h</ExtraFile10>
-    <ExtraFile11>Static_Code\System\CPU_Init.h</ExtraFile11>
-    <ExtraFile12>Static_Code\System\CPU_Init.c</ExtraFile12>
-    <ExtraFile13>Generated_Code\CPU_Config.h</ExtraFile13>
-    <ExtraFile14>Generated_Code\Init_Config.h</ExtraFile14>
-    <ExtraFile15>Documentation\doxygen\Clay_C6_Firmware_project.txt</ExtraFile15>
-    <ExtraFile16>Documentation\doxygen\RoutingReport_component.txt</ExtraFile16>
-    <ExtraFile17>Documentation\doxygen\pex.doxyfile</ExtraFile17>
-    <ExtraFile18>Documentation\doxygen\pex.css</ExtraFile18>
+    <ExtraFile2>Project_Settings\Startup_Code\startup.c</ExtraFile2>
+    <ExtraFile3>Generated_Code\Vectors_Config.h</ExtraFile3>
+    <ExtraFile4>Static_Code\PDD\PDD_Types.h</ExtraFile4>
+    <ExtraFile5>Static_Code\IO_Map\MK64F12.h</ExtraFile5>
+    <ExtraFile6>Static_Code\System\Vectors.c</ExtraFile6>
+    <ExtraFile7>Static_Code\System\Peripherals_Init.h</ExtraFile7>
+    <ExtraFile8>Static_Code\System\Peripherals_Init.c</ExtraFile8>
+    <ExtraFile9>Static_Code\System\PDD_Includes.h</ExtraFile9>
+    <ExtraFile10>Static_Code\System\CPU_Init.h</ExtraFile10>
+    <ExtraFile11>Static_Code\System\CPU_Init.c</ExtraFile11>
+    <ExtraFile12>Generated_Code\CPU_Config.h</ExtraFile12>
+    <ExtraFile13>Generated_Code\Init_Config.h</ExtraFile13>
+    <ExtraFile14>Documentation\doxygen\Clay_C6_Firmware_project.txt</ExtraFile14>
+    <ExtraFile15>Documentation\doxygen\RoutingReport_component.txt</ExtraFile15>
+    <ExtraFile16>Documentation\doxygen\pex.doxyfile</ExtraFile16>
+    <ExtraFile17>Documentation\doxygen\pex.css</ExtraFile17>
   </CpuID_12>
   <ComponentID_5>
     <Generated>true</Generated>

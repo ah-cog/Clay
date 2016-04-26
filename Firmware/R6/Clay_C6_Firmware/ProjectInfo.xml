@@ -35,7 +35,6 @@
     <FLASHsize>1M</FLASHsize>
   </PROCESSOR>
   <PATHS>
-    <LinkerCommandFile>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Project_Settings\Linker_Files\ProcessorExpert.ld</LinkerCommandFile>
     <IncludePaths>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Static_Code\System\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Static_Code\PDD\</Path>

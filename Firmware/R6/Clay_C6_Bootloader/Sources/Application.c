@@ -1,71 +1,94 @@
+////Includes //////////////////////////////////////////////////////
+#include "WiFi.h"
 #include "Application.h"
+#include "Clock.h"
+#include "Power_Manager.h"
+#include "Button.h"
 
-void Application(void)
-{
-    uint8_t status = 0;
+////Macros ////////////////////////////////////////////////////////
 
-    Initialize_Unit_UUID();
+////Typedefs  /////////////////////////////////////////////////////
 
-    status = Enable_Clock();
-    status = Start_Clock();
+////Globals   /////////////////////////////////////////////////////
 
-    Initialize_Bootloader();
+////Local vars/////////////////////////////////////////////////////
 
-    //if (!Verify_Firmware () || (/*!Has_Latest_Firmware()*/ SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update ())) {
-    if (!Verify_Firmware() || (SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update()))
-    {
+////Local Prototypes///////////////////////////////////////////////
 
-        Set_WiFi_Network(SSID_DEFAULT, PASSWORD_DEFAULT);
-        status = Enable_ESP8266();
+////Global implementations ////////////////////////////////////////
 
-        //    Wait (500);
-        if ((status = Enable_WiFi(internetProfile.wifi_ssid, internetProfile.wifi_password)) == TRUE)
-        {
+void Application(void) {
 
-            // Check if an application update is available. If so, write that value to the shared flash memory.
-            //    	if (!Has_Latest_Firmware ()) {
-            //    		SharedData.ApplicationUpdateAvailable = TRUE;
-            //    	}
+   //Init power manager to hold PowerOn line high so that our supply doesn't shut off.
+   Power_Manager_Enable();
+   //enable button so the user can shut us down.
+   Button_Enable();
 
-            // Updates the current firmware if the current application doesn't verify or if the user has approved a pending update.
-            // TODO: Initialize the "application key" // Has_User_Requested_Update ();
-            //    	if (!Verify_Firmware() || Has_User_Requested_Update ())
+   uint32_t enable_wifi_start_time_ms;
+   uint8_t status = Enable_Clock();
+   status = Start_Clock();
+
+   Initialize_Unit_UUID();
+
+   Initialize_Bootloader();
+
+   //if (!Verify_Firmware () || (/*!Has_Latest_Firmware()*/ SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update ())) {
+   if (!Verify_Firmware() || (SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update())) {
+
+      status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT);
+      enable_wifi_start_time_ms = Millis();
+      while ((Millis() - enable_wifi_start_time_ms) < 5000) {
+         Monitor_Periodic_Events();
+      }
+
+      //TODO: do init stuff for wifi peripherals so we can preserve our connection?
+//      if ((status = Get_WiFi_Connection_Status() || Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) == TRUE) {
+      if (status == TRUE) {
+
+         // Check if an application update is available. If so, write that value to the shared flash memory.
+         if (!Has_Latest_Firmware()) {
+            SharedData.ApplicationUpdateAvailable = TRUE;
+         }
+
+         // Updates the current firmware if the current application doesn't verify or if the user has approved a pending update.
+         // TODO: Initialize the "application key" // Has_User_Requested_Update ();
+         //    	if (!Verify_Firmware() || Has_User_Requested_Update ())
 //			if (!Verify_Firmware() || (/*!Has_Latest_Firmware()*/ SharedData.ApplicationUpdateAvailable = TRUE && Has_User_Requested_Update ()))
-            // if (!Verify_Firmware() || (!Has_Latest_Firmware() && Has_User_Requested_Update ()) && Has_User_Forced_Update ())
+         // if (!Verify_Firmware() || (!Has_Latest_Firmware() && Has_User_Requested_Update ()) && Has_User_Forced_Update ())
 //			{
-            if ((status = Update_Firmware()) == TRUE)
-            {
-                // TODO: Post successful download operations (i.e., update shared variables, store checksum, jump to program).
-            }
+         if ((status = Update_Firmware()) == TRUE) {
+            // TODO: Post successful download operations (i.e., update shared variables, store checksum, jump to program).
+         }
 
 //			} else {
 
-            // The firmware is already up to date or it hasn't yet been requested by the user.
-            // So reset the flag indicating a new firmware update is available.
-            //			SharedData.ApplicationUpdateAvailable = FALSE;
-            //			SharedData.UpdateApplication = FALSE;
+         // The firmware is already up to date or it hasn't yet been requested by the user.
+         // So reset the flag indicating a new firmware update is available.
+         //			SharedData.ApplicationUpdateAvailable = FALSE;
+         //			SharedData.UpdateApplication = FALSE;
 
 //			}
 
-        }
-        else
-        {
+      } else {
 
-            // Error: Could not connect to Wi-Fi.
+         // Error: Could not connect to Wi-Fi.
 
-        }
-    }
+      }
+   }
 
-    // Disable all interrupts before jumping to the application.
-    Disable_Interrupts();
+   // Disable all interrupts before jumping to the application.
+   Disable_Interrupts();
 
-    // TODO: Reset the "application key" to indicate the bootloader.
-    // Reset the "application key".
-    SharedData.ApplicationKey = BOOTLOADER_KEY_VALUE;
+   // TODO: Reset the "application key" to indicate the bootloader.
+   // Reset the "application key".
+   SharedData.ApplicationKey = BOOTLOADER_KEY_VALUE;
 
-    // Jump to main application firmware
-    Jump_To_Application();
+   // Jump to main application firmware
+   Jump_To_Application();
 
-    for (;;)
-        ;
+   for (;;)
+      ;
 }
+
+////Local implementations /////////////////////////////////////////
+

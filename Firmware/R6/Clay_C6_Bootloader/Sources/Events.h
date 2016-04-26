@@ -44,6 +44,9 @@
 #include "ESP8266_Serial.h"
 #include "PowerOn.h"
 #include "BUTTON_IN.h"
+#include "FLASH1.h"
+#include "LED1.h"
+#include "LED2.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -162,6 +165,25 @@ void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr);
 */
 /* ===================================================================*/
 void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr);
+
+/*
+** ===================================================================
+**     Event       :  FLASH1_OnOperationComplete (module Events)
+**
+**     Component   :  FLASH1 [FLASH_LDD]
+*/
+/*!
+**     @brief
+**         Called at the end of the whole write / erase operation. if
+**         the event is enabled. See SetEventMask() and GetEventMask()
+**         methods.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr);
 
 /* END Events */
 

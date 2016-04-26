@@ -3,7 +3,7 @@
   <Header>
     <Name>Clay_C6_Firmware</Name>
     <SavedBy>thebh</SavedBy>
-    <ModificationStamp>131</ModificationStamp>
+    <ModificationStamp>135</ModificationStamp>
     <Date>2016-01-26</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -3647,8 +3647,8 @@
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Value>true</Value>
-          <Expanded>true</Expanded>
+          <Value>false</Value>
+          <Expanded>false</Expanded>
         </ItemState>
         <ItemState>
           <ItemSymbol>InitializationState</ItemSymbol>
@@ -3892,7 +3892,7 @@
           <ItemSymbol>C_RomRamAddr2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>49168</Value>
+          <Value>22544</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
           <Area />
@@ -3901,7 +3901,7 @@
           <ItemSymbol>C_RomRamSize2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>974832</Value>
+          <Value>1026032</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
         </ItemState>

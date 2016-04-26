@@ -55,8 +55,8 @@
             <boolgroup name="ROM/RAM Area" v="Enabled">
               <Name v="m_text" />
               <Qualifier v="RX" />
-              <Address v="49168" />
-              <Size v="974832" />
+              <Address v="22544" />
+              <Size v="1026032" />
             </boolgroup>
           </group>
           <group name="MemoryArea3">
@@ -2036,7 +2036,7 @@ Autoselect
     </Properties>
     <Methods>
       <Init v="generate code" />
-      <Deinit v="don&amp;apos;t generate code" />
+      <Deinit v="generate code" />
       <Enable v="don&amp;apos;t generate code" />
       <Disable v="don&amp;apos;t generate code" />
       <SetEventMask v="don&amp;apos;t generate code" />
@@ -2046,8 +2046,8 @@ Autoselect
       <SetPeriodUS v="don&amp;apos;t generate code" />
       <SetPeriodMS v="generate code" />
       <SetPeriodSec v="don&amp;apos;t generate code" />
-      <SetPeriodReal v="don&amp;apos;t generate code" />
-      <SetFrequencyHz v="don&amp;apos;t generate code" />
+      <SetPeriodReal v="generate code" />
+      <SetFrequencyHz v="generate code" />
       <SetFrequencykHz v="don&amp;apos;t generate code" />
       <SetFrequencyMHz v="don&amp;apos;t generate code" />
       <SetRatio8 v="don&amp;apos;t generate code" />
