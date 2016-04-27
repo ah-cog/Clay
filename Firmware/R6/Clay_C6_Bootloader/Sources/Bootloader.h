@@ -25,6 +25,9 @@ typedef struct shared_bootloader_data
       uint16_t pad;
 } shared_bootloader_data;
 
+extern bool wifi_connected;
+extern bool local_address_received;
+
 extern shared_bootloader_data SharedData;
 
 extern uint8_t Initialize_Bootloader();
@@ -48,5 +51,11 @@ extern void Jump_To_Application();
 extern void Disable_Interrupts();
 
 extern bool Get_WiFi_Connection_Status();
+
+bool Parse_Wifi_Connection_Message(Message * response);
+
+bool Get_Local_Address();
+
+bool Parse_Wifi_Address_Message(Message * response);
 
 #endif /* BOOTLOADER_H */

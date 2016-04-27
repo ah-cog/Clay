@@ -25,6 +25,8 @@ void Application(void) {
    Button_Enable();
 
    uint32_t enable_wifi_start_time_ms;
+   Message * temp_message_ptr;
+
    uint8_t status = Enable_Clock();
    status = Start_Clock();
 
@@ -32,13 +34,38 @@ void Application(void) {
 
    Initialize_Bootloader();
 
+   wifi_connected = FALSE;
+   local_address_received = FALSE;
+
    //if (!Verify_Firmware () || (/*!Has_Latest_Firmware()*/ SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update ())) {
    if (!Verify_Firmware() || (SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update())) {
 
       status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT);
       enable_wifi_start_time_ms = Millis();
       while ((Millis() - enable_wifi_start_time_ms) < 5000) {
+         //see if we can catch the WiFi's messages during connection
          Monitor_Periodic_Events();
+      }
+
+      //take all the messages out of the queue, see if we got the two we care about: connection status and
+      while (Has_Messages(&incomingWiFiMessageQueue)) {
+         temp_message_ptr = Dequeue_Message(&incomingWiFiMessageQueue);
+
+         if (!wifi_connected) {
+            wifi_connected = Parse_Wifi_Connection_Message(temp_message_ptr);
+         }
+
+         if (!local_address_received) {
+            local_address_received = Parse_Wifi_Connection_Message(temp_message_ptr);
+         }
+      }
+
+      while (!wifi_connected) {
+         wifi_connected = Get_WiFi_Connection_Status();
+      }
+
+      while (!local_address_received) {
+         local_address_received = Get_Local_Address();
       }
 
       //TODO: do init stuff for wifi peripherals so we can preserve our connection?
@@ -46,9 +73,10 @@ void Application(void) {
       if (status == TRUE) {
 
          // Check if an application update is available. If so, write that value to the shared flash memory.
-         if (!Has_Latest_Firmware()) {
-            SharedData.ApplicationUpdateAvailable = TRUE;
-         }
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ben did this tonight
+//         if (!Has_Latest_Firmware()) {
+//            SharedData.ApplicationUpdateAvailable = TRUE;
+//         }
 
          // Updates the current firmware if the current application doesn't verify or if the user has approved a pending update.
          // TODO: Initialize the "application key" // Has_User_Requested_Update ();

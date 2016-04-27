@@ -24,12 +24,15 @@
 shared_bootloader_data __attribute__((section(".BootloaderSharedData"))) SharedData;
 
 uint8_t bootloaderMode = TRUE;        // Flag indicating if the unit is in bootloader mode.
+
+bool wifi_connected;
+bool local_address_received;
+
 ////Local vars/////////////////////////////////////////////////////
 static char update_server_address[ADDRESS_STRING_LENGTH];
 static char local_address[ADDRESS_STRING_LENGTH];
 
 ////Local Prototypes///////////////////////////////////////////////
-static bool Get_Local_Address();
 static Message * WiFi_Wait_For_Message(uint32_t timeout_ms);
 static uint8_t Message_Content_Parameter_Equals(Message *message, int token_index, const char *pattern);
 static uint32_t Parse_Size_From_Message(Message * message);
@@ -273,17 +276,21 @@ uint8_t Update_Firmware() {
    uint32_t startByte = 0;        // The first byte to receive in the firmware. This will be the first byte in the received block.
 
    Message * message;
-   if (!Get_Local_Address()) return 1;
 
-   if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
-      message = Wifi_Receive();
-      if (message != NULL && strcmp(message->type, "status")) {
+   for (;;) {
 
-         char * temp = message->destination;
-         message->destination = message->source;
-         message->source = temp;
+      Monitor_Periodic_Events();
 
-         Wifi_Send(message);
+      if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
+         message = Wifi_Receive();
+         if (message != NULL && strcmp(message->type, "status")) {
+
+            char * temp = message->destination;
+            message->destination = message->source;
+            message->source = temp;
+
+            Wifi_Send(message);
+         }
       }
    }
 
@@ -493,17 +500,7 @@ bool Get_WiFi_Connection_Status() {
 
       if ((response = WiFi_Wait_For_Message(REQUEST_WAIT_TIME_ms)) != NULL) {
 
-         int token_count = 0;
-
-         token_count = Get_Token_Count((*response).content);
-
-         if (Message_Content_Parameter_Equals(response, FIRST_PARAMETER, "wifi")) {
-            if (Message_Content_Parameter_Equals(response, SECOND_PARAMETER, "connected")) {
-               result = TRUE;
-            } else if (Message_Content_Parameter_Equals(response, SECOND_PARAMETER, "disconnected")) {
-               result = FALSE;
-            }
-         }
+         result = Parse_Wifi_Connection_Message(response);
 
          Delete_Message(response);
       }
@@ -512,8 +509,25 @@ bool Get_WiFi_Connection_Status() {
    return result;
 }
 
-////Local implementations /////////////////////////////////////////
-static bool Get_Local_Address() {
+bool Parse_Wifi_Connection_Message(Message * response) {
+
+   bool result = FALSE;
+   int token_count = 0;
+
+   token_count = Get_Token_Count((*response).content);
+
+   if (Message_Content_Parameter_Equals(response, FIRST_PARAMETER, "wifi")) {
+      if (Message_Content_Parameter_Equals(response, SECOND_PARAMETER, "connected")) {
+         result = TRUE;
+      } else if (Message_Content_Parameter_Equals(response, SECOND_PARAMETER, "disconnected")) {
+         result = FALSE;
+      }
+   }
+
+   return result;
+}
+
+bool Get_Local_Address() {
 
    bool result = FALSE;
    Message * response;
@@ -523,18 +537,7 @@ static bool Get_Local_Address() {
 
       if ((response = WiFi_Wait_For_Message(REQUEST_WAIT_TIME_ms)) != NULL) {
 
-         char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-         int token_count = 0;
-
-         if (Message_Content_Parameter_Equals(response, FIRST_PARAMETER, "wifi")) {
-            if (Message_Content_Parameter_Equals(response, SECOND_PARAMETER, "address")) {
-
-               Get_Token((*response).content, token, THIRD_PARAMETER);
-               strncpy(local_address, token, strlen(token));
-
-               result = true;
-            }
-         }
+         result = Parse_Wifi_Address_Message(response);
 
          Delete_Message(response);
       }
@@ -544,6 +547,26 @@ static bool Get_Local_Address() {
    return result;
 }
 
+bool Parse_Wifi_Address_Message(Message * response) {
+
+   bool result = false;
+   char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+   int token_count = 0;
+
+   if (Message_Content_Parameter_Equals(response, FIRST_PARAMETER, "wifi")) {
+      if (Message_Content_Parameter_Equals(response, SECOND_PARAMETER, "address")) {
+
+         Get_Token((*response).content, token, THIRD_PARAMETER);
+         sprintf(local_address, "%s:%d", token, 3000);
+
+         result = true;
+      }
+   }
+
+   return result;
+}
+
+////Local implementations /////////////////////////////////////////
 static Message * WiFi_Wait_For_Message(uint32_t timeout_ms) {
 
    Message * result = NULL;

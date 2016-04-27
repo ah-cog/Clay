@@ -4,6 +4,8 @@ Circuit/.DS_Store
 Circuit/P1R5/P1R5.zip
 Firmware/R5/*/Generated_Code
 Firmware/R6/*/Generated_Code
+Firmware/R6/*/*/Generated_Code
+Firmware/R6/*/*/Generated_Code
 Firmware/R6/*/Documentation
 *.g_c
 *.g_x
@@ -18,6 +20,7 @@ Firmware/R6/*/Documentation
 *.lss
 *.map
 *.sym
+*.d
 
 # Keep these if preferred for a reference of the final build.
 # *.elf

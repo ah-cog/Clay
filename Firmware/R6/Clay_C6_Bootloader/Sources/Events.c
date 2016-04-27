@@ -152,51 +152,51 @@ void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr) {
 /* ===================================================================*/
 void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
+   ESP8266_UART_Device *ptr = (ESP8266_UART_Device*) UserDataPtr;
+   ptr->isSent = TRUE;
 }
 
 /*
-** ===================================================================
-**     Event       :  BUTTON_IN_OnPortEvent (module Events)
-**
-**     Component   :  BUTTON_IN [GPIO_LDD]
-*/
+ ** ===================================================================
+ **     Event       :  BUTTON_IN_OnPortEvent (module Events)
+ **
+ **     Component   :  BUTTON_IN [GPIO_LDD]
+ */
 /*!
-**     @brief
-**         Called if defined event on any pin of the port occured.
-**         OnPortEvent event and GPIO interrupt must be enabled. See
-**         SetEventMask() and GetEventMask() methods. This event is
-**         enabled if [Interrupt service/event] is Enabled and disabled
-**         if [Interrupt service/event] is Disabled.
-**     @param
-**         UserDataPtr     - Pointer to RTOS device
-**                           data structure pointer.
-*/
+ **     @brief
+ **         Called if defined event on any pin of the port occured.
+ **         OnPortEvent event and GPIO interrupt must be enabled. See
+ **         SetEventMask() and GetEventMask() methods. This event is
+ **         enabled if [Interrupt service/event] is Enabled and disabled
+ **         if [Interrupt service/event] is Disabled.
+ **     @param
+ **         UserDataPtr     - Pointer to RTOS device
+ **                           data structure pointer.
+ */
 /* ===================================================================*/
-void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
+void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr) {
+   /* Write your code here ... */
 }
 
 /*
-** ===================================================================
-**     Event       :  FLASH1_OnOperationComplete (module Events)
-**
-**     Component   :  FLASH1 [FLASH_LDD]
-*/
+ ** ===================================================================
+ **     Event       :  FLASH1_OnOperationComplete (module Events)
+ **
+ **     Component   :  FLASH1 [FLASH_LDD]
+ */
 /*!
-**     @brief
-**         Called at the end of the whole write / erase operation. if
-**         the event is enabled. See SetEventMask() and GetEventMask()
-**         methods.
-**     @param
-**         UserDataPtr     - Pointer to the user or
-**                           RTOS specific data. This pointer is passed
-**                           as the parameter of Init method.
-*/
+ **     @brief
+ **         Called at the end of the whole write / erase operation. if
+ **         the event is enabled. See SetEventMask() and GetEventMask()
+ **         methods.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. This pointer is passed
+ **                           as the parameter of Init method.
+ */
 /* ===================================================================*/
-void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr)
-{
-  /* Write your code here ... */
+void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
+   /* Write your code here ... */
 }
 
 /* END Events */
