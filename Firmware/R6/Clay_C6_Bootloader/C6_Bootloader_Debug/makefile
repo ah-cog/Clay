@@ -10,10 +10,11 @@ RM := rm -rf
 -include sources.mk
 -include Static_Code/System/subdir.mk
 -include Sources/Utilities/subdir.mk
+-include Sources/Drivers/program_flash/subdir.mk
 -include Sources/Drivers/WiFi/subdir.mk
 -include Sources/Drivers/Power_Manager/subdir.mk
+-include Sources/Drivers/LED/subdir.mk
 -include Sources/Drivers/Button/subdir.mk
--include Sources/Drivers/subdir.mk
 -include Sources/subdir.mk
 -include Project_Settings/Startup_Code/subdir.mk
 -include Generated_Code/subdir.mk

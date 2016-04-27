@@ -54,7 +54,7 @@ void Initialize() {
 
    // Initialize Clay
 
-//   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
 //   Button_Register_Press_Response(Send_Mesh_Test_Message);
 //   Button_Register_Release_Response(Send_Mesh_Test_Message);
 

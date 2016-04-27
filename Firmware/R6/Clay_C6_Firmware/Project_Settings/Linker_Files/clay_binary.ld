@@ -28,7 +28,8 @@
 ENTRY(__thumb_startup)
 
 /* Highest address of the user mode stack */
-_estack = 0x20030000;    /* end of m_data */
+/*_estack = 0x20030000;    had to move this because of the shared variable.*/
+_estack = 0x20027FF7;
 __SP_INIT = _estack;
 __stack = _estack;
 
@@ -37,8 +38,8 @@ __heap_size = 0x00;                    /* required amount of heap  */
 __stack_size = 0x0400;                 /* required amount of stack */
 
 MEMORY {
-  m_interrupts (RX) : ORIGIN = 0x00005810, LENGTH = 0x00000198
-  m_text      (RX) : ORIGIN = 0x00005C10, LENGTH = 0x000FA3F0
+  m_interrupts (RX) : ORIGIN = 0x00005800, LENGTH = 0x00000198
+  m_text      (RX) : ORIGIN = 0x00005C00, LENGTH = 0x000FA400
   m_data_1FFF0000 (RW) : ORIGIN = 0x1FFF0000, LENGTH = 0x00010000
   m_data      (RW) : ORIGIN = 0x20000000, LENGTH = 0x00030000
 }

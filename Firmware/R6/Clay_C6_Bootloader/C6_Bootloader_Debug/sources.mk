@@ -30,9 +30,10 @@ SUBDIRS := \
 Static_Code/System \
 Sources \
 Sources/Utilities \
-Sources/Drivers \
+Sources/Drivers/program_flash \
 Sources/Drivers/WiFi \
 Sources/Drivers/Power_Manager \
+Sources/Drivers/LED \
 Sources/Drivers/Button \
 Project_Settings/Startup_Code \
 Generated_Code \

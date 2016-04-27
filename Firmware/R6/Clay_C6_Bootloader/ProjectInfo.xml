@@ -48,9 +48,10 @@
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Project_Settings\Startup_Code\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Button\</Path>
-      <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\</Path>
+      <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\LED\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Power_Manager\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\</Path>
+      <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\program_flash\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Static_Code\System\</Path>
     </SourceCodePaths>
@@ -78,11 +79,11 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Bootloader.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Clock.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Button\Button.c</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\LEDs.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\LED\LEDs.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Power_Manager\Power_Manager.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\Message_Info.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\WiFi.c</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\program_flash.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\program_flash\program_flash.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Events.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\HTTP_Messages.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Message.c</PathName>
@@ -124,11 +125,11 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Bootloader.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Clock.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Button\Button.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\LEDs.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\LED\LEDs.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Power_Manager\Power_Manager.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\Message_Info.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\WiFi.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\program_flash.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\program_flash\program_flash.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Events.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\HTTP_Messages.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Message.h</PathName>

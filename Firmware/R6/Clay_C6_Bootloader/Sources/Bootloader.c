@@ -3,7 +3,7 @@
 #include "Clock.h"
 #include "WiFi.h"
 #include "Bootloader.h"
-#include "Drivers/program_flash.h"
+#include "program_flash.h"
 #include "HTTP_Messages.h"
 
 ////Macros ////////////////////////////////////////////////////////
@@ -29,7 +29,6 @@ bool wifi_connected;
 bool local_address_received;
 
 ////Local vars/////////////////////////////////////////////////////
-static char update_server_address[ADDRESS_STRING_LENGTH];
 static char local_address[ADDRESS_STRING_LENGTH];
 
 ////Local Prototypes///////////////////////////////////////////////
@@ -158,8 +157,6 @@ uint8_t Has_Latest_Firmware() {
    uint16_t firmwareChecksum = 0;     // The stored checksum value.
    uint16_t latestFirmwareChecksum = 0;     // The checksum of the latest firmware.
 
-   char *address = FIRMWARE_SERVER_ADDRESS;
-   uint16_t port = FIRMWARE_SERVER_PORT;
    char uriParameters[64] = { 0 };
 
    //TODO: do a proper version check.
@@ -173,7 +170,7 @@ uint8_t Has_Latest_Firmware() {
    //wait for response, calling WiFi_State_Step
    //get the message back
 
-   Send_HTTP_GET_Request(update_server_address, local_address, uriParameters);
+   Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);
 //   latestFirmwareChecksum = atoi(httpResponseBuffer);
 
    // Get the stored checksum
@@ -277,25 +274,6 @@ uint8_t Update_Firmware() {
 
    Message * message;
 
-   for (;;) {
-
-      Monitor_Periodic_Events();
-
-      if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
-         message = Wifi_Receive();
-         if (message != NULL && strcmp(message->type, "status")) {
-
-            char * temp = message->destination;
-            message->destination = message->source;
-            message->source = temp;
-
-            Wifi_Send(message);
-         }
-      }
-   }
-
-   //TODO: test WiFi driver here.
-
    // TODO: Get total size of firmware (from firmware description).
    uint32_t firmware_size = DEFAULT_FIRMWARE_SIZE;     // Total size (in bytes) of the firmware being received.
    uint16_t firmware_checksum = DEFAULT_FIRMWARE_CHECKSUM;
@@ -310,7 +288,7 @@ uint8_t Update_Firmware() {
 
    // Retrieve firmware size from the server.
    sprintf(uriParameters, "/clay/firmware/size/");
-   Send_HTTP_GET_Request(update_server_address, local_address, uriParameters);
+   Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);
    response_message = WiFi_Wait_For_Message(REQUEST_WAIT_TIME_ms);
    firmware_size = Parse_Size_From_Message(response_message);
 
@@ -330,7 +308,7 @@ uint8_t Update_Firmware() {
 
    // Retrieve firmware checksum from the server.
    sprintf(uriParameters, "/clay/firmware/checksum/");
-   Send_HTTP_GET_Request(update_server_address, local_address, uriParameters);        // HTTP GET /firmware/version
+   Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);        // HTTP GET /firmware/version
    response_message = WiFi_Wait_For_Message(REQUEST_WAIT_TIME_ms);
 
    firmware_checksum = Parse_Checksum_From_Message(response_message);
@@ -358,7 +336,7 @@ uint8_t Update_Firmware() {
 
       startByte = blockIndex * blockSize;     // Determine the first byte to receive in the block based on the current block index.
       sprintf(uriParameters, "/clay/firmware/?startByte=%d&byteCount=%d", startByte, blockSize);
-      Send_HTTP_GET_Request(update_server_address, local_address, uriParameters);        // HTTP GET /firmware/version
+      Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);        // HTTP GET /firmware/version
 
 //    strncpy(firmwareBuffer, connectionDataQueue[connection], connectionDataQueueSize[connection]);        // Copy the received data into a response buffer.
 

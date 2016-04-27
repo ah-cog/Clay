@@ -84,7 +84,7 @@ static int receive_tail;
 static int receive_size;
 
 static uint32 last_tcp_activity_time;
-static uint32 tcp_connection_timeout_us = 1500000;
+static uint32 tcp_connection_timeout_us = 10000000;
 
 static bool listening;
 static bool task_running = false;
