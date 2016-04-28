@@ -29,7 +29,7 @@ ENTRY(__thumb_startup)
 
 /* Highest address of the user mode stack */
 /*_estack = 0x20030000;    had to move this because of the shared variable.*/
-_estack = 0x20027FF7;
+_estack = 0x2002FFF0;
 __SP_INIT = _estack;
 __stack = _estack;
 
@@ -51,14 +51,14 @@ SECTIONS
   /******************************************************************************/
   /*******************************clay sections**********************************/
   /*data shared between application and bootloader. The NOLOAD parameter is used to prevent jumps between applications from causing re-initialization of the data.*/
-  .BootloaderSharedData 0x20027FF8 (NOLOAD):
+  .BootloaderSharedData 0x2002FFF8 (NOLOAD):
   {
     KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
   } > m_data
   /******************************************************************************/
 
   /* The startup code goes first into INTERNAL_FLASH */
-  .interrupts :
+  .interrupts:
   {
     __vector_table = .;
     . = ALIGN(4);

@@ -28,7 +28,8 @@
 ENTRY(__thumb_startup)
 
 /* Highest address of the user mode stack */
-_estack = 0x20030000;    /* end of m_data */
+/*_estack = 0x20030000;    had to move this because of the shared variable.*/
+_estack = 0x2002FFF0;
 __SP_INIT = _estack;
 __stack = _estack;
 

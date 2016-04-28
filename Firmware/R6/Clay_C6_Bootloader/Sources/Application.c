@@ -38,8 +38,8 @@ void Application(void) {
    local_address_received = FALSE;
 
    //if (!Verify_Firmware () || (/*!Has_Latest_Firmware()*/ SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update ())) {
-//   if (!Verify_Firmware() || (SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update())) {
-   if (0) {
+   if (!Verify_Firmware() || (SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update())) {
+//   if (0) {
 
       status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT);
       enable_wifi_start_time_ms = Millis();

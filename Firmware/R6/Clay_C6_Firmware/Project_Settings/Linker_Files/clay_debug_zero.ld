@@ -38,10 +38,11 @@ __heap_size = 0x00;                    /* required amount of heap  */
 __stack_size = 0x0400;                 /* required amount of stack */
 
 MEMORY {
-  m_interrupts (RX) : ORIGIN = 0x00005800, LENGTH = 0x00000198
-  m_text      (RX) : ORIGIN = 0x00005C00, LENGTH = 0x000FA400
+  m_interrupts (RX) : ORIGIN = 0x00000000, LENGTH = 0x00000198
+  m_text      (RX) : ORIGIN = 0x00000410, LENGTH = 0x000FA3FF
   m_data_1FFF0000 (RW) : ORIGIN = 0x1FFF0000, LENGTH = 0x00010000
   m_data      (RW) : ORIGIN = 0x20000000, LENGTH = 0x00030000
+  m_cfmprotrom  (RX) : ORIGIN = 0x00000400, LENGTH = 0x00000010
 }
 
 /* Define output sections */
@@ -64,6 +65,13 @@ SECTIONS
     KEEP(*(.vectortable)) /* Startup code */
     . = ALIGN(4);
   } > m_interrupts
+
+  .cfmprotect :
+  {
+    . = ALIGN(4);
+	KEEP(*(.cfmconfig))	/* Flash Configuration Field (FCF) */
+	. = ALIGN(4);
+  } > m_cfmprotrom
   
   /* The program code and other data goes into INTERNAL_FLASH */
   .text :
