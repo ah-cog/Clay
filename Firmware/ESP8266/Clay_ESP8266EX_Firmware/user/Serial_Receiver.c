@@ -210,7 +210,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 //				taskEXIT_CRITICAL();
 //				taskYIELD();
 
-				//TODO: mas yields
 				taskENTER_CRITICAL();
 				received_message_type = Get_Message_Type_From_Str(temp_type);
 				taskEXIT_CRITICAL();
@@ -220,6 +219,13 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 						message_type_strings[received_message_type],
 						temp_source_address, temp_dest_address, temp_content);
 				taskEXIT_CRITICAL();
+
+//				taskENTER_CRITICAL();
+//				printf("srx msg: %s,%s,%s,%s,%d,%d\r\n", temp_msg.type,
+//						temp_msg.source, temp_msg.destination, temp_msg.content,
+//						strlen(temp_content), received_message_type);
+//				taskEXIT_CRITICAL();
+//				taskYIELD();
 
 				taskYIELD();
 
@@ -233,11 +239,12 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 				}
 #endif
 #if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED_TX
+				case MESSAGE_TYPE_HTTP:
 				case MESSAGE_TYPE_TCP:
 				{
 //					taskENTER_CRITICAL();
 //					printf("\r\ngot tcp msg: %s,%s,%s,%s\r\n", temp_msg.content,
-//							temp_msg.message_type, temp_msg.destination,
+//							temp_msg.type, temp_msg.destination,
 //							temp_msg.source);
 //					taskEXIT_CRITICAL();
 
@@ -252,6 +259,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					selected_message_queue = &incoming_command_queue;
 					break;
 				}
+
 				default:
 				{
 					selected_message_queue = NULL;

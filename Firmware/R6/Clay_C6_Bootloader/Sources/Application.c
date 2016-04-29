@@ -24,6 +24,9 @@ void Application(void) {
    //enable button so the user can shut us down.
    Button_Enable();
 
+   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+   Button_Register_Hold_Response(500, Wifi_Set_Operating_Mode);
+
    uint32_t enable_wifi_start_time_ms;
    Message * temp_message_ptr;
 
@@ -48,6 +51,13 @@ void Application(void) {
          Monitor_Periodic_Events();
       }
 
+#if 0
+      Wifi_Set_Programming_Mode();
+
+      while (Wifi_Get_State() == Programming)
+         ;
+#endif
+
       //take all the messages out of the queue, see if we got the two we care about: connection status and
       while (Has_Messages(&incomingWiFiMessageQueue)) {
          temp_message_ptr = Dequeue_Message(&incomingWiFiMessageQueue);
@@ -63,10 +73,23 @@ void Application(void) {
 
       while (!wifi_connected) {
          wifi_connected = Get_WiFi_Connection_Status();
+         Wait(100);
       }
 
       while (!local_address_received) {
          local_address_received = Get_Local_Address();
+         Wait(100);
+      }
+
+      enable_wifi_start_time_ms = Millis();
+
+      while (Has_Messages(&incomingWiFiMessageQueue) || (Millis() - enable_wifi_start_time_ms) < 2000) {
+         Message * m;
+         Monitor_Periodic_Events();
+         m = Dequeue_Message(&incomingWiFiMessageQueue);
+         if (m != NULL) {
+            Delete_Message(m);
+         }
       }
 
       //TODO: do init stuff for wifi peripherals so we can preserve our connection?

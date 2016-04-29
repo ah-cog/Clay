@@ -25,8 +25,8 @@ void Wifi_Test() {
 //   char * ssid_m = "hefnetm";
 //   char * password_m = "dips00BOYNEdo$!&";
 
-
    Power_Manager_Enable();
+   Initialize_Channels();
    Channel_Enable_All();
    Button_Enable();
    Enable_WiFi(ssid, password);
@@ -37,18 +37,20 @@ void Wifi_Test() {
    Message *message = NULL;
    Message * outgoing_message = NULL;
    uint32_t lastMessageSendTime = 0;
-   uint32_t messageSendPeriod = 250;
+   uint32_t messageSendPeriod = 1000;
 
    bool echo = TRUE;
    bool repeat_send = FALSE;
    bool request_connect = FALSE;
    bool get_ip = FALSE;
 
-   char type_str[] = "tcp";
-   char dest_addr[] = "192.168.1.3:1002";
-   char source_addr[] = "192.168.1.21:1002";
-   char message_content_template[] = "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d";
-   char message_content[256];
+   char type_str[] = "http";
+   char dest_addr[] = "107.170.180.158:3000/clay/firmware/size";
+//   char dest_addr[] = "192.168.1.3:3000/clay/firmware/size";
+   char source_addr[] = "192.168.1.21:3000";
+//   char message_content_template[] = "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d";
+//   char message_content[256];
+   char message_content[] = "none";
    int message_index = 0;
 
    for (;;) {
@@ -57,7 +59,7 @@ void Wifi_Test() {
       Wifi_State_Step();
       Button_Periodic_Call();
 
-#if 1
+#if 0
       //echo received messages
       if (echo && Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
          message = Wifi_Receive();
@@ -98,8 +100,6 @@ void Wifi_Test() {
          WiFi_Request_Get_Internet_Address();
 #else
 
-         sprintf(message_content, message_content_template, ++message_index);
-
          outgoing_message = Create_Message(message_content);
          Set_Message_Type(outgoing_message, type_str);
          Set_Message_Source(outgoing_message, source_addr);
@@ -117,9 +117,7 @@ void Wifi_Test() {
          request_connect = FALSE;
          if (use_mobile) {
             WiFi_Request_Connect(ssid_m, password_m);
-         }
-         else
-         {
+         } else {
             WiFi_Request_Connect(ssid, password);
          }
       }
@@ -131,8 +129,6 @@ void Wifi_Test() {
    }
 
 }
-
-
 
 ///setap test code.
 //   char * ssid = "hefnet";

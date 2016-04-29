@@ -156,6 +156,7 @@ uint8_t Has_Latest_Firmware() {
    uint8_t result = TRUE;     // Return value. Default to true.
    uint16_t firmwareChecksum = 0;     // The stored checksum value.
    uint16_t latestFirmwareChecksum = 0;     // The checksum of the latest firmware.
+   Message * response_message;
 
    char uriParameters[64] = { 0 };
 
@@ -171,6 +172,10 @@ uint8_t Has_Latest_Firmware() {
    //get the message back
 
    Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);
+   response_message = WiFi_Wait_For_Message(REQUEST_WAIT_TIME_ms);
+
+   latestFirmwareChecksum = Parse_Checksum_From_Message(response_message);
+
 //   latestFirmwareChecksum = atoi(httpResponseBuffer);
 
    // Get the stored checksum

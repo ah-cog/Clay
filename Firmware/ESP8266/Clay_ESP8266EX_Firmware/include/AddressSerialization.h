@@ -19,6 +19,8 @@
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
+extern const char * http_uri_delimiter_fs;
+extern const char * http_uri_delimiter_bs;
 extern const char * address_terminator;
 extern const char * address_delimiter;
 extern const char * type_delimiter;

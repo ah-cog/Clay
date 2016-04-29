@@ -8,8 +8,8 @@
 #include "Clay_Config.h"
 
 #define MAXIMUM_MESSAGE_LENGTH 256
-#define MAXIMUM_SOURCE_LENGTH 64
-#define MAXIMUM_DESTINATION_LENGTH 64
+#define MAXIMUM_SOURCE_LENGTH 100
+#define MAXIMUM_DESTINATION_LENGTH 100
 
 typedef struct Message
 {

@@ -58,7 +58,7 @@ SECTIONS
   /******************************************************************************/
 
   /* The startup code goes first into INTERNAL_FLASH */
-  .interrupts:
+  .interrupts :
   {
     __vector_table = .;
     . = ALIGN(4);

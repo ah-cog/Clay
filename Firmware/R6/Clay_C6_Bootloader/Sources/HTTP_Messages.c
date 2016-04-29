@@ -41,6 +41,15 @@ bool Send_HTTP_GET_Request(char * destination, char * source, char * request_con
       Set_Message_Source(request, source);
       Set_Message_Type(request, "tcp");
 
+      Wifi_Send(request);
+
+      sprintf(request_buffer, " \n");
+
+      request = Create_Message(request_buffer);
+      Set_Message_Destination(request, destination);
+      Set_Message_Source(request, source);
+      Set_Message_Type(request, "tcp");
+
       free(request_buffer);
 
       result = Wifi_Send(request);
@@ -52,8 +61,6 @@ bool Send_HTTP_GET_Request(char * destination, char * source, char * request_con
 bool Parse_HTTP_Response(char * response_content, char * output_buffer) {
 
    bool result = FALSE;
-
-
 
    return result;
 }

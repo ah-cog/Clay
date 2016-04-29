@@ -9,4 +9,4 @@
 #include "Clay_Config.h"
 
 uint8* message_type_strings[] =
-{ "udp", "tcp", "command", "status", "invalid" };
+{ "udp", "tcp", "command", "status", "http", "invalid" };

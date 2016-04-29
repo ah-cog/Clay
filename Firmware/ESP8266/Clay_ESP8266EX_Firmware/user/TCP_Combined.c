@@ -89,6 +89,10 @@ static uint32 tcp_connection_timeout_us = 10000000;
 static bool listening;
 static bool task_running = false;
 
+static Message_Type connection_type;
+
+static const char http_get_format[] = "GET %s HTTP/1.1\r\n\r\n";
+
 ////Local Prototypes///////////////////////////////////////////////
 static int32 Open_Listen_Connection(char * local_addr_string,
 		struct sockaddr_in * local_addr);
@@ -110,6 +114,7 @@ static void Connect_Task(void * PvParams);
 static void Data_Disconnect();
 static void Listen_Disconnect();
 static bool TCP_Timeout_Check();
+static bool Prepare_Http_Message(Message * m);
 
 ////Global implementations ////////////////////////////////////////
 bool ICACHE_RODATA_ATTR TCP_Combined_Init()
@@ -400,6 +405,8 @@ static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
 		Serialize_Address(remote_addr->sin_addr.s_addr,
 				ntohs(remote_addr->sin_port), remote_addr_string, 50);
 		taskEXIT_CRITICAL();
+
+		connection_type = MESSAGE_TYPE_TCP;
 	}
 
 	taskYIELD();
@@ -431,7 +438,12 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 		Initialize_Message(&temp_message, temp_message_ptr->type,
 				temp_message_ptr->source, temp_message_ptr->destination,
 				temp_message_ptr->content);
+
+		connection_type = Get_Message_Type_From_Str(temp_message.type);
+
+//		printf("message type:%d\r\n", connection_type);
 	}
+
 	taskEXIT_CRITICAL();
 
 	taskYIELD();
@@ -634,12 +646,6 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 	{
 //		DEBUG_Print("message matches");
 
-		taskENTER_CRITICAL();
-		size_t length = (size_t) (strlen(m->content) + 1);
-		taskEXIT_CRITICAL();
-
-		taskYIELD();
-
 //		taskENTER_CRITICAL();
 //		printf("sock:%d,size:%d,msg:%s\r\n", destination_socket, length,
 //				m->content);
@@ -647,50 +653,68 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 
 //		DEBUG_Print("tx");
 
-		taskYIELD();
-
-		rval = lwip_write(destination_socket, m->content, length) == length;
-
-		taskYIELD();
-
-//		DEBUG_Print(rval ? "ok" : "nfg");
-
-		if (!rval)
+		if (connection_type == MESSAGE_TYPE_HTTP
+				&& strlen(m->content) <= MAXIMUM_MESSAGE_LENGTH - 5)
 		{
-			int32 error = 0;
-			uint32 optionLength = sizeof(error);
-			int getReturn = lwip_getsockopt(destination_socket, SOL_SOCKET,
-			SO_ERROR, &error, &optionLength);
+			rval = Prepare_Http_Message(m);
+		}
+		else
+		{
+			rval = true;
+		}
+
+		taskENTER_CRITICAL();
+		size_t length = (size_t) (strlen(m->content));
+		taskEXIT_CRITICAL();
+
+		if (rval)
+		{
+			taskYIELD();
+
+			rval = lwip_write(destination_socket, m->content, length) == length;
+
+			taskYIELD();
+
+			//		DEBUG_Print(rval ? "ok" : "nfg");
+
+			if (!rval)
+			{
+				int32 error = 0;
+				uint32 optionLength = sizeof(error);
+				int getReturn = lwip_getsockopt(destination_socket, SOL_SOCKET,
+				SO_ERROR, &error, &optionLength);
 
 //			taskENTER_CRITICAL();
 //			printf("error:%d\r\n", error);
 //			taskEXIT_CRITICAL();
 
-			switch (error)
-			{
-			case ECONNRESET:
-			{
-				//we disconnected. return false.
-				Data_Disconnect();
-				break;
-			}
-			case EAGAIN:
-			{
-				rval = true;
+				switch (error)
+				{
+				case ECONNRESET:
+				{
+					//we disconnected. return false.
+					Data_Disconnect();
+					break;
+				}
+				case EAGAIN:
+				{
+					rval = true;
 
-				break;
+					break;
+				}
+				default:
+				{
+					rval = true;
+					break;
+				}
+				}
 			}
-			default:
+			else
 			{
-				rval = true;
-				break;
-			}
+				last_tcp_activity_time = system_get_time();
 			}
 		}
-		else
-		{
-			last_tcp_activity_time = system_get_time();
-		}
+
 	}
 	else
 	{
@@ -1293,3 +1317,28 @@ static bool TCP_Timeout_Check()
 	return rval;
 }
 
+static bool Prepare_Http_Message(Message * m)
+{
+	bool rval = false;
+	char * start_of_uri;
+
+	start_of_uri = strchr(m->destination, *http_uri_delimiter_fs);
+
+	if (start_of_uri == NULL)
+	{
+		start_of_uri = strchr(m->destination, *http_uri_delimiter_bs);
+	}
+
+	if (start_of_uri != NULL)
+	{
+		sprintf(m->content, http_get_format, start_of_uri);
+		start_of_uri = '\0';
+
+//		DEBUG_Print("prepared http:");
+//		DEBUG_Print(m->content);
+
+		rval = true;
+	}
+
+	return rval;
+}
