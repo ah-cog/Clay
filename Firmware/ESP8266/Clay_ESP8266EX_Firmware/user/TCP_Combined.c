@@ -28,6 +28,7 @@
 #include "Message_Queue.h"
 #include "Message.h"
 #include "AddressSerialization.h"
+#include "Multibyte_Ring_Buffer.h"
 
 ////Macros ////////////////////////////////////////////////////////
 #define DATA_CONNECT_ATTEMPT_MAX 		10
@@ -64,7 +65,7 @@ static xTaskHandle idle_handle;
 static bool connected;
 static bool promoted;
 
-static char *receive_data;
+//static char *receive_data;
 static char *transmit_data;
 static char *message_ptr;
 
@@ -92,6 +93,8 @@ static bool task_running = false;
 static Message_Type connection_type;
 
 static const char http_get_format[] = "GET %s HTTP/1.1\r\n\r\n";
+
+static Multibyte_Ring_Buffer receive_ring_buf;
 
 ////Local Prototypes///////////////////////////////////////////////
 static int32 Open_Listen_Connection(char * local_addr_string,
@@ -129,9 +132,10 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 		promoted = false;
 
 		taskENTER_CRITICAL();
+		Multibyte_Ring_Buffer_Init(&receive_ring_buf, RECEIVE_DATA_SIZE);
 		local_address_string = zalloc(ADDR_STRING_SIZE);
 		remote_address_string = zalloc(ADDR_STRING_SIZE);
-		receive_data = zalloc(RECEIVE_DATA_SIZE);
+//		receive_data = zalloc(RECEIVE_DATA_SIZE);
 		transmit_data = zalloc(TRANSMIT_DATA_SIZE);
 		taskEXIT_CRITICAL();
 
@@ -180,7 +184,8 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 
 		free(local_address_string);
 		free(remote_address_string);
-		free(receive_data);
+//		free(receive_data);
+		Multibyte_Ring_Buffer_Free(&receive_ring_buf);
 		free(transmit_data);
 
 		task_running = false;
@@ -785,313 +790,64 @@ static bool ICACHE_RODATA_ATTR Dequeue_And_Transmit(int32 data_sock)
 static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
+	uint32_t received_message_length;
 
-	//test code
+	received_count = Receive(data_sock,
+			receive_ring_buf.data + receive_ring_buf.tail,
+			((receive_ring_buf.tail > receive_ring_buf.head
+					|| (receive_ring_buf.tail == receive_ring_buf.head
+							&& receive_ring_buf.count == 0)) ?
+					(receive_ring_buf.max_count - receive_ring_buf.tail) :
+					receive_ring_buf.max_count - receive_ring_buf.count));
+	taskYIELD();
 
-//	received_count = Receive(data_sock, receive_data, RECEIVE_DATA_SIZE);
-//
-//	if (received_count == -1)
-//	{
-//		DEBUG_Print("dc");
-//		TCP_Disconnect();
-//		return false;
-//	}
-//	else
-//	{
-//		receive_data[received_count] = '\0';
-//
-//		taskENTER_CRITICAL();
-//		printf("rx'd %d: [%s]\r\n\r\n", received_count, receive_data);
-//		taskEXIT_CRITICAL();
-//
-//		*receive_data = '\0';
-//
-//		return true;
-//	}
+//	Initialize_Message(&temp_message,
+//							message_type_strings[MESSAGE_TYPE_TCP],
+//							remote_address_string, local_address_string,
+//							message_ptr);
 
-	//end test code
-
-//	taskENTER_CRITICAL();
-//	printf("\r\n\r\nrx params: t:%d,s:%d\r\n", receive_tail,
-//			((receive_tail > receive_head
-//					|| (receive_tail == receive_head && receive_size == 0)) ?
-//					(RECEIVE_DATA_SIZE - receive_tail) :
-//					RECEIVE_DATA_SIZE - receive_size));
-//	taskEXIT_CRITICAL();
-
-//	DEBUG_Print("call rx");
-
-//	taskENTER_CRITICAL();
-//	printf("rc c%d,h%d,t%d,s%d\r\n", received_count, receive_head, receive_tail,
-//			receive_size);
-//	taskEXIT_CRITICAL();
-
-//	taskENTER_CRITICAL();
-//	printf("rc: [%s]\r\n", local_address_string);
-//	taskEXIT_CRITICAL();
-
-	received_count = Receive(data_sock, receive_data + receive_tail,
-			((receive_tail > receive_head
-					|| (receive_tail == receive_head && receive_size == 0)) ?
-					(RECEIVE_DATA_SIZE - receive_tail) :
-					RECEIVE_DATA_SIZE - receive_size));
-
-//	taskENTER_CRITICAL();
-//	printf("rr: [%s]\r\n", local_address_string);
-//	taskEXIT_CRITICAL();
+	taskENTER_CRITICAL();
+	received_message_length = Multibyte_Ring_Buffer_Dequeue_Until_String(
+			&receive_ring_buf, temp_message.content, MAXIMUM_MESSAGE_LENGTH,
+			(connection_type == MESSAGE_TYPE_HTTP) ? "\n\n" : "\n");
+	taskEXIT_CRITICAL();
 
 	taskYIELD();
 
-//	taskENTER_CRITICAL();
-//	printf("rr c%d,h%d,t%d,s%d\r\n", received_count, receive_head, receive_tail,
-//			receive_size);
-//	taskEXIT_CRITICAL();
-
-	if (received_count > 0 || (receive_size > 0 && received_count > -1))
+	if (received_message_length > 0)
 	{
-		if (received_count > 0)
-		{
-			last_tcp_activity_time = system_get_time();
-		}
-
-		receive_tail = (receive_tail + received_count) % RECEIVE_DATA_SIZE;
-		receive_size += received_count;
-
-//		taskENTER_CRITICAL();
-//		printf("hd c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
-//				receive_tail, receive_size);
-//		taskEXIT_CRITICAL();
-
-		taskYIELD();
-
-		//if head is not less than tail, only search until end of buffer.
 		taskENTER_CRITICAL();
-		message_ptr = memchr2(receive_data + receive_head, message_end[0],
-				(receive_head < receive_tail ?
-						receive_size : RECEIVE_DATA_SIZE - receive_head));
+		bool message_too_long = strlen(
+				temp_message.content) > MAXIMUM_MESSAGE_LENGTH;
 		taskEXIT_CRITICAL();
 
 		taskYIELD();
 
-		//if we didn't find the end and the queue has wrapped, then search before the head for the terminator.
-		if (message_ptr == NULL
-				&& (receive_tail < receive_head
-						|| (receive_tail == receive_head
-								&& receive_size == RECEIVE_DATA_SIZE)))
+		if (!message_too_long)
 		{
 			taskENTER_CRITICAL();
-			message_ptr = memchr2(receive_data, message_end[0], receive_tail);
+			Initialize_Message(&temp_message,
+					message_type_strings[connection_type],
+					remote_address_string, local_address_string, message_ptr);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
-//			taskENTER_CRITICAL();
-//			printf("wa c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
-//					receive_tail, receive_size);
-//			UART_WaitTxFifoEmpty(UART0);
-//			taskEXIT_CRITICAL();
-
-			taskYIELD();
-
-			if (message_ptr != NULL)
-			{
-//				taskENTER_CRITICAL();
-//				printf("ss c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
-//						receive_tail, receive_size);
-//				UART_WaitTxFifoEmpty(UART0);
-//				taskEXIT_CRITICAL();
-
-//				DEBUG_Print("swap");
-
-//				taskENTER_CRITICAL();
-//				printf("ss: [%s]\r\n", local_address_string);
-//				taskEXIT_CRITICAL();
-
-				*message_ptr = '\0';
-
-				message_ptr = receive_data + receive_head;
-
-				taskYIELD();
-
-				///////////////////////////////////////////////////
-				//Look for more instances of this error
-				///not allocating enough memory. Need to alloc for and copy the entire buffer up to tail
-
-				//copy receive_tail bytes from receive_data into swap buffer
-				//copy RECEIVE_DATA_SIZE - receive_head bytes from head into start
-				//copy receive_tail bytes from swap buffer to receive_data + (RECEIVE_DATA_SIZE - receive_head)
-				//free swap.
-
-				taskENTER_CRITICAL();
-				char * swap = zalloc(receive_tail);
-				memcpy(swap, receive_data, receive_tail);
-				taskEXIT_CRITICAL();
-
-				taskYIELD();
-
-				taskENTER_CRITICAL();
-				//+1 because we replaced a newline with a null.
-				//	 We also need the null in there for the string operations to come
-				memcpy(receive_data, message_ptr,
-						(RECEIVE_DATA_SIZE - receive_head));
-				taskEXIT_CRITICAL();
-
-				taskYIELD();
-
-				taskENTER_CRITICAL();
-				memcpy(receive_data + (RECEIVE_DATA_SIZE - receive_head), swap,
-						receive_tail);
-				free(swap);
-				taskEXIT_CRITICAL();
-
-//				taskENTER_CRITICAL();
-//				printf("sd: [%s]\r\n", local_address_string);
-//				taskEXIT_CRITICAL();
-
-//				DEBUG_Print("swap done");
-
-				taskYIELD();
-
-				receive_head = 0;
-				receive_tail = (receive_size % RECEIVE_DATA_SIZE);
-				message_ptr = receive_data;
-
-//				taskENTER_CRITICAL();
-//				printf("sd c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
-//						receive_tail, receive_size);
-//				UART_WaitTxFifoEmpty(UART0);
-//				taskEXIT_CRITICAL();
-
-				taskYIELD();
-			}
-			else if (receive_size >= MAXIMUM_MESSAGE_LENGTH)
-			{
-//				taskENTER_CRITICAL();
-//				printf("rst c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
-//						receive_tail, receive_size);
-//				UART_WaitTxFifoEmpty(UART0);
-//				taskEXIT_CRITICAL();
-
-				//buffer's full and no terminator was found.
-				receive_head = 0;
-				receive_tail = 0;
-				receive_size = 0;
-			}
-		}
-		else if (message_ptr != NULL)
-		{
-//			taskENTER_CRITICAL();
-//			printf("found msg at %d\r\n",
-//					(uint32) (message_ptr - receive_data));
-//			UART_WaitTxFifoEmpty(UART0);
-//			taskEXIT_CRITICAL();
-
-			*message_ptr = '\0';
-			message_ptr = receive_data + receive_head;
-		}
-
-		if (message_ptr != NULL)
-		{
-
-//			DEBUG_Print("mpnn");
-
-			taskYIELD();
-
 			taskENTER_CRITICAL();
-			//+ 1 because the message had a newline on it when we received it.
-			receive_size -= (strlen(message_ptr) + 1);
-			receive_head = (receive_head + strlen(message_ptr) + 1)
-					% RECEIVE_DATA_SIZE;
+			Queue_Message(&incoming_message_queue, &temp_message);
 			taskEXIT_CRITICAL();
-
-//			DEBUG_Print("updidx");
-
-			taskYIELD();
-
-//			DEBUG_Print("mtlset");
-
-			taskENTER_CRITICAL();
-			bool message_too_long = strlen(message_ptr) > MAXIMUM_MESSAGE_LENGTH;
-			taskEXIT_CRITICAL();
-
-//			DEBUG_Print("mtl");
-
-			taskYIELD();
-
-			if (!message_too_long)
-			{
-//				taskENTER_CRITICAL();
-//				printf(
-//						"size:%d\r\ntype:[%s]\r\nsource:[%s]\r\ndest:[%s]\r\nmsg[%s]\r\n",
-//						strlen(message_ptr),
-//						message_type_strings[MESSAGE_TYPE_TCP],
-//						remote_address_string, local_address_string,
-//						message_ptr);
-//				UART_WaitTxFifoEmpty(UART0);
-//				taskEXIT_CRITICAL();
-
-				taskENTER_CRITICAL();
-				Initialize_Message(&temp_message,
-						message_type_strings[MESSAGE_TYPE_TCP],
-						remote_address_string, local_address_string,
-						message_ptr);
-				taskEXIT_CRITICAL();
-
-				taskYIELD();
-
-//				taskENTER_CRITICAL();
-//				printf("mi: [%s]\r\n", local_address_string);
-//				taskEXIT_CRITICAL();
-
-//				taskENTER_CRITICAL();
-//				printf(
-//						"size:%d\r\ntype:[%s]\r\nsource:[%s]\r\ndest:[%s]\r\nmsg[%s]\r\n",
-//						strlen(temp_message.content), temp_message.type,
-//						temp_message.source, temp_message.destination,
-//						temp_message.content);
-//				UART_WaitTxFifoEmpty(UART0);
-//				taskEXIT_CRITICAL();
-
-				taskENTER_CRITICAL();
-				Queue_Message(&incoming_message_queue, &temp_message);
-				taskEXIT_CRITICAL();
-
-//				taskENTER_CRITICAL();
-//				printf("nq: [%s]\r\n", local_address_string);
-//				taskEXIT_CRITICAL();
-
-//				DEBUG_Print("nq");
-
-//				taskENTER_CRITICAL();
-//				printf("nq c%d,h%d,t%d,s%d\r\n", received_count, receive_head,
-//						receive_tail, receive_size);
-//				UART_WaitTxFifoEmpty(UART0);
-//				taskEXIT_CRITICAL();
-
-				taskYIELD();
-			}
-
-			taskYIELD();
 		}
+
+		taskYIELD();
 	}
 	else if (received_count < 0)
 	{
-//		DEBUG_Print("rx closed");
-
 		Data_Disconnect();
 
 		rval = false;
 	}
 
-//	taskENTER_CRITICAL();
-//	printf("rxrtn: [%s]\r\n", local_address_string);
-//	UART_WaitTxFifoEmpty(UART0);
-//	taskEXIT_CRITICAL();
-
-//	DEBUG_Print("return");
-
 	return rval;
-
 }
 
 #if 0
