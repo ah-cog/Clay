@@ -140,6 +140,78 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Before_Char(Multibyte_Ring_Buffer * buf
    return rval;
 }
 
+uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(Multibyte_Ring_Buffer * buffer,
+                                                    uint8_t * data,
+                                                    uint32_t size,
+                                                    char * end_string) {
+
+   uint32_t rval = Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(buffer, end_string);
+
+   if (rval > 0 && rval <= size) {
+      rval = Multibyte_Ring_Buffer_Dequeue(buffer, data, rval);
+   } else {
+      rval = 0;
+   }
+
+   return rval;
+}
+
+//end_str must be null terminated.
+//returns the number of bytes until the end of the string.
+uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(Multibyte_Ring_Buffer * buffer, char * end_str) {
+
+   int rval = 0;
+   char * first_found = NULL;
+   char * last_found = NULL;
+   bool found = false;
+   bool continue_searching = true;
+
+   uint32_t target_length = strlen(end_str);
+   uint32_t first_char_index = 0;
+   uint32_t target_index = 0;
+
+   for (int i = buffer->head; i < (buffer->count + buffer->head) && continue_searching; ++i) {
+
+      if (first_found == NULL) {     //not out of data yet, and we haven't found the first char.
+
+         if ((buffer->data)[i % buffer->max_count] == end_str[target_index]) {
+            first_found = (buffer->data + (i % buffer->max_count));
+            ++target_index;
+         }
+      } else {     //we're not out of data, and we found the first char.
+
+         if ((buffer->data)[i % buffer->max_count] == end_str[target_index]) {
+            last_found = (buffer->data + (i % buffer->max_count));
+            ++target_index;
+         } else {
+            //start over
+            first_found = NULL;
+            found = false;
+            target_index = 0;
+         }
+
+         if (last_found != NULL) {
+            if (last_found > first_found) {     //our search hasn't wrapped around yet.
+
+               if (1 + (last_found - first_found) == target_length) {
+                  found = true;
+                  rval = 1 + (i - buffer->head);
+               }
+            } else if (1 + (last_found - (char *) buffer->data) + (buffer->max_count - (first_found - (char *) buffer->data))
+                       == target_length) {     //search has wrapped
+               found = true;
+               rval = 1 + (buffer->max_count - buffer->head) + (last_found - (char *) buffer->data);
+            }
+         }
+      }
+
+      //haven't found the whole string, and we still have room.
+      continue_searching = !found && ((buffer->count - (i - buffer->head)) > ((target_length) - target_index));
+   }
+
+   return rval;
+}
+
 uint32_t Multibyte_Ring_Buffer_Get_Free_Size(Multibyte_Ring_Buffer * buffer) {
 
    return buffer->max_count - buffer->count;
@@ -151,9 +223,13 @@ uint32_t Multibyte_Ring_Buffer_Get_Count(Multibyte_Ring_Buffer * buffer) {
 }
 
 bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer) {
+
    return buffer->count >= buffer->max_count;
 }
 
+////Local implementations /////////////////////////////////////////
+
+//test code for single byte search////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //281 chars including newline.
 //static char *test_msg =
 //      "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
@@ -193,4 +269,32 @@ bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer) {
 //
 //}
 
-////Local implementations /////////////////////////////////////////
+//test code for multi byte search////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//106 chars + 9 char terminating string. buffer should contain no termination strings with 104 bytes left.
+//  the next time around, the first message is 219 bytes (104 extra m's that didn't get parsed) , and the buffer will be cleared.
+//  watch for the termination string to wrap around the end of the ring buffer.
+//static char * test_msg = "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmstringend";
+//static char * search_str = "stringend";
+
+//uint32_t Multibyte_Ring_Buffer_Test() {
+//
+//   char dq_data[1024];
+//   uint32_t dq_max = 1024;
+//   uint32_t dq_count = 0;
+//
+//   Multibyte_Ring_Buffer test_buffer;
+//
+//   Multibyte_Ring_Buffer_Init(&test_buffer, 1024);
+//
+//   for (;;) {
+//      while (!Multibyte_Ring_Buffer_Full(&test_buffer)) {
+//         Multibyte_Ring_Buffer_Enqueue(&test_buffer, test_msg, strlen(test_msg));
+//      }
+//
+//      while (Multibyte_Ring_Buffer_Dequeue_Until_String(&test_buffer, dq_data, dq_max - dq_count, search_str)) {
+//         Multibyte_Ring_Buffer_Get_Count(&test_buffer);
+//      }
+//   }
+//}
+

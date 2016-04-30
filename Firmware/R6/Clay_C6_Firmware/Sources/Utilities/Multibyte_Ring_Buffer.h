@@ -35,8 +35,19 @@ extern void Multibyte_Ring_Buffer_Reset(Multibyte_Ring_Buffer * buffer);
 
 extern uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer, uint8_t * data, uint32_t size);
 extern uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t * data, uint32_t size);
-extern uint32_t Multibyte_Ring_Buffer_Dequeue_Until_Char(Multibyte_Ring_Buffer * buffer, uint8_t * data, uint32_t size, char end_char);
+extern uint32_t Multibyte_Ring_Buffer_Dequeue_Until_Char(Multibyte_Ring_Buffer * buffer,
+                                                         uint8_t * data,
+                                                         uint32_t size,
+                                                         char end_char);
 extern uint32_t Multibyte_Ring_Buffer_Get_Bytes_Before_Char(Multibyte_Ring_Buffer * buffer, char end_char);
+
+
+uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(Multibyte_Ring_Buffer * buffer, char * end_str);
+uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(Multibyte_Ring_Buffer * buffer,
+                                                    uint8_t * data,
+                                                    uint32_t size,
+                                                    char * end_string);
+
 
 extern uint32_t Multibyte_Ring_Buffer_Get_Free_Size(Multibyte_Ring_Buffer * buffer);
 extern uint32_t Multibyte_Ring_Buffer_Get_Count(Multibyte_Ring_Buffer * buffer);
