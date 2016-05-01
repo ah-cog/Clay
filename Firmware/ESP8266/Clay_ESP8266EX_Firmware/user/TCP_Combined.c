@@ -834,6 +834,8 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 	if (connection_type == MESSAGE_TYPE_TCP)
 	{
+		memset(temp_message.content, 0, MAXIMUM_MESSAGE_LENGTH);
+
 		taskENTER_CRITICAL();
 		received_message_length = Multibyte_Ring_Buffer_Dequeue_Until_String(
 				&receive_ring_buf, temp_message.content, MAXIMUM_MESSAGE_LENGTH,
@@ -1012,6 +1014,7 @@ static void ICACHE_RODATA_ATTR Data_Disconnect()
 
 	taskENTER_CRITICAL();
 	Initialize_Message_Queue(&outgoing_TCP_message_queue);
+	Multibyte_Ring_Buffer_Reset(&receive_ring_buf);
 	taskEXIT_CRITICAL();
 
 	if (data_sock > -1)
