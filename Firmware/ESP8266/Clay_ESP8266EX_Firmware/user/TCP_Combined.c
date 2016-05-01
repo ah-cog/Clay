@@ -660,16 +660,16 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 //	DEBUG_Print(m->destination);
 //	DEBUG_Print(remote_address_string);
 
-	taskENTER_CRITICAL();
-	Deserialize_Address(m->destination, &message_dest, ignored_message_type);
-	taskEXIT_CRITICAL();
-
-	taskYIELD();
-
 	//TODO: shouldn't a strcmp work here instead? save ourselves the deserialization.
-	if (message_dest.sin_addr.s_addr == remote_address.sin_addr.s_addr
-			&& message_dest.sin_port == remote_address.sin_port)
+//	if (message_dest.sin_addr.s_addr == remote_address.sin_addr.s_addr
+//			&& message_dest.sin_port == remote_address.sin_port)
+	if (strstr(m->destination, remote_address_string) != NULL)
 	{
+		taskENTER_CRITICAL();
+		Deserialize_Address(m->destination, &message_dest,
+				ignored_message_type);
+		taskEXIT_CRITICAL();
+
 //		DEBUG_Print("message matches");
 
 //		taskENTER_CRITICAL();

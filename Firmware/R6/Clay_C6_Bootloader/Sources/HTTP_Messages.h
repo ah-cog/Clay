@@ -10,6 +10,7 @@
 
 ////Includes //////////////////////////////////////////////////////
 #include "PE_Types.h"
+#include "Message.h"
 
 ////Macros ////////////////////////////////////////////////////////
 
@@ -18,7 +19,6 @@
 ////Globals   /////////////////////////////////////////////////////
 
 ////Function Prototypes ///////////////////////////////////////////
-extern bool Send_HTTP_GET_Request(char * destination, char * source, char * request_content);
-extern bool Parse_HTTP_Response(char * response_content, char * output_buffer);
+extern Message * Create_HTTP_GET_Request(char * destination, char * source, char * request_content);
 
 #endif /* SOURCES_HTTP_MESSAGES_H_ */

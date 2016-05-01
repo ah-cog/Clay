@@ -39,17 +39,17 @@ void Wifi_Test() {
    uint32_t lastMessageSendTime = 0;
    uint32_t messageSendPeriod = 1000;
 
-   bool echo = TRUE;
+   bool echo = FALSE;
    bool repeat_send = FALSE;
    bool request_connect = FALSE;
    bool get_ip = FALSE;
 
+   bool request_firmware_size = FALSE;
+
    char type_str[] = "http";
-   char dest_addr[] = "107.170.180.158:3000/clay/firmware/size";
-//   char dest_addr[] = "192.168.1.3:3000/clay/firmware/size";
+   char dest_addr_size[] = "107.170.180.158:3000/clay/firmware/size";
+   char dest_addr_checksum[] = "107.170.180.158:3000/clay/firmware/checksum";
    char source_addr[] = "192.168.1.21:3000";
-//   char message_content_template[] = "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d";
-//   char message_content[256];
    char message_content[] = "none";
    int message_index = 0;
 
@@ -59,7 +59,6 @@ void Wifi_Test() {
       Wifi_State_Step();
       Button_Periodic_Call();
 
-#if 0
       //echo received messages
       if (echo && Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
          message = Wifi_Receive();
@@ -79,16 +78,6 @@ void Wifi_Test() {
             Wifi_Send(message);
          }
       }
-#endif
-
-#define TEST_COMMAND_REPEAT 0
-#if TEST_COMMAND_REPEAT
-      if(Has_Messages(&incomingWiFiMessageQueue))
-      {
-         message = Wifi_Receive();
-         Wait(1);
-      }
-#endif
 
       //repeatedly send a message
       if (repeat_send
@@ -96,17 +85,19 @@ void Wifi_Test() {
           && !Has_Messages(&outgoingWiFiMessageQueue)
           && Millis() - lastMessageSendTime > messageSendPeriod) {
 
-#if TEST_COMMAND_REPEAT
-         WiFi_Request_Get_Internet_Address();
-#else
-
          outgoing_message = Create_Message(message_content);
          Set_Message_Type(outgoing_message, type_str);
          Set_Message_Source(outgoing_message, source_addr);
-         Set_Message_Destination(outgoing_message, dest_addr);
+
+         if (request_firmware_size) {
+            Set_Message_Destination(outgoing_message, dest_addr_size);
+            request_firmware_size = !request_firmware_size;
+         } else {
+            Set_Message_Destination(outgoing_message, dest_addr_checksum);
+            request_firmware_size = !request_firmware_size;
+         }
 
          Wifi_Send(outgoing_message);
-#endif
 
          lastMessageSendTime = Millis();
       } else if (Wifi_Get_State() == Programming) {

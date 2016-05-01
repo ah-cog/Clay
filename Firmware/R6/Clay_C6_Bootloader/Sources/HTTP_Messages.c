@@ -22,45 +22,27 @@
 ////Globals   /////////////////////////////////////////////////////
 
 ////Local vars/////////////////////////////////////////////////////
-static char * http_get_request_format = "GET %s HTTP/1.1\r\n";
+static char * http_get_request_format = "%s%s";
 
 ////Local Prototypes///////////////////////////////////////////////
 
 ////Global implementations ////////////////////////////////////////
-bool Send_HTTP_GET_Request(char * destination, char * source, char * request_content) {
+Message * Create_HTTP_GET_Request(char * destination, char * source, char * request_content) {
 
-   bool result = FALSE;
+   Message * result = NULL;
 
    if (destination != NULL && source != NULL && request_content != NULL) {
-      char * request_buffer = calloc(strlen(request_content) + strlen(http_get_request_format) + 2, sizeof(char));
+      char * request_buffer = calloc(strlen(destination) + strlen(request_content) + 2, sizeof(char));
 
-      sprintf(request_buffer, http_get_request_format, request_content);
+      sprintf(request_buffer, http_get_request_format, destination, request_content);
 
-      Message * request = Create_Message(request_buffer);
-      Set_Message_Destination(request, destination);
-      Set_Message_Source(request, source);
-      Set_Message_Type(request, "tcp");
-
-      Wifi_Send(request);
-
-      sprintf(request_buffer, " \n");
-
-      request = Create_Message(request_buffer);
-      Set_Message_Destination(request, destination);
-      Set_Message_Source(request, source);
-      Set_Message_Type(request, "tcp");
+      result = Create_Message("none");
+      Set_Message_Destination(result, request_buffer);
+      Set_Message_Source(result, source);
+      Set_Message_Type(result, "http");
 
       free(request_buffer);
-
-      result = Wifi_Send(request);
    }
-
-   return result;
-}
-
-bool Parse_HTTP_Response(char * response_content, char * output_buffer) {
-
-   bool result = FALSE;
 
    return result;
 }

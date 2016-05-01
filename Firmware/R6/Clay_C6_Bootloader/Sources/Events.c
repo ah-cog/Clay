@@ -32,6 +32,7 @@
 #include "PDD_Includes.h"
 #include "WiFi.h"
 #include "Clock.h"
+#include "program_flash.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -197,6 +198,7 @@ void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr) {
 /* ===================================================================*/
 void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
+   flash_operation_completed = TRUE;
 }
 
 /* END Events */

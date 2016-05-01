@@ -32,6 +32,7 @@ bool local_address_received;
 static char local_address[ADDRESS_STRING_LENGTH];
 
 ////Local Prototypes///////////////////////////////////////////////
+static Message * WiFi_Send_With_Retries(Message * outgoing_message, uint32_t retry_count, uint32_t per_try_timeout_ms);
 static Message * WiFi_Wait_For_Message(uint32_t timeout_ms);
 static uint8_t Message_Content_Parameter_Equals(Message *message, int token_index, const char *pattern);
 static uint32_t Parse_Size_From_Message(Message * message);
@@ -164,15 +165,16 @@ uint8_t Has_Latest_Firmware() {
    //sprintf(uriParameters, "/clay/firmware/version/");
 
    // Retrieve firmware checksum from the server.
-   sprintf(uriParameters, "/clay/firmware/checksum/");
+   sprintf(uriParameters, "/clay/firmware/checksum");
 
    //TODO: implement HTTP Get
    //Send message
    //wait for response, calling WiFi_State_Step
    //get the message back
 
-   Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);
-   response_message = WiFi_Wait_For_Message(REQUEST_WAIT_TIME_ms);
+   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
+                                             5,
+                                             500);
 
    latestFirmwareChecksum = Parse_Checksum_From_Message(response_message);
 
@@ -292,9 +294,11 @@ uint8_t Update_Firmware() {
    Erase_Program_Flash();
 
    // Retrieve firmware size from the server.
-   sprintf(uriParameters, "/clay/firmware/size/");
-   Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);
-   response_message = WiFi_Wait_For_Message(REQUEST_WAIT_TIME_ms);
+   sprintf(uriParameters, "/clay/firmware/size");
+
+   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
+                                             5,
+                                             500);
    firmware_size = Parse_Size_From_Message(response_message);
 
    /* Update the stored application firmware size and checksum.
@@ -312,11 +316,15 @@ uint8_t Update_Firmware() {
    }
 
    // Retrieve firmware checksum from the server.
-   sprintf(uriParameters, "/clay/firmware/checksum/");
-   Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);        // HTTP GET /firmware/version
-   response_message = WiFi_Wait_For_Message(REQUEST_WAIT_TIME_ms);
+   sprintf(uriParameters, "/clay/firmware/checksum");
+   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
+                                             5,
+                                             500);
 
    firmware_checksum = Parse_Checksum_From_Message(response_message);
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////
+   //wtf: Timer interrupts stop firing here....
 
    // Write checksum to flash and (TODO) verify it.
    if (firmware_size > 0 && firmware_checksum > 0 && (status = Write_Program_Checksum(firmware_checksum)) == 0) {
@@ -341,7 +349,9 @@ uint8_t Update_Firmware() {
 
       startByte = blockIndex * blockSize;     // Determine the first byte to receive in the block based on the current block index.
       sprintf(uriParameters, "/clay/firmware/?startByte=%d&byteCount=%d", startByte, blockSize);
-      Send_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters);        // HTTP GET /firmware/version
+      response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
+                                                5,
+                                                500);
 
 //    strncpy(firmwareBuffer, connectionDataQueue[connection], connectionDataQueueSize[connection]);        // Copy the received data into a response buffer.
 
@@ -550,6 +560,26 @@ bool Parse_Wifi_Address_Message(Message * response) {
 }
 
 ////Local implementations /////////////////////////////////////////
+static Message * WiFi_Send_With_Retries(Message * outgoing_message, uint32_t retry_count, uint32_t per_try_timeout_ms) {
+
+   Message * result = NULL;
+   Message * temp_outgoing_message;
+
+   for (int i = 0; i < retry_count && result == NULL; ++i) {
+      temp_outgoing_message = Create_Message(outgoing_message->content);
+      Set_Message_Type(temp_outgoing_message, outgoing_message->type);
+      Set_Message_Source(temp_outgoing_message, outgoing_message->source);
+      Set_Message_Destination(temp_outgoing_message, outgoing_message->destination);
+
+      Wifi_Send(temp_outgoing_message);
+      result = WiFi_Wait_For_Message(per_try_timeout_ms);
+   }
+
+   Delete_Message(outgoing_message);
+
+   return result;
+}
+
 static Message * WiFi_Wait_For_Message(uint32_t timeout_ms) {
 
    Message * result = NULL;
@@ -585,11 +615,7 @@ static uint32_t Parse_Size_From_Message(Message * message) {
    uint32_t rval = 0;
 
    if (message != NULL) {
-      char response[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-      Parse_HTTP_Response((*message).content, response);
-
-      //TODO: get the size out of the de-http'd response.
-
+      rval = atoi(message->content);
    }
 
    return rval;
@@ -600,11 +626,7 @@ static uint16_t Parse_Checksum_From_Message(Message * message) {
    uint16_t rval = 0;
 
    if (message != NULL) {
-      char response[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-      Parse_HTTP_Response((*message).content, response);
-
-      //TODO: get the checksum out of the de-http'd response.
-
+      rval = (atoi(message->content));
    }
 
    return rval;
@@ -615,12 +637,10 @@ static uint32_t Parse_Version_From_Message(Message * message) {
    uint32_t rval = 0;
 
    if (message != NULL) {
-      char response[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-      Parse_HTTP_Response((*message).content, response);
-
-      //TODO: get the version out of the de-http'd response.
-
+      rval = (atoi(message->content));
    }
+
+   return rval;
 
    return rval;
 }

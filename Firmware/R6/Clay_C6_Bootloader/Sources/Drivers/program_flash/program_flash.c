@@ -13,6 +13,10 @@
 
 bool checksum_initialized = FALSE;
 volatile bool flash_operation_completed;
+
+static uint32_t Read_Value_From_Address(uint32_t address, uint32_t size);
+static uint32_t Write_Value_To_Address(uint32_t address, uint32_t size, uint8_t * data);
+
 /**
  * Erases the entire program flash.
  * 
@@ -38,14 +42,18 @@ uint16_t Erase_Program_Flash() {
  * Erases the page of program flash containing the address.
  */
 uint16_t Erase_Program_Flash_Page(uint32_t address) {
+
+   //erase operations must be 128-bit aligned (as in address & 0xF == 0)
+   flash_operation_completed = FALSE;
+
    // Set up erase block operation
    uint16_t rval = FLASH1_Erase(FLASH1_DeviceData, address, FLASH_MEMORY_PAGE_SIZE);
-
-   flash_operation_completed = FALSE;
 
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
       FLASH1_Main(FLASH1_DeviceData);
+
+      flash_operation_completed = (FTFE_FSTAT & FTFE_FSTAT_CCIF_MASK);
    }
 
    return rval;
@@ -56,12 +64,15 @@ uint16_t Erase_Program_Flash_Page(uint32_t address) {
  */
 uint16_t Write_Program_Block(uint32_t destination, const uint8_t *data, uint32_t length) {
    // Set up flash operation
+   flash_operation_completed = FALSE;
+
    uint16_t rval = FLASH1_Write(FLASH1_DeviceData, (char *) data, destination, length);
 
-   flash_operation_completed = FALSE;
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
       FLASH1_Main(FLASH1_DeviceData);
+
+      flash_operation_completed = (FTFE_FSTAT & FTFE_FSTAT_CCIF_MASK);
    }
 
    return rval;
@@ -73,32 +84,11 @@ uint16_t Write_Program_Block(uint32_t destination, const uint8_t *data, uint32_t
  * flash.
  */
 uint16_t Write_Program_Checksum(uint16_t checksum) {
-   // Get pointer to the checksum data
-   uint8_t *data = (uint8_t *) &checksum;
-
-   // Set up flash operation
-   uint16_t rval = FLASH1_Write(FLASH1_DeviceData, data, APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE);
-
-   flash_operation_completed = FALSE;
-   while (!rval && !flash_operation_completed) {
-      // Run operation by calling flash1_main
-      FLASH1_Main(FLASH1_DeviceData);
-   }
-
-   return rval;
+   return Write_Value_To_Address(APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE, (uint8_t*) &checksum);
 }
 
 uint16_t Read_Program_Checksum() {
-   uint16_t result = NULL;     // Return value. Default to NULL.
-   uint16_t *checksum = NULL;     // Pointer to the checksum address in the flash memory.
-
-   // Point to the checksum memory location.
-   checksum = (uint16_t *) APP_CHECKSUM_ADDRESS;
-
-   // Copy the stored checksum into the return value.
-   result = *checksum;
-
-   return result;
+   return Read_Value_From_Address(APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE);
 }
 
 /**
@@ -107,30 +97,57 @@ uint16_t Read_Program_Checksum() {
  * flash.
  */
 uint16_t Write_Program_Size(uint32_t size) {
-   // Get pointer to the application size bytes
-   uint8_t *data = (uint8_t *) &size;
-
-   // Set up flash operation
-   uint16_t rval = FLASH1_Write(FLASH1_DeviceData, data, APP_SIZE_ADDRESS, APP_SIZE_SIZE);
-
-   flash_operation_completed = FALSE;
-   while (!rval && !flash_operation_completed) {
-      // Run operation by calling flash1_main
-      FLASH1_Main(FLASH1_DeviceData);
-   }
-
-   return rval;
+   return Write_Value_To_Address(APP_SIZE_ADDRESS, APP_SIZE_SIZE, (uint8_t*) &size);
 }
 
 uint32_t Read_Program_Size() {
+   return Read_Value_From_Address(APP_SIZE_ADDRESS, APP_SIZE_SIZE);
+}
+
+/**
+ * Writes the specified data to flash memory. Since the application size requires
+ * four bytes, only the first four bytes of the specified data will be coped to
+ * flash.
+ */
+uint32_t Write_Program_Version(uint32_t version) {
+   return Write_Value_To_Address(APP_VERSION_ADDRESS, APP_VERSION_SIZE, (uint8_t*) &version);
+}
+
+uint32_t Read_Program_Version() {
+   return Read_Value_From_Address(APP_VERSION_ADDRESS, APP_VERSION_SIZE);
+}
+
+//read up to an int.
+uint32_t Read_Value_From_Address(uint32_t address, uint32_t size) {
    uint32_t result = NULL;     // Return value. Default to NULL.
-   uint32_t *size = NULL;     // Pointer to the checksum address in the flash memory.
 
-   // Point to the checksum memory location.
-   size = (uint32_t *) APP_SIZE_ADDRESS;
+   flash_operation_completed = FALSE;
 
-   // Copy the stored checksum into the return value.
-   result = *size;
+   uint32_t read_result = FLASH1_Read(FLASH1_DeviceData, address, (void*) &result, size);
+
+   while (!read_result && !flash_operation_completed) {
+      // Run operation by calling flash1_main
+      FLASH1_Main(FLASH1_DeviceData);
+
+      flash_operation_completed = (FTFE_FSTAT & FTFE_FSTAT_CCIF_MASK);
+   }
 
    return result;
+}
+
+uint32_t Write_Value_To_Address(uint32_t address, uint32_t size, uint8_t * data) {
+
+   flash_operation_completed = FALSE;
+
+   // Set up flash operation
+   uint16_t rval = FLASH1_Write(FLASH1_DeviceData, data, APP_VERSION_ADDRESS, APP_VERSION_SIZE);
+
+   while (!rval && !flash_operation_completed) {
+      // Run operation by calling flash1_main
+      FLASH1_Main(FLASH1_DeviceData);
+
+      flash_operation_completed = (FTFE_FSTAT & FTFE_FSTAT_CCIF_MASK);
+   }
+
+   return rval;
 }
