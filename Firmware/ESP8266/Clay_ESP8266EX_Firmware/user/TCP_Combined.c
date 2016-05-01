@@ -67,7 +67,6 @@ static bool promoted;
 
 //static char *receive_data;
 static char *transmit_data;
-static char *message_ptr;
 
 static char * local_address_string;
 static char * remote_address_string;
@@ -436,7 +435,6 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 	taskENTER_CRITICAL();
 	//do not dequeue. leave the message in the queue to be processed by the send function..
 	temp_message_ptr = Peek_Message(&outgoing_TCP_message_queue);
-//	temp_message_ptr = Peeker();
 
 	if (temp_message_ptr != NULL)
 	{
@@ -445,8 +443,6 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 				temp_message_ptr->content);
 
 		connection_type = Get_Message_Type_From_Str(temp_message.type);
-
-//		printf("message type:%d\r\n", connection_type);
 	}
 
 	taskEXIT_CRITICAL();
@@ -464,27 +460,59 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 
 		taskYIELD();
 
-		taskENTER_CRITICAL();
-		sprintf(remote_address_string, temp_message.destination);
-//		printf("message for %s\r\n", remote_address_string);
-		taskEXIT_CRITICAL();
+		if (connection_type == MESSAGE_TYPE_HTTP)
+		{
+			taskENTER_CRITICAL();
+			char * start_of_uri = strchr(temp_message.destination,
+					*http_uri_delimiter_fs);
+			taskEXIT_CRITICAL();
+
+			if (start_of_uri == NULL)
+			{
+				taskENTER_CRITICAL();
+				start_of_uri = strchr(temp_message.destination,
+						*http_uri_delimiter_bs);
+				taskEXIT_CRITICAL();
+			}
+
+			if (start_of_uri != NULL)
+			{
+
+				taskENTER_CRITICAL();
+				memset(remote_address_string, 0, ADDR_STRING_SIZE);
+				strncpy(remote_address_string, temp_message.destination,
+						start_of_uri - temp_message.destination);
+				taskEXIT_CRITICAL();
+
+				rval = true;
+			}
+			else
+			{
+				rval = false;
+			}
+		}
+		else
+		{
+			taskENTER_CRITICAL();
+			sprintf(remote_address_string, temp_message.destination);
+			taskEXIT_CRITICAL();
+
+			rval = true;
+		}
 
 		taskYIELD();
-
-		data_sock = Open_Data_Connection(&remote_address);
-
-//		taskENTER_CRITICAL();
-//		printf("odc:%d\r\n", data_sock);
-//		taskEXIT_CRITICAL();
-
-		taskYIELD();
-
-		rval = data_sock > -1;
 
 		if (rval)
 		{
-//			DEBUG_Print("connected");
+			data_sock = Open_Data_Connection(&remote_address);
 
+			taskYIELD();
+
+			rval = data_sock > -1;
+		}
+
+		if (rval)
+		{
 			socklen_t sockaddr_size = sizeof(local_address);
 			getsockname(data_sock, (struct sockaddr* )&local_address,
 					&sockaddr_size);
@@ -498,8 +526,6 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 					local_address.sin_port, local_address_string,
 					ADDR_STRING_SIZE);
 			taskEXIT_CRITICAL();
-
-//			DEBUG_Print(local_address_string);
 		}
 		else
 		{
@@ -507,13 +533,8 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 			taskENTER_CRITICAL();
 			Dequeue_Message(&outgoing_TCP_message_queue, NULL);
 			taskEXIT_CRITICAL();
-
-//			DEBUG_Print("drop on connect");
 		}
 		taskYIELD();
-
-//		DEBUG_Print("returning\r\n\r\n");
-
 	}
 
 	return rval;
@@ -790,35 +811,108 @@ static bool ICACHE_RODATA_ATTR Dequeue_And_Transmit(int32 data_sock)
 static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
-	uint32_t received_message_length;
-
-	received_count = Receive(data_sock,
-			receive_ring_buf.data + receive_ring_buf.tail,
-			((receive_ring_buf.tail > receive_ring_buf.head
-					|| (receive_ring_buf.tail == receive_ring_buf.head
-							&& receive_ring_buf.count == 0)) ?
-					(receive_ring_buf.max_count - receive_ring_buf.tail) :
-					receive_ring_buf.max_count - receive_ring_buf.count));
-	taskYIELD();
-
-//	Initialize_Message(&temp_message,
-//							message_type_strings[MESSAGE_TYPE_TCP],
-//							remote_address_string, local_address_string,
-//							message_ptr);
+	uint32_t received_message_length = 0;
 
 	taskENTER_CRITICAL();
-	received_message_length = Multibyte_Ring_Buffer_Dequeue_Until_String(
-			&receive_ring_buf, temp_message.content, MAXIMUM_MESSAGE_LENGTH,
-			(connection_type == MESSAGE_TYPE_HTTP) ? "\n\n" : "\n");
+	uint32_t rx_temp_buffer_size = Multibyte_Ring_Buffer_Get_Free_Size(
+			&receive_ring_buf) + 2; //add extra so we have room for null terminator.
+
+	char * rx_temp_buffer = zalloc(rx_temp_buffer_size);
 	taskEXIT_CRITICAL();
+
+	received_count = Receive(data_sock, rx_temp_buffer,
+			rx_temp_buffer_size - 2);
+
+	taskENTER_CRITICAL();
+	Multibyte_Ring_Buffer_Enqueue(&receive_ring_buf, rx_temp_buffer,
+			received_count);
+	taskEXIT_CRITICAL();
+
+	taskYIELD();
+
+	//TODO: be able to dequeue if a complete message isn't found before the max message size.
+
+	if (connection_type == MESSAGE_TYPE_TCP)
+	{
+		taskENTER_CRITICAL();
+		received_message_length = Multibyte_Ring_Buffer_Dequeue_Until_String(
+				&receive_ring_buf, temp_message.content, MAXIMUM_MESSAGE_LENGTH,
+				(char *) message_end);
+		taskEXIT_CRITICAL();
+	}
+	else
+	{
+		//parse http message out of queue
+
+//		example message:
+//		HTTP/1.1 200 OK
+//		X-Powered-By: Express
+//		Content-Type: application/text; charset=utf-8
+//		Content-Length: 6
+//		ETag: W/"6-+nKcZrG+cjY967w8u/TfRA"
+//		Date: Sat, 30 Apr 2016 23:50:41 GMT
+//		Connection: keep-alive
+//
+//		130128
+
+		memset(rx_temp_buffer, 0, rx_temp_buffer_size);
+
+		//dq until Content-Length:
+		if (Multibyte_Ring_Buffer_Dequeue_Until_String(&receive_ring_buf,
+				rx_temp_buffer, rx_temp_buffer_size, "Content-Length:") != 0)
+		{
+			memset(rx_temp_buffer, 0, rx_temp_buffer_size);
+
+			//dq until newline
+			if (Multibyte_Ring_Buffer_Dequeue_Until_String(&receive_ring_buf,
+					rx_temp_buffer, rx_temp_buffer_size, "\r\n") != 0)
+			{
+				//parse content-length value out of last parsed string
+				taskENTER_CRITICAL();
+				received_message_length = atoi(rx_temp_buffer);
+				taskEXIT_CRITICAL();
+
+				//dq until Connection:
+				if (Multibyte_Ring_Buffer_Dequeue_Until_String(
+						&receive_ring_buf, rx_temp_buffer, rx_temp_buffer_size,
+						"Connection:") != 0)
+				{ //dq until \n\n
+					if (Multibyte_Ring_Buffer_Dequeue_Until_String(
+							&receive_ring_buf, rx_temp_buffer,
+							rx_temp_buffer_size, "\r\n\r\n") != 0)
+					{
+						//memset + 1 so there's a null after the end of the message in the buffer.
+						memset(rx_temp_buffer, 0, received_message_length + 1);
+
+						//dq content-length bytes.
+						if (Multibyte_Ring_Buffer_Dequeue(&receive_ring_buf,
+								temp_message.content, received_message_length)
+								!= received_message_length)
+						{
+							//malformed packet:
+							received_message_length = 0;
+						}
+					}
+					else
+					{
+						received_message_length = 0;
+					}
+				}
+				else
+				{
+					received_message_length = 0;
+				}
+			}
+		}
+
+	}
 
 	taskYIELD();
 
 	if (received_message_length > 0)
 	{
 		taskENTER_CRITICAL();
-		bool message_too_long = strlen(
-				temp_message.content) > MAXIMUM_MESSAGE_LENGTH;
+		bool message_too_long = received_message_length > MAXIMUM_MESSAGE_LENGTH;
 		taskEXIT_CRITICAL();
 
 		taskYIELD();
@@ -828,7 +922,7 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 			taskENTER_CRITICAL();
 			Initialize_Message(&temp_message,
 					message_type_strings[connection_type],
-					remote_address_string, local_address_string, message_ptr);
+					remote_address_string, local_address_string, NULL);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
@@ -847,88 +941,31 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 		rval = false;
 	}
 
+	free(rx_temp_buffer);
+
 	return rval;
 }
 
-#if 0
-//TCP Receive defeat/test code
-static int last_rx = 0;
-//281 chars including newline.
-//static char test_msg[] =
-//		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
-
-//20 chars, no newline
-static char test_msg[] = "mmmmmmmmmmmmmmmmmmmm";
-
-//510 chars, 10 messages
-//static char test_msg[] =
-//		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\nmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
-//256 chars, including newline
-//static char test_msg[] =
-//		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
-
-//161 chars, including newline
-//static char test_msg[] =
-//		"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm\n";
-
-//	taskENTER_CRITICAL();
-//	strncpy(destination, test_msg + last_send, receive_length_max);
-//	int x = (
-//			receive_length_max >= strlen(test_msg) ?
-//					strlen(test_msg + last_send) : receive_length_max);
-//	taskEXIT_CRITICAL();
-//
-//	taskENTER_CRITICAL();
-//	last_send = (receive_length_max >= strlen(test_msg) ? 0 : x);
-//	taskEXIT_CRITICAL();
-//
-//	taskYIELD();
-//
-//	return x;
-//End of defeat/test code.
-
-//returns size of data put into message, or -1 if the connection was reset.
 static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
 		uint32 receive_length_max)
 {
-	taskENTER_CRITICAL();
-	strncpy(destination, test_msg + last_rx,
-			(strlen(test_msg) - last_rx) < receive_length_max ?
-			(strlen(test_msg) - last_rx) : receive_length_max);
-	int received_bytes = (
-			receive_length_max >= strlen(test_msg) ?
-			strlen(test_msg + last_rx) : receive_length_max);
-	taskEXIT_CRITICAL();
-
-	taskENTER_CRITICAL();
-	last_rx = (
-			(last_rx + receive_length_max) >= strlen(test_msg) ?
-			0 : received_bytes + last_rx);
-	taskEXIT_CRITICAL();
-
-	taskYIELD();
-
-	if (last_rx > 0)
+	if (destination == NULL)
 	{
-		taskENTER_CRITICAL();
-		printf("ls:%d\r\n", last_rx);
-		taskEXIT_CRITICAL();
+		return 0;
 	}
 
-	return received_bytes;
-#else
-
-static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
-		uint32 receive_length_max)
-{
-#endif
-//		taskENTER_CRITICAL();
-//		printf("sock:%d rx up to %d into %d\r\n", source_socket,
-//				receive_length_max, (uint32) destination);
-//		UART_WaitTxFifoEmpty(UART0);
-//		taskEXIT_CRITICAL();
+//	taskENTER_CRITICAL();
+//	printf("sock:%d rx up to %d into %d\r\n", source_socket, receive_length_max,
+//			(uint32) destination);
+//	UART_WaitTxFifoEmpty(UART0);
+//	taskEXIT_CRITICAL();
 
 	int rval = lwip_recv(source_socket, destination, receive_length_max, 0);
+
+//	taskENTER_CRITICAL();
+//	printf("after lwip_rx of %d bytes:[%s]\r\n", rval, remote_address_string);
+//	UART_WaitTxFifoEmpty(UART0);
+//	taskEXIT_CRITICAL();
 
 //	taskENTER_CRITICAL();
 //	printf("rx'd %d\r\n", rval);

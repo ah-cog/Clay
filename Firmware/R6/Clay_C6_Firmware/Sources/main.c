@@ -80,6 +80,9 @@ int main(void)
    PE_low_level_init();
    /*** End of Processor Expert internal initialization.                    ***/
 
+   Wifi_Test();
+//   Multibyte_Ring_Buffer_Test();
+
    Initialize();
 
    Application();
