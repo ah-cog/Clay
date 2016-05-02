@@ -40,7 +40,7 @@ void Application(void) {
 
    Initialize_Bootloader();
 
-   Flash_Test();
+//   Flash_Test();
 
    wifi_connected = FALSE;
    local_address_received = FALSE;
@@ -132,7 +132,10 @@ void Application(void) {
 ////Local implementations /////////////////////////////////////////
 void Flash_Test() {
 
-   uint8_t not_actual_firmware[] ="aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu ";
+   uint8_t not_actual_firmware[] = "aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu ";
+   uint32_t firmware_write_index = 0;
+   uint32_t firmware_block_size = strlen(not_actual_firmware) + 1;
+
    uint16_t checksum = 0x50;
    uint32_t size = 0x0770;
    uint32_t version = 0x0880;
@@ -153,6 +156,15 @@ void Flash_Test() {
 
       Write_Program_Size(++size);
       Wait(10);
+
+      while (firmware_write_index * firmware_block_size < APP_END_ADDR) {
+         Write_Firmware_Bytes((firmware_write_index * firmware_block_size) + APP_START_ADDR,
+                              not_actual_firmware,
+                              firmware_block_size);
+         ++firmware_write_index;
+      }
+
+      firmware_write_index = 0;
 
       checksum_read = Read_Program_Checksum();
       size_read = Read_Program_Size();

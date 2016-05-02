@@ -80,11 +80,13 @@ uint16_t Write_Program_Block(uint32_t destination, const uint8_t *data, uint32_t
  * flash.
  */
 uint16_t Write_Program_Checksum(uint32_t checksum) {
+
+   checksum &= 0xFFFF;
    return Write_Value_To_Address(APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE, (uint8_t*) &checksum);
 }
 
 uint32_t Read_Program_Checksum() {
-   return Read_Value_From_Address(APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE);
+   return 0xFFFFU & Read_Value_From_Address(APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE);
 }
 
 /**

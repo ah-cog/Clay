@@ -33,6 +33,9 @@ uint8_t Enable_Clock() {
    LED1_Init(NULL);
    LED2_Init(NULL);
 
+   //set this so that the counter will keep running when the debugger is attached.
+   FTM0_CONF |= FTM_CONF_BDMMODE(3);
+
    return TRUE;
 }
 

@@ -4,7 +4,7 @@
 #include "PE_Types.h"
 
 #define APP_START_ADDR                0x00008000U
-#define APP_END_ADDR                  0x00100000U  //technically 0xFFFFF, but I don't want to break this right now.
+#define APP_END_ADDR                  0x000FFEFFU  //leave 256 bytes for information region.
 #define FLASH_MEMORY_PAGE_SIZE        0x00001000U
 
 ///information about the application firmware is stored at the end of application flash
@@ -21,7 +21,7 @@
 // The checksum of the application firmware is stored in flash memory
 // at locations 0x3FFFE and 0x3FFFF.
 #define APP_CHECKSUM_ADDRESS          0x000FFFF8U
-#define APP_CHECKSUM_SIZE             2
+#define APP_CHECKSUM_SIZE             4
 
 extern volatile bool flash_operation_completed;
 

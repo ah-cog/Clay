@@ -265,7 +265,12 @@ uint8_t Verify_Firmware_Bytes(const uint8_t *bytes, uint32_t length, uint16_t ex
  * Returns true if the bytes are valid, and false otherwise.
  */
 uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t length) {
-   return Write_Program_Block(APP_START_ADDR + address, bytes, length) == 0;
+
+   if (address < APP_START_ADDR || address > APP_END_ADDR) {
+      return 0;
+   }
+
+   return Write_Program_Block(address, bytes, length) == 0;
 }
 
 /**
@@ -322,9 +327,6 @@ uint8_t Update_Firmware() {
                                              500);
 
    firmware_checksum = Parse_Checksum_From_Message(response_message);
-
-   /////////////////////////////////////////////////////////////////////////////////////////////////////
-   //wtf: Timer interrupts stop firing here....
 
    // Write checksum to flash and (TODO) verify it.
    if (firmware_size > 0 && firmware_checksum > 0 && (status = Write_Program_Checksum(firmware_checksum)) == 0) {
