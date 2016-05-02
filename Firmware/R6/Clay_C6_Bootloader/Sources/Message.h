@@ -20,23 +20,26 @@
 #define MAXIMUM_MESSAGE_LENGTH 512 // 140
 #define MAXIMUM_GRAMMAR_SYMBOL_LENGTH 64
 
-typedef struct Message {
-	// TODO: char *uuid;
-	char *type;
-	char *source;
-	char *destination;
-	char *content;
+typedef struct Message
+{
+      // TODO: char *uuid;
+      char *type;
+      char *source;
+      char *destination;
+      char *content;
+      uint32_t content_length;
 
-	struct Message *previous;
-	struct Message *next;
+      struct Message *previous;
+      struct Message *next;
 } Message;
 
-extern Message* Create_Message (const char *content);
-extern int8_t Delete_Message (Message *message);
+extern Message* Create_Message(const char *content);
+extern Message* Create_Message_With_Length(const char *content, uint32_t content_length);
+extern int8_t Delete_Message(Message *message);
 
-extern void Set_Message_Type (Message *message, const char *type);
-extern void Set_Message_Source (Message *message, const char *address);
-extern void Set_Message_Destination (Message *message, const char *address);
-extern void Set_Message_Content (Message *message, const char *content);
+extern void Set_Message_Type(Message *message, const char *type);
+extern void Set_Message_Source(Message *message, const char *address);
+extern void Set_Message_Destination(Message *message, const char *address);
+extern void Set_Message_Content(Message *message, const char *content, uint32_t content_length);
 
 #endif

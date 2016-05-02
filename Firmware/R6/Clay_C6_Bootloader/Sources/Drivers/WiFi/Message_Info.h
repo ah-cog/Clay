@@ -9,6 +9,7 @@
 #define MESSAGE_INFO_H_
 
 #include "stdint.h"
+#include "Message.h"
 
 ////defines ///////////////////////////////////////////////////////
 #define CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH     16
@@ -24,16 +25,16 @@ typedef enum
 } Message_Type;
 
 ////Globals   /////////////////////////////////////////////////////
-//max 16 chars
 extern char* message_strings[];
-extern const char * address_terminator;
-extern const char * address_delimiter;
-extern const char * type_delimiter;
-extern const char * port_delimiter;
+extern const char * message_start;
+extern const char * message_field_delimiter;
+extern const char * message_end;
 extern const char * arg_delimiter;
 
 ////Prototypes/////////////////////////////////////////////////////
 extern bool Get_Message_Type_Str(Message_Type type, char * returnStr);
 extern Message_Type Get_Message_Type_From_Str(char * typeString);
+extern Message * Deserialize_Message(uint8_t message);
+extern uint32_t Serialize_Message(Message * message, uint8_t * destination_string, uint32_t destination_max_length);
 
 #endif /* MESSAGE_INFO_H_*/

@@ -355,104 +355,30 @@ uint8_t Update_Firmware() {
                                                 5,
                                                 500);
 
-//    strncpy(firmwareBuffer, connectionDataQueue[connection], connectionDataQueueSize[connection]);        // Copy the received data into a response buffer.
-
-      // Verify the received data.
-//        if ((status = Verify_Firmware_Bytes(httpResponseBuffer, httpResponseBufferSize)) != NULL)
-//        {
-
       // TODO: Implement per-block checksum!
-//        	if ((status = Verify_Firmware_Bytes (httpResponseBuffer, httpResponseBufferSize)) != NULL)
-//        	{
-//        	}
 
+      //verify message
+      //retry if necessary
       // Update the number of received bytes.
-//      bytesReceived = bytesReceived + httpResponseBufferSize;
-
       // Write the received bytes to application memory in flash.
-//      if ((status = Write_Firmware_Bytes(startByte, httpResponseBuffer, httpResponseBufferSize)) != NULL) {
-
-      // The byte was successfully written.
-//         bytesWritten = bytesWritten + httpResponseBufferSize;
 
       // Advance to the next byte.
       blockIndex = blockIndex + 1;
-
-//      } else {
-
-      // The byte was not successfully written. Retry?
-
-//      }
-
-//        }
-//        else
-//        {
-//
-//            // TODO: Retry receiving the segment.
-//        }
-
-      //
    }
 
-//    // Retrieve firmware checksum from the server.
-//	sprintf (uriParameters, "/clay/firmware/checksum/");
-//	Send_HTTP_GET_Request (address, port, uriParameters);
-//	firmwareChecksum = atoi (httpResponseBuffer);
-
-   // At this point, the number of bytes written (bytesWritten) should be
-   // equal to the size of the application firmware that was stored prior to
-   // downloading the firmware (retrievable with Read_Program_Size ()).
-
-   // To test that the correct application firmware checksum and size were
-   // stored in flash, read those stored values and use them in the
-   // computation of the checksum.
+   //verify program checksum
 
    firmware_size = Read_Program_Size();     // Read the application firmware size from flash memory.
    firmware_checksum = Read_Program_Checksum();     // Read the application firmware checksum from flash memory.
 
-   // Verify the correctness of the entire program that has been written to flash memory.
-   // To do so, compare the computed CRC-16 checksum to the received (from the firmware
-   // server) then stored (to flash) then loaded (from flash) CRC-16 checksum.
-   if ((status = Verify_Firmware_Bytes((uint8*) APP_START_ADDR, firmware_size, firmware_checksum)) != 0) {
-//		// Write the size of the application firmware to flash.
-//		// The stored size is used in CRC-16 checksum computations.
-//		if ((status = Write_Program_Size (bytesWritten)) == 0) {
-//			// TODO: store result of above function and only return TRUE if it's been written successfully!
-//			
-//			// The firmware updated successfully, so read it back from flash and use it in 
-//			// the computation of the checksum below as a test of its correctness.
-//			firmwareSize = Read_Program_Size ();
-//			
-//		} else {
-//			
-//			// The write to memory failed!
-//			
-//		}
-//		
-//    	// Write checksum to flash and (TODO) verify it.
-//    	if ((status = Write_Program_Checksum (firmwareChecksum)) == 0) {
-//			// TODO: store result of above function and only return TRUE if it's been written successfully!
-//    		
-//    		// The firmware updated successfully, so reset the flag indicating a new firmware update is available.
-//    		SharedData.ApplicationUpdateAvailable = FALSE;
-//    		SharedData.UpdateApplication = FALSE;
-//						
-//			// Compare the computed checksum of the received data to the expected checksum.
-//			// If they're equal, return true, indicating that the firmware was successfully 
-//			// written to flash and verified.
-//			return result = TRUE;
-//			
-//    	} else {
-//    		
-//    		// The write to memory failed!
-//    		
-//    	}
-
+   if (Verify_Firmware()) {
       // The firmware updated successfully, so reset the flag indicating a new firmware update is available.
       SharedData.ApplicationUpdateAvailable = FALSE;
       SharedData.UpdateApplication = FALSE;
 
       result = TRUE;
+   } else {
+      //start over. max retries?
    }
 
    return result;
@@ -463,17 +389,17 @@ uint8_t Update_Firmware() {
  * counter.
  */
 void Update_Program_Counter(uint32_t address) {
-   // Load new stack pointer address
+// Load new stack pointer address
    asm("LDR SP, [R0]");
-   // Load new program counter address
+// Load new program counter address
    asm("LDR PC, [R0,#4]");
 }
 
 void Jump_To_Application() {
-   //change vector table offset register to application vector table
+//change vector table offset register to application vector table
    SCB_VTOR = APP_START_ADDR & 0x1FFFFF80;
 
-   //set stack pointer/pc to the reset interrupt.
+//set stack pointer/pc to the reset interrupt.
    Update_Program_Counter(APP_START_ADDR);
 }
 

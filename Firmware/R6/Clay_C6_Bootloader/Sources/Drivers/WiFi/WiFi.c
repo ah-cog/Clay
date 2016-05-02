@@ -52,10 +52,6 @@ static uint8_t * temp_dest_address;
 static uint8_t * message_end_ptr;
 static uint8_t * message_start_ptr;
 
-static const char * message_start = "\f";
-static const char * message_field_delimiter = "\t";
-static const char * message_end = "\n";
-
 static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
 
@@ -170,6 +166,7 @@ void Wifi_State_Step() {
 
             if (temp_content != NULL && temp_type != NULL && temp_source_address != NULL && temp_dest_address != NULL) {
 
+               //TODO: get size field.
                // Create message object
                Message *message = Create_Message(temp_content);
                Set_Message_Type(message, temp_type);
@@ -196,26 +193,10 @@ void Wifi_State_Step() {
       case Serialize_Transmission: {
          Message *message = Dequeue_Message(&outgoingWiFiMessageQueue);
 
-         //	(*message).source = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
-         //	strcpy ((*message).source, address);
+         if (Serialize_Message(message, serial_tx_buffer, WIFI_SERIAL_OUT_BUFFER_LENGTH) > 0) {
+            pendingTransmitByteCount = strlen(serial_tx_buffer);
+         }
 
-         //	sprintf ((*message).source, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
-
-         //HACK: Padding added because it seems to lessen the likelihood that we miss a \n
-         snprintf(serial_tx_buffer,
-                  WIFI_SERIAL_OUT_BUFFER_LENGTH,
-                  "  %s%s%s%s%s%s%s%s%s  ",
-                  message_start,
-                  message->type,
-                  message_field_delimiter,
-                  message->source,
-                  message_field_delimiter,
-                  message->destination,
-                  message_field_delimiter,
-                  message->content,
-                  message_end);
-
-         pendingTransmitByteCount = strlen(serial_tx_buffer);
          Delete_Message(message);
 
          State = Start_Transmission;
