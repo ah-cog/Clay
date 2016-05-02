@@ -13,7 +13,7 @@
 
 #define DEFAULT_FIRMWARE_CHECKSUM 0x0000
 #define DEFAULT_FIRMWARE_SIZE 0 // The total size of the firmware to retrieve from the server.
-#define FIRMWARE_BLOCK_SIZE 256 // The number of bytes to request from the firmware server in a single request.
+#define FIRMWARE_BLOCK_SIZE 252 // The number of bytes to request from the firmware server in a single request.
 
 #define CRC16 0x8005
 

@@ -185,6 +185,21 @@ void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr);
 /* ===================================================================*/
 void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr);
 
+/*
+** ===================================================================
+**     Event       :  Cpu_OnHardFault (module Events)
+**
+**     Component   :  Cpu [MK64FN1M0LL12]
+*/
+/*!
+**     @brief
+**         This event is called when the Hard Fault exception had
+**         occurred. This event is automatically enabled when the [Hard
+**         Fault] property is set to 'Enabled'.
+*/
+/* ===================================================================*/
+void Cpu_OnHardFault(void);
+
 /* END Events */
 
 #ifdef __cplusplus

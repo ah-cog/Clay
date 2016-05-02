@@ -201,6 +201,24 @@ void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
    flash_operation_completed = TRUE;
 }
 
+/*
+ ** ===================================================================
+ **     Event       :  Cpu_OnHardFault (module Events)
+ **
+ **     Component   :  Cpu [MK64FN1M0LL12]
+ */
+/*!
+ **     @brief
+ **         This event is called when the Hard Fault exception had
+ **         occurred. This event is automatically enabled when the [Hard
+ **         Fault] property is set to 'Enabled'.
+ */
+/* ===================================================================*/
+void Cpu_OnHardFault(void) {
+   /* Write your code here ... */
+   PE_DEBUGHALT();
+}
+
 /* END Events */
 
 #ifdef __cplusplus

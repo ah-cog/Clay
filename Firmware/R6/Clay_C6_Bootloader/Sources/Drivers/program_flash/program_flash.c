@@ -27,7 +27,7 @@ uint16_t Erase_Program_Flash() {
    uint32_t address = APP_START_ADDR;
    uint16_t rval = 0;
 
-   while (!rval && address < APP_END_ADDR) {
+   while (!rval && address <= APP_END_ADDR) {
       rval = Erase_Program_Flash_Page(address);
 
       if (rval > 0) break;
@@ -52,8 +52,6 @@ uint16_t Erase_Program_Flash_Page(uint32_t address) {
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
       FLASH1_Main(FLASH1_DeviceData);
-
-      flash_operation_completed = (FTFE_FSTAT & FTFE_FSTAT_CCIF_MASK);
    }
 
    return rval;
@@ -71,8 +69,6 @@ uint16_t Write_Program_Block(uint32_t destination, const uint8_t *data, uint32_t
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
       FLASH1_Main(FLASH1_DeviceData);
-
-      flash_operation_completed = (FTFE_FSTAT & FTFE_FSTAT_CCIF_MASK);
    }
 
    return rval;
@@ -83,11 +79,11 @@ uint16_t Write_Program_Block(uint32_t destination, const uint8_t *data, uint32_t
  * two bytes, only the first two bytes of the specified data will be coped to 
  * flash.
  */
-uint16_t Write_Program_Checksum(uint16_t checksum) {
+uint16_t Write_Program_Checksum(uint32_t checksum) {
    return Write_Value_To_Address(APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE, (uint8_t*) &checksum);
 }
 
-uint16_t Read_Program_Checksum() {
+uint32_t Read_Program_Checksum() {
    return Read_Value_From_Address(APP_CHECKSUM_ADDRESS, APP_CHECKSUM_SIZE);
 }
 
@@ -109,7 +105,7 @@ uint32_t Read_Program_Size() {
  * four bytes, only the first four bytes of the specified data will be coped to
  * flash.
  */
-uint32_t Write_Program_Version(uint32_t version) {
+uint16_t Write_Program_Version(uint32_t version) {
    return Write_Value_To_Address(APP_VERSION_ADDRESS, APP_VERSION_SIZE, (uint8_t*) &version);
 }
 
@@ -128,8 +124,6 @@ uint32_t Read_Value_From_Address(uint32_t address, uint32_t size) {
    while (!read_result && !flash_operation_completed) {
       // Run operation by calling flash1_main
       FLASH1_Main(FLASH1_DeviceData);
-
-      flash_operation_completed = (FTFE_FSTAT & FTFE_FSTAT_CCIF_MASK);
    }
 
    return result;
@@ -140,14 +134,18 @@ uint32_t Write_Value_To_Address(uint32_t address, uint32_t size, uint8_t * data)
    flash_operation_completed = FALSE;
 
    // Set up flash operation
-   uint16_t rval = FLASH1_Write(FLASH1_DeviceData, data, APP_VERSION_ADDRESS, APP_VERSION_SIZE);
+   uint16_t rval = FLASH1_Write(FLASH1_DeviceData, data, address, size);
 
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
       FLASH1_Main(FLASH1_DeviceData);
-
-      flash_operation_completed = (FTFE_FSTAT & FTFE_FSTAT_CCIF_MASK);
    }
+
+//   rval = FLASH1_GetOperationStatus(FLASH1_DeviceData);
+//
+//   if (rval != 0) {
+//      rval = 0;
+//   }
 
    return rval;
 }

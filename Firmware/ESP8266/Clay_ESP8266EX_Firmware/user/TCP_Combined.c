@@ -884,7 +884,7 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 							rx_temp_buffer_size, "\r\n\r\n") != 0)
 					{
 						//memset + 1 so there's a null after the end of the message in the buffer.
-						memset(rx_temp_buffer, 0, received_message_length + 1);
+						memset(temp_message.content, 0, MAXIMUM_MESSAGE_LENGTH);
 
 						//dq content-length bytes.
 						if (Multibyte_Ring_Buffer_Dequeue(&receive_ring_buf,

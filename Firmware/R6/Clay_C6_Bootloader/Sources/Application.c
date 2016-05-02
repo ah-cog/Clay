@@ -5,6 +5,8 @@
 #include "Power_Manager.h"
 #include "Button.h"
 
+#include "program_flash.h"
+
 ////Macros ////////////////////////////////////////////////////////
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -14,6 +16,7 @@
 ////Local vars/////////////////////////////////////////////////////
 
 ////Local Prototypes///////////////////////////////////////////////
+void Flash_Test();
 
 ////Global implementations ////////////////////////////////////////
 
@@ -37,6 +40,8 @@ void Application(void) {
 
    Initialize_Bootloader();
 
+   Flash_Test();
+
    wifi_connected = FALSE;
    local_address_received = FALSE;
 
@@ -55,7 +60,7 @@ void Application(void) {
       Wifi_Set_Programming_Mode();
 
       while (Wifi_Get_State() == Programming)
-         ;
+      ;
 #endif
 
       //take all the messages out of the queue, see if we got the two we care about: connection status and
@@ -125,4 +130,33 @@ void Application(void) {
 }
 
 ////Local implementations /////////////////////////////////////////
+void Flash_Test() {
 
+   uint8_t not_actual_firmware[] ="aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu ";
+   uint16_t checksum = 0x50;
+   uint32_t size = 0x0770;
+   uint32_t version = 0x0880;
+
+   uint16_t checksum_read;
+   uint32_t size_read;
+   uint32_t version_read;
+
+   for (;;) {
+      Erase_Program_Flash();
+      Wait(10);
+
+      Write_Program_Version(++version);
+      Wait(10);
+
+      Write_Program_Checksum((++checksum));
+      Wait(10);
+
+      Write_Program_Size(++size);
+      Wait(10);
+
+      checksum_read = Read_Program_Checksum();
+      size_read = Read_Program_Size();
+      version_read = Read_Program_Version();
+   }
+
+}
