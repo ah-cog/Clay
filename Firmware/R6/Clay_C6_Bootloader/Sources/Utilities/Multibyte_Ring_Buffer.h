@@ -47,10 +47,14 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(Multibyte_Ring_Buffer * buff
                                                     uint32_t size,
                                                     char * end_string);
 
+uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_Ring_Buffer * buffer,
+                                                                      char * end_str,
+                                                                      uint32_t offset);
+
 extern uint32_t Multibyte_Ring_Buffer_Get_Free_Size(Multibyte_Ring_Buffer * buffer);
 extern uint32_t Multibyte_Ring_Buffer_Get_Count(Multibyte_Ring_Buffer * buffer);
 extern bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer);
 
-//extern uint32_t Multibyte_Ring_Buffer_Test();
+extern uint32_t Multibyte_Ring_Buffer_Test();
 
 #endif /* SOURCES_UTILITIES_MULTIBYTE_RING_BUFFER_H_ */

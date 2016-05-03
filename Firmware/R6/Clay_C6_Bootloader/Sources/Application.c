@@ -6,6 +6,7 @@
 #include "Button.h"
 
 #include "program_flash.h"
+#include "Multibyte_Ring_Buffer.h"
 
 ////Macros ////////////////////////////////////////////////////////
 
@@ -17,8 +18,9 @@
 
 ////Local Prototypes///////////////////////////////////////////////
 void Flash_Test();
+void Wifi_Test();
 
-////Global implementations ////////////////////////////////////////
+////Global implementations ////////////////////m////////////////////
 
 void Application(void) {
 
@@ -40,6 +42,8 @@ void Application(void) {
 
    Initialize_Bootloader();
 
+   Multibyte_Ring_Buffer_Test();
+//   Wifi_Test();
 //   Flash_Test();
 
    wifi_connected = FALSE;
@@ -130,6 +134,91 @@ void Application(void) {
 }
 
 ////Local implementations /////////////////////////////////////////
+void Wifi_Test() {
+
+   char * ssid = "hefnet";
+   char * password = "h3fn3r_is_better_than_me";
+
+   char * ssid_m = "Clay";
+   char * password_m = "redgreenblue";
+
+   bool use_mobile = false;
+//   char * ssid_m = "hefnetm";
+//   char * password_m = "dips00BOYNEdo$!&";
+
+   Power_Manager_Enable();
+   Button_Enable();
+   Enable_WiFi(ssid, password);
+
+   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+   Button_Register_Hold_Response(1000, Wifi_Set_Operating_Mode);
+
+   Message *message = NULL;
+   Message * outgoing_message = NULL;
+   uint32_t lastMessageSendTime = 0;
+   uint32_t messageSendPeriod = 1000;
+
+   bool echo = FALSE;
+   bool repeat_send = FALSE;
+   bool request_connect = FALSE;
+   bool get_ip = FALSE;
+
+   bool request_firmware_size = FALSE;
+
+   char type_str[] = "tcp";
+   char dest_addr[] = "192.168.1.3:3000";
+   char source_addr[] = "192.168.1.21:3000";
+   uint32_t message_length = 256;
+   char message_content[message_length];
+   int message_index = 0;
+
+   for (int i = 0; i < message_length; ++i) {
+      message_content[i] = i;
+   }
+
+   for (;;) {
+
+      // Step state machine
+      Wifi_State_Step();
+      Button_Periodic_Call();
+
+      //repeatedly send a message
+      if (repeat_send
+          && Wifi_Get_State() != Programming
+          && !Has_Messages(&outgoingWiFiMessageQueue)
+          && Millis() - lastMessageSendTime > messageSendPeriod) {
+
+         outgoing_message = Create_Message();
+
+         Set_Message_Type(outgoing_message, type_str);
+         Set_Message_Source(outgoing_message, source_addr);
+         Set_Message_Destination(outgoing_message, dest_addr);
+         Set_Message_Content(outgoing_message, message_content, message_length);
+         Set_Message_Content_Type(outgoing_message, message_content);
+
+         Wifi_Send(outgoing_message);
+
+         lastMessageSendTime = Millis();
+      } else if (Wifi_Get_State() == Programming) {
+         repeat_send = FALSE;
+      }
+
+      if (request_connect) {
+         request_connect = FALSE;
+         if (use_mobile) {
+            WiFi_Request_Connect(ssid_m, password_m);
+         } else {
+            WiFi_Request_Connect(ssid, password);
+         }
+      }
+
+      if (get_ip) {
+         get_ip = FALSE;
+         WiFi_Request_Get_Internet_Address();
+      }
+   }
+}
+
 void Flash_Test() {
 
    uint8_t not_actual_firmware[] = "aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu ";

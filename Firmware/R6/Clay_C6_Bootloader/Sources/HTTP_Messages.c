@@ -36,10 +36,13 @@ Message * Create_HTTP_GET_Request(char * destination, char * source, char * requ
 
       sprintf(request_buffer, http_get_request_format, destination, request_content);
 
-      result = Create_Message("none");
+      result = Create_Message();
+
       Set_Message_Destination(result, request_buffer);
       Set_Message_Source(result, source);
       Set_Message_Type(result, "http");
+      Set_Message_Content_Type(result, "text");
+      Set_Message_Content(result, "none", 4);
 
       free(request_buffer);
    }

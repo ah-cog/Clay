@@ -494,10 +494,13 @@ static Message * WiFi_Send_With_Retries(Message * outgoing_message, uint32_t ret
    Message * temp_outgoing_message;
 
    for (int i = 0; i < retry_count && result == NULL; ++i) {
-      temp_outgoing_message = Create_Message(outgoing_message->content);
+      temp_outgoing_message = Create_Message();
+
       Set_Message_Type(temp_outgoing_message, outgoing_message->type);
       Set_Message_Source(temp_outgoing_message, outgoing_message->source);
       Set_Message_Destination(temp_outgoing_message, outgoing_message->destination);
+      Set_Message_Content_Type(temp_outgoing_message, outgoing_message->content_type);
+      Set_Message_Content(temp_outgoing_message, outgoing_message->content, outgoing_message->content_length);
 
       Wifi_Send(temp_outgoing_message);
       result = WiFi_Wait_For_Message(per_try_timeout_ms);

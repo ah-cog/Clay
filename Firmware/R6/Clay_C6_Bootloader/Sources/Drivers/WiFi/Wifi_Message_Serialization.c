@@ -11,7 +11,7 @@
 #include "stdlib.h"
 #include "stdbool.h"
 #include "stdio.h"
-#include "Message_Info.h"
+#include "Wifi_Message_Serialization.h"
 #include "Message.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -58,10 +58,12 @@ Message_Type Get_Message_Type_From_Str(char * typeString) {
 uint32_t Serialize_Message(Message * message, uint8_t * destination_string, uint32_t destination_max_length) {
    uint32_t rval = 0;
 
+   //format: \f<type>\t<source>\t<destination>\t<content_type>\t<content_length>\t<content>
+
    //HACK: Padding added because it seems to lessen the likelihood that we miss the end of a message.
    rval = snprintf(destination_string,
                    destination_max_length,
-                   "  %s%s%s%s%s%s%s%s%s  ",
+                   "  %s%s%s%s%s%s%s%s%s%s%s  ",
                    message_start,
                    message->type,
                    message_field_delimiter,
@@ -69,11 +71,14 @@ uint32_t Serialize_Message(Message * message, uint8_t * destination_string, uint
                    message_field_delimiter,
                    message->destination,
                    message_field_delimiter,
+                   message->content_type,
+                   message_field_delimiter,
                    message->content_length,
                    message_field_delimiter);
 
-   if ((rval + 1) + message->content_length <= destination_max_length) {
+   if ((rval) + message->content_length <= destination_max_length) {
       memcpy(destination_string + rval, message->content, message->content_length);
+      rval += message->content_length;
    } else {
       rval = 0;
    }
@@ -82,17 +87,18 @@ uint32_t Serialize_Message(Message * message, uint8_t * destination_string, uint
 }
 
 //parse a message, including start character.
-Message * Deserialize_Message(uint8_t message) {
+Message * Deserialize_Message(uint8_t * message) {
 
    Message * rval = NULL;
    uint32_t content_length;
 
-//format: \f<type>\t<source>\t<destination>\t<content_length>\t<content>
+   //format: \f<type>\t<source>\t<destination>\t<content_type>\t<content_length>\t<content>
 
    uint8_t * temp_type = strtok(message, message_start);     //throw out the start character
    temp_type = strtok(NULL, message_field_delimiter);
    uint8_t * temp_source_address = strtok(NULL, message_field_delimiter);
    uint8_t * temp_dest_address = strtok(NULL, message_field_delimiter);
+   uint8_t * temp_content_type = strtok(NULL, message_field_delimiter);
    uint8_t * temp_content_length = strtok(NULL, message_field_delimiter);
    uint8_t * temp_content = temp_content_length + strlen(temp_content_length) + 1;
 
@@ -101,13 +107,17 @@ Message * Deserialize_Message(uint8_t message) {
    if (temp_type != NULL
        && temp_source_address != NULL
        && temp_dest_address != NULL
+       && temp_content_type != NULL
        && temp_content_length != NULL
        && temp_content != NULL) {
 
+      rval = Create_Message();
+
       // Create message object
-      rval = Create_Message_With_Length(temp_content, content_length);
       Set_Message_Type(rval, temp_type);
       Set_Message_Source(rval, temp_source_address);
       Set_Message_Destination(rval, temp_dest_address);
+      Set_Message_Content_Type(rval, temp_content_type);
+      Set_Message_Content(rval, temp_content, content_length);
    }
 }

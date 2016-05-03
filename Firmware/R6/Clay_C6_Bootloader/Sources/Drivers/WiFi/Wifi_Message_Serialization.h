@@ -34,7 +34,7 @@ extern const char * arg_delimiter;
 ////Prototypes/////////////////////////////////////////////////////
 extern bool Get_Message_Type_Str(Message_Type type, char * returnStr);
 extern Message_Type Get_Message_Type_From_Str(char * typeString);
-extern Message * Deserialize_Message(uint8_t message);
+extern Message * Deserialize_Message(uint8_t * message);
 extern uint32_t Serialize_Message(Message * message, uint8_t * destination_string, uint32_t destination_max_length);
 
 #endif /* MESSAGE_INFO_H_*/

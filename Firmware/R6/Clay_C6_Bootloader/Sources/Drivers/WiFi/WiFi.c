@@ -14,8 +14,9 @@
 #include "WIFI_RESET.h"
 #include "Ring_Buffer.h"
 #include "Clock.h"
-#include "Message_Info.h"
+#include "Wifi_Message_Serialization.h"
 #include "Multibyte_Ring_Buffer.h"
+#include "Wifi_Serial_Message_Parser.h"
 
 Multibyte_Ring_Buffer wifi_multibyte_ring;
 
@@ -37,7 +38,7 @@ static bool received_message_start;
 static uint32_t pendingTransmitByteCount;
 static uint32_t bytes_received;
 
-static uint8_t serial_tx_buffer[WIFI_SERIAL_OUT_BUFFER_LENGTH] = "test message, yo\r\n";
+static uint8_t serial_tx_buffer[WIFI_SERIAL_OUT_BUFFER_LENGTH];
 static uint8_t serial_rx_buffer[WIFI_SERIAL_IN_BUFFER_LENGTH];
 
 static Wifi_States State;
@@ -98,8 +99,6 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 
 void Wifi_State_Step() {
 
-   //TODO: if a transmission was waiting, we'll lose it here. Look at pendingbytecount? Maybe we don't care?
-   //      This may just be test code, actually. The button handler in events.c is setting WifiSetProgramMode
    if (State != Programming && WifiSetProgramMode) {
       Wifi_Set_Programming_Mode();
       WifiSetProgramMode = FALSE;
@@ -154,32 +153,27 @@ void Wifi_State_Step() {
 //                                                               WIFI_SERIAL_IN_BUFFER_LENGTH,
 //                                                               message_start[0])     //throw away data up until the start of a message
 
-         while (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring, serial_rx_buffer,
-         WIFI_SERIAL_IN_BUFFER_LENGTH,
-                                                         message_end[0])) {
+         Serial_Parse_Status receive_status = Serial_Parse_From_Multibyte_Queue(&wifi_multibyte_ring, serial_rx_buffer,
+         WIFI_SERIAL_IN_BUFFER_LENGTH);
 
-            temp_type = strtok(serial_rx_buffer, message_start);     //throw out the start character
-            temp_type = strtok(NULL, message_field_delimiter);
-            temp_source_address = strtok(NULL, message_field_delimiter);
-            temp_dest_address = strtok(NULL, message_field_delimiter);
-            temp_content = strtok(NULL, message_end);
+         //TODO: get data out of the buffer a different way. We need to read until content-length, and then read until
+         //      empty. I'll put this into a library so I can reuse it on the ESP tcp rx.
+         if (receive_status & SERIAL_STATUS_MESSAGE_COMPLETE) {
 
-            if (temp_content != NULL && temp_type != NULL && temp_source_address != NULL && temp_dest_address != NULL) {
+            Message * message = Deserialize_Message(serial_rx_buffer);
 
-               //TODO: get size field.
-               // Create message object
-               Message *message = Create_Message(temp_content);
-               Set_Message_Type(message, temp_type);
-               Set_Message_Source(message, temp_source_address);
-               Set_Message_Destination(message, temp_dest_address);
-
+            if (message != NULL) {
                // Queue the message
                Queue_Message(&incomingWiFiMessageQueue, message);
 
-               if (Multibyte_Ring_Buffer_Get_Count(&wifi_multibyte_ring) < 10) {
-                  interruptRxTime = Millis();
-                  State = Idle;
+               if (receive_status & SERIAL_STATUS_MORE_AVAILABLE) {
+                  //                  interruptRxTime = Millis();
+                  //                  State = Idle;
                }
+//               if (Multibyte_Ring_Buffer_Get_Count(&wifi_multibyte_ring) < 10) {
+//                  interruptRxTime = Millis();
+//                  State = Idle;
+//               }
             }
          }
 
@@ -435,10 +429,12 @@ static bool WiFi_Send_Command(char * command, char ** args, int arg_count) {
       }
    }
 
-   message = Create_Message(send_buffer);
+   message = Create_Message();
+   Set_Message_Type(message, "command");
    Set_Message_Destination(message, "none");
    Set_Message_Source(message, "none");
-   Set_Message_Type(message, "command");
+   Set_Message_Content_Type(message, "text");
+   Set_Message_Content(message, send_buffer, strlen(send_buffer));
 
    free(send_buffer);
 

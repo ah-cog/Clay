@@ -23,23 +23,31 @@
 typedef struct Message
 {
       // TODO: char *uuid;
-      char *type;
-      char *source;
-      char *destination;
-      char *content;
+      char * type;
+      char * source;
+      char * destination;
+      char * content;
+      char * content_type;
       uint32_t content_length;
 
       struct Message *previous;
       struct Message *next;
 } Message;
 
-extern Message* Create_Message(const char *content);
-extern Message* Create_Message_With_Length(const char *content, uint32_t content_length);
+extern Message* Create_Message();
 extern int8_t Delete_Message(Message *message);
 
 extern void Set_Message_Type(Message *message, const char *type);
 extern void Set_Message_Source(Message *message, const char *address);
 extern void Set_Message_Destination(Message *message, const char *address);
 extern void Set_Message_Content(Message *message, const char *content, uint32_t content_length);
+extern void Set_Message_Content_Type(Message *message, const char *content_type);
+
+extern char * Get_Message_Type(Message *message);
+extern char * Get_Message_Source(Message *message);
+extern char * Get_Message_Destination(Message *message);
+extern char * Get_Message_Content(Message *message);
+extern uint32_t Get_Message_Content_Length(Message *message);
+extern char * Get_Message_Content_Type(Message *message);
 
 #endif
