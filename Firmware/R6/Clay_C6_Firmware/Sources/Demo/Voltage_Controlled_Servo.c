@@ -47,15 +47,34 @@ void Voltage_Controlled_Servo_Demo() {
 
    Initialize_Channels();
 
-   updated_channel_profile[CHANNEL_6].enabled = TRUE;
-   updated_channel_profile[CHANNEL_6].type = CHANNEL_TYPE_WAVEFORM;
-   updated_channel_profile[CHANNEL_6].direction = CHANNEL_DIRECTION_INPUT;
+   updated_channel_profile[CHANNEL_3].enabled = TRUE;
+   updated_channel_profile[CHANNEL_3].type = CHANNEL_TYPE_WAVEFORM;
+   updated_channel_profile[CHANNEL_3].direction = CHANNEL_DIRECTION_INPUT;
 
    updated_channel_profile[CHANNEL_4].enabled = TRUE;
    updated_channel_profile[CHANNEL_4].type = CHANNEL_TYPE_PULSE;
    updated_channel_profile[CHANNEL_4].direction = CHANNEL_DIRECTION_OUTPUT;
-   updated_channel_profile[CHANNEL_4].pulse_period_s = 0.02;
-   updated_channel_profile[CHANNEL_4].pulse_duty = 90;
+
+//   updated_channel_profile[CHANNEL_4].data->pulse_period_seconds = 0.02;
+//   updated_channel_profile[CHANNEL_4].data->pulse_duty_cycle = 90;
+
+   // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+
+   // Get observable set...
+   Observable_Set *observable_set = updated_channel_profile[CHANNEL_4].observable_set;
+   Observable *observable = NULL;
+
+   // ...then get data from channel profile... then update the date.
+   observable = Get_Observable (observable_set, "pulse_period_seconds");
+   float default_pulse_period_seconds = 0.02;
+   Set_Observable_Data (observable, CONTENT_TYPE_FLOAT, &default_pulse_period_seconds);
+
+   // ...then get data from channel profile... then update the date.
+   observable = Get_Observable (observable_set, "pulse_duty_cycle");
+   float default_pulse_duty_cycle = 90;
+   Set_Observable_Data (observable, CONTENT_TYPE_INT16, &default_pulse_duty_cycle);
+
+   // </OPTIMIZE>
 
    Apply_Channels();
 
@@ -70,10 +89,26 @@ void Voltage_Controlled_Servo_Demo() {
       Button_Periodic_Call();
 
       //this value is set in channel_periodic_call
-      input_voltage = channel_profile[CHANNEL_6].waveform_value;
+//      input_voltage = channel_profile[CHANNEL_3].data->waveform_sample_value;
+
+      // <OPTIMIZE>
+      observable_set = channel_profile[CHANNEL_3].observable_set;
+      observable = Get_Observable (observable_set, "waveform_sample_value");
+      int32 waveform_sample_value = Get_Observable_Data_Int32 (observable);
+      input_voltage = (uint32_t) waveform_sample_value;
+      // </OPTIMIZE>
+
+      // ...then perform intermediate transformations...
+      int16_t scaled_content = (int16_t) Scale_Adc_Counts_To_Servo_Range(input_voltage);
 
       //this value is an output, we need to call apply_channels to update the output.
-      updated_channel_profile[CHANNEL_4].pulse_duty = Scale_Adc_Counts_To_Servo_Range(input_voltage);
+//      updated_channel_profile[CHANNEL_4].data->pulse_duty_cycle = scaled_content;
+
+      // <OPTIMIZE>
+      observable_set = updated_channel_profile[CHANNEL_4].observable_set;
+      observable = Get_Observable (observable_set, "pulse_duty_cycle");
+      Set_Observable_Data (observable, CONTENT_TYPE_INT16, &scaled_content);
+      // </OPTIMIZE>
 
       //set the output.
       Apply_Channels();

@@ -532,10 +532,39 @@ static int8_t Process_Get_Event_State(Message * message) {
    //get the value from channel_profile
    if (channel_profile[number].direction == CHANNEL_DIRECTION_INPUT) {
       if (channel_profile[number].type == CHANNEL_TYPE_TOGGLE) {
-         sprintf(response_message_content, "channel %d state %d", number + 1, channel_profile[number].toggle_value);
+//    	  sprintf(response_message_content, "channel %d state %d", number + 1, channel_profile[number].data->toggle_value);
+
+    	  // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+
+		 // Get observable set...
+		 Observable_Set *observable_set = channel_profile[number].observable_set;
+		 Observable *observable = NULL;
+
+		 // ...then get data from channel profile...
+		 observable = Get_Observable (observable_set, "toggle_value");
+		 int32_t toggle_value = Get_Observable_Data_Int32 (observable);
+
+		 // </OPTIMIZE>
+
+		 sprintf(response_message_content, "channel %d state %d", number + 1, toggle_value);
          result = TRUE;
       } else if (channel_profile[number].type == CHANNEL_TYPE_WAVEFORM) {
-         sprintf(response_message_content, "channel %d state %d", number + 1, channel_profile[number].waveform_value);
+//         sprintf(response_message_content, "channel %d state %d", number + 1, channel_profile[number].data->waveform_sample_value);
+
+    	  // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+
+		 // Get observable set...
+		 Observable_Set *observable_set = channel_profile[number].observable_set;
+		 Observable *observable = NULL;
+
+		 // ...then get data from channel profile...
+		 observable = Get_Observable (observable_set, "waveform_sample_value");
+		 int32_t waveform_sample_value = Get_Observable_Data_Int32 (observable);
+
+		 // </OPTIMIZE>
+
+		 sprintf(response_message_content, "channel %d state %d", number + 1, waveform_sample_value);
+
          result = TRUE;
       } else {
          result = TRUE;

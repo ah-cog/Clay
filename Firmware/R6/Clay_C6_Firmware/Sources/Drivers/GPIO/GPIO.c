@@ -45,8 +45,10 @@
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
-Channel updated_channel_profile[CHANNEL_COUNT];
-Channel channel_profile[CHANNEL_COUNT];
+Channel_Profile updated_channel_profile[CHANNEL_COUNT];
+Channel_Profile channel_profile[CHANNEL_COUNT];
+
+Observable_Device platform_observable_profiles[CHANNEL_COUNT];
 
 ////Local vars/////////////////////////////////////////////////////
 
@@ -86,6 +88,258 @@ static void Channel_Apply_Output(Channel_Number number);
 static void Initialize_Hardware_Interface();
 static void Initialize_Channel_Hardware_Interface(Channel_Number number);
 
+// <Data Flow>
+Observable* Create_Observable (const char *key, int8_t content_type, void *content) {
+
+	Observable *observable = (Observable *) malloc (sizeof(Observable));
+
+	// Allocate memory for the key and copy the key into it
+	(*observable).key = (char *) malloc (strlen (key) + 1);
+	memset ((*observable).key, '\0', strlen (key) + 1);
+	memcpy ((*observable).key, key, strlen (key));
+
+	// Set the type
+	(*observable).content_type = content_type;
+
+	// Allocate memory for the data and copy the data into it
+	if (content_type == CONTENT_TYPE_INT16) {
+		(*observable).content = (int16_t *) malloc (sizeof (int16_t));
+		int16_t typed_content = *((int16_t *) content);
+		*((int16_t *) (*observable).content) = typed_content;
+	} else if (content_type == CONTENT_TYPE_INT32) {
+		(*observable).content = (int32_t *) malloc (sizeof (int32_t));
+		int32_t typed_content = *((int32_t *) content);
+		*((int32_t *) (*observable).content) = typed_content;
+	} else if (content_type == CONTENT_TYPE_FLOAT) {
+		(*observable).content = (float *) malloc (sizeof (float));
+		float typed_content = *((float *) content);
+		*((float *) (*observable).content) = typed_content;
+	} else if (content_type == CONTENT_TYPE_DOUBLE) {
+		(*observable).content = (double *) malloc (sizeof (double));
+		double typed_content = *((double *) content);
+		*((double *) (*observable).content) = typed_content;
+	}
+
+	// List
+	(*observable).previous = NULL;
+	(*observable).next = NULL;
+
+	return observable;
+}
+
+void Delete_Observable (Observable *observable) {
+	if (observable != NULL) {
+
+		// Key
+		if ((*observable).key != NULL) {
+			free ((*observable).key);
+			(*observable).key = NULL;
+		}
+
+		// Data
+		if ((*observable).content != NULL) {
+			free ((*observable).content);
+			(*observable).content = NULL;
+		}
+
+		// Observable
+		free (observable);
+		observable = NULL;
+
+		// TODO: Free list of observables
+	}
+}
+
+void Set_Observable_Data (Observable *observable, int8_t content_type, void *content) {
+
+	// Update the content type.
+	(*observable).content_type = content_type;
+
+	// Allocate memory for the data and copy the data into it
+	if ((*observable).content_type == CONTENT_TYPE_INT16) {
+		*((int16_t *) (*observable).content) = *((int16_t *) content);
+	} else if ((*observable).content_type == CONTENT_TYPE_INT32) {
+		*((int32_t *) (*observable).content) = *((int32_t *) content);
+	} else if ((*observable).content_type == CONTENT_TYPE_FLOAT) {
+		*((float *) (*observable).content) = *((float *) content);
+	} else if ((*observable).content_type == CONTENT_TYPE_DOUBLE) {
+		*((double *) (*observable).content) = *((double *) content);
+	}
+
+	// TODO: Propagate value
+}
+
+int8_t Get_Observable_Type (Observable *observable) {
+	return (*observable).content_type;
+}
+
+int16_t Get_Observable_Data_Int16 (Observable *observable) {
+	return *((int16_t *) (*observable).content);
+}
+
+int32_t Get_Observable_Data_Int32 (Observable *observable) {
+	return *((int32_t *) (*observable).content);
+}
+
+float Get_Observable_Data_Float (Observable *observable) {
+	return *((float *) (*observable).content);
+}
+
+double Get_Observable_Data_Double (Observable *observable) {
+	return *((double *) (*observable).content);
+}
+
+Observable_Set* Create_Observable_Set () {
+	Observable_Set *observable_set = (Observable_Set *) malloc (sizeof (Observable_Set));
+	(*observable_set).first_observable = NULL;
+	return observable_set;
+}
+
+void Delete_Observable_Set (Observable_Set *observable_set) {
+
+	// TODO: Free individual observables
+
+	free (observable_set);
+	observable_set = NULL;
+}
+
+int16_t Add_Observable (Observable_Set *observable_set, Observable *observable) {
+	Observable *previous_observable = NULL; // The action construct presently at the end of the list. This will be set as the previous action construct to the one created for the newly-cached action.
+	uint16_t observable_count = 0;
+
+	// Create a action construct to denote to the action for the loop!
+	// NOTE: This construct must be different than the construct for the action cache to preserve their unique link structures and prevent infinite looping during list traversal.
+//	Event *event = Create_Event ((*action).uuid, action);
+
+	// TODO: Consider checking of the action has a action construct in the cache. If so reference that one. If not, create one. That, or note that doing it manually is required with Has_Cached_Action () _before_ calling Add_Action.
+
+	if ((*observable_set).first_observable == NULL) {
+
+		// The loop is empty, so add it to the loop as the only element.
+		(*observable_set).first_observable = observable;
+
+		(*observable).previous = NULL;
+		(*observable).next = NULL;
+
+	} else {
+
+		// Search for the last element in the list
+		previous_observable = (*observable_set).first_observable; // Get the front of the queue.
+		while ((*previous_observable).next != NULL) {
+			previous_observable = (*previous_observable).next;
+		}
+
+		// Update the list linkage to add the message to the back of the list
+		(*observable).previous = previous_observable;
+		(*previous_observable).next = observable;
+	}
+}
+
+Observable* Remove_Observable (Observable_Set *observable_set, Observable *observable) {
+
+	if (observable != NULL && observable_set != NULL) {
+
+		// Update the linked list to remove the action from the front of the queue.
+		if ((*observable).previous == NULL && (*observable).next != NULL) {
+
+			// The action in the first in the loop.
+
+			(*observable_set).first_observable = (*observable).next; // Update the loop's first action to be the next one.
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			(*((*observable_set).first_observable)).next = NULL; // Update the the new first action in the loop so it doesn't link to a "previous" action.
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*observable).previous = NULL;
+			(*observable).next = NULL;
+
+		} else if ((*observable).previous != NULL && (*observable).next != NULL) {
+
+			// The action is within the loop. It has previous and next actions.
+
+			(*(*observable).previous).next = (*observable).next; // Update the previous action to skip this action and point to the next action.
+
+			(*(*observable).next).previous = (*observable).previous; // Update the next action skip this action and point to the previous action.
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*observable).previous = NULL;
+			(*observable).next = NULL;
+
+		} else if ((*observable).previous != NULL && (*observable).next == NULL) {
+
+			// The action is the last in the loop. It has previous actions only.
+
+			(*(*observable).previous).next = NULL; // Update the previous action be the new last action in the loop. That is, make it point to no other action (and point to NULL).
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*observable).previous = NULL;
+			(*observable).next = NULL;
+
+		} else {
+
+			// There are no more actions in the loop, so remove all links and reset the loop to its "empty" state.
+
+			observable_set = NULL; // Remove the link to any actions at the front of the loop.
+
+			// Unlink the actions from linked list to finish dequeuing process.
+			(*observable).previous = NULL;
+			(*observable).next = NULL;
+
+		}
+
+		// Free the action construct from memory.
+		// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+		Delete_Observable (observable);
+	}
+
+	return NULL;
+}
+
+uint8_t Has_Observables (Observable_Set *observable_set) {
+	return (*observable_set).first_observable != NULL;
+}
+
+Observable* Get_Observable (Observable_Set *observable_set, char *key) {
+	Observable *observable = NULL;
+
+	if ((*observable_set).first_observable != NULL) {
+		observable = (*observable_set).first_observable; // Get the first action construct in the cache list.
+		while (observable != NULL) {
+			if (strncmp (key, (*observable).key, strlen ((*observable).key)) == 0) {
+				return observable; // Return the action associated with the specified action construct.
+			}
+			observable = (*observable).next;
+		}
+	}
+
+	return NULL;
+}
+
+Observable* Get_Observable_By_Index (Observable_Set *observable_set, int index) {
+	Observable *observable = NULL;
+	int current_index = -1;
+
+	if ((*observable_set).first_observable != NULL) {
+		observable = (*observable_set).first_observable; // Get the first action construct in the cache list.
+		current_index = 0;
+		while (observable != NULL) {
+			if (current_index == index) {
+				return observable; // Return the action associated with the specified action construct.
+			}
+			observable = (*observable).next;
+			current_index++;
+		}
+	}
+
+	return NULL;
+}
+// </Data Flow>
+
 ////Global implementations ////////////////////////////////////////
 // Profile
 int8_t Initialize_Channels() {
@@ -97,20 +351,67 @@ int8_t Initialize_Channels() {
       updated_channel_profile[i].enabled = FALSE;
       updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
-      updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
-      updated_channel_profile[i].waveform_value = -1;
-      updated_channel_profile[i].pulse_period_s = 0;
-      updated_channel_profile[i].pulse_duty = 0;
+      updated_channel_profile[i].data = &platform_observable_profiles[i];
+
+//      updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+//      updated_channel_profile[i].waveform_sample_value = -1;
+//      updated_channel_profile[i].pulse_period_seconds = 0;
+//      updated_channel_profile[i].pulse_duty_cycle = 0;
+
+      	// <OPTIMIZE>
+		updated_channel_profile[i].observable_set = Create_Observable_Set ();
+
+		Observable *observable = NULL;
+		Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+		int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
+		observable = Create_Observable ("toggle_value", CONTENT_TYPE_INT32, &default_content_int32);
+		Add_Observable (observable_set, observable);
+
+		default_content_int32 = -1;
+		observable = Create_Observable ("waveform_sample_value", CONTENT_TYPE_INT32, &default_content_int32);
+		Add_Observable (observable_set, observable);
+
+		float default_content_float = 0;
+		observable = Create_Observable ("pulse_period_seconds", CONTENT_TYPE_FLOAT, &default_content_float);
+		Add_Observable (observable_set, observable);
+
+		int16_t default_content_int16 = 0;
+		observable = Create_Observable ("pulse_duty_cycle", CONTENT_TYPE_INT16, &default_content_int16);
+		Add_Observable (observable_set, observable);
+		// </OPTIMIZE>
 
       // Initialize channel profile
       channel_profile[i].number = (Channel_Number) i;
       channel_profile[i].enabled = FALSE;
       channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
-      channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
-      channel_profile[i].waveform_value = -1;
-      channel_profile[i].pulse_period_s = 0;
-      channel_profile[i].pulse_duty = 0;
+      channel_profile[i].data = &platform_observable_profiles[i];
+
+//      channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+//      channel_profile[i].waveform_sample_value = -1;
+//      channel_profile[i].pulse_period_seconds = 0;
+//      channel_profile[i].pulse_duty_cycle = 0;
+
+		// <OPTIMIZE>
+      channel_profile[i].observable_set = Create_Observable_Set ();
+
+		observable_set = channel_profile[i].observable_set;
+		default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
+		observable = Create_Observable ("toggle_value", CONTENT_TYPE_INT32, &default_content_int32);
+		Add_Observable (observable_set, observable);
+
+		default_content_int32 = -1;
+		observable = Create_Observable ("waveform_sample_value", CONTENT_TYPE_INT32, &default_content_int32);
+		Add_Observable (observable_set, observable);
+
+		default_content_float = 0;
+		observable = Create_Observable ("pulse_period_seconds", CONTENT_TYPE_FLOAT, &default_content_float);
+		Add_Observable (observable_set, observable);
+
+		default_content_int16 = 0;
+		observable = Create_Observable ("pulse_duty_cycle", CONTENT_TYPE_INT16, &default_content_int16);
+		Add_Observable (observable_set, observable);
+		// </OPTIMIZE>
 
    }
 
@@ -130,20 +431,47 @@ int8_t Reset_Channels() {
       updated_channel_profile[i].enabled = FALSE;
       updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
       updated_channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
-      updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
-      updated_channel_profile[i].waveform_value = -1;
-      updated_channel_profile[i].pulse_period_s = 0;
-      updated_channel_profile[i].pulse_duty = 0;
 
-//      // Initialize channel profile
-//      channelProfile[i].number = (i + 1);
-//      channelProfile[i].enabled = FALSE;
-//      channelProfile[i].direction = CHANNEL_DIRECTION_OUTPUT;
-//      channelProfile[i].type = CHANNEL_MODE_TOGGLE;
-//      channelProfile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
+//      updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+//      updated_channel_profile[i].waveform_sample_value = -1;
+//      updated_channel_profile[i].pulse_period_seconds = 0;
+//      updated_channel_profile[i].pulse_duty_cycle = 0;
    }
 
    return TRUE;
+}
+
+static void Hack_Propagate (Channel_Profile *source_channel_profile, Channel_Profile *destination_channel_profile, char *observable_key) {
+
+	// Part 1:
+
+	// Get observable set from source channel profile...
+	// TODO: (?) Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+	Observable_Set *source_observable_set = (*source_channel_profile).observable_set;
+	Observable *source_observable = NULL;
+
+	// ...then get data from channel profile...
+	source_observable = Get_Observable (source_observable_set, observable_key);
+//	int16_t source_content = Get_Observable_Data_Int16 (source_observable);
+//	int8_t source_content_type = (*source_observable).content_type;
+
+//	source_observable = Get_Observable (observable_set, "pulse_period_seconds");
+//	float pulse_period_seconds = Get_Observable_Data_Float (source_observable);
+
+	// Part 2:
+
+	// Get observable set for destination channel profile...
+	Observable_Set *destination_observable_set = (*destination_channel_profile).observable_set;
+	Observable *destination_observable = NULL;
+
+	// ...then get data from channel profile...
+	destination_observable = Get_Observable (destination_observable_set, observable_key);
+
+	// ...then update the date.
+	// int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
+	// <HACK> (Only works on non-strings since copies with assignment operator.)
+	Set_Observable_Data (destination_observable, (*source_observable).content_type, (*source_observable).content);
+	// </HACK>
 }
 
 // Profiles -> Hardware
@@ -185,25 +513,50 @@ int8_t Apply_Channels() {
          }
 
          // Check if the value change. Apply the corresponding transform if it changed.
-         if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT
-             && (channel_profile[i].toggle_value != updated_channel_profile[i].toggle_value
-                 || channel_profile[i].waveform_value != updated_channel_profile[i].waveform_value
-                 || channel_profile[i].pulse_period_s != updated_channel_profile[i].pulse_period_s
-                 || channel_profile[i].pulse_duty != updated_channel_profile[i].pulse_duty)) {
+         if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT) {
+//         if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_OUTPUT
+//             && (channel_profile[i].toggle_value != updated_channel_profile[i].toggle_value
+//                 || channel_profile[i].waveform_sample_value != updated_channel_profile[i].waveform_sample_value
+//                 || channel_profile[i].pulse_period_seconds != updated_channel_profile[i].pulse_period_seconds
+//                 || channel_profile[i].pulse_duty_cycle != updated_channel_profile[i].pulse_duty_cycle)) {
 
-            channel_profile[i].toggle_value = updated_channel_profile[i].toggle_value;
-            channel_profile[i].waveform_value = updated_channel_profile[i].waveform_value;
-            channel_profile[i].pulse_period_s = updated_channel_profile[i].pulse_period_s;
-            channel_profile[i].pulse_duty = updated_channel_profile[i].pulse_duty;
+//            channel_profile[i].toggle_value = updated_channel_profile[i].toggle_value;
+//            channel_profile[i].waveform_sample_value = updated_channel_profile[i].waveform_sample_value;
+//            channel_profile[i].pulse_period_seconds = updated_channel_profile[i].pulse_period_seconds;
+//            channel_profile[i].pulse_duty_cycle = updated_channel_profile[i].pulse_duty_cycle;
+
+//        	 channel_profile[i].data->toggle_value = updated_channel_profile[i].data->toggle_value;
+//        	 channel_profile[i].data->waveform_sample_value = updated_channel_profile[i].data->waveform_sample_value;
+//        	 channel_profile[i].data->pulse_period_seconds = updated_channel_profile[i].data->pulse_period_seconds;
+//        	 channel_profile[i].data->pulse_duty_cycle = updated_channel_profile[i].data->pulse_duty_cycle;
+
+        	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "toggle_value");
+			 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "waveform_sample_value");
+			 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "pulse_period_seconds");
+			 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "pulse_duty_cycle");
+
+        	 // TODO: Propagate update_channel_profile state to channel_profile state
 
             // Apply value.
             Channel_Apply_Output((Channel_Number) i);
 
          } else if (updated_channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
-            channel_profile[i].toggle_value = updated_channel_profile[i].toggle_value;
-            channel_profile[i].waveform_value = updated_channel_profile[i].waveform_value;
-            channel_profile[i].pulse_period_s = updated_channel_profile[i].pulse_period_s;
-            channel_profile[i].pulse_duty = updated_channel_profile[i].pulse_duty;
+//            channel_profile[i].toggle_value = updated_channel_profile[i].toggle_value;
+//            channel_profile[i].waveform_sample_value = updated_channel_profile[i].waveform_sample_value;
+//            channel_profile[i].pulse_period_seconds = updated_channel_profile[i].pulse_period_seconds;
+//            channel_profile[i].pulse_duty_cycle = updated_channel_profile[i].pulse_duty_cycle;
+
+//        	 channel_profile[i].data->toggle_value = updated_channel_profile[i].data->toggle_value;
+//        	 channel_profile[i].data->waveform_sample_value = updated_channel_profile[i].data->waveform_sample_value;
+//        	 channel_profile[i].data->pulse_period_seconds = updated_channel_profile[i].data->pulse_period_seconds;
+//        	 channel_profile[i].data->pulse_duty_cycle = updated_channel_profile[i].data->pulse_duty_cycle;
+
+        	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "toggle_value");
+        	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "waveform_sample_value");
+        	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "pulse_period_seconds");
+        	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "pulse_duty_cycle");
+
+        	 // TODO: Propagate update_channel_profile state to channel_profile state
          }
 
       } else if (updated_channel_profile[i].enabled == FALSE
@@ -366,7 +719,8 @@ Channel_Direction Channel_Get_Direction(Channel_Number number) {
    return channel_profile[number].direction;
 }
 
-int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
+// MG: (?) <HACK /> What is going on here?
+int32_t Channel_Set_Data (Channel_Number number, int32_t data) {
 
    int32_t result = -1;
 
@@ -377,7 +731,21 @@ int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
          result = Channel_Write_Toggle(number, data);
 
          if (result != -1) {
-            channel_profile[number].toggle_value = data;
+//            channel_profile[number].data->toggle_value = data;
+
+        	 // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+
+        	 // Get observable set...
+        	 Observable_Set *observable_set = channel_profile[number].observable_set;
+        	 Observable *observable = NULL;
+
+        	 // ...then get data from channel profile...
+        	 observable = Get_Observable (observable_set, "toggle_value");
+
+        	 // ...then update the date.
+        	 Set_Observable_Data (observable, CONTENT_TYPE_INT32, &data);
+
+        	 // </OPTIMIZE>
          }
 
          break;
@@ -389,10 +757,41 @@ int32_t Channel_Set_Data(Channel_Number number, int32_t data) {
       }
 
       case CHANNEL_TYPE_PULSE: {
-         result = Channel_Write_Pulse(number, data, channel_profile[number].pulse_duty);
+
+//         result = Channel_Write_Pulse(number, data, channel_profile[number].data->pulse_duty_cycle);
+
+         // <OPTIMIZE>
+
+		  // Get observable set...
+		  // TODO: (?) Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+		  Observable_Set *observable_set = channel_profile[number].observable_set;
+		  Observable *observable = NULL;
+
+		  // ...then get data from channel profile...
+		  observable = Get_Observable (observable_set, "pulse_duty_cycle");
+		  int16_t pulse_duty_cycle = Get_Observable_Data_Int16 (observable);
+
+		  // ...then write the output to hardware.
+		  result = Channel_Write_Pulse(number, data, pulse_duty_cycle);
+
+		  // </OPTIMIZE>
 
          if (result != -1) {
-            channel_profile[number].pulse_period_s = data;
+//            channel_profile[number].data->pulse_period_seconds = data;
+
+        	 // <OPTIMIZE>
+
+			 // Get observable set...
+			 Observable_Set *observable_set = channel_profile[number].observable_set;
+			 Observable *observable = NULL;
+
+			 // ...then get data from channel profile...
+			 observable = Get_Observable (observable_set, "pulse_period_seconds");
+
+			 // ...then update the data.
+			 Set_Observable_Data (observable, CONTENT_TYPE_FLOAT, &data);
+
+			 // </OPTIMIZE>
          }
 
          break;
@@ -437,17 +836,52 @@ int32_t Channel_Get_Data(Channel_Number number) {
    return result;
 }
 
+// Function called to update the data sources for GPIO.
 void Channel_Periodic_Call() {
 
    for (int i = 0; i < CHANNEL_COUNT; ++i) {
       if (channel_profile[i].direction == CHANNEL_DIRECTION_INPUT) {
          switch (channel_profile[i].type) {
             case CHANNEL_TYPE_WAVEFORM: {
-               updated_channel_profile[i].waveform_value = Channel_Get_Data((Channel_Number) i);
+//               updated_channel_profile[i].data->waveform_sample_value = Channel_Get_Data((Channel_Number) i);
+
+            	// <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+
+				// Get observable set...
+				Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+				Observable *observable = NULL;
+
+				// ...then get data from channel profile...
+				observable = Get_Observable (observable_set, "waveform_sample_value");
+
+				// ...then update the date.
+				int32_t data = Channel_Get_Data((Channel_Number) i);
+				Set_Observable_Data (observable, CONTENT_TYPE_INT32, &data);
+
+				// </OPTIMIZE>
+
+               // data->waveform_sample_value = Channel_Get_Data((Channel_Number) i);
+               // data->notifyAll(); // including updated_channel_profile[i]
                break;
             }
             case CHANNEL_TYPE_TOGGLE: {
-               updated_channel_profile[i].toggle_value = Channel_Get_Data((Channel_Number) i);
+//               updated_channel_profile[i].data->toggle_value = Channel_Get_Data((Channel_Number) i);
+
+            	// <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+
+				 // Get observable set...
+				 Observable_Set *observable_set = channel_profile[i].observable_set;
+				 Observable *observable = NULL;
+
+				 // ...then get data from channel profile...
+				 observable = Get_Observable (observable_set, "toggle_value");
+
+				 // ...then update the date.
+				 int32_t data = Channel_Get_Data((Channel_Number) i);
+				 Set_Observable_Data (observable, CONTENT_TYPE_INT32, &data);
+
+				 // </OPTIMIZE>
+
                break;
             }
             default: {
@@ -467,10 +901,10 @@ void Channel_Periodic_Call() {
 // i.e., Digital
 static bool Channel_Enable_Toggle(Channel_Number number) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
        || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return FALSE;
 
-   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
+   switch (channel_profile[number].data->mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
          if (PTB_data == NULL) {
             PTB_data = GPIO_PTB_Init(NULL);
@@ -511,12 +945,12 @@ static bool Channel_Enable_Toggle(Channel_Number number) {
 // i.e., Analog
 static bool Channel_Enable_Waveform(Channel_Number number) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
        || channel_profile[number].type != CHANNEL_TYPE_WAVEFORM) return FALSE;
 
    bool rval = FALSE;
 
-   switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
+   switch (channel_profile[number].data->mcu_hardware_profile.adc_interface->adc_channel) {
       case MCU_ADC0: {
 
          //TODO: Config ADC0 . we'll have to share it with the vbat adc line.
@@ -560,12 +994,12 @@ static bool Channel_Enable_Waveform(Channel_Number number) {
 // i.e., PWM
 static bool Channel_Enable_Pulse(Channel_Number number) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
        || channel_profile[number].type != CHANNEL_TYPE_PULSE) return FALSE;
 
    bool rval = FALSE;
 
-   switch (channel_profile[number].mcu_hardware_profile.pwm_interface->pwm_channel) {
+   switch (channel_profile[number].data->mcu_hardware_profile.pwm_interface->pwm_channel) {
       case MCU_PWM_OUT_1: {
 
          LDD_TError err;
@@ -637,16 +1071,16 @@ static bool Channel_Enable_Pulse(Channel_Number number) {
 // Hardware. General-purpose GPIO control.
 static int32_t Channel_Read_Toggle(Channel_Number number) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
        || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return -1;
 
    int32_t result = -1;
 
-   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
+   switch (channel_profile[number].data->mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
 
          result =
-               (GPIO_PTB_GetPortValue(PTB_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
+               (GPIO_PTB_GetPortValue(PTB_data) & channel_profile[number].data->mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
@@ -654,7 +1088,7 @@ static int32_t Channel_Read_Toggle(Channel_Number number) {
       case MCU_GPIO_PORT_PTC: {
 
          result =
-               (GPIO_PTC_GetPortValue(PTC_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
+               (GPIO_PTC_GetPortValue(PTC_data) & channel_profile[number].data->mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
@@ -670,7 +1104,7 @@ static int32_t Channel_Read_Toggle(Channel_Number number) {
       case MCU_GPIO_PORT_PTE: {
 
          result =
-               (GPIO_PTE_GetPortValue(PTE_data) & channel_profile[number].mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
+               (GPIO_PTE_GetPortValue(PTE_data) & channel_profile[number].data->mcu_hardware_profile.digital_interface->mask) ? 1 : 0;
 
          break;
       }
@@ -687,15 +1121,15 @@ static int32_t Channel_Read_Toggle(Channel_Number number) {
 // Hardware. General-purpose GPIO control.
 static int32_t Channel_Read_Waveform(Channel_Number number) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
        || channel_profile[number].type != CHANNEL_TYPE_WAVEFORM) return -1;
 
    int rval;
 
-   switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
+   switch (channel_profile[number].data->mcu_hardware_profile.adc_interface->adc_channel) {
       case MCU_ADC0: {
 
-         ADC0_SelectSampleGroup(ADC0_data, channel_profile[number].mcu_hardware_profile.adc_interface->sample_group);
+         ADC0_SelectSampleGroup(ADC0_data, channel_profile[number].data->mcu_hardware_profile.adc_interface->sample_group);
 
          //tell the ADC to start a measurement.
          ADC0_StartSingleMeasurement(ADC0_data);
@@ -711,7 +1145,7 @@ static int32_t Channel_Read_Waveform(Channel_Number number) {
       }
 
       case MCU_ADC1: {
-         ADC1_SelectSampleGroup(ADC1_data, channel_profile[number].mcu_hardware_profile.adc_interface->sample_group);
+         ADC1_SelectSampleGroup(ADC1_data, channel_profile[number].data->mcu_hardware_profile.adc_interface->sample_group);
 
          //tell the ADC to start a measurement.
          ADC1_StartSingleMeasurement(ADC1_data);
@@ -737,18 +1171,18 @@ static int32_t Channel_Read_Waveform(Channel_Number number) {
 // Hardware. General-purpose GPIO control.
 static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
        || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return -1;
 
    int32_t result = 0;
 
-   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
+   switch (channel_profile[number].data->mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
 
          if (data) {
-            GPIO_PTB_SetPortBits(PTB_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTB_SetPortBits(PTB_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTB_ClearPortBits(PTB_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTB_ClearPortBits(PTB_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          }
 
          break;
@@ -757,9 +1191,9 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
       case MCU_GPIO_PORT_PTC: {
 
          if (data) {
-            GPIO_PTC_SetPortBits(PTC_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTC_SetPortBits(PTC_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTC_ClearPortBits(PTC_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTC_ClearPortBits(PTC_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          }
 
          break;
@@ -779,9 +1213,9 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
       case MCU_GPIO_PORT_PTE: {
 
          if (data) {
-            GPIO_PTE_SetPortBits(PTE_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTE_SetPortBits(PTE_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTE_ClearPortBits(PTE_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTE_ClearPortBits(PTE_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          }
 
          break;
@@ -799,12 +1233,12 @@ static int32_t Channel_Write_Toggle(Channel_Number number, int32_t data) {
 // Hardware. General-purpose GPIO control.
 static int32_t Channel_Write_Pulse(Channel_Number number, LDD_PPG_Tfloat period_s, uint16_t ratio) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
        || channel_profile[number].type != CHANNEL_TYPE_PULSE) return -1;
 
    int32_t rval = 0;
 
-   switch (channel_profile[number].mcu_hardware_profile.pwm_interface->pwm_channel) {
+   switch (channel_profile[number].data->mcu_hardware_profile.pwm_interface->pwm_channel) {
       case MCU_PWM_OUT_1: {
 
          if (period_s > 0 && ratio > 0) {
@@ -859,20 +1293,38 @@ static int32_t Channel_Write_Pulse(Channel_Number number, LDD_PPG_Tfloat period_
 
 static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direction direction) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
        || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return -1;
 
    int rval = 0;
 
-   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
+   switch (channel_profile[number].data->mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
 
          if (direction == CHANNEL_DIRECTION_INPUT) {
-            GPIO_PTB_SetPortInputDirection(PTB_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTB_SetPortInputDirection(PTB_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTB_SetPortOutputDirection(PTB_data,
-                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
-                                            channel_profile[number].toggle_value);
+
+//            GPIO_PTB_SetPortOutputDirection(PTB_data,
+//                                            channel_profile[number].data->mcu_hardware_profile.digital_interface->mask,
+//                                            channel_profile[number].data->toggle_value);
+
+        	 // <OPTIMIZE>
+
+        	 // Get observable set...
+        	 // TODO: (?) Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+        	 Observable_Set *observable_set = channel_profile[number].observable_set;
+        	 Observable *observable = NULL;
+
+        	 // ...then get data from channel profile...
+        	 observable = Get_Observable (observable_set, "toggle_value");
+        	 int32_t toggle_value = Get_Observable_Data_Int32 (observable);
+
+        	 // </OPTIMIZE>
+
+        	 GPIO_PTB_SetPortOutputDirection(PTB_data,
+        	                                             channel_profile[number].data->mcu_hardware_profile.digital_interface->mask,
+        	                                             toggle_value);
          }
 
          break;
@@ -881,11 +1333,28 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
       case MCU_GPIO_PORT_PTC: {
 
          if (direction == CHANNEL_DIRECTION_INPUT) {
-            GPIO_PTC_SetPortInputDirection(PTC_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTC_SetPortInputDirection(PTC_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          } else {
-            GPIO_PTC_SetPortOutputDirection(PTC_data,
-                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
-                                            channel_profile[number].toggle_value);
+//            GPIO_PTC_SetPortOutputDirection(PTC_data,
+//                                            channel_profile[number].data->mcu_hardware_profile.digital_interface->mask,
+//                                            channel_profile[number].data->toggle_value);
+
+            // <OPTIMIZE>
+
+			 // Get observable set...
+			 // TODO: (?) Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+			 Observable_Set *observable_set = channel_profile[number].observable_set;
+			 Observable *observable = NULL;
+
+			 // ...then get data from channel profile...
+			 observable = Get_Observable (observable_set, "toggle_value");
+			 int32_t toggle_value = Get_Observable_Data_Int32 (observable);
+
+			 // </OPTIMIZE>
+
+			GPIO_PTC_SetPortOutputDirection(PTC_data,
+											channel_profile[number].data->mcu_hardware_profile.digital_interface->mask,
+											toggle_value);
          }
 
          break;
@@ -907,11 +1376,28 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
       case MCU_GPIO_PORT_PTE: {
 
          if (direction == CHANNEL_DIRECTION_INPUT) {
-            GPIO_PTE_SetPortInputDirection(PTE_data, channel_profile[number].mcu_hardware_profile.digital_interface->mask);
+            GPIO_PTE_SetPortInputDirection(PTE_data, channel_profile[number].data->mcu_hardware_profile.digital_interface->mask);
          } else {
+//        	 GPIO_PTE_SetPortOutputDirection(PTE_data,
+//        	                                             channel_profile[number].data->mcu_hardware_profile.digital_interface->mask,
+//        	                                             channel_profile[number].data->toggle_value);
+
+        	 // <OPTIMIZE>
+
+			 // Get observable set...
+			 // TODO: (?) Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+			 Observable_Set *observable_set = channel_profile[number].observable_set;
+			 Observable *observable = NULL;
+
+			 // ...then get data from channel profile...
+			 observable = Get_Observable (observable_set, "toggle_value");
+			 int32_t toggle_value = Get_Observable_Data_Int32 (observable);
+
+			 // </OPTIMIZE>
+
             GPIO_PTE_SetPortOutputDirection(PTE_data,
-                                            channel_profile[number].mcu_hardware_profile.digital_interface->mask,
-                                            channel_profile[number].toggle_value);
+                                            channel_profile[number].data->mcu_hardware_profile.digital_interface->mask,
+                                            toggle_value);
          }
 
          break;
@@ -928,7 +1414,7 @@ static int32_t Channel_Set_Direction_Toggle(Channel_Number number, Channel_Direc
 
 static int32_t Channel_Set_Direction_Waveform(Channel_Number number, Channel_Direction direction) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_WAVEFORM)
        || channel_profile[number].type != CHANNEL_TYPE_WAVEFORM) return -1;
 
 //HACK
@@ -941,7 +1427,7 @@ static int32_t Channel_Set_Direction_Waveform(Channel_Number number, Channel_Dir
 
 static int32_t Channel_Set_Direction_Pulse(Channel_Number number, Channel_Direction direction) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
        || channel_profile[number].type != CHANNEL_TYPE_PULSE) return -1;
 
 //HACK
@@ -958,10 +1444,10 @@ static void Channel_Disable_Toggle(Channel_Number number) {
 //      the code below would disable the ports, but the ports are currently shared between I/O pins.
    return;
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_TOGGLE)
        || channel_profile[number].type != CHANNEL_TYPE_TOGGLE) return;
 
-   switch (channel_profile[number].mcu_hardware_profile.digital_interface->port) {
+   switch (channel_profile[number].data->mcu_hardware_profile.digital_interface->port) {
       case MCU_GPIO_PORT_PTB: {
          if (PTB_data != NULL) {
             GPIO_PTB_Deinit(PTB_data);
@@ -1003,10 +1489,10 @@ static void Channel_Disable_Toggle(Channel_Number number) {
 
 static void Channel_Disable_Waveform(Channel_Number number) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
        || channel_profile[number].type != CHANNEL_TYPE_PULSE) return;
 
-   switch (channel_profile[number].mcu_hardware_profile.adc_interface->adc_channel) {
+   switch (channel_profile[number].data->mcu_hardware_profile.adc_interface->adc_channel) {
       case MCU_ADC0: {
 
          //ADC0 doesn't get de-initialized. we use it for other things.
@@ -1033,10 +1519,10 @@ static void Channel_Disable_Waveform(Channel_Number number) {
 
 static void Channel_Disable_Pulse(Channel_Number number) {
 
-   if (!(channel_profile[number].mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
+   if (!(channel_profile[number].data->mcu_hardware_profile.supported_interfaces & CHANNEL_TYPE_PULSE)
        || channel_profile[number].type != CHANNEL_TYPE_PULSE) return;
 
-   switch (channel_profile[number].mcu_hardware_profile.pwm_interface->pwm_channel) {
+   switch (channel_profile[number].data->mcu_hardware_profile.pwm_interface->pwm_channel) {
       case MCU_PWM_OUT_1: {
 
          if (PWM_OUT_1_data != NULL) {
@@ -1075,11 +1561,40 @@ static void Channel_Apply_Output(Channel_Number number) {
 
    switch (channel_profile[number].type) {
       case CHANNEL_TYPE_PULSE: {
-         Channel_Write_Pulse(number, channel_profile[number].pulse_period_s, channel_profile[number].pulse_duty);
+//         Channel_Write_Pulse(number, channel_profile[number].data->pulse_period_seconds, channel_profile[number].data->pulse_duty_cycle);
+
+         // Get observable set...
+    	 // TODO: (?) Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+    	 Observable_Set *observable_set = channel_profile[number].observable_set;
+         Observable *observable = NULL;
+
+         // ...then get data from channel profile...
+         observable = Get_Observable (observable_set, "pulse_duty_cycle");
+		 int16_t pulse_duty_cycle = Get_Observable_Data_Int16 (observable);
+		 // TODO: int16_t pulse_duty_cycle = (int16_t) Get_Observable_Data (&platform_observable_profiles[number], "pulse_duty_cycle");
+
+		 observable = Get_Observable (observable_set, "pulse_period_seconds");
+		 float pulse_period_seconds = Get_Observable_Data_Float (observable);
+
+		 // ...then write the output to hardware.
+		 Channel_Write_Pulse (number, pulse_period_seconds, pulse_duty_cycle);
+
          break;
       }
       case CHANNEL_TYPE_TOGGLE: {
-         Channel_Write_Toggle(number, channel_profile[number].toggle_value);
+//         Channel_Write_Toggle(number, channel_profile[number].data->toggle_value);
+
+    	  // Get observable set...
+    	  // TODO: (?) Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+    	  Observable_Set *observable_set = channel_profile[number].observable_set;
+    	  Observable *observable = NULL;
+
+    	  // ...then get data from channel profile...
+    	  observable = Get_Observable (observable_set, "toggle_value");
+    	  int32_t toggle_value = Get_Observable_Data_Int32 (observable);
+
+		 // ...then write the output to hardware.
+    	  Channel_Write_Toggle(number, toggle_value);
          break;
       }
       default: {
@@ -1096,10 +1611,63 @@ static void Initialize_Hardware_Interface() {
    }
 }
 
+/**
+ * Initialize the platform. Essentially, this sets up the hardware abstraction
+ * layer (HAL) for use by Clay's system architecture.
+ *
+ * This exposes features of the physical device to Clay.
+ */
 static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
 
-   MCU_GPIO_Profile * profile = &channel_profile[number].mcu_hardware_profile;
+//   MCU_GPIO_Profile *profile = &channel_profile[number].mcu_hardware_profile;
 
+	MCU_GPIO_Profile *profile = &platform_observable_profiles[number].mcu_hardware_profile;
+
+//	channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+//	channel_profile[i].waveform_sample_value = -1;
+//	channel_profile[i].pulse_period_seconds = 0;
+//	channel_profile[i].pulse_duty_cycle = 0;
+
+	// Set default data
+//	platform_observable_profiles[number].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+//	platform_observable_profiles[number].waveform_sample_value = -1;
+//	platform_observable_profiles[number].pulse_period_seconds = 0;
+//	platform_observable_profiles[number].pulse_duty_cycle = 0;
+
+	platform_observable_profiles[number].observable_set = Create_Observable_Set ();
+
+	Observable *observable = NULL;
+	Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+	int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
+	observable = Create_Observable ("toggle_value", CONTENT_TYPE_INT32, &default_content_int32);
+	Add_Observable (observable_set, observable);
+
+	default_content_int32 = -1;
+	observable = Create_Observable ("waveform_sample_value", CONTENT_TYPE_INT32, &default_content_int32);
+	Add_Observable (observable_set, observable);
+
+	float default_content_float = 0;
+	observable = Create_Observable ("pulse_period_seconds", CONTENT_TYPE_FLOAT, &default_content_float);
+	Add_Observable (observable_set, observable);
+
+	int16_t default_content_int16 = 0;
+	observable = Create_Observable ("pulse_duty_cycle", CONTENT_TYPE_INT16, &default_content_int16);
+	Add_Observable (observable_set, observable);
+
+
+
+//	observable = Get_Observable (observable_set, "toggle_value");
+//	platform_observable_profiles[number].toggle_value = Get_Observable_Data_Int32 (observable);
+//
+//	observable = Get_Observable (observable_set, "waveform_sample_value");
+//	platform_observable_profiles[number].waveform_sample_value = Get_Observable_Data_Int32 (observable);
+//
+//	observable = Get_Observable (observable_set, "pulse_period_seconds");
+//	platform_observable_profiles[number].pulse_period_seconds = Get_Observable_Data_Float (observable);
+//	observable = Get_Observable (observable_set, "pulse_duty_cycle");
+//	platform_observable_profiles[number].pulse_duty_cycle = Get_Observable_Data_Int16 (observable);
+
+	// Set up platform-specific configuration
    switch (number) {
 
       case CHANNEL_1: {
