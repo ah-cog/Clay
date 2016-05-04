@@ -20,7 +20,24 @@
 #define BUFFER_TAIL(buffer)             ((buffer->data) + buffer->tail)
 #define BUFFER_HEAD(buffer)             ((buffer->data) + buffer->head)
 
+#define WIFI_FIELD_DELIMITER_COUNT              5
+#define WIFI_TOTAL_DELIMITER_COUNT              6
+
+#define WIFI_MESSAGE_TYPE_INDEX                 0
+#define WIFI_SOURCE_INDEX                       1
+#define WIFI_DESTINATION_INDEX                  2
+#define WIFI_CONTENT_TYPE_INDEX                 3
+#define WIFI_CONTENT_LENGTH_INDEX               4
+#define WIFI_CONTENT_DELIMITER_INDEX            5
+
 ////Typedefs  /////////////////////////////////////////////////////
+typedef enum
+{
+   SERIAL_STATUS_CONTENT_LENGTH_FOUND = 1,
+   SERIAL_STATUS_MESSAGE_COMPLETE = 2,
+   SERIAL_STATUS_MORE_AVAILABLE = 4,
+   SERIAL_STATUS_MESSAGE_TOO_BIG = 8
+} Serial_Parse_Status;
 
 ////Globals   /////////////////////////////////////////////////////
 
@@ -239,23 +256,7 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_
    return rval;
 }
 
-typedef enum
-{
-   SERIAL_STATUS_CONTENT_LENGTH_FOUND = 1,
-   SERIAL_STATUS_MESSAGE_COMPLETE = 2,
-   SERIAL_STATUS_MORE_AVAILABLE = 4,
-   SERIAL_STATUS_MESSAGE_TOO_BIG = 8
-} Serial_Parse_Status;
-
-#define WIFI_FIELD_DELIMITER_COUNT              5
-#define WIFI_TOTAL_DELIMITER_COUNT              6
-#define WIFI_MESSAGE_TYPE_INDEX                 0
-#define WIFI_SOURCE_INDEX                       1
-#define WIFI_DESTINATION_INDEX                  2
-#define WIFI_CONTENT_TYPE_INDEX                 3
-#define WIFI_CONTENT_LENGTH_INDEX               4
-#define WIFI_CONTENT_DELIMITER_INDEX            5
-
+//returns the number of bytes dequeued. Not the length of the message.
 uint32_t Multibyte_Ring_Buffer_Dequeue_Full_Message(Multibyte_Ring_Buffer * buffer, Message ** response_message) {
 
    uint32_t rval = 0;
@@ -267,16 +268,6 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Full_Message(Multibyte_Ring_Buffer * buff
 
    //         0       1         2              3               4                 5
    //format: \f<type>\t<source>\t<destination>\t<content_type>\t<content_length>\t<content>
-
-   //dequeue into flat buffer until the last \t delimiter.
-   //parse content length out of flat buffer, then dequeue the remaining bytes as they are available.
-
-   //find start of message \f
-   //verify we have all the tokens \t * 5
-   //parse content length out
-   //verify that we have content_length bytes left in the buffer
-   //init a message
-   //return the message
 
    delimiter_indices[0] = Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(buffer, (char *) message_start);
 
@@ -306,7 +297,12 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Full_Message(Multibyte_Ring_Buffer * buff
       }
 
       rval = delimiter_indices[WIFI_CONTENT_DELIMITER_INDEX];
-      content_length = atoi((buffer->data + buffer->head + delimiter_indices[WIFI_CONTENT_LENGTH_INDEX]));
+
+      //read the size out without dequeueing. we have to account for potential wrap around.
+      for (i = delimiter_indices[WIFI_CONTENT_LENGTH_INDEX]; i < (delimiter_indices[WIFI_CONTENT_DELIMITER_INDEX] - 1); ++i) {
+         //convert decimal text to ints,  shift current content length up by 1 significant digit.
+         content_length = (content_length * 10) + (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);
+      }
 
       if (content_length != 0 && (content_length + rval) <= buffer->count) {
          rval += content_length;
@@ -315,7 +311,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Full_Message(Multibyte_Ring_Buffer * buff
 
          (*response_message) = Create_Message();
 
-         //dequeue, including delimiter. for everything except content field, the delimiter has been replaced with null.
+         //dequeue, including delimiter. for everything except the content field, which has no terminating delimiter, the delimiter has been replaced with null.
          Multibyte_Ring_Buffer_Dequeue(buffer, temp_buffer, delimiter_indices[WIFI_MESSAGE_TYPE_INDEX]);     ///throw away up to start byte
 
          Multibyte_Ring_Buffer_Dequeue(buffer,
@@ -346,13 +342,20 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Full_Message(Multibyte_Ring_Buffer * buff
          Multibyte_Ring_Buffer_Dequeue(buffer, temp_buffer, content_length);     ///dequeue content.
 
          Set_Message_Content((*response_message), temp_buffer, content_length);
+
+         free(temp_buffer);
+
       } else {
 
+         *(buffer->data + ((buffer->head + delimiter_indices[0] - 1) % buffer->max_count)) = *message_start;
+
          //replace the delimiters for next time.
-         int i = 0;
+         int i = 1;
          for (; i < WIFI_TOTAL_DELIMITER_COUNT; ++i) {
-            *(buffer->data + ((buffer->head + delimiter_indices[i]) % buffer->max_count)) = *message_field_delimiter;
+            *(buffer->data + ((buffer->head + delimiter_indices[i] - 1) % buffer->max_count)) = *message_field_delimiter;
          }
+
+         rval = 0;
       }
    }
 
@@ -444,10 +447,12 @@ bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer) {
 //   }
 //}
 
-static char * test_msg = "\ftcp\t192.168.1.3:3000\t192.168.1.21:3000\ttext\t40\tmmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeee";
+//static char * test_msg = "\ftcp\t192.168.1.3:3000\t192.168.1.21:3000\ttext\t40\tmmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeee";
+static char * test_msg = "\ftcp\t192.168.1.3:3000\t192.168.1.21:3000\ttext\t256\tmmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmm256";
 
 uint32_t Multibyte_Ring_Buffer_Test() {
    char dq_data[1024];
+   char serial_data[1024];
    uint32_t dq_max = 1024;
    uint32_t dq_count = 0;
 
@@ -462,9 +467,11 @@ uint32_t Multibyte_Ring_Buffer_Test() {
          Multibyte_Ring_Buffer_Enqueue(&test_buffer, test_msg, strlen(test_msg));
       }
 
-      while (dq_count = Multibyte_Ring_Buffer_Dequeue_Full_Message(&test_buffer, &m) > 0) {
+      while ((dq_count = Multibyte_Ring_Buffer_Dequeue_Full_Message(&test_buffer, &m)) > 0) {
          Multibyte_Ring_Buffer_Get_Count(&test_buffer);
+         Serialize_Message(m, serial_data, 1024);
          Delete_Message(m);
+         memset(serial_data, 0, 1024);
       }
    }
 }

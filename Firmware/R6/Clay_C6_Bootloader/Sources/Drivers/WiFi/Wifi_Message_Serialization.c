@@ -63,7 +63,7 @@ uint32_t Serialize_Message(Message * message, uint8_t * destination_string, uint
    //HACK: Padding added because it seems to lessen the likelihood that we miss the end of a message.
    rval = snprintf(destination_string,
                    destination_max_length,
-                   "  %s%s%s%s%s%s%s%s%s%s%s  ",
+                   "  %s%s%s%s%s%s%s%s%s%d%s",
                    message_start,
                    message->type,
                    message_field_delimiter,

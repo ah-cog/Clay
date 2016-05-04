@@ -42,8 +42,8 @@ void Application(void) {
 
    Initialize_Bootloader();
 
-   Multibyte_Ring_Buffer_Test();
-//   Wifi_Test();
+//   Multibyte_Ring_Buffer_Test();
+   Wifi_Test();
 //   Flash_Test();
 
    wifi_connected = FALSE;
