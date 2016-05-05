@@ -42,7 +42,9 @@
 #include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 
+#include "Wifi_Message_Serialization.h"
 #include "Message_Queue.h"
+#include "Queues.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum

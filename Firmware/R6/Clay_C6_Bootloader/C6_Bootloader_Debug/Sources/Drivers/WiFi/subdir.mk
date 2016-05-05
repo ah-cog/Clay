@@ -5,18 +5,15 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Sources/Drivers/WiFi/WiFi.c \
-../Sources/Drivers/WiFi/Wifi_Message_Serialization.c \
-../Sources/Drivers/WiFi/Wifi_Serial_Message_Parser.c 
+../Sources/Drivers/WiFi/Wifi_Message_Serialization.c 
 
 OBJS += \
 ./Sources/Drivers/WiFi/WiFi.o \
-./Sources/Drivers/WiFi/Wifi_Message_Serialization.o \
-./Sources/Drivers/WiFi/Wifi_Serial_Message_Parser.o 
+./Sources/Drivers/WiFi/Wifi_Message_Serialization.o 
 
 C_DEPS += \
 ./Sources/Drivers/WiFi/WiFi.d \
-./Sources/Drivers/WiFi/Wifi_Message_Serialization.d \
-./Sources/Drivers/WiFi/Wifi_Serial_Message_Parser.d 
+./Sources/Drivers/WiFi/Wifi_Message_Serialization.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

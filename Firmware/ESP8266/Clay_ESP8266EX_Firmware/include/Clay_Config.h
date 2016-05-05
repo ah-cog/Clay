@@ -97,26 +97,15 @@
 #define TCP_TRANSMIT_CONNECT_TIMEOUT_ms				 20
 #define TCP_TX_BUFFER_SIZE_BYTES					 256
 
-//TODO: define SSID/PW here.
-//TODO: timeouts on serial comms?
-
-//TODO: check UDP ports
-//TODO: my port and a broadcast port, tx and rx
-//TODO: discovery port
+//TODO: clean this mess up
+#define MAXIMUM_DESTINATION_LENGTH					100
+#define MAXIMUM_SOURCE_LENGTH						100
 
 ////Typedefs  /////////////////////////////////////////////////////
-typedef enum
-{
-	MESSAGE_TYPE_UDP,
-	MESSAGE_TYPE_TCP,
-	MESSAGE_TYPE_COMMAND,
-	MESSAGE_TYPE_STATUS,
-	MESSAGE_TYPE_HTTP,
-	MESSAGE_TYPE_MAX
-} Message_Type;
 
 //max 16 chars
 extern uint8* message_type_strings[];
+extern uint8* content_type_strings[];
 ////Globals   /////////////////////////////////////////////////////
 
 ////Prototypes/////////////////////////////////////////////////////

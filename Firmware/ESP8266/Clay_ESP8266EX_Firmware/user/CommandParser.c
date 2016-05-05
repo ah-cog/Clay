@@ -26,9 +26,11 @@
 #include "Message.h"
 #include "ESP_Utilities.h"
 
+#include "Wifi_Message_Serialization.h"
 #include "UDP_Transmitter.h"
 #include "UDP_Receiver.h"
 #include "TCP_Combined.h"
+#include "Queues.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define WIFI_DISCONNECTED_RESPONSE		"wifi disconnected"
@@ -92,7 +94,7 @@ char args_delimiter = ',';
 
 int i;
 static Message * m;
-static Message temp_message;
+static Message * temp_message_ptr;
 static Command_Parser_States state;
 
 static bool promoted;
@@ -173,12 +175,13 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 #endif
 
 			taskENTER_CRITICAL();
-			Dequeue_Message(&incoming_command_queue, &temp_message);
+			temp_message_ptr = Dequeue_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
-			switch (Command_String_Parse(temp_message.content, &command_args))
+			switch (Command_String_Parse(temp_message_ptr->content,
+					&command_args))
 			{
 			case CLAY_COMMAND_SET_AP:
 			{
@@ -480,17 +483,9 @@ static bool Check_Needs_Promotion()
 
 	//remain promoted until we empty the queue.
 	taskENTER_CRITICAL();
-	rval = (incoming_command_queue.count
-			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	rval = (Has_Messages(&incoming_command_queue));
 	taskEXIT_CRITICAL();
 
-//	if (++loops > LOOPS_BEFORE_PRINT || incoming_command_queue.count)
-//	{
-//		loops = 0;
-//		taskENTER_CRITICAL();
-//		printf("cmd count:%d\r\n", incoming_command_queue.count);
-//		taskEXIT_CRITICAL();
-//	}
 	promoted = rval;
 
 	return rval;

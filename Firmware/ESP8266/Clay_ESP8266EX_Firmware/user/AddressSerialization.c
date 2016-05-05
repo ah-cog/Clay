@@ -11,8 +11,9 @@
 
 #include "lwip/sockets.h"
 
-#include "../include/AddressSerialization.h"
+#include "AddressSerialization.h"
 #include "Clay_Config.h"
+#include "Wifi_Message_Serialization.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 
@@ -24,10 +25,6 @@ const char * address_delimiter = ";";
 const char* type_delimiter = ",";
 const char * message_delimiter = "\n";
 const char* port_delimiter = ":";
-
-const char * message_start = "\f";
-const char * message_field_delimiter = "\t";
-const char * message_end = "\n";
 
 ////Local vars/////////////////////////////////////////////////////
 static uint8 deserialize_temp_str[50];
@@ -88,38 +85,6 @@ void ICACHE_RODATA_ATTR Deserialize_Address(uint8* Source,
 		Destination->sin_family = AF_INET;
 		Destination->sin_len = sizeof(*Destination);
 	}
-}
-
-bool ICACHE_RODATA_ATTR Get_Message_Type_Str(Message_Type type,
-		uint8 *returnStr)
-{
-	bool rval = false;
-
-	if (type < MESSAGE_TYPE_MAX)
-	{
-		strncpy(returnStr, message_type_strings[type],
-		CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH);
-		rval = true;
-	}
-
-	return rval;
-}
-
-Message_Type ICACHE_RODATA_ATTR Get_Message_Type_From_Str(uint8*typeString)
-{
-	Message_Type rval = MESSAGE_TYPE_MAX;
-
-	int i;
-	for (i = 0; i < MESSAGE_TYPE_MAX; ++i)
-	{
-		if (strstr(typeString, message_type_strings[i]) != NULL)
-		{
-			rval = (Message_Type) i;
-			break;
-		}
-	}
-
-	return rval;
 }
 
 ////Local implementations /////////////////////////////////////////

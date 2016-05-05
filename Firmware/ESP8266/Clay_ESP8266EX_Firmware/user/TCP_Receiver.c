@@ -40,6 +40,8 @@
 #include "UART.h"
 
 #include "Message_Queue.h"
+#include "Queues.h"
+#include "Wifi_Message_Serialization.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -246,22 +248,23 @@ static bool ICACHE_RODATA_ATTR Listen()
 
 		sock_index = SocketListAdd(client_sock);
 
-		if (sock_index > -1 && TCP_Start_Task(open_sockets + sock_index))
-		{
-//			taskENTER_CRITICAL();
-//			printf("opened sock:%d\r\n\r\n", client_sock);
-//			taskEXIT_CRITICAL();
-
-			rval = true;
-		}
-		else
-		{
-//			taskENTER_CRITICAL();
-//			printf("couldn't open sock:%d\r\n\r\n", client_sock);
-//			taskEXIT_CRITICAL();
-
-			rval = false;
-		}
+		//commented out for errors.
+//		if (sock_index > -1 && TCP_Start_Task(open_sockets + sock_index))
+//		{
+////			taskENTER_CRITICAL();
+////			printf("opened sock:%d\r\n\r\n", client_sock);
+////			taskEXIT_CRITICAL();
+//
+//			rval = true;
+//		}
+//		else
+//		{
+////			taskENTER_CRITICAL();
+////			printf("couldn't open sock:%d\r\n\r\n", client_sock);
+////			taskEXIT_CRITICAL();
+//
+//			rval = false;
+//		}
 	}
 
 	if (!rval)

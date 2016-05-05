@@ -1,44 +1,26 @@
 #ifndef MESSAGE_QUEUE_H
 #define MESSAGE_QUEUE_H
 
-#include <string.h>
+#include "stdlib.h"
+#include "stdint.h"
+#include "stdbool.h"
+#include "string.h"
+#include "stdio.h"
 
 #include "Message.h"
 
-#ifndef bool
-typedef int bool;
-enum
-{
-	false, true};
-#endif
+extern Message *incomingMessageQueue;
+extern Message *outgoingMessageQueue;
 
-#ifndef NULL
-#define NULL 0
-#endif
+// Message Queue
+extern uint8_t Initialize_Message_Queue (Message **messageQueue);
+extern int16_t Queue_Message (Message **messageQueue, Message *message); // Circular queue of incoming messages.
+extern Message* Peek_Message (Message **messageQueue);
+extern Message* Dequeue_Message (Message **messageQueue); // Get the message on the front of the incoming message queue.
+extern int16_t Get_Message_Count (Message **messageQueue);
+extern int8_t Has_Messages (Message **messageQueue);
 
-/**
- * Message Queue
- */
+// Outgoing Message Queue
+extern int16_t Queue_Outgoing_Message (char *address, Message *message);
 
-#define MAXIMUM_MESSAGE_COUNT 5
-
-typedef struct Message_Queue
-{
-	Message messages[MAXIMUM_MESSAGE_COUNT];
-	volatile int front;
-	volatile int back;
-	volatile int count;
-} Message_Queue;
-
-extern Message_Queue incoming_message_queue;
-extern Message_Queue incoming_command_queue;
-extern Message_Queue outgoing_UDP_message_queue;
-extern Message_Queue outgoing_TCP_message_queue;
-
-extern bool Initialize_Message_Queue(Message_Queue *message_queue);
-extern Message* Get_Next_Message(Message_Queue *message_queue);
-extern int Queue_Message(Message_Queue *message_queue, Message *message);
-extern Message* Peek_Message(Message_Queue *message_queue);
-extern bool Dequeue_Message(Message_Queue *message_queue, Message * destination);
-extern bool Has_Messages(Message_Queue *message_queue);
 #endif

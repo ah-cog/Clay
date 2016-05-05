@@ -72,7 +72,7 @@
 					<fileInfo id="cdt.managedbuild.toolchain.gnu.mingw.base.1544080900.834143893" name="TCP_Receiver.h" rcbsApplicability="disable" resourcePath="include/TCP_Receiver.h" toolsToInvoke=""/>
 					<fileInfo id="cdt.managedbuild.toolchain.gnu.mingw.base.1544080900.1507044735" name="TCP_Connection_Manager.h" rcbsApplicability="disable" resourcePath="include/TCP_Connection_Manager.h" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="user/TCP_Connection_Manager.c|include/TCP_Connection_Manager.h|include/TCP_Transmitter.h|include/TCP_Receiver.h|user/TCP_Transmitter.c|user/TCP_Receiver.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="user/TCP_Receiver.c|user/TCP_Connection_Manager.c|include/TCP_Connection_Manager.h|include/TCP_Transmitter.h|include/TCP_Receiver.h|user/TCP_Transmitter.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

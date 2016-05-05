@@ -1,92 +1,152 @@
-#include "esp_common.h"
+#include "string.h"
+#include "stdlib.h"
 #include "Message_Queue.h"
 
-Message_Queue incoming_message_queue;
-Message_Queue incoming_command_queue;
-Message_Queue outgoing_UDP_message_queue;
-Message_Queue outgoing_TCP_message_queue;
+Message *incomingMessageQueue = NULL;
+Message *outgoingMessageQueue = NULL;
 
-bool ICACHE_RODATA_ATTR Initialize_Message_Queue(Message_Queue *message_queue)
-{
-	int i;
+uint8_t Initialize_Message_Queue (Message **messageQueue) {
 
-	// Set size of queue to zero
-	(*message_queue).count = 0;
-	(*message_queue).front = 0;
-	(*message_queue).back = 0;
-
-	// Initialize message queue
-	for (i = 0; i < MAXIMUM_MESSAGE_COUNT; i++)
-	{
-		Initialize_Message(&((*message_queue).messages[i]), "", "", "", "");
-	}
-
+	(*messageQueue) = NULL;
 	return true;
 }
 
-Message* ICACHE_RODATA_ATTR Get_Next_Message(Message_Queue *message_queue)
-{
-	Message *message = NULL;
-	if ((*message_queue).count < MAXIMUM_MESSAGE_COUNT)
-	{
-		message = &(message_queue->messages[(*message_queue).back]);
+int16_t Queue_Message (Message **messageQueue, Message *message) {
+
+	Message *lastMessage = NULL;
+	uint16_t messageCount = 0;
+
+	if (message == NULL) {
+		return 0;
 	}
-	return message;
-}
 
-int ICACHE_RODATA_ATTR Queue_Message(Message_Queue *message_queue,
-		Message *message)
-{
-	if ((*message_queue).count < MAXIMUM_MESSAGE_COUNT)
-	{
-		//must make a copy
-		Initialize_Message(message_queue->messages + (message_queue->back),
-				message->type, message->source, message->destination,
-				message->content);
+	if ((*messageQueue) == NULL) {
 
-		(*message_queue).back = ((*message_queue).back + 1)
-				% MAXIMUM_MESSAGE_COUNT;
-		(*message_queue).count++;
-	}
-	return (*message_queue).count;
-}
+		// The queue is empty, so add it to the queue as the only element.
 
-Message* ICACHE_RODATA_ATTR Peek_Message(Message_Queue *message_queue)
-{
-	Message *message = NULL;
-	if ((*message_queue).count > 0)
-	{
-		message = &((*message_queue).messages[(*message_queue).front]);
-	}
-	return message;
-}
+		(*messageQueue) = message;
 
-bool ICACHE_RODATA_ATTR Dequeue_Message(Message_Queue *message_queue,
-		Message * destination)
-{
-	bool rval = false;
-	if ((*message_queue).count > 0)
-	{
-		if (destination != NULL)
-		{
-			Initialize_Message(destination,
-					message_queue->messages[message_queue->front].type,
-					message_queue->messages[message_queue->front].source,
-					message_queue->messages[message_queue->front].destination,
-					message_queue->messages[message_queue->front].content);
+		(*message).previous = NULL;
+		(*message).next = NULL;
+
+		messageCount = 1;
+
+	} else {
+
+		// Search for the last element in the queue.
+		lastMessage = (*messageQueue); // Get the front of the queue.
+		messageCount++;
+		while ((*lastMessage).previous != NULL) {
+			lastMessage = (*lastMessage).previous;
+			messageCount++;
 		}
 
-		(*message_queue).front = ((*message_queue).front + 1)
-				% MAXIMUM_MESSAGE_COUNT;
-		(*message_queue).count--;
+		// Update the linked list to add the message to the back of the queue.
+		(*message).previous = NULL; // NOTE: This should already be NULL at this point, so this is redundant, but adds some degree of robustness.
+		(*message).next = lastMessage;
 
-		rval = true;
+		(*lastMessage).previous = message;
+
+		messageCount++;
+
 	}
 
-	return rval;
+	return messageCount;
 }
 
-bool ICACHE_RODATA_ATTR Has_Messages(Message_Queue *message_queue)
-{
-	return ((*message_queue).count > 0);
+Message* Peek_Message (Message **messageQueue) {
+
+	Message *message = NULL;
+
+	// Reference the message at the front of the queue.
+	if ((*messageQueue) != NULL) {
+		message = (*messageQueue);
+	}
+
+	return message;
+}
+
+Message* Dequeue_Message (Message **messageQueue) {
+
+	Message *message = NULL;
+
+	if ((*messageQueue) != NULL) {
+
+		// Reference the message at the front of the queue.
+		message = (*messageQueue);
+
+		// Update the linked list to remove the message from the front of the queue.
+		if ((*message).previous != NULL) {
+
+			// There are additional messages on the queue. Set the previous element to the front of the queue.
+
+			(*messageQueue) = (*message).previous;
+			// incomingMessageQueue = (*message).next; // NOTE: This should already be NULL at this point, so this is redundant, but adds some degree of robustness.
+			(*(*messageQueue)).next = NULL; // Set as the first element in the queue.
+
+			// Unlink the message from linked list to finish dequeuing process.
+			(*message).previous = NULL;
+			(*message).next = NULL;
+
+		} else {
+
+			// There are no more messages in the queue, so remove links.
+
+			(*messageQueue) = NULL; // Remove the link to any message at the front of the queue.
+
+			// Unlink the message from linked list to finish dequeuing process.
+			(*message).previous = NULL;
+			(*message).next = NULL;
+
+		}
+	}
+
+	return message;
+}
+
+int16_t Get_Message_Count (Message **messageQueue) {
+
+	Message *lastMessage = NULL;
+	uint16_t messageCount = 0;
+
+	if ((*messageQueue) == NULL) {
+
+		messageCount = 0;
+
+	} else {
+
+		// Search for the last element in the queue.
+		lastMessage = (*messageQueue); // Get the front of the queue.
+		messageCount++;
+		while ((*lastMessage).previous != NULL) {
+			lastMessage = (*lastMessage).previous;
+			messageCount++;
+		}
+
+	}
+
+	return messageCount;
+}
+
+int8_t Has_Messages (Message **messageQueue) {
+
+	if ((*messageQueue) != NULL) {
+//		if ((*(*messageQueue)).content != NULL) {
+			return true;
+//		}
+	}
+
+	return false;
+}
+
+int16_t Queue_Outgoing_Message (char *address, Message *message) {
+	// Allocate memory for the UUID for this action.
+	(*message).destination = (char *) malloc (strlen (address) + 1);
+	memset ((*message).destination, '\0', strlen (address) + 1);
+
+	strcpy ((*message).destination, address); // Copy the message destination address
+
+	// Queue the message.
+	return Queue_Message (&outgoingMessageQueue, message);
+
 }

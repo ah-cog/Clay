@@ -24,9 +24,11 @@
 #include "UART.h"
 #include "TCP_Combined.h"
 
-#include "../include/System_Monitor.h"
+#include "Wifi_Message_Serialization.h"
+#include "System_Monitor.h"
 #include "Message_Queue.h"
 #include "Message.h"
+#include "Queues.h"
 #include "AddressSerialization.h"
 #include "Multibyte_Ring_Buffer.h"
 
@@ -74,7 +76,6 @@ static char * remote_address_string;
 struct sockaddr_in local_address;
 struct sockaddr_in remote_address;
 
-static Message temp_message;
 static Message * temp_message_ptr;
 static Message_Type * ignored_message_type;
 static Message temp_tx_message;
@@ -431,20 +432,25 @@ static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
 static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 {
 	bool rval = false;
+	Message * connection_message = NULL;
 
 	taskENTER_CRITICAL();
 	//do not dequeue. leave the message in the queue to be processed by the send function..
-	temp_message_ptr = Peek_Message(&outgoing_TCP_message_queue);
+	temp_message_ptr = Peek_Message(&outgoing_tcp_message_queue);
 
 	if (temp_message_ptr != NULL)
 	{
-		Initialize_Message(&temp_message, temp_message_ptr->type,
-				temp_message_ptr->source, temp_message_ptr->destination,
-				temp_message_ptr->content);
+		connection_message = Create_Message();
+		Set_Message_Type(connection_message, temp_message_ptr->type);
+		Set_Message_Source(connection_message, temp_message_ptr->source);
+		Set_Message_Destination(connection_message,
+				temp_message_ptr->destination);
+		Set_Message_Content_Type(connection_message, temp_message_ptr->type);
+		Set_Message_Content(connection_message, temp_message_ptr->content,
+				temp_message_ptr->content_length);
 
-		connection_type = Get_Message_Type_From_Str(temp_message.type);
+		connection_type = Get_Message_Type_From_Str(connection_message->type);
 	}
-
 	taskEXIT_CRITICAL();
 
 	taskYIELD();
@@ -531,9 +537,13 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 		{
 			//couldn't connect. drop this message
 			taskENTER_CRITICAL();
-			Dequeue_Message(&outgoing_TCP_message_queue, NULL);
+			Delete_Message(Dequeue_Message(&outgoing_tcp_message_queue));
 			taskEXIT_CRITICAL();
 		}
+
+		taskENTER_CRITICAL();
+		Delete_Message(connection_message);
+		taskEXIT_CRITICAL();
 		taskYIELD();
 	}
 
@@ -782,18 +792,17 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 static bool ICACHE_RODATA_ATTR Dequeue_And_Transmit(int32 data_sock)
 {
 	bool rval = false;
-
-//	rval = Create_Test_Message(&temp_tx_message);
+	Message * message = NULL;
 
 	taskENTER_CRITICAL();
-	rval = Dequeue_Message(&outgoing_TCP_message_queue, &temp_tx_message);
+	message = Dequeue_Message(&outgoing_tcp_message_queue);
 	taskEXIT_CRITICAL();
 
-	if (rval)
+	if (message != NULL)
 	{
 		taskYIELD();
 
-		rval = Send_Message(data_sock, &temp_tx_message);
+		rval = Send_Message(data_sock, message);
 
 		taskYIELD();
 
@@ -922,7 +931,19 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 		if (!message_too_long)
 		{
 			taskENTER_CRITICAL();
-			Initialize_Message(&temp_message,
+			temp_message_ptr = Create_Message();
+			Set_Message_Type(temp_message_ptr,
+					message_type_strings[connection_type]);
+			Set_Message_Source(temp_message_ptr, remote_address_string);
+			Set_Message_Destination(temp_message_ptr, local_address_string);
+			Set_Message_Content_Type(temp_message_ptr,
+					content_type_strings[CONTENT_TYPE_BINARY]);
+			Set_Message_Content(temp_message_ptr, temp_message_ptr->content,
+					temp_message_ptr->content_length);
+			taskEXIT_CRITICAL();
+
+			taskENTER_CRITICAL();
+			Initialize_Message(&temp_message_ptr,
 					message_type_strings[connection_type],
 					remote_address_string, local_address_string, NULL);
 			taskEXIT_CRITICAL();
@@ -930,7 +951,7 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 			taskYIELD();
 
 			taskENTER_CRITICAL();
-			Queue_Message(&incoming_message_queue, &temp_message);
+			Queue_Message(&incoming_message_queue, temp_message_ptr);
 			taskEXIT_CRITICAL();
 		}
 
@@ -1013,7 +1034,7 @@ static void ICACHE_RODATA_ATTR Data_Disconnect()
 //	DEBUG_Print("disconnect");
 
 	taskENTER_CRITICAL();
-	Initialize_Message_Queue(&outgoing_TCP_message_queue);
+	Initialize_Message_Queue(&outgoing_tcp_message_queue);
 	Multibyte_Ring_Buffer_Reset(&receive_ring_buf);
 	taskEXIT_CRITICAL();
 
@@ -1045,9 +1066,8 @@ static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 
 //remain promoted until we empty the queue.
 	taskENTER_CRITICAL();
-	rval =
-			outgoing_TCP_message_queue.count
-					> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL)|| receive_size > RECEIVE_BYTES_TRIGGER_LEVEL;
+	rval = (Has_Messages(&outgoing_tcp_message_queue)
+			|| receive_size > RECEIVE_BYTES_TRIGGER_LEVEL);
 	taskEXIT_CRITICAL();
 
 //	if (++loops > LOOPS_BEFORE_PRINT || rval

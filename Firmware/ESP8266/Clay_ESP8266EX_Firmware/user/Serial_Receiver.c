@@ -21,12 +21,14 @@
 #include "UDP_Transmitter.h"
 #include "Serial_Receiver.h"
 
-#include "../include/System_Monitor.h"
+#include "Wifi_Message_Serialization.h"
+#include "System_Monitor.h"
 #include "Serial_Transmitter.h"
 #include "Clay_Config.h"
 #include "Message_Queue.h"
 #include "Message.h"
 #include "Ring_Buffer.h"
+#include "Queues.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define RING_BUFFER_PROMOTION_THRESHOLD		30
@@ -47,7 +49,7 @@ static uint8 * serial_rx_buffer;
 static uint32 serial_rx_count;
 
 static bool buffer_has_data;
-static Message temp_msg;
+static Message * temp_msg_ptr;
 static char * temp_content;
 static char * temp_source_address;
 static char * temp_type;
@@ -55,7 +57,7 @@ static char * temp_dest_address;
 static uint32 state_time;
 int i;
 
-Message_Queue * selected_message_queue;
+Message * selected_message_queue;
 
 static Message_Type received_message_type;
 
@@ -71,10 +73,10 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 	master_interrupt_received = false;
 
 	taskENTER_CRITICAL();
-	serial_rx_buffer = zalloc(SERIAL_RX_BUFFER_SIZE_BYTES);
-	Ring_Buffer_Init();
-	Initialize_Message_Queue(&outgoing_UDP_message_queue);
-	Initialize_Message_Queue(&outgoing_TCP_message_queue);
+	Multibyte_Ring_Buffer_Init(&serial_rx_multibyte,
+	SERIAL_RX_BUFFER_SIZE_BYTES);
+	Initialize_Message_Queue(&outgoing_udp_message_queue);
+	Initialize_Message_Queue(&outgoing_tcp_message_queue);
 	Initialize_Message_Queue(&incoming_command_queue);
 	Initialize_Message_Queue(&incoming_message_queue);
 	taskEXIT_CRITICAL();
@@ -143,98 +145,37 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 		case Receiving:
 		{
-			taskENTER_CRITICAL();
-			buffer_has_data = Ring_Buffer_Has_Data();
-			taskEXIT_CRITICAL();
+//			if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS)
+//			{
+//
+//				Message * message = NULL;
+//
+//				int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Full_Message(
+//						&wifi_multibyte_ring, &message);
+//
+//				if (message != NULL)
+//				{
+//					// Queue the message
+//					Queue_Message(&incomingWiFiMessageQueue, message);
+//				}
+//				interruptRxTime = Millis(); // reset timeout, we'll look for another message.
+//			}
+//			else
+//			{
+//				State = Idle;
+//			}
 
-			if (buffer_has_data)
+			int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Full_Message(
+					&serial_rx_multibyte, &temp_msg_ptr);
+
+			if (temp_msg_ptr != NULL)
 			{
-				taskENTER_CRITICAL();
-				Ring_Buffer_Get(serial_rx_buffer + bytes_received);
-				taskEXIT_CRITICAL();
-
-				if (bytes_received == 0
-						&& serial_rx_buffer[0] == message_start[0])
-				{
-					++bytes_received;
-				}
-				else if (bytes_received > 0
-						&& serial_rx_buffer[bytes_received++] == message_end[0])
-				{
-					serial_rx_buffer[bytes_received] = '\0';
-					State = Parsing;
-				}
-			}
-			else if ((system_get_time() - state_time) > 1000000) //system_get_time returns us
-			{
-				State = Idle;
-			}
-			break;
-		}
-
-		case Parsing:
-		{
-#ifdef PRINT_HIGH_WATER
-			taskENTER_CRITICAL();
-			printf("\r\nsrx parse\r\n");
-			taskEXIT_CRITICAL();
-
-//			UART_WaitTxFifoEmpty(UART0);
-
-			DEBUG_Print_High_Water();
-#endif
-
-			//New message format:
-			//!<type>\t<source>\t<destination>\t<content>\n
-
-			taskENTER_CRITICAL();
-			temp_type = strtok(serial_rx_buffer + 1, message_field_delimiter); //offset to skip start char
-			temp_source_address = strtok(NULL, message_field_delimiter);
-			temp_dest_address = strtok(NULL, message_field_delimiter);
-			temp_content = strtok(NULL, message_end);
-
-			if (strlen(temp_content) > CLAY_MESSAGE_LENGTH_MAX_BYTES)
-			{
-				temp_content = NULL;
-			}
-			taskEXIT_CRITICAL();
-			taskYIELD();
-
-			if (temp_content != NULL && temp_type != NULL
-					&& temp_source_address != NULL && temp_dest_address != NULL)
-			{
-//				taskENTER_CRITICAL();
-//				printf("srx msg: %s,%s,%s,%s,%d\r\n", temp_type,
-//						temp_source_address, temp_dest_address, temp_content,
-//						strlen(temp_content));
-//				taskEXIT_CRITICAL();
-//				taskYIELD();
-
-				taskENTER_CRITICAL();
-				received_message_type = Get_Message_Type_From_Str(temp_type);
-				taskEXIT_CRITICAL();
-
-				taskENTER_CRITICAL();
-				Initialize_Message(&temp_msg,
-						message_type_strings[received_message_type],
-						temp_source_address, temp_dest_address, temp_content);
-				taskEXIT_CRITICAL();
-
-//				taskENTER_CRITICAL();
-//				printf("srx msg: %s,%s,%s,%s,%d,%d\r\n", temp_msg.type,
-//						temp_msg.source, temp_msg.destination, temp_msg.content,
-//						strlen(temp_content), received_message_type);
-//				taskEXIT_CRITICAL();
-//				taskYIELD();
-
-				taskYIELD();
-
 				switch (received_message_type)
 				{
 #if ENABLE_UDP_SENDER
 				case MESSAGE_TYPE_UDP:
 				{
-					selected_message_queue = &outgoing_UDP_message_queue;
+					selected_message_queue = outgoing_udp_message_queue;
 					break;
 				}
 #endif
@@ -242,21 +183,13 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 				case MESSAGE_TYPE_HTTP:
 				case MESSAGE_TYPE_TCP:
 				{
-//					taskENTER_CRITICAL();
-//					printf("\r\ngot tcp msg: %s,%s,%s,%s\r\n", temp_msg.content,
-//							temp_msg.type, temp_msg.destination,
-//							temp_msg.source);
-//					taskEXIT_CRITICAL();
-
-//					UART_WaitTxFifoEmpty(UART0);
-					selected_message_queue = &outgoing_TCP_message_queue;
+					selected_message_queue = outgoing_tcp_message_queue;
 					break;
 				}
 #endif
 				case MESSAGE_TYPE_COMMAND:
 				{
-
-					selected_message_queue = &incoming_command_queue;
+					selected_message_queue = incoming_command_queue;
 					break;
 				}
 
@@ -270,10 +203,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 				if (selected_message_queue != NULL)
 				{
 					taskENTER_CRITICAL();
-					Queue_Message(selected_message_queue, &temp_msg);
+					Queue_Message(&selected_message_queue, temp_msg_ptr);
 					taskEXIT_CRITICAL();
-
-//					DEBUG_Print("nq'd");
 				}
 
 			}

@@ -40,8 +40,10 @@
 #include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 
+#include "Wifi_Message_Serialization.h"
 #include "Message_Queue.h"
 #include "Message.h"
+#include "Queues.h"
 
 ////Macros  ///////////////////////////////////////////////////////
 #define MESSAGE_TRIGGER_LEVEL			10
@@ -72,7 +74,7 @@ static int32 testCounter;
 static Message_Type tempIgnoredMessageType;
 
 static Message * m;
-static Message temp_message;
+static Message * temp_message_ptr;
 
 static bool task_running = false;
 
@@ -93,7 +95,7 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 
 		taskENTER_CRITICAL();
 		UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
-		Initialize_Message_Queue(&outgoing_UDP_message_queue);
+		Initialize_Message_Queue(&outgoing_udp_message_queue);
 		taskEXIT_CRITICAL();
 
 		State = Disable;
@@ -172,21 +174,22 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			Dequeue_Message(&outgoing_UDP_message_queue, &temp_message);
+			temp_message_ptr = Dequeue_Message(&outgoing_udp_message_queue);
+			taskEXIT_CRITICAL();
+
+			taskYIELD();
+
+			TODO:
+			taskENTER_CRITICAL();
+			memcpy(UDP_Tx_Buffer, temp_message_ptr->content,
+					temp_message_ptr->content_length);
+			UDP_Tx_Count = temp_message_ptr->content_length;
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
 			taskENTER_CRITICAL();
-			strncpy(UDP_Tx_Buffer, temp_message.content,
-			UDP_TX_BUFFER_SIZE_BYTES);
-			UDP_Tx_Count = strlen(temp_message.content);
-			taskEXIT_CRITICAL();
-
-			taskYIELD();
-
-			taskENTER_CRITICAL();
-			Deserialize_Address(temp_message.destination, &DestinationAddr,
+			Deserialize_Address(temp_message_ptr->destination, &DestinationAddr,
 					&tempIgnoredMessageType);
 			taskEXIT_CRITICAL();
 
@@ -272,7 +275,7 @@ static bool Message_Available()
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	m = Peek_Message(&outgoing_UDP_message_queue);
+	m = Peek_Message(&outgoing_udp_message_queue);
 	taskEXIT_CRITICAL();
 
 	if (m != NULL)
@@ -290,8 +293,7 @@ static bool Check_Needs_Promotion()
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	rval = (outgoing_UDP_message_queue.count
-			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	rval = Has_Messages(&outgoing_udp_message_queue);
 	taskEXIT_CRITICAL();
 
 //	if (++loops > LOOPS_BEFORE_PRINT || outgoing_UDP_message_queue.count)
