@@ -23,12 +23,13 @@
 typedef struct Message
 {
       // TODO: char *uuid;
-      char * type;
+      char * message_type;
       char * source;
       char * destination;
-      char * content;
-      char * content_type;
       uint32_t content_length;
+      uint16_t content_checksum;
+      char * content_type;
+      char * content;
 
       struct Message *previous;
       struct Message *next;

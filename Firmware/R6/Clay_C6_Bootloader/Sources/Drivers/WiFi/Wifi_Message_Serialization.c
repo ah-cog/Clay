@@ -13,11 +13,14 @@
 #include "stdio.h"
 #include "Wifi_Message_Serialization.h"
 #include "Message.h"
+#include "CRC16.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
-char * message_strings[] = { "udp", "tcp", "command", "status", "invalid" };
+uint8_t* message_type_strings[] = { "udp", "tcp", "command", "status", "http", "invalid" };
+
+uint8_t* content_type_strings[] = { "text", "bin", "invalid" };
 
 const char * message_start = "\f";
 const char * message_field_delimiter = "\t";
@@ -56,29 +59,50 @@ Message_Type Get_Message_Type_From_Str(char * typeString) {
 }
 
 uint32_t Serialize_Message(Message * message, uint8_t * destination_string, uint32_t destination_max_length) {
+
+   //we only have 5 chars for size.
+   if (destination_max_length > 99999) return 0;
+
    uint32_t rval = 0;
+   uint16_t message_checksum = 0;
 
    //format: \f<type>\t<source>\t<destination>\t<content_type>\t<content_length>\t<content>
 
    //HACK: Padding added because it seems to lessen the likelihood that we miss the end of a message.
-   rval = snprintf(destination_string,
-                   destination_max_length,
-                   "  %s%s%s%s%s%s%s%s%s%d%s",
-                   message_start,
-                   message->type,
+   rval = snprintf(destination_string, destination_max_length, "  %s%05d%s%05d%s%s%s%s%s%s%s%d%s%s%s%d%s",     //
+                   message_start,     //
+                   0,     //placeholder for length. we pad out 5 bytes. TCP frames go up to 1500 bytes, jumbo frames up to 9000. We'd need to tack on > 90k of header to need another figure, which seems unlikely.
+                   message_field_delimiter,
+                   0,     //placeholder for checksum. we pad out 5 bytes for this, too. This is enough space for a CRC16, which will be <= 65535
+                   message_field_delimiter,
+                   message->message_type,
                    message_field_delimiter,
                    message->source,
                    message_field_delimiter,
                    message->destination,
                    message_field_delimiter,
+                   message->content_length,
+                   message_field_delimiter,
                    message->content_type,
                    message_field_delimiter,
-                   message->content_length,
+                   message->content_checksum,
                    message_field_delimiter);
 
    if ((rval) + message->content_length <= destination_max_length) {
+
       memcpy(destination_string + rval, message->content, message->content_length);
       rval += message->content_length;
+
+      sprintf(destination_string + 3, "%05d", rval);     //write the length after the first char (plus 2 for the padding)
+      destination_string[8] = *message_field_delimiter;     //put our delimiter back.
+
+      //TODO: checksum the message starting at index 15 (the character after the second \t)
+      message_checksum = Calculate_Checksum_On_Bytes(destination_string + 15, rval - 15);
+
+      sprintf(destination_string + 9, "%05d", message_checksum);     //write the checksum after the delimiter between the length and checksum.
+      destination_string[14] = *message_field_delimiter;     //put our delimiter back.
+
+
    } else {
       rval = 0;
    }
@@ -120,4 +144,5 @@ Message * Deserialize_Message(uint8_t * message) {
       Set_Message_Content_Type(rval, temp_content_type);
       Set_Message_Content(rval, temp_content, content_length);
    }
+   return rval;
 }

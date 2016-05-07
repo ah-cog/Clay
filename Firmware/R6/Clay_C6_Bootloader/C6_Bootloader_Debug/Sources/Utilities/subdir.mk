@@ -4,18 +4,21 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Sources/Utilities/CRC16.c \
 ../Sources/Utilities/Multibyte_Ring_Buffer.c \
 ../Sources/Utilities/Ring_Buffer.c \
 ../Sources/Utilities/UUID.c \
 ../Sources/Utilities/clayString.c 
 
 OBJS += \
+./Sources/Utilities/CRC16.o \
 ./Sources/Utilities/Multibyte_Ring_Buffer.o \
 ./Sources/Utilities/Ring_Buffer.o \
 ./Sources/Utilities/UUID.o \
 ./Sources/Utilities/clayString.o 
 
 C_DEPS += \
+./Sources/Utilities/CRC16.d \
 ./Sources/Utilities/Multibyte_Ring_Buffer.d \
 ./Sources/Utilities/Ring_Buffer.d \
 ./Sources/Utilities/UUID.d \

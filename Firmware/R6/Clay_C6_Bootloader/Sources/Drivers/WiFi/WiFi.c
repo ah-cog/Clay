@@ -124,6 +124,7 @@ void Wifi_State_Step() {
       case Idle: {
          //waiting for an interrupt, no tranmission pending
 
+         //this logic might leave us in a state where we never receive. We need to make sure we empty the buffer when we fail to retrieve a message from it a sufficient number of times.
          if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_start[0]) > 0) {
             State = Receive_Message;
          } else if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {

@@ -17,12 +17,20 @@
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-   MESSAGE_TYPE_UDP,
-   MESSAGE_TYPE_TCP,
-   MESSAGE_TYPE_COMMAND,
-   MESSAGE_TYPE_STATUS,
-   MESSAGE_TYPE_MAX
+	MESSAGE_TYPE_UDP,
+	MESSAGE_TYPE_TCP,
+	MESSAGE_TYPE_COMMAND,
+	MESSAGE_TYPE_STATUS,
+	MESSAGE_TYPE_HTTP,
+	MESSAGE_TYPE_MAX
 } Message_Type;
+
+typedef enum
+{
+	CONTENT_TYPE_TEXT,
+	CONTENT_TYPE_BINARY,
+	CONTENT_TYPE_MAX
+} Content_Type;
 
 ////Globals   /////////////////////////////////////////////////////
 extern char* message_strings[];

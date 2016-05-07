@@ -7,6 +7,7 @@
 
 #include "program_flash.h"
 #include "Multibyte_Ring_Buffer.h"
+#include "Wifi_Message_Serialization.h"
 
 ////Macros ////////////////////////////////////////////////////////
 
@@ -162,25 +163,32 @@ void Wifi_Test() {
    bool repeat_send = FALSE;
    bool request_connect = FALSE;
    bool get_ip = FALSE;
+   bool send_text_content = TRUE;
 
    bool request_firmware_size = FALSE;
 
+   const uint32_t max_serialized_length = 1024;
+   char serialized_message[max_serialized_length];
    char type_str[] = "tcp";
    char dest_addr[] = "192.168.1.3:3000";
    char source_addr[] = "192.168.1.21:3000";
-   uint32_t message_length = 256;
-   char message_content[message_length];
+
+   char text_content_type[] = "text";
+   char text_message_content[] = "this is my test message, yo. i can put all the \t's and \f's in it that i want and no one is going to give a hoot. how about that? good golly, this is some more text over here, and look what i brought along that's right its some tabs \t\t\t\t\t\t lots of tabs \t\t\t\t\t\t \t\a\bs those probably arent even all special charachters. i bet i get an error when i try to build! nope, it was a warning, and the only one that was a problem was \\s!";
+   uint32_t text_message_length = strlen(text_message_content);
+
+   char bin_content_type[] = "bin";
+   uint32_t bin_message_length = 256;
+   char bin_message_content[bin_message_length];
    int message_index = 0;
 
-   for (int i = 0; i < message_length; ++i) {
-      message_content[i] = i;
+   for (int i = 0; i < bin_message_length; ++i) {
+      bin_message_content[i] = i;
    }
 
    for (;;) {
 
-      // Step state machine
-      Wifi_State_Step();
-      Button_Periodic_Call();
+      Monitor_Periodic_Events();
 
       //repeatedly send a message
       if (repeat_send
@@ -193,8 +201,15 @@ void Wifi_Test() {
          Set_Message_Type(outgoing_message, type_str);
          Set_Message_Source(outgoing_message, source_addr);
          Set_Message_Destination(outgoing_message, dest_addr);
-         Set_Message_Content(outgoing_message, message_content, message_length);
-         Set_Message_Content_Type(outgoing_message, message_content);
+         if (send_text_content) {
+            Set_Message_Content(outgoing_message, text_message_content, text_message_length);
+            Set_Message_Content_Type(outgoing_message, text_content_type);
+         } else {
+            Set_Message_Content(outgoing_message, bin_message_content, bin_message_length);
+            Set_Message_Content_Type(outgoing_message, bin_content_type);
+         }
+
+         Serialize_Message(outgoing_message, serialized_message, max_serialized_length);
 
          Wifi_Send(outgoing_message);
 

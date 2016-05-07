@@ -15,7 +15,6 @@
 #define DEFAULT_FIRMWARE_SIZE 0 // The total size of the firmware to retrieve from the server.
 #define FIRMWARE_BLOCK_SIZE 248 // The number of bytes to request from the firmware server in a single request. must be multiple of 8 for PE flash component.
 
-#define CRC16 0x8005
 
 typedef struct shared_bootloader_data
 {
