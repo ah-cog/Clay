@@ -475,7 +475,6 @@ void ICACHE_RODATA_ATTR Send_Startup_Message()
 	Send_Message_To_Master(STARTUP_MESSAGE, MESSAGE_TYPE_STATUS);
 }
 
-static int loops = 0;
 
 static bool Check_Needs_Promotion()
 {

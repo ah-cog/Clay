@@ -1,7 +1,10 @@
-#include "Message.h"
 #include "stdlib.h"
+#include "stdint.h"
 #include "stdio.h"
 #include "string.h"
+
+#include "Message.h"
+#include "CRC16.h"
 
 #define DEFAULT_UUID_LENGTH 37
 
@@ -13,12 +16,13 @@ Message* Create_Message() {
    // Allocate memory for message structure.
    Message *message = (Message *) malloc(sizeof(Message));
 
-   (*message).type = NULL;
+   (*message).message_type = NULL;
    (*message).source = NULL;
    (*message).destination = NULL;
-   (*message).content = NULL;
-   (*message).content_type = NULL;
    (*message).content_length = 0;
+   (*message).content_checksum = 0;
+   (*message).content_type = NULL;
+   (*message).content = NULL;
 
    // Set up links for queue
    (*message).previous = NULL;
@@ -33,23 +37,31 @@ int8_t Delete_Message(Message *message) {
 
       // TODO: Remove references to the message in the queue.
 
-      // Free the message's content from memory
-      free((*message).content);
-      (*message).content = NULL;
+      if ((*message).message_type != NULL) {
+         free((*message).message_type);
+         (*message).message_type = NULL;
+      }
 
-      // Free the message's source address from memory
       if ((*message).source != NULL) {
          free((*message).source);
          (*message).source = NULL;
       }
 
-      // Free the message's destination address from memory
       if ((*message).destination != NULL) {
          free((*message).destination);
          (*message).destination = NULL;
       }
 
-      // Free the message from memory
+      if ((*message).content_type != NULL) {
+         free((*message).content_type);
+         (*message).content_type = NULL;
+      }
+
+      if ((*message).content != NULL) {
+         free((*message).content);
+         (*message).content = NULL;
+      }
+
       free(message);
       message = NULL;
 
@@ -62,16 +74,16 @@ int8_t Delete_Message(Message *message) {
 void Set_Message_Type(Message *message, const char *type) {
 
    // Free the message's destination stored type from memory
-   if ((*message).type != NULL) {
-      free((*message).type);
-      (*message).type = NULL;
+   if ((*message).message_type != NULL) {
+      free((*message).message_type);
+      (*message).message_type = NULL;
    }
 
    // Copy the type into the structure
-   (*message).type = (char *) malloc(strlen(type) + 1);
-   memset((*message).type, '\0', strlen(type) + 1);
+   (*message).message_type = (char *) malloc(strlen(type) + 1);
+   memset((*message).message_type, '\0', strlen(type) + 1);
 
-   strcpy((*message).type, type);
+   strcpy((*message).message_type, type);
 }
 
 void Set_Message_Source(Message *message, const char *address) {
@@ -98,7 +110,7 @@ void Set_Message_Destination(Message *message, const char *address) {
    }
 
    // Copy the message destination address
-   (*message).destination = (char *) malloc(strlen(address));
+   (*message).destination = (char *) malloc(strlen(address) + 1);
    memset((*message).destination, '\0', strlen(address) + 1);
 
    strcpy((*message).destination, address);
@@ -110,6 +122,8 @@ void Set_Message_Content(Message * message, const char *content, uint32_t conten
 
    // Allocate memory for the message's content.
    (*message).content = (char *) malloc((*message).content_length);
+   (*message).content_checksum = Calculate_Checksum_On_Bytes(content, content_length);
+
    memset((*message).content, 0, (*message).content_length);
 
    // Copy message content
@@ -125,14 +139,14 @@ extern void Set_Message_Content_Type(Message *message, const char *content_type)
    }
 
    // Copy the message content_type address
-   (*message).content_type = (char *) malloc(strlen(content_type));
+   (*message).content_type = (char *) malloc(strlen(content_type) + 1);
    memset((*message).content_type, '\0', strlen(content_type) + 1);
 
    strcpy((*message).content_type, content_type);
 }
 
 char * Get_Message_Type(Message *message) {
-   return (*message).type;
+   return (*message).message_type;
 }
 
 char * Get_Message_Source(Message *message) {
@@ -152,6 +166,6 @@ uint32_t Get_Message_Content_Length(Message *message) {
 }
 
 char * Get_Message_Content_Type(Message *message) {
-   return (*message).type;
+   return (*message).message_type;
 }
 

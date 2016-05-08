@@ -286,7 +286,6 @@ static bool Message_Available()
 	return rval;
 }
 
-static int loops = 0;
 
 static bool Check_Needs_Promotion()
 {

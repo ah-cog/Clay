@@ -44,16 +44,7 @@ volatile bool master_interrupt_received;
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Receiver_States State;
 
-static uint32 bytes_received;
-static uint8 * serial_rx_buffer;
-static uint32 serial_rx_count;
-
-static bool buffer_has_data;
 static Message * temp_msg_ptr;
-static char * temp_content;
-static char * temp_source_address;
-static char * temp_type;
-static char * temp_dest_address;
 static uint32 state_time;
 int i;
 
@@ -123,10 +114,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			{
 				master_interrupt_received = false;
 
-				serial_rx_count = 0;
-
-				bytes_received = 0;
-
 				taskENTER_CRITICAL();
 				Ring_Buffer_Init();
 				taskEXIT_CRITICAL();
@@ -165,46 +152,57 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 //				State = Idle;
 //			}
 
-			int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Full_Message(
-					&serial_rx_multibyte, &temp_msg_ptr);
+			uint8_t * serialized_message;
+			int dequeue_count =
+					Multibyte_Ring_Buffer_Dequeue_Serialized_Message(
+							&serial_rx_multibyte, &serialized_message);
 
-			if (temp_msg_ptr != NULL)
+			if (serialized_message != NULL)
 			{
-				switch (received_message_type)
+				temp_msg_ptr = Deserialize_Message_With_Message_Header(
+						serialized_message);
+
+				if (temp_msg_ptr != NULL)
 				{
+					received_message_type = Get_Message_Type_From_Str(
+							temp_msg_ptr->message_type);
+
+					switch (received_message_type)
+					{
 #if ENABLE_UDP_SENDER
-				case MESSAGE_TYPE_UDP:
-				{
-					selected_message_queue = outgoing_udp_message_queue;
-					break;
-				}
+					case MESSAGE_TYPE_UDP:
+					{
+						selected_message_queue = outgoing_udp_message_queue;
+						break;
+					}
 #endif
 #if ENABLE_TCP_SENDER || ENABLE_TCP_COMBINED_TX
-				case MESSAGE_TYPE_HTTP:
-				case MESSAGE_TYPE_TCP:
-				{
-					selected_message_queue = outgoing_tcp_message_queue;
-					break;
-				}
+					case MESSAGE_TYPE_HTTP:
+					case MESSAGE_TYPE_TCP:
+					{
+						selected_message_queue = outgoing_tcp_message_queue;
+						break;
+					}
 #endif
-				case MESSAGE_TYPE_COMMAND:
-				{
-					selected_message_queue = incoming_command_queue;
-					break;
-				}
+					case MESSAGE_TYPE_COMMAND:
+					{
+						selected_message_queue = incoming_command_queue;
+						break;
+					}
 
-				default:
-				{
-					selected_message_queue = NULL;
-					break;
-				}
-				}
+					default:
+					{
+						selected_message_queue = NULL;
+						break;
+					}
+					}
 
-				if (selected_message_queue != NULL)
-				{
-					taskENTER_CRITICAL();
-					Queue_Message(&selected_message_queue, temp_msg_ptr);
-					taskEXIT_CRITICAL();
+					if (selected_message_queue != NULL)
+					{
+						taskENTER_CRITICAL();
+						Queue_Message(&selected_message_queue, temp_msg_ptr);
+						taskEXIT_CRITICAL();
+					}
 				}
 
 			}
@@ -223,8 +221,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 		taskYIELD();
 	}
 }
-
-static int loops = 0;
 
 ////Local implementations /////////////////////////////////////////
 static bool Check_Needs_Promotion()

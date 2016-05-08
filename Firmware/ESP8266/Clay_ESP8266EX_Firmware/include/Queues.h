@@ -23,6 +23,7 @@
 
 ////Globals   /////////////////////////////////////////////////////
 extern Multibyte_Ring_Buffer serial_rx_multibyte;
+
 extern Message * incoming_message_queue;
 extern Message * outgoing_tcp_message_queue;
 extern Message * outgoing_udp_message_queue;

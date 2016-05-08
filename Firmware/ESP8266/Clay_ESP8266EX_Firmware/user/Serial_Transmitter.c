@@ -67,9 +67,7 @@ typedef enum
 static Serial_Transmitter_States state;
 
 static uint8 * serial_tx_buffer;
-static uint32 serial_tx_count;
 static Message * temp_message_ptr;
-static Message temp_message;
 
 static uint32 time_temp;
 static bool promoted;
@@ -142,9 +140,12 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			temp_message_ptr = Dequeue_Message(&incoming_message_queue);
 			taskEXIT_CRITICAL();
 
+			memset(serial_tx_buffer, 0, SERIAL_TX_BUFFER_SIZE_BYTES);
+
 			taskENTER_CRITICAL();
-			Serialize_Message(temp_message_ptr, serial_tx_buffer,
-			SERIAL_TX_BUFFER_SIZE_BYTES);
+			Serialize_Message_With_Message_Header(temp_message_ptr,
+					serial_tx_buffer,
+					SERIAL_TX_BUFFER_SIZE_BYTES - 1);
 			taskEXIT_CRITICAL();
 
 			time_temp = system_get_time();

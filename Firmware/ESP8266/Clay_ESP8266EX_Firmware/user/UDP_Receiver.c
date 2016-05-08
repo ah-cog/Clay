@@ -64,8 +64,8 @@ static UDP_Receiver_States State;
 
 static int ret;
 
-static uint8_t *UDP_Rx_Buffer;
-static uint16_t UDP_Rx_Count;
+static uint8_t *udp_rx_buffer;
+static uint16_t udp_rx_count;
 
 static size_t fromlen;
 
@@ -80,6 +80,7 @@ static int32 receive_sock;
 static bool Connected;
 static int32 testCounter;
 
+static Message * temp_message_ptr;
 static Message tempMessage;
 static char * source_addr;
 static char * dest_addr;
@@ -103,7 +104,7 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 		State = Disable;
 
 		taskENTER_CRITICAL();
-		UDP_Rx_Buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
+		udp_rx_buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
 		source_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 		dest_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 		Initialize_Message_Queue(&incoming_message_queue);
@@ -136,7 +137,7 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Deinit()
 		lwip_close(receive_sock);
 		receive_sock = -1;
 
-		free(UDP_Rx_Buffer);
+		free(udp_rx_buffer);
 		free(source_addr);
 		free(dest_addr);
 
@@ -188,10 +189,21 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 
 			taskYIELD();
 
+//			taskENTER_CRITICAL();
+//			Initialize_Message(&tempMessage,
+//					message_type_strings[MESSAGE_TYPE_UDP], source_addr,
+//					dest_addr, UDP_Rx_Buffer);
+//			taskEXIT_CRITICAL();
+
 			taskENTER_CRITICAL();
-			Initialize_Message(&tempMessage,
-					message_type_strings[MESSAGE_TYPE_UDP], source_addr,
-					dest_addr, UDP_Rx_Buffer);
+			temp_message_ptr = Create_Message();
+			Set_Message_Type(temp_message_ptr,
+					message_type_strings[MESSAGE_TYPE_UDP]);
+			Set_Message_Source(temp_message_ptr, source_addr);
+			Set_Message_Destination(temp_message_ptr, dest_addr);
+			Set_Message_Content_Type(temp_message_ptr,
+					content_type_strings[CONTENT_TYPE_BINARY]);
+			Set_Message_Content(temp_message_ptr, udp_rx_buffer, udp_rx_count);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
@@ -273,7 +285,7 @@ static bool ICACHE_RODATA_ATTR Receive()
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	memset(UDP_Rx_Buffer, 0, UDP_RX_BUFFER_SIZE_BYTES);
+	memset(udp_rx_buffer, 0, UDP_RX_BUFFER_SIZE_BYTES);
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
@@ -285,7 +297,7 @@ static bool ICACHE_RODATA_ATTR Receive()
 	fromlen = sizeof(struct sockaddr_in);
 
 	// attempt to receive
-	ret = recvfrom(receive_sock, (uint8 * ) UDP_Rx_Buffer,
+	ret = recvfrom(receive_sock, (uint8 * ) udp_rx_buffer,
 			UDP_RX_BUFFER_SIZE_BYTES, 0, (struct sockaddr * ) &from,
 			(socklen_t * ) &fromlen);
 
@@ -294,7 +306,7 @@ static bool ICACHE_RODATA_ATTR Receive()
 	if (ret > 0)
 	{
 		rval = true;
-		UDP_Rx_Count = ret;
+		udp_rx_count = ret;
 
 		//store the source address
 		lastSourceAddress.sin_addr = from.sin_addr;

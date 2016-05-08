@@ -42,7 +42,6 @@ void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
 void ICACHE_RODATA_ATTR GPIO_Init();
 void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt);
 void Master_Interrupt_Handler(void * arg);
-void Run_Queue_Test();
 
 /******************************************************************************
  * FunctionName : user_init

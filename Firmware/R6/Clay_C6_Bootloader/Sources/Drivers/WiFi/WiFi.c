@@ -125,9 +125,10 @@ void Wifi_State_Step() {
          //waiting for an interrupt, no tranmission pending
 
          //this logic might leave us in a state where we never receive. We need to make sure we empty the buffer when we fail to retrieve a message from it a sufficient number of times.
-         if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_start[0]) > 0) {
-            State = Receive_Message;
-         } else if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
+//         if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_start[0]) > 0) {
+//            State = Receive_Message;
+//         } else
+            if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
 
             State = Serialize_Transmission;
 
@@ -145,12 +146,15 @@ void Wifi_State_Step() {
 
       case Receive_Message: {
 
+
+         //TODO: dequeue in idle, if message available. if we get a message back, then come here, deserialize, and enqueue the message.
+         //      to handle the interrupt case, we can also check to see if the rx buffer is NULL, and dequeue here too.
          if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
 
             uint8_t * message_serial = NULL;
             Message * message = NULL;
 
-            int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message(&wifi_multibyte_ring, &message_serial);
+            int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(&wifi_multibyte_ring, &message_serial);
 
             if (message_serial != NULL) {
                message = Deserialize_Message_With_Message_Header(message_serial);

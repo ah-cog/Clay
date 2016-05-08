@@ -78,7 +78,6 @@ struct sockaddr_in remote_address;
 
 static Message * temp_message_ptr;
 static Message_Type * ignored_message_type;
-static Message temp_tx_message;
 
 static int receive_head;
 static int receive_tail;
@@ -193,8 +192,6 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 		Stop_Task(TASK_TYPE_TCP_RX);
 	}
 }
-
-static int tcpLoops = 0;
 
 void ICACHE_RODATA_ATTR TCP_Combined_Task()
 {
@@ -441,15 +438,17 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 	if (temp_message_ptr != NULL)
 	{
 		connection_message = Create_Message();
-		Set_Message_Type(connection_message, temp_message_ptr->type);
+		Set_Message_Type(connection_message, temp_message_ptr->message_type);
 		Set_Message_Source(connection_message, temp_message_ptr->source);
 		Set_Message_Destination(connection_message,
 				temp_message_ptr->destination);
-		Set_Message_Content_Type(connection_message, temp_message_ptr->type);
+		Set_Message_Content_Type(connection_message,
+				temp_message_ptr->content_type);
 		Set_Message_Content(connection_message, temp_message_ptr->content,
 				temp_message_ptr->content_length);
 
-		connection_type = Get_Message_Type_From_Str(connection_message->type);
+		connection_type = Get_Message_Type_From_Str(
+				connection_message->message_type);
 	}
 	taskEXIT_CRITICAL();
 
@@ -460,7 +459,7 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 		temp_message_ptr = NULL;
 
 		taskENTER_CRITICAL();
-		Deserialize_Address(temp_message.destination, &remote_address,
+		Deserialize_Address(connection_message->destination, &remote_address,
 				ignored_message_type);
 		taskEXIT_CRITICAL();
 
@@ -469,14 +468,14 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 		if (connection_type == MESSAGE_TYPE_HTTP)
 		{
 			taskENTER_CRITICAL();
-			char * start_of_uri = strchr(temp_message.destination,
+			char * start_of_uri = strchr(connection_message->destination,
 					*http_uri_delimiter_fs);
 			taskEXIT_CRITICAL();
 
 			if (start_of_uri == NULL)
 			{
 				taskENTER_CRITICAL();
-				start_of_uri = strchr(temp_message.destination,
+				start_of_uri = strchr(connection_message->destination,
 						*http_uri_delimiter_bs);
 				taskEXIT_CRITICAL();
 			}
@@ -486,8 +485,8 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 
 				taskENTER_CRITICAL();
 				memset(remote_address_string, 0, ADDR_STRING_SIZE);
-				strncpy(remote_address_string, temp_message.destination,
-						start_of_uri - temp_message.destination);
+				strncpy(remote_address_string, connection_message->destination,
+						start_of_uri - connection_message->destination);
 				taskEXIT_CRITICAL();
 
 				rval = true;
@@ -500,7 +499,7 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 		else
 		{
 			taskENTER_CRITICAL();
-			sprintf(remote_address_string, temp_message.destination);
+			sprintf(remote_address_string, connection_message->destination);
 			taskEXIT_CRITICAL();
 
 			rval = true;
@@ -821,6 +820,8 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
 	uint32_t received_message_length = 0;
+	Message * dequeued_message;
+	uint8_t * temp_string;
 
 	taskENTER_CRITICAL();
 	uint32_t rx_temp_buffer_size = Multibyte_Ring_Buffer_Get_Free_Size(
@@ -839,17 +840,17 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 	taskYIELD();
 
-	//TODO: be able to dequeue if a complete message isn't found before the max message size.
-
+	//TODO: fix this up with new message format/parsing.
 	if (connection_type == MESSAGE_TYPE_TCP)
 	{
-		memset(temp_message.content, 0, MAXIMUM_MESSAGE_LENGTH);
+		//TODO: dequeue_serialized_message_content
+		Multibyte_Ring_Buffer_Dequeue_Serialized_Message(&receive_ring_buf,
+				&temp_string);
+		if (temp_string != NULL)
+		{
+			dequeued_message = Deserialize_Message_Content(temp_string);
+		}
 
-		taskENTER_CRITICAL();
-		received_message_length = Multibyte_Ring_Buffer_Dequeue_Until_String(
-				&receive_ring_buf, temp_message.content, MAXIMUM_MESSAGE_LENGTH,
-				(char *) message_end);
-		taskEXIT_CRITICAL();
 	}
 	else
 	{
@@ -892,72 +893,44 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 							&receive_ring_buf, rx_temp_buffer,
 							rx_temp_buffer_size, "\r\n\r\n") != 0)
 					{
-						//memset + 1 so there's a null after the end of the message in the buffer.
-						memset(temp_message.content, 0, MAXIMUM_MESSAGE_LENGTH);
+						temp_string = zalloc(received_message_length);
 
 						//dq content-length bytes.
 						if (Multibyte_Ring_Buffer_Dequeue(&receive_ring_buf,
-								temp_message.content, received_message_length)
-								!= received_message_length)
+								temp_string, received_message_length)
+								== received_message_length)
 						{
-							//malformed packet:
-							received_message_length = 0;
+							taskENTER_CRITICAL();
+							dequeued_message = Create_Message();
+							Set_Message_Content_Type(dequeued_message,
+									content_type_strings[CONTENT_TYPE_BINARY]);
+							Set_Message_Content(dequeued_message, temp_string,
+									received_message_length);
+							taskEXIT_CRITICAL();
+
+							taskYIELD();
 						}
 					}
-					else
-					{
-						received_message_length = 0;
-					}
-				}
-				else
-				{
-					received_message_length = 0;
 				}
 			}
 		}
+	}
 
+	if (dequeued_message != NULL)
+	{
+		taskENTER_CRITICAL();
+		Set_Message_Type(dequeued_message,
+				message_type_strings[connection_type]);
+		Set_Message_Source(dequeued_message, remote_address_string);
+		Set_Message_Destination(dequeued_message, local_address_string);
+
+		Queue_Message(&incoming_message_queue, dequeued_message);
+		taskEXIT_CRITICAL();
 	}
 
 	taskYIELD();
 
-	if (received_message_length > 0)
-	{
-		taskENTER_CRITICAL();
-		bool message_too_long = received_message_length > MAXIMUM_MESSAGE_LENGTH;
-		taskEXIT_CRITICAL();
-
-		taskYIELD();
-
-		if (!message_too_long)
-		{
-			taskENTER_CRITICAL();
-			temp_message_ptr = Create_Message();
-			Set_Message_Type(temp_message_ptr,
-					message_type_strings[connection_type]);
-			Set_Message_Source(temp_message_ptr, remote_address_string);
-			Set_Message_Destination(temp_message_ptr, local_address_string);
-			Set_Message_Content_Type(temp_message_ptr,
-					content_type_strings[CONTENT_TYPE_BINARY]);
-			Set_Message_Content(temp_message_ptr, temp_message_ptr->content,
-					temp_message_ptr->content_length);
-			taskEXIT_CRITICAL();
-
-			taskENTER_CRITICAL();
-			Initialize_Message(&temp_message_ptr,
-					message_type_strings[connection_type],
-					remote_address_string, local_address_string, NULL);
-			taskEXIT_CRITICAL();
-
-			taskYIELD();
-
-			taskENTER_CRITICAL();
-			Queue_Message(&incoming_message_queue, temp_message_ptr);
-			taskEXIT_CRITICAL();
-		}
-
-		taskYIELD();
-	}
-	else if (received_count < 0)
+	if (received_count < 0)
 	{
 		Data_Disconnect();
 
@@ -1058,7 +1031,6 @@ static void ICACHE_RODATA_ATTR Listen_Disconnect()
 	}
 }
 
-static int loops = 0;
 
 static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
