@@ -60,8 +60,7 @@ Message_Type Get_Message_Type_From_Str(char * typeString) {
 
 uint32_t Serialize_Message_With_Message_Header(Message * message, uint8_t * destination_string, uint32_t destination_max_length) {
 
-   //we only have 5 chars for size.
-   if (destination_max_length > 99999) return 0;
+   if (message == NULL || destination_string == NULL) return 0;
 
    uint32_t rval = 0;
    uint16_t message_checksum = 0;
@@ -97,7 +96,6 @@ uint32_t Serialize_Message_With_Message_Header(Message * message, uint8_t * dest
       sprintf(destination_string + 3, "%05d", rval - 2);     //write the length after the first char (plus 2 for the padding at the start of the string, + 1 for the delimiter. -2 from size for the padding.)
       destination_string[8] = *message_field_delimiter;     //put our delimiter back.
 
-      //TODO: checksum the message starting at index 15 (the character after the second \t)
       message_checksum = Calculate_Checksum_On_Bytes(destination_string + 15, rval - 15);
 
       sprintf(destination_string + 9, "%05d", message_checksum);     //write the checksum after the delimiter between the length and checksum.
@@ -110,14 +108,46 @@ uint32_t Serialize_Message_With_Message_Header(Message * message, uint8_t * dest
    return rval;
 }
 
-//parse a message, including start character.
+uint32_t Serialize_Message_Content(Message * message, uint8_t * destination_string, uint32_t destination_max_length) {
+
+   if (message == NULL || destination_string == NULL) return 0;
+
+   uint32_t rval = 0;
+   uint16_t message_checksum = 0;
+
+   //         0                 1                   2               3         4              5                 6                   7               8
+   //format: \f<message_length>\t<message_checksum>\t<message_type>\ t<source>\t<destination>\t<content_length>\t<content_checksum>\t<content_type>\t<content>
+
+   //HACK: Padding added because it seems to lessen the likelihood that we miss the end of a message.
+   rval = snprintf(destination_string, destination_max_length, "  %s%d%s%d%s%s%s",     //
+                   message_start,     //
+                   message->content_length,
+                   message_field_delimiter,
+                   message->content_checksum,
+                   message_field_delimiter,
+                   message->content_type,
+                   message_field_delimiter);
+
+   if ((rval) + message->content_length <= destination_max_length) {
+
+      memcpy(destination_string + rval, message->content, message->content_length);
+      rval += message->content_length;
+
+   } else {
+
+      rval = 0;
+   }
+
+   return rval;
+}
+
+//parse a message, including start character. Start char must be first char in message.
 Message * Deserialize_Message_With_Message_Header(uint8_t * message) {
 
    //if there's no data, or we don't have a \f at the beginning of the message, we return.
    if (message == NULL || message[0] != *message_start) return NULL;
 
    Message * rval = NULL;
-   uint32_t content_length = 0;
    uint32_t message_length = 0;
    uint16_t message_checksum = 0;
 
@@ -147,46 +177,63 @@ Message * Deserialize_Message_With_Message_Header(uint8_t * message) {
                                          - ((temp_message_checksum + strlen(temp_message_checksum) + 1) - message))) {
 
       //if message checksum ok, proceed.
-
       //find serial message header
       uint8_t * temp_message_type = strtok_r(NULL, message_field_delimiter, &token_state);
       uint8_t * temp_source_address = strtok_r(NULL, message_field_delimiter, &token_state);
       uint8_t * temp_dest_address = strtok_r(NULL, message_field_delimiter, &token_state);
+      uint8_t * content_header_start = temp_dest_address + strlen(temp_dest_address);
 
-      //TODO: extract from here down as Deserialize_Message_Content.
+      if (temp_message_type != NULL && temp_source_address != NULL && temp_dest_address != NULL && content_header_start != NULL) {
 
-      //find content header
-      uint8_t * temp_content_length = strtok_r(NULL, message_field_delimiter, &token_state);
-      uint8_t * temp_content_checksum = strtok_r(NULL, message_field_delimiter, &token_state);
-      uint8_t * temp_content_type = strtok_r(NULL, message_field_delimiter, &token_state);
+         //put the message start char in the right place for Deserialize_Message_Content
+         *content_header_start = *message_start;
+         rval = Deserialize_Message_Content(content_header_start);
 
-      content_length = atoi(temp_content_length);
+         if (rval != NULL) {
 
-      if (temp_message_type != NULL
-          && temp_source_address != NULL
-          && temp_dest_address != NULL
-          && temp_content_length != NULL
-          && temp_content_type != NULL
-          && temp_content_checksum != NULL) {
-
-         //get a pointer to the content
-         uint8_t * temp_content = temp_content_type + (strlen(temp_content_type) + 1);
-
-         rval = Create_Message();
-
-         // Create message object
-         Set_Message_Type(rval, temp_message_type);
-         Set_Message_Source(rval, temp_source_address);
-         Set_Message_Destination(rval, temp_dest_address);
-         Set_Message_Content_Type(rval, temp_content_type);
-         Set_Message_Content(rval, temp_content, content_length);
-
-         //message checksum is set in Set_Message_content. we compare it to the checksum we received.
-         if (rval->content_checksum != atoi(temp_content_checksum)) {
-            //delete the message if the checksum didn't match
-            Delete_Message(rval);
-            rval = NULL;
+            *content_header_start = '\0';
+            Set_Message_Type(rval, temp_message_type);
+            Set_Message_Source(rval, temp_source_address);
+            Set_Message_Destination(rval, temp_dest_address);
          }
+      }
+   }
+
+   return rval;
+}
+
+Message * Deserialize_Message_Content(uint8_t * message) {
+
+   if (message == NULL || *message != *message_start) return NULL;
+
+   Message * rval = NULL;
+   char * token_state = NULL;
+   uint32_t content_length = 0;
+
+   //find content header
+   uint8_t * temp_content_length = strtok_r(message + 1, message_field_delimiter, &token_state);
+   uint8_t * temp_content_checksum = strtok_r(NULL, message_field_delimiter, &token_state);
+   uint8_t * temp_content_type = strtok_r(NULL, message_field_delimiter, &token_state);
+
+   content_length = atoi(temp_content_length);
+
+   if (temp_content_length != NULL && temp_content_type != NULL && temp_content_checksum != NULL) {
+
+      //get a pointer to the content
+      uint8_t * temp_content = temp_content_type + (strlen(temp_content_type) + 1);
+
+      rval = Create_Message();
+
+      // Create message object
+
+      Set_Message_Content_Type(rval, temp_content_type);
+      Set_Message_Content(rval, temp_content, content_length);
+
+      //message checksum is set in Set_Message_content. we compare it to the checksum we received.
+      if (rval->content_checksum != atoi(temp_content_checksum)) {
+         //delete the message if the checksum didn't match
+         Delete_Message(rval);
+         rval = NULL;
       }
    }
 

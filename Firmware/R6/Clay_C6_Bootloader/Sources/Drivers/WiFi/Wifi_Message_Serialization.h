@@ -45,6 +45,9 @@ extern Message_Type Get_Message_Type_From_Str(char * typeString);
 extern uint32_t Serialize_Message_With_Message_Header(Message * message,
                                                       uint8_t * destination_string,
                                                       uint32_t destination_max_length);
+extern uint32_t Serialize_Message_Content(Message * message, uint8_t * destination_string, uint32_t destination_max_length);
+
 extern Message * Deserialize_Message_With_Message_Header(uint8_t * message);
+extern Message * Deserialize_Message_Content(uint8_t * message);
 
 #endif /* MESSAGE_INFO_H_*/

@@ -464,7 +464,9 @@ uint32_t Multibyte_Ring_Buffer_Test() {
    char * test_msg_source = "192.168.1.3:3000";
    char * test_msg_dest = "192.168.1.21:3000";
    char * test_msg_content_type = "text";
-   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeee";
+//   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeee";     //40 chars
+//   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmm256"; //256 chars
+   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmm!!mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemm512";     //256 chars
 
    Message * test_msg = Create_Message();
    Set_Message_Type(test_msg, test_msg_type);
@@ -485,7 +487,7 @@ uint32_t Multibyte_Ring_Buffer_Test() {
 
    Multibyte_Ring_Buffer test_buffer;
 
-   Multibyte_Ring_Buffer_Init(&test_buffer, 1024);
+   Multibyte_Ring_Buffer_Init(&test_buffer, 2048);
 
    for (;;) {
       while (!Multibyte_Ring_Buffer_Full(&test_buffer)) {
@@ -495,6 +497,7 @@ uint32_t Multibyte_Ring_Buffer_Test() {
       while ((dq_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message(&test_buffer, &serial_data)) > 0) {
          if (serial_data != NULL) {
             deserialized_message = Deserialize_Message_With_Message_Header(serial_data);
+            Serialize_Message_Content(deserialized_message, serial_data, dq_count);
             Delete_Message(deserialized_message);
             free(serial_data);
             serial_data = NULL;

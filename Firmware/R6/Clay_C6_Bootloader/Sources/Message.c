@@ -37,23 +37,31 @@ int8_t Delete_Message(Message *message) {
 
       // TODO: Remove references to the message in the queue.
 
-      // Free the message's content from memory
-      free((*message).content);
-      (*message).content = NULL;
+      if ((*message).message_type != NULL) {
+         free((*message).message_type);
+         (*message).message_type = NULL;
+      }
 
-      // Free the message's source address from memory
       if ((*message).source != NULL) {
          free((*message).source);
          (*message).source = NULL;
       }
 
-      // Free the message's destination address from memory
       if ((*message).destination != NULL) {
          free((*message).destination);
          (*message).destination = NULL;
       }
 
-      // Free the message from memory
+      if ((*message).content_type != NULL) {
+         free((*message).content_type);
+         (*message).content_type = NULL;
+      }
+
+      if ((*message).content != NULL) {
+         free((*message).content);
+         (*message).content = NULL;
+      }
+
       free(message);
       message = NULL;
 
@@ -102,7 +110,7 @@ void Set_Message_Destination(Message *message, const char *address) {
    }
 
    // Copy the message destination address
-   (*message).destination = (char *) malloc(strlen(address));
+   (*message).destination = (char *) malloc(strlen(address) + 1);
    memset((*message).destination, '\0', strlen(address) + 1);
 
    strcpy((*message).destination, address);
@@ -131,7 +139,7 @@ extern void Set_Message_Content_Type(Message *message, const char *content_type)
    }
 
    // Copy the message content_type address
-   (*message).content_type = (char *) malloc(strlen(content_type));
+   (*message).content_type = (char *) malloc(strlen(content_type) + 1);
    memset((*message).content_type, '\0', strlen(content_type) + 1);
 
    strcpy((*message).content_type, content_type);
