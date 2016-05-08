@@ -67,7 +67,7 @@ typedef enum
 static Serial_Transmitter_States state;
 
 static uint8 * serial_tx_buffer;
-static Message * temp_message_ptr;
+static Message * temp_msg_ptr;
 
 static uint32 time_temp;
 static bool promoted;
@@ -122,31 +122,32 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		case Idle:
 		{
 			taskENTER_CRITICAL();
-			temp_message_ptr = Peek_Message(&incoming_message_queue);
-
-			taskEXIT_CRITICAL();
-
-			if (temp_message_ptr != NULL)
+			if (Has_Messages(&incoming_message_queue))
 			{
 				state = Message_Available;
-				UART_ResetTxFifo(UART0);
 			}
+			taskEXIT_CRITICAL();
+
 			break;
 		}
 
 		case Message_Available:
 		{
 			taskENTER_CRITICAL();
-			temp_message_ptr = Dequeue_Message(&incoming_message_queue);
-			taskEXIT_CRITICAL();
-
+			temp_msg_ptr = Dequeue_Message(&incoming_message_queue);
 			memset(serial_tx_buffer, 0, SERIAL_TX_BUFFER_SIZE_BYTES);
-
-			taskENTER_CRITICAL();
-			Serialize_Message_With_Message_Header(temp_message_ptr,
-					serial_tx_buffer,
-					SERIAL_TX_BUFFER_SIZE_BYTES - 1);
 			taskEXIT_CRITICAL();
+
+			if (temp_msg_ptr != NULL)
+			{
+				taskENTER_CRITICAL();
+				Serialize_Message_With_Message_Header(temp_msg_ptr,
+						serial_tx_buffer,
+						SERIAL_TX_BUFFER_SIZE_BYTES - 1);
+				taskEXIT_CRITICAL();
+
+				Delete_Message(temp_msg_ptr);
+			}
 
 			time_temp = system_get_time();
 
@@ -222,26 +223,20 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 
 void Send_Message_To_Master(char * message, Message_Type type)
 {
-	Message * temp_msg_ptr;
+	Message * temp_msg;
 	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
-//	DEBUG_Print("send message");
-//	DEBUG_Print(message);
-
 	taskENTER_CRITICAL();
-
-	temp_msg_ptr = Create_Message();
-	Set_Message_Type(temp_msg_ptr, message_type_strings[type]);
-	Set_Message_Source(temp_msg_ptr, TEXT_NONE);
-	Set_Message_Destination(temp_msg_ptr, TEXT_NONE);
-	Set_Message_Content_Type(temp_msg_ptr,
-			content_type_strings[CONTENT_TYPE_TEXT]);
-	Set_Message_Content(temp_msg_ptr, message, strlen(message));
-
+	temp_msg = Create_Message();
+	Set_Message_Type(temp_msg, message_type_strings[type]);
+	Set_Message_Source(temp_msg, TEXT_NONE);
+	Set_Message_Destination(temp_msg, TEXT_NONE);
+	Set_Message_Content_Type(temp_msg, content_type_strings[CONTENT_TYPE_TEXT]);
+	Set_Message_Content(temp_msg, message, strlen(message));
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
-	Queue_Message(&incoming_message_queue, temp_msg_ptr);
+	Queue_Message(&incoming_message_queue, temp_msg);
 	taskEXIT_CRITICAL();
 }
 

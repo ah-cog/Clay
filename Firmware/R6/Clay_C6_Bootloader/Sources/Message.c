@@ -121,10 +121,10 @@ void Set_Message_Content(Message * message, const char *content, uint32_t conten
    (*message).content_length = content_length;
 
    // Allocate memory for the message's content.
-   (*message).content = (char *) malloc((*message).content_length);
+   (*message).content = (char *) malloc((*message).content_length + 1);
    (*message).content_checksum = Calculate_Checksum_On_Bytes(content, content_length);
 
-   memset((*message).content, 0, (*message).content_length);
+   memset((*message).content, 0, (*message).content_length + 1);
 
    // Copy message content
    memcpy((*message).content, content, (*message).content_length);

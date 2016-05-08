@@ -128,7 +128,7 @@ void Wifi_State_Step() {
 //         if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_start[0]) > 0) {
 //            State = Receive_Message;
 //         } else
-            if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
+         if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
 
             State = Serialize_Transmission;
 
@@ -146,25 +146,27 @@ void Wifi_State_Step() {
 
       case Receive_Message: {
 
-
          //TODO: dequeue in idle, if message available. if we get a message back, then come here, deserialize, and enqueue the message.
          //      to handle the interrupt case, we can also check to see if the rx buffer is NULL, and dequeue here too.
-         if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
+         if ((Millis() - interruptRxTime) < INTERRUPT_RX_TIMEOUT_MS) {
 
             uint8_t * message_serial = NULL;
             Message * message = NULL;
 
-            int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(&wifi_multibyte_ring, &message_serial);
+            int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(&wifi_multibyte_ring,
+                                                                                                     &message_serial);
 
             if (message_serial != NULL) {
                message = Deserialize_Message_With_Message_Header(message_serial);
+            } else if (Multibyte_Ring_Buffer_Get_Free_Size(&wifi_multibyte_ring) < 1) {
+               Multibyte_Ring_Buffer_Reset(&wifi_multibyte_ring);
             }
 
             if (message != NULL) {
                // Queue the message
                Queue_Message(&incomingWiFiMessageQueue, message);
+               interruptRxTime = Millis();     // reset timeout, we'll look for another message.
             }
-            interruptRxTime = Millis();     // reset timeout, we'll look for another message.
          } else {
             State = Idle;
          }
@@ -175,9 +177,8 @@ void Wifi_State_Step() {
       case Serialize_Transmission: {
          Message *message = Dequeue_Message(&outgoingWiFiMessageQueue);
 
-         if ((pendingTransmitByteCount = Serialize_Message_With_Message_Header(message,
-                                                                               serial_tx_buffer,
-                                                                               WIFI_SERIAL_OUT_BUFFER_LENGTH))
+         if ((pendingTransmitByteCount = Serialize_Message_With_Message_Header(message, serial_tx_buffer,
+         WIFI_SERIAL_OUT_BUFFER_LENGTH))
              > 0) {
             State = Start_Transmission;
          } else {

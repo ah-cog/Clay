@@ -29,6 +29,8 @@
 #include "TCP_Receiver.h"
 #include "TCP_Transmitter.h"
 #include "Message_Queue.h"
+#include "Queues.h"
+#include "Multibyte_Ring_Buffer.h"
 
 //#include "user_interface.h"
 //#include "eagle_soc.h"
@@ -59,6 +61,9 @@ void ICACHE_RODATA_ATTR user_init(void)
 	printf("SDK version:%s\n", system_get_sdk_version());
 	/* need to set opmode before you set config */
 	wifi_set_opmode(STATIONAP_MODE);
+
+	Multibyte_Ring_Buffer_Init(&serial_rx_multibyte,
+	SERIAL_RX_BUFFER_SIZE_BYTES);
 
 	uart_init_new();
 

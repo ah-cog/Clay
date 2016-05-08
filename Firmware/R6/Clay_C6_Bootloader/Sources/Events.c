@@ -33,6 +33,7 @@
 #include "WiFi.h"
 #include "Clock.h"
 #include "program_flash.h"
+#include "Button.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -105,6 +106,7 @@ void Timer_1ms_OnInterrupt(LDD_TUserData *UserDataPtr) {
 /* ===================================================================*/
 void WIFI_XPD_DCDC_INTERRUPT_OnPortEvent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
+   WifiInterruptReceived = TRUE;
 }
 
 /*
@@ -177,6 +179,7 @@ void ESP8266_Serial_OnBlockSent(LDD_TUserData *UserDataPtr) {
 /* ===================================================================*/
 void BUTTON_IN_OnPortEvent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
+   Button_Event_Handler();
 }
 
 /*

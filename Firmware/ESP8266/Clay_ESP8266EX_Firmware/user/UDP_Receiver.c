@@ -80,7 +80,7 @@ static int32 receive_sock;
 static bool Connected;
 static int32 testCounter;
 
-static Message * temp_message_ptr;
+static Message * temp_msg_ptr;
 static Message tempMessage;
 static char * source_addr;
 static char * dest_addr;
@@ -189,6 +189,8 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 
 			taskYIELD();
 
+//			temp_message_ptr =
+
 //			taskENTER_CRITICAL();
 //			Initialize_Message(&tempMessage,
 //					message_type_strings[MESSAGE_TYPE_UDP], source_addr,
@@ -196,14 +198,14 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 //			taskEXIT_CRITICAL();
 
 			taskENTER_CRITICAL();
-			temp_message_ptr = Create_Message();
-			Set_Message_Type(temp_message_ptr,
+			temp_msg_ptr = Create_Message();
+			Set_Message_Type(temp_msg_ptr,
 					message_type_strings[MESSAGE_TYPE_UDP]);
-			Set_Message_Source(temp_message_ptr, source_addr);
-			Set_Message_Destination(temp_message_ptr, dest_addr);
-			Set_Message_Content_Type(temp_message_ptr,
+			Set_Message_Source(temp_msg_ptr, source_addr);
+			Set_Message_Destination(temp_msg_ptr, dest_addr);
+			Set_Message_Content_Type(temp_msg_ptr,
 					content_type_strings[CONTENT_TYPE_BINARY]);
-			Set_Message_Content(temp_message_ptr, udp_rx_buffer, udp_rx_count);
+			Set_Message_Content(temp_msg_ptr, udp_rx_buffer, udp_rx_count);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
@@ -280,6 +282,8 @@ static bool ICACHE_RODATA_ATTR Connect()
 	return Connected;
 }
 
+
+//TODO: combine TCP and UDP operations. They don't need to be separate.
 static bool ICACHE_RODATA_ATTR Receive()
 {
 	bool rval = false;

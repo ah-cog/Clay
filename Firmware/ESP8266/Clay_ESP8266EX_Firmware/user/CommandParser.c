@@ -93,14 +93,14 @@ char command_delimiter = ' ';
 char args_delimiter = ',';
 
 int i;
-static Message * m;
-static Message * temp_message_ptr;
+static Message * temp_msg_ptr;
 static Command_Parser_States state;
 
 static bool promoted;
 
 ////Local Prototypes///////////////////////////////////////////////
-static CLAY_ESP_COMMANDS Command_String_Parse(char * CommandStr, char ** ArgStr);
+static CLAY_ESP_COMMANDS Command_String_Parse(char * commandStr,
+		uint32_t commandStrLength, char ** argStr);
 static bool Set_AP_Command(char * args);
 static bool Get_AP_Command(char * args);
 static bool Scan_AP_Command(char * args);
@@ -152,13 +152,11 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 		case Idle:
 		{
 			taskENTER_CRITICAL();
-			m = Peek_Message(&incoming_command_queue);
-			taskEXIT_CRITICAL();
-
-			if (m != NULL)
+			if (Has_Messages(&incoming_command_queue))
 			{
 				state = ParseCommand;
 			}
+			taskEXIT_CRITICAL();
 			break;
 		}
 
@@ -175,17 +173,16 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 #endif
 
 			taskENTER_CRITICAL();
-			temp_message_ptr = Dequeue_Message(&incoming_command_queue);
+			temp_msg_ptr = Dequeue_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
-			switch (Command_String_Parse(temp_message_ptr->content,
-					&command_args))
+			switch (Command_String_Parse(temp_msg_ptr->content,
+					temp_msg_ptr->content_length, &command_args))
 			{
 			case CLAY_COMMAND_SET_AP:
 			{
-				//DEBUG_Print("setap rx");
 				Set_AP_Command(command_args);
 				break;
 			}
@@ -236,7 +233,10 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 
 			}
 
-			//DEBUG_Print("return to idle");
+			if(temp_msg_ptr != NULL)
+			{
+				Delete_Message(temp_msg_ptr);
+			}
 
 			state = Idle;
 			break;
@@ -259,7 +259,7 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 //Command strings should be of the following format:
 //		"<Command Token> <arg1>,<arg2>...."
 static ICACHE_RODATA_ATTR CLAY_ESP_COMMANDS Command_String_Parse(
-		char * commandStr, char ** argStr)
+		char * commandStr, uint32_t commandStrLength, char ** argStr)
 {
 	char * cmd_str_ptr;
 	CLAY_ESP_COMMANDS rval = CLAY_COMMAND_MAX;
@@ -270,9 +270,6 @@ static ICACHE_RODATA_ATTR CLAY_ESP_COMMANDS Command_String_Parse(
 
 	for (i = 0; i < CLAY_COMMAND_MAX; ++i)
 	{
-		//NOTE: The RTOS is pretty touchy about the length of critical sections.
-		//		I tried putting the strstr in the if statement, with the entire block
-		//		as a crit section, and it would crash every time.
 		taskENTER_CRITICAL();
 		cmd_str_ptr = strstr(commandStr, command_tokens[i]);
 		taskEXIT_CRITICAL();
@@ -474,7 +471,6 @@ void ICACHE_RODATA_ATTR Send_Startup_Message()
 {
 	Send_Message_To_Master(STARTUP_MESSAGE, MESSAGE_TYPE_STATUS);
 }
-
 
 static bool Check_Needs_Promotion()
 {

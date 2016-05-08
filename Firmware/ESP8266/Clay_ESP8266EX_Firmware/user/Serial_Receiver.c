@@ -27,11 +27,11 @@
 #include "Clay_Config.h"
 #include "Message_Queue.h"
 #include "Message.h"
-#include "Ring_Buffer.h"
 #include "Queues.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define RING_BUFFER_PROMOTION_THRESHOLD		30
+#define SERIAL_RX_TIMEOUT_us				100000
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -44,11 +44,13 @@ volatile bool master_interrupt_received;
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Receiver_States State;
 
+static bool message_received;
+
 static Message * temp_msg_ptr;
 static uint32 state_time;
 int i;
 
-Message * selected_message_queue;
+Message ** selected_message_queue;
 
 static Message_Type received_message_type;
 
@@ -64,8 +66,7 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 	master_interrupt_received = false;
 
 	taskENTER_CRITICAL();
-	Multibyte_Ring_Buffer_Init(&serial_rx_multibyte,
-	SERIAL_RX_BUFFER_SIZE_BYTES);
+	//multibyte ring buffer initialized in user_main
 	Initialize_Message_Queue(&outgoing_udp_message_queue);
 	Initialize_Message_Queue(&outgoing_tcp_message_queue);
 	Initialize_Message_Queue(&incoming_command_queue);
@@ -114,11 +115,9 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			{
 				master_interrupt_received = false;
 
-				taskENTER_CRITICAL();
-				Ring_Buffer_Init();
-				taskEXIT_CRITICAL();
-
+				message_received = FALSE;
 				state_time = system_get_time();
+
 				State = Receiving;
 			}
 			else
@@ -132,38 +131,25 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 		case Receiving:
 		{
-//			if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS)
-//			{
-//
-//				Message * message = NULL;
-//
-//				int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Full_Message(
-//						&wifi_multibyte_ring, &message);
-//
-//				if (message != NULL)
-//				{
-//					// Queue the message
-//					Queue_Message(&incomingWiFiMessageQueue, message);
-//				}
-//				interruptRxTime = Millis(); // reset timeout, we'll look for another message.
-//			}
-//			else
-//			{
-//				State = Idle;
-//			}
-
-			uint8_t * serialized_message;
+			uint8_t * serialized_message = NULL;
+			temp_msg_ptr = NULL;
+			taskENTER_CRITICAL();
 			int dequeue_count =
-					Multibyte_Ring_Buffer_Dequeue_Serialized_Message(
+					Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 							&serial_rx_multibyte, &serialized_message);
+			taskEXIT_CRITICAL();
 
 			if (serialized_message != NULL)
 			{
+				taskENTER_CRITICAL();
 				temp_msg_ptr = Deserialize_Message_With_Message_Header(
 						serialized_message);
+				taskEXIT_CRITICAL();
 
 				if (temp_msg_ptr != NULL)
 				{
+					message_received = TRUE;
+
 					received_message_type = Get_Message_Type_From_Str(
 							temp_msg_ptr->message_type);
 
@@ -172,7 +158,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 #if ENABLE_UDP_SENDER
 					case MESSAGE_TYPE_UDP:
 					{
-						selected_message_queue = outgoing_udp_message_queue;
+						selected_message_queue = &outgoing_udp_message_queue;
 						break;
 					}
 #endif
@@ -180,13 +166,14 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					case MESSAGE_TYPE_HTTP:
 					case MESSAGE_TYPE_TCP:
 					{
-						selected_message_queue = outgoing_tcp_message_queue;
+						selected_message_queue = &outgoing_tcp_message_queue;
 						break;
 					}
 #endif
 					case MESSAGE_TYPE_COMMAND:
 					{
-						selected_message_queue = incoming_command_queue;
+						selected_message_queue = &incoming_command_queue;
+
 						break;
 					}
 
@@ -200,14 +187,24 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					if (selected_message_queue != NULL)
 					{
 						taskENTER_CRITICAL();
-						Queue_Message(&selected_message_queue, temp_msg_ptr);
+						Queue_Message(selected_message_queue, temp_msg_ptr);
 						taskEXIT_CRITICAL();
+					}
+					else if (temp_msg_ptr != NULL)
+					{
+						Delete_Message(temp_msg_ptr);
 					}
 				}
 
+				free(serialized_message);
+				serialized_message = NULL;
 			}
 
-			State = Idle;
+			if (!message_received
+					&& system_get_time() - state_time > SERIAL_RX_TIMEOUT_us)
+			{
+				State = Idle;
+			}
 
 			break;
 		}
@@ -225,16 +222,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 ////Local implementations /////////////////////////////////////////
 static bool Check_Needs_Promotion()
 {
-//	return false;
-	int elts = Ring_Buffer_NofElements();
-
-//	if (++loops > LOOPS_BEFORE_PRINT || elts > RING_BUFFER_PROMOTION_THRESHOLD)
-//	{
-//		loops = 0;
-//		taskENTER_CRITICAL();
-//		printf("srx count:%d\r\n", elts);
-//		taskEXIT_CRITICAL();
-//	}
-
-	return elts > RING_BUFFER_PROMOTION_THRESHOLD && State == Idle;
+	return Multibyte_Ring_Buffer_Get_Count(&serial_rx_multibyte)
+			> RING_BUFFER_PROMOTION_THRESHOLD && State == Idle;
 }

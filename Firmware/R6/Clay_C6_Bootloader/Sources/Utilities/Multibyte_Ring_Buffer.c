@@ -621,51 +621,51 @@ bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer) {
 //   }
 //}
 
-uint32_t Multibyte_Ring_Buffer_Test() {
-
-   char * test_msg_type = "tcp";
-   char * test_msg_source = "192.168.1.3:3000";
-   char * test_msg_dest = "192.168.1.21:3000";
-   char * test_msg_content_type = "text";
-   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeee";     //40 chars
-//   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmm256"; //256 chars
-//   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmm!!mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemm512";     //512 chars
-
-   Message * test_msg = Create_Message();
-   Set_Message_Type(test_msg, test_msg_type);
-   Set_Message_Source(test_msg, test_msg_source);
-   Set_Message_Destination(test_msg, test_msg_dest);
-   Set_Message_Content_Type(test_msg, test_msg_content_type);
-   Set_Message_Content(test_msg, test_msg_content, strlen(test_msg_content));
-
-   uint32_t test_msg_str_len = 1024;
-   char test_msg_str[test_msg_str_len];
-   memset(test_msg_str, 0, test_msg_str_len);
-   Serialize_Message_Content(test_msg, test_msg_str, test_msg_str_len);
-
-   uint8_t * serial_data;
-   uint32_t dq_count = 0;
-
-   Message * deserialized_message;
-   Message * deserialized_message_content;
-
-   Multibyte_Ring_Buffer test_buffer;
-
-   Multibyte_Ring_Buffer_Init(&test_buffer, 1024);
-
-   for (;;) {
-      while (!Multibyte_Ring_Buffer_Full(&test_buffer)) {
-         Multibyte_Ring_Buffer_Enqueue(&test_buffer, test_msg_str, strlen(test_msg_str));
-      }
-
-      while ((dq_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(&test_buffer, &serial_data)) > 0) {
-         if (serial_data != NULL) {
-            deserialized_message = Deserialize_Message_Content(serial_data);
-            Serialize_Message_Content(deserialized_message, serial_data, dq_count);
-            Delete_Message(deserialized_message);
-            free(serial_data);
-            serial_data = NULL;
-         }
-      }
-   }
-}
+//uint32_t Multibyte_Ring_Buffer_Test() {
+//
+//   char * test_msg_type = "tcp";
+//   char * test_msg_source = "192.168.1.3:3000";
+//   char * test_msg_dest = "192.168.1.21:3000";
+//   char * test_msg_content_type = "text";
+//   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeee";     //40 chars
+////   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmm256"; //256 chars
+////   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmm!!mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemm512";     //512 chars
+//
+//   Message * test_msg = Create_Message();
+//   Set_Message_Type(test_msg, test_msg_type);
+//   Set_Message_Source(test_msg, test_msg_source);
+//   Set_Message_Destination(test_msg, test_msg_dest);
+//   Set_Message_Content_Type(test_msg, test_msg_content_type);
+//   Set_Message_Content(test_msg, test_msg_content, strlen(test_msg_content));
+//
+//   uint32_t test_msg_str_len = 1024;
+//   char test_msg_str[test_msg_str_len];
+//   memset(test_msg_str, 0, test_msg_str_len);
+//   Serialize_Message_Content(test_msg, test_msg_str, test_msg_str_len);
+//
+//   uint8_t * serial_data;
+//   uint32_t dq_count = 0;
+//
+//   Message * deserialized_message;
+//   Message * deserialized_message_content;
+//
+//   Multibyte_Ring_Buffer test_buffer;
+//
+//   Multibyte_Ring_Buffer_Init(&test_buffer, 1024);
+//
+//   for (;;) {
+//      while (!Multibyte_Ring_Buffer_Full(&test_buffer)) {
+//         Multibyte_Ring_Buffer_Enqueue(&test_buffer, test_msg_str, strlen(test_msg_str));
+//      }
+//
+//      while ((dq_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(&test_buffer, &serial_data)) > 0) {
+//         if (serial_data != NULL) {
+//            deserialized_message = Deserialize_Message_Content(serial_data);
+//            Serialize_Message_Content(deserialized_message, serial_data, dq_count);
+//            Delete_Message(deserialized_message);
+//            free(serial_data);
+//            serial_data = NULL;
+//         }
+//      }
+//   }
+//}
