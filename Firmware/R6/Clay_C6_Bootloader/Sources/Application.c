@@ -43,8 +43,8 @@ void Application(void) {
 
    Initialize_Bootloader();
 
-//   Multibyte_Ring_Buffer_Test();
-   Wifi_Test();
+   Multibyte_Ring_Buffer_Test();
+//   Wifi_Test();
 //   Flash_Test();
 
    wifi_connected = FALSE;
@@ -209,7 +209,7 @@ void Wifi_Test() {
             Set_Message_Content_Type(outgoing_message, bin_content_type);
          }
 
-         Serialize_Message(outgoing_message, serialized_message, max_serialized_length);
+         Serialize_Message_With_Message_Header(outgoing_message, serialized_message, max_serialized_length);
 
          Wifi_Send(outgoing_message);
 

@@ -147,9 +147,14 @@ void Wifi_State_Step() {
 
          if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
 
+            uint8_t * message_serial = NULL;
             Message * message = NULL;
 
-            int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Full_Message(&wifi_multibyte_ring, &message);
+            int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message(&wifi_multibyte_ring, &message_serial);
+
+            if (message_serial != NULL) {
+               message = Deserialize_Message_With_Message_Header(message_serial);
+            }
 
             if (message != NULL) {
                // Queue the message
@@ -166,7 +171,10 @@ void Wifi_State_Step() {
       case Serialize_Transmission: {
          Message *message = Dequeue_Message(&outgoingWiFiMessageQueue);
 
-         if ((pendingTransmitByteCount = Serialize_Message(message, serial_tx_buffer, WIFI_SERIAL_OUT_BUFFER_LENGTH)) > 0) {
+         if ((pendingTransmitByteCount = Serialize_Message_With_Message_Header(message,
+                                                                               serial_tx_buffer,
+                                                                               WIFI_SERIAL_OUT_BUFFER_LENGTH))
+             > 0) {
             State = Start_Transmission;
          } else {
             State = Idle;

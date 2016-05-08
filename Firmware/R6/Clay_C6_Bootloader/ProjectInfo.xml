@@ -81,13 +81,14 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Button\Button.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\LED\LEDs.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Power_Manager\Power_Manager.c</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\Message_Info.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\WiFi.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\Wifi_Message_Serialization.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\program_flash\program_flash.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Events.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\HTTP_Messages.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Message.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Message_Queue.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\CRC16.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\Multibyte_Ring_Buffer.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\Ring_Buffer.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\UUID.c</PathName>
@@ -127,13 +128,14 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Button\Button.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\LED\LEDs.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\Power_Manager\Power_Manager.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\Message_Info.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\WiFi.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\WiFi\Wifi_Message_Serialization.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Drivers\program_flash\program_flash.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Events.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\HTTP_Messages.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Message.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Message_Queue.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\CRC16.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\Multibyte_Ring_Buffer.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\Ring_Buffer.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Bootloader\Sources\Utilities\UUID.h</PathName>
