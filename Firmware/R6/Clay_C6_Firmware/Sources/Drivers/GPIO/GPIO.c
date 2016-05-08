@@ -88,6 +88,185 @@ static void Channel_Apply_Output(Channel_Number number);
 static void Initialize_Hardware_Interface();
 static void Initialize_Channel_Hardware_Interface(Channel_Number number);
 
+Propagator* Create_Propagator (Observable *source, char *source_key, Observable *destination, char *destination_key) {
+
+	// Create propagator
+	Propagator *propagator = (Propagator *) malloc (sizeof (Propagator));
+
+	// Source
+	(*propagator).source = source;
+
+	// Reserve memory for the source key and copy the key into it
+	(*propagator).source_key = (char *) malloc (strlen (source_key) + 1);
+	memset ((*propagator).source_key, '\0', strlen (source_key) + 1);
+	memcpy ((*propagator).source_key, source_key, strlen (source_key));
+
+	// Destination
+	(*propagator).destination = destination;
+
+	// Reserve memory for the destination key and copy the key into it
+	(*propagator).destination_key = (char *) malloc (strlen (destination_key) + 1);
+	memset ((*propagator).destination_key, '\0', strlen (destination_key) + 1);
+	memcpy ((*propagator).destination_key, destination_key, strlen (destination_key));
+
+	// List
+	(*propagator).previous = NULL;
+	(*propagator).next = NULL;
+
+	return propagator;
+}
+
+void Delete_Propagator (Propagator *propagator) {
+	if (propagator != NULL) {
+
+		// Source Key
+		if ((*propagator).source_key != NULL) {
+			free ((*propagator).source_key);
+			(*propagator).source_key = NULL;
+		}
+
+		// Destination Key
+		if ((*propagator).destination_key != NULL) {
+			free ((*propagator).destination_key);
+			(*propagator).destination_key = NULL;
+		}
+
+		// Observable
+		free (propagator);
+		propagator = NULL;
+	}
+}
+
+int16_t Add_Propagator (Observable *observable, Propagator *propagator) {
+
+	Propagator *previous_propagator = NULL; // The action construct presently at the end of the list. This will be set as the previous action construct to the one created for the newly-cached action.
+
+	// Create a action construct to denote to the action for the loop!
+	// NOTE: This construct must be different than the construct for the action cache to preserve their unique link structures and prevent infinite looping during list traversal.
+//	Event *event = Create_Event ((*action).uuid, action);
+
+	// TODO: Consider checking of the action has a action construct in the cache. If so reference that one. If not, create one. That, or note that doing it manually is required with Has_Cached_Action () _before_ calling Add_Action.
+
+	if ((*observable).propagators == NULL) {
+
+		// The loop is empty, so add it to the loop as the only element.
+		(*observable).propagators = propagator;
+
+		(*propagator).previous = NULL;
+		(*propagator).next = NULL;
+
+	} else {
+
+		// Search for the last element in the list
+		previous_propagator = (*observable).propagators; // Get the front of the queue.
+		while ((*previous_propagator).next != NULL) {
+			previous_propagator = (*previous_propagator).next;
+		}
+
+		// Update the list linkage to add the message to the back of the list
+		(*propagator).previous = previous_propagator;
+		(*previous_propagator).next = propagator;
+	}
+}
+
+uint8_t Has_Propagators (Observable *observable) {
+	return (*observable).propagators != NULL;
+}
+
+bool Has_Propagator (Observable *source, char *source_key, Observable *destination, char *destination_key) {
+
+	bool result = FALSE;
+
+	if (source != NULL) {
+
+		Propagator *propagator = NULL;
+
+		if ((*source).propagators != NULL) {
+			propagator = (*source).propagators; // Get the first propagator in the list.
+			while (propagator != NULL) {
+
+				// TODO: Compare key of each propagator until the same one is found or it is not found at all
+				if ((strncmp ((*propagator).source_key, source_key, strlen (source_key)) == 0)
+						&& ((*propagator).destination == destination)
+						&& (strncmp ((*propagator).destination_key, destination_key, strlen (destination_key)) == 0)) {
+
+					result = TRUE;
+					break;
+				}
+
+				propagator = (*propagator).next;
+			}
+		}
+	}
+
+	return result;
+}
+
+Propagator* Remove_Propagator (Observable *observable, Propagator *propagator) {
+
+	if (propagator != NULL && observable != NULL) {
+
+		// Update the linked list to remove the action from the front of the queue.
+		if ((*propagator).previous == NULL && (*propagator).next != NULL) {
+
+			// The action in the first in the loop.
+
+			(*observable).propagators = (*propagator).next; // Update the loop's first action to be the next one.
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			(*((*observable).propagators)).next = NULL; // Update the the new first action in the loop so it doesn't link to a "previous" action.
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*propagator).previous = NULL;
+			(*propagator).next = NULL;
+
+		} else if ((*propagator).previous != NULL && (*propagator).next != NULL) {
+
+			// The action is within the loop. It has previous and next actions.
+
+			(*(*propagator).previous).next = (*propagator).next; // Update the previous action to skip this action and point to the next action.
+
+			(*(*propagator).next).previous = (*propagator).previous; // Update the next action skip this action and point to the previous action.
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*propagator).previous = NULL;
+			(*propagator).next = NULL;
+
+		} else if ((*propagator).previous != NULL && (*propagator).next == NULL) {
+
+			// The action is the last in the loop. It has previous actions only.
+
+			(*(*propagator).previous).next = NULL; // Update the previous action be the new last action in the loop. That is, make it point to no other action (and point to NULL).
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*propagator).previous = NULL;
+			(*propagator).next = NULL;
+
+		} else {
+
+			// There are no more actions in the loop, so remove all links and reset the loop to its "empty" state.
+
+			observable = NULL; // Remove the link to any actions at the front of the loop.
+
+			// Unlink the actions from linked list to finish dequeuing process.
+			(*propagator).previous = NULL;
+			(*propagator).next = NULL;
+
+		}
+
+		// Free the action construct from memory.
+		// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+		Delete_Observable (propagator);
+	}
+
+	return NULL;
+}
+
 // <Data Flow>
 Observable* Create_Observable (const char *key, int8_t content_type, void *content) {
 
@@ -124,6 +303,9 @@ Observable* Create_Observable (const char *key, int8_t content_type, void *conte
 	(*observable).previous = NULL;
 	(*observable).next = NULL;
 
+	// Propagators
+	(*observable).propagators = NULL;
+
 	return observable;
 }
 
@@ -150,12 +332,12 @@ void Delete_Observable (Observable *observable) {
 	}
 }
 
-void Set_Observable_Data (Observable *observable, int8_t content_type, void *content) {
+void Set_Observable_Content (Observable *observable, int8_t content_type, void *content) {
 
 	// Update the content type.
 	(*observable).content_type = content_type;
 
-	// Allocate memory for the data and copy the data into it
+	// Allocate memory for the data and copy the data into it (type-casting appropriately)
 	if ((*observable).content_type == CONTENT_TYPE_INT16) {
 		*((int16_t *) (*observable).content) = *((int16_t *) content);
 	} else if ((*observable).content_type == CONTENT_TYPE_INT32) {
@@ -166,7 +348,49 @@ void Set_Observable_Data (Observable *observable, int8_t content_type, void *con
 		*((double *) (*observable).content) = *((double *) content);
 	}
 
-	// TODO: Propagate value
+	// TODO: Add check for triggers?
+
+	// Propagate
+	if (Has_Propagators (observable)) {
+		Propagate (observable);
+	}
+}
+
+// void Propagate (Channel_Profile *source_channel_profile, Channel_Profile *destination_channel_profile, char *observable_key) {
+void Propagate (Observable *observable) {
+
+	if (observable != NULL) {
+
+		Propagator *propagator = NULL;
+
+		if ((*observable).propagators != NULL) {
+			propagator = (*observable).propagators; // Get the first propagator in the list.
+			while (propagator != NULL) {
+
+				// <HACK>
+//				int16_t scaled_content = (int16_t) Scale_Adc_Counts_To_Servo_Range((*((*propagator).source)).content);
+
+//				int servo_max_voltage_before_end_stop = 56645;
+				//int32_t voltage_mv = *((int32_t *) (*((*propagator).source)).content);
+				int32_t voltage_mv = Get_Observable_Data_Int32 ((*propagator).source);
+
+				//limiting to keep in range.
+				if (voltage_mv > 56645) {
+					voltage_mv = 56645;
+				}
+
+				int16_t scaled_content = (int16_t) (voltage_mv * 0.08844f + 57700);
+				//                        ^ TODO: Always cast to the source data to the destination data type.
+				// </HACK>
+
+				// Set the content (and continue propagation), casting to the destination observable's type.
+				Set_Observable_Content ((*propagator).destination, (*((*propagator).destination)).content_type, &scaled_content);
+//				Set_Observable_Content ((*propagator).destination, (*((*propagator).source)).content_type, (*((*propagator).source)).content);
+
+				propagator = (*propagator).next;
+			}
+		}
+	}
 }
 
 int8_t Get_Observable_Type (Observable *observable) {
@@ -470,7 +694,7 @@ static void Hack_Propagate (Channel_Profile *source_channel_profile, Channel_Pro
 	// ...then update the date.
 	// int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
 	// <HACK> (Only works on non-strings since copies with assignment operator.)
-	Set_Observable_Data (destination_observable, (*source_observable).content_type, (*source_observable).content);
+	Set_Observable_Content (destination_observable, (*source_observable).content_type, (*source_observable).content);
 	// </HACK>
 }
 
@@ -530,10 +754,12 @@ int8_t Apply_Channels() {
 //        	 channel_profile[i].data->pulse_period_seconds = updated_channel_profile[i].data->pulse_period_seconds;
 //        	 channel_profile[i].data->pulse_duty_cycle = updated_channel_profile[i].data->pulse_duty_cycle;
 
+        	 /*
         	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "toggle_value");
 			 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "waveform_sample_value");
 			 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "pulse_period_seconds");
 			 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "pulse_duty_cycle");
+			 */
 
         	 // TODO: Propagate update_channel_profile state to channel_profile state
 
@@ -551,10 +777,12 @@ int8_t Apply_Channels() {
 //        	 channel_profile[i].data->pulse_period_seconds = updated_channel_profile[i].data->pulse_period_seconds;
 //        	 channel_profile[i].data->pulse_duty_cycle = updated_channel_profile[i].data->pulse_duty_cycle;
 
+        	 /*
         	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "toggle_value");
         	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "waveform_sample_value");
         	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "pulse_period_seconds");
         	 Hack_Propagate (&updated_channel_profile[i], &channel_profile[i], "pulse_duty_cycle");
+        	 */
 
         	 // TODO: Propagate update_channel_profile state to channel_profile state
          }
@@ -743,7 +971,7 @@ int32_t Channel_Set_Data (Channel_Number number, int32_t data) {
         	 observable = Get_Observable (observable_set, "toggle_value");
 
         	 // ...then update the date.
-        	 Set_Observable_Data (observable, CONTENT_TYPE_INT32, &data);
+        	 Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
 
         	 // </OPTIMIZE>
          }
@@ -789,7 +1017,7 @@ int32_t Channel_Set_Data (Channel_Number number, int32_t data) {
 			 observable = Get_Observable (observable_set, "pulse_period_seconds");
 
 			 // ...then update the data.
-			 Set_Observable_Data (observable, CONTENT_TYPE_FLOAT, &data);
+			 Set_Observable_Content (observable, CONTENT_TYPE_FLOAT, &data);
 
 			 // </OPTIMIZE>
          }
@@ -848,7 +1076,8 @@ void Channel_Periodic_Call() {
             	// <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
 
 				// Get observable set...
-				Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+//				Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+            	Observable_Set *observable_set = channel_profile[i].observable_set;
 				Observable *observable = NULL;
 
 				// ...then get data from channel profile...
@@ -856,7 +1085,7 @@ void Channel_Periodic_Call() {
 
 				// ...then update the date.
 				int32_t data = Channel_Get_Data((Channel_Number) i);
-				Set_Observable_Data (observable, CONTENT_TYPE_INT32, &data);
+				Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
 
 				// </OPTIMIZE>
 
@@ -878,7 +1107,7 @@ void Channel_Periodic_Call() {
 
 				 // ...then update the date.
 				 int32_t data = Channel_Get_Data((Channel_Number) i);
-				 Set_Observable_Data (observable, CONTENT_TYPE_INT32, &data);
+				 Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
 
 				 // </OPTIMIZE>
 
@@ -1570,7 +1799,7 @@ static void Channel_Apply_Output(Channel_Number number) {
 
          // ...then get data from channel profile...
          observable = Get_Observable (observable_set, "pulse_duty_cycle");
-		 int16_t pulse_duty_cycle = Get_Observable_Data_Int16 (observable);
+		 int16_t pulse_duty_cycle = (int16_t) Get_Observable_Data_Int16 (observable);
 		 // TODO: int16_t pulse_duty_cycle = (int16_t) Get_Observable_Data (&platform_observable_profiles[number], "pulse_duty_cycle");
 
 		 observable = Get_Observable (observable_set, "pulse_period_seconds");

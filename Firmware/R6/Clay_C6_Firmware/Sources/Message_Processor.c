@@ -23,6 +23,7 @@ static int8_t Process_Set_Event_Action(Message *message);
 static int8_t Process_Set_Event_State(Message *message);
 static int8_t Process_Set_Event_Trigger(Message *message);
 static int8_t Process_Get_Event_State(Message * message);
+static int8_t Process_Set_Event_Context (Message *message);
 static int8_t Process_Set_Event_Length (Message *message);
 
 int8_t Process_Incoming_Message(Message *message) {
@@ -109,6 +110,12 @@ int8_t Process_Incoming_Message(Message *message) {
    }
    // </HACK>
 
+   // "get channel state"
+   // "get observables" -> "(<id>, <key>), (<id>, <key>), (<id>, <key>), ..."
+   // "propagate observable <source-observable> <source-observable> observable <destination-observable> <destination-key>"
+   // "set channel <number> observable <key> source [to] channel <number> observable <key>"
+   // "propagate channel <number> observable <key> [to] channel <number> observable <key>"
+
    if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "cache")) {
       if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "action")) {
          return Process_Cache_Action(message);
@@ -125,13 +132,15 @@ int8_t Process_Incoming_Message(Message *message) {
       if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "event")) {
          if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "action")) {
             return Process_Set_Event_Action(message);
-         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "state")) {
+         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "state")) { // JUST DATA GOES HERE
             return Process_Set_Event_State(message);
-         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "trigger")) {
+         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "trigger")) { // Rename to "CUE"
             return Process_Set_Event_Trigger(message);
+         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "context")) { // PUT CHANNEL CONFIG STUFF HERE! (& send before state)
+             return Process_Set_Event_Context (message);
          } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "duration")) {
              return Process_Set_Event_Length(message);
-          }
+         }
       }
    } else if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "get")) {
       if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "channel")) {
@@ -410,6 +419,49 @@ static int8_t Process_Set_Event_State(Message *message) {
       //	Action *action = Get_Cached_Action_By_UUID (uuid_buffer2);
       if (event != NULL) {
          Set_Event_State(event, uuid_buffer2);
+         result = TRUE;
+      } else {
+         // TODO: If action or nextAction are NULL, stream them in over the Internet.
+      }
+   } else {
+      // TODO: The action is not in the cache! Return response indicating this! Or request it from the cloud!
+      result = FALSE;
+   }
+
+   return result;
+}
+
+static int8_t Process_Set_Event_Context (Message *message) {
+
+   int8_t status = NULL;
+   int8_t result = NULL;
+
+   int token_count = 0;
+
+   char *message_content = (*message).content;
+   char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+
+// i.e., "set event <event-uuid> action <action-uuid>"
+
+// Extract parameters
+   status = Get_Token(message_content, uuid_buffer, 2);     // Get UUID of action (parameter index 2)
+   status = Get_Token(message_content, uuid_buffer2, 4);     // Get state of action (parameter index 4)
+
+// Send message to sender to acknowledge receipt
+   Send_Acknowledgment(token, message_content);
+
+// Delete the message
+//	Delete_Message (message);
+
+// Check if the action is already in the cache. If nay, cache it!
+// TODO: Only call either Get_Cached_Action_By_UUID. Don't call both Has_Cached_Action_By_UUID and Get_Cached_Action_By_UUID. They do the same search work. Don't search multiple times for no reason during action construct recall!
+   if (Has_Event_By_UUID(timeline, uuid_buffer) == TRUE) {
+
+      // Get the event with the UUID and assign the action with the UUID.
+      Event *event = Get_Event_By_UUID(timeline, uuid_buffer);
+      //	Action *action = Get_Cached_Action_By_UUID (uuid_buffer2);
+      if (event != NULL) {
+         Set_Event_Context(event, uuid_buffer2);
          result = TRUE;
       } else {
          // TODO: If action or nextAction are NULL, stream them in over the Internet.

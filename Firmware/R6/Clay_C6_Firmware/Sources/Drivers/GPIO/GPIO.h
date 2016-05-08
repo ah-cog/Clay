@@ -126,12 +126,14 @@ typedef struct {
 #define CONTENT_TYPE_FLOAT  4
 #define CONTENT_TYPE_DOUBLE 5
 
-typedef struct Observable { // or "Generator"
+struct Propagator; // Structure prototypes
+
+typedef struct Observable { // or "Drop" (with "Ripple"), or "Generator"
 	char *key;
 	int8_t content_type;
 	void *content;
 
-	struct Observable *observables; //Propagator *propagators; // Observer *observers; // - subscribers
+	struct Propagator *propagators; //Propagator *propagators; // Observer *observers; // - subscribers
 
 	// USE_LINKED_LIST(Observable): a define to add linked list functionality to the structure
 	struct Observable *previous;
@@ -139,13 +141,34 @@ typedef struct Observable { // or "Generator"
 } Observable;
 
 extern Observable* Create_Observable (const char *key, int8_t content_type, void *content);
-extern void Set_Observable_Data (Observable *observable, int8_t content_type, void *content);
+extern void Set_Observable_Content (Observable *observable, int8_t content_type, void *content);
 extern int8_t Get_Observable_Type (Observable *observable);
 extern int16_t Get_Observable_Data_Int16 (Observable *observable);
 extern int32_t Get_Observable_Data_Int32 (Observable *observable);
 extern float Get_Observable_Data_Float (Observable *observable);
 extern double Get_Observable_Data_Double (Observable *observable);
 extern void Delete_Observable (Observable *observable);
+
+typedef struct Propagator { // rename to "Ripple"
+	Observable *source;
+	char *source_key;
+	Observable *destination;
+	char *destination_key;
+	// TODO: Add custom propagator function?
+
+	struct Propagator *previous;
+	struct Propagator *next;
+} Propagator;
+
+extern Propagator* Create_Propagator (Observable *source, char *source_key, Observable *destination, char *destination_key);
+extern void Delete_Propagator ();
+
+extern int16_t Add_Propagator (Observable *observable, Propagator *propagator);
+extern uint8_t Has_Propagators (Observable *observable);
+extern bool Has_Propagator (Observable *source, char *source_key, Observable *destination, char *destination_key);
+//extern Propagator* Get_Propagator (Observable *observable, char *key);
+extern void Propagate (Observable *observable);
+extern Propagator* Remove_Propagator (Observable *observable, Propagator *propagator);
 
 /*
 //void Observe (Observable o1, char *key1, Observable o2, char *key2);
