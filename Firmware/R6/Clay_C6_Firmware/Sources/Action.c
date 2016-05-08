@@ -380,8 +380,7 @@ static int8_t Perform_Signal_Action(char *state) {
    int tokenInt = 0;
    int i;
 
-   // e.g., "TITL TOTL TITL TOTL TITL TOTL TITL TOTL TITL TOTL TITL TOTL"
-   // e.g., "F--- TI-L F--- F--- F--- TO-L F--- F--- F--- TO-- F--- F---"
+   // e.g., "none none none 0.02,64450 none none none none none none none none"
 
    // Update the channels
    // TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
@@ -434,7 +433,7 @@ static int8_t Perform_Signal_Action(char *state) {
 
                // ...then update the date.
                int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
-               Set_Observable_Data (observable, CONTENT_TYPE_INT32, &default_content_int32);
+               Set_Observable_Content (observable, CONTENT_TYPE_INT32, &default_content_int32);
                // </OPTIMIZE>
 
             } else if (token[3] == 'L') {
@@ -451,7 +450,7 @@ static int8_t Perform_Signal_Action(char *state) {
 
 			   // ...then update the date.
 			   int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_OFF;
-			   Set_Observable_Data (observable, CONTENT_TYPE_INT32, &default_content_int32);
+			   Set_Observable_Content (observable, CONTENT_TYPE_INT32, &default_content_int32);
 			   // </OPTIMIZE>
             } else {
                // ERROR: Error. An unrecognized toggle value was specified.
@@ -468,25 +467,34 @@ static int8_t Perform_Signal_Action(char *state) {
             // 20 is the frequency in seconds, as a double (for now I'm treating it like us, because the app doesn't allow for setting a decimal)
             // 62000 is the counts for the duty cycle ratio.
 
-            char * frequency_str = token + 4;
-            char * duty_str = strchr(token, DEFAULT_TOKEN_PARAMETER_DELIMITER) + 1;
-            *(duty_str - 1) = '\0';     //do this so we can use atoi
+//            char * frequency_str = strtok (token, ",");
+//            char * duty_str = strtok (NULL, ","); //strchr(token, DEFAULT_TOKEN_PARAMETER_DELIMITER) + 1;
+//            // *(duty_str - 1) = '\0';     //do this so we can use atoi
+//
+//            Observable *observable = NULL;
+//            //Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+//            Observable_Set *observable_set = channel_profile[i].observable_set;
 
-            Observable *observable = NULL;
-            Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+//            THIS IS OVERWRITING THE VALUE PROPAGATED FROM THE INPUT! OPEN FOR 1 PROPAGATION EVERY TIME THIS EXECUTES (LIKE A DOOR)! CAN ALSO SET UP SO IT USES CONTINUOUS PROPAGATION.
+//            -- TEST THIS BY JUST COMMENTING OUT THE CODE BELOW THAT CALLS "Set_Observable_Content"
 
-            observable = Get_Observable (observable_set, "pulse_period_seconds");
-            float content_float = ((float) atoi(frequency_str) / 1000000);
-            Set_Observable_Data (observable, CONTENT_TYPE_FLOAT, &content_float);
+            // e.g., "0.02,64450"
+
+            // TODO: Create "switched" "constant" observable in Event.c and ensure it is in place with the right value...
+            // TODO: Here, "switch" the observable, to "observe" a single value from it (do one-time propagation here, don't propagate it continuously) and .
+
+//            observable = Get_Observable (observable_set, "pulse_period_seconds");
+//            float content_float = strtof(frequency_str, NULL); // ((float) atoi(frequency_str) / 1000000);
+//            Set_Observable_Content (observable, CONTENT_TYPE_FLOAT, &content_float);
 //            updated_channel_profile[i].data->pulse_period_seconds = ((float) atoi(frequency_str) / 1000000);
 
-            observable = Get_Observable (observable_set, "pulse_duty_cycle");
-			int16_t content_int16 = atoi(duty_str);
-			Set_Observable_Data (observable, CONTENT_TYPE_INT16, &content_int16);
-//            updated_channel_profile[i].data->pulse_duty_cycle = atoi(duty_str);
+//            observable = Get_Observable (observable_set, "pulse_duty_cycle");
+//			int16_t content_int16 = (int16_t) atoi (duty_str);
+//			Set_Observable_Content (observable, CONTENT_TYPE_INT16, &content_int16);
+////            updated_channel_profile[i].data->pulse_duty_cycle = atoi(duty_str);
 
             //restore the delimiter in case it's needed later.
-            *(duty_str - 1) = DEFAULT_TOKEN_PARAMETER_DELIMITER;
+//            *(duty_str - 1) = DEFAULT_TOKEN_PARAMETER_DELIMITER;
 
          } else {
             // ERROR: Error. An invalid mode was specified.
@@ -508,7 +516,7 @@ static int8_t Perform_Signal_Action(char *state) {
 
         	 // ...then update the date.
         	 int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
-        	 Set_Observable_Data (observable, CONTENT_TYPE_INT32, &data);
+        	 Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
 
         	 // </OPTIMIZE>
 
@@ -527,8 +535,9 @@ static int8_t Perform_Signal_Action(char *state) {
             observable = Get_Observable (observable_set, "waveform_sample_value");
 
             // ...then update the date.
-            int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
-            Set_Observable_Data (observable, CONTENT_TYPE_INT32, &data);
+//            int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
+            int32 waveform_sample_value = Get_Observable_Data_Int32 (observable);
+//            Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
 
             // </OPTIMIZE>
 
