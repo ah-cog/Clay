@@ -72,12 +72,16 @@ void Application(void) {
       while (Has_Messages(&incomingWiFiMessageQueue)) {
          temp_message_ptr = Dequeue_Message(&incomingWiFiMessageQueue);
 
-         if (!wifi_connected) {
-            wifi_connected = Parse_Wifi_Connection_Message(temp_message_ptr);
-         }
+         if (temp_message_ptr != NULL) {
+            if (!wifi_connected) {
+               wifi_connected = Parse_Wifi_Connection_Message(temp_message_ptr);
+            }
 
-         if (!local_address_received) {
-            local_address_received = Parse_Wifi_Connection_Message(temp_message_ptr);
+            if (!local_address_received) {
+               local_address_received = Parse_Wifi_Connection_Message(temp_message_ptr);
+            }
+
+            Delete_Message(temp_message_ptr);
          }
       }
 
@@ -152,15 +156,16 @@ void Wifi_Test() {
    Message *message = NULL;
    Message * outgoing_message = NULL;
    uint32_t lastMessageSendTime = 0;
-   uint32_t messageSendPeriod = 1000;
+   uint32_t messageSendPeriod = 100;
 
-   bool echo = FALSE;
+   bool echo = TRUE;
    bool repeat_send = FALSE;
+
    bool request_connect = FALSE;
    bool get_ip = FALSE;
-   bool send_text_content = TRUE;
 
-   bool request_firmware_size = FALSE;
+   bool send_text_content = TRUE;
+   bool send_http_message = TRUE;
 
    const uint32_t max_serialized_length = 1024;
    char serialized_message[max_serialized_length];
@@ -169,8 +174,16 @@ void Wifi_Test() {
    char source_addr[] = "192.168.1.21:3000";
 
    char text_content_type[] = "text";
-   char text_message_content[] = "this is my test message, yo. i can put all the \t's and \f's in it that i want and no one is going to give a hoot. how about that? good golly, this is some more text over here, and look what i brought along that's right its some tabs \t\t\t\t\t\t lots of tabs \t\t\t\t\t\t \t\a\bs those probably arent even all special charachters. i bet i get an error when i try to build! nope, it was a warning, and the only one that was a problem was \\s!";
+   char text_message_content[] = "muhuhuhueessagueaaaay!!!";
    uint32_t text_message_length = strlen(text_message_content);
+
+   char http_type_str[] = "http";
+   char http_dest_addr[] = "192.168.1.3:3000/something/for/you/here";
+   char http_source_addr[] = "192.168.1.21:3000";
+
+   char http_text_content_type[] = "text";
+   char http_text_message_content[] = "none";
+   uint32_t http_text_message_length = strlen(http_text_message_content);
 
    char bin_content_type[] = "bin";
    uint32_t bin_message_length = 256;
@@ -193,12 +206,24 @@ void Wifi_Test() {
 
          outgoing_message = Create_Message();
 
-         Set_Message_Type(outgoing_message, type_str);
-         Set_Message_Source(outgoing_message, source_addr);
-         Set_Message_Destination(outgoing_message, dest_addr);
+         if (send_http_message) {
+            Set_Message_Type(outgoing_message, http_type_str);
+            Set_Message_Source(outgoing_message, http_source_addr);
+            Set_Message_Destination(outgoing_message, http_dest_addr);
+         } else {
+            Set_Message_Type(outgoing_message, type_str);
+            Set_Message_Source(outgoing_message, source_addr);
+            Set_Message_Destination(outgoing_message, dest_addr);
+         }
+
          if (send_text_content) {
-            Set_Message_Content(outgoing_message, text_message_content, text_message_length);
-            Set_Message_Content_Type(outgoing_message, text_content_type);
+            if (send_http_message) {
+               Set_Message_Content(outgoing_message, http_text_message_content, http_text_message_length);
+               Set_Message_Content_Type(outgoing_message, text_content_type);
+            } else {
+               Set_Message_Content(outgoing_message, text_message_content, text_message_length);
+               Set_Message_Content_Type(outgoing_message, text_content_type);
+            }
          } else {
             Set_Message_Content(outgoing_message, bin_message_content, bin_message_length);
             Set_Message_Content_Type(outgoing_message, bin_content_type);
@@ -209,6 +234,18 @@ void Wifi_Test() {
          lastMessageSendTime = Millis();
       } else if (Wifi_Get_State() == Programming) {
          repeat_send = FALSE;
+      }
+
+      if (echo && Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
+         message = Wifi_Receive();
+         if (message != NULL && strcmp(message->message_type, "status")) {
+
+            char * temp = message->destination;
+            message->destination = message->source;
+            message->source = temp;
+
+            Wifi_Send(message);
+         }
       }
 
       if (request_connect) {

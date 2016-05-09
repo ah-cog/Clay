@@ -177,7 +177,11 @@ uint8_t Has_Latest_Firmware() {
                                              5,
                                              500);
 
-   latestFirmwareChecksum = Parse_Checksum_From_Message(response_message);
+   if (response_message != NULL) {
+      latestFirmwareChecksum = Parse_Checksum_From_Message(response_message);
+      Delete_Message(response_message);
+      response_message = NULL;
+   }
 
 //   latestFirmwareChecksum = atoi(httpResponseBuffer);
 
@@ -250,9 +254,13 @@ uint8_t Update_Firmware() {
    sprintf(uriParameters, "/clay/firmware/size");
 
    response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
-                                             5,
+                                             1,
                                              500);
-   firmware_size = Parse_Size_From_Message(response_message);
+   if (response_message != NULL) {
+      firmware_size = Parse_Size_From_Message(response_message);
+      Delete_Message(response_message);
+      response_message = NULL;
+   }
 
    /* Update the stored application firmware size and checksum.
     * These are used to indicate what should be on the device. */
@@ -273,8 +281,11 @@ uint8_t Update_Firmware() {
    response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
                                              5,
                                              500);
-
-   firmware_checksum = Parse_Checksum_From_Message(response_message);
+   if (response_message != NULL) {
+      firmware_checksum = Parse_Checksum_From_Message(response_message);
+      Delete_Message(response_message);
+      response_message = NULL;
+   }
 
    // Write checksum to flash and (TODO) verify it.
    if (firmware_size > 0 && firmware_checksum > 0 && (status = Write_Program_Checksum(firmware_checksum)) == 0) {
@@ -293,9 +304,6 @@ uint8_t Update_Firmware() {
 
    // Retrieve firmware if is hasn't yet been received in its entirety.
    while (bytesReceived < firmware_size) {
-      // TODO: Download the latest firmware via HTTP request
-
-      // Get the new firmware in chunks, perform checksum on each one (retry if fail, continue to next chunk if success), write the verified chunk into flash
 
       startByte = blockIndex * blockSize;     // Determine the first byte to receive in the block based on the current block index.
       sprintf(uriParameters, "/clay/firmware/?startByte=%d&byteCount=%d", startByte, blockSize);
@@ -303,12 +311,19 @@ uint8_t Update_Firmware() {
                                                 5,
                                                 500);
 
-      // TODO: Implement per-block checksum!
+      if (response_message != NULL) {
+         bytesReceived += response_message->content_length;
 
-      //verify message
-      //retry if necessary
-      // Update the number of received bytes.
-      // Write the received bytes to application memory in flash.
+         // TODO: Implement per-block length/checksum fields on server messages.
+
+         //verify message
+         //retry if necessary
+         // Update the number of received bytes.
+         // Write the received bytes to application memory in flash.
+
+         Delete_Message(response_message);
+         response_message = NULL;
+      }
 
       // Advance to the next byte.
       blockIndex = blockIndex + 1;

@@ -35,7 +35,7 @@
 ////Macros ////////////////////////////////////////////////////////
 #define DATA_CONNECT_ATTEMPT_MAX 		10
 #define RECEIVE_DATA_SIZE				1024
-#define TRANSMIT_DATA_SIZE				256
+#define TRANSMIT_DATA_SIZE				1024
 #define LOCAL_TCP_PORT					3000
 #define ADDR_STRING_SIZE 				50
 #define CONNECT_TIMEOUT_ms				100
@@ -78,10 +78,6 @@ struct sockaddr_in remote_address;
 
 static Message * temp_msg_ptr;
 static Message_Type * ignored_message_type;
-
-static int receive_head;
-static int receive_tail;
-static int receive_size;
 
 static uint32 last_tcp_activity_time;
 static uint32 tcp_connection_timeout_us = 10000000;
@@ -134,24 +130,13 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 		Multibyte_Ring_Buffer_Init(&tcp_rx_multibyte, RECEIVE_DATA_SIZE);
 		local_address_string = zalloc(ADDR_STRING_SIZE);
 		remote_address_string = zalloc(ADDR_STRING_SIZE);
-//		receive_data = zalloc(RECEIVE_DATA_SIZE);
 		transmit_data = zalloc(TRANSMIT_DATA_SIZE);
 		taskEXIT_CRITICAL();
-
-		//	taskENTER_CRITICAL();
-		//	printf("\r\n\r\nla:%08x\r\nra:%08x\r\nrx:%08x\r\ntx:%08x\r\n\r\n",
-		//			(uint32) local_address_string, (uint32) remote_address_string,
-		//			(uint32) receive_data, (uint32) transmit_data);
-		//	UART_WaitTxFifoEmpty(UART0);
-		//	taskEXIT_CRITICAL();
-
-		//	vTaskDelay(5000 / portTICK_RATE_MS);
 
 		taskYIELD();
 
 		xTaskHandle TCP_combined_handle;
 
-		//TODO: print high water mark and revise stack size if necessary.
 		xTaskCreate(TCP_Combined_Task, "TCP combined", 256, NULL,
 				Get_Task_Priority(TASK_TYPE_TCP_RX), &TCP_combined_handle);
 
@@ -177,13 +162,8 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 		Data_Disconnect();
 		Listen_Disconnect();
 
-		receive_head = 0;
-		receive_tail = 0;
-		receive_size = 0;
-
 		free(local_address_string);
 		free(remote_address_string);
-//		free(receive_data);
 		Multibyte_Ring_Buffer_Free(&tcp_rx_multibyte);
 		free(transmit_data);
 
@@ -197,7 +177,6 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 {
 	for (;;)
 	{
-//		DEBUG_Print("top of combined");
 		connected = false;
 
 #if ENABLE_TCP_COMBINED_RX
@@ -213,25 +192,12 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 		//listen for incoming connection, start a connection if we have an outgoing message.
 		while (!connected)
 		{
-//			if (++tcpLoops > 50)
-//			{
-//				tcpLoops = 0;
-//				taskENTER_CRITICAL();
-//				printf("listen on sock:%d, %s\r\n", listen_sock,
-//						local_address_string);
-//				taskEXIT_CRITICAL();
-//			}
 
 #if ENABLE_TCP_COMBINED_RX
 			data_sock = Listen(listen_sock, remote_address_string,
 					&remote_address);
 			connected = data_sock > -1;
 #endif
-
-//			if(connected)
-//			{
-//				DEBUG_Print("accepted incoming connection.");
-//			}
 
 #if ENABLE_TCP_COMBINED_TX
 			if (!connected)
@@ -243,25 +209,10 @@ void ICACHE_RODATA_ATTR TCP_Combined_Task()
 			taskYIELD();
 		}
 
-		receive_head = 0;
-		receive_tail = 0;
-		receive_size = 0;
-
 		while (connected)
 		{
-//			if (++tcpLoops > 30)
-//			{
-//				tcpLoops = 0;
-//				DEBUG_Print("connected");
-//			}
-
 #if ENABLE_TCP_COMBINED_TX
 			connected = Dequeue_And_Transmit(data_sock);
-
-//			if (!connected)
-//			{
-//				DEBUG_Print("dqt disconnect\r\n\r\n");
-//			}
 #endif
 
 #if ENABLE_TCP_COMBINED_RX
@@ -288,13 +239,9 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 	int32 bind_result;
 	int32 listen_result;
 
-//	DEBUG_Print("olc");
-
 	taskENTER_CRITICAL();
 	memset(local_addr, 0, sizeof(struct sockaddr_in));
 	taskEXIT_CRITICAL();
-
-//	DEBUG_Print("did memset");
 
 	taskYIELD();
 
@@ -303,14 +250,10 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 	local_addr->sin_len = sizeof(*local_addr);
 	local_addr->sin_port = htons(server_port);
 
-//	DEBUG_Print_Address(local_addr, "listen addr");
-
 	taskENTER_CRITICAL();
 	Serialize_Address(Get_IP_Address(), ntohs(local_addr->sin_port),
 			local_addr_string, 50);
 	taskEXIT_CRITICAL();
-
-//	DEBUG_Print("serialized");
 
 	taskYIELD();
 
@@ -330,10 +273,6 @@ static int32 ICACHE_RODATA_ATTR Open_Listen_Connection(char * local_addr_string,
 			uint32 optionLength = sizeof(error);
 			int getReturn = lwip_getsockopt(listen_socket, SOL_SOCKET,
 			SO_ERROR, &error, &optionLength);
-
-//			taskENTER_CRITICAL();
-//			printf("bind fail:%d\r\n", error);
-//			taskEXIT_CRITICAL();
 
 			lwip_close(listen_socket);
 			listen_socket = -1;
@@ -413,16 +352,6 @@ static int32 ICACHE_RODATA_ATTR Listen(int32 listen_socket,
 
 	return accepted_sock;
 }
-
-//Message peek_message =
-//		{ "192.168.1.21:3000", "192.168.1.3:1002",
-//				"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d",
-//				"tcp" };
-//Message * Peeker()
-//{
-//	vTaskDelay(1000 / portTICK_RATE_MS);
-//	return &peek_message;
-//}
 
 static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 {
@@ -644,16 +573,11 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 		return true;
 	}
 
+	size_t length = 0;
 	bool rval = false;
-	struct sockaddr_in message_dest;
 
 	if (strstr(m->destination, remote_address_string) != NULL)
 	{
-		taskENTER_CRITICAL();
-		Deserialize_Address(m->destination, &message_dest,
-				ignored_message_type);
-		taskEXIT_CRITICAL();
-
 		if (connection_type == MESSAGE_TYPE_HTTP
 				&& strlen(m->content) <= MAXIMUM_MESSAGE_LENGTH - 5)
 		{
@@ -661,18 +585,28 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 		}
 		else
 		{
+			taskENTER_CRITICAL();
+			length = (size_t) Serialize_Message_Content(m, transmit_data,
+			TRANSMIT_DATA_SIZE);
+			taskEXIT_CRITICAL();
+
 			rval = true;
 		}
-
-		taskENTER_CRITICAL();
-		size_t length = (size_t) (strlen(m->content));
-		taskEXIT_CRITICAL();
 
 		if (rval)
 		{
 			taskYIELD();
 
-			rval = lwip_write(destination_socket, m->content, length) == length;
+			if (connection_type == MESSAGE_TYPE_HTTP)
+			{
+				rval = lwip_write(destination_socket, m->content,
+						m->content_length) == m->content_length;
+			}
+			else
+			{
+				rval = lwip_write(destination_socket, transmit_data, length)
+						== length;
+			}
 
 			taskYIELD();
 
@@ -751,8 +685,8 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 {
 	bool rval = true;
 	uint32_t received_message_length = 0;
-	Message * dequeued_message;
-	uint8_t * temp_string;
+	Message * dequeued_message = NULL;
+	uint8_t * temp_string = NULL;
 
 	taskENTER_CRITICAL();
 	uint32_t rx_temp_buffer_size = Multibyte_Ring_Buffer_Get_Free_Size(
@@ -773,11 +707,16 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 	if (connection_type == MESSAGE_TYPE_TCP)
 	{
+		taskENTER_CRITICAL();
 		Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 				&tcp_rx_multibyte, &temp_string);
+		taskEXIT_CRITICAL();
+
 		if (temp_string != NULL)
 		{
+			taskENTER_CRITICAL();
 			dequeued_message = Deserialize_Message_Content(temp_string);
+			taskEXIT_CRITICAL();
 			free(temp_string);
 		}
 	}
@@ -796,38 +735,65 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 		//
 		//		130128
 
+		taskENTER_CRITICAL();
 		memset(rx_temp_buffer, 0, rx_temp_buffer_size);
+		taskEXIT_CRITICAL();
+
+		taskENTER_CRITICAL();
+		uint32_t dequeued_count = Multibyte_Ring_Buffer_Dequeue_Until_String(
+				&tcp_rx_multibyte, rx_temp_buffer, rx_temp_buffer_size,
+				"Content-Length:");
+		taskEXIT_CRITICAL();
 
 		//dq until Content-Length:
-		if (Multibyte_Ring_Buffer_Dequeue_Until_String(&tcp_rx_multibyte,
-				rx_temp_buffer, rx_temp_buffer_size, "Content-Length:") != 0)
+		if (dequeued_count != 0)
 		{
+			taskENTER_CRITICAL();
 			memset(rx_temp_buffer, 0, rx_temp_buffer_size);
+			taskEXIT_CRITICAL();
+
+			taskENTER_CRITICAL();
+			dequeued_count = Multibyte_Ring_Buffer_Dequeue_Until_String(
+					&tcp_rx_multibyte, rx_temp_buffer, rx_temp_buffer_size,
+					"\r\n");
+			taskEXIT_CRITICAL();
 
 			//dq until newline
-			if (Multibyte_Ring_Buffer_Dequeue_Until_String(&tcp_rx_multibyte,
-					rx_temp_buffer, rx_temp_buffer_size, "\r\n") != 0)
+			if (dequeued_count != 0)
 			{
 				//parse content-length value out of last parsed string
 				taskENTER_CRITICAL();
 				received_message_length = atoi(rx_temp_buffer);
 				taskEXIT_CRITICAL();
 
-				//dq until Connection:
-				if (Multibyte_Ring_Buffer_Dequeue_Until_String(
+				taskENTER_CRITICAL();
+				dequeued_count = Multibyte_Ring_Buffer_Dequeue_Until_String(
 						&tcp_rx_multibyte, rx_temp_buffer, rx_temp_buffer_size,
-						"Connection:") != 0)
+						"Connection:");
+				taskEXIT_CRITICAL();
+
+				//dq until Connection:
+				if (dequeued_count != 0)
 				{ //dq until \n\n
-					if (Multibyte_Ring_Buffer_Dequeue_Until_String(
+
+					dequeued_count = Multibyte_Ring_Buffer_Dequeue_Until_String(
 							&tcp_rx_multibyte, rx_temp_buffer,
-							rx_temp_buffer_size, "\r\n\r\n") != 0)
+							rx_temp_buffer_size, "\r\n\r\n");
+
+					if (dequeued_count != 0)
 					{
+						taskENTER_CRITICAL();
 						temp_string = zalloc(received_message_length);
+						taskEXIT_CRITICAL();
+
+						taskENTER_CRITICAL();
+						dequeued_count = Multibyte_Ring_Buffer_Dequeue(
+								&tcp_rx_multibyte, temp_string,
+								received_message_length);
+						taskEXIT_CRITICAL();
 
 						//dq content-length bytes.
-						if (Multibyte_Ring_Buffer_Dequeue(&tcp_rx_multibyte,
-								temp_string, received_message_length)
-								== received_message_length)
+						if (dequeued_count == received_message_length)
 						{
 							taskENTER_CRITICAL();
 							dequeued_message = Create_Message();
@@ -950,6 +916,8 @@ static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 	rval = (Has_Messages(&outgoing_tcp_message_queue)
 			|| Multibyte_Ring_Buffer_Get_Count(&tcp_rx_multibyte)
 					> RECEIVE_BYTES_TRIGGER_LEVEL);
+//	rval = (Multibyte_Ring_Buffer_Get_Count(&tcp_rx_multibyte)
+//			> RECEIVE_BYTES_TRIGGER_LEVEL);
 	taskEXIT_CRITICAL();
 
 	promoted = rval;
@@ -976,11 +944,12 @@ uint8_t ICACHE_RODATA_ATTR *memchr2(uint8_t *ptr, uint8_t ch, size_t size)
 	return NULL;
 }
 
-static bool TCP_Timeout_Check()
+static bool ICACHE_RODATA_ATTR TCP_Timeout_Check()
 {
 	bool rval = true;
 
-	if (system_get_time() - last_tcp_activity_time > tcp_connection_timeout_us)
+	if ((system_get_time() - last_tcp_activity_time)
+			> tcp_connection_timeout_us)
 	{
 		Data_Disconnect();
 		rval = false;
@@ -989,7 +958,7 @@ static bool TCP_Timeout_Check()
 	return rval;
 }
 
-static bool Prepare_Http_Message(Message * m)
+static bool ICACHE_RODATA_ATTR Prepare_Http_Message(Message * m)
 {
 	bool rval = false;
 	char * start_of_uri;
@@ -1003,7 +972,7 @@ static bool Prepare_Http_Message(Message * m)
 
 	if (start_of_uri != NULL)
 	{
-		sprintf(m->content, http_get_format, start_of_uri);
+		m->content_length = sprintf(m->content, http_get_format, start_of_uri);
 		start_of_uri = '\0';
 
 		rval = true;

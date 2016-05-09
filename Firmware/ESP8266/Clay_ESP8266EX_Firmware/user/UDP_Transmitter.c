@@ -60,8 +60,8 @@ static UDP_Transmitter_States State;
 
 static int ret;
 
-static uint8_t *UDP_Tx_Buffer;
-static uint16_t UDP_Tx_Count;
+static uint8_t *udp_tx_buffer;
+static uint16_t udp_tx_count;
 
 static bool promoted;
 
@@ -94,7 +94,7 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 		promoted = false;
 
 		taskENTER_CRITICAL();
-		UDP_Tx_Buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
+		udp_tx_buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
 		Initialize_Message_Queue(&outgoing_udp_message_queue);
 		taskEXIT_CRITICAL();
 
@@ -127,7 +127,7 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Deinit()
 		lwip_close(transmit_sock);
 		transmit_sock = -1;
 
-		free(UDP_Tx_Buffer);
+		free(udp_tx_buffer);
 
 		task_running = false;
 		Stop_Task(TASK_TYPE_UDP_TX);
@@ -181,9 +181,8 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 
 			TODO:
 			taskENTER_CRITICAL();
-			memcpy(UDP_Tx_Buffer, temp_msg_ptr->content,
-					temp_msg_ptr->content_length);
-			UDP_Tx_Count = temp_msg_ptr->content_length;
+			udp_tx_count = Serialize_Message_Content(temp_msg_ptr,
+					udp_tx_buffer, UDP_TX_BUFFER_SIZE_BYTES);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
@@ -221,7 +220,7 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 }
 
 ////Local implementations /////////////////////////////////////////
-static bool ICACHE_RODATA_ATTR Connect()
+static bool ICACHE_RODATA_ATTR ICACHE_RODATA_ATTR Connect()
 {
 	bool rval = false;
 
@@ -259,18 +258,18 @@ static bool ICACHE_RODATA_ATTR Connect()
 	return rval;
 }
 
-static bool Transmit()
+static bool ICACHE_RODATA_ATTR Transmit()
 {
 	bool rval = false;
-	rval = UDP_Tx_Count
-			== sendto(transmit_sock, (uint8* ) UDP_Tx_Buffer, UDP_Tx_Count, 0,
+	rval = udp_tx_count
+			== sendto(transmit_sock, (uint8* ) udp_tx_buffer, udp_tx_count, 0,
 					(struct sockaddr * ) &DestinationAddr,
 					sizeof(DestinationAddr));
 
 	return rval;
 }
 
-static bool Message_Available()
+static bool ICACHE_RODATA_ATTR Message_Available()
 {
 	bool rval = false;
 
@@ -286,24 +285,15 @@ static bool Message_Available()
 	return rval;
 }
 
-
-static bool Check_Needs_Promotion()
+static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-	taskENTER_CRITICAL();
-	rval = Has_Messages(&outgoing_udp_message_queue);
-	taskEXIT_CRITICAL();
-
-//	if (++loops > LOOPS_BEFORE_PRINT || outgoing_UDP_message_queue.count)
-//	{
-//		loops = 0;
-//		taskENTER_CRITICAL();
-//		printf("udp tx count:%d\r\n", outgoing_UDP_message_queue.count);
-//		taskEXIT_CRITICAL();
-//	}
-
-	promoted = rval;
+//	taskENTER_CWRITICAL();
+//	rval = Has_Messages(&outgoing_udp_message_queue);
+//	taskEXIT_CRITICAL();
+//
+//	promoted = rval;
 
 	return rval;
 }

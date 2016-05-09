@@ -9,7 +9,8 @@
 #include "esp_common.h"
 #include "Message_Queue.h"
 #include "queue.h"
-#include "../include/System_Monitor.h"
+#include "System_Monitor.h"
+#include "UART.h"
 
 ////Macros ////////////////////////////////////////////////////////
 #define DEFAULT_PRIORITY 		           2
@@ -62,8 +63,10 @@ void ICACHE_RODATA_ATTR Start_System_Monitor()
 {
 	idle_handle = xTaskGetIdleTaskHandle();
 	current_task = TASK_TYPE_UDP_TX;
-	xTaskCreate(System_Monitor_Task, "system monitor", configMINIMAL_STACK_SIZE,
-			NULL, SYSTEM_MONITOR_PRIORITY, &system_monitor_handle);
+
+	xTaskCreate(System_Monitor_Task, "system monitor", 256, NULL,
+			SYSTEM_MONITOR_PRIORITY, &system_monitor_handle);
+
 }
 
 void ICACHE_RODATA_ATTR System_Register_Task(TASK_TYPE calling_task,
@@ -80,8 +83,6 @@ void ICACHE_RODATA_ATTR System_Monitor_Task()
 
 	for (;;)
 	{
-		//TODO: figure out how long an iteration of this task runs.
-
 		Monitor_Priority();
 		Monitor_Memory();
 
@@ -119,17 +120,18 @@ static void ICACHE_RODATA_ATTR Monitor_Priority()
 		if (current_task_ptr->task_needs_promotion != NULL
 				&& current_task_ptr->task_needs_promotion())
 		{
-			if (++loops > LOOPS_BEFORE_PRINT)
-			{
-				loops = 0;
-//				taskENTER_CRITICAL();
-//				printf("%d promoted\r\n", (int) current_task);
-//				taskEXIT_CRITICAL();
-			}
-
 			if (current_task_ptr->current_priority
 					<= current_task_ptr->default_priority)
 			{
+//				taskENTER_CRITICAL();
+//				printf(
+//						"\r\n---------------------------------------------\r\n%d promoted old:%d default:%d sysmon:%d\r\n---------------------------------------------\r\n",
+//						(int) current_task, current_task_ptr->current_priority,
+//						current_task_ptr->default_priority,
+//						SYSTEM_MONITOR_PRIORITY);
+//				UART_WaitTxFifoEmpty(UART0);
+//				taskEXIT_CRITICAL();
+
 				++(current_task_ptr->current_priority);
 
 				//context switch will happen here if task priority is higher than the current task..
@@ -141,6 +143,15 @@ static void ICACHE_RODATA_ATTR Monitor_Priority()
 		else if (current_task_ptr->current_priority
 				> current_task_ptr->default_priority)
 		{
+//			taskENTER_CRITICAL();
+//			printf(
+//					"\r\n---------------------------------------------\r\n%d demoted old:%d default:%d sysmon:%d\r\n---------------------------------------------\r\n",
+//					(int) current_task, current_task_ptr->current_priority,
+//					current_task_ptr->default_priority,
+//					SYSTEM_MONITOR_PRIORITY);
+//			UART_WaitTxFifoEmpty(UART0);
+//			taskEXIT_CRITICAL();
+
 			--(current_task_ptr->current_priority);
 
 			vTaskPrioritySet(current_task_ptr->task_handle,
@@ -156,9 +167,9 @@ static void ICACHE_RODATA_ATTR Monitor_Memory()
 {
 	free_heap_size = system_get_free_heap_size();
 
-	taskENTER_CRITICAL();
-	printf("heap free: %d\r\n", free_heap_size);
-	taskEXIT_CRITICAL();
+//	taskENTER_CRITICAL();
+//	printf("\r\n\r\nheap free: %d\r\n\r\n", free_heap_size);
+//	taskEXIT_CRITICAL();
 
 	if (free_heap_size < FREE_HEAP_MINIMUM_LEVEL)
 	{

@@ -233,7 +233,7 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 
 			}
 
-			if(temp_msg_ptr != NULL)
+			if (temp_msg_ptr != NULL)
 			{
 				Delete_Message(temp_msg_ptr);
 			}
@@ -396,7 +396,7 @@ bool ICACHE_RODATA_ATTR Get_Subnet_Command(char * args)
 	return rval;
 }
 
-static void Stop_Task_Command(TASK_TYPE tt)
+static void ICACHE_RODATA_ATTR Stop_Task_Command(TASK_TYPE tt)
 {
 //TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
 
@@ -424,7 +424,7 @@ static void Stop_Task_Command(TASK_TYPE tt)
 	Send_Message_To_Master(TASK_STOP_OK_RESPONSE, MESSAGE_TYPE_STATUS);
 }
 
-static void Start_Task_Command(TASK_TYPE tt)
+static void ICACHE_RODATA_ATTR Start_Task_Command(TASK_TYPE tt)
 {
 //TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
 
@@ -472,16 +472,15 @@ void ICACHE_RODATA_ATTR Send_Startup_Message()
 	Send_Message_To_Master(STARTUP_MESSAGE, MESSAGE_TYPE_STATUS);
 }
 
-static bool Check_Needs_Promotion()
+static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-	//remain promoted until we empty the queue.
-	taskENTER_CRITICAL();
-	rval = (Has_Messages(&incoming_command_queue));
-	taskEXIT_CRITICAL();
-
-	promoted = rval;
+//	taskENTER_CRITICAL();
+//	rval = (Has_Messages(&incoming_command_queue));
+//	taskEXIT_CRITICAL();
+//
+//	promoted = rval;
 
 	return rval;
 }

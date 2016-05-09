@@ -21,7 +21,7 @@ typedef enum
    Enable,
    Programming,
    Idle,
-   Receive_Message,
+   Deserialize_Received_Message,
    Serialize_Transmission,
    Start_Transmission,
    Transmission_Sent

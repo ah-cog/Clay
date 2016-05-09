@@ -221,7 +221,8 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 	}
 }
 
-void Send_Message_To_Master(char * message, Message_Type type)
+void ICACHE_RODATA_ATTR Send_Message_To_Master(char * message,
+		Message_Type type)
 {
 	Message * temp_msg;
 	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
@@ -241,13 +242,13 @@ void Send_Message_To_Master(char * message, Message_Type type)
 }
 
 ////Local implementations /////////////////////////////////////////
-static bool Check_Needs_Promotion()
+static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-	taskENTER_CRITICAL();
-	rval = (Has_Messages(&incoming_message_queue));
-	taskEXIT_CRITICAL();
+//	taskENTER_CRITICAL();
+//	rval = (Has_Messages(&incoming_message_queue));
+//	taskEXIT_CRITICAL();
 
 	promoted = rval;
 

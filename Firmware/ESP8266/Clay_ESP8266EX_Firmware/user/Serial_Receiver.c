@@ -220,7 +220,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 }
 
 ////Local implementations /////////////////////////////////////////
-static bool Check_Needs_Promotion()
+static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	return Multibyte_Ring_Buffer_Get_Count(&serial_rx_multibyte)
 			> RING_BUFFER_PROMOTION_THRESHOLD && State == Idle;

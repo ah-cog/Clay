@@ -49,9 +49,14 @@ static uint8_t * temp_source_address;
 static uint8_t * temp_dest_address;
 static uint8_t * message_end_ptr;
 static uint8_t * message_start_ptr;
+static uint8_t * message_serial;
+static Message * message;
 
 static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
+
+static uint32_t rx_message_count;
+static uint32_t tx_message_count;
 
 bool Enable_WiFi(const char *ssid, const char *password) {
    bool rval = FALSE;
@@ -71,6 +76,8 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 
    State = Idle;
 
+   rx_message_count = 0;
+   tx_message_count = 0;
    Initialize_Message_Queue(&incomingWiFiMessageQueue);
    Initialize_Message_Queue(&outgoingWiFiMessageQueue);
 
@@ -103,6 +110,9 @@ void Wifi_State_Step() {
 
    switch (State) {
       case Enable: {
+         //TODO: on startup, the ESP sends a message saying that it has powered up. We should always be watching for
+         //      that message so we can see when it resets, handle any startup we may want to do, have better knowledge of the wifi state, etc
+
          if (WifiInterruptReceived) {
             WifiInterruptReceived = FALSE;
             ++PowerOn_Interrupt_Count;
@@ -123,59 +133,47 @@ void Wifi_State_Step() {
 
       case Idle: {
          //waiting for an interrupt, no tranmission pending
-
-         //this logic might leave us in a state where we never receive. We need to make sure we empty the buffer when we fail to retrieve a message from it a sufficient number of times.
-//         if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_start[0]) > 0) {
-//            State = Receive_Message;
-//         } else
          if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
 
             State = Serialize_Transmission;
 
-         } else if (WifiInterruptReceived) {
+         } else {
+            message_serial = NULL;
+            int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(&wifi_multibyte_ring,
+                                                                                                     &message_serial);
 
-            State = Receive_Message;
-
-            WifiInterruptReceived = FALSE;
-
-            interruptRxTime = Millis();
+            if (message_serial != NULL) {
+               State = Deserialize_Received_Message;
+               message = NULL;
+            } else if (Multibyte_Ring_Buffer_Get_Free_Size(&wifi_multibyte_ring) < 1) {
+               //didn't find a message, so the buffer's full of garbage. throw it out.
+               Multibyte_Ring_Buffer_Reset(&wifi_multibyte_ring);
+            }
          }
 
          break;
       }
 
-      case Receive_Message: {
+      case Deserialize_Received_Message: {
 
-         //TODO: dequeue in idle, if message available. if we get a message back, then come here, deserialize, and enqueue the message.
-         //      to handle the interrupt case, we can also check to see if the rx buffer is NULL, and dequeue here too.
-         if ((Millis() - interruptRxTime) < INTERRUPT_RX_TIMEOUT_MS) {
+         message = Deserialize_Message_With_Message_Header(message_serial);
+         free(message_serial);
 
-            uint8_t * message_serial = NULL;
-            Message * message = NULL;
-
-            int dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(&wifi_multibyte_ring,
-                                                                                                     &message_serial);
-
-            if (message_serial != NULL) {
-               message = Deserialize_Message_With_Message_Header(message_serial);
-            } else if (Multibyte_Ring_Buffer_Get_Free_Size(&wifi_multibyte_ring) < 1) {
-               Multibyte_Ring_Buffer_Reset(&wifi_multibyte_ring);
-            }
-
-            if (message != NULL) {
-               // Queue the message
-               Queue_Message(&incomingWiFiMessageQueue, message);
-               interruptRxTime = Millis();     // reset timeout, we'll look for another message.
-            }
-         } else {
-            State = Idle;
+         if (message != NULL) {
+            // Queue the message
+            Queue_Message(&incomingWiFiMessageQueue, message);
+            ++rx_message_count;
+            interruptRxTime = Millis();     // reset timeout, we'll look for another message.
          }
+
+         State = Idle;
 
          break;
       }
 
       case Serialize_Transmission: {
          Message *message = Dequeue_Message(&outgoingWiFiMessageQueue);
+         --tx_message_count;
 
          if ((pendingTransmitByteCount = Serialize_Message_With_Message_Header(message, serial_tx_buffer,
          WIFI_SERIAL_OUT_BUFFER_LENGTH))
@@ -253,6 +251,8 @@ void Wifi_Do_Reset(bool StateMachineWaitForConnect) {
 
 bool Wifi_Send(Message *message) {
    Queue_Message(&outgoingWiFiMessageQueue, message);
+   ++tx_message_count;
+
    return TRUE;
 }
 
@@ -260,6 +260,7 @@ Message* Wifi_Receive() {
    Message *message = NULL;
    if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
       message = Dequeue_Message(&incomingWiFiMessageQueue);
+      --rx_message_count;
       return message;
    }
    return NULL;
@@ -327,6 +328,8 @@ bool WiFi_Enable() {
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
 
+   rx_message_count = 0;
+   tx_message_count = 0;
    Initialize_Message_Queue(&incomingWiFiMessageQueue);
    Initialize_Message_Queue(&outgoingWiFiMessageQueue);
 

@@ -142,6 +142,7 @@ uint32_t Serialize_Message_Content(Message * message, uint8_t * destination_stri
 }
 
 //parse a message, including start character. Start char must be first char in message.
+//  note:message is strtok'd by this function.
 Message * Deserialize_Message_With_Message_Header(uint8_t * message) {
 
    //if there's no data, or we don't have a \f at the beginning of the message, we return.
