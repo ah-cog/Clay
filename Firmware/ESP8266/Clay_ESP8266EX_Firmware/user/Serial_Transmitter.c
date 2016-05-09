@@ -66,6 +66,7 @@ typedef enum
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Transmitter_States state;
 
+static int serial_tx_length;
 static uint8 * serial_tx_buffer;
 static Message * temp_msg_ptr;
 
@@ -141,35 +142,39 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			if (temp_msg_ptr != NULL)
 			{
 				taskENTER_CRITICAL();
-				Serialize_Message_With_Message_Header(temp_msg_ptr,
-						serial_tx_buffer,
+				serial_tx_length = Serialize_Message_With_Message_Header(
+						temp_msg_ptr, serial_tx_buffer,
 						SERIAL_TX_BUFFER_SIZE_BYTES - 1);
 				taskEXIT_CRITICAL();
 
 				Delete_Message(temp_msg_ptr);
-			}
 
-			time_temp = system_get_time();
+				if (serial_tx_length > 0)
+				{
 
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-			gpio16_output_set(0);
-#else
-			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
-#endif
-
-			//wait 1ms
-			while ((system_get_time() - time_temp) < 1000)
-			{
-				taskYIELD();
-			}
+					time_temp = system_get_time();
 
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
-			gpio16_output_set(1);
+					gpio16_output_set(0);
 #else
-			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
+					GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
 #endif
 
-			state = Wait_For_Transmit_Ok;
+					//wait 1ms
+					while ((system_get_time() - time_temp) < 1000)
+					{
+						taskYIELD();
+					}
+
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+					gpio16_output_set(1);
+#else
+					GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
+#endif
+
+					state = Wait_For_Transmit_Ok;
+				}
+			}
 
 			break;
 		}
@@ -187,7 +192,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 #endif
 
 			taskENTER_CRITICAL();
-			printf(serial_tx_buffer);
+			uart_tx_array(UART0, serial_tx_buffer, serial_tx_length);
 			taskEXIT_CRITICAL();
 			state = Transmitting;
 

@@ -739,15 +739,16 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 		memset(rx_temp_buffer, 0, rx_temp_buffer_size);
 		taskEXIT_CRITICAL();
 
+		//dq until Content-Length:
 		taskENTER_CRITICAL();
 		uint32_t dequeued_count = Multibyte_Ring_Buffer_Dequeue_Until_String(
 				&tcp_rx_multibyte, rx_temp_buffer, rx_temp_buffer_size,
 				"Content-Length:");
 		taskEXIT_CRITICAL();
 
-		//dq until Content-Length:
 		if (dequeued_count != 0)
 		{
+			//dq until newline
 			taskENTER_CRITICAL();
 			memset(rx_temp_buffer, 0, rx_temp_buffer_size);
 			taskEXIT_CRITICAL();
@@ -758,7 +759,6 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 					"\r\n");
 			taskEXIT_CRITICAL();
 
-			//dq until newline
 			if (dequeued_count != 0)
 			{
 				//parse content-length value out of last parsed string
@@ -774,8 +774,8 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 				//dq until Connection:
 				if (dequeued_count != 0)
-				{ //dq until \n\n
-
+				{
+					//dq until \n\n
 					dequeued_count = Multibyte_Ring_Buffer_Dequeue_Until_String(
 							&tcp_rx_multibyte, rx_temp_buffer,
 							rx_temp_buffer_size, "\r\n\r\n");

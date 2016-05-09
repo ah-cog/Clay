@@ -70,7 +70,7 @@ void Application(void) {
 
       //take all the messages out of the queue, see if we got the two we care about: connection status and
       while (Has_Messages(&incomingWiFiMessageQueue)) {
-         temp_message_ptr = Dequeue_Message(&incomingWiFiMessageQueue);
+         temp_message_ptr = Wifi_Receive();
 
          if (temp_message_ptr != NULL) {
             if (!wifi_connected) {
@@ -100,7 +100,7 @@ void Application(void) {
       while (Has_Messages(&incomingWiFiMessageQueue) || (Millis() - enable_wifi_start_time_ms) < 2000) {
          Message * m;
          Monitor_Periodic_Events();
-         m = Dequeue_Message(&incomingWiFiMessageQueue);
+         m = Wifi_Receive();
          if (m != NULL) {
             Delete_Message(m);
          }
@@ -156,9 +156,9 @@ void Wifi_Test() {
    Message *message = NULL;
    Message * outgoing_message = NULL;
    uint32_t lastMessageSendTime = 0;
-   uint32_t messageSendPeriod = 100;
+   uint32_t messageSendPeriod = 10000;
 
-   bool echo = TRUE;
+   bool echo = FALSE;
    bool repeat_send = FALSE;
 
    bool request_connect = FALSE;
@@ -178,7 +178,7 @@ void Wifi_Test() {
    uint32_t text_message_length = strlen(text_message_content);
 
    char http_type_str[] = "http";
-   char http_dest_addr[] = "192.168.1.3:3000/something/for/you/here";
+   char http_dest_addr[] = "107.170.180.158:3000/clay/firmware/?startByte=0&byteCount=256";
    char http_source_addr[] = "192.168.1.21:3000";
 
    char http_text_content_type[] = "text";
@@ -198,6 +198,11 @@ void Wifi_Test() {
 
       Monitor_Periodic_Events();
 
+      if (!echo && Has_Messages(&incomingMessageQueue)) {
+         Message * temp = Wifi_Receive();
+         Delete_Message(temp);
+      }
+
       //repeatedly send a message
       if (repeat_send
           && Wifi_Get_State() != Programming
@@ -207,6 +212,7 @@ void Wifi_Test() {
          outgoing_message = Create_Message();
 
          if (send_http_message) {
+
             Set_Message_Type(outgoing_message, http_type_str);
             Set_Message_Source(outgoing_message, http_source_addr);
             Set_Message_Destination(outgoing_message, http_dest_addr);

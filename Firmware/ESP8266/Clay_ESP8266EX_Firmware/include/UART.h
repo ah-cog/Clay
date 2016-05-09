@@ -300,6 +300,8 @@ void UART_SetLineInverse(UART_Port uart_no, UART_LineLevelInverse inverse_mask);
  */
 void uart_init_new(void);
 
+STATUS uart_tx_array(uint8 uart, uint8 * array, uint32_t count);
+
 /**
  * @}
  */

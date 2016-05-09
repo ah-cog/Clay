@@ -323,10 +323,10 @@ uint8_t Update_Firmware() {
 
          Delete_Message(response_message);
          response_message = NULL;
-      }
 
-      // Advance to the next byte.
-      blockIndex = blockIndex + 1;
+         // Advance to the next byte.
+         blockIndex = blockIndex + 1;
+      }
    }
 
    //verify program checksum

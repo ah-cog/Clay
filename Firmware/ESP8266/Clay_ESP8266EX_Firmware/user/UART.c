@@ -498,3 +498,15 @@ void ICACHE_RODATA_ATTR uart_init_new(void)
 	 */
 
 }
+
+STATUS ICACHE_RODATA_ATTR uart_tx_array(uint8 uart, uint8 * array,
+		uint32_t count)
+{
+	int i = 0;
+	for (; i < count; ++i)
+	{
+		uart_tx_one_char(uart, array[i]);
+	}
+
+	return OK;
+}
