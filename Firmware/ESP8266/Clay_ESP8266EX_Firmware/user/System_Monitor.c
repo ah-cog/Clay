@@ -79,14 +79,17 @@ void ICACHE_RODATA_ATTR System_Register_Task(TASK_TYPE calling_task,
 
 void ICACHE_RODATA_ATTR System_Monitor_Task()
 {
-	previous_run_time = xTaskGetTickCount();
-
 	for (;;)
 	{
 		Monitor_Priority();
 		Monitor_Memory();
 
+//		taskENTER_CRITICAL();
+//		printf("prt:%d\r\n\r\n", previous_run_time);
+//		taskEXIT_CRITICAL();
+
 		//run every priority_monitor_interval ticks.
+		previous_run_time = xTaskGetTickCount();
 		vTaskDelayUntil(&previous_run_time, priority_monitor_interval);
 	}
 }
@@ -168,7 +171,8 @@ static void ICACHE_RODATA_ATTR Monitor_Memory()
 	free_heap_size = system_get_free_heap_size();
 
 //	taskENTER_CRITICAL();
-//	printf("\r\n\r\nheap free: %d\r\n\r\n", free_heap_size);
+//	printf("\r\n\r\ntick:%d heap free: %d\r\n\r\n", xTaskGetTickCount(),
+//			free_heap_size);
 //	taskEXIT_CRITICAL();
 
 	if (free_heap_size < FREE_HEAP_MINIMUM_LEVEL)

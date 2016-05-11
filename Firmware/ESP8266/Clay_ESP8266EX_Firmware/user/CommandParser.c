@@ -176,6 +176,8 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			temp_msg_ptr = Dequeue_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
 
+			DEBUG_Print("\r\ncommand rx");
+
 			taskYIELD();
 
 			switch (Command_String_Parse(temp_msg_ptr->content,

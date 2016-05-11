@@ -9,7 +9,7 @@
 
 ////Macros ////////////////////////////////////////////////////////
 #define ADDRESS_STRING_LENGTH 30
-#define REQUEST_WAIT_TIME_ms  10000
+#define REQUEST_WAIT_TIME_ms  1000
 
 #define FIRST_PARAMETER  0
 #define SECOND_PARAMETER 1
@@ -485,7 +485,7 @@ static Message * WiFi_Wait_For_Message(uint32_t timeout_ms) {
    }
 
    if (Has_Messages(&incomingWiFiMessageQueue)) {
-      result = Dequeue_Message(&incomingWiFiMessageQueue);
+      result = Wifi_Receive();
    }
 
    return result;

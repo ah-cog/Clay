@@ -30,28 +30,31 @@
 #include "Queues.h"
 
 ////Defines ///////////////////////////////////////////////////////
-#define RING_BUFFER_PROMOTION_THRESHOLD		30
+#define RING_BUFFER_PROMOTION_THRESHOLD		512
 #define SERIAL_RX_TIMEOUT_us				100000
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
 {
-	Disable, Configure, Idle, Receiving, Parsing, UDP_STATE_MAX
+	Disable,
+	Configure,
+	Idle,
+	Deserialize_Received_Message,
+	Parsing,
+	UDP_STATE_MAX
 } Serial_Receiver_States;
 ////Globals   /////////////////////////////////////////////////////
-volatile bool master_interrupt_received;
 
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Receiver_States State;
 
-static bool message_received;
-
 static Message * temp_msg_ptr;
-static uint32 state_time;
 int i;
 
 Message ** selected_message_queue;
 
+static uint8_t * message_serial;
+static int dequeue_count;
 static Message_Type received_message_type;
 
 uint32 counter;
@@ -63,7 +66,6 @@ static bool Check_Needs_Promotion();
 bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 {
 	bool rval = true;
-	master_interrupt_received = false;
 
 	taskENTER_CRITICAL();
 	//multibyte ring buffer initialized in user_main
@@ -111,44 +113,48 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 		case Idle:
 		{
-			if (master_interrupt_received) //state transition
+			message_serial = NULL;
+
+			taskENTER_CRITICAL();
+			dequeue_count =
+					Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
+							&serial_rx_multibyte, &message_serial);
+			taskEXIT_CRITICAL();
+
+			if (message_serial != NULL) //state transition
 			{
-				master_interrupt_received = false;
-
-				message_received = FALSE;
-				state_time = system_get_time();
-
-				State = Receiving;
+				State = Deserialize_Received_Message;
+				temp_msg_ptr = NULL;
 			}
 			else
 			{
 				taskENTER_CRITICAL();
-				UART_ResetRxFifo(UART0);
+				uint32_t free_size = Multibyte_Ring_Buffer_Get_Free_Size(
+						&serial_rx_multibyte);
 				taskEXIT_CRITICAL();
+
+				if (free_size < 1)
+				{
+					//full of garbage.
+					taskENTER_CRITICAL();
+					Multibyte_Ring_Buffer_Reset(&serial_rx_multibyte);
+					taskEXIT_CRITICAL();
+				}
 			}
 			break;
 		}
 
-		case Receiving:
+		case Deserialize_Received_Message:
 		{
-			uint8_t * serialized_message = NULL;
-			temp_msg_ptr = NULL;
-			taskENTER_CRITICAL();
-			int dequeue_count =
-					Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
-							&serial_rx_multibyte, &serialized_message);
-			taskEXIT_CRITICAL();
-
-			if (serialized_message != NULL)
+			if (message_serial != NULL)
 			{
 				taskENTER_CRITICAL();
 				temp_msg_ptr = Deserialize_Message_With_Message_Header(
-						serialized_message);
+						message_serial);
 				taskEXIT_CRITICAL();
 
 				if (temp_msg_ptr != NULL)
 				{
-					message_received = TRUE;
 
 					received_message_type = Get_Message_Type_From_Str(
 							temp_msg_ptr->message_type);
@@ -158,6 +164,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 #if ENABLE_UDP_SENDER
 					case MESSAGE_TYPE_UDP:
 					{
+
 						selected_message_queue = &outgoing_udp_message_queue;
 						break;
 					}
@@ -166,12 +173,14 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					case MESSAGE_TYPE_HTTP:
 					case MESSAGE_TYPE_TCP:
 					{
+
 						selected_message_queue = &outgoing_tcp_message_queue;
 						break;
 					}
 #endif
 					case MESSAGE_TYPE_COMMAND:
 					{
+
 						selected_message_queue = &incoming_command_queue;
 
 						break;
@@ -179,6 +188,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 					default:
 					{
+
 						selected_message_queue = NULL;
 						break;
 					}
@@ -186,25 +196,24 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 					if (selected_message_queue != NULL)
 					{
+
 						taskENTER_CRITICAL();
 						Queue_Message(selected_message_queue, temp_msg_ptr);
 						taskEXIT_CRITICAL();
 					}
 					else if (temp_msg_ptr != NULL)
 					{
+
 						Delete_Message(temp_msg_ptr);
 					}
+
+					temp_msg_ptr = NULL;
 				}
 
-				free(serialized_message);
-				serialized_message = NULL;
+				free(message_serial);
+				message_serial = NULL;
 			}
-
-			if (!message_received
-					&& system_get_time() - state_time > SERIAL_RX_TIMEOUT_us)
-			{
-				State = Idle;
-			}
+			State = Idle;
 
 			break;
 		}
@@ -212,6 +221,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 		case UDP_STATE_MAX:
 		default:
 		{
+			State = Idle;
 			break;
 		}
 		}
@@ -222,6 +232,10 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 ////Local implementations /////////////////////////////////////////
 static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
-	return Multibyte_Ring_Buffer_Get_Count(&serial_rx_multibyte)
+	taskENTER_CRITICAL();
+	bool rval = Multibyte_Ring_Buffer_Get_Count(&serial_rx_multibyte)
 			> RING_BUFFER_PROMOTION_THRESHOLD && State == Idle;
+	taskEXIT_CRITICAL();
+
+	return rval;
 }

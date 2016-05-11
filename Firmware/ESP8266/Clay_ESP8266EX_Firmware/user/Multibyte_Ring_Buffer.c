@@ -17,6 +17,8 @@
 #include "Wifi_Message_Serialization.h"
 #include "CRC16.h"
 
+#include "esp_common.h"
+
 ////Macros ////////////////////////////////////////////////////////
 #define BUFFER_TAIL(buffer)             ((buffer->data) + buffer->tail)
 #define BUFFER_HEAD(buffer)             ((buffer->data) + buffer->head)
@@ -65,7 +67,6 @@ void Multibyte_Ring_Buffer_Init(Multibyte_Ring_Buffer * buffer, uint32_t size)
 
 void Multibyte_Ring_Buffer_Free(Multibyte_Ring_Buffer * buffer)
 {
-
 	if (buffer->data != NULL)
 	{
 		free(buffer->data);
@@ -83,6 +84,10 @@ void Multibyte_Ring_Buffer_Reset(Multibyte_Ring_Buffer * buffer)
 uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer,
 		uint8_t * data, uint32_t size)
 {
+	if (buffer->data == NULL)
+	{
+		return 0;
+	}
 
 	uint32_t rval = (
 			(Multibyte_Ring_Buffer_Get_Free_Size(buffer) > size) ?
@@ -123,6 +128,10 @@ uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer,
 uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer,
 		uint8_t * data, uint32_t size)
 {
+	if (buffer->data == NULL)
+	{
+		return 0;
+	}
 
 	uint32_t bytes_after_head = (
 			buffer->head < buffer->tail ?
@@ -212,6 +221,10 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(
 		Multibyte_Ring_Buffer * buffer, uint8_t * data, uint32_t size,
 		char * end_string)
 {
+	if (buffer->data == NULL)
+	{
+		return 0;
+	}
 
 	uint32_t rval = Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(buffer,
 			end_string);
@@ -233,7 +246,6 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(
 uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(
 		Multibyte_Ring_Buffer * buffer, char * end_str)
 {
-
 	return Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(buffer,
 			end_str, 0);
 }
@@ -241,8 +253,7 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(
 uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(
 		Multibyte_Ring_Buffer * buffer, char * end_str, uint32_t offset)
 {
-
-	if (offset > buffer->count)
+	if (buffer->data == NULL || offset > buffer->count)
 	{
 		return 0;
 	}
@@ -358,6 +369,10 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(
 uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 		Multibyte_Ring_Buffer * buffer, uint8_t * * destination)
 {
+	if (buffer->data == NULL)
+	{
+		return 0;
+	}
 
 	uint32_t rval = 0;
 	uint32_t delimiter_indices[WIFI_TOTAL_DELIMITER_COUNT];
@@ -409,6 +424,10 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 			rval -= 1;
 			buffer->head += (rval % buffer->max_count);
 			buffer->count -= rval;
+
+			taskENTER_CRITICAL();
+			printf("interrupted_message\r\n");
+			taskEXIT_CRITICAL();
 		}
 		else
 		{
@@ -438,6 +457,10 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 				buffer->count -= (delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
 						- 1);
 				rval = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
+
+				taskENTER_CRITICAL();
+				printf("not enough data\r\n");
+				taskEXIT_CRITICAL();
 			}
 			else
 			{
@@ -454,7 +477,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 									- 0x30);
 				}
 
-				*destination = malloc(message_length);
+				*destination = zalloc(message_length + 1);
 				//dequeue until start of message
 				rval = Multibyte_Ring_Buffer_Dequeue(buffer, *destination,
 						delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1);
@@ -477,6 +500,10 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 												- delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
 												+ 1))))
 				{
+					taskENTER_CRITICAL();
+					printf("bad checksum on: [%s]\r\n", *destination);
+					taskEXIT_CRITICAL();
+
 					free(*destination);
 					*destination = NULL;
 				}
@@ -494,6 +521,10 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 		Multibyte_Ring_Buffer * buffer, uint8_t * * destination)
 {
+	if (buffer->data == NULL)
+	{
+		return 0;
+	}
 
 	uint32_t rval = 0;
 	uint32_t delimiter_indices[WIFI_CONTENT_DELIMITER_COUNT];
@@ -640,19 +671,16 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 
 uint32_t Multibyte_Ring_Buffer_Get_Free_Size(Multibyte_Ring_Buffer * buffer)
 {
-
 	return buffer->max_count - buffer->count;
 }
 
 uint32_t Multibyte_Ring_Buffer_Get_Count(Multibyte_Ring_Buffer * buffer)
 {
-
 	return buffer->count;
 }
 
 bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer)
 {
-
 	return buffer->count >= buffer->max_count;
 }
 

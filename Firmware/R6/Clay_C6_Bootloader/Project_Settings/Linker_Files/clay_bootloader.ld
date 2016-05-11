@@ -34,8 +34,8 @@ __SP_INIT = _estack;
 __stack = _estack;
 
 /* Generate a link error if heap and stack don't fit into RAM */
-__heap_size = 0x00;                    /* required amount of heap  */
-__stack_size = 0x0400;                 /* required amount of stack */
+__heap_size = 0x26000;                    /* required amount of heap  */
+__stack_size = 0x0800;                 /* required amount of stack */
 
 MEMORY {
   m_interrupts (RX) : ORIGIN = 0x00000000, LENGTH = 0x00000198
@@ -48,15 +48,6 @@ MEMORY {
 /* Define output sections */
 SECTIONS
 {
-  /******************************************************************************/
-  /*******************************clay sections**********************************/
-  /*data shared between application and bootloader. The NOLOAD parameter is used to prevent jumps between applications from causing re-initialization of the data.*/
-  .BootloaderSharedData 0x20027FF8 (NOLOAD):
-  {
-    KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
-  } > m_data
-  /******************************************************************************/    
-
   /* The startup code goes first into INTERNAL_FLASH */
   .interrupts :
   {
@@ -233,6 +224,16 @@ SECTIONS
     . = ALIGN(4);
   } > m_data
 
+  /******************************************************************************/
+  /*******************************clay sections**********************************/
+  /*data shared between application and bootloader. The NOLOAD parameter is used to prevent jumps between applications from causing re-initialization of the data.*/
+  .BootloaderSharedData 0x2002FFF8 (NOLOAD):
+  {
+    KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
+  } > m_data
+  /******************************************************************************/    
+  /******************************************************************************/    
+  
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }
 

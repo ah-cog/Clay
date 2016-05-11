@@ -68,8 +68,7 @@ uint32_t Serialize_Message_With_Message_Header(Message * message, uint8_t * dest
    //         0                 1                   2               3         4              5                 6                   7               8
    //format: \f<message_length>\t<message_checksum>\t<message_type>\ t<source>\t<destination>\t<content_length>\t<content_checksum>\t<content_type>\t<content>
 
-   //HACK: Padding added because it seems to lessen the likelihood that we miss the end of a message.
-   rval = snprintf(destination_string, destination_max_length, "  %s%05d%s%05d%s%s%s%s%s%s%s%d%s%d%s%s%s",     //
+   rval = snprintf(destination_string, destination_max_length, "%s%05d%s%05d%s%s%s%s%s%s%s%d%s%d%s%s%s",     //
                    message_start,     //
                    0,     //placeholder for length. we pad out 5 bytes. TCP frames go up to 1500 bytes, jumbo frames up to 9000. We'd need to tack on > 90k of header to need another figure, which seems unlikely.
                    message_field_delimiter,
@@ -93,13 +92,13 @@ uint32_t Serialize_Message_With_Message_Header(Message * message, uint8_t * dest
       memcpy(destination_string + rval, message->content, message->content_length);
       rval += message->content_length;
 
-      sprintf(destination_string + 3, "%05d", rval - 2);     //write the length after the first char (plus 2 for the padding at the start of the string, + 1 for the delimiter. -2 from size for the padding.)
-      destination_string[8] = *message_field_delimiter;     //put our delimiter back.
+      sprintf(destination_string + 1, "%05d", rval);     //write the length after the first char (+ 1 for the delimiter.)
+      destination_string[6] = *message_field_delimiter;     //put our delimiter back.
 
-      message_checksum = Calculate_Checksum_On_Bytes(destination_string + 15, rval - 15);
+      message_checksum = Calculate_Checksum_On_Bytes(destination_string + 13, rval - 13);
 
-      sprintf(destination_string + 9, "%05d", message_checksum);     //write the checksum after the delimiter between the length and checksum.
-      destination_string[14] = *message_field_delimiter;     //put our delimiter back.
+      sprintf(destination_string + 7, "%05d", message_checksum);     //write the checksum after the delimiter between the length and checksum.
+      destination_string[12] = *message_field_delimiter;     //put our delimiter back.
 
    } else {
       rval = 0;
@@ -118,8 +117,7 @@ uint32_t Serialize_Message_Content(Message * message, uint8_t * destination_stri
    //         0                 1                   2               3         4              5                 6                   7               8
    //format: \f<message_length>\t<message_checksum>\t<message_type>\ t<source>\t<destination>\t<content_length>\t<content_checksum>\t<content_type>\t<content>
 
-   //HACK: Padding added because it seems to lessen the likelihood that we miss the end of a message.
-   rval = snprintf(destination_string, destination_max_length, "  %s%d%s%d%s%s%s",     //
+   rval = snprintf(destination_string, destination_max_length, "%s%d%s%d%s%s%s",     //
                    message_start,     //
                    message->content_length,
                    message_field_delimiter,

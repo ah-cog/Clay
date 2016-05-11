@@ -78,6 +78,10 @@ void Multibyte_Ring_Buffer_Reset(Multibyte_Ring_Buffer * buffer) {
 
 uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer, uint8_t * data, uint32_t size) {
 
+   if (buffer->data == NULL) {
+      return 0;
+   }
+
    uint32_t rval = ((Multibyte_Ring_Buffer_Get_Free_Size(buffer) > size) ? size : Multibyte_Ring_Buffer_Get_Free_Size(buffer));
 
    //it's ok if this is nonzero when the buffer's full. rval is used to determine how much data can be put in.
@@ -104,6 +108,10 @@ uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer, uint8_t *
 }
 
 uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t * data, uint32_t size) {
+
+   if (buffer->data == NULL) {
+      return 0;
+   }
 
    uint32_t bytes_after_head = (buffer->head < buffer->tail ? buffer->count : buffer->max_count - buffer->head);
    uint32_t rval = (buffer->count > size ? size : buffer->count);
@@ -173,6 +181,9 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(Multibyte_Ring_Buffer * buff
                                                     uint8_t * data,
                                                     uint32_t size,
                                                     char * end_string) {
+   if (buffer->data == NULL) {
+      return 0;
+   }
 
    uint32_t rval = Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(buffer, end_string);
 
@@ -195,8 +206,7 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(Multibyte_Ring_Buffer 
 uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_Ring_Buffer * buffer,
                                                                       char * end_str,
                                                                       uint32_t offset) {
-
-   if (offset > buffer->count) {
+   if (buffer->data == NULL || offset > buffer->count) {
       return 0;
    }
 
@@ -280,6 +290,9 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_
 //      for the corrupt message, including any bytes that were dequeued before the message.
 uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Multibyte_Ring_Buffer * buffer,
                                                                               uint8_t * * destination) {
+   if (buffer->data == NULL) {
+      return 0;
+   }
 
    uint32_t rval = 0;
    uint32_t delimiter_indices[WIFI_TOTAL_DELIMITER_COUNT];
@@ -382,6 +395,10 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
 //  if a \f is found in there, we dequeue until that, and drop the message we were working on
 //  if no \f is found, and there's enough data to get the entire message, we dequeue.
 uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring_Buffer * buffer, uint8_t * * destination) {
+
+   if (buffer->data == NULL) {
+      return 0;
+   }
 
    uint32_t rval = 0;
    uint32_t delimiter_indices[WIFI_CONTENT_DELIMITER_COUNT];

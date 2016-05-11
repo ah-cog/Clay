@@ -142,7 +142,7 @@ void Master_Interrupt_Handler(void * args)
 
 	GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS,
 			gpio_status & BIT(CLAY_INTERRUPT_IN_PIN));
-	master_interrupt_received = true;
+//	master_interrupt_received = true;
 }
 
 void ICACHE_RODATA_ATTR GPIO_Init()

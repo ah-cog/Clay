@@ -74,8 +74,8 @@
 #define UDP_TX_BUFFER_SIZE_BYTES                     (CLAY_MESSAGE_STRUCT_SIZE_BYTES * UDP_TX_MESSAGE_CAPACITY)
 #define SERIAL_TX_MESSAGE_CAPACITY                   2
 #define SERIAL_RX_MESSAGE_CAPACITY                   2
-#define SERIAL_TX_BUFFER_SIZE_BYTES                  (CLAY_MESSAGE_STRUCT_SIZE_BYTES * SERIAL_TX_MESSAGE_CAPACITY)
-#define SERIAL_RX_BUFFER_SIZE_BYTES                  (CLAY_MESSAGE_STRUCT_SIZE_BYTES * SERIAL_RX_MESSAGE_CAPACITY)
+#define SERIAL_TX_BUFFER_SIZE_BYTES                  1024
+#define SERIAL_RX_BUFFER_SIZE_BYTES                  1024
 
 ///
 #define CLAY_RX_MESSAGE_QUEUE_SIZE                   15        //Messages pending to the uC

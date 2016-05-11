@@ -15,6 +15,8 @@
 #include "Clay_Config.h"
 #include "Wifi_Message_Serialization.h"
 
+////Macros  /////////////////////////////////////////////////////
+#define DESERIALIZE_TEMP_LENGTH				100
 ////Typedefs  /////////////////////////////////////////////////////
 
 ////Globals   /////////////////////////////////////////////////////
@@ -27,7 +29,7 @@ const char * message_delimiter = "\n";
 const char* port_delimiter = ":";
 
 ////Local vars/////////////////////////////////////////////////////
-static uint8 deserialize_temp_str[50];
+static uint8 deserialize_temp_str[DESERIALIZE_TEMP_LENGTH];
 
 ////Local Prototypes///////////////////////////////////////////////
 
@@ -54,8 +56,9 @@ void ICACHE_RODATA_ATTR Deserialize_Address(uint8* Source,
 {
 	uint8 port_str[5];
 	memset(Destination, 0, sizeof(*Destination));
+	memset(deserialize_temp_str, 0, DESERIALIZE_TEMP_LENGTH);
 
-	strcpy(deserialize_temp_str, Source);
+	strncpy(deserialize_temp_str, Source, DESERIALIZE_TEMP_LENGTH - 1);
 
 	taskENTER_CRITICAL();
 	uint8* ip_start = strtok(deserialize_temp_str, port_delimiter);

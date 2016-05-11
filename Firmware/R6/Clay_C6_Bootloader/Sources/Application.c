@@ -44,7 +44,7 @@ void Application(void) {
    Initialize_Bootloader();
 
 //   Multibyte_Ring_Buffer_Test();
-   Wifi_Test();
+//   Wifi_Test();
 //   Flash_Test();
 
    wifi_connected = FALSE;
@@ -138,59 +138,65 @@ void Application(void) {
       ;
 }
 
+static Message *message = NULL;
+static Message * outgoing_message = NULL;
+static uint32_t lastMessageSendTime = 0;
+static uint32_t messageSendPeriod = 1000;
+
+static bool echo = FALSE;
+static bool repeat_send = FALSE;
+
+static bool request_connect = FALSE;
+static bool get_ip = FALSE;
+
+static bool send_text_content = TRUE;
+static bool send_http_message = TRUE;
+
+#define MAX_SERIALIZED_LENGTH  1024
+static char serialized_message[MAX_SERIALIZED_LENGTH];
+static char type_str[] = "tcp";
+static char dest_addr[] = "192.168.1.3:3000";
+static char source_addr[] = "192.168.1.21:3000";
+
+static char text_content_type[] = "text";
+static char text_message_content[] = "muhuhuhueessagueaaaay!!!";
+static uint32_t text_message_length;
+
+static uint32_t bootloader_index = 0;
+static char http_type_str[] = "http";
+static const char http_dest_addr_format[] = "107.170.180.158:3000/clay/firmware/?startByte=%d&byteCount=256";
+static char http_dest_addr[100];
+static char http_source_addr[] = "192.168.1.21:3000";
+
+static char http_text_content_type[] = "text";
+static char http_text_message_content[] = "none";
+static uint32_t http_text_message_length;
+
+static char bin_content_type[] = "bin";
+#define BIN_MESSAGE_LENGTH  256
+static char bin_message_content[BIN_MESSAGE_LENGTH];
+static int message_index = 0;
+
+static char * ssid = "hefnet";
+static char * password = "h3fn3r_is_better_than_me";
+
+static char * ssid_m = "Clay";
+static char * password_m = "redgreenblue";
+
 ////Local implementations /////////////////////////////////////////
 void Wifi_Test() {
-
-   char * ssid = "hefnet";
-   char * password = "h3fn3r_is_better_than_me";
-
-   char * ssid_m = "Clay";
-   char * password_m = "redgreenblue";
 
    bool use_mobile = false;
 //   char * ssid_m = "hefnetm";
 //   char * password_m = "dips00BOYNEdo$!&";
 
+   text_message_length = strlen(text_message_content);
+
+   http_text_message_length = strlen(http_text_message_content);
+
    Enable_WiFi(ssid, password);
 
-   Message *message = NULL;
-   Message * outgoing_message = NULL;
-   uint32_t lastMessageSendTime = 0;
-   uint32_t messageSendPeriod = 10000;
-
-   bool echo = FALSE;
-   bool repeat_send = FALSE;
-
-   bool request_connect = FALSE;
-   bool get_ip = FALSE;
-
-   bool send_text_content = TRUE;
-   bool send_http_message = TRUE;
-
-   const uint32_t max_serialized_length = 1024;
-   char serialized_message[max_serialized_length];
-   char type_str[] = "tcp";
-   char dest_addr[] = "192.168.1.3:3000";
-   char source_addr[] = "192.168.1.21:3000";
-
-   char text_content_type[] = "text";
-   char text_message_content[] = "muhuhuhueessagueaaaay!!!";
-   uint32_t text_message_length = strlen(text_message_content);
-
-   char http_type_str[] = "http";
-   char http_dest_addr[] = "107.170.180.158:3000/clay/firmware/?startByte=0&byteCount=256";
-   char http_source_addr[] = "192.168.1.21:3000";
-
-   char http_text_content_type[] = "text";
-   char http_text_message_content[] = "none";
-   uint32_t http_text_message_length = strlen(http_text_message_content);
-
-   char bin_content_type[] = "bin";
-   uint32_t bin_message_length = 256;
-   char bin_message_content[bin_message_length];
-   int message_index = 0;
-
-   for (int i = 0; i < bin_message_length; ++i) {
+   for (int i = 0; i < BIN_MESSAGE_LENGTH; ++i) {
       bin_message_content[i] = i;
    }
 
@@ -198,7 +204,7 @@ void Wifi_Test() {
 
       Monitor_Periodic_Events();
 
-      if (!echo && Has_Messages(&incomingMessageQueue)) {
+      if (!echo && Has_Messages(&incomingWiFiMessageQueue)) {
          Message * temp = Wifi_Receive();
          Delete_Message(temp);
       }
@@ -215,7 +221,10 @@ void Wifi_Test() {
 
             Set_Message_Type(outgoing_message, http_type_str);
             Set_Message_Source(outgoing_message, http_source_addr);
+
+            sprintf(http_dest_addr, http_dest_addr_format, bootloader_index * 256);
             Set_Message_Destination(outgoing_message, http_dest_addr);
+
          } else {
             Set_Message_Type(outgoing_message, type_str);
             Set_Message_Source(outgoing_message, source_addr);
@@ -231,7 +240,7 @@ void Wifi_Test() {
                Set_Message_Content_Type(outgoing_message, text_content_type);
             }
          } else {
-            Set_Message_Content(outgoing_message, bin_message_content, bin_message_length);
+            Set_Message_Content(outgoing_message, bin_message_content, BIN_MESSAGE_LENGTH);
             Set_Message_Content_Type(outgoing_message, bin_content_type);
          }
 
@@ -269,46 +278,46 @@ void Wifi_Test() {
       }
    }
 }
-
-void Flash_Test() {
-
-   uint8_t not_actual_firmware[] = "aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu ";
-   uint32_t firmware_write_index = 0;
-   uint32_t firmware_block_size = strlen(not_actual_firmware) + 1;
-
-   uint16_t checksum = 0x50;
-   uint32_t size = 0x0770;
-   uint32_t version = 0x0880;
-
-   uint16_t checksum_read;
-   uint32_t size_read;
-   uint32_t version_read;
-
-   for (;;) {
-      Erase_Program_Flash();
-      Wait(10);
-
-      Write_Program_Version(++version);
-      Wait(10);
-
-      Write_Program_Checksum((++checksum));
-      Wait(10);
-
-      Write_Program_Size(++size);
-      Wait(10);
-
-      while (firmware_write_index * firmware_block_size < APP_END_ADDR) {
-         Write_Firmware_Bytes((firmware_write_index * firmware_block_size) + APP_START_ADDR,
-                              not_actual_firmware,
-                              firmware_block_size);
-         ++firmware_write_index;
-      }
-
-      firmware_write_index = 0;
-
-      checksum_read = Read_Program_Checksum();
-      size_read = Read_Program_Size();
-      version_read = Read_Program_Version();
-   }
-
-}
+//
+//void Flash_Test() {
+//
+//   uint8_t not_actual_firmware[] = "aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu ";
+//   uint32_t firmware_write_index = 0;
+//   uint32_t firmware_block_size = strlen(not_actual_firmware) + 1;
+//
+//   uint16_t checksum = 0x50;
+//   uint32_t size = 0x0770;
+//   uint32_t version = 0x0880;
+//
+//   uint16_t checksum_read;
+//   uint32_t size_read;
+//   uint32_t version_read;
+//
+//   for (;;) {
+//      Erase_Program_Flash();
+//      Wait(10);
+//
+//      Write_Program_Version(++version);
+//      Wait(10);
+//
+//      Write_Program_Checksum((++checksum));
+//      Wait(10);
+//
+//      Write_Program_Size(++size);
+//      Wait(10);
+//
+//      while (firmware_write_index * firmware_block_size < APP_END_ADDR) {
+//         Write_Firmware_Bytes((firmware_write_index * firmware_block_size) + APP_START_ADDR,
+//                              not_actual_firmware,
+//                              firmware_block_size);
+//         ++firmware_write_index;
+//      }
+//
+//      firmware_write_index = 0;
+//
+//      checksum_read = Read_Program_Checksum();
+//      size_read = Read_Program_Size();
+//      version_read = Read_Program_Version();
+//   }
+//
+//}
