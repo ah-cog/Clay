@@ -82,6 +82,12 @@ uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer, uint8_t *
       return 0;
    }
 
+   if (buffer->data != NULL && buffer->count > buffer->max_count
+       || buffer->head > buffer->max_count
+       || buffer->tail > buffer->max_count) {
+      PE_DEBUGHALT();
+   }
+
    uint32_t rval = ((Multibyte_Ring_Buffer_Get_Free_Size(buffer) > size) ? size : Multibyte_Ring_Buffer_Get_Free_Size(buffer));
 
    //it's ok if this is nonzero when the buffer's full. rval is used to determine how much data can be put in.
@@ -102,6 +108,12 @@ uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer, uint8_t *
       }
 
       buffer->count += rval;
+
+      if (buffer->data != NULL && buffer->count > buffer->max_count
+          || buffer->head > buffer->max_count
+          || buffer->tail > buffer->max_count) {
+         PE_DEBUGHALT();
+      }
    }
 
    return rval;
@@ -111,6 +123,12 @@ uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t *
 
    if (buffer->data == NULL) {
       return 0;
+   }
+
+   if (buffer->data != NULL && buffer->count > buffer->max_count
+       || buffer->head > buffer->max_count
+       || buffer->tail > buffer->max_count) {
+      PE_DEBUGHALT();
    }
 
    uint32_t bytes_after_head = (buffer->head < buffer->tail ? buffer->count : buffer->max_count - buffer->head);
@@ -132,6 +150,12 @@ uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t *
       }
 
       buffer->count -= rval;
+   }
+
+   if (buffer->data != NULL && buffer->count > buffer->max_count
+       || buffer->head > buffer->max_count
+       || buffer->tail > buffer->max_count) {
+      PE_DEBUGHALT();
    }
 
    return rval;
@@ -294,6 +318,12 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
       return 0;
    }
 
+   if (buffer->data != NULL && buffer->count > buffer->max_count
+       || buffer->head > buffer->max_count
+       || buffer->tail > buffer->max_count) {
+      PE_DEBUGHALT();
+   }
+
    uint32_t rval = 0;
    uint32_t delimiter_indices[WIFI_TOTAL_DELIMITER_COUNT];
    uint32_t delimiter_count = 0;
@@ -333,9 +363,17 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
 
       //if we find a message start in the header fields, we just throw away the interrupted header.
       if (rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX]) {
+
          rval -= 1;
-         buffer->head += (rval % buffer->max_count);
+         buffer->head = ((buffer->head + rval) % buffer->max_count);
          buffer->count -= rval;
+
+         if (buffer->data != NULL && buffer->count > buffer->max_count
+             || buffer->head > buffer->max_count
+             || buffer->tail > buffer->max_count) {
+            PE_DEBUGHALT();
+         }
+
       } else {
          //  If no <message_start> is found in the headers, message length is parsed out of serialized message and used to determine if there is enough
          //  data for the message
@@ -350,9 +388,17 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
          if (buffer->count < message_length) {
             //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
             //      the return value will be the number of bytes dequeued.
-            buffer->head += (delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1) % buffer->max_count;
+            ((buffer->head + rval) % buffer->max_count);
+
+            buffer->head = (buffer->head + delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1) % buffer->max_count;
             buffer->count -= (delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1);
             rval = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
+
+            if (buffer->data != NULL && buffer->count > buffer->max_count
+                || buffer->head > buffer->max_count
+                || buffer->tail > buffer->max_count) {
+               PE_DEBUGHALT();
+            }
          } else {
 
             //read the message checksum out without dequeueing. we have to account for potential wrap around.
@@ -385,6 +431,12 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
             }
          }
       }
+   }
+
+   if (buffer->data != NULL && buffer->count > buffer->max_count
+       || buffer->head > buffer->max_count
+       || buffer->tail > buffer->max_count) {
+      PE_DEBUGHALT();
    }
 
    return rval;
@@ -440,7 +492,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
       //if we find a message start in the header fields, we just throw away the interrupted header.
       if (rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]) {
          rval -= 1;
-         buffer->head += (rval % buffer->max_count);
+         buffer->head = ((buffer->head + rval) % buffer->max_count);
          buffer->count -= rval;
       } else {
          //  If no <message_start> is found in the headers, content length is parsed out of serialized message and used to determine if there is enough
@@ -461,7 +513,8 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
          if (buffer->count < message_length) {
             //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
             //      the return value will be the number of bytes dequeued.
-            buffer->head += (delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1) % buffer->max_count;
+            buffer->head = (buffer->head + delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1)
+                           % buffer->max_count;
             buffer->count -= (delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1);
             rval = delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1;
          } else {
@@ -638,51 +691,55 @@ bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer) {
 //   }
 //}
 
-//uint32_t Multibyte_Ring_Buffer_Test() {
-//
-//   char * test_msg_type = "tcp";
-//   char * test_msg_source = "192.168.1.3:3000";
-//   char * test_msg_dest = "192.168.1.21:3000";
-//   char * test_msg_content_type = "text";
-//   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeee";     //40 chars
-////   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmm256"; //256 chars
-////   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmm!!mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemm512";     //512 chars
-//
-//   Message * test_msg = Create_Message();
-//   Set_Message_Type(test_msg, test_msg_type);
-//   Set_Message_Source(test_msg, test_msg_source);
-//   Set_Message_Destination(test_msg, test_msg_dest);
-//   Set_Message_Content_Type(test_msg, test_msg_content_type);
-//   Set_Message_Content(test_msg, test_msg_content, strlen(test_msg_content));
-//
-//   uint32_t test_msg_str_len = 1024;
-//   char test_msg_str[test_msg_str_len];
-//   memset(test_msg_str, 0, test_msg_str_len);
+uint32_t Multibyte_Ring_Buffer_Test() {
+
+   char * test_msg_type = "tcp";
+   char * test_msg_source = "192.168.1.3:3000";
+   char * test_msg_dest = "192.168.1.21:3000";
+   char * test_msg_content_type = "text";
+   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeee";     //40 chars
+//   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmm256"; //256 chars
+//   char * test_msg_content = "mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmm!!mmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemmmmmeeeeemm512";     //512 chars
+
+   Message * test_msg = Create_Message();
+   Set_Message_Type(test_msg, test_msg_type);
+   Set_Message_Source(test_msg, test_msg_source);
+   Set_Message_Destination(test_msg, test_msg_dest);
+   Set_Message_Content_Type(test_msg, test_msg_content_type);
+   Set_Message_Content(test_msg, test_msg_content, strlen(test_msg_content));
+
+   uint32_t test_msg_str_len = 1024;
+   char test_msg_str[test_msg_str_len];
+   memset(test_msg_str, 0, test_msg_str_len);
 //   Serialize_Message_Content(test_msg, test_msg_str, test_msg_str_len);
-//
-//   uint8_t * serial_data;
-//   uint32_t dq_count = 0;
-//
-//   Message * deserialized_message;
-//   Message * deserialized_message_content;
-//
-//   Multibyte_Ring_Buffer test_buffer;
-//
-//   Multibyte_Ring_Buffer_Init(&test_buffer, 1024);
-//
-//   for (;;) {
-//      while (!Multibyte_Ring_Buffer_Full(&test_buffer)) {
-//         Multibyte_Ring_Buffer_Enqueue(&test_buffer, test_msg_str, strlen(test_msg_str));
-//      }
-//
+   Serialize_Message_With_Message_Header(test_msg, test_msg_str, test_msg_str_len);
+
+   uint8_t * serial_data;
+   uint32_t dq_count = 0;
+
+   Message * deserialized_message;
+   Message * deserialized_message_content;
+
+   Multibyte_Ring_Buffer test_buffer;
+
+   Multibyte_Ring_Buffer_Init(&test_buffer, 1024);
+
+   for (;;) {
+      while (!Multibyte_Ring_Buffer_Full(&test_buffer)) {
+         Multibyte_Ring_Buffer_Enqueue(&test_buffer, test_msg_str, strlen(test_msg_str));
+      }
+
 //      while ((dq_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(&test_buffer, &serial_data)) > 0) {
-//         if (serial_data != NULL) {
+      while ((dq_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(&test_buffer, &serial_data)) > 0) {
+         if (serial_data != NULL) {
+            deserialized_message = Deserialize_Message_With_Message_Header(serial_data);
 //            deserialized_message = Deserialize_Message_Content(serial_data);
+            Serialize_Message_With_Message_Header(deserialized_message, serial_data, dq_count);
 //            Serialize_Message_Content(deserialized_message, serial_data, dq_count);
-//            Delete_Message(deserialized_message);
-//            free(serial_data);
-//            serial_data = NULL;
-//         }
-//      }
-//   }
-//}
+            Delete_Message(deserialized_message);
+            free(serial_data);
+            serial_data = NULL;
+         }
+      }
+   }
+}

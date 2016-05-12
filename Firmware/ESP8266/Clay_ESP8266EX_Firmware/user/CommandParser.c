@@ -116,10 +116,6 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 	bool rval = false;
 	promoted = false;
 
-	taskENTER_CRITICAL();
-	Initialize_Message_Queue(&incoming_command_queue);
-	taskEXIT_CRITICAL();
-
 	state = Idle;
 
 	xTaskHandle command_parser_handle;
@@ -176,63 +172,66 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 			temp_msg_ptr = Dequeue_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
 
-			DEBUG_Print("\r\ncommand rx");
-
 			taskYIELD();
 
-			switch (Command_String_Parse(temp_msg_ptr->content,
-					temp_msg_ptr->content_length, &command_args))
+			if (temp_msg_ptr != NULL)
 			{
-			case CLAY_COMMAND_SET_AP:
-			{
-				Set_AP_Command(command_args);
-				break;
-			}
+				--incoming_command_message_count;
 
-			case CLAY_COMMAND_GET_AP:
-			{
-				Get_AP_Command(command_args);
-				break;
-			}
+				switch (Command_String_Parse(temp_msg_ptr->content,
+						temp_msg_ptr->content_length, &command_args))
+				{
+				case CLAY_COMMAND_SET_AP:
+				{
+					Set_AP_Command(command_args);
+					break;
+				}
 
-			case CLAY_COMMAND_SCAN_AP:
-			{
-				Scan_AP_Command(command_args);
-				break;
-			}
+				case CLAY_COMMAND_GET_AP:
+				{
+					Get_AP_Command(command_args);
+					break;
+				}
 
-			case CLAY_COMMAND_GET_IP:
-			{
-				Get_IP_Command(command_args);
-				break;
-			}
+				case CLAY_COMMAND_SCAN_AP:
+				{
+					Scan_AP_Command(command_args);
+					break;
+				}
 
-			case CLAY_COMMAND_GET_GATEWAY:
-			{
-				Get_Gateway_Command(command_args);
-				break;
-			}
+				case CLAY_COMMAND_GET_IP:
+				{
+					Get_IP_Command(command_args);
+					break;
+				}
 
-			case CLAY_COMMAND_GET_SUBNET:
-			{
-				Get_Subnet_Command(command_args);
-				break;
-			}
+				case CLAY_COMMAND_GET_GATEWAY:
+				{
+					Get_Gateway_Command(command_args);
+					break;
+				}
 
-			case CLAY_COMMAND_GET_CONNECTION_STATUS:
-			{
-				Get_Wifi_Status_Command(command_args);
-				break;
-			}
+				case CLAY_COMMAND_GET_SUBNET:
+				{
+					Get_Subnet_Command(command_args);
+					break;
+				}
 
-			case CLAY_COMMAND_START_TASK:
-			case CLAY_COMMAND_STOP_TASK:
-			case CLAY_COMMAND_MAX:
-			default:
-			{
-				break;
-			}
+				case CLAY_COMMAND_GET_CONNECTION_STATUS:
+				{
+					Get_Wifi_Status_Command(command_args);
+					break;
+				}
 
+				case CLAY_COMMAND_START_TASK:
+				case CLAY_COMMAND_STOP_TASK:
+				case CLAY_COMMAND_MAX:
+				default:
+				{
+					break;
+				}
+
+				}
 			}
 
 			if (temp_msg_ptr != NULL)
@@ -298,10 +297,6 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 	char * ssid = strtok(args, &args_delimiter);
 	char * key = strtok(NULL, &args_delimiter);
 	taskEXIT_CRITICAL();
-
-//	taskENTER_CRITICAL();
-//	printf("\r\n\r\nsetap:%s,%s\r\n\r\n", ssid, key);
-//	taskEXIT_CRITICAL();
 
 	if (Set_Access_Point(ssid, key))
 	{
@@ -476,7 +471,9 @@ void ICACHE_RODATA_ATTR Send_Startup_Message()
 
 static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
-	bool rval = false;
+	taskENTER_CRITICAL();
+	bool rval = (incoming_command_message_count > 5);
+	taskEXIT_CRITICAL();
 
 //	taskENTER_CRITICAL();
 //	rval = (Has_Messages(&incoming_command_queue));

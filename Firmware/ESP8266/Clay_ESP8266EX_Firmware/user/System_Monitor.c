@@ -9,6 +9,7 @@
 #include "esp_common.h"
 #include "Message_Queue.h"
 #include "queue.h"
+#include "queues.h"
 #include "System_Monitor.h"
 #include "UART.h"
 
@@ -45,7 +46,6 @@ static xTaskHandle idle_handle;
 static xTaskHandle system_monitor_handle;
 
 static uint32 free_heap_size;
-static int loops = 0;
 
 static TASK_TYPE current_task;
 
@@ -85,7 +85,9 @@ void ICACHE_RODATA_ATTR System_Monitor_Task()
 		Monitor_Memory();
 
 //		taskENTER_CRITICAL();
-//		printf("prt:%d\r\n\r\n", previous_run_time);
+//		printf("ic:%d im:%d ot:%d ou:%d\r\n\r\n",
+//				incoming_command_message_count, incoming_message_count,
+//				outgoing_tcp_message_count, outgoing_udp_message_count);
 //		taskEXIT_CRITICAL();
 
 		//run every priority_monitor_interval ticks.
@@ -171,7 +173,7 @@ static void ICACHE_RODATA_ATTR Monitor_Memory()
 	free_heap_size = system_get_free_heap_size();
 
 //	taskENTER_CRITICAL();
-//	printf("\r\n\r\ntick:%d heap free: %d\r\n\r\n", xTaskGetTickCount(),
+//	printf("\r\ntick:%d heap free: %d\r\n", xTaskGetTickCount(),
 //			free_heap_size);
 //	taskEXIT_CRITICAL();
 

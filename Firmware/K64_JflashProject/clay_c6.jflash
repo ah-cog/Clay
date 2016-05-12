@@ -1,4 +1,4 @@
-  AppVersion = 51007
+  AppVersion = 50201
 [GENERAL]
   ConnectMode = 0
   CurrentFile = ""
@@ -70,9 +70,6 @@
   EnableProductionMode = 0
   EnableTargetPower = 0
   EraseType = 2
-  MonitorVTref = 0
-  MonitorVTrefMax = 0x0000157C
-  MonitorVTrefMin = 0x000003E8
   OverrideTimeouts = 0
   ProductionDelay = 0x000001F4
   ProductionThreshold = 0x00000BB8

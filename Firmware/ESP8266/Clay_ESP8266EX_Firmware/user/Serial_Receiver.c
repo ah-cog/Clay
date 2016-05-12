@@ -67,14 +67,6 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 {
 	bool rval = true;
 
-	taskENTER_CRITICAL();
-	//multibyte ring buffer initialized in user_main
-	Initialize_Message_Queue(&outgoing_udp_message_queue);
-	Initialize_Message_Queue(&outgoing_tcp_message_queue);
-	Initialize_Message_Queue(&incoming_command_queue);
-	Initialize_Message_Queue(&incoming_message_queue);
-	taskEXIT_CRITICAL();
-
 	State = Idle;
 
 	xTaskHandle serial_rx_handle;
@@ -121,8 +113,19 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 							&serial_rx_multibyte, &message_serial);
 			taskEXIT_CRITICAL();
 
+//			if (dequeue_count > 0)
+//			{
+//				taskENTER_CRITICAL();
+//				printf("dequeued %d\r\n", dequeue_count);
+//				taskEXIT_CRITICAL();
+//			}
+
 			if (message_serial != NULL) //state transition
 			{
+//				taskENTER_CRITICAL();
+//				printf("message\f  [%s]", message_serial);
+//				taskEXIT_CRITICAL();
+
 				State = Deserialize_Received_Message;
 				temp_msg_ptr = NULL;
 			}
@@ -148,6 +151,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 		{
 			if (message_serial != NULL)
 			{
+//				DEBUG_Print("deserialize.");
+
 				taskENTER_CRITICAL();
 				temp_msg_ptr = Deserialize_Message_With_Message_Header(
 						message_serial);
@@ -155,6 +160,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 				if (temp_msg_ptr != NULL)
 				{
+//					DEBUG_Print("message not null");
 
 					received_message_type = Get_Message_Type_From_Str(
 							temp_msg_ptr->message_type);
@@ -166,6 +172,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					{
 
 						selected_message_queue = &outgoing_udp_message_queue;
+						++outgoing_tcp_message_queue;
 						break;
 					}
 #endif
@@ -175,6 +182,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					{
 
 						selected_message_queue = &outgoing_tcp_message_queue;
+						++outgoing_tcp_message_count;
 						break;
 					}
 #endif
@@ -182,7 +190,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					{
 
 						selected_message_queue = &incoming_command_queue;
-
+						++incoming_command_message_count;
 						break;
 					}
 
@@ -196,7 +204,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 					if (selected_message_queue != NULL)
 					{
-
 						taskENTER_CRITICAL();
 						Queue_Message(selected_message_queue, temp_msg_ptr);
 						taskEXIT_CRITICAL();

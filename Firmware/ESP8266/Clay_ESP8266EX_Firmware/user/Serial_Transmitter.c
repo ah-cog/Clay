@@ -84,7 +84,6 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 
 	taskENTER_CRITICAL();
 	serial_tx_buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
-	Initialize_Message_Queue(&incoming_message_queue);
 	taskEXIT_CRITICAL();
 
 	state = Idle;
@@ -141,6 +140,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 
 			if (temp_msg_ptr != NULL)
 			{
+				--incoming_message_count;
 				taskENTER_CRITICAL();
 				serial_tx_length = Serialize_Message_With_Message_Header(
 						temp_msg_ptr, serial_tx_buffer,
@@ -242,18 +242,16 @@ void ICACHE_RODATA_ATTR Send_Message_To_Master(char * message,
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
-	Queue_Message(&incoming_message_queue, temp_msg);
+	incoming_message_count = Queue_Message(&incoming_message_queue, temp_msg);
 	taskEXIT_CRITICAL();
 }
 
 ////Local implementations /////////////////////////////////////////
 static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
-	bool rval = false;
-
-//	taskENTER_CRITICAL();
-//	rval = (Has_Messages(&incoming_message_queue));
-//	taskEXIT_CRITICAL();
+	taskENTER_CRITICAL();
+	bool rval = (incoming_message_count > 5);
+	taskEXIT_CRITICAL();
 
 	promoted = rval;
 

@@ -25,12 +25,19 @@
 extern Multibyte_Ring_Buffer serial_rx_multibyte;
 
 extern Message * incoming_message_queue;
+extern uint32_t incoming_message_count;
+
 extern Message * outgoing_tcp_message_queue;
+extern uint32_t outgoing_tcp_message_count;
+
 extern Message * outgoing_udp_message_queue;
+extern uint32_t outgoing_udp_message_count;
+
 extern Message * incoming_command_queue;
+extern uint32_t incoming_command_message_count;
 
 ////Function Prototypes ///////////////////////////////////////////
 extern void Initialize_Message_Queues();
-extern void Free_Message_Queues();
+extern void Free_Message_Queue();
 
 #endif /* INCLUDE_QUEUES_H_ */

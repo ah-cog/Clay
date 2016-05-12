@@ -83,7 +83,6 @@ static bool Connected;
 static int32 testCounter;
 
 static Message * temp_msg_ptr;
-static Message tempMessage;
 static char * source_addr;
 static char * dest_addr;
 
@@ -111,7 +110,6 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 		Multibyte_Ring_Buffer_Init(&udp_rx_multibyte, UDP_RX_BUFFER_SIZE_BYTES);
 		source_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 		dest_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
-		Initialize_Message_Queue(&incoming_message_queue);
 		taskEXIT_CRITICAL();
 
 		xTaskHandle UDP_receive_handle;
@@ -222,7 +220,7 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 					taskYIELD();
 
 					taskENTER_CRITICAL();
-					Queue_Message(&incoming_message_queue, temp_msg_ptr);
+					incoming_message_count =Queue_Message(&incoming_message_queue, temp_msg_ptr);
 					taskEXIT_CRITICAL();
 				}
 			}
@@ -344,10 +342,10 @@ static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-//	taskENTER_CRITICAL();
-//	rval = (Multibyte_Ring_Buffer_Get_Count(&udp_rx_multibyte)
-//			> RECEIVE_BYTES_TRIGGER_LEVEL);
-//	taskEXIT_CRITICAL();
+	taskENTER_CRITICAL();
+	rval = (Multibyte_Ring_Buffer_Get_Count(&udp_rx_multibyte)
+			> RECEIVE_BYTES_TRIGGER_LEVEL);
+	taskEXIT_CRITICAL();
 
 	return rval;
 }

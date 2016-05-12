@@ -422,12 +422,8 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 		if (rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX])
 		{
 			rval -= 1;
-			buffer->head += (rval % buffer->max_count);
+			buffer->head = ((buffer->head + rval) % buffer->max_count);
 			buffer->count -= rval;
-
-			taskENTER_CRITICAL();
-			printf("interrupted_message\r\n");
-			taskEXIT_CRITICAL();
 		}
 		else
 		{
@@ -452,15 +448,13 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 			{
 				//  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
 				//      the return value will be the number of bytes dequeued.
-				buffer->head += (delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
-						- 1) % buffer->max_count;
+
+				buffer->head = (buffer->head
+						+ delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1)
+						% buffer->max_count;
 				buffer->count -= (delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
 						- 1);
 				rval = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
-
-				taskENTER_CRITICAL();
-				printf("not enough data\r\n");
-				taskEXIT_CRITICAL();
 			}
 			else
 			{
@@ -477,7 +471,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 									- 0x30);
 				}
 
-				*destination = zalloc(message_length + 1);
+				(*destination) = zalloc(message_length + 1);
 				//dequeue until start of message
 				rval = Multibyte_Ring_Buffer_Dequeue(buffer, *destination,
 						delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1);
@@ -500,12 +494,8 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 												- delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
 												+ 1))))
 				{
-					taskENTER_CRITICAL();
-					printf("bad checksum on: [%s]\r\n", *destination);
-					taskEXIT_CRITICAL();
-
 					free(*destination);
-					*destination = NULL;
+					(*destination) = NULL;
 				}
 			}
 		}
@@ -579,7 +569,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 								- WIFI_CONTENT_LENGTH_INDEX])
 		{
 			rval -= 1;
-			buffer->head += (rval % buffer->max_count);
+			buffer->head = ((buffer->head + rval) % buffer->max_count);
 			buffer->count -= rval;
 		}
 		else
@@ -612,8 +602,10 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 			{
 				//  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
 				//      the return value will be the number of bytes dequeued.
-				buffer->head += (delimiter_indices[WIFI_CONTENT_LENGTH_INDEX
-						- WIFI_CONTENT_LENGTH_INDEX] - 1) % buffer->max_count;
+				buffer->head = (buffer->head
+						+ delimiter_indices[WIFI_CONTENT_LENGTH_INDEX
+								- WIFI_CONTENT_LENGTH_INDEX] - 1)
+						% buffer->max_count;
 				buffer->count -= (delimiter_indices[WIFI_CONTENT_LENGTH_INDEX
 						- WIFI_CONTENT_LENGTH_INDEX] - 1);
 				rval = delimiter_indices[WIFI_CONTENT_LENGTH_INDEX
@@ -636,7 +628,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 									- 0x30);
 				}
 
-				*destination = malloc(message_length);
+				(*destination) = malloc(message_length);
 
 				//dequeue until start of message
 				rval = Multibyte_Ring_Buffer_Dequeue(buffer, *destination,
@@ -660,7 +652,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 												+ 1), content_length))
 				{
 					free(*destination);
-					*destination = NULL;
+					(*destination) = NULL;
 				}
 			}
 		}

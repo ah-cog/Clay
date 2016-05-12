@@ -95,7 +95,6 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 
 		taskENTER_CRITICAL();
 		udp_tx_buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
-		Initialize_Message_Queue(&outgoing_udp_message_queue);
 		taskEXIT_CRITICAL();
 
 		State = Disable;
@@ -177,22 +176,26 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 			temp_msg_ptr = Dequeue_Message(&outgoing_udp_message_queue);
 			taskEXIT_CRITICAL();
 
-			taskYIELD();
+			if (temp_msg_ptr != NULL)
+			{
+				--outgoing_udp_message_count;
 
-			TODO:
-			taskENTER_CRITICAL();
-			udp_tx_count = Serialize_Message_Content(temp_msg_ptr,
-					udp_tx_buffer, UDP_TX_BUFFER_SIZE_BYTES);
-			taskEXIT_CRITICAL();
+				taskYIELD();
 
-			taskYIELD();
+				taskENTER_CRITICAL();
+				udp_tx_count = Serialize_Message_Content(temp_msg_ptr,
+						udp_tx_buffer, UDP_TX_BUFFER_SIZE_BYTES);
+				taskEXIT_CRITICAL();
 
-			taskENTER_CRITICAL();
-			Deserialize_Address(temp_msg_ptr->destination, &DestinationAddr,
-					&tempIgnoredMessageType);
-			taskEXIT_CRITICAL();
+				taskYIELD();
 
-			taskYIELD();
+				taskENTER_CRITICAL();
+				Deserialize_Address(temp_msg_ptr->destination, &DestinationAddr,
+						&tempIgnoredMessageType);
+				taskEXIT_CRITICAL();
+
+				taskYIELD();
+			}
 
 			State = Send_Message;
 			break;
@@ -287,13 +290,9 @@ static bool ICACHE_RODATA_ATTR Message_Available()
 
 static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
-	bool rval = false;
-
-//	taskENTER_CWRITICAL();
-//	rval = Has_Messages(&outgoing_udp_message_queue);
-//	taskEXIT_CRITICAL();
-//
-//	promoted = rval;
+	taskENTER_CRITICAL();
+	bool rval = outgoing_udp_message_count;
+	taskEXIT_CRITICAL();
 
 	return rval;
 }

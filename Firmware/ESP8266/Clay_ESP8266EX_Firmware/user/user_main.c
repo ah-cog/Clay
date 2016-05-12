@@ -62,8 +62,10 @@ void ICACHE_RODATA_ATTR user_init(void)
 	/* need to set opmode before you set config */
 	wifi_set_opmode(STATIONAP_MODE);
 
+	taskENTER_CRITICAL();
 	Multibyte_Ring_Buffer_Init(&serial_rx_multibyte,
 	SERIAL_RX_BUFFER_SIZE_BYTES);
+	taskEXIT_CRITICAL();
 
 	uart_init_new();
 
@@ -95,6 +97,10 @@ void ICACHE_RODATA_ATTR user_init(void)
 #if 1
 	//set up our callback handler. this will start the networking tasks on connect.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
+
+	taskENTER_CRITICAL();
+	Initialize_Message_Queues();
+	taskEXIT_CRITICAL();
 
 	Start_System_Monitor();
 

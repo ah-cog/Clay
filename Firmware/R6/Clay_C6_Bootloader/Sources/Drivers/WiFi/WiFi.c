@@ -449,27 +449,39 @@ static bool WiFi_Send_Command(char * command, char ** args, int arg_count) {
       buff_length += strlen(args[i]) + 1;     //+1 for comma;
    }
 
-   EnterCritical();
+   EnterCritical()
+   ;
    send_buffer = calloc(buff_length, sizeof(char));
    ExitCritical();
 
+   EnterCritical()
+   ;
    sprintf(send_buffer, "%s ", command);
+   ExitCritical();
 
    for (int i = 0; i < arg_count; ++i) {
 
+      EnterCritical()
+      ;
       strcat(send_buffer, args[i]);
-
+      ExitCritical();
       if (i < arg_count - 1) {
+         EnterCritical()
+         ;
          strcat(send_buffer, arg_delimiter);
+         ExitCritical();
       }
    }
 
+   EnterCritical()
+   ;
    message = Create_Message();
    Set_Message_Type(message, "command");
    Set_Message_Destination(message, "none");
    Set_Message_Source(message, "none");
    Set_Message_Content_Type(message, "text");
    Set_Message_Content(message, send_buffer, strlen(send_buffer));
+   ExitCritical();
 
    free(send_buffer);
 
