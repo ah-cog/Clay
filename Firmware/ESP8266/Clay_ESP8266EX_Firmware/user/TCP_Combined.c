@@ -80,7 +80,7 @@ static Message * temp_msg_ptr;
 static Message_Type * ignored_message_type;
 
 static uint32 last_tcp_activity_time;
-static uint32 tcp_connection_timeout_us = 10000000;
+static uint32 tcp_connection_timeout_us = 2500000;
 
 static bool listening;
 static bool task_running = false;
@@ -128,6 +128,7 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 		promoted = false;
 
 		taskENTER_CRITICAL();
+		Free_Message_Queue(&outgoing_tcp_message_queue);
 		Multibyte_Ring_Buffer_Init(&tcp_rx_multibyte, RECEIVE_DATA_SIZE);
 		local_address_string = zalloc(ADDR_STRING_SIZE);
 		remote_address_string = zalloc(ADDR_STRING_SIZE);
@@ -139,7 +140,7 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 		xTaskHandle TCP_combined_handle;
 
 		xTaskCreate(TCP_Combined_Task, "TCP combined", 256, NULL,
-				Get_Task_Priority(TASK_TYPE_TCP_RX), &TCP_combined_handle);
+				DEFAULT_PRIORITY, &TCP_combined_handle);
 
 		System_Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle,
 				Check_Needs_Promotion);
@@ -182,7 +183,7 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 
 		task_running = false;
 
-		Stop_Task(TASK_TYPE_TCP_RX);
+		System_Stop_Task(TASK_TYPE_TCP_RX);
 	}
 }
 
@@ -367,6 +368,8 @@ static bool ICACHE_RODATA_ATTR Initiate_Connection_For_Outgoing_Message()
 	bool rval = false;
 	Message * connection_message = NULL;
 
+	taskYIELD();
+
 	taskENTER_CRITICAL();
 	//do not dequeue. leave the message in the queue to be processed by the send function..
 	temp_msg_ptr = Peek_Message(&outgoing_tcp_message_queue);
@@ -529,7 +532,8 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 			//high water mark recorded as 28 bytes. Leaving this stack at 128 for safety.
 			xTaskCreate(Connect_Task, "tcp connect task",
 					configMINIMAL_STACK_SIZE, &connect_args,
-					Get_Task_Priority(TASK_TYPE_TCP_TX), &connect_task_handle);
+					System_Get_Task_Priority(TASK_TYPE_TCP_TX),
+					&connect_task_handle);
 
 			if (connect_task_handle == NULL)
 			{
@@ -537,7 +541,7 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 				xTaskHandle idle_handle = xTaskGetIdleTaskHandle();
 
 				vTaskPrioritySet(idle_handle,
-						Get_Task_Priority(TASK_TYPE_TCP_TX));
+						System_Get_Task_Priority(TASK_TYPE_TCP_TX));
 				vTaskDelay(250 / portTICK_RATE_MS);
 				vTaskPrioritySet(idle_handle, 0);
 			}
@@ -570,7 +574,8 @@ static ICACHE_RODATA_ATTR int32 Open_Data_Connection(
 
 			taskYIELD();
 
-			vTaskPrioritySet(idle_handle, Get_Task_Priority(TASK_TYPE_TCP_TX));
+			vTaskPrioritySet(idle_handle,
+					System_Get_Task_Priority(TASK_TYPE_TCP_TX));
 			vTaskDelay(250 / portTICK_RATE_MS);
 			vTaskPrioritySet(idle_handle, 0);
 
@@ -602,9 +607,12 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 	}
 
 	size_t length = 0;
-	bool rval = false;
 
-	if (strstr(m->destination, remote_address_string) != NULL)
+	taskENTER_CRITICAL();
+	bool rval = strstr(m->destination, remote_address_string) != NULL;
+	taskEXIT_CRITICAL();
+
+	if (rval)
 	{
 //		DEBUG_Print("match");
 
@@ -647,16 +655,6 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 //				printf("send of %d %s\r\n", m->content_length,
 //						rval ? "ok" : "failed");
 //				taskEXIT_CRITICAL();
-
-				int32 error = 0;
-				uint32 optionLength = sizeof(error);
-				int getReturn = lwip_getsockopt(destination_socket, SOL_SOCKET,
-				SO_ERROR, &error, &optionLength);
-
-//				taskENTER_CRITICAL();
-//				printf("error: %d\r\n", error);
-//				taskEXIT_CRITICAL();
-
 			}
 			else
 			{
@@ -758,10 +756,13 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 	uint32_t rx_temp_buffer_size = tcp_rx_multibyte.max_count + 2; //add extra so we have room for null terminator.
 
 	char * rx_temp_buffer = zalloc(rx_temp_buffer_size);
+	uint32_t buffer_free = Multibyte_Ring_Buffer_Get_Free_Size(
+			&tcp_rx_multibyte);
 	taskEXIT_CRITICAL();
 
-	received_count = Receive(data_sock, rx_temp_buffer,
-			Multibyte_Ring_Buffer_Get_Free_Size(&tcp_rx_multibyte));
+	taskYIELD();
+
+	received_count = Receive(data_sock, rx_temp_buffer, buffer_free);
 
 	taskENTER_CRITICAL();
 	Multibyte_Ring_Buffer_Enqueue(&tcp_rx_multibyte, rx_temp_buffer,
@@ -966,6 +967,11 @@ static ICACHE_RODATA_ATTR int Receive(int32 source_socket, char * destination,
 		}
 	}
 
+	if (rval > 0)
+	{
+		last_tcp_activity_time = system_get_time();
+	}
+
 	return rval;
 }
 
@@ -1004,15 +1010,15 @@ static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-	if (!opening_connection
-			&& (system_get_time() - last_tcp_activity_time)
-					> tcp_connection_timeout_us)
-	{
-		Data_Disconnect();
-//		TCP_Combined_Deinit();
-//
-//		TCP_Combined_Init();
-	}
+//	if (!opening_connection
+//			&& (system_get_time() - last_tcp_activity_time)
+//					> tcp_connection_timeout_us)
+//	{
+//		Data_Disconnect();
+////		TCP_Combined_Deinit();
+////
+////		TCP_Combined_Init();
+//	}
 
 	//remain promoted until we empty the queue.
 	taskENTER_CRITICAL();

@@ -121,7 +121,7 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 	xTaskHandle command_parser_handle;
 
 	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER),
+			DEFAULT_PRIORITY,
 			&command_parser_handle);
 
 	System_Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,

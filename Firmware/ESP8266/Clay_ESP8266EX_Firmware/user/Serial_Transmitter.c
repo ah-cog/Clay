@@ -91,7 +91,7 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 	xTaskHandle serial_tx_handle;
 
 	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL,
-			Get_Task_Priority(TASK_TYPE_SERIAL_TX), &serial_tx_handle);
+			DEFAULT_PRIORITY, &serial_tx_handle);
 
 	System_Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle,
 			Check_Needs_Promotion);

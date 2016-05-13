@@ -72,7 +72,7 @@ bool ICACHE_RODATA_ATTR Serial_Receiver_Init()
 	xTaskHandle serial_rx_handle;
 
 	xTaskCreate(Serial_Receiver_Task, "uartrx1", configMINIMAL_STACK_SIZE, NULL,
-			Get_Task_Priority(TASK_TYPE_SERIAL_RX), &serial_rx_handle);
+			DEFAULT_PRIORITY, &serial_rx_handle);
 
 	System_Register_Task(TASK_TYPE_SERIAL_RX, serial_rx_handle,
 			Check_Needs_Promotion);
@@ -162,8 +162,10 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 				{
 //					DEBUG_Print("message not null");
 
+					taskENTER_CRITICAL();
 					received_message_type = Get_Message_Type_From_Str(
 							temp_msg_ptr->message_type);
+					taskEXIT_CRITICAL();
 
 					switch (received_message_type)
 					{

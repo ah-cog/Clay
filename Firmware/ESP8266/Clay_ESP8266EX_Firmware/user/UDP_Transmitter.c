@@ -94,6 +94,7 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 		promoted = false;
 
 		taskENTER_CRITICAL();
+		Free_Message_Queue(&outgoing_udp_message_queue);
 		udp_tx_buffer = zalloc(UDP_TX_BUFFER_SIZE_BYTES);
 		taskEXIT_CRITICAL();
 
@@ -101,8 +102,8 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 
 		xTaskHandle UDP_transmit_handle;
 
-		xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL,
-				Get_Task_Priority(TASK_TYPE_UDP_TX), &UDP_transmit_handle);
+		xTaskCreate(UDP_Transmitter_Task, "udptx1", 512, NULL, DEFAULT_PRIORITY,
+				&UDP_transmit_handle);
 
 		System_Register_Task(TASK_TYPE_UDP_TX, UDP_transmit_handle,
 				Check_Needs_Promotion);
@@ -129,7 +130,7 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Deinit()
 		free(udp_tx_buffer);
 
 		task_running = false;
-		Stop_Task(TASK_TYPE_UDP_TX);
+		System_Stop_Task(TASK_TYPE_UDP_TX);
 	}
 }
 

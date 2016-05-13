@@ -11,7 +11,10 @@
 ////Includes //////////////////////////////////////////////////////
 
 ////Macros ////////////////////////////////////////////////////////
-#define LOOPS_BEFORE_PRINT		  10
+#define LOOPS_BEFORE_PRINT		  		   10
+#define DEFAULT_PRIORITY 		           2
+#define SYSTEM_MONITOR_PRIORITY            DEFAULT_PRIORITY + 2
+#define FREE_HEAP_MINIMUM_LEVEL 		   4000
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -33,10 +36,12 @@ typedef bool (*Check_Task_Needs_Promotion)();
 extern uint32 default_priority;
 
 ////Global Prototypes /////////////////////////////////////////////
-void System_Register_Task(TASK_TYPE calling_task, xTaskHandle task_handle,
-		Check_Task_Needs_Promotion promotion_callback);
-void System_Monitor_Task();
-int32 Get_Task_Priority(TASK_TYPE requested_task);
-void Stop_Task(TASK_TYPE kill_task);
+extern void System_Register_Task(TASK_TYPE calling_task,
+		xTaskHandle task_handle, Check_Task_Needs_Promotion promotion_callback);
+extern void System_Monitor_Task();
+extern int32 System_Get_Task_Priority(TASK_TYPE requested_task);
+extern void System_Stop_Task(TASK_TYPE kill_task);
+
+extern void System_Start_Tasks();
 
 #endif /* INCLUDE_SYSTEM_MONITOR_H_ */

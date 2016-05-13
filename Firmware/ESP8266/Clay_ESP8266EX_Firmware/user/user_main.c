@@ -195,26 +195,6 @@ void wifi_handle_event_cb(System_Event_t *evt)
 	}
 	case EVENT_STAMODE_GOT_IP:
 	{
-#if ENABLE_UDP_SENDER
-		UDP_Transmitter_Init();
-#endif
-
-#if ENABLE_UDP_RECEIVER
-		UDP_Receiver_Init();
-#endif
-
-#if ENABLE_TCP_SENDER
-		TCP_Transmitter_Init();
-#endif
-
-#if ENABLE_TCP_RECEIVER
-		TCP_Receiver_Init();
-#endif
-
-#if ENABLE_TCP_COMBINED_TX || ENABLE_TCP_COMBINED_RX
-		TCP_Combined_Init();
-#endif
-
 		Get_Wifi_Status_Command(NULL);
 		Get_IP_Command(NULL);
 

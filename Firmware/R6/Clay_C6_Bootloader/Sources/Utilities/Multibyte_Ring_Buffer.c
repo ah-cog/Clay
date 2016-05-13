@@ -137,6 +137,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t *
    if (rval > 0) {
       if (rval < bytes_after_head) {
          memcpy(data, BUFFER_HEAD(buffer), rval);
+         memset(BUFFER_HEAD(buffer), 0, rval);
          buffer->head = (buffer->head + rval) % buffer->max_count;
 
       } else {

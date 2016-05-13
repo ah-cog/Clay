@@ -114,8 +114,8 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 
 		xTaskHandle UDP_receive_handle;
 
-		xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL,
-				Get_Task_Priority(TASK_TYPE_UDP_RX), &UDP_receive_handle);
+		xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL, DEFAULT_PRIORITY,
+				&UDP_receive_handle);
 
 		System_Register_Task(TASK_TYPE_UDP_RX, UDP_receive_handle,
 				Check_Needs_Promotion);
@@ -144,7 +144,7 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Deinit()
 		free(dest_addr);
 
 		task_running = false;
-		Stop_Task(TASK_TYPE_UDP_RX);
+		System_Stop_Task(TASK_TYPE_UDP_RX);
 	}
 }
 
@@ -220,7 +220,8 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 					taskYIELD();
 
 					taskENTER_CRITICAL();
-					incoming_message_count =Queue_Message(&incoming_message_queue, temp_msg_ptr);
+					incoming_message_count = Queue_Message(
+							&incoming_message_queue, temp_msg_ptr);
 					taskEXIT_CRITICAL();
 				}
 			}
@@ -297,8 +298,11 @@ static bool ICACHE_RODATA_ATTR Connect()
 static bool ICACHE_RODATA_ATTR Receive()
 {
 	bool rval = false;
+
+	taskENTER_CRITICAL();
 	char * rx_temp = zalloc(
 			Multibyte_Ring_Buffer_Get_Free_Size(&udp_rx_multibyte));
+	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
 	memset(&from, 0, sizeof(from));
@@ -319,7 +323,9 @@ static bool ICACHE_RODATA_ATTR Receive()
 		rval = true;
 		udp_rx_count = ret;
 
+		taskENTER_CRITICAL();
 		Multibyte_Ring_Buffer_Enqueue(&udp_rx_multibyte, rx_temp, ret);
+		taskEXIT_CRITICAL();
 
 		//store the source address
 		lastSourceAddress.sin_addr = from.sin_addr;
