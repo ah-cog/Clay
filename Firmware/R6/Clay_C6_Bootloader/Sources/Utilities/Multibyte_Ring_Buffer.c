@@ -386,7 +386,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
             message_length = (message_length * 10) + (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);
          }
 
-         if (buffer->count < message_length) {
+         if (buffer->count < (message_length + delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1)) {
             //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
             //      the return value will be the number of bytes dequeued.
             ((buffer->head + rval) % buffer->max_count);
@@ -511,7 +511,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
                              - delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX])
                           + 1;
 
-         if (buffer->count < message_length) {
+         if (buffer->count < (message_length + delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1)) {
             //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
             //      the return value will be the number of bytes dequeued.
             buffer->head = (buffer->head + delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1)

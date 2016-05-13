@@ -232,28 +232,28 @@ uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t le
 uint8_t Update_Firmware() {
    uint8_t status = NULL;     // Stores the result of called functions, indicating the status of the operation of this function.
    uint8_t result = FALSE;     // Return value. Default to false, indicating failure to update the firmware.
-   uint32_t blockIndex = 0;        // The current block index to receive, verify, and write to flash.
-   uint32_t blockSize = FIRMWARE_BLOCK_SIZE;        // The number of bytes to receive.
-   uint32_t startByte = 0;        // The first byte to receive in the firmware. This will be the first byte in the received block.
+   uint32_t block_index = 0;        // The current block index to receive, verify, and write to flash.
+   uint32_t block_size = FIRMWARE_BLOCK_SIZE;        // The number of bytes to receive.
+   uint32_t start_byte = 0;       // The first byte to receive in the firmware. This will be the first byte in the received block.
 
    Message * message;
 
    // TODO: Get total size of firmware (from firmware description).
    uint32_t firmware_size = DEFAULT_FIRMWARE_SIZE;     // Total size (in bytes) of the firmware being received.
    uint16_t firmware_checksum = DEFAULT_FIRMWARE_CHECKSUM;
-   int bytesReceived = 0;     // Total number of verified bytes received so far.
-   int bytesWritten = 0;     // Total number of bytes written to flash.
+   int bytes_received = 0;     // Total number of verified bytes received so far.
+   int bytes_written = 0;     // Total number of bytes written to flash.
    Message * response_message;
 
-   char uriParameters[64] = { 0 };
+   char uri_parameters[64] = { 0 };
 
    // Erase application from flash before getting data.
    Erase_Program_Flash();
 
    // Retrieve firmware size from the server.
-   sprintf(uriParameters, "/clay/firmware/size");
+   sprintf(uri_parameters, "/clay/firmware/size");
 
-   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
+   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uri_parameters),
                                              1,
                                              500);
    if (response_message != NULL) {
@@ -277,8 +277,8 @@ uint8_t Update_Firmware() {
    }
 
    // Retrieve firmware checksum from the server.
-   sprintf(uriParameters, "/clay/firmware/checksum");
-   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
+   sprintf(uri_parameters, "/clay/firmware/checksum");
+   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uri_parameters),
                                              5,
                                              500);
    if (response_message != NULL) {
@@ -303,16 +303,18 @@ uint8_t Update_Firmware() {
    }
 
    // Retrieve firmware if is hasn't yet been received in its entirety.
-   while (bytesReceived < firmware_size) {
+   while (bytes_received < firmware_size) {
 
-      startByte = blockIndex * blockSize;     // Determine the first byte to receive in the block based on the current block index.
-      sprintf(uriParameters, "/clay/firmware/?startByte=%d&byteCount=%d", startByte, blockSize);
-      response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
+      start_byte = block_index * block_size;     // Determine the first byte to receive in the block based on the current block index.
+      sprintf(uri_parameters, "/clay/firmware/?startByte=%d&byteCount=%d", start_byte, block_size);
+      response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uri_parameters),
                                                 5,
                                                 500);
 
       if (response_message != NULL) {
-         bytesReceived += response_message->content_length;
+         bytes_received += response_message->content_length;
+
+         Write_Firmware_Bytes(start_byte, response_message->content, bytes_received);
 
          // TODO: Implement per-block length/checksum fields on server messages.
 
@@ -325,14 +327,9 @@ uint8_t Update_Firmware() {
          response_message = NULL;
 
          // Advance to the next byte.
-         blockIndex = blockIndex + 1;
+         block_index = block_index + 1;
       }
    }
-
-   //verify program checksum
-
-   firmware_size = Read_Program_Size();     // Read the application firmware size from flash memory.
-   firmware_checksum = Read_Program_Checksum();     // Read the application firmware checksum from flash memory.
 
    if (Verify_Firmware()) {
       // The firmware updated successfully, so reset the flag indicating a new firmware update is available.

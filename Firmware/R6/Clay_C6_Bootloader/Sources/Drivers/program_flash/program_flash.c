@@ -63,12 +63,17 @@ uint16_t Erase_Program_Flash_Page(uint32_t address) {
 uint16_t Write_Program_Block(uint32_t destination, const uint8_t *data, uint32_t length) {
    // Set up flash operation
    flash_operation_completed = FALSE;
+   LDD_FLASH_TOperationStatus status;
 
    uint16_t rval = FLASH1_Write(FLASH1_DeviceData, (char *) data, destination, length);
 
    while (!rval && !flash_operation_completed) {
       // Run operation by calling flash1_main
       FLASH1_Main(FLASH1_DeviceData);
+
+      status = FLASH1_GetOperationStatus(FLASH1_DeviceData);
+
+      flash_operation_completed = status != LDD_FLASH_RUNNING && status != LDD_FLASH_START && status != LDD_FLASH_STOP_REQ;
    }
 
    return rval;

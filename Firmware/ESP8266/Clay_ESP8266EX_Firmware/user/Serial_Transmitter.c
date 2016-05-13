@@ -90,8 +90,8 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 
 	xTaskHandle serial_tx_handle;
 
-	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL,
-			DEFAULT_PRIORITY, &serial_tx_handle);
+	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL, DEFAULT_PRIORITY,
+			&serial_tx_handle);
 
 	System_Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle,
 			Check_Needs_Promotion);
@@ -192,7 +192,10 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 #endif
 
 			taskENTER_CRITICAL();
+			printf("  ");
+			UART_WaitTxFifoEmpty(UART0);
 			uart_tx_array(UART0, serial_tx_buffer, serial_tx_length);
+			UART_WaitTxFifoEmpty(UART0);
 			taskEXIT_CRITICAL();
 			state = Transmitting;
 
@@ -221,8 +224,7 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		}
 		}
 
-		vTaskDelay(5 / portTICK_RATE_MS);
-//		taskYIELD();
+		taskYIELD();
 	}
 }
 
