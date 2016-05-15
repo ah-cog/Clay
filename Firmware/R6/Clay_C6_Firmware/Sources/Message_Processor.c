@@ -4,6 +4,9 @@
 #include "Event.h"
 #include "Timeline.h"
 
+#include "Interactive_Assembly.h"
+#include "UDP_Discovery_temp.h"
+
 #define FIRST_PARAMETER  0
 #define SECOND_PARAMETER 1
 #define THIRD_PARAMETER  2
@@ -23,8 +26,9 @@ static int8_t Process_Set_Event_Action(Message *message);
 static int8_t Process_Set_Event_State(Message *message);
 static int8_t Process_Set_Event_Trigger(Message *message);
 static int8_t Process_Get_Event_State(Message * message);
-static int8_t Process_Set_Event_Context (Message *message);
-static int8_t Process_Set_Event_Length (Message *message);
+static int8_t Process_Set_Event_Context(Message *message);
+static int8_t Process_Set_Event_Length(Message *message);
+static int8_t Receive_Interactive_Assembly_Message(Message *message);
 
 int8_t Process_Incoming_Message(Message *message) {
 
@@ -39,14 +43,14 @@ int8_t Process_Incoming_Message(Message *message) {
 
    token_count = Get_Token_Count((*message).content);
 
-   // Reset the buffer
+// Reset the buffer
    memset(uuid_buffer2, '\0', DEFAULT_UUID_LENGTH);
 
-   // <HACK>
-   // TODO: Handle messages from ESP8266:
-   // TODO: - INFO,CONNECTED
-   // TODO: - INFO,192.168.1.1 (for example)
-   // TODO: - INFO,DISCONNECTED
+// <HACK>
+// TODO: Handle messages from ESP8266:
+// TODO: - INFO,CONNECTED
+// TODO: - INFO,192.168.1.1 (for example)
+// TODO: - INFO,DISCONNECTED
    if (strncmp((*message).type, "status", strlen("status")) == 0) {
 
       // <HACK>
@@ -82,6 +86,9 @@ int8_t Process_Incoming_Message(Message *message) {
                internet_address = (*message).content;     // Start at the beginning of the message content (first token)...
                internet_address = strchr(internet_address, ' ') + 1;     // ...then jump to "address" (second token)...
                internet_address = strchr(internet_address, ' ') + 1;     // ...then jump to start of first address octet (third token)...
+
+               strncpy(local_address, internet_address, strlen(internet_address));
+
                char *fourth_octet = strchr(internet_address, '.') + 1;     // ...then the second...
                fourth_octet = strchr(fourth_octet, '.') + 1;     // ...then the third...
                fourth_octet = strchr(fourth_octet, '.') + 1;     // ...then the fourth.
@@ -90,8 +97,13 @@ int8_t Process_Incoming_Message(Message *message) {
 
                // i.e., Copy "192.168.43." into broadcast_address
                strncpy(broadcast_address, internet_address, (fourth_octet - internet_address));
+               strncpy(broadcast_address_module, internet_address, (fourth_octet - internet_address));
+
                broadcast_address[fourth_octet - internet_address] = '\0';
                strcat(broadcast_address, "255:4445");
+
+               broadcast_address_module[fourth_octet - internet_address] = '\0';
+               strcat(broadcast_address_module, "255:4446");
 
                has_generated_discovery_broadcast_address = TRUE;
             }
@@ -108,13 +120,21 @@ int8_t Process_Incoming_Message(Message *message) {
          return TRUE;
       }
    }
-   // </HACK>
+// </HACK>
 
-   // "get channel state"
-   // "get observables" -> "(<id>, <key>), (<id>, <key>), (<id>, <key>), ..."
-   // "propagate observable <source-observable> <source-observable> observable <destination-observable> <destination-key>"
-   // "set channel <number> observable <key> source [to] channel <number> observable <key>"
-   // "propagate channel <number> observable <key> [to] channel <number> observable <key>"
+   if (Check_For_Discovery_Message(message)) {
+      return TRUE;
+   }
+
+   if (Receive_Interactive_Assembly_Message(message)) {
+      return TRUE;
+   }
+
+// "get channel state"
+// "get observables" -> "(<id>, <key>), (<id>, <key>), (<id>, <key>), ..."
+// "propagate observable <source-observable> <source-observable> observable <destination-observable> <destination-key>"
+// "set channel <number> observable <key> source [to] channel <number> observable <key>"
+// "propagate channel <number> observable <key> [to] channel <number> observable <key>"
 
    if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "cache")) {
       if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "action")) {
@@ -132,14 +152,14 @@ int8_t Process_Incoming_Message(Message *message) {
       if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "event")) {
          if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "action")) {
             return Process_Set_Event_Action(message);
-         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "state")) { // JUST DATA GOES HERE
+         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "state")) {     // JUST DATA GOES HERE
             return Process_Set_Event_State(message);
-         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "trigger")) { // Rename to "CUE"
+         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "trigger")) {     // Rename to "CUE"
             return Process_Set_Event_Trigger(message);
-         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "context")) { // PUT CHANNEL CONFIG STUFF HERE! (& send before state)
-             return Process_Set_Event_Context (message);
+         } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "context")) {     // PUT CHANNEL CONFIG STUFF HERE! (& send before state)
+            return Process_Set_Event_Context(message);
          } else if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "duration")) {
-             return Process_Set_Event_Length(message);
+            return Process_Set_Event_Length(message);
          }
       }
    } else if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "get")) {
@@ -431,7 +451,7 @@ static int8_t Process_Set_Event_State(Message *message) {
    return result;
 }
 
-static int8_t Process_Set_Event_Context (Message *message) {
+static int8_t Process_Set_Event_Context(Message *message) {
 
    int8_t status = NULL;
    int8_t result = NULL;
@@ -524,7 +544,7 @@ static int8_t Process_Set_Event_Trigger(Message *message) {
    return result;
 }
 
-static int8_t Process_Set_Event_Length (Message *message) {
+static int8_t Process_Set_Event_Length(Message *message) {
 
    int8_t status = NULL;
    int8_t result = NULL;
@@ -555,7 +575,7 @@ static int8_t Process_Set_Event_Length (Message *message) {
       //	Action *action = Get_Cached_Action_By_UUID (uuid_buffer2);
       if (event != NULL) {
          //Set_Event_State(event, uuid_buffer2);
-    	  (*event).repeat_period = atoi (uuid_buffer2);
+         (*event).repeat_period = atoi(uuid_buffer2);
          result = TRUE;
       } else {
          // TODO: If action or nextAction are NULL, stream them in over the Internet.
@@ -575,47 +595,47 @@ static int8_t Process_Get_Event_State(Message * message) {
    char response_message_content[MAXIMUM_MESSAGE_LENGTH];
    Message * response_message = NULL;
 
-   //get the profile index from the message -- "get channel <number> state"
+//get the profile index from the message -- "get channel <number> state"
 
    Get_Token((*message).content, response_message_content, 2);
 
    number = atoi(response_message_content) - 1;
 
-   //get the value from channel_profile
+//get the value from channel_profile
    if (channel_profile[number].direction == CHANNEL_DIRECTION_INPUT) {
       if (channel_profile[number].type == CHANNEL_TYPE_TOGGLE) {
 //    	  sprintf(response_message_content, "channel %d state %d", number + 1, channel_profile[number].data->toggle_value);
 
-    	  // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+         // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
 
-		 // Get observable set...
-		 Observable_Set *observable_set = channel_profile[number].observable_set;
-		 Observable *observable = NULL;
+         // Get observable set...
+         Observable_Set *observable_set = channel_profile[number].observable_set;
+         Observable *observable = NULL;
 
-		 // ...then get data from channel profile...
-		 observable = Get_Observable (observable_set, "toggle_value");
-		 int32_t toggle_value = Get_Observable_Data_Int32 (observable);
+         // ...then get data from channel profile...
+         observable = Get_Observable(observable_set, "toggle_value");
+         int32_t toggle_value = Get_Observable_Data_Int32(observable);
 
-		 // </OPTIMIZE>
+         // </OPTIMIZE>
 
-		 sprintf(response_message_content, "channel %d state %d", number + 1, toggle_value);
+         sprintf(response_message_content, "channel %d state %d", number + 1, toggle_value);
          result = TRUE;
       } else if (channel_profile[number].type == CHANNEL_TYPE_WAVEFORM) {
 //         sprintf(response_message_content, "channel %d state %d", number + 1, channel_profile[number].data->waveform_sample_value);
 
-    	  // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+         // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
 
-		 // Get observable set...
-		 Observable_Set *observable_set = channel_profile[number].observable_set;
-		 Observable *observable = NULL;
+         // Get observable set...
+         Observable_Set *observable_set = channel_profile[number].observable_set;
+         Observable *observable = NULL;
 
-		 // ...then get data from channel profile...
-		 observable = Get_Observable (observable_set, "waveform_sample_value");
-		 int32_t waveform_sample_value = Get_Observable_Data_Int32 (observable);
+         // ...then get data from channel profile...
+         observable = Get_Observable(observable_set, "waveform_sample_value");
+         int32_t waveform_sample_value = Get_Observable_Data_Int32(observable);
 
-		 // </OPTIMIZE>
+         // </OPTIMIZE>
 
-		 sprintf(response_message_content, "channel %d state %d", number + 1, waveform_sample_value);
+         sprintf(response_message_content, "channel %d state %d", number + 1, waveform_sample_value);
 
          result = TRUE;
       } else {
@@ -679,4 +699,15 @@ void Send_Acknowledgment_UDP(char *token, char *messageContent) {
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
    Queue_Message(&outgoingMessageQueue, responseMessage);
+}
+
+static int8_t Receive_Interactive_Assembly_Message(Message * message) {
+
+   int8_t result = FALSE;
+
+   if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "interactive_assembly")) {
+      result = Process_Interactive_Assembly_Message(message);
+   }
+
+   return result;
 }

@@ -933,7 +933,7 @@ registers of the peripheral(s) configured by the component.
 **          Interrupt service/event                        : Enabled
 **            Interrupt                                    : INT_FTM3
 **            Interrupt priority                           : medium priority
-**          Interrupt period                               : 50 Âµs
+**          Interrupt period                               : 50 µs
 **          Initialization                                 : 
 **            Enabled in init. code                        : yes
 **            Auto initialization                          : yes

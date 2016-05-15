@@ -17,6 +17,9 @@
 #include "PowerOn.h"
 #include "Button.h"
 
+#include "UDP_Discovery_temp.h"
+#include "Interactive_Assembly.h"
+
 #include "Power_Manager.h"
 
 static bool led_1_state;
@@ -55,6 +58,7 @@ void Initialize() {
    // Initialize Clay
 
 //   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+//   Button_Register_Hold_Response(1000, Wifi_Set_Operating_Mode);
 //   Button_Register_Press_Response(Send_Mesh_Test_Message);
 //   Button_Register_Release_Response(Send_Mesh_Test_Message);
 
@@ -168,6 +172,7 @@ int8_t has_received_internet_address = FALSE;
 int8_t has_generated_discovery_broadcast_address = FALSE;
 int8_t has_enabled_broadcast = FALSE;
 char broadcast_address[32];
+char local_address[32];
 
 void Discovery_Broadcast_Presence() {
 
@@ -217,77 +222,77 @@ void Application(void) {
 
       // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 
-	   // Step state machine
-	         Wifi_State_Step();
+      // Step state machine
+      Wifi_State_Step();
 
-	         // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
-	         if (Has_Messages(&incomingWiFiMessageQueue)) {
-	            message = Dequeue_Message(&incomingWiFiMessageQueue);
+      // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
+      if (Has_Messages(&incomingWiFiMessageQueue)) {
+         message = Dequeue_Message(&incomingWiFiMessageQueue);
 
-	            message_status = Process_Incoming_Message(message);
+         message_status = Process_Incoming_Message(message);
 
-	            // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
-	            if (message_status == TRUE) {
-	               Delete_Message(message);
-	            } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
-	               // TODO: Process events on the timeline with the message, before dequeueing...
-	               Queue_Message(&incomingMessageQueue, message);
-	            }
-	         }
+         // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
+         if (message_status == TRUE) {
+            Delete_Message(message);
+         } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
+            // TODO: Process events on the timeline with the message, before dequeueing...
+            Queue_Message(&incomingMessageQueue, message);
+         }
+      }
 
-	         // Process the next incoming message on the system queue
-	         if (lock_timeline == FALSE) {
-	            if (Has_Messages(&incomingMessageQueue)) {
-	               message = Peek_Message(&incomingMessageQueue);
-	               lock_timeline = TRUE;
-	            }
-	         }
+      // Process the next incoming message on the system queue
+      if (lock_timeline == FALSE) {
+         if (Has_Messages(&incomingMessageQueue)) {
+            message = Peek_Message(&incomingMessageQueue);
+            lock_timeline = TRUE;
+         }
+      }
 
-	         // Perform action.
-	         if ((*timeline).current_event != NULL) {
-	       	 message_status = Process_Event (((*timeline).current_event));
+      // Perform action.
+      if ((*timeline).current_event != NULL) {
+         message_status = Process_Event(((*timeline).current_event));
 
-	            if (message_status != FALSE) {
+         if (message_status != FALSE) {
 
-	               // NOTE: Action was performed successfully.
+            // NOTE: Action was performed successfully.
 
-	               // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
-	            }
+            // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
+         }
 
-	            if (message_status != 2) {
-	           	 // Go to the next action on the timeline
-	   			 if ((*((*timeline).current_event)).next != NULL) {
-	   				(*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
-	   			 } else {
+         if (message_status != 2) {
+            // Go to the next action on the timeline
+            if ((*((*timeline).current_event)).next != NULL) {
+               (*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
+            } else {
 
-	   				// TODO: Remove message from the queue (if it was not a basic message)
-	   				if (lock_timeline == TRUE) {
-	   				   if (Has_Messages(&incomingMessageQueue)) {
-	   					  message = Dequeue_Message(&incomingMessageQueue);
-	   					  Delete_Message(message);
-	   					  lock_timeline = FALSE;
-	   				   }
-	   				}
+               // TODO: Remove message from the queue (if it was not a basic message)
+               if (lock_timeline == TRUE) {
+                  if (Has_Messages(&incomingMessageQueue)) {
+                     message = Dequeue_Message(&incomingMessageQueue);
+                     Delete_Message(message);
+                     lock_timeline = FALSE;
+                  }
+               }
 
-	   				(*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
-	   			 }
-	            }
+               (*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
+            }
+         }
 
-	         } else {
+      } else {
 
-	            /*
-	             // Reset the channel states...
-	             Reset_Channels();
-	             Apply_Channels();
+         /*
+          // Reset the channel states...
+          Reset_Channels();
+          Apply_Channels();
 
-	             // ...the channel light states...
-	             Reset_Channel_Lights();
-	             Apply_Channel_Lights();
+          // ...the channel light states...
+          Reset_Channel_Lights();
+          Apply_Channel_Lights();
 
-	             // ...and the device states.
-	             // TODO: Reset any other device states.
-	             */
-	         }
+          // ...and the device states.
+          // TODO: Reset any other device states.
+          */
+      }
 
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
@@ -369,6 +374,7 @@ void Monitor_Periodic_Events() {
       Imu_Get_Data();
       Button_Periodic_Call();
       Channel_Periodic_Call();
+      Interactive_Assembly_Periodic_Call();
 
       // TODO: Put this in a callback timer...
       if (button_mode_timeout > 0) {
@@ -426,6 +432,7 @@ void Monitor_Periodic_Events() {
       // Once discovery broadcast address is generated and discovery is enabled, send discovery broadcast.
       if (has_generated_discovery_broadcast_address && has_enabled_broadcast) {
          Discovery_Broadcast_Presence();
+         Discovery_Broadcast_Presence_4446();
       }
 
       // TODO: Perform any periodic actions (3000 ms).
