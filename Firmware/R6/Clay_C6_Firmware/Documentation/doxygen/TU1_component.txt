@@ -932,7 +932,7 @@ registers of the peripheral(s) configured by the component.
 **            Counter frequency                            : Auto select
 **          Counter restart                                : On-match
 **            Period device                                : FTM3_MOD
-**            Period                                       : 50 Âµs
+**            Period                                       : 50 µs
 **            Interrupt                                    : Enabled
 **              Interrupt                                  : INT_FTM3
 **              Interrupt priority                         : medium priority
