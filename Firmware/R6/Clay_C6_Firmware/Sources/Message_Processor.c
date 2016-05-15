@@ -4,6 +4,7 @@
 #include "Event.h"
 #include "Timeline.h"
 
+#include "Interactive_Assembly.h"
 #include "UDP_Discovery_temp.h"
 
 #define FIRST_PARAMETER  0
@@ -27,6 +28,7 @@ static int8_t Process_Set_Event_Trigger(Message *message);
 static int8_t Process_Get_Event_State(Message * message);
 static int8_t Process_Set_Event_Context(Message *message);
 static int8_t Process_Set_Event_Length(Message *message);
+static int8_t Receive_Interactive_Assembly_Message(Message *message);
 
 int8_t Process_Incoming_Message(Message *message) {
 
@@ -83,6 +85,9 @@ int8_t Process_Incoming_Message(Message *message) {
                char *internet_address = NULL;
                internet_address = (*message).content;     // Start at the beginning of the message content (first token)...
                internet_address = strchr(internet_address, ' ') + 1;     // ...then jump to "address" (second token)...
+
+               strncpy(local_address, internet_address, strlen(internet_address));
+
                internet_address = strchr(internet_address, ' ') + 1;     // ...then jump to start of first address octet (third token)...
                char *fourth_octet = strchr(internet_address, '.') + 1;     // ...then the second...
                fourth_octet = strchr(fourth_octet, '.') + 1;     // ...then the third...
@@ -92,13 +97,13 @@ int8_t Process_Incoming_Message(Message *message) {
 
                // i.e., Copy "192.168.43." into broadcast_address
                strncpy(broadcast_address, internet_address, (fourth_octet - internet_address));
-               strncpy(broadcast_address_4446, internet_address, (fourth_octet - internet_address));
+               strncpy(broadcast_address_module, internet_address, (fourth_octet - internet_address));
 
                broadcast_address[fourth_octet - internet_address] = '\0';
-               broadcast_address_4446[fourth_octet - internet_address] = '\0';
-
                strcat(broadcast_address, "255:4445");
-               strcat(broadcast_address_4446, "255:4446");
+
+               broadcast_address_module[fourth_octet - internet_address] = '\0';
+               strcat(broadcast_address_module, "255:4446");
 
                has_generated_discovery_broadcast_address = TRUE;
             }
@@ -118,7 +123,11 @@ int8_t Process_Incoming_Message(Message *message) {
 // </HACK>
 
    if (Check_For_Discovery_Message(message)) {
-      return true;
+      return TRUE;
+   }
+
+   if (Receive_Interactive_Assembly_Message(message)) {
+      return TRUE;
    }
 
 // "get channel state"
@@ -690,4 +699,15 @@ void Send_Acknowledgment_UDP(char *token, char *messageContent) {
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
    Queue_Message(&outgoingMessageQueue, responseMessage);
+}
+
+static int8_t Receive_Interactive_Assembly_Message(Message * message) {
+
+   int8_t result = FALSE;
+
+   if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "interactive_assembly")) {
+      result = Process_Interactive_Assembly_Message(message);
+   }
+
+   return result;
 }

@@ -29,6 +29,7 @@ extern int8_t has_received_internet_address;
 extern int8_t has_generated_discovery_broadcast_address;
 extern int8_t has_enabled_broadcast;
 extern char broadcast_address[32];
+extern char local_address[32];
 
 /**
  * Initializes the device.

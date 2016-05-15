@@ -34,7 +34,7 @@ typedef struct
 
 ////Globals   /////////////////////////////////////////////////////
 extern remote_clay_module discovered_modules[];
-extern char broadcast_address_4446[];
+extern char broadcast_address_module[];
 
 ////Function Prototypes ///////////////////////////////////////////
 extern int8_t Find_Uuid_In_Discovered_Modules(char * uuid_buffer);

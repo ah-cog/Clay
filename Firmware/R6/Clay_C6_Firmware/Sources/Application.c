@@ -171,6 +171,7 @@ int8_t has_received_internet_address = FALSE;
 int8_t has_generated_discovery_broadcast_address = FALSE;
 int8_t has_enabled_broadcast = FALSE;
 char broadcast_address[32];
+char local_address[32];
 
 void Discovery_Broadcast_Presence() {
 

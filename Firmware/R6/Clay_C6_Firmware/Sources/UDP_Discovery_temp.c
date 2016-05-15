@@ -41,7 +41,7 @@
 
 ////Globals   /////////////////////////////////////////////////////
 remote_clay_module discovered_modules[MODULE_DISCOVERY_COUNT] = { 0, 0, 0 };
-char broadcast_address_4446[32];
+char broadcast_address_module[32];
 
 ////Local vars/////////////////////////////////////////////////////
 static char uuid_buffer[DEFAULT_UUID_LENGTH] = { 0 };
@@ -54,12 +54,17 @@ static uint8_t Message_Content_Parameter_Equals(Message *message, int token_inde
 
 ////Global implementations ////////////////////////////////////////
 int8_t Check_For_Discovery_Message(Message*message) {
+
+   int8_t result = FALSE;
+
    //look for announce messages from other clay modules.
    if (strncmp((*message).type, "udp", strlen("udp")) == 0
        && Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "announce")
        && Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "device")) {
-      return Process_Module_Announce_Message(message);
+      result = Process_Module_Announce_Message(message);
    }
+
+   return result;
 }
 
 int8_t Find_Uuid_In_Discovered_Modules(char * uuid_buffer) {
@@ -117,9 +122,21 @@ void Discovery_Broadcast_Presence_4446() {     // Queue device discovery broadca
    sprintf(buffer2, "announce device %s", uuid);
    Message *broadcastMessage = Create_Message(buffer2);
    Set_Message_Type(broadcastMessage, "udp");
-   Set_Message_Source(broadcastMessage, broadcast_address_4446);
-   Set_Message_Destination(broadcastMessage, broadcast_address_4446);
+   Set_Message_Source(broadcastMessage, broadcast_address_module);
+   Set_Message_Destination(broadcastMessage, broadcast_address_module);
    Queue_Message(&outgoingMessageQueue, broadcastMessage);
+}
+
+uint8_t Get_Module_Count() {
+   uint8_t result = 0;
+
+   for (int i = 0; i < MODULE_DISCOVERY_COUNT; ++i) {
+      if (discovered_modules[i].allocated) {
+         ++result;
+      }
+   }
+
+   return result;
 }
 
 ////Local implementations /////////////////////////////////////////
