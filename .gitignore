@@ -22,3 +22,4 @@ Firmware/R6/*/Documentation
 # Keep these if preferred for a reference of the final build.
 # *.elf
 # *.hex
+Firmware/R6/Clay_C6_Firmware/gdb_log.txt

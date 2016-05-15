@@ -47,6 +47,7 @@ char broadcast_address_4446[32];
 static char uuid_buffer[DEFAULT_UUID_LENGTH] = { 0 };
 static char uuid_buffer2[512] = { 0 };     // char uuid_buffer2[DEFAULT_UUID_LENGTH] = { 0 };
 static char state_buffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
+static char buffer2[128] = { 0 };
 
 ////Local Prototypes///////////////////////////////////////////////
 static uint8_t Message_Content_Parameter_Equals(Message *message, int token_index, const char *pattern);
