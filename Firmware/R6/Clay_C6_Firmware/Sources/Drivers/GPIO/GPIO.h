@@ -129,6 +129,7 @@ typedef struct {
 struct Propagator; // Structure prototypes
 
 typedef struct Observable { // or "Drop" (with "Ripple"), or "Generator"
+	char *device_uuid;
 	char *key;
 	int8_t content_type;
 	void *content;
@@ -141,6 +142,7 @@ typedef struct Observable { // or "Drop" (with "Ripple"), or "Generator"
 } Observable;
 
 extern Observable* Create_Observable (const char *key, int8_t content_type, void *content);
+extern void Set_Observable_Device_UUID (Observable *observable, char *device_uuid);
 extern void Set_Observable_Content (Observable *observable, int8_t content_type, void *content);
 extern int8_t Get_Observable_Type (Observable *observable);
 extern int16_t Get_Observable_Data_Int16 (Observable *observable);
@@ -151,9 +153,9 @@ extern void Delete_Observable (Observable *observable);
 
 typedef struct Propagator { // rename to "Ripple"
 	Observable *source;
-	char *source_key;
+//	char *source_key;
 	Observable *destination;
-	char *destination_key;
+//	char *destination_key;
 	// TODO: Add custom propagator function?
 
 	struct Propagator *previous;
