@@ -24,5 +24,5 @@ extern void Request_Change_Selected_Channel();
 extern void Change_Selected_Channel();
 extern void Request_Change_Selected_Channel_Mode();
 extern int8_t Process_Interactive_Assembly_Message(Message * message);
-
+extern void Interactive_Assembly_Periodic_Call() ;
 #endif

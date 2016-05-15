@@ -18,6 +18,7 @@
 #include "Button.h"
 
 #include "UDP_Discovery_temp.h"
+#include "Interactive_Assembly.h"
 
 #include "Power_Manager.h"
 
@@ -373,6 +374,7 @@ void Monitor_Periodic_Events() {
       Imu_Get_Data();
       Button_Periodic_Call();
       Channel_Periodic_Call();
+      Interactive_Assembly_Periodic_Call();
 
       // TODO: Put this in a callback timer...
       if (button_mode_timeout > 0) {

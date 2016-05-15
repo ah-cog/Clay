@@ -7,9 +7,17 @@
 #include "Application.h"
 #include "Message.h"
 
+#include "GPIO.h"
+
 #include "UDP_Discovery_temp.h"
 
 ////Macros ////////////////////////////////////////////////////////
+#define REQUEST_KEYWORD  "request"
+#define ACCEPT_KEYWORD  "accept"
+#define UPDATE_KEYWORD  "update"
+#define INPUT_KEYWORD  "input"
+#define OUTPUT_KEYWORD "output"
+#define CANCEL_KEYWORD "cancel"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -33,6 +41,12 @@ static Interactive_Assembly_Channel_State state;
 static int8_t selected_channel = -1;
 static int8_t changed_channel_mode = FALSE;
 
+static char interactive_assembly_message_type[20];
+static char interactive_assembly_message_content[20];
+static char remote_module_address[50];
+
+static bool channel_active;
+
 ////Local Prototypes///////////////////////////////////////////////
 static void Request_Remote_Channel();
 static void Cancel_Last_Channel_Request();
@@ -44,6 +58,7 @@ int8_t Enable_Interactive_Assembly() {
    Button_Register_Release_Response(&Request_Change_Selected_Channel);
    Button_Register_Hold_Response(DEFAULT_BUTTON_HOLD_TIME, &Request_Change_Selected_Channel_Mode);
    state = INTERACTIVE_ASSEMBLY_NONE;
+   channel_active = FALSE;
    return TRUE;
 }
 
@@ -53,6 +68,7 @@ void Request_Reset_Button() {
    // Reset button logic state
    button_mode = 0;
    button_mode_timeout = 0;
+   channel_active = FALSE;
    selected_channel--;     //Don't reset to -1. Michael likes the selected channel to be remembered. Allows picking up where left off.
 
    changed_channel_mode = FALSE;
@@ -123,6 +139,8 @@ void Change_Selected_Channel() {
          Request_Remote_Channel();
       } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE || state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE) {
          Accept_Channel_Request();
+         button_mode_timeout = 0;
+         channel_active = TRUE;
       }
 
       // Apply the new light states
@@ -168,15 +186,6 @@ void Request_Change_Selected_Channel_Mode() {
    }
 }
 
-#define REQUEST_KEYWORD  "request"
-#define ACCEPT_KEYWORD  "accept"
-#define INPUT_KEYWORD  "input"
-#define OUTPUT_KEYWORD "output"
-#define CANCEL_KEYWORD "cancel"
-static char interactive_assembly_message_type[20];
-static char interactive_assembly_message_content[20];
-static char remote_module_address[50];
-
 int8_t Process_Interactive_Assembly_Message(Message * message) {
 
    //examples:
@@ -220,16 +229,23 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
          if (strncmp(interactive_assembly_message_content, INPUT_KEYWORD, strlen(INPUT_KEYWORD)) == 0) {
             if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER) {
                //remote has the right config
+               button_mode_timeout = 0;
+               channel_active = TRUE;
             }
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, OUTPUT_KEYWORD, strlen(OUTPUT_KEYWORD)) == 0) {
             if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER) {
                //remote has the right config
+               button_mode_timeout = 0;
+               channel_active = TRUE;
             }
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, CANCEL_KEYWORD, strlen(CANCEL_KEYWORD)) == 0) {
             result = TRUE;
          }
+      } else if (strncmp(interactive_assembly_message_type, UPDATE_KEYWORD, strlen(UPDATE_KEYWORD)) == 0) {
+         //received state from remote. update the output.
+         Channel_Set_Data(selected_channel, atoi(interactive_assembly_message_content));
       }
    }
 
@@ -242,6 +258,28 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
    }
 
    return result;
+}
+
+static char * channel_state_format = "interactive_assembly update %d";
+static char channel_state_message_buffer[50];
+static uint32_t last_reported_value;
+
+void Interactive_Assembly_Periodic_Call() {
+   if (channel_active && (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE)) {
+      //read the value and send it to the remote
+      int32_t channel_state = Channel_Get_Data((Channel_Number) selected_channel);
+
+      if (last_reported_value != channel_state) {
+         sprintf(channel_state_message_buffer, channel_state_format, channel_state);
+         Message * m = Create_Message(channel_state_message_buffer);
+         Set_Message_Type(m, "udp");
+         Set_Message_Destination(m, remote_module_address);
+         Set_Message_Source(m, local_address);
+
+         Wifi_Send(m);
+         last_reported_value = channel_state;
+      }
+   }
 }
 
 ////Local implementations /////////////////////////////////////////

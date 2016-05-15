@@ -3,7 +3,7 @@
   <Header>
     <Name>Clay_C6_Firmware</Name>
     <SavedBy>thebh</SavedBy>
-    <ModificationStamp>131</ModificationStamp>
+    <ModificationStamp>132</ModificationStamp>
     <Date>2016-01-26</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1550-0615</PEversion>
@@ -37834,7 +37834,7 @@
         <InitValue>139 ms</InitValue>
         <Precision>0.03333</Precision>
         <PrecInProc>false</PrecInProc>
-        <LowLimit>0.533333 ms</LowLimit>
+        <LowLimit>0.533333 us</LowLimit>
         <HighLimit>139 ms</HighLimit>
         <List lines_count="0" />
         <UnitText>ms</UnitText>
