@@ -4,6 +4,8 @@
 #include "stdint.h"
 
 #include "GPIO.h"
+#include "Message.h"
+#include "Message_Queue.h"
 
 #include "PWM_Utils.h"
 
@@ -97,17 +99,17 @@ Propagator* Create_Propagator (Observable *source, char *source_key, Observable 
 	(*propagator).source = source;
 
 	// Reserve memory for the source key and copy the key into it
-	(*propagator).source_key = (char *) malloc (strlen (source_key) + 1);
-	memset ((*propagator).source_key, '\0', strlen (source_key) + 1);
-	memcpy ((*propagator).source_key, source_key, strlen (source_key));
+//	(*propagator).source_key = (char *) malloc (strlen (source_key) + 1);
+//	memset ((*propagator).source_key, '\0', strlen (source_key) + 1);
+//	memcpy ((*propagator).source_key, source_key, strlen (source_key));
 
 	// Destination
 	(*propagator).destination = destination;
 
 	// Reserve memory for the destination key and copy the key into it
-	(*propagator).destination_key = (char *) malloc (strlen (destination_key) + 1);
-	memset ((*propagator).destination_key, '\0', strlen (destination_key) + 1);
-	memcpy ((*propagator).destination_key, destination_key, strlen (destination_key));
+//	(*propagator).destination_key = (char *) malloc (strlen (destination_key) + 1);
+//	memset ((*propagator).destination_key, '\0', strlen (destination_key) + 1);
+//	memcpy ((*propagator).destination_key, destination_key, strlen (destination_key));
 
 	// List
 	(*propagator).previous = NULL;
@@ -120,16 +122,16 @@ void Delete_Propagator (Propagator *propagator) {
 	if (propagator != NULL) {
 
 		// Source Key
-		if ((*propagator).source_key != NULL) {
-			free ((*propagator).source_key);
-			(*propagator).source_key = NULL;
-		}
+//		if ((*propagator).source_key != NULL) {
+//			free ((*propagator).source_key);
+//			(*propagator).source_key = NULL;
+//		}
 
 		// Destination Key
-		if ((*propagator).destination_key != NULL) {
-			free ((*propagator).destination_key);
-			(*propagator).destination_key = NULL;
-		}
+//		if ((*propagator).destination_key != NULL) {
+//			free ((*propagator).destination_key);
+//			(*propagator).destination_key = NULL;
+//		}
 
 		// Observable
 		free (propagator);
@@ -183,13 +185,13 @@ bool Has_Propagator (Observable *source, char *source_key, Observable *destinati
 
 		if ((*source).propagators != NULL) {
 			propagator = (*source).propagators; // Get the first propagator in the list.
-			while (propagator != NULL) {
+			while (propagator != NULL && (*propagator).source != NULL && (*propagator).destination != NULL) {
 
 				// TODO: Compare key of each propagator until the same one is found or it is not found at all
-				if ((strncmp ((*propagator).source_key, source_key, strlen (source_key)) == 0)
-						&& ((*propagator).destination == destination)
-						&& (strncmp ((*propagator).destination_key, destination_key, strlen (destination_key)) == 0)) {
-
+//				if ((strncmp ((*propagator).source_key, source_key, strlen (source_key)) == 0)
+//						&& ((*propagator).destination == destination)
+//						&& (strncmp ((*propagator).destination_key, destination_key, strlen (destination_key)) == 0)) {
+				if ((*propagator).source == source && (*propagator).destination == destination) {
 					result = TRUE;
 					break;
 				}
@@ -272,6 +274,9 @@ Observable* Create_Observable (const char *key, int8_t content_type, void *conte
 
 	Observable *observable = (Observable *) malloc (sizeof(Observable));
 
+	// Default UUID is NULL. NULL UUID means the observable is for the device.
+	(*observable).device_uuid = NULL;
+
 	// Allocate memory for the key and copy the key into it
 	(*observable).key = (char *) malloc (strlen (key) + 1);
 	memset ((*observable).key, '\0', strlen (key) + 1);
@@ -332,6 +337,16 @@ void Delete_Observable (Observable *observable) {
 	}
 }
 
+void Set_Observable_Device_UUID (Observable *observable, char *device_uuid) {
+
+	if (observable != NULL) {
+		// Allocate memory for the device UUID identifying the device with the observable, then copy the UUID into it
+		(*observable).device_uuid = (char *) malloc (strlen (device_uuid) + 1);
+		memset ((*observable).device_uuid, '\0', strlen (device_uuid) + 1);
+		memcpy ((*observable).device_uuid, device_uuid, strlen (device_uuid));
+	}
+}
+
 void Set_Observable_Content (Observable *observable, int8_t content_type, void *content) {
 
 	// Update the content type.
@@ -367,6 +382,10 @@ void Propagate (Observable *observable) {
 			propagator = (*observable).propagators; // Get the first propagator in the list.
 			while (propagator != NULL) {
 
+
+
+
+
 				// <HACK>
 //				int16_t scaled_content = (int16_t) Scale_Adc_Counts_To_Servo_Range((*((*propagator).source)).content);
 
@@ -383,9 +402,44 @@ void Propagate (Observable *observable) {
 				//                        ^ TODO: Always cast to the source data to the destination data type.
 				// </HACK>
 
-				// Set the content (and continue propagation), casting to the destination observable's type.
-				Set_Observable_Content ((*propagator).destination, (*((*propagator).destination)).content_type, &scaled_content);
-//				Set_Observable_Content ((*propagator).destination, (*((*propagator).source)).content_type, (*((*propagator).source)).content);
+
+
+				char *this_device_uuid = Get_Unit_UUID();
+				if ((*((*propagator).destination)).device_uuid == NULL
+						|| strncmp((*((*propagator).destination)).device_uuid, this_device_uuid, strlen (this_device_uuid)) == 0) {
+					// The destination observable is on this device
+					// Set the content (and continue propagation), casting to the destination observable's type.
+					Set_Observable_Content ((*propagator).destination, (*((*propagator).destination)).content_type, &scaled_content);
+	//				Set_Observable_Content ((*propagator).destination, (*((*propagator).source)).content_type, (*((*propagator).source)).content);
+				} else {
+					// The destination observable is on another device, so look up that device's
+					// address, if available, and if so, send message to that device with the
+					// observable's data.
+
+					// TODO: Check mesh address tables to see if the device is in the local mesh
+					// TODO: (if the above fails) Look for the device in the LAN device table
+					// TODO: (if the previous two fail) Send message to remote server that will deliver the message to the device (if connected)
+
+					char *destination_device_internet_address = NULL;
+					// TODO: Get_Device_Address (char *destination_device_uuid)
+
+					// Create message from state
+					Message *message = Create_Message("set observable <key> content <content>"); // set observable <key> content <content>
+					Set_Message_Type(message, "udp");
+					Set_Message_Source(message, "<INTERNET ADDRESS>");     // <HACK />
+					//	Set_Message_Destination (message, "192.168.1.255:4445");
+					Set_Message_Destination(message, destination_device_internet_address);
+
+					// Queue the outgoing message
+					Queue_Message(&outgoingMessageQueue, message);
+
+					// TODO: Handle the message on the remote device with the following code...
+					/*
+					// Set the content (and continue propagation), casting to the destination observable's type.
+					Set_Observable_Content ((*propagator).destination, (*((*propagator).destination)).content_type, &scaled_content);
+	//				Set_Observable_Content ((*propagator).destination, (*((*propagator).source)).content_type, (*((*propagator).source)).content);
+					*/
+				}
 
 				propagator = (*propagator).next;
 			}
