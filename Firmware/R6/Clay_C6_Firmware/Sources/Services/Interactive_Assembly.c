@@ -49,7 +49,7 @@ static char requesting_module_address[ADDRESS_STR_LENGTH];
 static int8_t requesting_module_channel;
 
 static int8_t button_mode;
-static uint32_t button_mode_timeout;
+static uint32_t button_mode_start_time;
 
 static int8_t selected_channel = -1;
 static int8_t changed_channel_mode = FALSE;
@@ -97,7 +97,7 @@ int8_t Enable_Interactive_Assembly() {
 
    interactive_assembly_using_lights = FALSE;
    button_mode = FALSE;
-   button_mode_timeout = 0;
+   button_mode_start_time = 0;
 
    for (int i = 0; i < CHANNEL_COUNT; ++i) {
       channels[i].channel_active = FALSE;
@@ -118,7 +118,7 @@ void Request_Reset_Button() {
 
    // Reset button logic state
    button_mode = 0;
-   button_mode_timeout = 0;
+   button_mode_start_time = 0;
    selected_channel--;     //Don't reset to -1. Michael likes the selected channel to be remembered. Allows picking up where left off.
 
    changed_channel_mode = FALSE;
@@ -145,7 +145,7 @@ void Change_Selected_Channel() {
    selected_channel = (selected_channel + 1) % 12;
    Interactive_Assembly_Channel_State new_state = channels[selected_channel].state;
 
-   button_mode_timeout = DEFAULT_BUTTON_MODE_TIMEOUT;
+   button_mode_start_time = Millis();
 
    if (!channels[selected_channel].channel_active) {
 
@@ -261,7 +261,9 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                Request_Reset_Channel(local_channel);
             }
 
-            if (local_channel == requesting_module_channel && strcmp(requesting_module_address, (*message).destination)) {
+            //HACK: strncmp on length - 1 because the last digit of the port doesn't match.
+            if (remote_channel == requesting_module_channel
+                && strncmp(requesting_module_address, (*message).source, strlen(requesting_module_address) - 1) == 0) {
                Cancel_Pending_Request();
             }
 
@@ -271,21 +273,33 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
          if (strncmp(interactive_assembly_message_content, INPUT_KEYWORD, strlen(INPUT_KEYWORD)) == 0) {
             if (channels[local_channel].state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SOURCE) {
                //remote has the right config
-               button_mode_timeout = 0;
+               button_mode_start_time = 0;
                channels[local_channel].channel_active = TRUE;
                channels[local_channel].remote_channel = remote_channel;
                sprintf(channels[local_channel].remote_module_address, (*message).source);
                *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+            } else {
+               //remote has wrong config. tell it to cancel
+               channels[local_channel].remote_channel = remote_channel;
+               sprintf(channels[local_channel].remote_module_address, (*message).source);
+               *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+               Request_Reset_Channel(local_channel);
             }
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, OUTPUT_KEYWORD, strlen(OUTPUT_KEYWORD)) == 0) {
             if (channels[local_channel].state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SOURCE) {
                //remote has the right config
-               button_mode_timeout = 0;
+               button_mode_start_time = 0;
                channels[local_channel].channel_active = TRUE;
                channels[local_channel].remote_channel = remote_channel;
                sprintf(channels[local_channel].remote_module_address, (*message).source);
                *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+            } else {
+               //remote has wrong config. tell it to cancel
+               channels[local_channel].remote_channel = remote_channel;
+               sprintf(channels[local_channel].remote_module_address, (*message).source);
+               *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+               Request_Reset_Channel(local_channel);
             }
             result = TRUE;
          }
@@ -312,13 +326,11 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
 
 void Interactive_Assembly_Periodic_Call() {
 
-   if (button_mode_timeout > 0) {
-      button_mode_timeout--;
+   if ((button_mode_start_time != 0) && ((Millis() - button_mode_start_time) > DEFAULT_BUTTON_MODE_TIMEOUT)) {
 
       // Check if the button mode timer expired
-      if (button_mode_timeout == 0) {
-         Request_Reset_Button();
-      }
+      Request_Reset_Button();
+      button_mode_start_time = 0;
    }
 
    //TODO: observables.
@@ -453,7 +465,7 @@ bool local_initiated,
       if (local_initiated && channels[channel].channel_active && IS_SLAVE(channels[channel].state)) {
          //accepted a pending channel response.
          Accept_Channel_Request(channel);
-         button_mode_timeout = 0;
+         button_mode_start_time = 0;
       } else if (local_initiated) {
          //requested a change in the channel or a new channel to be created
          Request_Remote_Channel(channel);

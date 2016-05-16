@@ -8,7 +8,7 @@
 
 ////Macros ////////////////////////////////////////////////////////
 #define DEFAULT_BUTTON_HOLD_TIME 1000
-#define DEFAULT_BUTTON_MODE_TIMEOUT 2000
+#define DEFAULT_BUTTON_MODE_TIMEOUT 5000
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
