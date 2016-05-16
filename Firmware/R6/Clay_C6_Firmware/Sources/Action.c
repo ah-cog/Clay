@@ -335,7 +335,7 @@ static int8_t Perform_Light_Action(char *state) {
    // e.g., FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
 
    // Check if lights are being used by interactive assembly service
-   if (button_mode != 0) {
+   if (interactive_assembly_using_lights != 0) {
       return TRUE;
    }
 

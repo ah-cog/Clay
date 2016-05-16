@@ -376,15 +376,6 @@ void Monitor_Periodic_Events() {
       Channel_Periodic_Call();
       Interactive_Assembly_Periodic_Call();
 
-      // TODO: Put this in a callback timer...
-      if (button_mode_timeout > 0) {
-         button_mode_timeout--;
-
-         // Check if the button mode timer expired
-         if (button_mode_timeout == 0) {
-            Request_Reset_Button();
-         }
-      }
 
       // TODO: Perform any periodic actions (1 ms).
    }
