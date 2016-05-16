@@ -19,18 +19,13 @@
 #define OUTPUT_KEYWORD "output"
 #define CANCEL_KEYWORD "cancel"
 
+#define IS_INPUT(x)     (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER || x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE)
+#define IS_OUTPUT(x)    (x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE)
+#define IS_MASTER(x)    (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER)
+#define IS_SLAVE(x)     (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE)
+#define IS_PENDING(x)     (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING)
+
 ////Typedefs  /////////////////////////////////////////////////////
-typedef enum
-{
-   INTERACTIVE_ASSEMBLY_NONE,                       //nothing happening; haven't received any button presses
-   INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER,         //received button press locally first
-   INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE,     //user pushed the button on this module after receiving a message telling it to be input
-   INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING,        //received message saying we should be config'd as input
-   INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER,        //received button press locally first
-   INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE,     //user pushed the button on this module after receiving a message telling it to be output
-   INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING,       //received message saying we should be config'd as output.
-   INTERACTIVE_ASSEMBLY_CHANNEL_STATE_MAX
-} Interactive_Assembly_Channel_State;
 
 ////Globals   /////////////////////////////////////////////////////
 int8_t button_mode = 0;     // 0 = default, 1 = select channel
@@ -49,8 +44,9 @@ static bool channel_active;
 
 ////Local Prototypes///////////////////////////////////////////////
 static void Request_Remote_Channel();
-static void Cancel_Last_Channel_Request();
+static void Cancel_Channel_Request();
 static void Accept_Channel_Request();
+static void Interactive_Assembly_Apply_State(Interactive_Assembly_Channel_State new_state, bool local_initiated);
 
 ////Global implementations ////////////////////////////////////////
 
@@ -63,7 +59,6 @@ int8_t Enable_Interactive_Assembly() {
 }
 
 void Request_Reset_Button() {
-   int i;
 
    // Reset button logic state
    button_mode = 0;
@@ -74,13 +69,13 @@ void Request_Reset_Button() {
    changed_channel_mode = FALSE;
 
    // Reset the state of all lights
-   for (i = 0; i < 12; i++) {
+   for (int i = 0; i < 12; i++) {
       proposed_light_profiles[i].enabled = TRUE;
       Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
    }
 
    state = INTERACTIVE_ASSEMBLY_NONE;
-   Cancel_Last_Channel_Request();
+   Cancel_Channel_Request();
 
    // Apply the new light states
    Apply_Channels();
@@ -88,10 +83,6 @@ void Request_Reset_Button() {
 }
 
 void Request_Change_Selected_Channel() {
-
-   if (state == INTERACTIVE_ASSEMBLY_NONE) {
-      state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER;
-   }
 
    button_mode_timeout = DEFAULT_BUTTON_MODE_TIMEOUT;
 
@@ -103,86 +94,53 @@ void Request_Change_Selected_Channel() {
 }
 
 void Change_Selected_Channel() {
-   int i;
+
+   Interactive_Assembly_Channel_State new_state = state;
+
    selected_channel = (selected_channel + 1) % 12;
 
    if (state == INTERACTIVE_ASSEMBLY_NONE || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING) {
+
       if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING) {
-         state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE;
+         new_state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE;
       } else {
-         state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER;
+         new_state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER;
       }
+
    } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING) {
-      state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE;
+      new_state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE;
    }
 
-   if (selected_channel >= 0 && selected_channel < 12) {
-
-      // Reset the state of all lights
-      for (i = 0; i < 12; i++) {
-         proposed_light_profiles[i].enabled = TRUE;
-         Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
-      }
-
-      // Set the state of the selected channel's light
-      proposed_light_profiles[selected_channel].enabled = TRUE;
-
-      if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE) {
-         Set_Light_Color(&proposed_light_profiles[selected_channel], 50, 160, 200);
-      } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE) {
-         Set_Light_Color(&proposed_light_profiles[selected_channel], 250, 90, 20);
-      }
-
-      // TODO: Set the selected channel as input (if first device)
-
-      if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER) {
-         Request_Remote_Channel();
-      } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE || state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE) {
-         Accept_Channel_Request();
-         button_mode_timeout = 0;
-         channel_active = TRUE;
-      }
-
-      // Apply the new light states
-      Apply_Channels();
-      Apply_Channel_Lights();
-   }
+   //apply the state.
+   Interactive_Assembly_Apply_State(new_state, TRUE);
 }
 
 void Request_Change_Selected_Channel_Mode() {
+
+   Interactive_Assembly_Channel_State new_state = state;
 
    if (changed_channel_mode == FALSE) {
       if (state == INTERACTIVE_ASSEMBLY_NONE
           || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING
           || state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER) {
-         if (state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING) {
-            state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE;
+         if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING) {
+            new_state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE;
          } else {
-            state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER;
+            new_state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER;
          }
       } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING) {
-         state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE;
+         new_state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE;
       } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER) {
-         state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER;
+         new_state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER;
+      } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE) {
+         new_state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE;     //we remain the 'slave', but maybe we need a different term for this now that it's not really a slave anymore, or maybe we need to do away with these states?
+      } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE) {
+         new_state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE;     //we remain the 'slave', but maybe we need a different term for this now that it's not really a slave anymore, or maybe we need to do away with these states?
       }
 
       changed_channel_mode = TRUE;
 
-      if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE) {
-         Set_Light_Color(&proposed_light_profiles[selected_channel], 50, 160, 200);
-      } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE) {
-         Set_Light_Color(&proposed_light_profiles[selected_channel], 250, 90, 20);
-      }
-
-      // TODO: Set the selected channel as input (if first device)
-
-      if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER) {
-         Request_Remote_Channel();
-      }
-
-      // Apply the new light states
-      Apply_Channels();
-      Apply_Channel_Lights();
+      Interactive_Assembly_Apply_State(new_state, TRUE);
    }
 }
 
@@ -211,16 +169,33 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
       if (strncmp(interactive_assembly_message_type, REQUEST_KEYWORD, strlen(REQUEST_KEYWORD)) == 0) {
 
          if (strncmp(interactive_assembly_message_content, INPUT_KEYWORD, strlen(INPUT_KEYWORD)) == 0) {
-            state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING;
+            if (!channel_active) {
+               //received request to set up channel as input
+               state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING;
+            } else {
+               //already connected, remote requested that we change to an input
+               if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER) {
+                  Interactive_Assembly_Apply_State(INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER, FALSE);
+               } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE) {
+                  Interactive_Assembly_Apply_State(INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE, FALSE);
+               }
+            }
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, OUTPUT_KEYWORD, strlen(OUTPUT_KEYWORD)) == 0) {
-            state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING;
+            if (!channel_active) {
+               //received request to set up channel as output
+               state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING;
+            } else {
+               //already connected, remote requested that we change to an output
+               if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER) {
+                  Interactive_Assembly_Apply_State(INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER, FALSE);
+               } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE) {
+                  Interactive_Assembly_Apply_State(INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE, FALSE);
+               }
+            }
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, CANCEL_KEYWORD, strlen(CANCEL_KEYWORD)) == 0) {
-            if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING
-                || state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING
-                || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE
-                || state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE) {
+            if (channel_active) {
                Request_Reset_Button();
             }
             result = TRUE;
@@ -241,10 +216,15 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
             }
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, CANCEL_KEYWORD, strlen(CANCEL_KEYWORD)) == 0) {
+            //remote cancelled
+            Request_Reset_Button();
             result = TRUE;
          }
       } else if (strncmp(interactive_assembly_message_type, UPDATE_KEYWORD, strlen(UPDATE_KEYWORD)) == 0) {
          //received state from remote. update the output.
+
+         ////Process received data here, if not already handled by the observer/propagator
+
          Channel_Set_Data(selected_channel, atoi(interactive_assembly_message_content));
       }
    }
@@ -265,11 +245,15 @@ static char channel_state_message_buffer[50];
 static uint32_t last_reported_value;
 
 void Interactive_Assembly_Periodic_Call() {
+
    if (channel_active && (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER || state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE)) {
       //read the value and send it to the remote
       int32_t channel_state = Channel_Get_Data((Channel_Number) selected_channel);
 
       if (last_reported_value != channel_state) {
+
+         /////this is a place where we can poll the data and send it to the remote, if that isn't already handled by the observer/propagator
+
          sprintf(channel_state_message_buffer, channel_state_format, channel_state);
          Message * m = Create_Message(channel_state_message_buffer);
          Set_Message_Type(m, "udp");
@@ -286,11 +270,11 @@ void Interactive_Assembly_Periodic_Call() {
 static void Request_Remote_Channel() {
 
    Message * m = NULL;
-   if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_MASTER) {
+   if (IS_INPUT(state)) {
 
       m = Create_Message("interactive_assembly request output");
 
-   } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_MASTER) {
+   } else if (IS_OUTPUT(state)) {
 
       m = Create_Message("interactive_assembly request input");
    }
@@ -299,18 +283,28 @@ static void Request_Remote_Channel() {
 
       Set_Message_Type(m, "udp");
       Set_Message_Source(m, local_address);
-      Set_Message_Destination(m, broadcast_address_module);
+
+      if (channel_active) {
+         Set_Message_Destination(m, remote_module_address);
+      } else {
+         Set_Message_Destination(m, broadcast_address_module);
+      }
 
       Wifi_Send(m);
    }
 }
 
-static void Cancel_Last_Channel_Request() {
+static void Cancel_Channel_Request() {
 
    Message * m = Create_Message("interactive_assembly request cancel");
    Set_Message_Type(m, "udp");
    Set_Message_Source(m, local_address);
-   Set_Message_Destination(m, broadcast_address_module);
+
+   if (channel_active) {
+      Set_Message_Destination(m, remote_module_address);
+   } else {
+      Set_Message_Destination(m, broadcast_address_module);
+   }
 
    Wifi_Send(m);
 }
@@ -319,9 +313,9 @@ static void Accept_Channel_Request() {
 
    Message * m;
 
-   if (state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SLAVE) {
+   if (IS_INPUT(state)) {
       m = Create_Message("interactive_assembly accept input");
-   } else if (state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SLAVE) {
+   } else if (IS_OUTPUT(state)) {
       m = Create_Message("interactive_assembly accept output");
    }
 
@@ -332,4 +326,68 @@ static void Accept_Channel_Request() {
 
       Wifi_Send(m);
    }
+}
+
+static void Interactive_Assembly_Apply_State(Interactive_Assembly_Channel_State new_state, bool local_initiated) {
+
+   if (new_state == INTERACTIVE_ASSEMBLY_NONE) {
+      Request_Reset_Button();
+   } else if (IS_PENDING(new_state)) {
+      //should never happen
+   } else {
+
+      if (IS_INPUT(new_state)) {
+         if (!IS_INPUT(state)) {
+            ////Update channel direction here///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            updated_channel_profile[selected_channel].direction = CHANNEL_DIRECTION_INPUT;
+         }
+
+         // Reset the state of all lights
+         for (int i = 0; i < 12; i++) {
+            proposed_light_profiles[i].enabled = TRUE;
+            Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
+         }
+
+         Set_Light_Color(&proposed_light_profiles[selected_channel], 50, 160, 200);
+
+         state = new_state;
+
+      } else if (IS_OUTPUT(new_state)) {
+         if (!IS_OUTPUT(state)) {
+            ////Update channel direction here///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            updated_channel_profile[selected_channel].direction = CHANNEL_DIRECTION_OUTPUT;
+         }
+
+         // Reset the state of all lights
+         for (int i = 0; i < 12; i++) {
+            proposed_light_profiles[i].enabled = TRUE;
+            Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
+         }
+
+         Set_Light_Color(&proposed_light_profiles[selected_channel], 250, 90, 20);
+
+         state = new_state;
+
+      }
+
+      //send acknowledge.
+      if (local_initiated && !channel_active && IS_SLAVE(state)) {
+         //accepted a pending channel response.
+         Accept_Channel_Request();
+         button_mode_timeout = 0;
+         channel_active = TRUE;
+      } else if (local_initiated) {
+         //requested a change in the channel or a new channel to be created
+         Request_Remote_Channel();
+      } else {
+         //received a request to change the channel
+         Accept_Channel_Request();
+      }
+   }
+
+   // Apply the new light states
+   Apply_Channels();
+   Apply_Channel_Lights();
 }
