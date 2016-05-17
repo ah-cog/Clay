@@ -18,8 +18,12 @@
 #define INPUT_KEYWORD  "input"
 #define OUTPUT_KEYWORD "output"
 #define CANCEL_KEYWORD "cancel"
+#define BLINK_KEYWORD "blink"
 
+#define CHANNEL_BLINK_TIMEOUT_ms  3000           //the time between blinks.
+#define CHANNEL_BLINK_TIME_ms     300            //the time the channel light is off for.
 #define ADDRESS_STR_LENGTH 50
+#define WIFI_STATE_STEPS   5
 
 #define IS_INPUT(x)     (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SOURCE || x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_DESTINATION)
 #define IS_OUTPUT(x)    (x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SOURCE || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_DESTINATION)
@@ -33,6 +37,9 @@ typedef struct
    bool channel_active;
    Interactive_Assembly_Channel_State state;
 
+   bool blinked;
+
+   uint32_t blink_time;
    int8_t local_channel;
 
    int8_t remote_channel;
@@ -43,6 +50,18 @@ typedef struct
 int8_t interactive_assembly_using_lights;
 
 ////Local vars/////////////////////////////////////////////////////
+RGB_Color channel_colors[CHANNEL_COUNT] = { { 45, 0, 0 },
+                                            { 0, 45, 0 },
+                                            { 0, 0, 45 },
+                                            { 22, 22, 0 },
+                                            { 0, 22, 22 },
+                                            { 22, 0, 22 },
+                                            { 0, 45, 10 },
+                                            { 10, 0, 45 },
+                                            { 45, 10, 0 },
+                                            { 10, 45, 0 },
+                                            { 0, 10, 45 },
+                                            { 45, 0, 10 } };
 
 static Interactive_Assembly_Channel_State requested_state;
 static char requesting_module_address[ADDRESS_STR_LENGTH];
@@ -71,9 +90,11 @@ static char channel_accept_message_buffer[50];
 static const char * channel_cancel_format = "interactive_assembly %d %d request cancel";
 static char channel_cancel_message_buffer[50];
 
-static uint32_t last_reported_value;
+static const char * channel_blink_format = "interactive_assembly %d %d request blink";
+static char channel_blink_message_buffer[50];
 
-//static bool channel_active;
+static uint32_t last_reported_value;
+static int8_t active_channel_count;
 
 static Interactive_Assembly_Channel channels[CHANNEL_COUNT] = { 0 };
 
@@ -81,12 +102,14 @@ static Interactive_Assembly_Channel channels[CHANNEL_COUNT] = { 0 };
 static void Request_Remote_Channel(int8_t channel);
 static void Cancel_Channel_Request(int8_t channel);
 static void Accept_Channel_Request(int8_t channel);
+static void Request_Remote_Blink(int8_t channel);
 static void Interactive_Assembly_Apply_State(Interactive_Assembly_Channel_State new_state, bool local_initiated, int8_t channel);
 static void Interactive_Assembly_Update_Leds();
 static Interactive_Assembly_Channel * Get_Channel_By_Local(int8_t local_channel);
 static Interactive_Assembly_Channel * Get_Channel_By_Remote(int8_t local_channel);
 static void Request_Reset_Channel(int8_t channel);
 static void Cancel_Pending_Request();
+static void Set_Channel_Blinked(int8_t channel);
 
 ////Global implementations ////////////////////////////////////////
 
@@ -98,11 +121,14 @@ int8_t Enable_Interactive_Assembly() {
    interactive_assembly_using_lights = FALSE;
    button_mode = FALSE;
    button_mode_start_time = 0;
+   active_channel_count = 0;
 
    for (int i = 0; i < CHANNEL_COUNT; ++i) {
       channels[i].channel_active = FALSE;
       channels[i].state = INTERACTIVE_ASSEMBLY_NONE;
       channels[i].remote_channel = -1;
+      channels[i].blinked = FALSE;
+      channels[i].blink_time = 0;
 
       memset(channels[i].remote_module_address, 0, ADDRESS_STR_LENGTH);
    }
@@ -143,6 +169,11 @@ void Change_Selected_Channel() {
    }
 
    selected_channel = (selected_channel + 1) % 12;
+
+   while (channels[selected_channel].channel_active) {
+      selected_channel = (selected_channel + 1) % 12;
+   }
+
    Interactive_Assembly_Channel_State new_state = channels[selected_channel].state;
 
    button_mode_start_time = Millis();
@@ -183,7 +214,7 @@ void Request_Change_Selected_Channel_Mode() {
       if (IS_PENDING(requested_state)) {
 
          if (!channels[selected_channel].channel_active) {
-            channels[selected_channel].channel_active = true;
+            channels[selected_channel].channel_active = TRUE;
             channels[selected_channel].local_channel = selected_channel;
 
             //copy request vars into channel
@@ -231,6 +262,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
 
    int8_t local_channel;
    int8_t remote_channel;
+   Interactive_Assembly_Channel * local_channel_info = NULL;
 
    // Extract parameters
    result = Get_Token(message_content, interactive_assembly_message_source, 1);
@@ -242,6 +274,16 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
    remote_channel = atoi(interactive_assembly_message_source);
 
    if (result) {
+
+      //this way we have a sure reference to the channel we have a message for, if it's initialized.
+      if (remote_channel >= 0) {
+         local_channel_info = Get_Channel_By_Remote(remote_channel);
+
+         //and we make sure we have the right local channel if we're connected to a channel but it doesn't know who we are yet (pretty much always a cancel.)
+         if (local_channel_info != NULL && local_channel == -1) {
+            local_channel = (*local_channel_info).local_channel;
+         }
+      }
 
       if (strncmp(interactive_assembly_message_type, REQUEST_KEYWORD, strlen(REQUEST_KEYWORD)) == 0) {
 
@@ -257,7 +299,8 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, CANCEL_KEYWORD, strlen(CANCEL_KEYWORD)) == 0) {
 
-            if (local_channel > 0 && channels[local_channel].channel_active) {
+            //this means we got a cancel from a remote channel we're connected to.
+            if (local_channel_info != NULL) {
                Request_Reset_Channel(local_channel);
             }
 
@@ -268,6 +311,8 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
             }
 
             result = TRUE;
+         } else if (strncmp(interactive_assembly_message_content, BLINK_KEYWORD, strlen(BLINK_KEYWORD)) == 0) {
+            Set_Channel_Blinked(local_channel);
          }
       } else if (strncmp(interactive_assembly_message_type, ACCEPT_KEYWORD, strlen(ACCEPT_KEYWORD)) == 0) {
          if (strncmp(interactive_assembly_message_content, INPUT_KEYWORD, strlen(INPUT_KEYWORD)) == 0) {
@@ -278,6 +323,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                channels[local_channel].remote_channel = remote_channel;
                sprintf(channels[local_channel].remote_module_address, (*message).source);
                *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+               Interactive_Assembly_Update_Leds();
             } else {
                //remote has wrong config. tell it to cancel
                channels[local_channel].remote_channel = remote_channel;
@@ -294,6 +340,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                channels[local_channel].remote_channel = remote_channel;
                sprintf(channels[local_channel].remote_module_address, (*message).source);
                *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+               Interactive_Assembly_Update_Leds();
             } else {
                //remote has wrong config. tell it to cancel
                channels[local_channel].remote_channel = remote_channel;
@@ -347,23 +394,43 @@ void Interactive_Assembly_Periodic_Call() {
       button_mode_start_time = 0;
    }
 
-   //TODO: observables.
+   active_channel_count = 0;
 
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   //if you need a periodic place to read data or do anything periodic related to interactive assembly (animations,callbacks, other state vars, etc),/
-   //    then use this function. /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   for (int i = 0; i < CHANNEL_COUNT; ++i) {
+      if (channels[i].channel_active) {
+         ++active_channel_count;
+
+         if (channels[i].blinked && ((Millis() - channels[i].blink_time) > CHANNEL_BLINK_TIME_ms)) {
+            channels[i].blinked = FALSE;
+            Interactive_Assembly_Update_Leds();
+
+            if (IS_INPUT(channels[i].state)) {
+               Request_Remote_Blink(i);
+            }
+
+         } else if (((Millis() - channels[i].blink_time) > (CHANNEL_BLINK_TIMEOUT_ms))) {
+            Set_Channel_Blinked(i);
+         }
+      }
+   }
+
+//TODO: observables.
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//if you need a periodic place to read data or do anything periodic related to interactive assembly (animations,callbacks, other state vars, etc),/
+//    then use this function. /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //   for (int i = 0; i < CHANNEL_COUNT; ++i) {
 //
@@ -418,6 +485,10 @@ static void Request_Remote_Channel(int8_t channel) {
       }
 
       Wifi_Send(m);
+      //HACK: tryna make sure we get our message out asap
+      for (int i = 0; i < WIFI_STATE_STEPS; ++i) {
+         Wifi_State_Step();
+      }
    }
 }
 
@@ -436,6 +507,10 @@ static void Cancel_Channel_Request(int8_t channel) {
    }
 
    Wifi_Send(m);
+//HACK: tryna make sure we get our message out asap
+   for (int i = 0; i < WIFI_STATE_STEPS; ++i) {
+      Wifi_State_Step();
+   }
 }
 
 static void Accept_Channel_Request(int8_t channel) {
@@ -458,6 +533,30 @@ static void Accept_Channel_Request(int8_t channel) {
       Set_Message_Destination(m, channels[channel].remote_module_address);
 
       Wifi_Send(m);
+      //HACK: tryna make sure we get our message out asap
+      for (int i = 0; i < WIFI_STATE_STEPS; ++i) {
+         Wifi_State_Step();
+      }
+   }
+}
+
+static void Request_Remote_Blink(int8_t channel) {
+
+   Message * m;
+
+   sprintf(channel_blink_message_buffer, channel_blink_format, channel, channels[channel].remote_channel);
+   m = Create_Message(channel_blink_message_buffer);
+
+   if (m != NULL) {
+      Set_Message_Type(m, "udp");
+      Set_Message_Source(m, local_address);
+      Set_Message_Destination(m, channels[channel].remote_module_address);
+
+      Wifi_Send(m);
+      //HACK: tryna make sure we get our message out asap
+      for (int i = 0; i < WIFI_STATE_STEPS; ++i) {
+         Wifi_State_Step();
+      }
    }
 }
 
@@ -542,7 +641,7 @@ static void Interactive_Assembly_Update_Leds() {
 
    interactive_assembly_using_lights = FALSE;
 
-   // Reset the state of all lights
+// Reset the state of all lights
    for (int i = 0; i < 12; i++) {
       proposed_light_profiles[i].enabled = TRUE;
 
@@ -550,14 +649,44 @@ static void Interactive_Assembly_Update_Leds() {
          Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
       } else if (IS_INPUT(channels[i].state)) {
          interactive_assembly_using_lights = TRUE;
-         Set_Light_Color(&proposed_light_profiles[i], 50, 160, 200);
+
+         if (channels[i].channel_active) {
+            if (channels[i].blinked) {
+               Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
+            } else if (IS_MASTER(channels[i].state)) {
+               Set_Light_Color(&proposed_light_profiles[i], channel_colors[i].R, channel_colors[i].G, channel_colors[i].B);
+            } else {
+               Set_Light_Color(&proposed_light_profiles[i],
+                               channel_colors[channels[i].remote_channel].R,
+                               channel_colors[channels[i].remote_channel].G,
+                               channel_colors[channels[i].remote_channel].B);
+            }
+         } else {
+            Set_Light_Color(&proposed_light_profiles[i], 50, 160, 200);
+         }
+
       } else if (IS_OUTPUT(channels[i].state)) {
          interactive_assembly_using_lights = TRUE;
-         Set_Light_Color(&proposed_light_profiles[i], 250, 90, 20);
+
+         if (channels[i].channel_active) {
+
+            if (channels[i].blinked) {
+               Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
+            } else if (IS_MASTER(channels[i].state)) {
+               Set_Light_Color(&proposed_light_profiles[i], channel_colors[i].R, channel_colors[i].G, channel_colors[i].B);
+            } else {
+               Set_Light_Color(&proposed_light_profiles[i],
+                               channel_colors[channels[i].remote_channel].R,
+                               channel_colors[channels[i].remote_channel].G,
+                               channel_colors[channels[i].remote_channel].B);
+            }
+         } else {
+            Set_Light_Color(&proposed_light_profiles[i], 250, 90, 20);
+         }
       }
    }
 
-   // Apply the new light states
+// Apply the new light states
    Apply_Channels();
    Apply_Channel_Lights();
 }
@@ -602,4 +731,11 @@ static void Cancel_Pending_Request() {
    memset(requesting_module_address, 0, ADDRESS_STR_LENGTH);
    requested_state = INTERACTIVE_ASSEMBLY_NONE;
    requesting_module_channel = -1;
+}
+
+static void Set_Channel_Blinked(int8_t channel) {
+   channels[channel].blink_time = Millis();
+   channels[channel].blinked = TRUE;
+
+   Interactive_Assembly_Update_Leds();
 }

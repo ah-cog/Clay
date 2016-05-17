@@ -131,13 +131,17 @@ void Wifi_State_Step() {
 
       case Idle: {
          //waiting for an interrupt, no tranmission pending
-
-         if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_end[0]) > 0) {
-            State = Receive_Message;
-         } else if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
+         if (Has_Messages(&outgoingWiFiMessageQueue) == TRUE) {
 
             State = Serialize_Transmission;
 
+         } else if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_end[0]) > 0) {
+            State = Receive_Message;
+
+            WifiInterruptReceived = FALSE;
+            received_message_start = FALSE;
+
+            interruptRxTime = Millis();
          } else if (WifiInterruptReceived) {
 
             State = Receive_Message;
@@ -158,9 +162,9 @@ void Wifi_State_Step() {
 //                                                               WIFI_SERIAL_IN_BUFFER_LENGTH,
 //                                                               message_start[0])     //throw away data up until the start of a message
 
-         while (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring, serial_rx_buffer,
+         if (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring, serial_rx_buffer,
          WIFI_SERIAL_IN_BUFFER_LENGTH,
-                                                         message_end[0])) {
+                                                      message_end[0])) {
 
             temp_type = strtok(serial_rx_buffer, message_start);     //throw out the start character
             temp_type = strtok(NULL, message_field_delimiter);
@@ -179,10 +183,12 @@ void Wifi_State_Step() {
                // Queue the message
                Queue_Message(&incomingWiFiMessageQueue, message);
 
-               if (Multibyte_Ring_Buffer_Get_Count(&wifi_multibyte_ring) < 10) {
-                  interruptRxTime = Millis();
-                  State = Idle;
-               }
+               State = Idle;
+
+//               if (Multibyte_Ring_Buffer_Get_Count(&wifi_multibyte_ring) < 10) {
+//                  interruptRxTime = Millis();
+//                  State = Idle;
+//               }
             }
          }
 
