@@ -20,8 +20,8 @@
 #define CANCEL_KEYWORD "cancel"
 #define BLINK_KEYWORD "blink"
 
-#define CHANNEL_BLINK_TIMEOUT_PER_CHANNEL_ms  2200           //the time between blinks.
-#define CHANNEL_BLINK_TIME_ms  50                            //the time the channel light is off for.
+#define CHANNEL_BLINK_TIMEOUT_ms  3000           //the time between blinks.
+#define CHANNEL_BLINK_TIME_ms     300            //the time the channel light is off for.
 #define ADDRESS_STR_LENGTH 50
 #define WIFI_STATE_STEPS   5
 
@@ -408,7 +408,7 @@ void Interactive_Assembly_Periodic_Call() {
                Request_Remote_Blink(i);
             }
 
-         } else if (((Millis() - channels[i].blink_time) > (CHANNEL_BLINK_TIMEOUT_PER_CHANNEL_ms * active_channel_count))) {
+         } else if (((Millis() - channels[i].blink_time) > (CHANNEL_BLINK_TIMEOUT_ms))) {
             Set_Channel_Blinked(i);
          }
       }
