@@ -52,6 +52,7 @@ typedef struct
 } Connect_Task_Args;
 
 ////Globals   /////////////////////////////////////////////////////
+bool tcp_task_running = false;
 
 ////Local vars/////////////////////////////////////////////////////
 static int32 listen_sock;
@@ -87,7 +88,6 @@ static uint32 last_tcp_activity_time;
 static uint32 tcp_connection_timeout_us = 1500000;
 
 static bool listening;
-static bool task_running = false;
 
 ////Local Prototypes///////////////////////////////////////////////
 static int32 Open_Listen_Connection(char * local_addr_string,
@@ -116,7 +116,7 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 {
 	bool rval = true;
 
-	if (!task_running)
+	if (!tcp_task_running)
 	{
 
 		idle_handle = xTaskGetIdleTaskHandle();
@@ -150,7 +150,7 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 		System_Register_Task(TASK_TYPE_TCP_RX, TCP_combined_handle,
 				Check_Needs_Promotion);
 
-		task_running = true;
+		tcp_task_running = true;
 	}
 	else
 	{
@@ -162,7 +162,7 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 
 void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 {
-	if (task_running)
+	if (tcp_task_running)
 	{
 		connected = false;
 
@@ -178,7 +178,7 @@ void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 		free(receive_data);
 		free(transmit_data);
 
-		task_running = false;
+		tcp_task_running = false;
 
 		Stop_Task(TASK_TYPE_TCP_RX);
 	}

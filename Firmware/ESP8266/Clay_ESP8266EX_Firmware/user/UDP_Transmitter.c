@@ -52,6 +52,7 @@ typedef enum
 	Disable, Configure, Idle, Buffer_Message, Send_Message, UDP_STATE_MAX
 } UDP_Transmitter_States;
 ////Globals   /////////////////////////////////////////////////////
+bool udp_tx_task_running = false;
 
 ////Local vars/////////////////////////////////////////////////////
 static UDP_Transmitter_States State;
@@ -74,8 +75,6 @@ static Message_Type tempIgnoredMessageType;
 static Message * m;
 static Message temp_message;
 
-static bool task_running = false;
-
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
 static bool Transmit();
@@ -87,7 +86,7 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 {
 	bool rval = true;
 
-	if (!task_running)
+	if (!udp_tx_task_running)
 	{
 		promoted = false;
 
@@ -108,7 +107,7 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 
 		testCounter = 0;
 
-		task_running = true;
+		udp_tx_task_running = true;
 	}
 	else
 	{
@@ -120,14 +119,14 @@ bool ICACHE_RODATA_ATTR UDP_Transmitter_Init()
 
 void ICACHE_RODATA_ATTR UDP_Transmitter_Deinit()
 {
-	if (task_running)
+	if (udp_tx_task_running)
 	{
 		lwip_close(transmit_sock);
 		transmit_sock = -1;
 
 		free(UDP_Tx_Buffer);
 
-		task_running = false;
+		udp_tx_task_running = false;
 		Stop_Task(TASK_TYPE_UDP_TX);
 	}
 }
