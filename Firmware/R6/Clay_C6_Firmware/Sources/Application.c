@@ -57,8 +57,6 @@ void Initialize() {
 
    // Initialize Clay
 
-//   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
-//   Button_Register_Hold_Response(1000, Wifi_Set_Operating_Mode);
 //   Button_Register_Press_Response(Send_Mesh_Test_Message);
 //   Button_Register_Release_Response(Send_Mesh_Test_Message);
 
@@ -92,30 +90,12 @@ void Initialize() {
 
    Power_Manager_Check_Startup();
 
-   // Status LEDs.
-
-   if ((status = LED_Enable()) != TRUE) {
+   // Message queue.
+   if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE) {
       // Failure
    }
 
-   Perform_Status_LED_Effect();
-
-   //TODO: troubleshoot MPU start with invensense drivers.
-   if ((status = Start_MPU9250()) != TRUE) {
-      // Failure
-   }
-
-   Initialize_Color_Palette();
-
-   if ((Initialize_Channel_Lights()) != TRUE) {
-      // Failure
-   }
-
-   if ((status = Start_Light_Behavior()) != TRUE) {
-      // Failure
-   }
-
-   if ((status = RGB_LED_Enable()) != TRUE) {
+   if ((status = Initialize_Message_Queue(&outgoingMessageQueue)) != TRUE) {
       // Failure
    }
 
@@ -130,24 +110,48 @@ void Initialize() {
       // Failure
    }
 
+   //TODO: troubleshoot MPU start with invensense drivers.
+//   if ((status = Start_MPU9250()) != TRUE) {
+//      // Failure
+//   }
+
+   if ((status = Enable_WiFi(ssid, password)) != TRUE) {     // if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
+      // Failure
+   }
+
+   // Status LEDs.
+
+   if ((status = LED_Enable()) != TRUE) {
+      // Failure
+   }
+
+   Perform_Status_LED_Effect();
+
+   Initialize_Color_Palette();
+
+   if ((Initialize_Channel_Lights()) != TRUE) {
+      // Failure
+   }
+
+   //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
+   Perform_Status_LED_Effect();
+
+   if ((status = Start_Light_Behavior()) != TRUE) {
+      // Failure
+   }
+
+   //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
+   Perform_Status_LED_Effect();
+
+   if ((status = RGB_LED_Enable()) != TRUE) {
+      // Failure
+   }
+
    if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE) {
       // Failure
    }
 
    if ((status == Buzzer_Enable()) != TRUE) {
-      // Failure
-   }
-
-   // Message queue.
-   if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE) {
-      // Failure
-   }
-
-   if ((status = Initialize_Message_Queue(&outgoingMessageQueue)) != TRUE) {
-      // Failure
-   }
-
-   if ((status = Enable_WiFi(ssid, password)) != TRUE) {     // if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
       // Failure
    }
 
@@ -361,6 +365,8 @@ void Application(void) {
    }
 }
 
+static bool request_status;
+
 //bool io_state;
 void Monitor_Periodic_Events() {
 
@@ -375,7 +381,6 @@ void Monitor_Periodic_Events() {
       Button_Periodic_Call();
       Channel_Periodic_Call();
       Interactive_Assembly_Periodic_Call();
-
 
       // TODO: Perform any periodic actions (1 ms).
    }
@@ -407,7 +412,13 @@ void Monitor_Periodic_Events() {
 
       // Request Wi-Fi status
       if (!has_connection_to_wifi) {
-         WiFi_Request_Get_Connection_Status();
+         //6 second period.
+         if (request_status) {
+            request_status = false;
+            WiFi_Request_Get_Connection_Status();
+         } else {
+            request_status = true;
+         }
       }
 
       // Once connected, get Internet address.

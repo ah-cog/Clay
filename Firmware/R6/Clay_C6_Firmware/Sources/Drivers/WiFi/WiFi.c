@@ -27,6 +27,8 @@ Message *outgoingWiFiMessageQueue = NULL;
 #define INTERRUPT_RX_TIMEOUT_MS     3000
 #define INTERRUPT_TX_TIMEOUT_MS     1000
 
+#define STATE_STEP_COUNT        5
+
 ESP8266_UART_Device deviceData;
 volatile bool WifiInterruptReceived;
 volatile bool WifiSetProgramMode;
@@ -83,11 +85,18 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
 
-   Wait(2000);
+   Wait(300);
 
-   WiFi_Request_Connect(ssid, password);
+   WiFi_Request_Connect((char*) ssid, (char*) password);
+
+   //make sure this message gets out right away.
+   for (int i = 0; i < STATE_STEP_COUNT; ++i) {
+      Wifi_State_Step();
+   }
 
    Multibyte_Ring_Buffer_Init(&wifi_multibyte_ring, WIFI_SERIAL_IN_BUFFER_LENGTH);
+
+   Wait(500);
 
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
