@@ -49,8 +49,6 @@ void Monitor_Periodic_Events();
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
 void Send_Mesh_Test_Message();
 
-#define WIFI_FLASH_BUTTONS 0
-
 void Initialize() {
 
    vBat = 0;
@@ -59,10 +57,6 @@ void Initialize() {
 
    // Initialize Clay
 
-#if WIFI_FLASH_BUTTONS
-   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
-   Button_Register_Hold_Response(1000, Wifi_Set_Operating_Mode);
-#endif
 //   Button_Register_Press_Response(Send_Mesh_Test_Message);
 //   Button_Register_Release_Response(Send_Mesh_Test_Message);
 
@@ -171,11 +165,9 @@ void Initialize() {
       ;
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
 
-#if !WIFI_FLASH_BUTTONS
    if ((status = Enable_Interactive_Assembly()) != TRUE) {
       // Failure
    }
-#endif
 }
 
 // TODO: Move these into Device_Status.h
