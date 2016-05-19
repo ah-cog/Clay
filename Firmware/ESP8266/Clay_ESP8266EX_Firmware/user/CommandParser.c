@@ -332,7 +332,7 @@ bool ICACHE_RODATA_ATTR Get_IP_Command(char * args)
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	char * response_buffer = zalloc(30);
+	char * response_buffer = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 	taskEXIT_CRITICAL();
 
 	int ip = Get_IP_Address();
@@ -355,7 +355,7 @@ bool ICACHE_RODATA_ATTR Get_Gateway_Command(char * args)
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	char * response_buffer = zalloc(30);
+	char * response_buffer = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 	taskEXIT_CRITICAL();
 
 	int gw = Get_Gateway_Address();
@@ -378,7 +378,7 @@ bool ICACHE_RODATA_ATTR Get_Subnet_Command(char * args)
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	char * response_buffer = zalloc(30);
+	char * response_buffer = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 	taskEXIT_CRITICAL();
 
 	int mask = Get_Subnet_Mask();

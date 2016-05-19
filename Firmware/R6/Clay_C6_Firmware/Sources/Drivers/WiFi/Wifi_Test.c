@@ -25,9 +25,12 @@ void Wifi_Test() {
 //   char * ssid_m = "hefnetm";
 //   char * password_m = "dips00BOYNEdo$!&";
 
-
    Power_Manager_Enable();
+
+   Initialize_Channels();
+   Apply_Channels();
    Channel_Enable_All();
+
    Button_Enable();
    Enable_WiFi(ssid, password);
 
@@ -117,9 +120,7 @@ void Wifi_Test() {
          request_connect = FALSE;
          if (use_mobile) {
             WiFi_Request_Connect(ssid_m, password_m);
-         }
-         else
-         {
+         } else {
             WiFi_Request_Connect(ssid, password);
          }
       }
@@ -131,8 +132,6 @@ void Wifi_Test() {
    }
 
 }
-
-
 
 ///setap test code.
 //   char * ssid = "hefnet";

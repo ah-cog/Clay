@@ -27,7 +27,7 @@
 
 #define IS_INPUT(x)     (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SOURCE || x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_DESTINATION)
 #define IS_OUTPUT(x)    (x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SOURCE || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_DESTINATION)
-#define IS_MASTER(x)    (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SOURCE || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SOURCE)
+#define IS_SOURCE(x)    (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SOURCE || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SOURCE)
 #define IS_SLAVE(x)     (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_DESTINATION || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_DESTINATION)
 #define IS_PENDING(x)     (x == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING || x == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING)
 
@@ -101,6 +101,7 @@ static Interactive_Assembly_Channel channels[CHANNEL_COUNT] = { 0 };
 ////Local Prototypes///////////////////////////////////////////////
 static void Request_Remote_Channel(int8_t channel);
 static void Cancel_Channel_Request(int8_t channel);
+static void Cancel_Channel_Request_Specific(int8_t local_channel, int8_t remote_channel, char * remote_address);
 static void Accept_Channel_Request(int8_t channel);
 static void Request_Remote_Blink(int8_t channel);
 static void Interactive_Assembly_Apply_State(Interactive_Assembly_Channel_State new_state, bool local_initiated, int8_t channel);
@@ -316,7 +317,8 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
          }
       } else if (strncmp(interactive_assembly_message_type, ACCEPT_KEYWORD, strlen(ACCEPT_KEYWORD)) == 0) {
          if (strncmp(interactive_assembly_message_content, INPUT_KEYWORD, strlen(INPUT_KEYWORD)) == 0) {
-            if (channels[local_channel].state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SOURCE) {
+            if (channels[local_channel].state == INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_SOURCE
+                && !channels[local_channel].channel_active) {
                //remote has the right config
                button_mode_start_time = 0;
                channels[local_channel].channel_active = TRUE;
@@ -325,15 +327,21 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
                Interactive_Assembly_Update_Leds();
             } else {
-               //remote has wrong config. tell it to cancel
-               channels[local_channel].remote_channel = remote_channel;
-               sprintf(channels[local_channel].remote_module_address, (*message).source);
-               *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
-               Request_Reset_Channel(local_channel);
+               if (!channels[local_channel].channel_active) {
+                  //remote has wrong config. tell it to cancel
+                  channels[local_channel].remote_channel = remote_channel;
+                  sprintf(channels[local_channel].remote_module_address, (*message).source);
+                  *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+                  Request_Reset_Channel(local_channel);
+               } else {
+                  //received a second accept message. send a cancel back to the originator.
+                  Cancel_Channel_Request_Specific(local_channel, remote_channel, (*message).source);
+               }
             }
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, OUTPUT_KEYWORD, strlen(OUTPUT_KEYWORD)) == 0) {
-            if (channels[local_channel].state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SOURCE) {
+            if (channels[local_channel].state == INTERACTIVE_ASSEMBLY_LOCAL_INPUT_SOURCE
+                && !channels[local_channel].channel_active) {
                //remote has the right config
                button_mode_start_time = 0;
                channels[local_channel].channel_active = TRUE;
@@ -342,11 +350,16 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
                Interactive_Assembly_Update_Leds();
             } else {
-               //remote has wrong config. tell it to cancel
-               channels[local_channel].remote_channel = remote_channel;
-               sprintf(channels[local_channel].remote_module_address, (*message).source);
-               *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
-               Request_Reset_Channel(local_channel);
+               if (!channels[local_channel].channel_active) {
+                  //remote has wrong config. tell it to cancel
+                  channels[local_channel].remote_channel = remote_channel;
+                  sprintf(channels[local_channel].remote_module_address, (*message).source);
+                  *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+                  Request_Reset_Channel(local_channel);
+               } else {
+                  //received a second accept message. send a cancel back to the originator.
+                  Cancel_Channel_Request_Specific(local_channel, remote_channel, (*message).source);
+               }
             }
             result = TRUE;
          }
@@ -408,7 +421,7 @@ void Interactive_Assembly_Periodic_Call() {
                Request_Remote_Blink(i);
             }
 
-         } else if (((Millis() - channels[i].blink_time) > (CHANNEL_BLINK_TIMEOUT_ms))) {
+         } else if (IS_INPUT(channels[i].state) && ((Millis() - channels[i].blink_time) > (CHANNEL_BLINK_TIMEOUT_ms))) {
             Set_Channel_Blinked(i);
          }
       }
@@ -493,21 +506,22 @@ static void Request_Remote_Channel(int8_t channel) {
 }
 
 static void Cancel_Channel_Request(int8_t channel) {
+   Cancel_Channel_Request_Specific(channel,
+                                   channels[channel].remote_channel,
+                                   channels[channel].channel_active ? channels[channel].remote_channel :
+                                                                      broadcast_address_module);
+}
 
-   sprintf(channel_cancel_message_buffer, channel_cancel_format, channel, channels[channel].remote_channel);
+static void Cancel_Channel_Request_Specific(int8_t local_channel, int8_t remote_channel, char * remote_address) {
+
+   sprintf(channel_cancel_message_buffer, channel_cancel_format, local_channel, remote_channel);
 
    Message * m = Create_Message(channel_cancel_message_buffer);
    Set_Message_Type(m, "udp");
    Set_Message_Source(m, local_address);
-
-   if (channels[channel].channel_active) {
-      Set_Message_Destination(m, channels[channel].remote_module_address);
-   } else {
-      Set_Message_Destination(m, broadcast_address_module);
-   }
-
+   Set_Message_Destination(m, remote_address);
    Wifi_Send(m);
-//HACK: tryna make sure we get our message out asap
+   //HACK: tryna make sure we get our message out asap
    for (int i = 0; i < WIFI_STATE_STEPS; ++i) {
       Wifi_State_Step();
    }
@@ -653,7 +667,7 @@ static void Interactive_Assembly_Update_Leds() {
          if (channels[i].channel_active) {
             if (channels[i].blinked) {
                Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
-            } else if (IS_MASTER(channels[i].state)) {
+            } else if (IS_SOURCE(channels[i].state)) {
                Set_Light_Color(&proposed_light_profiles[i], channel_colors[i].R, channel_colors[i].G, channel_colors[i].B);
             } else {
                Set_Light_Color(&proposed_light_profiles[i],
@@ -672,7 +686,7 @@ static void Interactive_Assembly_Update_Leds() {
 
             if (channels[i].blinked) {
                Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
-            } else if (IS_MASTER(channels[i].state)) {
+            } else if (IS_SOURCE(channels[i].state)) {
                Set_Light_Color(&proposed_light_profiles[i], channel_colors[i].R, channel_colors[i].G, channel_colors[i].B);
             } else {
                Set_Light_Color(&proposed_light_profiles[i],
