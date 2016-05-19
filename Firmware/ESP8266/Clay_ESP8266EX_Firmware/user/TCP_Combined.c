@@ -32,7 +32,7 @@
 ////Macros ////////////////////////////////////////////////////////
 #define DATA_CONNECT_ATTEMPT_MAX 		10
 #define RECEIVE_DATA_SIZE				1024
-#define TRANSMIT_DATA_SIZE				256
+#define TRANSMIT_DATA_SIZE				1024
 #define LOCAL_TCP_PORT					3000
 #define ADDR_STRING_SIZE 				50
 #define CONNECT_TIMEOUT_ms				100

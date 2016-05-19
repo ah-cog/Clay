@@ -336,8 +336,6 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                } else {
                   //received a second accept message. send a cancel back to the originator.
                   Cancel_Channel_Request_Specific(local_channel, remote_channel, (*message).source);
-                  Cancel_Channel_Request_Specific(local_channel, remote_channel, (*message).source);
-                  Cancel_Channel_Request_Specific(local_channel, remote_channel, (*message).source);
                }
             }
             result = TRUE;
@@ -360,8 +358,6 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                   Request_Reset_Channel(local_channel);
                } else {
                   //received a second accept message. send a cancel back to the originator.
-                  Cancel_Channel_Request_Specific(local_channel, remote_channel, (*message).source);
-                  Cancel_Channel_Request_Specific(local_channel, remote_channel, (*message).source);
                   Cancel_Channel_Request_Specific(local_channel, remote_channel, (*message).source);
                }
             }
