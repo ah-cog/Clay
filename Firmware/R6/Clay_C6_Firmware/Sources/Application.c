@@ -62,6 +62,8 @@ void Initialize() {
 
    Initialize_Unit_UUID();
 
+   Enable_Observable_Interface (); // Enable Clay's observable interface service
+
    timeline = Create_Timeline("timeline-uuid");
 
    Enable_Actions();
@@ -168,6 +170,19 @@ void Initialize() {
    if ((status = Enable_Interactive_Assembly()) != TRUE) {
       // Failure
    }
+}
+
+// Device profile
+// TODO: Create a structure for the device profile
+Observable_Interface *observable_interface = NULL;
+char internet_address[32] = { 0 };
+
+void Enable_Observable_Interface () {
+	// <HACK>
+	// TODO: Consider giving each device a unique interface UUID and expose it.
+	char *device_uuid = Get_Unit_UUID();
+	// </HACK>
+	observable_interface = Create_Observable_Interface (device_uuid); // e.g., "set interface <uuid> provider <uuid> observable <uuid> content <content>"
 }
 
 // TODO: Move these into Device_Status.h

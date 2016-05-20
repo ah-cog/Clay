@@ -120,7 +120,7 @@ static int8_t Perform_Observable_Update_Action (char *state) {
 
    int8_t status = NULL;
    int8_t result = NULL;
-   char token[128] = { 0 };
+   char token[256] = { 0 }; // TODO: Reduce this back down to 128 if possible!
    int tokenInt = 0;
    int i;
 
@@ -222,6 +222,7 @@ static int8_t Perform_Observable_Update_Action (char *state) {
         	 char *first_output = NULL;
         	 char *second_output = NULL;
         	 char *source_channel_number_and_observable = NULL;
+        	 char *source_device_uuid = NULL;
         	 char *source_channel_number = NULL;
         	 char *source_observable_key = NULL;
         	 char *destination_observable_key = NULL;
@@ -235,62 +236,80 @@ static int8_t Perform_Observable_Update_Action (char *state) {
 
         		 // first observable: "3,'waveform_sample_value'|'pulse_duty_cycle'"
 				 source_channel_number_and_observable = strtok (observable_description, "|"); // "3,'waveform_sample_value'"
+
 				 destination_observable_key = strtok (NULL, "|") + 1; // "'pulse_duty_cycle'"
 				 destination_observable_key[strlen (destination_observable_key) - 1] = '\0';
 
-				 source_channel_number = strtok (source_channel_number_and_observable, ","); // "'pulse_duty_cycle';F,0.02|'pulse_period_seconds'"
-				 if (strncmp (source_channel_number, "F", strlen ("F")) == 0) {
-					 source_observable_key = strtok (NULL, ","); // "F,0.02"
-					 source_observable_key[strlen (source_observable_key)] = '\0';
+				 // Device UUID
+				 source_device_uuid = strtok (source_channel_number_and_observable, ","); // "'pulse_duty_cycle';F,0.02|'pulse_period_seconds'"
+				 char *destination_device_uuid = Get_Unit_UUID();
+				 bool souce_device_equals_destination_device = false;
 
-					 // TODO: Create "Constant Observable" and set it as the source!
-
-					 // F,0.02|'pulse_period_seconds'"
-
-					 // Observable_Set *source_observable_set = channel_profile[source_channel_index].observable_set;
-					 Observable_Set *destination_observable_set = channel_profile[i].observable_set;
-
-					 Observable *destination_observable = Get_Observable (destination_observable_set, destination_observable_key);
-					 float content_float = strtof (source_observable_key, NULL); // ((float) atoi(frequency_str) / 1000000);
-					 Set_Observable_Content (destination_observable, CONTENT_TYPE_FLOAT, &content_float);
-
-					 // <HACK>
-
-					 // </HACK>
-
+				 // Is the content source provided by this device or a another device?
+				 if (strncmp (source_device_uuid, destination_device_uuid, strlen (destination_device_uuid)) == 0) {
+					 souce_device_equals_destination_device = true;
 				 } else {
-					 source_observable_key = strtok (NULL, ",") + 1; // "3,'waveform-sample-value'"
-					 source_observable_key[strlen (source_observable_key) - 1] = '\0';
+					 souce_device_equals_destination_device = false;
+				 }
 
-					 int16_t source_channel_index = atoi (source_channel_number) - 1;
+				 // Get observable provider associated with the other device
 
-					 // <HACK>
+				 if (souce_device_equals_destination_device) { // <HACK />
 
-					 // Propagate state
+					 source_channel_number = strtok (NULL, ","); // "'pulse_duty_cycle';F,0.02|'pulse_period_seconds'"
+					 if (strncmp (source_channel_number, "F", strlen ("F")) == 0) {
+						 source_observable_key = strtok (NULL, ","); // "F,0.02"
+						 source_observable_key[strlen (source_observable_key)] = '\0';
 
-					 Observable_Set *source_observable_set = channel_profile[source_channel_index].observable_set;
-					 Observable_Set *destination_observable_set = channel_profile[i].observable_set;
+						 // TODO: Create "Constant Observable" and set it as the source!
 
-					 if (!Has_Propagator (Get_Observable (source_observable_set, source_observable_key), // Get_Observable (source_observable_set, "waveform_sample_value"),
-						   source_observable_key,
-						   Get_Observable (destination_observable_set, destination_observable_key),
-						   destination_observable_key)) {
+						 // F,0.02|'pulse_period_seconds'"
 
-						 Propagator *propagator = Create_Propagator (
-						   Get_Observable (source_observable_set, source_observable_key), // Get_Observable (source_observable_set, "waveform_sample_value"),
-						   source_observable_key,
-						   Get_Observable (destination_observable_set, destination_observable_key),
-						   destination_observable_key);
-						 Add_Propagator (
-						   Get_Observable (source_observable_set, source_observable_key),
-						   propagator);
+						 // Observable_Set *source_observable_set = channel_profile[source_channel_index].observable_set;
+						 Observable_Set *destination_observable_set = channel_profile[i].observable_set;
 
+						 Observable *destination_observable = Get_Observable (destination_observable_set, destination_observable_key);
+						 float content_float = strtof (source_observable_key, NULL); // ((float) atoi(frequency_str) / 1000000);
+						 Set_Observable_Content (destination_observable, CONTENT_TYPE_FLOAT, &content_float);
+
+						 // <HACK>
+
+						 // </HACK>
+
+					 } else {
+						 source_observable_key = strtok (NULL, ",") + 1; // "3,'waveform-sample-value'"
+						 source_observable_key[strlen (source_observable_key) - 1] = '\0';
+
+						 int16_t source_channel_index = atoi (source_channel_number) - 1;
+
+						 // <HACK>
+
+						 // Propagate state
+
+						 Observable_Set *source_observable_set = channel_profile[source_channel_index].observable_set;
+						 Observable_Set *destination_observable_set = channel_profile[i].observable_set;
+
+						 if (!Has_Propagator (Get_Observable (source_observable_set, source_observable_key), // Get_Observable (source_observable_set, "waveform_sample_value"),
+							   source_observable_key,
+							   Get_Observable (destination_observable_set, destination_observable_key),
+							   destination_observable_key)) {
+
+							 Propagator *propagator = Create_Propagator (
+							   Get_Observable (source_observable_set, source_observable_key), // Get_Observable (source_observable_set, "waveform_sample_value"),
+							   source_observable_key,
+							   Get_Observable (destination_observable_set, destination_observable_key),
+							   destination_observable_key);
+							 Add_Propagator (
+							   Get_Observable (source_observable_set, source_observable_key),
+							   propagator);
+
+						 }
+
+
+		 //				 Apply_Channels();
+
+					   // </HACK>
 					 }
-
-
-	 //				 Apply_Channels();
-
-				   // </HACK>
 				 }
 
         		 // Get the next observable description

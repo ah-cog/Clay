@@ -3,6 +3,7 @@
 #include "string.h"
 #include "stdint.h"
 
+#include "Application.h"
 #include "GPIO.h"
 #include "Message.h"
 #include "Message_Queue.h"
@@ -16,6 +17,8 @@
 
 #include "ADC1.h"
 #include "PWM_OUT_1.h"
+
+#include "UDP_Discovery_temp.h"
 
 //TODO: lose ADC calibration
 //      get channel hardware put into this code
@@ -277,6 +280,8 @@ Observable* Create_Observable (const char *key, int8_t content_type, void *conte
 	// Default UUID is NULL. NULL UUID means the observable is for the device.
 	(*observable).device_uuid = NULL;
 
+	(*observable).provider_uuid = NULL;
+
 	// Allocate memory for the key and copy the key into it
 	(*observable).key = (char *) malloc (strlen (key) + 1);
 	memset ((*observable).key, '\0', strlen (key) + 1);
@@ -344,6 +349,16 @@ void Set_Observable_Device_UUID (Observable *observable, char *device_uuid) {
 		(*observable).device_uuid = (char *) malloc (strlen (device_uuid) + 1);
 		memset ((*observable).device_uuid, '\0', strlen (device_uuid) + 1);
 		memcpy ((*observable).device_uuid, device_uuid, strlen (device_uuid));
+	}
+}
+
+void Set_Observable_Provider_UUID (Observable *observable, char *provider_uuid) {
+
+	if (observable != NULL) {
+		// Allocate memory for the device UUID identifying the device with the observable, then copy the UUID into it
+		(*observable).provider_uuid = (char *) malloc (strlen (provider_uuid) + 1);
+		memset ((*observable).provider_uuid, '\0', strlen (provider_uuid) + 1);
+		memcpy ((*observable).provider_uuid, provider_uuid, strlen (provider_uuid));
 	}
 }
 
@@ -420,18 +435,67 @@ void Propagate (Observable *observable) {
 					// TODO: (if the above fails) Look for the device in the LAN device table
 					// TODO: (if the previous two fail) Send message to remote server that will deliver the message to the device (if connected)
 
-					char *destination_device_internet_address = NULL;
-					// TODO: Get_Device_Address (char *destination_device_uuid)
+					Observable *source_observable = (*propagator).source;
+					Observable *destination_observable = (*propagator).destination;
 
-					// Create message from state
-					Message *message = Create_Message("set observable <key> content <content>"); // set observable <key> content <content>
-					Set_Message_Type(message, "udp");
-					Set_Message_Source(message, "<INTERNET ADDRESS>");     // <HACK />
-					//	Set_Message_Destination (message, "192.168.1.255:4445");
-					Set_Message_Destination(message, destination_device_internet_address);
+					char destination_device_internet_address[32] = { 0 };
+					// TODO: Get_Device_Address (char *destination_device_uuid)]
+					remote_clay_module *destination_device = Get_Device_By_UUID ((*destination_observable).device_uuid);
 
-					// Queue the outgoing message
-					Queue_Message(&outgoingMessageQueue, message);
+					// Create message containing the (scaled) content to propagate to an observable on the destination device
+					// e.g., "set [device <uuid>] provider "00000000-0000-0000-0000-000000000004" observable "pulse_duty_cycle" content "scaled_output"
+					char message_content[128] = { 0 };
+
+					// <SERIALIZE OBSERVABLE CONTENT>
+					// Get the observable data encoded as a string for sending in a message.
+					char serialized_observable_content[32] = { 0 };
+					if ((*source_observable).content_type == CONTENT_TYPE_INT16) {
+						// Serialize
+						int16_t observable_content = Get_Observable_Data_Int16 (source_observable);
+						sprintf (serialized_observable_content, "%d", observable_content);
+						// Create message content
+						sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
+					} else if ((*source_observable).content_type == CONTENT_TYPE_INT32) {
+						// Serialize
+						int32_t observable_content = Get_Observable_Data_Int32 (source_observable);
+						sprintf (serialized_observable_content, "%d", observable_content);
+						// Create message content
+						sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
+					} else if ((*source_observable).content_type == CONTENT_TYPE_FLOAT) {
+						// Serialize
+						float observable_content = Get_Observable_Data_Float (source_observable);
+						// sprintf (serialized_observable_content, "%0.6f", (*observable).content);
+						sprintf (serialized_observable_content, "%f", observable_content);
+						// Create message content
+						sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
+					} else if ((*source_observable).content_type == CONTENT_TYPE_DOUBLE) {
+						// Serialize
+						double observable_content = Get_Observable_Data_Double (source_observable);
+						// sprintf (serialized_observable_content, "%0.6f", (*observable).content);
+						sprintf (serialized_observable_content, "%f", observable_content);
+						// Create message content
+						sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
+					}
+					// </SERIALIZE OBSERVABLE CONTENT>
+
+					if (Get_Message_Count (&outgoingMessageQueue) < 5 && Get_Message_Count (&outgoingWiFiMessageQueue) < 5) {
+
+						// <CREATE MESSAGE>
+						// Create message to send
+						//Message *message = Create_Message("set provider <uuid> observable <key> content <content>"); // set observable <key> content <content>
+						Message *message = Create_Message (message_content);
+						Set_Message_Type(message, "udp"); // TODO: In order, try mesh, LAN, WAN
+						char this_device_internet_address[32] = { 0 };
+						sprintf (this_device_internet_address, "%s:4446", local_address); // is this correct?
+						Set_Message_Source(message, this_device_internet_address);     // <HACK />
+						 Set_Message_Destination (message, "192.168.1.255:4446");
+	//					sprintf (destination_device_internet_address, "%s:4446", (*destination_device).address);
+	//					Set_Message_Destination(message, (*destination_device).address);
+						// </CREATE MESSAGE>
+
+						// Queue the outgoing message
+						Queue_Message(&outgoingMessageQueue, message);
+					}
 
 					// TODO: Handle the message on the remote device with the following code...
 					/*
@@ -467,9 +531,19 @@ double Get_Observable_Data_Double (Observable *observable) {
 	return *((double *) (*observable).content);
 }
 
-Observable_Set* Create_Observable_Set () {
+Observable_Set* Create_Observable_Set (char *provider_uuid) {
 	Observable_Set *observable_set = (Observable_Set *) malloc (sizeof (Observable_Set));
+
+	// UUID of Provider
+	(*observable_set).provider_uuid = (char *) malloc (strlen (provider_uuid) + 1);
+	memset ((*observable_set).provider_uuid, '\0', strlen (provider_uuid) + 1);
+	memcpy ((*observable_set).provider_uuid, provider_uuid, strlen (provider_uuid));
+
 	(*observable_set).first_observable = NULL;
+
+	(*observable_set).next = NULL;
+	(*observable_set).previous = NULL;
+
 	return observable_set;
 }
 
@@ -616,6 +690,155 @@ Observable* Get_Observable_By_Index (Observable_Set *observable_set, int index) 
 
 	return NULL;
 }
+
+Observable_Interface* Create_Observable_Interface () {
+	Observable_Interface *observable_interface = (Observable_Interface *) malloc (sizeof (Observable_Interface));
+
+//	// Allocate memory for the device UUID identifying the device with the observable, then copy the UUID into it
+//	(*observable_interface).uuid = (char *) malloc (strlen (uuid) + 1);
+//	memset ((*observable_interface).uuid, '\0', strlen (uuid) + 1);
+//	memcpy ((*observable_interface).uuid, uuid, strlen (uuid));
+
+	// List of observable providers
+	(*observable_interface).first_observable_provider = NULL;
+
+	return observable_interface;
+}
+
+void Delete_Observable_Interface (Observable_Interface *observable_interface) {
+
+	// TODO: Free observables in (*observable_interface).observable_set
+	// TODO: Free (*observable_interface).observable_set
+
+	free (observable_interface);
+	observable_interface = NULL;
+}
+
+int16_t Add_Observable_Provider (Observable_Interface *observable_interface, Observable_Set *observable_provider) {
+	Observable_Set *previous_observable_provider = NULL; // The action construct presently at the end of the list. This will be set as the previous action construct to the one created for the newly-cached action.
+
+	if ((*observable_interface).first_observable_provider == NULL) {
+
+		// The list is empty, so add it to the list as the first and only element.
+		(*observable_interface).first_observable_provider = observable_provider;
+
+		(*observable_provider).previous = NULL;
+		(*observable_provider).next = NULL;
+
+	} else {
+
+		// Search for the last element in the list
+		previous_observable_provider = (*observable_interface).first_observable_provider; // Get the front of the queue.
+		while ((*previous_observable_provider).next != NULL) {
+			previous_observable_provider = (*previous_observable_provider).next;
+		}
+
+		// Update the list linkage to add the message to the back of the list
+		(*observable_provider).previous = previous_observable_provider;
+		(*previous_observable_provider).next = observable_provider;
+	}
+}
+
+Observable_Set* Remove_Observable_Provider (Observable_Interface *observable_interface, Observable_Set *observable_provider) {
+
+	if (observable_provider != NULL && observable_interface != NULL) {
+
+		// Update the linked list to remove the action from the front of the queue.
+		if ((*observable_provider).previous == NULL && (*observable_provider).next != NULL) {
+
+			// The action in the first in the loop.
+
+			(*observable_interface).first_observable_provider = (*observable_provider).next; // Update the loop's first action to be the next one.
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			(*((*observable_interface).first_observable_provider)).next = NULL; // Update the the new first action in the loop so it doesn't link to a "previous" action.
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*observable_provider).previous = NULL;
+			(*observable_provider).next = NULL;
+
+		} else if ((*observable_provider).previous != NULL && (*observable_provider).next != NULL) {
+
+			// The action is within the loop. It has previous and next actions.
+
+			(*(*observable_provider).previous).next = (*observable_provider).next; // Update the previous action to skip this action and point to the next action.
+
+			(*(*observable_provider).next).previous = (*observable_provider).previous; // Update the next action skip this action and point to the previous action.
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*observable_provider).previous = NULL;
+			(*observable_provider).next = NULL;
+
+		} else if ((*observable_provider).previous != NULL && (*observable_provider).next == NULL) {
+
+			// The action is the last in the loop. It has previous actions only.
+
+			(*(*observable_provider).previous).next = NULL; // Update the previous action be the new last action in the loop. That is, make it point to no other action (and point to NULL).
+
+			// TODO: Check the state of the loop pointer, and update it if it points to the action being removed!
+
+			// Unlink the action from linked list to finish dequeuing process.
+			(*observable_provider).previous = NULL;
+			(*observable_provider).next = NULL;
+
+		} else {
+
+			// There are no more actions in the loop, so remove all links and reset the loop to its "empty" state.
+
+			observable_interface = NULL; // Remove the link to any actions at the front of the loop.
+
+			// Unlink the actions from linked list to finish dequeuing process.
+			(*observable_provider).previous = NULL;
+			(*observable_provider).next = NULL;
+
+		}
+
+		// Free the action construct from memory.
+		// TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
+		Delete_Observable_Set (observable_provider);
+	}
+
+	return NULL;
+}
+
+uint8_t Has_Observable_Providers (Observable_Interface *observable_interface) {
+	return (*observable_interface).first_observable_provider != NULL;
+}
+
+Observable_Set* Get_Observable_Provider (Observable_Interface *observable_interface, char *provider_uuid) {
+	Observable_Set *observable_provider = NULL;
+
+	if ((*observable_interface).first_observable_provider != NULL) {
+		observable_provider = (*observable_interface).first_observable_provider; // Get the first action construct in the cache list.
+		while (observable_provider != NULL) {
+			if (strncmp (provider_uuid, (*observable_provider).provider_uuid, strlen ((*observable_provider).provider_uuid)) == 0) {
+				return observable_provider; // Return the action associated with the specified action construct.
+			}
+			observable_provider = (*observable_provider).next;
+		}
+	}
+
+	return NULL;
+}
+
+Observable_Set* Get_Observable_Provider_By_UUID (Observable_Interface *observable_interface, char *provider_uuid) {
+	Observable_Set *observable_provider = NULL;
+
+	if ((*observable_interface).first_observable_provider != NULL) {
+		observable_provider = (*observable_interface).first_observable_provider; // Get the first action construct in the cache list.
+		while (observable_provider != NULL) {
+			if (strncmp((*observable_provider).provider_uuid, provider_uuid, strlen (provider_uuid)) == 0) {
+				return observable_provider; // Return the action associated with the specified action construct.
+			}
+			observable_provider = (*observable_provider).next;
+		}
+	}
+
+	return NULL;
+}
 // </Data Flow>
 
 ////Global implementations ////////////////////////////////////////
@@ -637,33 +860,51 @@ int8_t Initialize_Channels() {
 //      updated_channel_profile[i].pulse_duty_cycle = 0;
 
       	// <OPTIMIZE>
-		updated_channel_profile[i].observable_set = Create_Observable_Set ();
+        char *provider_uuid[12] = {
+        		"00000000-0000-0000-0000-000000000001",
+				"00000000-0000-0000-0000-000000000002",
+				"00000000-0000-0000-0000-000000000003",
+				"00000000-0000-0000-0000-000000000004",
+				"00000000-0000-0000-0000-000000000005",
+				"00000000-0000-0000-0000-000000000006",
+				"00000000-0000-0000-0000-000000000007",
+				"00000000-0000-0000-0000-000000000008",
+				"00000000-0000-0000-0000-000000000009",
+				"00000000-0000-0000-0000-000000000010",
+				"00000000-0000-0000-0000-000000000011",
+				"00000000-0000-0000-0000-000000000012"
+        };
+		updated_channel_profile[i].observable_set = Create_Observable_Set (provider_uuid[i]);
 
 		Observable *observable = NULL;
 		Observable_Set *observable_set = updated_channel_profile[i].observable_set;
 		int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
 		observable = Create_Observable ("toggle_value", CONTENT_TYPE_INT32, &default_content_int32);
+		Set_Observable_Provider_UUID (observable, provider_uuid[i]);
 		Add_Observable (observable_set, observable);
 
 		default_content_int32 = -1;
 		observable = Create_Observable ("waveform_sample_value", CONTENT_TYPE_INT32, &default_content_int32);
+		Set_Observable_Provider_UUID (observable, provider_uuid[i]);
 		Add_Observable (observable_set, observable);
 
 		float default_content_float = 0;
 		observable = Create_Observable ("pulse_period_seconds", CONTENT_TYPE_FLOAT, &default_content_float);
+		Set_Observable_Provider_UUID (observable, provider_uuid[i]);
 		Add_Observable (observable_set, observable);
 
 		int16_t default_content_int16 = 0;
 		observable = Create_Observable ("pulse_duty_cycle", CONTENT_TYPE_INT16, &default_content_int16);
+		Set_Observable_Provider_UUID (observable, provider_uuid[i]);
 		Add_Observable (observable_set, observable);
 		// </OPTIMIZE>
 
-      // Initialize channel profile
-      channel_profile[i].number = (Channel_Number) i;
-      channel_profile[i].enabled = FALSE;
-      channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
-      channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
-      channel_profile[i].data = &platform_observable_profiles[i];
+        // Initialize channel profile
+		channel_profile[i].number = (Channel_Number) i;
+		channel_profile[i].enabled = FALSE;
+		channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
+		channel_profile[i].type = CHANNEL_TYPE_TOGGLE;
+		channel_profile[i].data = &platform_observable_profiles[i];
 
 //      channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
 //      channel_profile[i].waveform_sample_value = -1;
@@ -671,24 +912,32 @@ int8_t Initialize_Channels() {
 //      channel_profile[i].pulse_duty_cycle = 0;
 
 		// <OPTIMIZE>
-      channel_profile[i].observable_set = Create_Observable_Set ();
+//		char *provider_uuid = Get_Unit_UUID();
+        channel_profile[i].observable_set = Create_Observable_Set (provider_uuid[i]);
 
 		observable_set = channel_profile[i].observable_set;
 		default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
 		observable = Create_Observable ("toggle_value", CONTENT_TYPE_INT32, &default_content_int32);
+		Set_Observable_Provider_UUID (observable, provider_uuid[i]);
 		Add_Observable (observable_set, observable);
 
 		default_content_int32 = -1;
 		observable = Create_Observable ("waveform_sample_value", CONTENT_TYPE_INT32, &default_content_int32);
+		Set_Observable_Provider_UUID (observable, provider_uuid[i]);
 		Add_Observable (observable_set, observable);
 
 		default_content_float = 0;
 		observable = Create_Observable ("pulse_period_seconds", CONTENT_TYPE_FLOAT, &default_content_float);
+		Set_Observable_Provider_UUID (observable, provider_uuid[i]);
 		Add_Observable (observable_set, observable);
 
 		default_content_int16 = 0;
 		observable = Create_Observable ("pulse_duty_cycle", CONTENT_TYPE_INT16, &default_content_int16);
+		Set_Observable_Provider_UUID (observable, provider_uuid[i]);
 		Add_Observable (observable_set, observable);
+
+		// Expose the observables for this provider
+		Add_Observable_Provider (observable_interface, channel_profile[i].observable_set);
 		// </OPTIMIZE>
 
    }
@@ -1894,6 +2143,16 @@ static void Initialize_Hardware_Interface() {
    }
 }
 
+void Set_Observable_Provider_Device_UUID (Observable_Set *observable_provider, char *device_uuid) {
+
+	if (observable_provider != NULL) {
+		// Allocate memory for the device UUID identifying the device with the observable, then copy the UUID into it
+		(*observable_provider).device_uuid = (char *) malloc (strlen (device_uuid) + 1);
+		memset ((*observable_provider).device_uuid, '\0', strlen (device_uuid) + 1);
+		memcpy ((*observable_provider).device_uuid, device_uuid, strlen (device_uuid));
+	}
+}
+
 /**
  * Initialize the platform. Essentially, this sets up the hardware abstraction
  * layer (HAL) for use by Clay's system architecture.
@@ -1917,24 +2176,43 @@ static void Initialize_Channel_Hardware_Interface(Channel_Number number) {
 //	platform_observable_profiles[number].pulse_period_seconds = 0;
 //	platform_observable_profiles[number].pulse_duty_cycle = 0;
 
-	platform_observable_profiles[number].observable_set = Create_Observable_Set ();
+	char *provider_uuid[12] = {
+			"00000000-0000-0000-0000-000000000001",
+			"00000000-0000-0000-0000-000000000002",
+			"00000000-0000-0000-0000-000000000003",
+			"00000000-0000-0000-0000-000000000004",
+			"00000000-0000-0000-0000-000000000005",
+			"00000000-0000-0000-0000-000000000006",
+			"00000000-0000-0000-0000-000000000007",
+			"00000000-0000-0000-0000-000000000008",
+			"00000000-0000-0000-0000-000000000009",
+			"00000000-0000-0000-0000-000000000010",
+			"00000000-0000-0000-0000-000000000011",
+			"00000000-0000-0000-0000-000000000012"
+	};
+
+	platform_observable_profiles[number].observable_provider = Create_Observable_Set (provider_uuid[number]);
 
 	Observable *observable = NULL;
-	Observable_Set *observable_set = platform_observable_profiles[number].observable_set;
+	Observable_Set *observable_set = platform_observable_profiles[number].observable_provider;
 	int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
 	observable = Create_Observable ("toggle_value", CONTENT_TYPE_INT32, &default_content_int32);
+	Set_Observable_Provider_UUID (observable, provider_uuid[number]);
 	Add_Observable (observable_set, observable);
 
 	default_content_int32 = -1;
 	observable = Create_Observable ("waveform_sample_value", CONTENT_TYPE_INT32, &default_content_int32);
+	Set_Observable_Provider_UUID (observable, provider_uuid[number]);
 	Add_Observable (observable_set, observable);
 
 	float default_content_float = 0;
 	observable = Create_Observable ("pulse_period_seconds", CONTENT_TYPE_FLOAT, &default_content_float);
+	Set_Observable_Provider_UUID (observable, provider_uuid[number]);
 	Add_Observable (observable_set, observable);
 
 	int16_t default_content_int16 = 0;
 	observable = Create_Observable ("pulse_duty_cycle", CONTENT_TYPE_INT16, &default_content_int16);
+	Set_Observable_Provider_UUID (observable, provider_uuid[number]);
 	Add_Observable (observable_set, observable);
 
 
