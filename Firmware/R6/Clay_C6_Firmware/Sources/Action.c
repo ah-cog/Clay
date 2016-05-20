@@ -376,7 +376,7 @@ static int8_t Perform_Signal_Action(char *state) {
 
    int8_t status = NULL;
    int8_t result = NULL;
-   char token[32] = { 0 };
+   char token[256] = { 0 }; // TODO: char token[32] = { 0 }; // <HACK />
    int tokenInt = 0;
    int i;
 
