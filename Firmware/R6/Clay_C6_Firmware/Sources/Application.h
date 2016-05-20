@@ -31,6 +31,10 @@ extern int8_t has_enabled_broadcast;
 extern char broadcast_address[32];
 extern char local_address[32];
 
+extern Observable_Interface *observable_interface;
+
+extern void Enable_Observable_Interface ();
+
 /**
  * Initializes the device.
  */

@@ -39,6 +39,7 @@ extern char broadcast_address_module[];
 ////Function Prototypes ///////////////////////////////////////////
 extern int8_t Find_Uuid_In_Discovered_Modules(char * uuid_buffer);
 extern int8_t Process_Module_Announce_Message(Message * message);
+extern remote_clay_module* Get_Device_By_UUID (char *uuid);
 extern int8_t Check_For_Discovery_Message(Message*message);
 extern void Discovery_Broadcast_Presence_4446();
 

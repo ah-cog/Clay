@@ -81,6 +81,18 @@ int8_t Find_Uuid_In_Discovered_Modules(char * uuid_buffer) {
    return result;
 }
 
+remote_clay_module* Get_Device_By_UUID (char *uuid) {
+
+	   for (int i = 0; i < MODULE_DISCOVERY_COUNT; ++i) {
+	      if (discovered_modules[i].allocated && strcmp(discovered_modules[i].uuid, uuid) == 0) {
+	         return &discovered_modules[i];
+	         break;
+	      }
+	   }
+
+	   return NULL;
+}
+
 int8_t Process_Module_Announce_Message(Message * message) {
 
    //announce device <module_uuid>
