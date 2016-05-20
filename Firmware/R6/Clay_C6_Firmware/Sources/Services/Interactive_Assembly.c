@@ -20,8 +20,11 @@
 #define CANCEL_KEYWORD "cancel"
 #define BLINK_KEYWORD "blink"
 
-#define CHANNEL_BLINK_TIMEOUT_ms  3000           //the time between blinks.
-#define CHANNEL_BLINK_TIME_ms     300            //the time the channel light is off for.
+#define CHANNEL_BLINK_TIMEOUT_ms        3000           //the time between blinks.
+#define CHANNEL_BLINK_TIME_ms           250            //the time the channel light is off for.
+#define CHANNEL_CONNECTION_TIMEOUT      CHANNEL_BLINK_TIMEOUT_ms * 10
+#define OUTPUT_BLINK_COUNT              2
+
 #define ADDRESS_STR_LENGTH 50
 #define WIFI_STATE_STEPS   5
 
@@ -39,7 +42,9 @@ typedef struct
 
    bool blinked;
 
+   uint32_t blink_count;
    uint32_t blink_time;
+   uint32_t last_message_time;
    int8_t local_channel;
 
    int8_t remote_channel;
@@ -66,6 +71,7 @@ RGB_Color channel_colors[CHANNEL_COUNT] = { { 45, 0, 0 },
 static Interactive_Assembly_Channel_State requested_state;
 static char requesting_module_address[ADDRESS_STR_LENGTH];
 static int8_t requesting_module_channel;
+static int32_t request_time_ms;
 
 static int8_t button_mode;
 static uint32_t button_mode_start_time;
@@ -103,6 +109,7 @@ static void Request_Remote_Channel(int8_t channel);
 static void Cancel_Channel_Request(int8_t channel);
 static void Cancel_Channel_Request_Specific(int8_t local_channel, int8_t remote_channel, char * remote_address);
 static void Accept_Channel_Request(int8_t channel);
+static void Accept_Channel_Request_Specific(int8_t channel, char * accept_content);
 static void Request_Remote_Blink(int8_t channel);
 static void Interactive_Assembly_Apply_State(Interactive_Assembly_Channel_State new_state, bool local_initiated, int8_t channel);
 static void Interactive_Assembly_Update_Leds();
@@ -161,8 +168,6 @@ void Request_Change_Selected_Channel() {
 }
 
 void Change_Selected_Channel() {
-
-//TODO: cancel previous channel, start this channel, set timeout.
 
    if (!channels[selected_channel > 0 ? selected_channel : 0].channel_active) {
       channels[selected_channel > 0 ? selected_channel : 0].state = INTERACTIVE_ASSEMBLY_NONE;
@@ -292,11 +297,13 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
             //received request to set up channel as input
             requested_state = INTERACTIVE_ASSEMBLY_LOCAL_INPUT_PENDING;
             requesting_module_channel = remote_channel;
+            request_time_ms = Millis();
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, OUTPUT_KEYWORD, strlen(OUTPUT_KEYWORD)) == 0) {
             //received request to set up channel as output
             requested_state = INTERACTIVE_ASSEMBLY_LOCAL_OUTPUT_PENDING;
             requesting_module_channel = remote_channel;
+            request_time_ms = Millis();
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, CANCEL_KEYWORD, strlen(CANCEL_KEYWORD)) == 0) {
 
@@ -314,6 +321,9 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, BLINK_KEYWORD, strlen(BLINK_KEYWORD)) == 0) {
             Set_Channel_Blinked(local_channel);
+            channels[local_channel].blink_count = OUTPUT_BLINK_COUNT - 1;
+            channels[local_channel].last_message_time = Millis();
+            Accept_Channel_Request_Specific(local_channel, BLINK_KEYWORD);
          }
       } else if (strncmp(interactive_assembly_message_type, ACCEPT_KEYWORD, strlen(ACCEPT_KEYWORD)) == 0) {
          if (strncmp(interactive_assembly_message_content, INPUT_KEYWORD, strlen(INPUT_KEYWORD)) == 0) {
@@ -325,6 +335,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                channels[local_channel].remote_channel = remote_channel;
                sprintf(channels[local_channel].remote_module_address, (*message).source);
                *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+               channels[local_channel].last_message_time = Millis();
                Interactive_Assembly_Update_Leds();
             } else {
                if (!channels[local_channel].channel_active) {
@@ -348,6 +359,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                channels[local_channel].remote_channel = remote_channel;
                sprintf(channels[local_channel].remote_module_address, (*message).source);
                *(channels[local_channel].remote_module_address + strlen(channels[local_channel].remote_module_address) - 1) = '6';     //HACK: we need the port to be 4446
+               channels[local_channel].last_message_time = Millis();
                Interactive_Assembly_Update_Leds();
             } else {
                if (!channels[local_channel].channel_active) {
@@ -362,10 +374,11 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
                }
             }
             result = TRUE;
+         } else if (strncmp(interactive_assembly_message_content, BLINK_KEYWORD, strlen(BLINK_KEYWORD)) == 0) {
+            channels[local_channel].last_message_time = Millis();
          }
       } else if (strncmp(interactive_assembly_message_type, UPDATE_KEYWORD, strlen(UPDATE_KEYWORD)) == 0) {
          //received state from remote. update the output.
-
          ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -381,9 +394,6 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
          ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-         //TODO: observables.
-//         Channel_Set_Data(local_channel, atoi(interactive_assembly_message_content));
       }
    }
 
@@ -400,8 +410,11 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
 
 void Interactive_Assembly_Periodic_Call() {
 
-   if ((button_mode_start_time != 0) && ((Millis() - button_mode_start_time) > DEFAULT_BUTTON_MODE_TIMEOUT)) {
+   if (IS_PENDING(requested_state) && (Millis() - request_time_ms) >= DEFAULT_BUTTON_MODE_TIMEOUT) {
+      Cancel_Pending_Request();
+   }
 
+   if ((button_mode_start_time != 0) && ((Millis() - button_mode_start_time) > DEFAULT_BUTTON_MODE_TIMEOUT)) {
       // Check if the button mode timer expired
       Request_Reset_Button();
       button_mode_start_time = 0;
@@ -411,6 +424,7 @@ void Interactive_Assembly_Periodic_Call() {
 
    for (int i = 0; i < CHANNEL_COUNT; ++i) {
       if (channels[i].channel_active) {
+
          ++active_channel_count;
 
          if (channels[i].blinked && ((Millis() - channels[i].blink_time) > CHANNEL_BLINK_TIME_ms)) {
@@ -423,49 +437,31 @@ void Interactive_Assembly_Periodic_Call() {
 
          } else if (IS_INPUT(channels[i].state) && ((Millis() - channels[i].blink_time) > (CHANNEL_BLINK_TIMEOUT_ms))) {
             Set_Channel_Blinked(i);
+         } else if (IS_OUTPUT(channels[i].state)
+                    && ((Millis() - channels[i].blink_time) > (2 * CHANNEL_BLINK_TIME_ms))
+                    && channels[i].blink_count > 0) {
+            Set_Channel_Blinked(i);
+            --channels[i].blink_count;
+         } else if ((Millis() - channels[i].last_message_time) >= CHANNEL_CONNECTION_TIMEOUT) {
+            Request_Reset_Channel(i);
          }
       }
    }
-
-//TODO: observables.
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//if you need a periodic place to read data or do anything periodic related to interactive assembly (animations,callbacks, other state vars, etc),/
-//    then use this function. /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//   for (int i = 0; i < CHANNEL_COUNT; ++i) {
-//
-//      if (channels[i].channel_active && IS_INPUT(channels[i].state)) {
-//         //read the value and send it to the remote
-//         int32_t channel_state = Channel_Get_Data((Channel_Number) i);
-//
-//         if (last_reported_value != channel_state) {
-//
-//            /////this is a place where we can poll the data and send it to the remote, if that isn't already handled by the observer/propagator
-//
-//            sprintf(channel_state_message_buffer, channel_state_format, i, channels[i].remote_channel, channel_state);
-//            Message * m = Create_Message(channel_state_message_buffer);
-//            Set_Message_Type(m, "udp");
-//            Set_Message_Destination(m, channels[i].remote_module_address);
-//            Set_Message_Source(m, local_address);
-//
-//            Wifi_Send(m);
-//            last_reported_value = channel_state;
-//         }
-//      }
-//   }
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   //if you need a periodic place to read data or do anything periodic related to interactive assembly (animations,callbacks, other state vars, etc),/
+   //    then use this function. /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 ////Local implementations /////////////////////////////////////////
@@ -529,17 +525,19 @@ static void Cancel_Channel_Request_Specific(int8_t local_channel, int8_t remote_
 
 static void Accept_Channel_Request(int8_t channel) {
 
+   if (IS_INPUT(channels[channel].state)) {
+      Accept_Channel_Request_Specific(channel, INPUT_KEYWORD);
+   } else if (IS_OUTPUT(channels[channel].state)) {
+      Accept_Channel_Request_Specific(channel, OUTPUT_KEYWORD);
+   }
+}
+
+static void Accept_Channel_Request_Specific(int8_t channel, char * accept_content) {
+
    Message * m;
 
-   if (IS_INPUT(channels[channel].state)) {
-      sprintf(channel_accept_message_buffer, channel_accept_format, channel, channels[channel].remote_channel,
-      INPUT_KEYWORD);
-      m = Create_Message(channel_accept_message_buffer);
-   } else if (IS_OUTPUT(channels[channel].state)) {
-      sprintf(channel_accept_message_buffer, channel_accept_format, channel, channels[channel].remote_channel,
-      OUTPUT_KEYWORD);
-      m = Create_Message(channel_accept_message_buffer);
-   }
+   sprintf(channel_accept_message_buffer, channel_accept_format, channel, channels[channel].remote_channel, accept_content);
+   m = Create_Message(channel_accept_message_buffer);
 
    if (m != NULL) {
       Set_Message_Type(m, "udp");
@@ -640,6 +638,7 @@ bool local_initiated,
       if (local_initiated && channels[channel].channel_active && IS_SLAVE(channels[channel].state)) {
          //accepted a pending channel response.
          Accept_Channel_Request(channel);
+         channels[channel].last_message_time = Millis();
          button_mode_start_time = 0;
       } else if (local_initiated) {
          //requested a change in the channel or a new channel to be created
@@ -647,6 +646,7 @@ bool local_initiated,
       } else {
          //received a request to change the channel
          Accept_Channel_Request(channel);
+         channels[channel].last_message_time = Millis();
       }
    }
 }
@@ -676,7 +676,7 @@ static void Interactive_Assembly_Update_Leds() {
                                channel_colors[channels[i].remote_channel].B);
             }
          } else {
-            Set_Light_Color(&proposed_light_profiles[i], 50, 160, 200);
+            Set_Light_Color(&proposed_light_profiles[i], 100, 160, 250);
          }
 
       } else if (IS_OUTPUT(channels[i].state)) {
@@ -695,7 +695,7 @@ static void Interactive_Assembly_Update_Leds() {
                                channel_colors[channels[i].remote_channel].B);
             }
          } else {
-            Set_Light_Color(&proposed_light_profiles[i], 250, 90, 20);
+            Set_Light_Color(&proposed_light_profiles[i], 250, 160, 100);
          }
       }
    }
