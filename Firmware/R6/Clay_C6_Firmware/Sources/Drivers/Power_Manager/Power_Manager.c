@@ -12,7 +12,7 @@
 #include "Clock.h"
 
 ////Macros ////////////////////////////////////////////////////////
-#define BUTTON_SHUTDOWN_HOLD_TIME_ms         3000
+#define BUTTON_SHUTDOWN_HOLD_TIME_ms         6000
 #define BUTTON_STARTUP_HOLD_TIME_ms         500
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -69,6 +69,12 @@ void Power_Manager_Power_Off() {
 //looks at ADC to see if user wants to shut down.
 void Power_Manager_Check_For_Power_Off_Conditions() {
 
+}
+
+void Power_Manager_Software_Reset() {
+   SCB_AIRCR = SCB_AIRCR_VECTKEY(0x5FA) | SCB_AIRCR_SYSRESETREQ_MASK;
+   for (;;)
+      ;
 }
 
 ////Local implementations /////////////////////////////////////////

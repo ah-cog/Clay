@@ -321,7 +321,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, BLINK_KEYWORD, strlen(BLINK_KEYWORD)) == 0) {
             Set_Channel_Blinked(local_channel);
-            channels[local_channel].blink_count = OUTPUT_BLINK_COUNT - 1;
+            channels[local_channel].blink_count = OUTPUT_BLINK_COUNT - 1;  //already blinked once.
             channels[local_channel].last_message_time = Millis();
             Accept_Channel_Request_Specific(local_channel, BLINK_KEYWORD);
          }

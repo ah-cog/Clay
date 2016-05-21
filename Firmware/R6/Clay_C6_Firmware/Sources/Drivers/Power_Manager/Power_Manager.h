@@ -22,5 +22,6 @@ extern bool Power_Manager_Enable();
 extern void Power_Manager_Check_Startup();
 extern void Power_Manager_Power_Off();
 extern void Power_Manager_Check_For_Power_Off_Conditions();
+extern void Power_Manager_Software_Reset();
 
 #endif /* SOURCES_DRIVERS_POWER_MANAGER_POWER_MANAGER_H_ */

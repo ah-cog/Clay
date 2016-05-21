@@ -45,4 +45,8 @@ void Initialize ();
  */
 void Application ();
 
+
+//HACK: the location, more than anything, I think is the hack. threw this in here for bay area maker faire. BAMF
+extern void Blink_Leds();
+
 #endif
