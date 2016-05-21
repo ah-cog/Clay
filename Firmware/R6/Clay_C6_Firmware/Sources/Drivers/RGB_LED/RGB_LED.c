@@ -254,3 +254,8 @@ bool Perform_Channel_Light_Effect(bool reverse) {
 
    return TRUE;
 }
+
+void Channel_Light_Effect_Step()
+{
+
+}

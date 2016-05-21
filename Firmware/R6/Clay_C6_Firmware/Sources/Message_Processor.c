@@ -4,6 +4,7 @@
 #include "Action.h"
 #include "Event.h"
 #include "Timeline.h"
+#include "Power_Manager.h"
 
 #include "Interactive_Assembly.h"
 #include "UDP_Discovery_temp.h"
@@ -34,8 +35,8 @@ static int8_t Process_Get_Event_State(Message * message);
 static int8_t Process_Set_Event_Context(Message *message);
 static int8_t Process_Set_Event_Length(Message *message);
 static int8_t Receive_Interactive_Assembly_Message(Message *message);
-static int8_t Process_Set_Observable_Content (Message *message);
-static int8_t Hack_Process_Start_Propagator (Message *message);
+static int8_t Process_Set_Observable_Content(Message *message);
+static int8_t Hack_Process_Start_Propagator(Message *message);
 
 int8_t Process_Incoming_Message(Message *message) {
 
@@ -169,14 +170,14 @@ int8_t Process_Incoming_Message(Message *message) {
             return Process_Set_Event_Length(message);
          }
       } else if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "provider")) {
-    	  // e.g., "set provider <uuid> observable <key> type <type> content <content>"
-    	  if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "observable")) {
-    		  if (Message_Content_Parameter_Equals(message, SIXTH_PARAMETER, "type")) {
-    			  if (Message_Content_Parameter_Equals(message, EIGHTH_PARAMETER, "content")) {
-    				  return Process_Set_Observable_Content(message);
-				  }
-			  }
-		  }
+         // e.g., "set provider <uuid> observable <key> type <type> content <content>"
+         if (Message_Content_Parameter_Equals(message, FOURTH_PARAMETER, "observable")) {
+            if (Message_Content_Parameter_Equals(message, SIXTH_PARAMETER, "type")) {
+               if (Message_Content_Parameter_Equals(message, EIGHTH_PARAMETER, "content")) {
+                  return Process_Set_Observable_Content(message);
+               }
+            }
+         }
       }
    } else if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "get")) {
       if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "channel")) {
@@ -185,8 +186,17 @@ int8_t Process_Incoming_Message(Message *message) {
          }
       }
    } else if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "propagate")) {
-	  // e.g., propagate 3,'waveform_sample_value' to 002effff-ffff-ffff-4e45-3158200a0015,4,'pulse_duty_cycle'
-	   return Hack_Process_Start_Propagator (message);
+      // e.g., propagate 3,'waveform_sample_value' to 002effff-ffff-ffff-4e45-3158200a0015,4,'pulse_duty_cycle'
+      return Hack_Process_Start_Propagator(message);
+   } else if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "request")) {
+      if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "blink")) {
+Blink_Leds();
+         return TRUE;
+      } else if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "reset")) {
+         Power_Manager_Software_Reset();
+         return TRUE; //not really needed, we'll never come back from the reset...
+      }
+      return Hack_Process_Start_Propagator(message);
    } else {
       // TODO: Don't delete the message until after executing the entire timeline of events.
       // TODO: (cont'd) Do if any message trigger dependencies are present on events in the timeline.
@@ -470,7 +480,7 @@ static int8_t Process_Set_Event_State(Message *message) {
    return result;
 }
 
-static int8_t Process_Set_Observable_Content (Message *message) {
+static int8_t Process_Set_Observable_Content(Message *message) {
 
    int8_t status = NULL;
    int8_t result = NULL;
@@ -504,27 +514,27 @@ static int8_t Process_Set_Observable_Content (Message *message) {
 
    // Extract parameters
    // e.g., "set provider <uuid> observable <key> type <type> content <content>"
-   status = Get_Token (message_content, uuid_buffer, 2);     // Get device UUID (parameter index 2)
-   status = Get_Token (message_content, observable_buffer, 4);     // Get provider UUID (parameter index 4)
-   status = Get_Token (message_content, type_buffer, 6);     // Get state of action (parameter index 6)
-   status = Get_Token (message_content, content_buffer, 8);     // Get state of action (parameter index 8)
+   status = Get_Token(message_content, uuid_buffer, 2);     // Get device UUID (parameter index 2)
+   status = Get_Token(message_content, observable_buffer, 4);     // Get provider UUID (parameter index 4)
+   status = Get_Token(message_content, type_buffer, 6);     // Get state of action (parameter index 6)
+   status = Get_Token(message_content, content_buffer, 8);     // Get state of action (parameter index 8)
    //status = Get_Token (message_content, type_buffer, 10);     // Get state of action (parameter index 10)
 
    // Send message to sender to acknowledge receipt
-   Send_Acknowledgment (token, message_content);
+   Send_Acknowledgment(token, message_content);
 
-	// Delete the message
+   // Delete the message
 //	Delete_Message (message);
 
    /*
-   // Create observable provider for the "remote" observable and add it to the interface
-   Observable_Set *observable_provider = Create_Observable_Set (uuid_buffer);
-   //Set_Observable_Provider_Device_UUID (observable_provider, uuid_buffer);
-   Add_Observable_Provider (observable_interface, observable_provider);
-   */
+    // Create observable provider for the "remote" observable and add it to the interface
+    Observable_Set *observable_provider = Create_Observable_Set (uuid_buffer);
+    //Set_Observable_Provider_Device_UUID (observable_provider, uuid_buffer);
+    Add_Observable_Provider (observable_interface, observable_provider);
+    */
 
    // Create observable and add it to the observable associated provider
-   int32_t observable_type = atoi (type_buffer);
+   int32_t observable_type = atoi(type_buffer);
 
    char content_char = 0;
    int16_t content_int16 = 0;
@@ -533,63 +543,61 @@ static int8_t Process_Set_Observable_Content (Message *message) {
    double content_double = 0;
 
    // Get observable provider by UUID
-   Observable_Set *observable_provider = Get_Observable_Provider_By_UUID (observable_interface, uuid_buffer);
+   Observable_Set *observable_provider = Get_Observable_Provider_By_UUID(observable_interface, uuid_buffer);
 
    // <HACK>
    if (observable_provider == NULL) {
-	   return TRUE;
+      return TRUE;
    }
    // </HACK>
 
    // Get observable
-   Observable *observable = Get_Observable (observable_provider, observable_buffer);
+   Observable *observable = Get_Observable(observable_provider, observable_buffer);
 
    // Set the data type
    if (observable_type == CONTENT_TYPE_CHAR) {
-	   content_char = (char) content_buffer[0];
-	   Set_Observable_Content (observable, (*observable).content_type, &content_char);
+      content_char = (char) content_buffer[0];
+      Set_Observable_Content(observable, (*observable).content_type, &content_char);
    } else if (observable_type == CONTENT_TYPE_INT16) {
-	   content_int16 = (int16_t) atoi (content_buffer);
-	   Set_Observable_Content (observable, (*observable).content_type, &content_int16);
+      content_int16 = (int16_t) atoi(content_buffer);
+      Set_Observable_Content(observable, (*observable).content_type, &content_int16);
    } else if (observable_type == CONTENT_TYPE_INT32) {
-	   content_int32 = (int32_t) atoi (content_buffer);
-	   Set_Observable_Content (observable, (*observable).content_type, &content_int32);
+      content_int32 = (int32_t) atoi(content_buffer);
+      Set_Observable_Content(observable, (*observable).content_type, &content_int32);
    } else if (observable_type == CONTENT_TYPE_FLOAT) {
-	   content_float = strtof (content_buffer, NULL);
-	   Set_Observable_Content (observable, (*observable).content_type, &content_float);
+      content_float = strtof(content_buffer, NULL);
+      Set_Observable_Content(observable, (*observable).content_type, &content_float);
    } else if (observable_type == CONTENT_TYPE_DOUBLE) {
-	   content_double = strtod (content_buffer, NULL);
-	   Set_Observable_Content (observable, (*observable).content_type, &content_double);
+      content_double = strtod(content_buffer, NULL);
+      Set_Observable_Content(observable, (*observable).content_type, &content_double);
    }
 
    /*
-   // Set the data type
-   if (observable_type == CONTENT_TYPE_CHAR) {
-	   content_char = (char) content_buffer[0];
-	   observable = Create_Observable (observable_buffer, observable_type, &content_char);
-   } else if (observable_type == CONTENT_TYPE_INT16) {
-	   content_int16 = (int16_t) atoi (content_buffer);
-	   observable = Create_Observable (observable_buffer, observable_type, &content_int16);
-   } else if (observable_type == CONTENT_TYPE_INT32) {
-	   content_int32 = (int32_t) atoi (content_buffer);
-	   observable = Create_Observable (observable_buffer, observable_type, &content_int32);
-   } else if (observable_type == CONTENT_TYPE_FLOAT) {
-	   content_float = strtof (content_buffer, NULL);
-	   observable = Create_Observable (observable_buffer, observable_type, &content_float);
-   } else if (observable_type == CONTENT_TYPE_DOUBLE) {
-	   content_double = strtod (content_buffer, NULL);
-	   observable = Create_Observable (observable_buffer, observable_type, &content_double);
-   }
-   */
+    // Set the data type
+    if (observable_type == CONTENT_TYPE_CHAR) {
+    content_char = (char) content_buffer[0];
+    observable = Create_Observable (observable_buffer, observable_type, &content_char);
+    } else if (observable_type == CONTENT_TYPE_INT16) {
+    content_int16 = (int16_t) atoi (content_buffer);
+    observable = Create_Observable (observable_buffer, observable_type, &content_int16);
+    } else if (observable_type == CONTENT_TYPE_INT32) {
+    content_int32 = (int32_t) atoi (content_buffer);
+    observable = Create_Observable (observable_buffer, observable_type, &content_int32);
+    } else if (observable_type == CONTENT_TYPE_FLOAT) {
+    content_float = strtof (content_buffer, NULL);
+    observable = Create_Observable (observable_buffer, observable_type, &content_float);
+    } else if (observable_type == CONTENT_TYPE_DOUBLE) {
+    content_double = strtod (content_buffer, NULL);
+    observable = Create_Observable (observable_buffer, observable_type, &content_double);
+    }
+    */
 
    // Add observable to the "remote" provider (already in the "local" interface)
 //   Observable *observable = Create_Observable (observable_buffer, observable_type, &content_int32);
 //   Observable_Set *observable_set = updated_channel_profile[i].observable_set;
    /*
-   Add_Observable (observable_provider, observable);
-   */
-
-
+    Add_Observable (observable_provider, observable);
+    */
 
 //   Observable_Set *source_observable_provider = channel_profile[source_channel_index].observable_set;
 //   Observable_Set *destination_observable_provider = channel_profile[i].observable_set;
@@ -629,11 +637,10 @@ static int8_t Process_Set_Observable_Content (Message *message) {
 //	   // TODO: The action is not in the cache! Return response indicating this! Or request it from the cloud!
 //	   result = FALSE;
 //   }
-
    return result;
 }
 
-static int8_t Hack_Process_Start_Propagator (Message *message) {
+static int8_t Hack_Process_Start_Propagator(Message *message) {
 
    int8_t status = NULL;
    int8_t result = NULL;
@@ -666,54 +673,52 @@ static int8_t Hack_Process_Start_Propagator (Message *message) {
    char *destination_provider_uuid = NULL;
    char *destination_observable_key = NULL;
 
-   source_provider_uuid = strtok (message_content, " "); // <HACK />
-   source_provider_uuid = strtok (NULL, " ");
-   source_observable_key = strtok (NULL, " ");
-   destination_device_uuid = strtok (NULL, " "); // <HACK />
-   destination_device_uuid = strtok (NULL, " ");
-   destination_provider_uuid = strtok (NULL, " ");
-   destination_observable_key = strtok (NULL, " ");
+   source_provider_uuid = strtok(message_content, " ");     // <HACK />
+   source_provider_uuid = strtok(NULL, " ");
+   source_observable_key = strtok(NULL, " ");
+   destination_device_uuid = strtok(NULL, " ");     // <HACK />
+   destination_device_uuid = strtok(NULL, " ");
+   destination_provider_uuid = strtok(NULL, " ");
+   destination_observable_key = strtok(NULL, " ");
 
    // Send message to sender to acknowledge receipt
-   Send_Acknowledgment (token, message_content);
+   Send_Acknowledgment(token, message_content);
 
-	// Delete the message
+   // Delete the message
 //	Delete_Message (message);
 
    /*
-   // Create observable provider for the "remote" observable and add it to the interface
-   Observable_Set *observable_provider = Create_Observable_Set (uuid_buffer);
-   //Set_Observable_Provider_Device_UUID (observable_provider, uuid_buffer);
-   Add_Observable_Provider (observable_interface, observable_provider);
-   */
+    // Create observable provider for the "remote" observable and add it to the interface
+    Observable_Set *observable_provider = Create_Observable_Set (uuid_buffer);
+    //Set_Observable_Provider_Device_UUID (observable_provider, uuid_buffer);
+    Add_Observable_Provider (observable_interface, observable_provider);
+    */
 
    // Create observable and add it to the observable associated provider
 //   int32_t observable_type = atoi (type_buffer);
-
 //   char content_char = 0;
 //   int16_t content_int16 = 0;
 //   int32_t content_int32 = 0;
 //   float content_float = 0;
 //   double content_double = 0;
-
    // Get observable provider by UUID
-   Observable_Set *observable_provider = Get_Observable_Provider_By_UUID (observable_interface, source_provider_uuid);
+   Observable_Set *observable_provider = Get_Observable_Provider_By_UUID(observable_interface, source_provider_uuid);
 
    // <HACK>
    if (observable_provider == NULL) {
-	   return TRUE;
+      return TRUE;
    }
    // </HACK>
 
    // Get observable
-   Observable *source_observable = Get_Observable (observable_provider, source_observable_key);
+   Observable *source_observable = Get_Observable(observable_provider, source_observable_key);
 
    // <HACK>
    // Create destination observable (for propagator)
    int32_t content_int32 = 0;
-   Observable *destination_observable = Create_Observable (destination_observable_key, CONTENT_TYPE_INT32, &content_int32);
-   Set_Observable_Provider_UUID (destination_observable, destination_provider_uuid);
-   Set_Observable_Device_UUID (destination_observable, destination_device_uuid);
+   Observable *destination_observable = Create_Observable(destination_observable_key, CONTENT_TYPE_INT32, &content_int32);
+   Set_Observable_Provider_UUID(destination_observable, destination_provider_uuid);
+   Set_Observable_Device_UUID(destination_observable, destination_device_uuid);
    // TODO: Observable_Set *observable_set = updated_channel_profile[i].observable_set;
    // </HACK>
 
@@ -721,27 +726,23 @@ static int8_t Hack_Process_Start_Propagator (Message *message) {
 //   Observable *observable = Create_Observable (observable_buffer, observable_type, &content_int32);
 //   Observable_Set *observable_set = updated_channel_profile[i].observable_set;
    /*
-   Add_Observable (observable_provider, observable);
-   */
-
-
+    Add_Observable (observable_provider, observable);
+    */
 
 //   Observable_Set *source_observable_provider = channel_profile[source_channel_index].observable_set;
 //   Observable_Set *destination_observable_provider = channel_profile[i].observable_set;
 //
-   if (!Has_Propagator (source_observable, // Get_Observable (source_observable_set, "waveform_sample_value"),
-		   (*source_observable).key,
-		   destination_observable,
-		   (*destination_observable).key)) {
+   if (!Has_Propagator(source_observable,     // Get_Observable (source_observable_set, "waveform_sample_value"),
+                       (*source_observable).key,
+                       destination_observable,
+                       (*destination_observable).key)) {
 
-	   Propagator *propagator = Create_Propagator (
-			   source_observable, // Get_Observable (source_observable_provider, source_observable_key), // Get_Observable (source_observable_set, "waveform_sample_value"),
-			   (*source_observable).key,
-			   destination_observable,
-			   (*destination_observable).key);
-	   Add_Propagator (
-			   source_observable, // Get_Observable (source_observable_provider, source_observable_key),
-			   propagator);
+      Propagator *propagator = Create_Propagator(source_observable,     // Get_Observable (source_observable_provider, source_observable_key), // Get_Observable (source_observable_set, "waveform_sample_value"),
+                                                 (*source_observable).key,
+                                                 destination_observable,
+                                                 (*destination_observable).key);
+      Add_Propagator(source_observable,     // Get_Observable (source_observable_provider, source_observable_key),
+                     propagator);
    }
 //
 //   Set_Observable_Content ((*propagator).destination, (*((*propagator).destination)).content_type, &scaled_content);

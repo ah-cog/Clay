@@ -49,6 +49,20 @@ void Monitor_Periodic_Events();
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
 void Send_Mesh_Test_Message();
 
+//this code is used when we receive a request message to blink the LEDs. BAMF
+#define BLINK_INTERVAL_ms  50
+#define BLINK_COUNT        3
+int32_t blink_count;
+uint32_t blink_time;
+bool blunk;
+
+//BAMF led blink
+void Blink_Leds() {
+   blunk = TRUE;
+   blink_time = Millis();
+   blink_count = BLINK_COUNT;
+}
+
 void Initialize() {
 
    vBat = 0;
@@ -57,12 +71,14 @@ void Initialize() {
 
    // Initialize Clay
 
-//   Button_Register_Press_Response(Send_Mesh_Test_Message);
-//   Button_Register_Release_Response(Send_Mesh_Test_Message);
+//   Button_Register_Press_Response(Blink_Leds);
+//   Button_Register_Hold_Response(5000, Software_Reset);
+   //   Button_Register_Press_Response(Send_Mesh_Test_Message);
+   //   Button_Register_Release_Response(Send_Mesh_Test_Message);
 
    Initialize_Unit_UUID();
 
-   Enable_Observable_Interface (); // Enable Clay's observable interface service
+   Enable_Observable_Interface();     // Enable Clay's observable interface service
 
    timeline = Create_Timeline("timeline-uuid");
 
@@ -167,9 +183,27 @@ void Initialize() {
       ;
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
 
-   if ((status = Enable_Interactive_Assembly()) != TRUE) {
-      // Failure
-   }
+   //HACK HACK HACK HACK HACK OH NO !!1 ELEVENS
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+//   if ((status = Enable_Interactive_Assembly()) != TRUE) {
+//      // Failure
+//   }
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+
 }
 
 // Device profile
@@ -177,12 +211,12 @@ void Initialize() {
 Observable_Interface *observable_interface = NULL;
 char internet_address[32] = { 0 };
 
-void Enable_Observable_Interface () {
-	// <HACK>
-	// TODO: Consider giving each device a unique interface UUID and expose it.
-	char *device_uuid = Get_Unit_UUID();
-	// </HACK>
-	observable_interface = Create_Observable_Interface (device_uuid); // e.g., "set interface <uuid> provider <uuid> observable <uuid> content <content>"
+void Enable_Observable_Interface() {
+   // <HACK>
+   // TODO: Consider giving each device a unique interface UUID and expose it.
+   char *device_uuid = Get_Unit_UUID();
+   // </HACK>
+   observable_interface = Create_Observable_Interface(device_uuid);     // e.g., "set interface <uuid> provider <uuid> observable <uuid> content <content>"
 }
 
 // TODO: Move these into Device_Status.h
@@ -387,6 +421,29 @@ void Monitor_Periodic_Events() {
 
    // TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
 
+   if (blink_count > 0 && (Millis() - blink_time) > BLINK_INTERVAL_ms) {
+      interactive_assembly_using_lights = true;
+      for (int i = 0; i < CHANNEL_COUNT; ++i) {
+         if (blunk) {
+            Set_Light_Color(&proposed_light_profiles[i], 0, 0, 150);
+         } else {
+            Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
+         }
+      }
+
+      if (!blunk) {
+         --blink_count;
+      }
+
+      // Apply the new light states
+      Apply_Channels();
+      Apply_Channel_Lights();
+      blink_time = Millis();
+      blunk = !blunk;
+
+      interactive_assembly_using_lights = blink_count > 0;
+   }
+
    if (tick_1ms) {
       tick_1ms = FALSE;
 
@@ -402,7 +459,6 @@ void Monitor_Periodic_Events() {
 
    if (tick_250ms) {
       tick_250ms = FALSE;
-
       // TODO: Perform any periodic actions (250 ms).
    }
 
@@ -413,19 +469,19 @@ void Monitor_Periodic_Events() {
       LED1_PutVal(NULL, led_2_state);
       led_2_state = !led_2_state;
 
-      // TODO: Perform any periodic actions (500 ms).
+// TODO: Perform any periodic actions (500 ms).
    }
 
    if (tick_1000ms) {
       tick_1000ms = FALSE;
 
-      // TODO: Perform any periodic action (1000 ms).
+// TODO: Perform any periodic action (1000 ms).
    }
 
    if (tick_3000ms) {
       tick_3000ms = FALSE;
 
-      // Request Wi-Fi status
+// Request Wi-Fi status
       if (!has_connection_to_wifi) {
          //6 second period.
          if (request_status) {
@@ -436,23 +492,23 @@ void Monitor_Periodic_Events() {
          }
       }
 
-      // Once connected, get Internet address.
+// Once connected, get Internet address.
       if (has_connection_to_wifi && !has_received_internet_address) {
          WiFi_Request_Get_Internet_Address();
       }
 
-      // Once retreived address, generate broadcast address.
+// Once retreived address, generate broadcast address.
       if (has_received_internet_address && !has_generated_discovery_broadcast_address) {
          // TODO: Generate broadcast address based on received address
       }
 
-      // Once discovery broadcast address is generated and discovery is enabled, send discovery broadcast.
+// Once discovery broadcast address is generated and discovery is enabled, send discovery broadcast.
       if (has_generated_discovery_broadcast_address && has_enabled_broadcast) {
          Discovery_Broadcast_Presence();
          Discovery_Broadcast_Presence_4446();
       }
 
-      // TODO: Perform any periodic actions (3000 ms).
+// TODO: Perform any periodic actions (3000 ms).
    }
 }
 
