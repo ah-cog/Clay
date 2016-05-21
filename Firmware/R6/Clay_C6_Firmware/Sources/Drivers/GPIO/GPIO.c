@@ -453,30 +453,40 @@ void Propagate (Observable *observable) {
 						// Serialize
 						int16_t observable_content = Get_Observable_Data_Int16 (source_observable);
 						sprintf (serialized_observable_content, "%d", observable_content);
-						// Create message content
-						sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
 					} else if ((*source_observable).content_type == CONTENT_TYPE_INT32) {
-						// Serialize
+
 						int32_t observable_content = Get_Observable_Data_Int32 (source_observable);
-						sprintf (serialized_observable_content, "%d", observable_content);
-						// Create message content
-						sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
+
+						// <TRANSFORM DATA: /SCALE/MAP/ETC.>
+						// <HACK>
+						// Apply transformations
+						//limiting to keep in range.
+						if (observable_content > 56645) {
+							observable_content = 56645;
+						}
+						int16_t scaled_observable_content = (int16_t) (observable_content * 0.08844f + 57700);
+						//                        ^ TODO: Always cast to the source data to the destination data type.
+						// </HACK>
+						// </TRANSFORM DATA>
+
+						// Serialize
+						sprintf (serialized_observable_content, "%d", scaled_observable_content);
+						// sprintf (serialized_observable_content, "%d", observable_content);
 					} else if ((*source_observable).content_type == CONTENT_TYPE_FLOAT) {
 						// Serialize
 						float observable_content = Get_Observable_Data_Float (source_observable);
 						// sprintf (serialized_observable_content, "%0.6f", (*observable).content);
 						sprintf (serialized_observable_content, "%f", observable_content);
-						// Create message content
-						sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
 					} else if ((*source_observable).content_type == CONTENT_TYPE_DOUBLE) {
 						// Serialize
 						double observable_content = Get_Observable_Data_Double (source_observable);
 						// sprintf (serialized_observable_content, "%0.6f", (*observable).content);
 						sprintf (serialized_observable_content, "%f", observable_content);
-						// Create message content
-						sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
 					}
 					// </SERIALIZE OBSERVABLE CONTENT>
+
+					// Create message content
+					sprintf (message_content, "set provider %s observable %s type %d content %s", (*destination_observable).provider_uuid, (*destination_observable).key, (*source_observable).content_type, serialized_observable_content);
 
 					if (Get_Message_Count (&outgoingMessageQueue) < 5 && Get_Message_Count (&outgoingWiFiMessageQueue) < 5) {
 
@@ -488,9 +498,15 @@ void Propagate (Observable *observable) {
 						char this_device_internet_address[32] = { 0 };
 						sprintf (this_device_internet_address, "%s:4446", local_address); // is this correct?
 						Set_Message_Source(message, this_device_internet_address);     // <HACK />
-						 Set_Message_Destination (message, "192.168.1.255:4446");
-	//					sprintf (destination_device_internet_address, "%s:4446", (*destination_device).address);
-	//					Set_Message_Destination(message, (*destination_device).address);
+
+						char destination_device_address[32] = { 0 };
+						strncpy (destination_device_address, (*destination_device).address, strlen ((*destination_device).address));
+						char *port_index = strstr (destination_device_address, ":") + 1;
+						port_index[0] = '\0';
+						strcat (destination_device_address, "4446");
+						// Set_Message_Destination (message, "192.168.1.255:4446");
+						//sprintf (destination_device_internet_address, "%s:4446", (*destination_device).address);
+						Set_Message_Destination(message, destination_device_address);
 						// </CREATE MESSAGE>
 
 						// Queue the outgoing message
