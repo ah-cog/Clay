@@ -130,6 +130,8 @@ int8_t Process_Incoming_Message(Message *message) {
    }
 // </HACK>
 
+   //Added for BAMF to detect when the WiFi crashes.
+
    if (Check_For_Discovery_Message(message)) {
       return TRUE;
    }
@@ -190,11 +192,11 @@ int8_t Process_Incoming_Message(Message *message) {
       return Hack_Process_Start_Propagator(message);
    } else if (Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "request")) {
       if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "blink")) {
-Blink_Leds();
+         Blink_Leds();
          return TRUE;
       } else if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "reset")) {
          Power_Manager_Software_Reset();
-         return TRUE; //not really needed, we'll never come back from the reset...
+         return TRUE;     //not really needed, we'll never come back from the reset...
       }
       return Hack_Process_Start_Propagator(message);
    } else {

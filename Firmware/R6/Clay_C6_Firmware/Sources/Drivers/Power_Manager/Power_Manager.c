@@ -12,7 +12,7 @@
 #include "Clock.h"
 
 ////Macros ////////////////////////////////////////////////////////
-#define BUTTON_SHUTDOWN_HOLD_TIME_ms         6000
+#define BUTTON_SHUTDOWN_HOLD_TIME_ms         3000
 #define BUTTON_STARTUP_HOLD_TIME_ms         500
 
 ////Typedefs  /////////////////////////////////////////////////////

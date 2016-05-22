@@ -5,8 +5,13 @@
 
 #include "GPIO.h"
 
-int8_t Start_Light_Behavior ();
-bool Perform_Channel_Light_Effect (bool reverse);
+extern int8_t Start_Light_Behavior();
+extern bool Perform_Channel_Light_Effect(bool reverse);
+
+//TODO: added this stuff for BAMF day 2
+extern bool Channel_Light_Blast_Step();
+extern void Channel_Light_Program_Reset();
+extern void Channel_Light_Startup_Step();
 
 //todo: #define several LED colors (RGB_Color){0xFF,0xFF,0xFF}
 
@@ -26,10 +31,11 @@ typedef struct
       uint8_t B;
 } RGB_Color;
 
-typedef struct {
-	uint8_t number;
-	uint8_t enabled; // Specifies whether or not the channel being used.
-	RGB_Color color;
+typedef struct
+{
+      uint8_t number;
+      uint8_t enabled;     // Specifies whether or not the channel being used.
+      RGB_Color color;
 } Channel_Light;
 
 RGB_Color offColor;
@@ -64,12 +70,12 @@ extern void RGB_LED_SetState(RGB_LED LED, bool On, LED_Mode CurrentMax);
 extern void RGB_LED_SetColor(RGB_LED led, RGB_Color *output_color);
 extern void RGB_LED_UpdateOutput();
 
-extern void Set_Light_Color (Channel_Light *channel_light, uint8_t red, uint8_t green, uint8_t blue);
+extern void Set_Light_Color(Channel_Light *channel_light, uint8_t red, uint8_t green, uint8_t blue);
 
-int8_t Initialize_Channel_Lights ();
-void Reset_Channel_Lights ();
-int8_t Apply_Channel_Lights ();
+int8_t Initialize_Channel_Lights();
+void Reset_Channel_Lights();
+int8_t Apply_Channel_Lights();
 
-int8_t Initialize_Color_Palette ();
+int8_t Initialize_Color_Palette();
 
 #endif /* SOURCES_RGB_LED_RGB_LED_H_ */
