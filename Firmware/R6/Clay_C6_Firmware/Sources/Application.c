@@ -28,6 +28,7 @@ Message *outMessage = NULL;
 int status;
 char buffer2[128] = { 0 };
 
+#define WIFI_CONNECT_TIMEOUT_ms     20000 //20 seconds should be plenty.
 #define VBAT_ADC_SLOPE          7.97094E-5
 #define VBAT_ADC_OFFSET         3.20144E-2
 static double vBat;
@@ -48,6 +49,9 @@ LDD_TDeviceDataPtr ADC0_DeviceData;
 void Monitor_Periodic_Events();
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
 void Send_Mesh_Test_Message();
+
+//BAMF
+uint32_t wifi_reset_time = 0;
 
 //this code is used when we receive a request message to blink the LEDs. BAMF
 #define BLINK_INTERVAL_ms  50
@@ -160,28 +164,36 @@ void Initialize() {
 
    //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
    Perform_Status_LED_Effect();
+   Channel_Light_Startup_Step();
 
    if ((status = RGB_LED_Enable()) != TRUE) {
       // Failure
    }
+   Channel_Light_Startup_Step();
 
-   if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE) {
-      // Failure
-   }
+//   if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE) {
+//      // Failure
+//   }
+   Channel_Light_Startup_Step();
 
    if ((status == Buzzer_Enable()) != TRUE) {
       // Failure
    }
+   Channel_Light_Startup_Step();
 
    //TODO: move power monitor code into a library.
    // Initialize Power Monitor
    ADC0_DeviceData = ADC0_Init(NULL);
+   Channel_Light_Startup_Step();
 
    // Initialize Power Monitor
    ADC0_StartCalibration(ADC0_DeviceData);
-   while (!ADC0_GetMeasurementCompleteStatus(ADC0_DeviceData))
-      ;
+   while (!ADC0_GetMeasurementCompleteStatus(ADC0_DeviceData)) {
+      Channel_Light_Startup_Step();
+      Wait(10);
+   }
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
+   Channel_Light_Startup_Step();
 
    //HACK HACK HACK HACK HACK OH NO !!1 ELEVENS
    //TODO: DISABLED FOR BAMF
@@ -415,6 +427,7 @@ void Application(void) {
 }
 
 static bool request_status;
+static bool performed_wifi_led_blast = FALSE;
 
 //bool io_state;
 void Monitor_Periodic_Events() {
@@ -455,6 +468,31 @@ void Monitor_Periodic_Events() {
       Interactive_Assembly_Periodic_Call();
 
       // TODO: Perform any periodic actions (1 ms).
+   }
+
+   //HACK: added 10ms tick and the code in it for BAMF day 2
+   if (tick_10ms) {
+      tick_10ms = FALSE;
+      if (has_connection_to_wifi && !performed_wifi_led_blast) {
+         performed_wifi_led_blast = Channel_Light_Blast_Step();
+         if (performed_wifi_led_blast) {
+            Channel_Light_Program_Reset();
+         }
+      }
+   }
+
+   //HACK: added 50ms tick and the code in it for BAMF day 2
+   if (tick_50ms) {
+      tick_50ms = FALSE;
+
+      if (!has_connection_to_wifi) {
+         if ((Millis() - wifi_reset_time) > WIFI_CONNECT_TIMEOUT_ms) {
+            wifi_reset_time = Millis();
+            Enable_WiFi(ssid, password);
+            Channel_Light_Program_Reset();
+         }
+         Channel_Light_Startup_Step();
+      }
    }
 
    if (tick_250ms) {
