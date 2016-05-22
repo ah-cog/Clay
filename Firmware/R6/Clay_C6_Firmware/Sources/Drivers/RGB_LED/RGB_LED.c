@@ -260,9 +260,13 @@ RGB_Color current_color = { 0, 0, 0 };
 
 void Channel_Light_Startup_Step() {
 
+   //TODO: in the event that we haven't gotten a connection on startup, this starts to look pretty samey, as it gets into the middle range of the color value.
+   //           To fix it either:
+   //               cycle a brighter LED around
+   //               increase the increment value so that it is still obviously increasing.
    RGB_LED_SetColor(current_led, &current_color);
    if (current_led == CHANNEL_COUNT - 1) {
-      current_blue_value = (current_blue_value + 1) % 0x100;
+      current_blue_value = (current_blue_value + 10) % 100;
       current_color.B = current_blue_value;
    }
    current_led = (current_led + 1) % CHANNEL_COUNT;
@@ -296,9 +300,12 @@ bool Channel_Light_Blast_Step() {
    return rval;
 }
 
+uint8_t current_red_value = 0xFF;
+
 void Channel_Light_Program_Reset() {
    current_led = 0;
    current_blue_value = 0;
+   current_red_value = 0xff;
    current_color.R = 0;
    current_color.G = 0;
    current_color.B = 0;
@@ -306,5 +313,20 @@ void Channel_Light_Program_Reset() {
 
    for (int i = 0; i < RGB_MAX; ++i) {
       RGB_LED_SetColor((RGB_LED) i, &current_color);
+   }
+}
+
+void Channel_Light_Countdown_Step() {
+
+   current_color.R = current_red_value;
+   current_color.G = 0;
+   current_color.B = 0;
+
+   for (int i = 0; i < CHANNEL_COUNT; ++i) {
+      RGB_LED_SetColor(i, &current_color);
+   }
+
+   if (current_red_value > 0) {
+      current_red_value -= 5;
    }
 }

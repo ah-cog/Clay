@@ -12,6 +12,7 @@ extern bool Perform_Channel_Light_Effect(bool reverse);
 extern bool Channel_Light_Blast_Step();
 extern void Channel_Light_Program_Reset();
 extern void Channel_Light_Startup_Step();
+extern void Channel_Light_Countdown_Step();
 
 //todo: #define several LED colors (RGB_Color){0xFF,0xFF,0xFF}
 

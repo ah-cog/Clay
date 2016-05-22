@@ -57,7 +57,7 @@ void Power_Manager_Power_Off() {
 
    //wait for button to be released so we don't immediately turn on again.
    while (Button_Get_Status()) {
-      Wait(10);
+      Channel_Light_Countdown_Step();
    }
 
    PowerOn_PutVal(power_on_data, 0);
