@@ -131,6 +131,16 @@ int8_t Process_Incoming_Message(Message *message) {
 // </HACK>
 
    //Added for BAMF to detect when the WiFi crashes.
+   //TODO: Needs more work on ESP side. we never receive this message.
+//   if (Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "announce")
+//       && Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "device")
+//       && Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "wifi")) {
+//      has_connection_to_wifi = FALSE;
+//      has_received_internet_address = FALSE;
+//      has_generated_discovery_broadcast_address = FALSE;
+//      has_enabled_broadcast = FALSE;
+//      return TRUE;
+//   }
 
    if (Check_For_Discovery_Message(message)) {
       return TRUE;
