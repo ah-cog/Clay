@@ -64,6 +64,9 @@ static void add_datapoint(quaternion * quat, mpu_values * mpu_raw);
 
 //initalizes mpu and dmp. returns 1 if successful, 0 if not.
 uint8_t Start_MPU9250() {
+
+   //TODO: need to initialize the IMU pins now.
+
    raw_head = 0;
    raw_count = 0;
    raw_tail = 0;
@@ -74,9 +77,11 @@ uint8_t Start_MPU9250() {
 
    //TODO: is the CS necessary here?
    //toggle these lines to ensure the bus is in an idle state.
-   IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 1);
+   IMU_FSYNC_PutVal(NULL, 1);
    Wait(5);
-   IMU_FSYNC_PutVal(IMU_FSYNC_DeviceData, 0);
+   IMU_FSYNC_PutVal(NULL, 0);
+
+   return 0;
 
    ///initialize mpu driver from invensense. see arm project included in the library download zip for more info.
    int8_t status = !mpu_init(NULL);

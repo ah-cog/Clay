@@ -16,6 +16,7 @@
 #include "Message.h"
 #include "Message_Queue.h"
 #include "Services/Interactive_Assembly.h"
+#include "GPIO.h"
 
 #define TRIGGER_TYPE_MESSAGE 1
 #define TRIGGER_TYPE_CHANNEL 2
@@ -32,7 +33,7 @@ typedef struct Trigger {
 	char *message_content;
 
 	// for "channel" type
-	Channel *channel; // TODO: Channel_Profile
+	struct Channel *channel; // TODO: Channel_Profile
 	// int8_t channel_trigger_type; // 0 = on low, 1 = on high, 2 = on change (for digital)
 
 } Trigger;

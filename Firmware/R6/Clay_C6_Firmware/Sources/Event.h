@@ -24,6 +24,7 @@
 
 extern Event* Create_Event (char *uuid, Action *action, char *state);
 extern int8_t Delete_Event (Event *event);
+extern void Set_Event_Context (Event *event, char *context);
 extern void Set_Event_State (Event *event, char *state);
 
 extern void Set_Event_Trigger (Event *event, Trigger *trigger);

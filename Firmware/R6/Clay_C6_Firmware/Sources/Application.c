@@ -17,6 +17,9 @@
 #include "PowerOn.h"
 #include "Button.h"
 
+#include "UDP_Discovery_temp.h"
+#include "Interactive_Assembly.h"
+
 #include "Power_Manager.h"
 
 static bool led_1_state;
@@ -25,6 +28,7 @@ Message *outMessage = NULL;
 int status;
 char buffer2[128] = { 0 };
 
+#define WIFI_CONNECT_TIMEOUT_ms     20000 //20 seconds should be plenty.
 #define VBAT_ADC_SLOPE          7.97094E-5
 #define VBAT_ADC_OFFSET         3.20144E-2
 static double vBat;
@@ -46,6 +50,23 @@ void Monitor_Periodic_Events();
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
 void Send_Mesh_Test_Message();
 
+//BAMF
+uint32_t wifi_reset_time = 0;
+
+//this code is used when we receive a request message to blink the LEDs. BAMF
+#define BLINK_INTERVAL_ms  50
+#define BLINK_COUNT        3
+int32_t blink_count;
+uint32_t blink_time;
+bool blunk;
+
+//BAMF led blink
+void Blink_Leds() {
+   blunk = TRUE;
+   blink_time = Millis();
+   blink_count = BLINK_COUNT;
+}
+
 void Initialize() {
 
    vBat = 0;
@@ -54,11 +75,14 @@ void Initialize() {
 
    // Initialize Clay
 
-   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
-//   Button_Register_Press_Response(Send_Mesh_Test_Message);
-//   Button_Register_Release_Response(Send_Mesh_Test_Message);
+//   Button_Register_Press_Response(Blink_Leds);
+//   Button_Register_Hold_Response(5000, Software_Reset);
+   //   Button_Register_Press_Response(Send_Mesh_Test_Message);
+   //   Button_Register_Release_Response(Send_Mesh_Test_Message);
 
    Initialize_Unit_UUID();
+
+   Enable_Observable_Interface();     // Enable Clay's observable interface service
 
    timeline = Create_Timeline("timeline-uuid");
 
@@ -88,30 +112,12 @@ void Initialize() {
 
    Power_Manager_Check_Startup();
 
-   // Status LEDs.
-
-   if ((status = LED_Enable()) != TRUE) {
+   // Message queue.
+   if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE) {
       // Failure
    }
 
-   Perform_Status_LED_Effect();
-
-   //TODO: troubleshoot MPU start with invensense drivers.
-   if ((status = Start_MPU9250()) != TRUE) {
-      // Failure
-   }
-
-   Initialize_Color_Palette();
-
-   if ((Initialize_Channel_Lights()) != TRUE) {
-      // Failure
-   }
-
-   if ((status = Start_Light_Behavior()) != TRUE) {
-      // Failure
-   }
-
-   if ((status = RGB_LED_Enable()) != TRUE) {
+   if ((status = Initialize_Message_Queue(&outgoingMessageQueue)) != TRUE) {
       // Failure
    }
 
@@ -126,40 +132,103 @@ void Initialize() {
       // Failure
    }
 
-   if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE) {
-      // Failure
-   }
-
-   if ((status == Buzzer_Enable()) != TRUE) {
-      // Failure
-   }
-
-   // Message queue.
-   if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE) {
-      // Failure
-   }
-
-   if ((status = Initialize_Message_Queue(&outgoingMessageQueue)) != TRUE) {
-      // Failure
-   }
+   //TODO: troubleshoot MPU start with invensense drivers.
+//   if ((status = Start_MPU9250()) != TRUE) {
+//      // Failure
+//   }
 
    if ((status = Enable_WiFi(ssid, password)) != TRUE) {     // if ((status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT)) != TRUE) {
       // Failure
    }
 
+   // Status LEDs.
+
+   if ((status = LED_Enable()) != TRUE) {
+      // Failure
+   }
+
+   Perform_Status_LED_Effect();
+
+   Initialize_Color_Palette();
+
+   if ((Initialize_Channel_Lights()) != TRUE) {
+      // Failure
+   }
+
+   //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
+   Perform_Status_LED_Effect();
+
+   if ((status = Start_Light_Behavior()) != TRUE) {
+      // Failure
+   }
+
+   //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
+   Perform_Status_LED_Effect();
+   Channel_Light_Startup_Step();
+
+   if ((status = RGB_LED_Enable()) != TRUE) {
+      // Failure
+   }
+   Channel_Light_Startup_Step();
+
+//   if ((status = Perform_Channel_Light_Effect(TRUE)) != TRUE) {
+//      // Failure
+//   }
+   Channel_Light_Startup_Step();
+
+   if ((status == Buzzer_Enable()) != TRUE) {
+      // Failure
+   }
+   Channel_Light_Startup_Step();
+
    //TODO: move power monitor code into a library.
    // Initialize Power Monitor
    ADC0_DeviceData = ADC0_Init(NULL);
+   Channel_Light_Startup_Step();
 
    // Initialize Power Monitor
    ADC0_StartCalibration(ADC0_DeviceData);
-   while (!ADC0_GetMeasurementCompleteStatus(ADC0_DeviceData))
-      ;
-   LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
-
-   if ((status = Enable_Interactive_Assembly()) != TRUE) {
-      // Failure
+   while (!ADC0_GetMeasurementCompleteStatus(ADC0_DeviceData)) {
+      Channel_Light_Startup_Step();
+      Wait(10);
    }
+   LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
+   Channel_Light_Startup_Step();
+
+   //HACK HACK HACK HACK HACK OH NO !!1 ELEVENS
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+//   if ((status = Enable_Interactive_Assembly()) != TRUE) {
+//      // Failure
+//   }
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+   //TODO: DISABLED FOR BAMF
+
+}
+
+// Device profile
+// TODO: Create a structure for the device profile
+Observable_Interface *observable_interface = NULL;
+char internet_address[32] = { 0 };
+
+void Enable_Observable_Interface() {
+   // <HACK>
+   // TODO: Consider giving each device a unique interface UUID and expose it.
+   char *device_uuid = Get_Unit_UUID();
+   // </HACK>
+   observable_interface = Create_Observable_Interface(device_uuid);     // e.g., "set interface <uuid> provider <uuid> observable <uuid> content <content>"
 }
 
 // TODO: Move these into Device_Status.h
@@ -168,6 +237,7 @@ int8_t has_received_internet_address = FALSE;
 int8_t has_generated_discovery_broadcast_address = FALSE;
 int8_t has_enabled_broadcast = FALSE;
 char broadcast_address[32];
+char local_address[32];
 
 void Discovery_Broadcast_Presence() {
 
@@ -217,77 +287,77 @@ void Application(void) {
 
       // TODO: Try processing the IMMEDIATE outgoing messages in the outgoing queue here! This will allow responding to incoming messages as soon as possible, using the queue.
 
-	   // Step state machine
-	         Wifi_State_Step();
+      // Step state machine
+      Wifi_State_Step();
 
-	         // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
-	         if (Has_Messages(&incomingWiFiMessageQueue)) {
-	            message = Dequeue_Message(&incomingWiFiMessageQueue);
+      // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
+      if (Has_Messages(&incomingWiFiMessageQueue)) {
+         message = Dequeue_Message(&incomingWiFiMessageQueue);
 
-	            message_status = Process_Incoming_Message(message);
+         message_status = Process_Incoming_Message(message);
 
-	            // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
-	            if (message_status == TRUE) {
-	               Delete_Message(message);
-	            } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
-	               // TODO: Process events on the timeline with the message, before dequeueing...
-	               Queue_Message(&incomingMessageQueue, message);
-	            }
-	         }
+         // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
+         if (message_status == TRUE) {
+            Delete_Message(message);
+         } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
+            // TODO: Process events on the timeline with the message, before dequeueing...
+            Queue_Message(&incomingMessageQueue, message);
+         }
+      }
 
-	         // Process the next incoming message on the system queue
-	         if (lock_timeline == FALSE) {
-	            if (Has_Messages(&incomingMessageQueue)) {
-	               message = Peek_Message(&incomingMessageQueue);
-	               lock_timeline = TRUE;
-	            }
-	         }
+      // Process the next incoming message on the system queue
+      if (lock_timeline == FALSE) {
+         if (Has_Messages(&incomingMessageQueue)) {
+            message = Peek_Message(&incomingMessageQueue);
+            lock_timeline = TRUE;
+         }
+      }
 
-	         // Perform action.
-	         if ((*timeline).current_event != NULL) {
-	       	 message_status = Process_Event (((*timeline).current_event));
+      // Perform action.
+      if ((*timeline).current_event != NULL) {
+         message_status = Process_Event(((*timeline).current_event));
 
-	            if (message_status != FALSE) {
+         if (message_status != FALSE) {
 
-	               // NOTE: Action was performed successfully.
+            // NOTE: Action was performed successfully.
 
-	               // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
-	            }
+            // TODO: When repeating actions, don't clobber previous changes, just ensure the state is set.
+         }
 
-	            if (message_status != 2) {
-	           	 // Go to the next action on the timeline
-	   			 if ((*((*timeline).current_event)).next != NULL) {
-	   				(*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
-	   			 } else {
+         if (message_status != 2) {
+            // Go to the next action on the timeline
+            if ((*((*timeline).current_event)).next != NULL) {
+               (*timeline).current_event = (*((*timeline).current_event)).next;     // Go to the next action.
+            } else {
 
-	   				// TODO: Remove message from the queue (if it was not a basic message)
-	   				if (lock_timeline == TRUE) {
-	   				   if (Has_Messages(&incomingMessageQueue)) {
-	   					  message = Dequeue_Message(&incomingMessageQueue);
-	   					  Delete_Message(message);
-	   					  lock_timeline = FALSE;
-	   				   }
-	   				}
+               // TODO: Remove message from the queue (if it was not a basic message)
+               if (lock_timeline == TRUE) {
+                  if (Has_Messages(&incomingMessageQueue)) {
+                     message = Dequeue_Message(&incomingMessageQueue);
+                     Delete_Message(message);
+                     lock_timeline = FALSE;
+                  }
+               }
 
-	   				(*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
-	   			 }
-	            }
+               (*timeline).current_event = (*timeline).first_event;     // Go to the start of the loop.
+            }
+         }
 
-	         } else {
+      } else {
 
-	            /*
-	             // Reset the channel states...
-	             Reset_Channels();
-	             Apply_Channels();
+         /*
+          // Reset the channel states...
+          Reset_Channels();
+          Apply_Channels();
 
-	             // ...the channel light states...
-	             Reset_Channel_Lights();
-	             Apply_Channel_Lights();
+          // ...the channel light states...
+          Reset_Channel_Lights();
+          Apply_Channel_Lights();
 
-	             // ...and the device states.
-	             // TODO: Reset any other device states.
-	             */
-	         }
+          // ...and the device states.
+          // TODO: Reset any other device states.
+          */
+      }
 
 //        // Perform operating system operations.
 //        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
@@ -356,10 +426,36 @@ void Application(void) {
    }
 }
 
+static bool request_status;
+static bool performed_wifi_led_blast = FALSE;
+
 //bool io_state;
 void Monitor_Periodic_Events() {
 
    // TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
+
+   if (blink_count > 0 && (Millis() - blink_time) > BLINK_INTERVAL_ms) {
+      interactive_assembly_using_lights = true;
+      for (int i = 0; i < CHANNEL_COUNT; ++i) {
+         if (blunk) {
+            Set_Light_Color(&proposed_light_profiles[i], 0, 0, 150);
+         } else {
+            Set_Light_Color(&proposed_light_profiles[i], 0, 0, 0);
+         }
+      }
+
+      if (!blunk) {
+         --blink_count;
+      }
+
+      // Apply the new light states
+      Apply_Channels();
+      Apply_Channel_Lights();
+      blink_time = Millis();
+      blunk = !blunk;
+
+      interactive_assembly_using_lights = blink_count > 0;
+   }
 
    if (tick_1ms) {
       tick_1ms = FALSE;
@@ -369,23 +465,38 @@ void Monitor_Periodic_Events() {
       Imu_Get_Data();
       Button_Periodic_Call();
       Channel_Periodic_Call();
-
-      // TODO: Put this in a callback timer...
-      if (button_mode_timeout > 0) {
-         button_mode_timeout--;
-
-         // Check if the button mode timer expired
-         if (button_mode_timeout == 0) {
-            Request_Reset_Button();
-         }
-      }
+      Interactive_Assembly_Periodic_Call();
 
       // TODO: Perform any periodic actions (1 ms).
    }
 
+   //HACK: added 10ms tick and the code in it for BAMF day 2
+   if (tick_10ms) {
+      tick_10ms = FALSE;
+      if (has_connection_to_wifi && !performed_wifi_led_blast) {
+         performed_wifi_led_blast = Channel_Light_Blast_Step();
+         if (performed_wifi_led_blast) {
+            Channel_Light_Program_Reset();
+         }
+      }
+   }
+
+   //HACK: added 50ms tick and the code in it for BAMF day 2
+   if (tick_50ms) {
+      tick_50ms = FALSE;
+
+      if (!has_connection_to_wifi) {
+         if ((Millis() - wifi_reset_time) > WIFI_CONNECT_TIMEOUT_ms) {
+            wifi_reset_time = Millis();
+            Enable_WiFi(ssid, password);
+            Channel_Light_Program_Reset();
+         }
+         Channel_Light_Startup_Step();
+      }
+   }
+
    if (tick_250ms) {
       tick_250ms = FALSE;
-
       // TODO: Perform any periodic actions (250 ms).
    }
 
@@ -396,39 +507,46 @@ void Monitor_Periodic_Events() {
       LED1_PutVal(NULL, led_2_state);
       led_2_state = !led_2_state;
 
-      // TODO: Perform any periodic actions (500 ms).
+// TODO: Perform any periodic actions (500 ms).
    }
 
    if (tick_1000ms) {
       tick_1000ms = FALSE;
 
-      // TODO: Perform any periodic action (1000 ms).
+// TODO: Perform any periodic action (1000 ms).
    }
 
    if (tick_3000ms) {
       tick_3000ms = FALSE;
 
-      // Request Wi-Fi status
+// Request Wi-Fi status
       if (!has_connection_to_wifi) {
-         WiFi_Request_Get_Connection_Status();
+         //6 second period.
+         if (request_status) {
+            request_status = false;
+            WiFi_Request_Get_Connection_Status();
+         } else {
+            request_status = true;
+         }
       }
 
-      // Once connected, get Internet address.
+// Once connected, get Internet address.
       if (has_connection_to_wifi && !has_received_internet_address) {
          WiFi_Request_Get_Internet_Address();
       }
 
-      // Once retreived address, generate broadcast address.
+// Once retreived address, generate broadcast address.
       if (has_received_internet_address && !has_generated_discovery_broadcast_address) {
          // TODO: Generate broadcast address based on received address
       }
 
-      // Once discovery broadcast address is generated and discovery is enabled, send discovery broadcast.
+// Once discovery broadcast address is generated and discovery is enabled, send discovery broadcast.
       if (has_generated_discovery_broadcast_address && has_enabled_broadcast) {
          Discovery_Broadcast_Presence();
+         Discovery_Broadcast_Presence_4446();
       }
 
-      // TODO: Perform any periodic actions (3000 ms).
+// TODO: Perform any periodic actions (3000 ms).
    }
 }
 

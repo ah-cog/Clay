@@ -6,6 +6,7 @@
 extern bool tick_50us;
 extern bool tick_1ms;
 extern bool tick_50ms;
+extern bool tick_10ms;
 extern bool tick_250ms;
 extern bool tick_500ms;
 extern bool tick_1000ms;

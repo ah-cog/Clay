@@ -29,6 +29,11 @@ extern int8_t has_received_internet_address;
 extern int8_t has_generated_discovery_broadcast_address;
 extern int8_t has_enabled_broadcast;
 extern char broadcast_address[32];
+extern char local_address[32];
+
+extern Observable_Interface *observable_interface;
+
+extern void Enable_Observable_Interface ();
 
 /**
  * Initializes the device.
@@ -39,5 +44,9 @@ void Initialize ();
  * Runs the application. This should be called only after calling Initialize().
  */
 void Application ();
+
+
+//HACK: the location, more than anything, I think is the hack. threw this in here for bay area maker faire. BAMF
+extern void Blink_Leds();
 
 #endif

@@ -56,8 +56,8 @@
 
 #define UINT32_SIZE_BYTES                            4
 
-#define CLAY_MESSAGE_LENGTH_MAX_BYTES                256                                   //4                     //16
-#define CLAY_MESSAGE_STRUCT_SIZE_BYTES               (CLAY_MESSAGE_LENGTH_MAX_BYTES + UINT32_SIZE_BYTES + SOCKADDR_IN_SIZE_BYTES) //total size 532
+#define CLAY_MESSAGE_LENGTH_MAX_BYTES                512
+#define CLAY_MESSAGE_STRUCT_SIZE_BYTES               CLAY_MESSAGE_LENGTH_MAX_BYTES + 200 //200 should be plenty for headers
 
 ////
 #define UDP_RX_TIMEOUT_MSEC                          100
@@ -78,8 +78,8 @@
 #define SERIAL_RX_BUFFER_SIZE_BYTES                  1024
 
 ///
-#define CLAY_RX_MESSAGE_QUEUE_SIZE                   15        //Messages pending to the uC
-#define CLAY_TX_MESSAGE_QUEUE_SIZE                   15        //Messages pending for transmission
+#define CLAY_RX_MESSAGE_QUEUE_SIZE                   5        //Messages pending to the uC
+#define CLAY_TX_MESSAGE_QUEUE_SIZE                   5        //Messages pending for transmission
 
 #define CLAY_SERIAL_MESSAGE_NEWLINE_COUNT            2
 
@@ -91,11 +91,11 @@
 #define TCP_RECEIVE_CONNECTION_TIMEOUT_ms			 20
 #define TCP_RECEIVE_PORT							 3000
 #define TCP_MAX_CONNECTIONS    						 5
-#define TCP_RECEIVE_TASK_BUFFER_SIZE 				 256
-#define CLAY_ADDR_STRING_BUF_LENGTH 				 25   //xxx.xxx.xxx.xxx:xxxxx
+#define TCP_RECEIVE_TASK_BUFFER_SIZE 				 1024
+#define CLAY_ADDR_STRING_BUF_LENGTH 				 30   //xxx.xxx.xxx.xxx:xxxxx
 
 #define TCP_TRANSMIT_CONNECT_TIMEOUT_ms				 20
-#define TCP_TX_BUFFER_SIZE_BYTES					 256
+#define TCP_TX_BUFFER_SIZE_BYTES					 1024
 
 //TODO: clean this mess up
 #define MAXIMUM_DESTINATION_LENGTH					100

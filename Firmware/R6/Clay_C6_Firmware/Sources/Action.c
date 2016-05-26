@@ -335,7 +335,7 @@ static int8_t Perform_Light_Action(char *state) {
    // e.g., FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF FFFFFF
 
    // Check if lights are being used by interactive assembly service
-   if (button_mode != 0) {
+   if (interactive_assembly_using_lights != 0) {
       return TRUE;
    }
 
@@ -376,12 +376,11 @@ static int8_t Perform_Signal_Action(char *state) {
 
    int8_t status = NULL;
    int8_t result = NULL;
-   char token[32] = { 0 };
+   char token[256] = { 0 }; // TODO: char token[32] = { 0 }; // <HACK />
    int tokenInt = 0;
    int i;
 
-   // e.g., "TITL TOTL TITL TOTL TITL TOTL TITL TOTL TITL TOTL TITL TOTL"
-   // e.g., "F--- TI-L F--- F--- F--- TO-L F--- F--- F--- TO-- F--- F---"
+   // e.g., "none none none 0.02,64450 none none none none none none none none"
 
    // Update the channels
    // TODO: Update the intermediate data structure and only update the actual LEDs when the state changes.
@@ -405,8 +404,6 @@ static int8_t Perform_Signal_Action(char *state) {
          updated_channel_profile[i].direction = CHANNEL_DIRECTION_INPUT;
       } else if (token[1] == 'O') {
          updated_channel_profile[i].direction = CHANNEL_DIRECTION_OUTPUT;
-      } else if (token[1] == '-') {
-         // NOTE: Don't change!
       }
 
       // Mode. Set channel mode. Is it a toggle (discrete switch), waveform (continuous analog signal), or pulse (e.g., PWM).
@@ -416,8 +413,6 @@ static int8_t Perform_Signal_Action(char *state) {
          updated_channel_profile[i].type = CHANNEL_TYPE_WAVEFORM;
       } else if (token[2] == 'P') {
          updated_channel_profile[i].type = CHANNEL_TYPE_PULSE;
-      } else if (token[2] == '-') {
-         // NOTE: Don't change!
       }
 
       // Value. Set channel value. This depends on the direction and mode of the channel.
@@ -426,10 +421,37 @@ static int8_t Perform_Signal_Action(char *state) {
             // Assign the channel's value based on the received data.
             if (token[3] == 'H') {
 //                   updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_ON;
-               updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_ON;
+
+//               updated_channel_profile[i].data->toggle_value = CHANNEL_VALUE_TOGGLE_ON;
+
+               // <OPTIMIZE>
+               Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+               Observable *observable = NULL;
+
+               // ...then get data from channel profile...
+               observable = Get_Observable (observable_set, "toggle_value");
+
+               // ...then update the date.
+               int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
+               Set_Observable_Content (observable, CONTENT_TYPE_INT32, &default_content_int32);
+               // </OPTIMIZE>
+
             } else if (token[3] == 'L') {
 //                   updated_channel_profile[i].value = CHANNEL_VALUE_TOGGLE_OFF;
-               updated_channel_profile[i].toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+
+//               updated_channel_profile[i].data->toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
+
+            	// <OPTIMIZE>
+			   Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+			   Observable *observable = NULL;
+
+			   // ...then get data from channel profile...
+			   observable = Get_Observable (observable_set, "toggle_value");
+
+			   // ...then update the date.
+			   int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_OFF;
+			   Set_Observable_Content (observable, CONTENT_TYPE_INT32, &default_content_int32);
+			   // </OPTIMIZE>
             } else {
                // ERROR: Error. An unrecognized toggle value was specified.
             }
@@ -445,15 +467,34 @@ static int8_t Perform_Signal_Action(char *state) {
             // 20 is the frequency in seconds, as a double (for now I'm treating it like us, because the app doesn't allow for setting a decimal)
             // 62000 is the counts for the duty cycle ratio.
 
-            char * frequency_str = token + 4;
-            char * duty_str = strchr(token, DEFAULT_TOKEN_PARAMETER_DELIMITER) + 1;
-            *(duty_str - 1) = '\0';     //do this so we can use atoi
+//            char * frequency_str = strtok (token, ",");
+//            char * duty_str = strtok (NULL, ","); //strchr(token, DEFAULT_TOKEN_PARAMETER_DELIMITER) + 1;
+//            // *(duty_str - 1) = '\0';     //do this so we can use atoi
+//
+//            Observable *observable = NULL;
+//            //Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+//            Observable_Set *observable_set = channel_profile[i].observable_set;
 
-            updated_channel_profile[i].pulse_period_s = ((float) atoi(frequency_str) / 1000000);
-            updated_channel_profile[i].pulse_duty = atoi(duty_str);
+//            THIS IS OVERWRITING THE VALUE PROPAGATED FROM THE INPUT! OPEN FOR 1 PROPAGATION EVERY TIME THIS EXECUTES (LIKE A DOOR)! CAN ALSO SET UP SO IT USES CONTINUOUS PROPAGATION.
+//            -- TEST THIS BY JUST COMMENTING OUT THE CODE BELOW THAT CALLS "Set_Observable_Content"
+
+            // e.g., "0.02,64450"
+
+            // TODO: Create "switched" "constant" observable in Event.c and ensure it is in place with the right value...
+            // TODO: Here, "switch" the observable, to "observe" a single value from it (do one-time propagation here, don't propagate it continuously) and .
+
+//            observable = Get_Observable (observable_set, "pulse_period_seconds");
+//            float content_float = strtof(frequency_str, NULL); // ((float) atoi(frequency_str) / 1000000);
+//            Set_Observable_Content (observable, CONTENT_TYPE_FLOAT, &content_float);
+//            updated_channel_profile[i].data->pulse_period_seconds = ((float) atoi(frequency_str) / 1000000);
+
+//            observable = Get_Observable (observable_set, "pulse_duty_cycle");
+//			int16_t content_int16 = (int16_t) atoi (duty_str);
+//			Set_Observable_Content (observable, CONTENT_TYPE_INT16, &content_int16);
+////            updated_channel_profile[i].data->pulse_duty_cycle = atoi(duty_str);
 
             //restore the delimiter in case it's needed later.
-            *(duty_str - 1) = DEFAULT_TOKEN_PARAMETER_DELIMITER;
+//            *(duty_str - 1) = DEFAULT_TOKEN_PARAMETER_DELIMITER;
 
          } else {
             // ERROR: Error. An invalid mode was specified.
@@ -462,11 +503,44 @@ static int8_t Perform_Signal_Action(char *state) {
          // NOTE: The channel direction is input, so its value is set by the pin's voltage state.
          if (updated_channel_profile[i].type == CHANNEL_TYPE_TOGGLE) {
             // Assign the channel value based on the physical pin state.
-            updated_channel_profile[i].toggle_value = Channel_Get_Data(updated_channel_profile[i].number);
+//        	 updated_channel_profile[i].data->toggle_value = Channel_Get_Data(updated_channel_profile[i].number);
+
+        	 // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+
+        	 // Get observable set...
+        	 Observable_Set *observable_set = channel_profile[i].observable_set;
+        	 Observable *observable = NULL;
+
+        	 // ...then get data from channel profile...
+        	 observable = Get_Observable (observable_set, "toggle_value");
+
+        	 // ...then update the date.
+        	 int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
+        	 Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
+
+        	 // </OPTIMIZE>
+
          } else if (updated_channel_profile[i].type == CHANNEL_TYPE_WAVEFORM) {
             // TODO: Assign the value differently, depending on the specified channel direction and mode.
             // TODO: Assign this based on the received data.
-            updated_channel_profile[i].waveform_value = Channel_Get_Data(updated_channel_profile[i].number);
+//            updated_channel_profile[i].data->waveform_sample_value = Channel_Get_Data(updated_channel_profile[i].number);
+
+            // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+
+            // Get observable set...
+            Observable_Set *observable_set = channel_profile[i].observable_set;
+            Observable *observable = NULL;
+
+            // ...then get data from channel profile...
+            observable = Get_Observable (observable_set, "waveform_sample_value");
+
+            // ...then update the date.
+//            int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
+            int32 waveform_sample_value = Get_Observable_Data_Int32 (observable);
+//            Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
+
+            // </OPTIMIZE>
+
          } else if (updated_channel_profile[i].type == CHANNEL_TYPE_PULSE) {
             // TODO: Assign the value differently, depending on the specified channel direction and mode.
             // TODO: Assign this based on the received data.

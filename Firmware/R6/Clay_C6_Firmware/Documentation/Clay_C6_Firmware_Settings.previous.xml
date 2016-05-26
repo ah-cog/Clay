@@ -55,8 +55,8 @@
             <boolgroup name="ROM/RAM Area" v="Enabled">
               <Name v="m_text" />
               <Qualifier v="RX" />
-              <Address v="22544" />
-              <Size v="1026032" />
+              <Address v="49168" />
+              <Size v="974832" />
             </boolgroup>
           </group>
           <group name="MemoryArea3">
@@ -2024,7 +2024,7 @@ Autoselect
       <Duty_device v="FTM1_C0V" />
       <Output_pin v="ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/RMII0_MDIO/MII0_MDIO/FTM1_QD_PHA" />
       <boolgroup name="Interrupt service/event" v="Disabled" />
-      <Period init="139 ms" runtime_settings="interval" low="0.533333 ms" high="139 ms" />
+      <Period init="139 ms" runtime_settings="interval" low="0.533333 &amp;#181;s" high="139 ms" />
       <Starting_pulse_width v="70 ms" />
       <Initial_polarity v="low" />
       <group name="Initialization">

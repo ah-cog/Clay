@@ -57,7 +57,7 @@ void Power_Manager_Power_Off() {
 
    //wait for button to be released so we don't immediately turn on again.
    while (Button_Get_Status()) {
-      Wait(10);
+      Channel_Light_Countdown_Step();
    }
 
    PowerOn_PutVal(power_on_data, 0);
@@ -69,6 +69,12 @@ void Power_Manager_Power_Off() {
 //looks at ADC to see if user wants to shut down.
 void Power_Manager_Check_For_Power_Off_Conditions() {
 
+}
+
+void Power_Manager_Software_Reset() {
+   SCB_AIRCR = SCB_AIRCR_VECTKEY(0x5FA) | SCB_AIRCR_SYSRESETREQ_MASK;
+   for (;;)
+      ;
 }
 
 ////Local implementations /////////////////////////////////////////

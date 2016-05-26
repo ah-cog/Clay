@@ -371,7 +371,7 @@ registers of the peripheral(s) configured by the component.
 **          Initialization                                 : 
 **            Init. direction                              : Output
 **            Init. value                                  : 0
-**            Auto initialization                          : yes
+**            Auto initialization                          : no
 **          Safe mode                                      : no
 <h1>
 \endcode

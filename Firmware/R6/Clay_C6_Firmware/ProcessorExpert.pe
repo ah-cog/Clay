@@ -3,10 +3,10 @@
   <Header>
     <Name>Clay_C6_Firmware</Name>
     <SavedBy>thebh</SavedBy>
-    <ModificationStamp>136</ModificationStamp>
+    <ModificationStamp>133</ModificationStamp>
     <Date>2016-01-26</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.12.2.RT7_b1550-0615</PEversion>
+    <PEversion>1.12.0.RT7_b1515-0427</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>100</ProjectCompNumb>
+    <ProjectCompNumb>98</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -52,7 +52,7 @@
     <ComponentUUID>com.freescale.processorexpert.processor.mk64fn1m0ll12</ComponentUUID>
     <BeanType>MK64FN1M0LL12</BeanType>
     <Name>Cpu</Name>
-    <CompNumb>99</CompNumb>
+    <CompNumb>12</CompNumb>
     <CompEnabled>true</CompEnabled>
     <GenCodeMode>ALWAYS_WRITE</GenCodeMode>
     <IconName>CPU_CHIP2</IconName>
@@ -1690,9 +1690,9 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value />
         <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        <EnumSymbVal>-1</EnumSymbVal>
+        <EnumSymbVal>8</EnumSymbVal>
+        <Index>0</Index>
       </ItemState>
       <ItemState>
         <ItemSymbol>DflashSettingsGrp</ItemSymbol>
@@ -3531,7 +3531,7 @@
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Index>0</Index>
+          <Index>1</Index>
           <Expanded>true</Expanded>
         </ItemState>
         <ItemState>
@@ -3647,8 +3647,8 @@
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Value>false</Value>
-          <Expanded>false</Expanded>
+          <Value>true</Value>
+          <Expanded>true</Expanded>
         </ItemState>
         <ItemState>
           <ItemSymbol>InitializationState</ItemSymbol>
@@ -3734,7 +3734,7 @@
         <ItemState>
           <ItemSymbol>C_RomRamList</ItemSymbol>
           <ReadOnly>false</ReadOnly>
-          <ListItemCount>6</ListItemCount>
+          <ListItemCount>5</ListItemCount>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Expanded>true</Expanded>
         </ItemState>
@@ -3892,7 +3892,7 @@
           <ItemSymbol>C_RomRamAddr2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>1040</Value>
+          <Value>49168</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
           <Area />
@@ -3901,7 +3901,7 @@
           <ItemSymbol>C_RomRamSize2</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>1047536</Value>
+          <Value>974832</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
         </ItemState>
@@ -3923,13 +3923,13 @@
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Value>false</Value>
+          <Value>true</Value>
           <Expanded>false</Expanded>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamName3</ItemSymbol>
           <ReadOnly>false</ReadOnly>
-          <Value>m_text_10000000</Value>
+          <Value>m_data_1FFF0000</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         </ItemState>
         <ItemState>
@@ -3937,8 +3937,8 @@
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Index>1</Index>
-          <EnumSymbVal>RX</EnumSymbVal>
+          <Index>2</Index>
+          <EnumSymbVal>RW</EnumSymbVal>
         </ItemState>
         <ItemState>
           <ItemSymbol>C_RomRamPhysicalType3</ItemSymbol>
@@ -3950,7 +3950,7 @@
           <ItemSymbol>C_RomRamAddr3</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>268435456</Value>
+          <Value>536805376</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
           <Area />
@@ -3959,7 +3959,7 @@
           <ItemSymbol>C_RomRamSize3</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>131072</Value>
+          <Value>65536</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
         </ItemState>
@@ -3987,7 +3987,7 @@
         <ItemState>
           <ItemSymbol>C_RomRamName4</ItemSymbol>
           <ReadOnly>false</ReadOnly>
-          <Value>m_data_1FFF0000</Value>
+          <Value>m_data</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
         </ItemState>
         <ItemState>
@@ -4008,7 +4008,7 @@
           <ItemSymbol>C_RomRamAddr4</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>536805376</Value>
+          <Value>536870912</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
           <Area />
@@ -4017,70 +4017,12 @@
           <ItemSymbol>C_RomRamSize4</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>65536</Value>
-          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Base>HEX</Base>
-        </ItemState>
-        <ItemState>
-          <ItemSymbol>C_RomRamGroupContent4</ItemSymbol>
-          <ReadOnly>false</ReadOnly>
-          <Value>(string list)</Value>
-          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <StrgList lines_count="0" />
-        </ItemState>
-        <ItemState>
-          <ItemSymbol>C_MemoryArea5</ItemSymbol>
-          <ReadOnly>false</ReadOnly>
-          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Expanded>true</Expanded>
-        </ItemState>
-        <ItemState>
-          <ItemSymbol>C_RomRamArea5</ItemSymbol>
-          <ReadOnly>false</ReadOnly>
-          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Value>true</Value>
-          <Expanded>false</Expanded>
-        </ItemState>
-        <ItemState>
-          <ItemSymbol>C_RomRamName5</ItemSymbol>
-          <ReadOnly>false</ReadOnly>
-          <Value>m_data</Value>
-          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        </ItemState>
-        <ItemState>
-          <ItemSymbol>C_RomRamQualifier5</ItemSymbol>
-          <ReadOnly>false</ReadOnly>
-          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Index>2</Index>
-          <EnumSymbVal>RW</EnumSymbVal>
-        </ItemState>
-        <ItemState>
-          <ItemSymbol>C_RomRamPhysicalType5</ItemSymbol>
-          <ReadOnly>false</ReadOnly>
-          <Value>RAM</Value>
-          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-        </ItemState>
-        <ItemState>
-          <ItemSymbol>C_RomRamAddr5</ItemSymbol>
-          <ReadOnly>false</ReadOnly>
-          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-          <Value>536870912</Value>
-          <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
-          <Base>HEX</Base>
-          <Area />
-        </ItemState>
-        <ItemState>
-          <ItemSymbol>C_RomRamSize5</ItemSymbol>
-          <ReadOnly>false</ReadOnly>
-          <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
           <Value>196608</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
           <Base>HEX</Base>
         </ItemState>
         <ItemState>
-          <ItemSymbol>C_RomRamGroupContent5</ItemSymbol>
+          <ItemSymbol>C_RomRamGroupContent4</ItemSymbol>
           <ReadOnly>false</ReadOnly>
           <Value>(string list)</Value>
           <ItemWasNeverEnabledInChgScript>true</ItemWasNeverEnabledInChgScript>
@@ -4266,7 +4208,7 @@
     <CompNumb>3</CompNumb>
     <NodeName>FLASH</NodeName>
     <CnfgEnabled>true</CnfgEnabled>
-    <TargetCPU>99</TargetCPU>
+    <TargetCPU>12</TargetCPU>
     <ConfigurationComment lines_count="0" />
     <BoolList_FpgaConfig>
       <Count>0</Count>
@@ -4283,63 +4225,63 @@
       <Value3>true</Value3>
       <ItemId4>9</ItemId4>
       <Value4>true</Value4>
-      <ItemId5>13</ItemId5>
+      <ItemId5>12</ItemId5>
       <Value5>true</Value5>
-      <ItemId6>14</ItemId6>
+      <ItemId6>13</ItemId6>
       <Value6>true</Value6>
-      <ItemId7>18</ItemId7>
+      <ItemId7>14</ItemId7>
       <Value7>true</Value7>
-      <ItemId8>19</ItemId8>
+      <ItemId8>18</ItemId8>
       <Value8>true</Value8>
-      <ItemId9>20</ItemId9>
+      <ItemId9>19</ItemId9>
       <Value9>true</Value9>
-      <ItemId10>21</ItemId10>
+      <ItemId10>20</ItemId10>
       <Value10>true</Value10>
-      <ItemId11>22</ItemId11>
+      <ItemId11>21</ItemId11>
       <Value11>true</Value11>
-      <ItemId12>23</ItemId12>
+      <ItemId12>22</ItemId12>
       <Value12>true</Value12>
-      <ItemId13>26</ItemId13>
+      <ItemId13>23</ItemId13>
       <Value13>true</Value13>
-      <ItemId14>27</ItemId14>
+      <ItemId14>26</ItemId14>
       <Value14>true</Value14>
-      <ItemId15>28</ItemId15>
+      <ItemId15>27</ItemId15>
       <Value15>true</Value15>
-      <ItemId16>29</ItemId16>
+      <ItemId16>28</ItemId16>
       <Value16>true</Value16>
-      <ItemId17>33</ItemId17>
+      <ItemId17>29</ItemId17>
       <Value17>true</Value17>
-      <ItemId18>36</ItemId18>
+      <ItemId18>33</ItemId18>
       <Value18>true</Value18>
-      <ItemId19>76</ItemId19>
+      <ItemId19>36</ItemId19>
       <Value19>true</Value19>
-      <ItemId20>77</ItemId20>
+      <ItemId20>76</ItemId20>
       <Value20>true</Value20>
-      <ItemId21>78</ItemId21>
+      <ItemId21>77</ItemId21>
       <Value21>true</Value21>
-      <ItemId22>79</ItemId22>
+      <ItemId22>78</ItemId22>
       <Value22>true</Value22>
-      <ItemId23>85</ItemId23>
+      <ItemId23>79</ItemId23>
       <Value23>true</Value23>
-      <ItemId24>86</ItemId24>
+      <ItemId24>85</ItemId24>
       <Value24>true</Value24>
-      <ItemId25>87</ItemId25>
-      <Value25>false</Value25>
-      <ItemId26>88</ItemId26>
-      <Value26>true</Value26>
-      <ItemId27>89</ItemId27>
+      <ItemId25>86</ItemId25>
+      <Value25>true</Value25>
+      <ItemId26>87</ItemId26>
+      <Value26>false</Value26>
+      <ItemId27>88</ItemId27>
       <Value27>true</Value27>
-      <ItemId28>90</ItemId28>
-      <Value28>false</Value28>
-      <ItemId29>91</ItemId29>
-      <Value29>true</Value29>
-      <ItemId30>93</ItemId30>
-      <Value30>false</Value30>
-      <ItemId31>94</ItemId31>
-      <Value31>true</Value31>
-      <ItemId32>97</ItemId32>
+      <ItemId28>89</ItemId28>
+      <Value28>true</Value28>
+      <ItemId29>90</ItemId29>
+      <Value29>false</Value29>
+      <ItemId30>91</ItemId30>
+      <Value30>true</Value30>
+      <ItemId31>93</ItemId31>
+      <Value31>false</Value31>
+      <ItemId32>94</ItemId32>
       <Value32>true</Value32>
-      <ItemId33>99</ItemId33>
+      <ItemId33>97</ItemId33>
       <Value33>true</Value33>
     </BoolList_BeanConfig>
     <BoolList_TaskConfig>
@@ -28780,8 +28722,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>SafeMode</ItemSymbol>
@@ -29230,8 +29172,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <Value>true</Value>
+        <Index>1</Index>
+        <Value>false</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>EventsInitStateGrp</ItemSymbol>
@@ -32758,7 +32700,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
-        <LastSelection>true</LastSelection>
+        <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ConnectPin</UsrMethodName>
       </ItemState>
@@ -33574,7 +33516,7 @@
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <Index>0</Index>
         <Value>true</Value>
-        <LastSelection>true</LastSelection>
+        <LastSelection>false</LastSelection>
         <LastUserSel>yes</LastUserSel>
         <UsrMethodName>ConnectPin</UsrMethodName>
       </ItemState>
@@ -37892,7 +37834,7 @@
         <InitValue>139 ms</InitValue>
         <Precision>0.03333</Precision>
         <PrecInProc>false</PrecInProc>
-        <LowLimit>0.533333 ms</LowLimit>
+        <LowLimit>0.533333 us</LowLimit>
         <HighLimit>139 ms</HighLimit>
         <List lines_count="0" />
         <UnitText>ms</UnitText>
