@@ -55,6 +55,7 @@ typedef struct
 } Connect_Task_Args;
 
 ////Globals   /////////////////////////////////////////////////////
+bool task_running = false;
 
 ////Local vars/////////////////////////////////////////////////////
 static int32 listen_sock;
@@ -83,7 +84,6 @@ static uint32 last_tcp_activity_time;
 static uint32 tcp_connection_timeout_us = 2500000;
 
 static bool listening;
-static bool task_running = false;
 static bool opening_connection = false;
 
 static Message_Type connection_type;
@@ -147,7 +147,6 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 
 		if (TCP_combined_handle != NULL)
 		{
-//			DEBUG_Print("tcp task started");
 			task_running = true;
 		}
 	}
@@ -161,11 +160,8 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 
 void ICACHE_RODATA_ATTR TCP_Combined_Deinit()
 {
-//	DEBUG_Print("tcp deinit");
-
 	if (task_running)
 	{
-
 		connected = false;
 
 		Data_Disconnect();
@@ -614,21 +610,15 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 
 	if (rval)
 	{
-//		DEBUG_Print("match");
-
 		if (connection_type == MESSAGE_TYPE_HTTP
 				&& (m->content_length) <= MAXIMUM_MESSAGE_LENGTH - 19) //get adds on this much
 		{
-//			DEBUG_Print("http");
-
 			taskENTER_CRITICAL();
 			rval = Prepare_Http_Message(m);
 			taskEXIT_CRITICAL();
 		}
 		else
 		{
-//			DEBUG_Print("tcp");
-
 			taskENTER_CRITICAL();
 			length = (size_t) Serialize_Message_Content(m, transmit_data,
 			TRANSMIT_DATA_SIZE);
@@ -643,31 +633,15 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 
 			if (connection_type == MESSAGE_TYPE_HTTP)
 			{
-//				taskENTER_CRITICAL();
-//				printf("send http to [%s] [%d] bytes: \r\n[%s]\r\n",
-//						remote_address_string, m->content_length, m->content);
-//				taskEXIT_CRITICAL();
-
 				rval = lwip_write(destination_socket, m->content,
 						m->content_length) == m->content_length;
 
-//				taskENTER_CRITICAL();
-//				printf("send of %d %s\r\n", m->content_length,
-//						rval ? "ok" : "failed");
-//				taskEXIT_CRITICAL();
+				taskYIELD();
 			}
 			else
 			{
-//				DEBUG_Print("send tcp");
-
 				rval = lwip_write(destination_socket, transmit_data, length)
 						== length;
-
-//				taskENTER_CRITICAL();
-//				printf("send of %d %s\r\n", m->content_length,
-//						rval ? "ok" : "failed");
-//				taskEXIT_CRITICAL();
-
 			}
 
 			taskYIELD();
@@ -676,7 +650,8 @@ static ICACHE_RODATA_ATTR bool Send_Message(int32 destination_socket,
 			{
 				int32 error = 0;
 				uint32 optionLength = sizeof(error);
-				int getReturn = lwip_getsockopt(destination_socket, SOL_SOCKET,
+				int getReturn = lwip_getsockopt(destination_socket,
+				SOL_SOCKET,
 				SO_ERROR, &error, &optionLength);
 
 //				taskENTER_CRITICAL();
@@ -1081,7 +1056,13 @@ static bool ICACHE_RODATA_ATTR Prepare_Http_Message(Message * m)
 
 	if (start_of_uri != NULL)
 	{
-		m->content_length = sprintf(m->content, http_get_format, start_of_uri);
+		char * temp = zalloc(
+				strlen(m->destination) + strlen(http_get_format) + 10);
+
+		m->content_length = sprintf(temp, http_get_format, start_of_uri);
+		Set_Message_Content(m, temp, strlen(temp));
+
+		free(temp);
 
 		rval = true;
 	}

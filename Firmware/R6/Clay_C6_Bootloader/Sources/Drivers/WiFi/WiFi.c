@@ -23,7 +23,7 @@ Message *incomingWiFiMessageQueue = NULL;
 Message *outgoingWiFiMessageQueue = NULL;
 
 #define WIFI_SERIAL_OUT_BUFFER_LENGTH           1024
-#define WIFI_SERIAL_IN_BUFFER_LENGTH            1024
+#define WIFI_SERIAL_IN_BUFFER_LENGTH            2048
 #define INTERRUPT_RX_TIMEOUT_MS     3000
 #define INTERRUPT_TX_TIMEOUT_MS     1000
 
@@ -68,10 +68,10 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 
    Wifi_Message_Available = FALSE;
 
-   EnterCritical()
+//   EnterCritical()
    ;
    Multibyte_Ring_Buffer_Init(&wifi_multibyte_ring, WIFI_SERIAL_IN_BUFFER_LENGTH);
-   ExitCritical();
+//   ExitCritical();
 
    // Initialize the ESP8266 device data structure
    deviceData.handle = ESP8266_Serial_Init(&deviceData);
@@ -152,28 +152,28 @@ void Wifi_State_Step() {
          } else {
             message_serial = NULL;
 
-            EnterCritical()
+//            EnterCritical()
             ;
             dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(&wifi_multibyte_ring,
                                                                                                  &message_serial);
-            ExitCritical();
+//            ExitCritical();
 
             if (message_serial != NULL) {
                State = Deserialize_Received_Message;
                message = NULL;
             } else {
 
-               EnterCritical()
+//               EnterCritical()
                ;
                uint32_t free_size = Multibyte_Ring_Buffer_Get_Free_Size(&wifi_multibyte_ring);
-               ExitCritical();
+//               ExitCritical();
 
                if (free_size < 1) {
                   //didn't find a message, so the buffer's full of garbage. throw it out.
-                  EnterCritical()
+//                  EnterCritical()
                   ;
                   Multibyte_Ring_Buffer_Reset(&wifi_multibyte_ring);
-                  ExitCritical();
+//                  ExitCritical();
                }
             }
          }
@@ -183,7 +183,9 @@ void Wifi_State_Step() {
 
       case Deserialize_Received_Message: {
 
+//         EnterCritical();
          message = Deserialize_Message_With_Message_Header(message_serial);
+//         ExitCritical();
          free(message_serial);
 
          if (message != NULL) {
@@ -449,31 +451,31 @@ static bool WiFi_Send_Command(char * command, char ** args, int arg_count) {
       buff_length += strlen(args[i]) + 1;     //+1 for comma;
    }
 
-   EnterCritical()
+//   EnterCritical()
    ;
    send_buffer = calloc(buff_length, sizeof(char));
-   ExitCritical();
+//   ExitCritical();
 
-   EnterCritical()
+//   EnterCritical()
    ;
    sprintf(send_buffer, "%s ", command);
-   ExitCritical();
+//   ExitCritical();
 
    for (int i = 0; i < arg_count; ++i) {
 
-      EnterCritical()
+//      EnterCritical()
       ;
       strcat(send_buffer, args[i]);
-      ExitCritical();
+//      ExitCritical();
       if (i < arg_count - 1) {
-         EnterCritical()
+//         EnterCritical()
          ;
          strcat(send_buffer, arg_delimiter);
-         ExitCritical();
+//         ExitCritical();
       }
    }
 
-   EnterCritical()
+//   EnterCritical()
    ;
    message = Create_Message();
    Set_Message_Type(message, "command");
@@ -481,7 +483,7 @@ static bool WiFi_Send_Command(char * command, char ** args, int arg_count) {
    Set_Message_Source(message, "none");
    Set_Message_Content_Type(message, "text");
    Set_Message_Content(message, send_buffer, strlen(send_buffer));
-   ExitCritical();
+//   ExitCritical();
 
    free(send_buffer);
 

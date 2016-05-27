@@ -133,6 +133,14 @@ void Set_Message_Destination(Message *message, const char *address)
 void Set_Message_Content(Message * message, const char *content,
 		uint32_t content_length)
 {
+	if ((*message).content != NULL)
+	{
+		free((*message).content);
+		(*message).content = NULL;
+
+		(*message).content_length = 0;
+		(*message).content_checksum = 0;
+	}
 
 	(*message).content_length = content_length;
 

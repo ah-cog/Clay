@@ -1,4 +1,7 @@
 ////Includes //////////////////////////////////////////////////////
+#include "PE_Types.h"
+#include "CPU_Init.h"
+
 #include "MK64F12.h"
 #include "Clock.h"
 #include "WiFi.h"
@@ -244,6 +247,7 @@ uint8_t Update_Firmware() {
    int bytes_received = 0;     // Total number of verified bytes received so far.
    int bytes_written = 0;     // Total number of bytes written to flash.
    Message * response_message;
+   int retry_count = 0;
 
    char uri_parameters[64] = { 0 };
 
@@ -301,44 +305,53 @@ uint8_t Update_Firmware() {
 //		return result = TRUE;
 
    }
+   while (retry_count < 3) {
 
-   // Retrieve firmware if is hasn't yet been received in its entirety.
-   while (bytes_received < firmware_size) {
+      // Retrieve firmware if is hasn't yet been received in its entirety.
+      while (bytes_received < firmware_size) {
 
-      start_byte = block_index * block_size;     // Determine the first byte to receive in the block based on the current block index.
-      sprintf(uri_parameters, "/clay/firmware/?startByte=%d&byteCount=%d", start_byte, block_size);
-      response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uri_parameters),
-                                                1,
-                                                2500);
-
-      if (response_message != NULL) {
-         bytes_received += response_message->content_length;
-
-         Write_Firmware_Bytes(APP_START_ADDR + start_byte, response_message->content, block_size);
-
+         start_byte = block_index * block_size;     // Determine the first byte to receive in the block based on the current block index.
+         sprintf(uri_parameters, "/clay/firmware/?startByte=%d&byteCount=%d", start_byte, block_size);
+         response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS,
+                                                                           local_address,
+                                                                           uri_parameters),
+                                                   1,
+                                                   2500);
          // TODO: Implement per-block length/checksum fields on server messages.
 
-         //verify message
-         //retry if necessary
-         // Update the number of received bytes.
-         // Write the received bytes to application memory in flash.
+         if (response_message != NULL) {
+            bytes_received += response_message->content_length;
 
-         Delete_Message(response_message);
-         response_message = NULL;
+            Write_Firmware_Bytes(APP_START_ADDR + start_byte, response_message->content, block_size);
 
-         // Advance to the next byte.
-         block_index = block_index + 1;
+            Delete_Message(response_message);
+            response_message = NULL;
+
+            Message * m = Dequeue_Message(&incomingWiFiMessageQueue);
+
+            while (m != NULL) {
+               Delete_Message(m);
+               m = Dequeue_Message(&incomingWiFiMessageQueue);
+            }
+
+            Multibyte_Ring_Buffer_Reset(&wifi_multibyte_ring);
+
+            // Advance to the next byte.
+            ++block_index;
+         }
       }
-   }
 
-   if (Verify_Firmware()) {
-      // The firmware updated successfully, so reset the flag indicating a new firmware update is available.
-      SharedData.ApplicationUpdateAvailable = FALSE;
-      SharedData.UpdateApplication = FALSE;
+      if (Verify_Firmware()) {
+         // The firmware updated successfully, so reset the flag indicating a new firmware update is available.
+         SharedData.ApplicationUpdateAvailable = FALSE;
+         SharedData.UpdateApplication = FALSE;
 
-      result = TRUE;
-   } else {
-      //start over. max retries?
+         result = TRUE;
+      } else {
+         bytes_received = 0;
+         block_index = 0;
+         ++retry_count;
+      }
    }
 
    return result;

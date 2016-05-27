@@ -13,9 +13,6 @@
 #include "Message_Queue.h"
 #include "Multibyte_Ring_Buffer.h"
 
-#define WIFI_SERIAL_OUT_BUFFER_LENGTH           1024
-#define WIFI_SERIAL_IN_BUFFER_LENGTH            1024
-
 typedef enum
 {
    Enable,

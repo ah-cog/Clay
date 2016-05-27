@@ -29,28 +29,6 @@ RM := rm -rf
 -include Sources/subdir.mk
 -include Project_Settings/Startup_Code/subdir.mk
 -include Generated_Code/subdir.mk
--include Debug/Static_Code/System/subdir.mk
--include Debug/Sources/Utilities/subdir.mk
--include Debug/Sources/Services/subdir.mk
--include Debug/Sources/Drivers/WiFi/subdir.mk
--include Debug/Sources/Drivers/RGB_LED/subdir.mk
--include Debug/Sources/Drivers/Power_Manager/subdir.mk
--include Debug/Sources/Drivers/Mesh/subdir.mk
--include Debug/Sources/Drivers/LEDs/subdir.mk
--include Debug/Sources/Drivers/IMU/libmplmpu/core/mllite/subdir.mk
--include Debug/Sources/Drivers/IMU/libmplmpu/core/eMPL-hal/subdir.mk
--include Debug/Sources/Drivers/IMU/libmplmpu/core/driver/eMPL/subdir.mk
--include Debug/Sources/Drivers/IMU/subdir.mk
--include Debug/Sources/Drivers/I2C/subdir.mk
--include Debug/Sources/Drivers/GPIO/subdir.mk
--include Debug/Sources/Drivers/Clock/subdir.mk
--include Debug/Sources/Drivers/Buzzer/subdir.mk
--include Debug/Sources/Drivers/Button/subdir.mk
--include Debug/Sources/Demo/subdir.mk
--include Debug/Sources/subdir.mk
--include Debug/Project_Settings/Startup_Code/subdir.mk
--include Debug/Generated_Code/subdir.mk
--include Debug/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -87,6 +65,9 @@ endif
 SECONDARY_FLASH += \
 Clay_C6_Firmware.bin \
 
+SECONDARY_SIZE += \
+Clay_C6_Firmware.siz \
+
 
 # All Target
 all: Clay_C6_Firmware.elf secondary-outputs
@@ -105,12 +86,18 @@ Clay_C6_Firmware.bin: Clay_C6_Firmware.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
+Clay_C6_Firmware.siz: Clay_C6_Firmware.elf
+	@echo 'Invoking: Cross ARM GNU Print Size'
+	arm-none-eabi-size --format=berkeley -x --totals "Clay_C6_Firmware.elf"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(S_UPPER_DEPS) Clay_C6_Firmware.elf
+	-$(RM) $(SECONDARY_SIZE)$(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(S_UPPER_DEPS) Clay_C6_Firmware.elf
 	-@echo ' '
 
-secondary-outputs: $(SECONDARY_FLASH)
+secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_SIZE)
 
 .PHONY: all clean dependents
 .SECONDARY:

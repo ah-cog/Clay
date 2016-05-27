@@ -159,14 +159,15 @@ void Application(void) {
 //static char source_addr[] = "192.168.1.21:3000";
 //
 //static char text_content_type[] = "text";
-//static char text_message_content[] = "muhuhuhueessagueaaaay!!!";
+//static char text_message_content[] = "GET /clay/firmware/?startByte=%d&byteCount=256 HTTP/1.1";
 //static uint32_t text_message_length;
 //
 //static uint32_t bootloader_index = 0;
 //static char http_type_str[] = "http";
-//static const char http_dest_addr_format[] = "107.170.180.158:3000/clay/firmware/?startByte=%d&byteCount=256";
+////static const char http_dest_addr_format[] = "107.170.180.158:3000/clay/firmware/?startByte=%d&byteCount=256";
+//static const char http_dest_addr_format[] = "192.168.1.3:3000/clay/firmware/?startByte=%d&byteCount=256";
 //static char http_dest_addr[100];
-//static char http_source_addr[] = "192.168.1.21:3000";
+//static char http_source_addr[] = "192.168.1.5:3000";
 //
 //static char http_text_content_type[] = "text";
 //static char http_text_message_content[] = "none";
@@ -278,7 +279,7 @@ void Application(void) {
 //      }
 //   }
 //}
-//
+
 //void Flash_Test() {
 //
 //   uint8_t not_actual_firmware[] = "aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu aoeu ";
