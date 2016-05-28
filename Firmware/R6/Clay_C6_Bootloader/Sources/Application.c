@@ -87,12 +87,12 @@ void Application(void) {
 
       while (!wifi_connected) {
          wifi_connected = Get_WiFi_Connection_Status();
-         Wait(100);
+         Wait(1000);
       }
 
       while (!local_address_received) {
          local_address_received = Get_Local_Address();
-         Wait(100);
+         Wait(1000);
       }
 
       enable_wifi_start_time_ms = Millis();

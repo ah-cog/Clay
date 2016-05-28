@@ -358,37 +358,58 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
                                                                           delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]);
 
       //if we find a message start in the header fields, we just throw away the interrupted header.
-      if (rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX]) {
+      if ((rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX])) {
 
          rval -= 1;
          buffer->head = ((buffer->head + rval) % buffer->max_count);
          buffer->count -= rval;
+      } else if (((delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX] - delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]) > 6)     //also, verify that we only get 5 size bytes, 5 checksum bytes.
+                 || ((delimiter_indices[WIFI_MESSAGE_TYPE_INDEX] - delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX]) > 6)) {
+
+         //throw away up to this tab.
+         rval = delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX];
+         buffer->head = ((buffer->head + rval) % buffer->max_count);
+         buffer->count -= rval;
+
       } else {
          //  If no <message_start> is found in the headers, message length is parsed out of serialized message and used to determine if there is enough
          //  data for the message
          int i;
+         int temp;
 
          //read the message length without dequeueing. we have to account for potential wrap around.
          for (i = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]; i < (delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX] - 1); ++i) {
-            //convert decimal text to ints,  shift current length up by 1 significant digit.
-            message_length = (message_length * 10) + (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);
+            temp = (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);     //get next byte, convert to number.
+
+            if (temp >= 0 && temp <= 9) {     //verify that the character is a valid digit
+               message_length = (message_length * 10) + temp;
+            } else {
+               //if it's not a digit, then we can dequeue up to this point safely.
+               buffer->head = ((buffer->head + i) % buffer->max_count);
+               buffer->count -= i;
+            }
          }
 
          if (buffer->count < (message_length + delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1)) {
             //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
             //      the return value will be the number of bytes dequeued.
-            ((buffer->head + rval) % buffer->max_count);
 
-            buffer->head = (buffer->head + delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1) % buffer->max_count;
-            buffer->count -= (delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1);
             rval = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
-
+            buffer->head = (buffer->head + rval) % buffer->max_count;
+            buffer->count -= rval;
          } else {
 
             //read the message checksum out without dequeueing. we have to account for potential wrap around.
             for (i = delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX]; i < (delimiter_indices[WIFI_MESSAGE_TYPE_INDEX] - 1); ++i) {
-               //convert decimal text to ints,  shift current checksum up by 1 significant digit.
-               message_checksum = (message_checksum * 10) + (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);
+               temp = (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);     //get next byte, convert to number.
+
+               if (temp >= 0 && temp <= 9) {     //verify that the character is a valid digit
+                  message_checksum = (message_checksum * 10) + temp;
+               } else {
+                  //if it's not a digit, then we can dequeue up to this point safely.
+                  buffer->head = ((buffer->head + i) % buffer->max_count);
+                  buffer->count -= i;
+               }
             }
 
             *destination = malloc(message_length);
@@ -446,7 +467,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
    //found start char
    if (delimiter_indices[0] > 0) {
 
-      //find the other field delimiters
+//find the other field delimiters
       for (delimiter_count = 1; delimiter_count < WIFI_CONTENT_DELIMITER_COUNT; ++delimiter_count) {
 
          delimiter_indices[delimiter_count] = Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(buffer,
@@ -467,7 +488,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
                                                                           delimiter_indices[WIFI_CONTENT_INDEX
                                                                                             - WIFI_CONTENT_LENGTH_INDEX]);
 
-      //if we find a message start in the header fields, we just throw away the interrupted header.
+//if we find a message start in the header fields, we just throw away the interrupted header.
       if (rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]) {
          rval -= 1;
          buffer->head = ((buffer->head + rval) % buffer->max_count);

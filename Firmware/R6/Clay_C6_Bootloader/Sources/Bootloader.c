@@ -316,10 +316,10 @@ uint8_t Update_Firmware() {
                                                                            local_address,
                                                                            uri_parameters),
                                                    1,
-                                                   2500);
+                                                   1500);
          // TODO: Implement per-block length/checksum fields on server messages.
 
-         if (response_message != NULL) {
+         if (response_message != NULL && (response_message->content_length == block_size ||  (bytes_received + response_message->content_length) >= firmware_size) ) {
             bytes_received += response_message->content_length;
 
             Write_Firmware_Bytes(APP_START_ADDR + start_byte, response_message->content, block_size);
@@ -338,6 +338,8 @@ uint8_t Update_Firmware() {
 
             // Advance to the next byte.
             ++block_index;
+
+            Wait(10);
          }
       }
 
@@ -347,10 +349,13 @@ uint8_t Update_Firmware() {
          SharedData.UpdateApplication = FALSE;
 
          result = TRUE;
+
+         break;
       } else {
          bytes_received = 0;
          block_index = 0;
          ++retry_count;
+         Erase_Program_Flash();
       }
    }
 
