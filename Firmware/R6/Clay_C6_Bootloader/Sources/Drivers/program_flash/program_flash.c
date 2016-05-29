@@ -122,7 +122,7 @@ uint32_t Read_Program_Version() {
 
 //read up to an int.
 uint32_t Read_Value_From_Address(uint32_t address, uint32_t size) {
-   uint32_t result = NULL;     // Return value. Default to NULL.
+   uint32_t result = FALSE;
 
    flash_operation_completed = FALSE;
 
@@ -147,12 +147,6 @@ uint32_t Write_Value_To_Address(uint32_t address, uint32_t size, uint8_t * data)
       // Run operation by calling flash1_main
       FLASH1_Main(FLASH1_DeviceData);
    }
-
-//   rval = FLASH1_GetOperationStatus(FLASH1_DeviceData);
-//
-//   if (rval != 0) {
-//      rval = 0;
-//   }
 
    return rval;
 }

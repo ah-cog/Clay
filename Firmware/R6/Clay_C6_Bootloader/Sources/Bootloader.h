@@ -14,6 +14,7 @@
 #define DEFAULT_FIRMWARE_CHECKSUM 0x0000
 #define DEFAULT_FIRMWARE_SIZE 0 // The total size of the firmware to retrieve from the server.
 #define FIRMWARE_BLOCK_SIZE 512 // The number of bytes to request from the firmware server in a single request. must be multiple of 8 for PE flash component.
+#define RETRY_COUNT_MAX     3
 
 
 typedef struct shared_bootloader_data

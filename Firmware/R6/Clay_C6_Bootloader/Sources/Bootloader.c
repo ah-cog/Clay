@@ -41,6 +41,7 @@ static Message * WiFi_Wait_For_Message(uint32_t timeout_ms);
 static uint8_t Message_Content_Parameter_Equals(Message *message, int token_index, const char *pattern);
 static uint32_t Parse_Size_From_Message(Message * message);
 static uint16_t Parse_Checksum_From_Message(Message * message);
+static void Flush_Incoming_Wifi_Buffers();
 
 ////Global implementations ////////////////////////////////////////
 
@@ -208,8 +209,6 @@ uint8_t Has_Latest_Firmware() {
  */
 uint8_t Verify_Firmware_Bytes(const uint8_t *bytes, uint32_t length, uint16_t expected_checksum) {
 
-//    uint16_t received_checksum = bytes[0] | (bytes[1] << 8);
-//    uint32_t computed_checksum = Calculate_Checksum_On_Bytes(bytes + 2, length - 2);
    uint32_t computed_checksum = Calculate_Checksum_On_Bytes(bytes, length);
    return expected_checksum == computed_checksum;
 }
@@ -233,129 +232,102 @@ uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t le
  * flash memory.
  */
 uint8_t Update_Firmware() {
-   uint8_t status = NULL;     // Stores the result of called functions, indicating the status of the operation of this function.
-   uint8_t result = FALSE;     // Return value. Default to false, indicating failure to update the firmware.
-   uint32_t block_index = 0;        // The current block index to receive, verify, and write to flash.
-   uint32_t block_size = FIRMWARE_BLOCK_SIZE;        // The number of bytes to receive.
-   uint32_t start_byte = 0;       // The first byte to receive in the firmware. This will be the first byte in the received block.
+   uint8_t result = FALSE;
+   uint8_t status = FALSE;
+
+   uint32_t block_index = 0;
+   uint32_t firmware_image_offset = 0;
 
    Message * message;
 
-   // TODO: Get total size of firmware (from firmware description).
-   uint32_t firmware_size = DEFAULT_FIRMWARE_SIZE;     // Total size (in bytes) of the firmware being received.
-   uint16_t firmware_checksum = DEFAULT_FIRMWARE_CHECKSUM;
-   int bytes_received = 0;     // Total number of verified bytes received so far.
-   int bytes_written = 0;     // Total number of bytes written to flash.
-   Message * response_message;
+   uint32_t firmware_size = 0;
+   uint16_t firmware_checksum = 0;
+   int bytes_received = 0;
+   int bytes_written = 0;
    int retry_count = 0;
+
+   Message * response_message = NULL;
 
    char uri_parameters[64] = { 0 };
 
-   // Erase application from flash before getting data.
    Erase_Program_Flash();
 
-   // Retrieve firmware size from the server.
-   sprintf(uri_parameters, "/clay/firmware/size");
+   while (retry_count < RETRY_COUNT_MAX) {
+      // Retrieve firmware size from the server.
+      sprintf(uri_parameters, "/clay/firmware/size");
+      response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uri_parameters),
+                                                1,
+                                                15000);
+      if (response_message != NULL) {
+         firmware_size = Parse_Size_From_Message(response_message);
+         Delete_Message(response_message);
+         response_message = NULL;
 
-   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uri_parameters),
-                                             1,
-                                             500);
-   if (response_message != NULL) {
-      firmware_size = Parse_Size_From_Message(response_message);
-      Delete_Message(response_message);
-      response_message = NULL;
-   }
+         status = (firmware_size > 0) && !Write_Program_Size(firmware_size);
 
-   /* Update the stored application firmware size and checksum.
-    * These are used to indicate what should be on the device. */
+         Flush_Incoming_Wifi_Buffers();
+      }
 
-   // Write the size of the application firmware to flash.
-   // The stored size is used in CRC-16 checksum computations.
-   if ((status = Write_Program_Size(firmware_size)) == 0) {
-      // TODO: store result of above function and only return TRUE if it's been written successfully!
-
-      // The firmware updated successfully, so read it back from flash and use it in
-      // the computation of the checksum below as a test of its correctness.
-//		firmwareSize = Read_Program_Size ();
-
-   }
-
-   // Retrieve firmware checksum from the server.
-   sprintf(uri_parameters, "/clay/firmware/checksum");
-   response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uri_parameters),
-                                             5,
-                                             500);
-   if (response_message != NULL) {
-      firmware_checksum = Parse_Checksum_From_Message(response_message);
-      Delete_Message(response_message);
-      response_message = NULL;
-   }
-
-   // Write checksum to flash and (TODO) verify it.
-   if (firmware_size > 0 && firmware_checksum > 0 && (status = Write_Program_Checksum(firmware_checksum)) == 0) {
-      // TODO: store result of above function and only return TRUE if it's been written successfully!
-
-//		// The firmware updated successfully, so reset the flag indicating a new firmware update is available.
-//		SharedData.ApplicationUpdateAvailable = FALSE;
-//		SharedData.UpdateApplication = FALSE;
-
-      // Compare the computed checksum of the received data to the expected checksum.
-      // If they're equal, return true, indicating that the firmware was successfully
-      // written to flash and verified.
-//		return result = TRUE;
-
-   }
-   while (retry_count < 3) {
-
-      // Retrieve firmware if is hasn't yet been received in its entirety.
-      while (bytes_received < firmware_size) {
-
-         start_byte = block_index * block_size;     // Determine the first byte to receive in the block based on the current block index.
-         sprintf(uri_parameters, "/clay/firmware/?startByte=%d&byteCount=%d", start_byte, block_size);
+      if (status) {
+         // Retrieve firmware checksum from the server.
+         sprintf(uri_parameters, "/clay/firmware/checksum");
          response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS,
                                                                            local_address,
                                                                            uri_parameters),
                                                    1,
-                                                   1500);
-         // TODO: Implement per-block length/checksum fields on server messages.
-
-         if (response_message != NULL && (response_message->content_length == block_size ||  (bytes_received + response_message->content_length) >= firmware_size) ) {
-            bytes_received += response_message->content_length;
-
-            Write_Firmware_Bytes(APP_START_ADDR + start_byte, response_message->content, block_size);
-
+                                                   15000);
+         if (response_message != NULL) {
+            firmware_checksum = Parse_Checksum_From_Message(response_message);
             Delete_Message(response_message);
             response_message = NULL;
 
-            Message * m = Dequeue_Message(&incomingWiFiMessageQueue);
+            status = !Write_Program_Checksum(firmware_checksum);
 
-            while (m != NULL) {
-               Delete_Message(m);
-               m = Dequeue_Message(&incomingWiFiMessageQueue);
-            }
-
-            Multibyte_Ring_Buffer_Reset(&wifi_multibyte_ring);
-
-            // Advance to the next byte.
-            ++block_index;
-
-            Wait(10);
+            Flush_Incoming_Wifi_Buffers();
          }
       }
 
-      if (Verify_Firmware()) {
-         // The firmware updated successfully, so reset the flag indicating a new firmware update is available.
-         SharedData.ApplicationUpdateAvailable = FALSE;
-         SharedData.UpdateApplication = FALSE;
+      if (status) {
+         while (bytes_received < firmware_size) {
+            firmware_image_offset = block_index * FIRMWARE_BLOCK_SIZE;     // Determine the first byte to receive in the block based on the current block index.
+            sprintf(uri_parameters, "/clay/firmware/?startByte=%d&byteCount=%d", firmware_image_offset, FIRMWARE_BLOCK_SIZE);
+            response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS,
+                                                                              local_address,
+                                                                              uri_parameters),
+                                                      1,
+                                                      15000);
+            // TODO: Implement per-block address/length/checksum fields on server messages.
 
-         result = TRUE;
+            if (response_message != NULL
+                && (response_message->content_length == FIRMWARE_BLOCK_SIZE
+                    || (bytes_received + response_message->content_length) >= firmware_size)) {
+               bytes_received += response_message->content_length;
 
-         break;
+               Write_Firmware_Bytes(APP_START_ADDR + firmware_image_offset, response_message->content, FIRMWARE_BLOCK_SIZE);
+
+               Delete_Message(response_message);
+               response_message = NULL;
+
+               ++block_index;
+            }
+         }
+
+         if (Verify_Firmware()) {
+            // The firmware updated successfully, so reset the flag indicating a new firmware update is available.
+            SharedData.ApplicationUpdateAvailable = FALSE;
+            SharedData.UpdateApplication = FALSE;
+
+            result = TRUE;
+
+            break;
+         } else {
+            bytes_received = 0;
+            block_index = 0;
+            ++retry_count;
+            Erase_Program_Flash();
+         }
       } else {
-         bytes_received = 0;
-         block_index = 0;
          ++retry_count;
-         Erase_Program_Flash();
       }
    }
 
@@ -552,6 +524,18 @@ static uint32_t Parse_Version_From_Message(Message * message) {
    return rval;
 
    return rval;
+}
+
+static void Flush_Incoming_Wifi_Buffers() {
+   //reset incoming message and serial buffers, in case we had to retry and have received the same block several times
+   Message * m = Dequeue_Message(&incomingWiFiMessageQueue);
+
+   while (m != NULL) {
+      Delete_Message(m);
+      m = Dequeue_Message(&incomingWiFiMessageQueue);
+   }
+
+   Multibyte_Ring_Buffer_Reset(&wifi_multibyte_ring);
 }
 
 ////CRC test code, tested against http://www.lammertbies.nl/comm/info/crc-calculation.html 

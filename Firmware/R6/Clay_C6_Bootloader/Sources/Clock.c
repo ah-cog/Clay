@@ -19,6 +19,7 @@
 // global vars ///////////////
 uint32_t power_on_time_msec;
 uint8_t tick_1msec;
+uint8_t tick_5msec;
 uint8_t tick_250msec;
 uint8_t tick_500msec;
 uint8_t tick_3000msec;
@@ -44,6 +45,7 @@ uint8_t Start_Clock() {
 
    power_on_time_msec = 0;
    tick_1msec = FALSE;
+   tick_5msec = FALSE;
    tick_250msec = FALSE;
    tick_500msec = FALSE;
    tick_3000msec = FALSE;
@@ -56,6 +58,10 @@ void Tick() {
 
    ++power_on_time_msec;
    tick_1msec = TRUE;
+
+   if (!(power_on_time_msec % 5)) {
+      tick_5msec = TRUE;
+   }
 
    if (!(power_on_time_msec % 250)) {
       tick_250msec = TRUE;
@@ -89,8 +95,12 @@ void Monitor_Periodic_Events() {
    if (tick_1msec) {
       tick_1msec = FALSE;
 
-      Wifi_State_Step();
       Button_Periodic_Call();
+   }
+
+   if (tick_5msec) {
+      tick_5msec = FALSE;
+      Wifi_State_Step();
    }
 
    if (tick_250msec) {

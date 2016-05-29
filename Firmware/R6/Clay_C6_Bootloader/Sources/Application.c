@@ -164,8 +164,8 @@ void Application(void) {
 //
 //static uint32_t bootloader_index = 0;
 //static char http_type_str[] = "http";
-////static const char http_dest_addr_format[] = "107.170.180.158:3000/clay/firmware/?startByte=%d&byteCount=256";
-//static const char http_dest_addr_format[] = "192.168.1.3:3000/clay/firmware/?startByte=%d&byteCount=256";
+//static const char http_dest_addr_format[] = "107.170.180.158:3000/clay/firmware/?startByte=%d&byteCount=512";
+////static const char http_dest_addr_format[] = "192.168.1.3:3000/clay/firmware/?startByte=%d&byteCount=256";
 //static char http_dest_addr[100];
 //static char http_source_addr[] = "192.168.1.5:3000";
 //
@@ -184,13 +184,10 @@ void Application(void) {
 //static char * ssid_m = "Clay";
 //static char * password_m = "redgreenblue";
 //
+//bool use_mobile = false;
+//
 //////Local implementations /////////////////////////////////////////
 //void Wifi_Test() {
-//
-//   bool use_mobile = false;
-////   char * ssid_m = "hefnetm";
-////   char * password_m = "dips00BOYNEdo$!&";
-//
 //   text_message_length = strlen(text_message_content);
 //
 //   http_text_message_length = strlen(http_text_message_content);

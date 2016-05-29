@@ -12,6 +12,7 @@
 
 extern uint32_t power_on_time_msec;
 extern bool tick_1msec;
+extern bool tick_5msec;
 extern bool tick_250msec;
 extern bool tick_500msec;
 

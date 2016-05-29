@@ -83,12 +83,6 @@ uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer, uint8_t *
       return 0;
    }
 
-   if (buffer->data != NULL && buffer->count > buffer->max_count
-       || buffer->head > buffer->max_count
-       || buffer->tail > buffer->max_count) {
-      PE_DEBUGHALT();
-   }
-
    uint32_t rval = ((Multibyte_Ring_Buffer_Get_Free_Size(buffer) > size) ? size : Multibyte_Ring_Buffer_Get_Free_Size(buffer));
 
    //it's ok if this is nonzero when the buffer's full. rval is used to determine how much data can be put in.
@@ -109,12 +103,6 @@ uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer, uint8_t *
       }
 
       buffer->count += rval;
-
-      if (buffer->data != NULL && buffer->count > buffer->max_count
-          || buffer->head > buffer->max_count
-          || buffer->tail > buffer->max_count) {
-         PE_DEBUGHALT();
-      }
    }
 
    return rval;
@@ -124,12 +112,6 @@ uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t *
 
    if (buffer->data == NULL) {
       return 0;
-   }
-
-   if (buffer->data != NULL && buffer->count > buffer->max_count
-       || buffer->head > buffer->max_count
-       || buffer->tail > buffer->max_count) {
-      PE_DEBUGHALT();
    }
 
    uint32_t bytes_after_head = (buffer->head < buffer->tail ? buffer->count : buffer->max_count - buffer->head);
@@ -152,12 +134,6 @@ uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t *
       }
 
       buffer->count -= rval;
-   }
-
-   if (buffer->data != NULL && buffer->count > buffer->max_count
-       || buffer->head > buffer->max_count
-       || buffer->tail > buffer->max_count) {
-      PE_DEBUGHALT();
    }
 
    return rval;
@@ -281,7 +257,6 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_
 
          if (last_found != NULL) {
             if (last_found > first_found) {     //our search hasn't wrapped around yet.
-
                if (1 + (last_found - first_found) == target_length) {
                   found = true;
                   rval = 1 + (i - buffer->head);
@@ -329,6 +304,9 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
 
    uint32_t content_length = 0;
    uint32_t content_checksum = 0;
+
+   uint32_t current_head = buffer->head;
+
    //         0                 1                   2               3         4              5                 6                   7               8
    //format: \f<message_length>\t<message_checksum>\t<message_type>\t<source>\t<destination>\t<content_length>\t<content_checksum>\t<content_type>\t<content>
 
@@ -359,18 +337,17 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
 
       //if we find a message start in the header fields, we just throw away the interrupted header.
       if ((rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX])) {
-
          rval -= 1;
          buffer->head = ((buffer->head + rval) % buffer->max_count);
          buffer->count -= rval;
       } else if (((delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX] - delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]) > 6)     //also, verify that we only get 5 size bytes, 5 checksum bytes.
                  || ((delimiter_indices[WIFI_MESSAGE_TYPE_INDEX] - delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX]) > 6)) {
-
-         //throw away up to this tab.
+         //throw away up to the end of what was assumed to be a message header. We can safely discard up to the
+         //     end of the checksum field, as we have found \f<size>\t<checksum>\t, so if either is wrong, then
+         //     this isn't a valid message header.
          rval = delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX];
          buffer->head = ((buffer->head + rval) % buffer->max_count);
          buffer->count -= rval;
-
       } else {
          //  If no <message_start> is found in the headers, message length is parsed out of serialized message and used to determine if there is enough
          //  data for the message
@@ -390,13 +367,10 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
             }
          }
 
-         if (buffer->count < (message_length + delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1)) {
+         if (buffer->count < (message_length + delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1)) {     //include the data before the start character.
             //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
             //      the return value will be the number of bytes dequeued.
-
-            rval = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
-            buffer->head = (buffer->head + rval) % buffer->max_count;
-            buffer->count -= rval;
+            rval = 0;
          } else {
 
             //read the message checksum out without dequeueing. we have to account for potential wrap around.
