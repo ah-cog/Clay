@@ -57,6 +57,9 @@ Clay_C6_Bootloader.bin \
 SECONDARY_LIST += \
 Clay_C6_Bootloader.lst \
 
+SECONDARY_SIZE += \
+Clay_C6_Bootloader.siz \
+
 
 # All Target
 all: Clay_C6_Bootloader.elf secondary-outputs
@@ -65,7 +68,7 @@ all: Clay_C6_Bootloader.elf secondary-outputs
 Clay_C6_Bootloader.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "E:/git/clay/Firmware/R6/Clay_C6_Bootloader/Project_Settings/Linker_Files/clay_bootloader.ld" -Xlinker --gc-sections -L"E:/git/clay/Firmware/R6/Clay_C6_Bootloader/Project_Settings/Linker_Files" -Wl,-Map,"Clay_C6_Bootloader.map" -specs=nano.specs -specs=nosys.specs -o "Clay_C6_Bootloader.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "E:/git/clay/Firmware/R6/Clay_C6_Bootloader/Project_Settings/Linker_Files/clay_bootloader.ld" -Xlinker --gc-sections -L"E:/git/clay/Firmware/R6/Clay_C6_Bootloader/Project_Settings/Linker_Files" -Wl,-Map,"Clay_C6_Bootloader.map" -Xlinker --print-map -specs=nano.specs -specs=nosys.specs -o "Clay_C6_Bootloader.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -81,12 +84,18 @@ Clay_C6_Bootloader.lst: Clay_C6_Bootloader.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
+Clay_C6_Bootloader.siz: Clay_C6_Bootloader.elf
+	@echo 'Invoking: Cross ARM GNU Print Size'
+	arm-none-eabi-size --format=berkeley "Clay_C6_Bootloader.elf"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) $(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(SECONDARY_LIST)$(S_UPPER_DEPS) Clay_C6_Bootloader.elf
+	-$(RM) $(SECONDARY_SIZE)$(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(SECONDARY_LIST)$(S_UPPER_DEPS) Clay_C6_Bootloader.elf
 	-@echo ' '
 
-secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_LIST)
+secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_LIST) $(SECONDARY_SIZE)
 
 .PHONY: all clean dependents
 .SECONDARY:

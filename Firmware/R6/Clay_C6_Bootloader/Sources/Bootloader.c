@@ -227,6 +227,8 @@ uint8_t Write_Firmware_Bytes(uint32_t address, const uint8_t *bytes, uint32_t le
    return Write_Program_Block(address, bytes, length) == 0;
 }
 
+uint32_t timeout_count = 0;
+
 /**
  * Retrieves the latest firmware from the firmware server and writes it to 
  * flash memory.
@@ -309,6 +311,8 @@ uint8_t Update_Firmware() {
                response_message = NULL;
 
                ++block_index;
+            } else {
+               ++timeout_count;
             }
          }
 
@@ -325,6 +329,7 @@ uint8_t Update_Firmware() {
             block_index = 0;
             ++retry_count;
             Erase_Program_Flash();
+            timeout_count = 0;
          }
       } else {
          ++retry_count;

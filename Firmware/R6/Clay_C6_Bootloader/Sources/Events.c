@@ -35,11 +35,13 @@
 #include "program_flash.h"
 #include "Button.h"
 
+#include "Multibyte_Ring_Buffer.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif 
 
-#define WIFI_INTERRUPT_RX_BUF_SIZE              1
+#define WIFI_INTERRUPT_RX_BUF_SIZE              5
 
 uint8_t wifi_serial_interrupt_rx_buf[WIFI_INTERRUPT_RX_BUF_SIZE];
 uint32_t wifi_rx_interrupt_count = WIFI_INTERRUPT_RX_BUF_SIZE;
@@ -134,7 +136,6 @@ void ESP8266_Serial_OnBlockReceived(LDD_TUserData *UserDataPtr) {
 
    Multibyte_Ring_Buffer_Enqueue(&wifi_multibyte_ring, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count);
    (void) ESP8266_Serial_ReceiveBlock(ptr->handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count);
-
 }
 
 /*
@@ -220,6 +221,37 @@ void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
 void Cpu_OnHardFault(void) {
    /* Write your code here ... */
    PE_DEBUGHALT();
+}
+
+/*
+ ** ===================================================================
+ **     Event       :  ESP8266_Serial_OnError (module Events)
+ **
+ **     Component   :  ESP8266_Serial [Serial_LDD]
+ */
+/*!
+ **     @brief
+ **         This event is called when a channel error (not the error
+ **         returned by a given method) occurs. The errors can be read
+ **         using [GetError] method.
+ **         The event is available only when the [Interrupt
+ **         service/event] property is enabled.
+ **     @param
+ **         UserDataPtr     - Pointer to the user or
+ **                           RTOS specific data. This pointer is passed
+ **                           as the parameter of Init method.
+ */
+/* ===================================================================*/
+void ESP8266_Serial_OnError(LDD_TUserData *UserDataPtr) {
+   /* Write your code here ... */
+   LDD_SERIAL_TError serial_error;
+   LDD_TError get_error_result = ESP8266_Serial_GetError(&wifi_serial_device_data, &serial_error);
+
+//                              LDD_SERIAL_RX_OVERRUN - Receiver overrun.
+//                              LDD_SERIAL_PARITY_ERROR - Parity error
+//                              (only if HW supports parity feature).
+//                              LDD_SERIAL_FRAMING_ERROR - Framing error.
+//                              LDD_SERIAL_NOISE_ERROR - Noise error.
 }
 
 /* END Events */

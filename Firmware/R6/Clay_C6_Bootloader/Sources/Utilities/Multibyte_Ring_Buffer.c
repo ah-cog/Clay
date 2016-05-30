@@ -12,6 +12,9 @@
 #include "string.h"
 #include "stdbool.h"
 
+#include "PE_Types.h"
+#include "CPU_Init.h"
+
 #include "Message.h"
 #include "Multibyte_Ring_Buffer.h"
 #include "Wifi_Message_Serialization.h"
@@ -53,6 +56,8 @@ typedef enum
 ////Global implementations ////////////////////////////////////////
 void Multibyte_Ring_Buffer_Init(Multibyte_Ring_Buffer * buffer, uint32_t size) {
 
+   EnterCritical()
+   ;
    buffer->max_count = size;
    buffer->data = malloc(buffer->max_count);
    buffer->head = 0;
@@ -60,21 +65,28 @@ void Multibyte_Ring_Buffer_Init(Multibyte_Ring_Buffer * buffer, uint32_t size) {
    buffer->count = 0;
 
    memset(buffer->data, 0, buffer->max_count);
+   ExitCritical();
 }
 
 void Multibyte_Ring_Buffer_Free(Multibyte_Ring_Buffer * buffer) {
 
+   EnterCritical()
+   ;
    if (buffer->data != NULL) {
       free(buffer->data);
       buffer->max_count = 0;
    }
+   ExitCritical();
 }
 
 void Multibyte_Ring_Buffer_Reset(Multibyte_Ring_Buffer * buffer) {
+   EnterCritical()
+   ;
    buffer->head = 0;
    buffer->tail = 0;
    buffer->count = 0;
    memset(buffer->data, 0, buffer->max_count);
+   ExitCritical();
 }
 
 uint32_t Multibyte_Ring_Buffer_Enqueue(Multibyte_Ring_Buffer * buffer, uint8_t * data, uint32_t size) {
@@ -114,26 +126,43 @@ uint32_t Multibyte_Ring_Buffer_Dequeue(Multibyte_Ring_Buffer * buffer, uint8_t *
       return 0;
    }
 
+   EnterCritical()
+   ;
    uint32_t bytes_after_head = (buffer->head < buffer->tail ? buffer->count : buffer->max_count - buffer->head);
    uint32_t rval = (buffer->count > size ? size : buffer->count);
+   ExitCritical();
 
    if (rval > 0) {
       if (rval < bytes_after_head) {
          memcpy(data, BUFFER_HEAD(buffer), rval);
          memset(BUFFER_HEAD(buffer), 0, rval);
+         EnterCritical()
+         ;
          buffer->head = (buffer->head + rval) % buffer->max_count;
+         ExitCritical();
 
       } else {
          memcpy(data, BUFFER_HEAD(buffer), bytes_after_head);
          memset(BUFFER_HEAD(buffer), 0, bytes_after_head);
+
+         EnterCritical()
+         ;
          buffer->head = (buffer->head + bytes_after_head) % buffer->max_count;
+         ExitCritical();
 
          memcpy(data + bytes_after_head, BUFFER_HEAD(buffer), rval - bytes_after_head);
          memset(BUFFER_HEAD(buffer), 0, rval - bytes_after_head);
+
+         EnterCritical()
+         ;
          buffer->head = (buffer->head + (rval - bytes_after_head)) % buffer->max_count;
+         ExitCritical();
       }
 
+      EnterCritical()
+      ;
       buffer->count -= rval;
+      ExitCritical();
    }
 
    return rval;
@@ -214,8 +243,11 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_
 
    int rval = 0;
 
+   EnterCritical()
+   ;
    uint32_t buffer_head_index = (buffer->head + offset) % buffer->max_count;
    uint32_t buffer_size_offset = buffer->count - offset;
+   ExitCritical();
 
    char * first_found = NULL;
    char * last_found = NULL;
@@ -291,7 +323,7 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_
 //      for the corrupt message, including any bytes that were dequeued before the message.
 uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Multibyte_Ring_Buffer * buffer,
                                                                               uint8_t * * destination) {
-   if (buffer->data == NULL) {
+   if (buffer->data == NULL || buffer->count == 0) {
       return 0;
    }
 
@@ -306,6 +338,8 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
    uint32_t content_checksum = 0;
 
    uint32_t current_head = buffer->head;
+
+   bool parse_error = FALSE;
 
    //         0                 1                   2               3         4              5                 6                   7               8
    //format: \f<message_length>\t<message_checksum>\t<message_type>\t<source>\t<destination>\t<content_length>\t<content_checksum>\t<content_type>\t<content>
@@ -337,17 +371,27 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
 
       //if we find a message start in the header fields, we just throw away the interrupted header.
       if ((rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX])) {
+
          rval -= 1;
+
+         EnterCritical()
+         ;
          buffer->head = ((buffer->head + rval) % buffer->max_count);
          buffer->count -= rval;
+         ExitCritical();
+
       } else if (((delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX] - delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]) > 6)     //also, verify that we only get 5 size bytes, 5 checksum bytes.
                  || ((delimiter_indices[WIFI_MESSAGE_TYPE_INDEX] - delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX]) > 6)) {
          //throw away up to the end of what was assumed to be a message header. We can safely discard up to the
          //     end of the checksum field, as we have found \f<size>\t<checksum>\t, so if either is wrong, then
          //     this isn't a valid message header.
          rval = delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX];
+
+         EnterCritical()
+         ;
          buffer->head = ((buffer->head + rval) % buffer->max_count);
          buffer->count -= rval;
+         ExitCritical();
       } else {
          //  If no <message_start> is found in the headers, message length is parsed out of serialized message and used to determine if there is enough
          //  data for the message
@@ -362,51 +406,74 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
                message_length = (message_length * 10) + temp;
             } else {
                //if it's not a digit, then we can dequeue up to this point safely.
+
+               EnterCritical()
+               ;
                buffer->head = ((buffer->head + i) % buffer->max_count);
                buffer->count -= i;
+               ExitCritical();
+
+               parse_error = TRUE;
             }
          }
 
-         if (buffer->count < (message_length + delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1)) {     //include the data before the start character.
-            //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
-            //      the return value will be the number of bytes dequeued.
-            rval = 0;
-         } else {
+         if (!parse_error) {
+            if (buffer->count < (message_length + delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1)) {     //include the data before the start character.
+               //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
+               //      the return value will be the number of bytes dequeued.
+               rval = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
 
-            //read the message checksum out without dequeueing. we have to account for potential wrap around.
-            for (i = delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX]; i < (delimiter_indices[WIFI_MESSAGE_TYPE_INDEX] - 1); ++i) {
-               temp = (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);     //get next byte, convert to number.
+               EnterCritical()
+               ;
+               buffer->head = (buffer->head + rval) % buffer->max_count;
+               buffer->count -= rval;
+               ExitCritical();
 
-               if (temp >= 0 && temp <= 9) {     //verify that the character is a valid digit
-                  message_checksum = (message_checksum * 10) + temp;
-               } else {
-                  //if it's not a digit, then we can dequeue up to this point safely.
-                  buffer->head = ((buffer->head + i) % buffer->max_count);
-                  buffer->count -= i;
+            } else {
+
+               //read the message checksum out without dequeueing. we have to account for potential wrap around.
+               for (i = delimiter_indices[WIFI_MESSAGE_CHECKSUM_INDEX]; i < (delimiter_indices[WIFI_MESSAGE_TYPE_INDEX] - 1);
+                     ++i) {
+                  temp = (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);     //get next byte, convert to number.
+
+                  if (temp >= 0 && temp <= 9) {     //verify that the character is a valid digit
+                     message_checksum = (message_checksum * 10) + temp;
+                  } else {
+                     //if it's not a digit, then we can dequeue up to this point safely.
+                     EnterCritical()
+                     ;
+                     buffer->head = ((buffer->head + i) % buffer->max_count);
+                     buffer->count -= i;
+                     ExitCritical();
+
+                     parse_error = TRUE;
+                  }
                }
-            }
 
-            *destination = malloc(message_length);
-            //dequeue until start of message
-            rval = Multibyte_Ring_Buffer_Dequeue(buffer, *destination, delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1);
+               if (!parse_error) {
+                  *destination = malloc(message_length);
+                  //dequeue until start of message
+                  rval = Multibyte_Ring_Buffer_Dequeue(buffer, *destination, delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1);
 
-            //  If enough data is present, then destination will be allocated for message_length bytes, and the message will be dequeued into it.
-            rval += Multibyte_Ring_Buffer_Dequeue(buffer, *destination, message_length);
+                  //  If enough data is present, then destination will be allocated for message_length bytes, and the message will be dequeued into it.
+                  rval += Multibyte_Ring_Buffer_Dequeue(buffer, *destination, message_length);
 
-            //  The message is then checksummed.
-            //  If the checksum fails, destination is free'd and set to NULL, and the return is the number of bytes dequeued for the corrupt message
+                  //  The message is then checksummed.
+                  //  If the checksum fails, destination is free'd and set to NULL, and the return is the number of bytes dequeued for the corrupt message
 
-            if (message_checksum
-                != Calculate_Checksum_On_Bytes((*destination)
-                                               + (delimiter_indices[WIFI_MESSAGE_TYPE_INDEX]
-                                                  - delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
-                                                  + 1),
-                                               (message_length
-                                                - (delimiter_indices[WIFI_MESSAGE_TYPE_INDEX]
-                                                   - delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
-                                                   + 1)))) {
-               free(*destination);
-               *destination = NULL;
+                  if (message_checksum
+                      != Calculate_Checksum_On_Bytes((*destination)
+                                                     + (delimiter_indices[WIFI_MESSAGE_TYPE_INDEX]
+                                                        - delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
+                                                        + 1),
+                                                     (message_length
+                                                      - (delimiter_indices[WIFI_MESSAGE_TYPE_INDEX]
+                                                         - delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX]
+                                                         + 1)))) {
+                     free(*destination);
+                     *destination = NULL;
+                  }
+               }
             }
          }
       }
@@ -421,7 +488,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
 //  if no \f is found, and there's enough data to get the entire message, we dequeue.
 uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring_Buffer * buffer, uint8_t * * destination) {
 
-   if (buffer->data == NULL) {
+   if (buffer->data == NULL || buffer->count == 0) {
       return 0;
    }
 
@@ -432,6 +499,8 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
    uint32_t message_length = 0;
    uint32_t content_length = 0;
    uint16_t content_checksum = 0;
+
+   bool parse_error = FALSE;
 
    //         0                 1                   2               3
    //format: \f<content_length>\t<content_checksum>\t<content_type>\t<content>
@@ -465,61 +534,100 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
 //if we find a message start in the header fields, we just throw away the interrupted header.
       if (rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]) {
          rval -= 1;
+
+         EnterCritical()
+         ;
          buffer->head = ((buffer->head + rval) % buffer->max_count);
          buffer->count -= rval;
+         ExitCritical();
       } else {
          //  If no <message_start> is found in the headers, content length is parsed out of serialized message and used to determine if there is enough
          //  data for the message
          int i;
+         int temp;
+
          //read the message length without dequeueing. we have to account for potential wrap around.
          for (i = delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX];
                i < (delimiter_indices[WIFI_CONTENT_CHECKSUM_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1); ++i) {
-            //convert decimal text to ints,  shift current length up by 1 significant digit.
-            content_length = (content_length * 10) + (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);
+            temp = (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);     //get next byte, convert to number.
+
+            if (temp >= 0 && temp <= 9) {     //verify that the character is a valid digit
+               content_length = (content_length * 10) + temp;
+            } else {
+               //if it's not a digit, then we can dequeue up to this point safely.
+               EnterCritical()
+               ;
+               buffer->head = ((buffer->head + i) % buffer->max_count);
+               buffer->count -= i;
+               ExitCritical();
+
+               parse_error = TRUE;
+            }
          }
 
-         message_length = content_length
-                          + (delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]
-                             - delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX])
-                          + 1;
+         if (!parse_error) {
+            message_length = content_length
+                             + (delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]
+                                - delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX])
+                             + 1;
 
-         if (buffer->count < (message_length + delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1)) {
-            //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
-            //      the return value will be the number of bytes dequeued.
-            buffer->head = (buffer->head + delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1)
-                           % buffer->max_count;
-            buffer->count -= (delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1);
-            rval = delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1;
-         } else {
+            if (buffer->count < (message_length + delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1)) {
+               //  If enough data is not present, the queue will dequeue until a start character, if one is found. destination will be null upon return and
+               //      the return value will be the number of bytes dequeued.
 
-            //read the message checksum out without dequeueing. we have to account for potential wrap around.
-            for (i = delimiter_indices[WIFI_CONTENT_CHECKSUM_INDEX - WIFI_CONTENT_LENGTH_INDEX];
-                  i < (delimiter_indices[WIFI_CONTENT_TYPE_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1); ++i) {
-               //convert decimal text to ints,  shift current checksum up by 1 significant digit.
-               content_checksum = (content_checksum * 10) + (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);
-            }
+               rval = delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1;
+               EnterCritical()
+               ;
+               buffer->head = (buffer->head + rval) % buffer->max_count;
+               buffer->count -= rval;
+               ExitCritical();
 
-            *destination = malloc(message_length);
+            } else {
 
-            //dequeue until start of message
-            rval = Multibyte_Ring_Buffer_Dequeue(buffer,
-                                                 *destination,
-                                                 delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1);
+               //read the message checksum out without dequeueing. we have to account for potential wrap around.
+               for (i = delimiter_indices[WIFI_CONTENT_CHECKSUM_INDEX - WIFI_CONTENT_LENGTH_INDEX];
+                     i < (delimiter_indices[WIFI_CONTENT_TYPE_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1); ++i) {
+                  temp = (*(buffer->data + (i + buffer->head) % buffer->max_count) - 0x30);     //get next byte, convert to number.
 
-            //  If enough data is present, then destination will be allocated for message_length bytes, and the message will be dequeued into it.
-            rval += Multibyte_Ring_Buffer_Dequeue(buffer, *destination, message_length);
+                  if (temp >= 0 && temp <= 9) {     //verify that the character is a valid digit
+                     content_checksum = (content_checksum * 10) + temp;
+                  } else {
+                     //if it's not a digit, then we can dequeue up to this point safely.
+                     EnterCritical()
+                     ;
+                     buffer->head = ((buffer->head + i) % buffer->max_count);
+                     buffer->count -= i;
+                     ExitCritical();
 
-            //  The message is then checksummed.
-            //  If the checksum fails, destination is free'd and set to NULL, and the return is the number of bytes dequeued for the corrupt message
+                     parse_error = TRUE;
+                  }
+               }
 
-            if (content_checksum
-                != Calculate_Checksum_On_Bytes((*destination)
-                                               + (delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]
-                                                  - delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX]
-                                                  + 1),
-                                               content_length)) {
-               free(*destination);
-               *destination = NULL;
+               if (!parse_error) {
+                  *destination = malloc(message_length);
+
+                  //dequeue until start of message
+                  rval = Multibyte_Ring_Buffer_Dequeue(buffer,
+                                                       *destination,
+                                                       delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX]
+                                                       - 1);
+
+                  //  If enough data is present, then destination will be allocated for message_length bytes, and the message will be dequeued into it.
+                  rval += Multibyte_Ring_Buffer_Dequeue(buffer, *destination, message_length);
+
+                  //  The message is then checksummed.
+                  //  If the checksum fails, destination is free'd and set to NULL, and the return is the number of bytes dequeued for the corrupt message
+
+                  if (content_checksum
+                      != Calculate_Checksum_On_Bytes((*destination)
+                                                     + (delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]
+                                                        - delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX]
+                                                        + 1),
+                                                     content_length)) {
+                     free(*destination);
+                     *destination = NULL;
+                  }
+               }
             }
          }
       }
@@ -530,17 +638,30 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
 
 uint32_t Multibyte_Ring_Buffer_Get_Free_Size(Multibyte_Ring_Buffer * buffer) {
 
-   return buffer->max_count - buffer->count;
+   EnterCritical()
+   ;
+   uint32_t rval = buffer->max_count - buffer->count;
+   ExitCritical();
+   return rval;
 }
 
 uint32_t Multibyte_Ring_Buffer_Get_Count(Multibyte_Ring_Buffer * buffer) {
 
-   return buffer->count;
+   EnterCritical()
+   ;
+   uint32_t rval = buffer->count;
+   ExitCritical();
+   return rval;
 }
 
 bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer) {
 
-   return buffer->count >= buffer->max_count;
+   EnterCritical()
+   ;
+   bool rval = buffer->count >= buffer->max_count;
+   ExitCritical();
+
+   return rval;
 }
 
 ////Local implementations /////////////////////////////////////////

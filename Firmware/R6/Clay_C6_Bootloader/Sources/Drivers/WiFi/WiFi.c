@@ -27,7 +27,7 @@ Message *outgoingWiFiMessageQueue = NULL;
 #define INTERRUPT_RX_TIMEOUT_MS     3000
 #define INTERRUPT_TX_TIMEOUT_MS     1000
 
-ESP8266_UART_Device deviceData;
+ESP8266_UART_Device wifi_serial_device_data;
 volatile bool WifiInterruptReceived;
 volatile bool WifiSetProgramMode;
 bool Wifi_Message_Available;
@@ -67,16 +67,19 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    bool rval = FALSE;
 
    Wifi_Message_Available = FALSE;
+
+
    Multibyte_Ring_Buffer_Init(&wifi_multibyte_ring, WIFI_SERIAL_IN_BUFFER_LENGTH);
 
-   // Initialize the ESP8266 device data structure
-   deviceData.handle = ESP8266_Serial_Init(&deviceData);
-   deviceData.isSent = FALSE;
-   deviceData.rxChar = '\0';
-   deviceData.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
+// Initialize the ESP8266 device data structure
+   wifi_serial_device_data.handle = ESP8266_Serial_Init(&wifi_serial_device_data);
+   wifi_serial_device_data.isSent = FALSE;
+   wifi_serial_device_data.rxChar = '\0';
+   wifi_serial_device_data.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
 
    // Read any pending data to "clear the line"
-   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count) != ERR_OK) {
+   while (ESP8266_Serial_ReceiveBlock(wifi_serial_device_data.handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count)
+          != ERR_OK) {
 
    }
 
@@ -155,7 +158,6 @@ void Wifi_State_Step() {
                State = Deserialize_Received_Message;
                message = NULL;
             } else {
-
                uint32_t free_size = Multibyte_Ring_Buffer_Get_Free_Size(&wifi_multibyte_ring);
 
                if (free_size < 1) {
@@ -214,8 +216,8 @@ void Wifi_State_Step() {
          Wait(1);
          WIFI_GPIO2_PutVal(NULL, 1);
 
-         deviceData.isSent = FALSE;
-         ESP8266_Serial_SendBlock(deviceData.handle, serial_tx_buffer, pendingTransmitByteCount);
+         wifi_serial_device_data.isSent = FALSE;
+         ESP8266_Serial_SendBlock(wifi_serial_device_data.handle, serial_tx_buffer, pendingTransmitByteCount);
          State = Transmission_Sent;
 
          break;
@@ -223,7 +225,7 @@ void Wifi_State_Step() {
 
       case Transmission_Sent: {
          //transmission has been sent. back to idle for now, I guess
-         if (deviceData.isSent) {
+         if (wifi_serial_device_data.isSent) {
             State = Idle;
          }
          break;
@@ -323,13 +325,16 @@ bool WiFi_Enable() {
    Wifi_Message_Available = FALSE;
 
 // Initialize the ESP8266 device data structure
-   deviceData.handle = ESP8266_Serial_Init(&deviceData);
-   deviceData.isSent = FALSE;
-   deviceData.rxChar = '\0';
-   deviceData.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
+   wifi_serial_device_data.handle = ESP8266_Serial_Init(&wifi_serial_device_data);
+   wifi_serial_device_data.isSent = FALSE;
+   wifi_serial_device_data.rxChar = '\0';
+   wifi_serial_device_data.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
 
 // Read any pending data to "clear the line"
-   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar)) != ERR_OK) {
+   while (ESP8266_Serial_ReceiveBlock(wifi_serial_device_data.handle,
+                                      (LDD_TData *) &wifi_serial_device_data.rxChar,
+                                      sizeof(wifi_serial_device_data.rxChar))
+          != ERR_OK) {
 
    }
 

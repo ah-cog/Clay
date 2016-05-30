@@ -32,7 +32,7 @@ typedef struct
       uint8_t (*rxPutFct)(uint8_t);
 } ESP8266_UART_Device;        // NOTE: This was named "UART_Desc" previously.
 
-extern ESP8266_UART_Device deviceData;
+extern ESP8266_UART_Device wifi_serial_device_data;
 extern volatile bool WifiInterruptReceived;
 extern volatile bool WifiSetProgramMode;
 extern bool Wifi_Message_Available;

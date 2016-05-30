@@ -196,6 +196,8 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 			UART_WaitTxFifoEmpty(UART0);
 			uart_tx_array(UART0, serial_tx_buffer, serial_tx_length);
 			UART_WaitTxFifoEmpty(UART0);
+			printf("          ");
+			UART_WaitTxFifoEmpty(UART0);
 			taskEXIT_CRITICAL();
 			state = Transmitting;
 
