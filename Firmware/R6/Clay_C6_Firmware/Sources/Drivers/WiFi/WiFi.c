@@ -1,4 +1,4 @@
-#include <Message.h>
+#include "Message.h"
 #include "stdint.h"
 #include "stdlib.h"
 #include "stdio.h"
@@ -14,7 +14,7 @@
 #include "WIFI_RESET.h"
 #include "Ring_Buffer.h"
 #include "Clock.h"
-#include "Message_Info.h"
+#include "Wifi_Message_Serialization.h"
 #include "Multibyte_Ring_Buffer.h"
 
 Multibyte_Ring_Buffer wifi_multibyte_ring;
@@ -23,23 +23,19 @@ Message *incomingWiFiMessageQueue = NULL;
 Message *outgoingWiFiMessageQueue = NULL;
 
 #define WIFI_SERIAL_OUT_BUFFER_LENGTH           1024
-#define WIFI_SERIAL_IN_BUFFER_LENGTH            1024
+#define WIFI_SERIAL_IN_BUFFER_LENGTH            2048
 #define INTERRUPT_RX_TIMEOUT_MS     3000
 #define INTERRUPT_TX_TIMEOUT_MS     1000
 
-#define STATE_STEP_COUNT        5
-
-ESP8266_UART_Device deviceData;
+ESP8266_UART_Device wifi_serial_device_data;
 volatile bool WifiInterruptReceived;
 volatile bool WifiSetProgramMode;
 bool Wifi_Message_Available;
 
-static bool received_message_start;
-
 static uint32_t pendingTransmitByteCount;
 static uint32_t bytes_received;
 
-static uint8_t serial_tx_buffer[WIFI_SERIAL_OUT_BUFFER_LENGTH] = "test message, yo\r\n";
+static uint8_t serial_tx_buffer[WIFI_SERIAL_OUT_BUFFER_LENGTH];
 static uint8_t serial_rx_buffer[WIFI_SERIAL_IN_BUFFER_LENGTH];
 
 static Wifi_States State;
@@ -53,50 +49,57 @@ static uint8_t * temp_source_address;
 static uint8_t * temp_dest_address;
 static uint8_t * message_end_ptr;
 static uint8_t * message_start_ptr;
-
-static const char * message_start = "\f";
-static const char * message_field_delimiter = "\t";
-static const char * message_end = "\n";
+static uint8_t * message_serial;
+static Message * message;
 
 static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
+
+static uint32_t rx_message_count;
+static uint32_t tx_message_count;
+static uint32_t rx_message_count_max;
+static uint32_t tx_message_count_max;
+static uint32_t rx_message_count_total;
+static uint32_t tx_message_count_total;
+int dequeue_count;
 
 bool Enable_WiFi(const char *ssid, const char *password) {
    bool rval = FALSE;
 
    Wifi_Message_Available = FALSE;
 
-   // Initialize the ESP8266 device data structure
-   deviceData.handle = ESP8266_Serial_Init(&deviceData);
-   deviceData.isSent = FALSE;
-   deviceData.rxChar = '\0';
-   deviceData.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
+
+   Multibyte_Ring_Buffer_Init(&wifi_multibyte_ring, WIFI_SERIAL_IN_BUFFER_LENGTH);
+
+// Initialize the ESP8266 device data structure
+   wifi_serial_device_data.handle = ESP8266_Serial_Init(&wifi_serial_device_data);
+   wifi_serial_device_data.isSent = FALSE;
+   wifi_serial_device_data.rxChar = '\0';
+   wifi_serial_device_data.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
 
    // Read any pending data to "clear the line"
-   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count) != ERR_OK) {
+   while (ESP8266_Serial_ReceiveBlock(wifi_serial_device_data.handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count)
+          != ERR_OK) {
 
    }
 
    State = Idle;
 
+   rx_message_count = 0;
+   tx_message_count = 0;
+   rx_message_count_max = 0;
+   tx_message_count_max = 0;
+   rx_message_count_total = 0;
+   tx_message_count_total = 0;
    Initialize_Message_Queue(&incomingWiFiMessageQueue);
    Initialize_Message_Queue(&outgoingWiFiMessageQueue);
 
    WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
 
-   Wait(300);
+   Wait(2000);
 
-   WiFi_Request_Connect((char*) ssid, (char*) password);
-
-   //make sure this message gets out right away.
-   for (int i = 0; i < STATE_STEP_COUNT; ++i) {
-      Wifi_State_Step();
-   }
-
-   Multibyte_Ring_Buffer_Init(&wifi_multibyte_ring, WIFI_SERIAL_IN_BUFFER_LENGTH);
-
-   Wait(500);
+   WiFi_Request_Connect(ssid, password);
 
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
@@ -111,8 +114,6 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 
 void Wifi_State_Step() {
 
-   //TODO: if a transmission was waiting, we'll lose it here. Look at pendingbytecount? Maybe we don't care?
-   //      This may just be test code, actually. The button handler in events.c is setting WifiSetProgramMode
    if (State != Programming && WifiSetProgramMode) {
       Wifi_Set_Programming_Mode();
       WifiSetProgramMode = FALSE;
@@ -120,6 +121,9 @@ void Wifi_State_Step() {
 
    switch (State) {
       case Enable: {
+         //TODO: on startup, the ESP sends a message saying that it has powered up. We should always be watching for
+         //      that message so we can see when it resets, handle any startup we may want to do, have better knowledge of the wifi state, etc
+
          if (WifiInterruptReceived) {
             WifiInterruptReceived = FALSE;
             ++PowerOn_Interrupt_Count;
@@ -144,96 +148,65 @@ void Wifi_State_Step() {
 
             State = Serialize_Transmission;
 
-         } else if (Multibyte_Ring_Buffer_Get_Bytes_Before_Char(&wifi_multibyte_ring, message_end[0]) > 0) {
-            State = Receive_Message;
+         } else {
+            message_serial = NULL;
 
-            WifiInterruptReceived = FALSE;
-            received_message_start = FALSE;
+            dequeue_count = Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(&wifi_multibyte_ring,
+                                                                                                 &message_serial);
 
-            interruptRxTime = Millis();
-         } else if (WifiInterruptReceived) {
+            if (message_serial != NULL) {
+               State = Deserialize_Received_Message;
+               message = NULL;
+            } else {
+               uint32_t free_size = Multibyte_Ring_Buffer_Get_Free_Size(&wifi_multibyte_ring);
 
-            State = Receive_Message;
-
-            WifiInterruptReceived = FALSE;
-            received_message_start = FALSE;
-
-            interruptRxTime = Millis();
+               if (free_size < 1) {
+                  //didn't find a message, so the buffer's full of garbage. throw it out.
+                  Multibyte_Ring_Buffer_Reset(&wifi_multibyte_ring);
+               }
+            }
          }
 
          break;
       }
 
-      case Receive_Message: {
+      case Deserialize_Received_Message: {
 
-//         if (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring,
-//                                                               serial_rx_buffer,
-//                                                               WIFI_SERIAL_IN_BUFFER_LENGTH,
-//                                                               message_start[0])     //throw away data up until the start of a message
+         message = Deserialize_Message_With_Message_Header(message_serial);
+         free(message_serial);
 
-         if (Multibyte_Ring_Buffer_Dequeue_Until_Char(&wifi_multibyte_ring, serial_rx_buffer,
-         WIFI_SERIAL_IN_BUFFER_LENGTH,
-                                                      message_end[0])) {
+         if (message != NULL) {
+            // Queue the message
+            Queue_Message(&incomingWiFiMessageQueue, message);
+            ++rx_message_count;
+            ++rx_message_count_total;
 
-            temp_type = strtok(serial_rx_buffer, message_start);     //throw out the start character
-            temp_type = strtok(NULL, message_field_delimiter);
-            temp_source_address = strtok(NULL, message_field_delimiter);
-            temp_dest_address = strtok(NULL, message_field_delimiter);
-            temp_content = strtok(NULL, message_end);
-
-            if (temp_content != NULL && temp_type != NULL && temp_source_address != NULL && temp_dest_address != NULL) {
-
-               // Create message object
-               Message *message = Create_Message(temp_content);
-               Set_Message_Type(message, temp_type);
-               Set_Message_Source(message, temp_source_address);
-               Set_Message_Destination(message, temp_dest_address);
-
-               // Queue the message
-               Queue_Message(&incomingWiFiMessageQueue, message);
-
-               State = Idle;
-
-//               if (Multibyte_Ring_Buffer_Get_Count(&wifi_multibyte_ring) < 10) {
-//                  interruptRxTime = Millis();
-//                  State = Idle;
-//               }
+            if (rx_message_count > rx_message_count_max) {
+               rx_message_count_max = rx_message_count;
             }
+
+            interruptRxTime = Millis();     // reset timeout, we'll look for another message.
          }
 
-         if ((Millis() - interruptRxTime) > INTERRUPT_RX_TIMEOUT_MS) {
-            State = Idle;
-         }
+         State = Idle;
 
          break;
       }
 
       case Serialize_Transmission: {
          Message *message = Dequeue_Message(&outgoingWiFiMessageQueue);
+         --tx_message_count;
 
-         //	(*message).source = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
-         //	strcpy ((*message).source, address);
+         if ((pendingTransmitByteCount = Serialize_Message_With_Message_Header(message, serial_tx_buffer,
+         WIFI_SERIAL_OUT_BUFFER_LENGTH))
+             > 0) {
+            State = Start_Transmission;
+         } else {
+            State = Idle;
+         }
 
-         //	sprintf ((*message).source, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
-
-         //HACK: Padding added because it seems to lessen the likelihood that we miss a \n
-         snprintf(serial_tx_buffer,
-                  WIFI_SERIAL_OUT_BUFFER_LENGTH,
-                  "  %s%s%s%s%s%s%s%s%s  ",
-                  message_start,
-                  message->type,
-                  message_field_delimiter,
-                  message->source,
-                  message_field_delimiter,
-                  message->destination,
-                  message_field_delimiter,
-                  message->content,
-                  message_end);
-
-         pendingTransmitByteCount = strlen(serial_tx_buffer);
          Delete_Message(message);
 
-         State = Start_Transmission;
          break;
       }
 
@@ -243,8 +216,8 @@ void Wifi_State_Step() {
          Wait(1);
          WIFI_GPIO2_PutVal(NULL, 1);
 
-         deviceData.isSent = FALSE;
-         ESP8266_Serial_SendBlock(deviceData.handle, serial_tx_buffer, pendingTransmitByteCount);
+         wifi_serial_device_data.isSent = FALSE;
+         ESP8266_Serial_SendBlock(wifi_serial_device_data.handle, serial_tx_buffer, pendingTransmitByteCount);
          State = Transmission_Sent;
 
          break;
@@ -252,7 +225,7 @@ void Wifi_State_Step() {
 
       case Transmission_Sent: {
          //transmission has been sent. back to idle for now, I guess
-         if (deviceData.isSent) {
+         if (wifi_serial_device_data.isSent) {
             State = Idle;
          }
          break;
@@ -300,6 +273,12 @@ void Wifi_Do_Reset(bool StateMachineWaitForConnect) {
 
 bool Wifi_Send(Message *message) {
    Queue_Message(&outgoingWiFiMessageQueue, message);
+   ++tx_message_count;
+   ++tx_message_count_total;
+   if (tx_message_count > tx_message_count_max) {
+      tx_message_count_max = tx_message_count;
+   }
+
    return TRUE;
 }
 
@@ -307,6 +286,7 @@ Message* Wifi_Receive() {
    Message *message = NULL;
    if (Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
       message = Dequeue_Message(&incomingWiFiMessageQueue);
+      --rx_message_count;
       return message;
    }
    return NULL;
@@ -345,13 +325,16 @@ bool WiFi_Enable() {
    Wifi_Message_Available = FALSE;
 
 // Initialize the ESP8266 device data structure
-   deviceData.handle = ESP8266_Serial_Init(&deviceData);
-   deviceData.isSent = FALSE;
-   deviceData.rxChar = '\0';
-   deviceData.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
+   wifi_serial_device_data.handle = ESP8266_Serial_Init(&wifi_serial_device_data);
+   wifi_serial_device_data.isSent = FALSE;
+   wifi_serial_device_data.rxChar = '\0';
+   wifi_serial_device_data.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
 
 // Read any pending data to "clear the line"
-   while (ESP8266_Serial_ReceiveBlock(deviceData.handle, (LDD_TData *) &deviceData.rxChar, sizeof(deviceData.rxChar)) != ERR_OK) {
+   while (ESP8266_Serial_ReceiveBlock(wifi_serial_device_data.handle,
+                                      (LDD_TData *) &wifi_serial_device_data.rxChar,
+                                      sizeof(wifi_serial_device_data.rxChar))
+          != ERR_OK) {
 
    }
 
@@ -374,6 +357,8 @@ bool WiFi_Enable() {
    WifiInterruptReceived = FALSE;
    WifiSetProgramMode = FALSE;
 
+   rx_message_count = 0;
+   tx_message_count = 0;
    Initialize_Message_Queue(&incomingWiFiMessageQueue);
    Initialize_Message_Queue(&outgoingWiFiMessageQueue);
 
@@ -392,8 +377,8 @@ bool WiFi_Disable() {
 
 // Requests the WiFi controller to connect to an access point with the specified SSID and password.
 // The WiFi controller will send a response in a "status" Message.
-bool WiFi_Request_Connect(char * ssid, char * password) {
-   char* args[] = { ssid, password };
+bool WiFi_Request_Connect(const char * ssid, const char * password) {
+   char* args[] = { (char *) ssid, (char *) password };
    return WiFi_Send_Command(SET_AP_CMD_STR, args, 2);
 }
 
@@ -463,16 +448,17 @@ static bool WiFi_Send_Command(char * command, char ** args, int arg_count) {
    for (int i = 0; i < arg_count; ++i) {
 
       strcat(send_buffer, args[i]);
-
       if (i < arg_count - 1) {
          strcat(send_buffer, arg_delimiter);
       }
    }
 
-   message = Create_Message(send_buffer);
+   message = Create_Message();
+   Set_Message_Type(message, "command");
    Set_Message_Destination(message, "none");
    Set_Message_Source(message, "none");
-   Set_Message_Type(message, "command");
+   Set_Message_Content_Type(message, "text");
+   Set_Message_Content(message, send_buffer, strlen(send_buffer));
 
    free(send_buffer);
 

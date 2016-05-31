@@ -9,7 +9,7 @@
 #define BOOTLOADER_H
 
 //#include "ESP8266.h"
-#include "program_flash.h"
+#include "Program_Flash.h"
 
 //includes
 #include "PE_Types.h"
@@ -19,8 +19,7 @@
 #define BOOTLOADER_KEY_VALUE   0x00000000U
 #define BOOT_START_ADDR        0x00000000U
 
-#define FIRMWARE_SERVER_ADDRESS "107.170.180.158"
-#define FIRMWARE_SERVER_PORT 3000
+#define FIRMWARE_SERVER_ADDRESS "107.170.180.158:3000"
 
 //data types
 typedef struct shared_bootloader_data

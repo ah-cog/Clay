@@ -5,7 +5,7 @@
 #include "Power_Manager.h"
 #include "Button.h"
 
-#include "program_flash.h"
+#include "Program_Flash.h"
 #include "Multibyte_Ring_Buffer.h"
 #include "Wifi_Message_Serialization.h"
 
@@ -50,23 +50,15 @@ void Application(void) {
    wifi_connected = FALSE;
    local_address_received = FALSE;
 
-   //if (!Verify_Firmware () || (/*!Has_Latest_Firmware()*/ SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update ())) {
-   if (!Verify_Firmware() || (SharedData.ApplicationUpdateAvailable && Has_User_Requested_Update())) {
-//   if (0) {
+   if (!Verify_Firmware() || Has_User_Requested_Update()) {
 
+      //TODO: this should be done in the app after startup. It really slows down boot-up.
       status = Enable_WiFi(SSID_DEFAULT, PASSWORD_DEFAULT);
       enable_wifi_start_time_ms = Millis();
       while ((Millis() - enable_wifi_start_time_ms) < 5000) {
          //see if we can catch the WiFi's messages during connection
          Monitor_Periodic_Events();
       }
-
-#if 0
-      Wifi_Set_Programming_Mode();
-
-      while (Wifi_Get_State() == Programming)
-      ;
-#endif
 
       //take all the messages out of the queue, see if we got the two we care about: connection status and
       while (Has_Messages(&incomingWiFiMessageQueue)) {
@@ -106,13 +98,10 @@ void Application(void) {
          }
       }
 
-      //TODO: do init stuff for wifi peripherals so we can preserve our connection?
-      if (wifi_connected && local_address_received) {
+      if (wifi_connected && local_address_received && !Has_Latest_Firmware()) {
 
          // Check if an application update is available. If so, write that value to the shared flash memory.
-         if (!Has_Latest_Firmware()) {
-            SharedData.ApplicationUpdateAvailable = TRUE;
-         }
+         SharedData.ApplicationUpdateAvailable = TRUE;
 
          // Update the current firmware if the current application doesn't verify or if the user has approved a pending update.
          if ((status = Update_Firmware()) == TRUE) {
@@ -120,7 +109,6 @@ void Application(void) {
          }
       } else {
          // Error: Could not connect to Wi-Fi.
-
       }
    }
 

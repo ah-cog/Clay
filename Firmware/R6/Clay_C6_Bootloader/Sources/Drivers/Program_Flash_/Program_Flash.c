@@ -7,7 +7,7 @@
 
 #include "PE_Types.h"
 #include "FLASH1.h"
-#include "program_flash.h"
+#include "Program_Flash.h"
 
 #define CRC16_POLY 0x8005U
 

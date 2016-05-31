@@ -13,7 +13,6 @@ ASM_SRCS :=
 CXX_SRCS := 
 C++_SRCS := 
 CC_SRCS := 
-SECONDARY_SIZE := 
 C++_DEPS := 
 OBJS := 
 C_DEPS := 
@@ -31,8 +30,8 @@ SUBDIRS := \
 Static_Code/System \
 Sources \
 Sources/Utilities \
-Sources/Drivers/program_flash \
 Sources/Drivers/WiFi \
+Sources/Drivers/Program_Flash_ \
 Sources/Drivers/Power_Manager \
 Sources/Drivers/LED \
 Sources/Drivers/Button \

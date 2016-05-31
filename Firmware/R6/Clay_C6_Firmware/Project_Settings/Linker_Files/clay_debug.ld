@@ -34,29 +34,20 @@ __SP_INIT = _estack;
 __stack = _estack;
 
 /* Generate a link error if heap and stack don't fit into RAM */
-__heap_size = 0x00;                    /* required amount of heap  */
-__stack_size = 0x0400;                 /* required amount of stack */
+__heap_size = 0x20000;                    /* required amount of heap  */
+__stack_size = 0x1400;                 /* required amount of stack */
 
 MEMORY {
+  m_bootloader (RX) : ORIGIN = 0x00000000, LENGTH = 0x8000
   m_interrupts (RX) : ORIGIN = 0x00008000, LENGTH = 0x00000198
   m_text      (RX) : ORIGIN = 0x00008400, LENGTH = 0x000F7C00
   m_data_1FFF0000 (RW) : ORIGIN = 0x1FFF0000, LENGTH = 0x00010000
   m_data      (RW) : ORIGIN = 0x20000000, LENGTH = 0x00030000
-  m_cfmprotrom  (RX) : ORIGIN = 0x00000400, LENGTH = 0x00000010
 }
 
 /* Define output sections */
 SECTIONS
 {
-  /******************************************************************************/
-  /*******************************clay sections**********************************/
-  /*data shared between application and bootloader. The NOLOAD parameter is used to prevent jumps between applications from causing re-initialization of the data.*/
-  .BootloaderSharedData 0x2002FFF8 (NOLOAD):
-  {
-    KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
-  } > m_data
-  /******************************************************************************/
-
   /* The startup code goes first into INTERNAL_FLASH */
   .interrupts :
   {
@@ -65,14 +56,7 @@ SECTIONS
     KEEP(*(.vectortable)) /* Startup code */
     . = ALIGN(4);
   } > m_interrupts
-
-  .cfmprotect :
-  {
-    . = ALIGN(4);
-	KEEP(*(.cfmconfig))	/* Flash Configuration Field (FCF) */
-	. = ALIGN(4);
-  } > m_cfmprotrom
-  
+ 
   /* The program code and other data goes into INTERNAL_FLASH */
   .text :
   {
@@ -232,6 +216,15 @@ SECTIONS
     . = . + __stack_size;
     . = ALIGN(4);
   } > m_data
+  
+  /******************************************************************************/
+  /*******************************clay sections**********************************/
+  /*data shared between application and bootloader. The NOLOAD parameter is used to prevent jumps between applications from causing re-initialization of the data.*/
+  .BootloaderSharedData 0x2002FFF8 (NOLOAD):
+  {
+    KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
+  } > m_data
+  /******************************************************************************/
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }

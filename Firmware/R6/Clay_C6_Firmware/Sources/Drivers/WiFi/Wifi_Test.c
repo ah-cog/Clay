@@ -62,7 +62,7 @@ void Wifi_Test() {
       //echo received messages
       if (echo && Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
          message = Wifi_Receive();
-         if (message != NULL && strcmp(message->type, "status")) {
+         if (message != NULL && strcmp(message->message_type, "status")) {
 
 //            sprintf(message_content, message_content_template, ++message_index);
 //
@@ -85,9 +85,11 @@ void Wifi_Test() {
           && !Has_Messages(&outgoingWiFiMessageQueue)
           && Millis() - lastMessageSendTime > messageSendPeriod) {
 
-         outgoing_message = Create_Message(message_content);
+         outgoing_message = Create_Message();
          Set_Message_Type(outgoing_message, type_str);
          Set_Message_Source(outgoing_message, source_addr);
+         Set_Message_Content_Type(outgoing_message, "text");
+         Set_Message_Content(outgoing_message, message_content, strlen(message_content));
 
          if (request_firmware_size) {
             Set_Message_Destination(outgoing_message, dest_addr_size);

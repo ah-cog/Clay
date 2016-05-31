@@ -62,6 +62,7 @@
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\LEDs\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Power_Manager\</Path>
+      <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Program_Flash_\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\</Path>
       <Path>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Services\</Path>
@@ -107,7 +108,6 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Action.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Application.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\Bootloader.c</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\program_flash.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\IR_Range.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\Servo.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\Voltage_Controlled_Servo.c</PathName>
@@ -133,10 +133,12 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\LEDs\LEDs.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_Simple.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Power_Manager\Power_Manager.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Program_Flash_\Program_Flash.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\RGBDemo.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\RGB_LED.c</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\Message_Info.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\HTTP_Messages.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\WiFi.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\Wifi_Message_Serialization.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\Wifi_Test.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Event.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Events.c</PathName>
@@ -147,6 +149,7 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Timeline.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Trigger.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\UDP_Discovery_temp.c</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\CRC16.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\Multibyte_Ring_Buffer.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\PWM_Utils.c</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\Ring_Buffer.c</PathName>
@@ -200,7 +203,6 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Action.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Application.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\Bootloader.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Bootloader\program_flash.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\IR_Range.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\Servo.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Demo\Voltage_Controlled_Servo.h</PathName>
@@ -269,10 +271,12 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_RH\mesh_stastistics.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Mesh\Mesh_Simple.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Power_Manager\Power_Manager.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\Program_Flash_\Program_Flash.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\RGBDemo.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\RGB_LED\RGB_LED.h</PathName>
-      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\Message_Info.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\HTTP_Messages.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\WiFi.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\Wifi_Message_Serialization.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Drivers\WiFi\Wifi_Test.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Event.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Events.h</PathName>
@@ -283,6 +287,7 @@
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Timeline.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Trigger.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\UDP_Discovery_temp.h</PathName>
+      <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\CRC16.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\Multibyte_Ring_Buffer.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\PWM_Utils.h</PathName>
       <PathName>E:\git\clay\Firmware\R6\Clay_C6_Firmware\Sources\Utilities\Ring_Buffer.h</PathName>

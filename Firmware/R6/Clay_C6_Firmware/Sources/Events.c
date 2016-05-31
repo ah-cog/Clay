@@ -32,6 +32,7 @@
 #include "Init_Config.h"
 #include "PDD_Includes.h"
 
+#include "Program_Flash.h"
 #include "Clock.h"
 //#include "Mesh.h"
 #include "Mesh_Simple.h"
@@ -245,6 +246,7 @@ void Cpu_OnNMI(void) {
 /* ===================================================================*/
 void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
+   flash_operation_completed = TRUE;
 }
 
 /*

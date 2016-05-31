@@ -13,15 +13,12 @@
 #include "Message_Queue.h"
 #include "Multibyte_Ring_Buffer.h"
 
-#define WIFI_SERIAL_OUT_BUFFER_LENGTH           1024
-#define WIFI_SERIAL_IN_BUFFER_LENGTH            1024
-
 typedef enum
 {
    Enable,
    Programming,
    Idle,
-   Receive_Message,
+   Deserialize_Received_Message,
    Serialize_Transmission,
    Start_Transmission,
    Transmission_Sent
@@ -35,7 +32,7 @@ typedef struct
       uint8_t (*rxPutFct)(uint8_t);
 } ESP8266_UART_Device;        // NOTE: This was named "UART_Desc" previously.
 
-extern ESP8266_UART_Device deviceData;
+extern ESP8266_UART_Device wifi_serial_device_data;
 extern volatile bool WifiInterruptReceived;
 extern volatile bool WifiSetProgramMode;
 extern bool Wifi_Message_Available;
@@ -72,7 +69,7 @@ extern bool WiFi_Disable();
 
 // Requests the WiFi controller to connect to an access point with the specified SSID and password.
 // The WiFi controller will send a response in a "status" Message.
-extern bool WiFi_Request_Connect(char * ssid, char * password);
+extern bool WiFi_Request_Connect(const char * ssid, const char * password);
 
 // Requests the WiFi controller to disconnect from the connected access point, if any.
 // The WiFi controller will send a response in a "status" Message.

@@ -1,127 +1,179 @@
-#include <Message.h>
-#include "Action.h"
+#include "stdlib.h"
+#include "stdint.h"
+#include "stdio.h"
+#include "string.h"
+
+#include "Message.h"
+#include "CRC16.h"
 
 #define DEFAULT_UUID_LENGTH 37
-
-#define MESSAGE_TERMINATOR '\n'
-#define ADDRESS_TERMINATOR '\x12'
 
 char messageUuidBuffer[DEFAULT_UUID_LENGTH] = { 0 };
 char grammarSymbolBuffer[MAXIMUM_GRAMMAR_SYMBOL_LENGTH] = { 0 };
 
-Message* Create_Message (const char *content) {
+Message* Create_Message() {
 
-	// Allocate memory for message structure.
-	Message *message = (Message *) malloc (sizeof (Message));
+   // Allocate memory for message structure.
+   Message *message = (Message *) malloc(sizeof(Message));
 
-	(*message).type = NULL;
-	(*message).source = NULL;
-	(*message).destination = NULL;
+   (*message).message_type = NULL;
+   (*message).source = NULL;
+   (*message).destination = NULL;
+   (*message).content_length = 0;
+   (*message).content_checksum = 0;
+   (*message).content_type = NULL;
+   (*message).content = NULL;
 
-	// Allocate memory for the message's content.
-	(*message).content = (char *) malloc (strlen (content) + 1);
-	memset ((*message).content, '\0', strlen (content) + 1);
+   // Set up links for queue
+   (*message).previous = NULL;
+   (*message).next = NULL;
 
-	// Copy message content
-	strncpy ((*message).content, content, strlen (content));
-
-	// Set up links for queue
-	(*message).previous = NULL;
-	(*message).next = NULL;
-
-	return message;
+   return message;
 }
 
-void Set_Message_Type (Message *message, const char *type) {
+int8_t Delete_Message(Message *message) {
 
-	// Free the message's destination stored type from memory
-	if ((*message).type != NULL) {
-		free ((*message).type);
-		(*message).type = NULL;
-	}
+   if (message != NULL) {
 
-	// Copy the type into the structure
-	(*message).type = (char *) malloc (strlen (type) + 1);
-	memset ((*message).type, '\0', strlen (type) + 1);
+      // TODO: Remove references to the message in the queue.
 
-	strcpy ((*message).type, type);
+      if ((*message).message_type != NULL) {
+         free((*message).message_type);
+         (*message).message_type = NULL;
+      }
 
-//	sprintf ((*message).source, "%s,%s%c", channel, address, ADDRESS_TERMINATOR);
+      if ((*message).source != NULL) {
+         free((*message).source);
+         (*message).source = NULL;
+      }
+
+      if ((*message).destination != NULL) {
+         free((*message).destination);
+         (*message).destination = NULL;
+      }
+
+      if ((*message).content_type != NULL) {
+         free((*message).content_type);
+         (*message).content_type = NULL;
+      }
+
+      if ((*message).content != NULL) {
+         free((*message).content);
+         (*message).content = NULL;
+      }
+
+      free(message);
+      message = NULL;
+
+      return TRUE;
+   }
+
+   return FALSE;
 }
 
-void Set_Message_Source (Message *message, const char *address) {
+void Set_Message_Type(Message *message, const char *type) {
 
-	// Free the message's destination address from memory
-	if ((*message).source != NULL) {
-		free ((*message).source);
-		(*message).source = NULL;
-	}
+   // Free the message's destination stored type from memory
+   if ((*message).message_type != NULL) {
+      free((*message).message_type);
+      (*message).message_type = NULL;
+   }
 
-	// Copy the message destination address
-	(*message).source = (char *) malloc (strlen (address) + 1);
-	memset ((*message).source, '\0', strlen (address) + 1);
+   // Copy the type into the structure
+   (*message).message_type = (char *) malloc(strlen(type) + 1);
+   memset((*message).message_type, '\0', strlen(type) + 1);
 
-	strcpy ((*message).source, address);
-
-//	(*message).source = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
-//	strcpy ((*message).source, address);
-
-//	sprintf ((*message).source, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
+   strcpy((*message).message_type, type);
 }
 
-void Set_Message_Destination (Message *message, const char *address) {
+void Set_Message_Source(Message *message, const char *address) {
 
-	// Free the message's destination address from memory
-	if ((*message).destination != NULL) {
-		free ((*message).destination);
-		(*message).destination = NULL;
-	}
+   // Free the message's destination address from memory
+   if ((*message).source != NULL) {
+      free((*message).source);
+      (*message).source = NULL;
+   }
 
-	// Copy the message destination address
-	(*message).destination = (char *) malloc (strlen (address));
-	memset ((*message).destination, '\0', strlen (address) + 1);
+   // Copy the message destination address
+   (*message).source = (char *) malloc(strlen(address) + 1);
+   memset((*message).source, '\0', strlen(address) + 1);
 
-	strcpy ((*message).destination, address);
-
-//	(*message).destination = (char *) malloc (strlen (type) + 1 + strlen (address) + 1); // i.e., <channel>,<address>!
-//	strcpy ((*message).destination, address);
-
-//	sprintf ((*message).destination, "%s,%s%c", type, address, ADDRESS_TERMINATOR);
+   strcpy((*message).source, address);
 }
 
-//void Set_Message_Source (Message *message, const char *address);
-//void Set_Message_Destination (Message *message, const char *address);
-//void Set_Message_Content (Message *message, const char *content);
+void Set_Message_Destination(Message *message, const char *address) {
 
-int8_t Delete_Message (Message *message) {
+   // Free the message's destination address from memory
+   if ((*message).destination != NULL) {
+      free((*message).destination);
+      (*message).destination = NULL;
+   }
 
-	if (message != NULL) {
+   // Copy the message destination address
+   (*message).destination = (char *) malloc(strlen(address) + 1);
+   memset((*message).destination, '\0', strlen(address) + 1);
 
-		// TODO: Remove references to the message in the queue.
+   strcpy((*message).destination, address);
+}
 
-		// Free the message's content from memory
-		free ((*message).content);
-		(*message).content = NULL;
+void Set_Message_Content(Message * message, const char *content, uint32_t content_length) {
 
-		// Free the message's source address from memory
-		if ((*message).source != NULL) {
-			free ((*message).source);
-			(*message).source = NULL;
-		}
+   if ((*message).content != NULL) {
+      free((*message).content);
+      (*message).content = NULL;
 
-		// Free the message's destination address from memory
-		if ((*message).destination != NULL) {
-			free ((*message).destination);
-			(*message).destination = NULL;
-		}
+      (*message).content_length = 0;
+      (*message).content_checksum = 0;
+   }
 
-		// Free the message from memory
-		free (message);
-		message = NULL;
+   (*message).content_length = content_length;
 
-		return TRUE;
-	}
+   // Allocate memory for the message's content.
+   (*message).content = (char *) malloc((*message).content_length + 1);
+   (*message).content_checksum = Calculate_Checksum_On_Bytes(content, content_length);
 
-	return FALSE;
+   memset((*message).content, 0, (*message).content_length + 1);
+
+   // Copy message content
+   memcpy((*message).content, content, (*message).content_length);
+}
+
+extern void Set_Message_Content_Type(Message *message, const char *content_type) {
+
+   // Free the message's destination address from memory
+   if ((*message).content_type != NULL) {
+      free((*message).content_type);
+      (*message).content_type = NULL;
+   }
+
+   // Copy the message content_type address
+   (*message).content_type = (char *) malloc(strlen(content_type) + 1);
+   memset((*message).content_type, '\0', strlen(content_type) + 1);
+
+   strcpy((*message).content_type, content_type);
+}
+
+char * Get_Message_Type(Message *message) {
+   return (*message).message_type;
+}
+
+char * Get_Message_Source(Message *message) {
+   return (*message).source;
+}
+
+char * Get_Message_Destination(Message *message) {
+   return (*message).destination;
+}
+
+char * Get_Message_Content(Message *message) {
+   return (*message).content;
+}
+
+uint32_t Get_Message_Content_Length(Message *message) {
+   return (*message).content_length;
+}
+
+char * Get_Message_Content_Type(Message *message) {
+   return (*message).message_type;
 }
 

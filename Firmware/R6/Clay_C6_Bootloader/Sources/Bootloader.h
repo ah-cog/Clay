@@ -9,7 +9,6 @@
 #define BOOT_START_ADDR        0x00000000U
 
 #define FIRMWARE_SERVER_ADDRESS "107.170.180.158:3000"
-//#define FIRMWARE_SERVER_ADDRESS "192.168.1.3:3000"
 
 #define DEFAULT_FIRMWARE_CHECKSUM 0x0000
 #define DEFAULT_FIRMWARE_SIZE 0 // The total size of the firmware to retrieve from the server.

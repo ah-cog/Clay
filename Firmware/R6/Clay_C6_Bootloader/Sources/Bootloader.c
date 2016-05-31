@@ -6,7 +6,7 @@
 #include "Clock.h"
 #include "WiFi.h"
 #include "Bootloader.h"
-#include "program_flash.h"
+#include "Program_Flash.h"
 #include "HTTP_Messages.h"
 #include "CRC16.h"
 
@@ -46,9 +46,6 @@ static void Flush_Incoming_Wifi_Buffers();
 ////Global implementations ////////////////////////////////////////
 
 //data types
-
-//TODO: place bootloader version in ROM.
-//TODO: place app version in app ROM.
 
 uint8_t Initialize_Bootloader() {
 
@@ -167,15 +164,10 @@ uint8_t Has_Latest_Firmware() {
    char uriParameters[64] = { 0 };
 
    //TODO: do a proper version check.
-   //sprintf(uriParameters, "/clay/firmware/version/");
+   //sprintf(uriParameters, "/clay/firmware/version");
 
    // Retrieve firmware checksum from the server.
    sprintf(uriParameters, "/clay/firmware/checksum");
-
-   //TODO: implement HTTP Get
-   //Send message
-   //wait for response, calling WiFi_State_Step
-   //get the message back
 
    response_message = WiFi_Send_With_Retries(Create_HTTP_GET_Request(FIRMWARE_SERVER_ADDRESS, local_address, uriParameters),
                                              5,
@@ -187,8 +179,6 @@ uint8_t Has_Latest_Firmware() {
       response_message = NULL;
    }
 
-//   latestFirmwareChecksum = atoi(httpResponseBuffer);
-
    // Get the stored checksum
    firmwareChecksum = Read_Program_Checksum();
 
@@ -198,7 +188,6 @@ uint8_t Has_Latest_Firmware() {
       result = FALSE;
    }
 
-   //TODO: implement this. If the firmware IS out of date, set the value in the SharedData struct.
    return result;
 }
 
@@ -305,7 +294,9 @@ uint8_t Update_Firmware() {
                     || (bytes_received + response_message->content_length) >= firmware_size)) {
                bytes_received += response_message->content_length;
 
-               Write_Firmware_Bytes(APP_START_ADDR + firmware_image_offset, response_message->content, FIRMWARE_BLOCK_SIZE);
+               Write_Firmware_Bytes(APP_START_ADDR + firmware_image_offset,
+                                    response_message->content,
+                                    response_message->content_length);
 
                Delete_Message(response_message);
                response_message = NULL;

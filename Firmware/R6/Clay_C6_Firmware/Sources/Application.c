@@ -1,6 +1,7 @@
 #include <Message.h>
 #include "Application.h"
 
+#include "Message_Processor.h"
 //#include "meshTest.h"
 #include "Bootloader.h"
 //#include "Mesh.h"
@@ -39,6 +40,8 @@ char * password = "h3fn3r_is_better_than_me";
 //char * ssid = "Clay";
 //char * password = "redgreenblue";
 
+static bool request_status;
+static bool performed_wifi_led_blast = FALSE;
 static uint16_t buzzerRatio = 6500;
 static uint16_t buzzerPeriod_us = 240;
 static uint16_t buzzerDuty_us = 120;
@@ -46,7 +49,6 @@ uint32_t Button_Press_Time;
 uint32_t adcRead = 0;
 LDD_TDeviceDataPtr ADC0_DeviceData;
 
-void Monitor_Periodic_Events();
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
 void Send_Mesh_Test_Message();
 
@@ -89,9 +91,7 @@ void Initialize() {
    Enable_Actions();
 
    // Initialize bootloader.
-   //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
-//	bool is_update_available = FALSE;
-//	Initialize_Bootloader (); // TODO: Make this work!
+   Initialize_Bootloader();
 
    if ((status = Button_Enable()) != TRUE) {
       // Failure
@@ -246,11 +246,40 @@ void Discovery_Broadcast_Presence() {
    // Queue device discovery broadcast
    char *uuid = Get_Unit_UUID();
    sprintf(buffer2, "announce device %s", uuid);
-   Message *broadcastMessage = Create_Message(buffer2);
+   Message *broadcastMessage = Create_Message();
    Set_Message_Type(broadcastMessage, "udp");
    Set_Message_Source(broadcastMessage, broadcast_address);
    Set_Message_Destination(broadcastMessage, broadcast_address);
+   Set_Message_Content(broadcastMessage, buffer2, strlen(buffer2));
+   Set_Message_Content_Type(broadcastMessage, "text");
+
    Queue_Message(&outgoingMessageQueue, broadcastMessage);
+}
+
+void Wait_For_Wifi_Startup() {
+
+   Message * message;
+   bool message_status = FALSE;
+   //wait until we've finished the startup light show.
+   while (!performed_wifi_led_blast) {
+
+      // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
+      if (Has_Messages(&incomingWiFiMessageQueue)) {
+         message = Dequeue_Message(&incomingWiFiMessageQueue);
+
+         message_status = Process_Incoming_Message(message);
+
+         // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
+         if (message_status == TRUE) {
+            Delete_Message(message);
+         } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
+            // TODO: Process events on the timeline with the message, before dequeueing...
+            Queue_Message(&incomingMessageQueue, message);
+         }
+      }
+
+      Monitor_Periodic_Events();
+   }
 }
 
 int8_t message_status = FALSE;
@@ -260,6 +289,11 @@ uint8_t pause_timeline = FALSE;
 void Application(void) {
    Message *message = NULL;
    int i;
+
+   if (Update_Available()) {
+      Disable_Interrupts();
+      Jump_To_Bootloader_And_Update_Application();
+   }
 
 //	Message *signalMessage;
 //	signalMessage = Create_Message("start event 89d87141-01f7-4812-a358-3892cf2f5a70");
@@ -360,16 +394,6 @@ void Application(void) {
       }
 
 //        // Perform operating system operations.
-//        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
-//		is_update_available = Update_Available ();
-//		//if (is_update_available) {
-//		if (SharedData.UpdateApplication) {
-//			
-//			// TODO: Disable all interrupts!
-//			
-//			// Jump to the bootloader.
-//			Jump_To_Bootloader_And_Update_Application ();
-//		}
 
 //      // Perform action.
 //      if ((*timeline).current_event != NULL) {
@@ -407,11 +431,11 @@ void Application(void) {
       if (Has_Messages(&outgoingMessageQueue) == TRUE) {
          message = Dequeue_Message(&outgoingMessageQueue);
 
-         if (strncmp((*message).type, "device", strlen("device")) == 0) {
+         if (strncmp((*message).message_type, "device", strlen("device")) == 0) {
             // Device
             Queue_Message(&incomingMessageQueue, message);
-         } else if ((strncmp((*message).type, "udp", strlen("udp")) == 0)
-                    || (strncmp((*message).type, "tcp", strlen("tcp")) == 0)) {
+         } else if ((strncmp((*message).message_type, "udp", strlen("udp")) == 0)
+                    || (strncmp((*message).message_type, "tcp", strlen("tcp")) == 0)) {
             // Wi-Fi (UDP or TCP). Propagate to Wi-Fi message queue (or other queue, if exists)
             Queue_Message(&outgoingWiFiMessageQueue, message);
          }
@@ -425,9 +449,6 @@ void Application(void) {
       Monitor_Periodic_Events();
    }
 }
-
-static bool request_status;
-static bool performed_wifi_led_blast = FALSE;
 
 //bool io_state;
 void Monitor_Periodic_Events() {
@@ -466,6 +487,7 @@ void Monitor_Periodic_Events() {
       Button_Periodic_Call();
       Channel_Periodic_Call();
       Interactive_Assembly_Periodic_Call();
+      Wifi_State_Step();
 
       // TODO: Perform any periodic actions (1 ms).
    }

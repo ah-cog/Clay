@@ -14,6 +14,8 @@
 #include "stdint.h"
 #include "stdbool.h"
 
+#include "Message.h"
+
 ////Macros ////////////////////////////////////////////////////////
 
 ////Typedefs  /////////////////////////////////////////////////////
@@ -41,16 +43,22 @@ extern uint32_t Multibyte_Ring_Buffer_Dequeue_Until_Char(Multibyte_Ring_Buffer *
                                                          char end_char);
 extern uint32_t Multibyte_Ring_Buffer_Get_Bytes_Before_Char(Multibyte_Ring_Buffer * buffer, char end_char);
 
-uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(Multibyte_Ring_Buffer * buffer, char * end_str);
-uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(Multibyte_Ring_Buffer * buffer,
-                                                    uint8_t * data,
-                                                    uint32_t size,
-                                                    char * end_string);
+extern uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End(Multibyte_Ring_Buffer * buffer, char * end_str);
+extern uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(Multibyte_Ring_Buffer * buffer,
+                                                           uint8_t * data,
+                                                           uint32_t size,
+                                                           char * end_string);
+
+extern uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Multibyte_Ring_Buffer * buffer, uint8_t * * destination);
+
+extern uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_Ring_Buffer * buffer,
+                                                                             char * end_str,
+                                                                             uint32_t offset);
 
 extern uint32_t Multibyte_Ring_Buffer_Get_Free_Size(Multibyte_Ring_Buffer * buffer);
 extern uint32_t Multibyte_Ring_Buffer_Get_Count(Multibyte_Ring_Buffer * buffer);
 extern bool Multibyte_Ring_Buffer_Full(Multibyte_Ring_Buffer * buffer);
 
-//extern uint32_t Multibyte_Ring_Buffer_Test();
+extern uint32_t Multibyte_Ring_Buffer_Test();
 
 #endif /* SOURCES_UTILITIES_MULTIBYTE_RING_BUFFER_H_ */

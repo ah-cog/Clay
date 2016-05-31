@@ -58,7 +58,7 @@ int8_t Check_For_Discovery_Message(Message*message) {
    int8_t result = FALSE;
 
    //look for announce messages from other clay modules.
-   if (strncmp((*message).type, "udp", strlen("udp")) == 0
+   if (strncmp((*message).message_type, "udp", strlen("udp")) == 0
        && Message_Content_Parameter_Equals(message, FIRST_PARAMETER, "announce")
        && Message_Content_Parameter_Equals(message, SECOND_PARAMETER, "device")) {
       result = Process_Module_Announce_Message(message);
@@ -81,16 +81,16 @@ int8_t Find_Uuid_In_Discovered_Modules(char * uuid_buffer) {
    return result;
 }
 
-remote_clay_module* Get_Device_By_UUID (char *uuid) {
+remote_clay_module* Get_Device_By_UUID(char *uuid) {
 
-	   for (int i = 0; i < MODULE_DISCOVERY_COUNT; ++i) {
-	      if (discovered_modules[i].allocated && strcmp(discovered_modules[i].uuid, uuid) == 0) {
-	         return &discovered_modules[i];
-	         break;
-	      }
-	   }
+   for (int i = 0; i < MODULE_DISCOVERY_COUNT; ++i) {
+      if (discovered_modules[i].allocated && strcmp(discovered_modules[i].uuid, uuid) == 0) {
+         return &discovered_modules[i];
+         break;
+      }
+   }
 
-	   return NULL;
+   return NULL;
 }
 
 int8_t Process_Module_Announce_Message(Message * message) {
@@ -132,10 +132,13 @@ int8_t Process_Module_Announce_Message(Message * message) {
 void Discovery_Broadcast_Presence_4446() {     // Queue device discovery broadcast
    char *uuid = Get_Unit_UUID();
    sprintf(buffer2, "announce device %s", uuid);
-   Message *broadcastMessage = Create_Message(buffer2);
+   Message *broadcastMessage = Create_Message();
    Set_Message_Type(broadcastMessage, "udp");
    Set_Message_Source(broadcastMessage, broadcast_address_module);
    Set_Message_Destination(broadcastMessage, broadcast_address_module);
+   Set_Message_Content(broadcastMessage, buffer2, strlen(buffer2));
+   Set_Message_Content_Type(broadcastMessage, "text");
+
    Queue_Message(&outgoingMessageQueue, broadcastMessage);
 }
 

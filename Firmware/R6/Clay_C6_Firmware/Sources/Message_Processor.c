@@ -59,7 +59,7 @@ int8_t Process_Incoming_Message(Message *message) {
 // TODO: - INFO,CONNECTED
 // TODO: - INFO,192.168.1.1 (for example)
 // TODO: - INFO,DISCONNECTED
-   if (strncmp((*message).type, "status", strlen("status")) == 0) {
+   if (strncmp((*message).message_type, "status", strlen("status")) == 0) {
 
       // <HACK>
       // </HACK>
@@ -975,10 +975,12 @@ static int8_t Process_Get_Event_State(Message * message) {
 
    if (result) {
 
-      response_message = Create_Message(response_message_content);
+      response_message = Create_Message();
       Set_Message_Destination(response_message, message->source);
       Set_Message_Source(response_message, message->destination);
-      Set_Message_Type(response_message, message->type);
+      Set_Message_Type(response_message, message->message_type);
+      Set_Message_Content(response_message, response_message_content, strlen(response_message_content));
+      Set_Message_Content_Type(response_message,"text");
 
       Queue_Message(&outgoingMessageQueue, response_message);
    }
@@ -1010,24 +1012,28 @@ void Send_Acknowledgment_UDP(char *token, char *messageContent) {
 // Queue the outgoing acknowledgment message!
    Message *responseMessage;
 
-   responseMessage = Create_Message(token);
+   responseMessage = Create_Message();
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
+   Set_Message_Content(responseMessage, token, strlen(token));
    Queue_Message(&outgoingMessageQueue, responseMessage);
 
-   responseMessage = Create_Message(token);
+   responseMessage = Create_Message();
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
+   Set_Message_Content(responseMessage, token, strlen(token));
    Queue_Message(&outgoingMessageQueue, responseMessage);
 
-   responseMessage = Create_Message(token);
+   responseMessage = Create_Message();
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
+   Set_Message_Content(responseMessage, token, strlen(token));
    Queue_Message(&outgoingMessageQueue, responseMessage);
 
-   responseMessage = Create_Message(token);
+   responseMessage = Create_Message();
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
+   Set_Message_Content(responseMessage, token, strlen(token));
    Queue_Message(&outgoingMessageQueue, responseMessage);
 }
 

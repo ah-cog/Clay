@@ -337,8 +337,6 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
    uint32_t content_length = 0;
    uint32_t content_checksum = 0;
 
-   uint32_t current_head = buffer->head;
-
    bool parse_error = FALSE;
 
    //         0                 1                   2               3         4              5                 6                   7               8

@@ -33,18 +33,19 @@ extern char local_address[32];
 
 extern Observable_Interface *observable_interface;
 
-extern void Enable_Observable_Interface ();
+extern void Enable_Observable_Interface();
 
 /**
  * Initializes the device.
  */
-void Initialize ();
+extern void Initialize();
 
+extern void Wait_For_Wifi_Startup();
 /**
  * Runs the application. This should be called only after calling Initialize().
  */
-void Application ();
-
+extern void Application();
+extern void Monitor_Periodic_Events();
 
 //HACK: the location, more than anything, I think is the hack. threw this in here for bay area maker faire. BAMF
 extern void Blink_Leds();
