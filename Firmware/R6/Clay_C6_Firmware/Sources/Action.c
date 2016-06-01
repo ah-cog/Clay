@@ -374,6 +374,7 @@ static int8_t Perform_Light_Action(char *state) {
 
 static int8_t Perform_Signal_Action(char *state) {
 
+   //TODO: review token usage throughout this file (declare token buffer static at file scope or dynamically allocate it here). this function uses 336 bytes of stack.
    int8_t status = NULL;
    int8_t result = NULL;
    char token[256] = { 0 };     // TODO: char token[32] = { 0 }; // <HACK />
@@ -592,6 +593,8 @@ static int8_t Perform_Pause_Action(char *state) {
 static int8_t Perform_Message_Action(char *state) {
    // TODO: Make an action that queues a message.
 
+   //TODO: review array usage throughout this file (declare token buffer static at file scope or dynamically allocate it here). this function uses 224 bytes of stack.
+
    // i.e., "<protocol> <destination> <message-content>"
    // e.g., "udp 192.168.1.30:8000 \"hello there\""
    // e.g., "tcp 192.168.1.30:8000 \"hello there\""
@@ -626,7 +629,7 @@ static int8_t Perform_Message_Action(char *state) {
 //	Set_Message_Destination (message, "192.168.1.255:4445");
    Set_Message_Destination(message, param2);
    Set_Message_Content(message, param3, strlen(param3));
-   Set_Message_Content_Type(message,"text");
+   Set_Message_Content_Type(message, "text");
 
    // Queue the outgoing message
    Queue_Message(&outgoingMessageQueue, message);
@@ -636,6 +639,8 @@ static int8_t Perform_Message_Action(char *state) {
 
 static int8_t Perform_Buzzer_Action(char *state) {
    // TODO: Make an action that queues a message.
+
+   //TODO: review array usage throughout this file (declare token buffer static at file scope or dynamically allocate it here). this function uses 336 bytes of stack.
 
    // i.e., "<note|frequency> <note|frequency> [<frequency-unit>] <duration> <duration-unit>"
    // e.g., "note f# 3 ms"

@@ -118,6 +118,8 @@ void Set_Event_Trigger (Event *event, Trigger *trigger) {
 
 static int8_t Perform_Observable_Update_Action (char *state) {
 
+   //TODO: review usage of stacked buffers. this function uses 416 bytes of stack.
+
    int8_t status = NULL;
    int8_t result = NULL;
    char token[256] = { 0 }; // TODO: Reduce this back down to 128 if possible!

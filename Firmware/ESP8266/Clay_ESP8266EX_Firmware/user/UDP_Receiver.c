@@ -106,8 +106,10 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 
 		State = Disable;
 
-		taskENTER_CRITICAL();
+		//crit sections are internal to ring buffer, because of the length of some of its functions.
 		Multibyte_Ring_Buffer_Init(&udp_rx_multibyte, UDP_RX_BUFFER_SIZE_BYTES);
+
+		taskENTER_CRITICAL();
 		source_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 		dest_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 		taskEXIT_CRITICAL();
@@ -176,11 +178,10 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 		{
 			Receive();
 
-			taskENTER_CRITICAL();
+			//crit sections are internal to ring buffer, because of the length of some of its functions.
 			udp_serialized_rx_buffer = NULL;
 			Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 					&udp_rx_multibyte, &udp_serialized_rx_buffer);
-			taskEXIT_CRITICAL();
 
 			if (udp_serialized_rx_buffer != NULL)
 			{
@@ -323,9 +324,8 @@ static bool ICACHE_RODATA_ATTR Receive()
 		rval = true;
 		udp_rx_count = ret;
 
-		taskENTER_CRITICAL();
+		//crit sections are internal to ring buffer, because of the length of some of its functions.
 		Multibyte_Ring_Buffer_Enqueue(&udp_rx_multibyte, rx_temp, ret);
-		taskEXIT_CRITICAL();
 
 		//store the source address
 		lastSourceAddress.sin_addr = from.sin_addr;
@@ -348,10 +348,9 @@ static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-	taskENTER_CRITICAL();
+	//crit sections are internal to ring buffer, because of the length of some of its functions.
 	rval = (Multibyte_Ring_Buffer_Get_Count(&udp_rx_multibyte)
 			> RECEIVE_BYTES_TRIGGER_LEVEL);
-	taskEXIT_CRITICAL();
 
 	return rval;
 }

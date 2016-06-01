@@ -40,6 +40,8 @@ static int8_t Hack_Process_Start_Propagator(Message *message);
 
 int8_t Process_Incoming_Message(Message *message) {
 
+   //TODO: review usage of stacked buffers. There are several functions in this library that use > 540 bytes of stack.
+
    int8_t status = NULL;
    int8_t result = NULL;
    char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };

@@ -62,10 +62,9 @@ void ICACHE_RODATA_ATTR user_init(void)
 	/* need to set opmode before you set config */
 	wifi_set_opmode(STATIONAP_MODE);
 
-	taskENTER_CRITICAL();
+	//crit sections are internal to ring buffer, because of the length of some of its functions.
 	Multibyte_Ring_Buffer_Init(&serial_rx_multibyte,
-	SERIAL_RX_BUFFER_SIZE_BYTES);
-	taskEXIT_CRITICAL();
+			SERIAL_RX_BUFFER_SIZE_BYTES);
 
 	uart_init_new();
 

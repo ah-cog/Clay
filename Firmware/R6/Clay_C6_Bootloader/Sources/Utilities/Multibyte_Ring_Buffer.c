@@ -258,7 +258,8 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_
    uint32_t first_char_index = 0;
    uint32_t target_index = 0;
 
-   for (int i = buffer_head_index; i < (buffer_size_offset + buffer_head_index) && continue_searching; ++i) {
+   int i;
+   for (i = buffer_head_index; i < (buffer_size_offset + buffer_head_index) && continue_searching; ++i) {
 
       if (first_found == NULL) {     //not out of data yet, and we haven't found the first char.
 

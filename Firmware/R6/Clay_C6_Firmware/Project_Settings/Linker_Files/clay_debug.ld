@@ -225,6 +225,7 @@ SECTIONS
     KEEP(*(.BootloaderSharedData)) /* keep my variable even if not referenced */
   } > m_data
   /******************************************************************************/
+  /******************************************************************************/    
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
 }

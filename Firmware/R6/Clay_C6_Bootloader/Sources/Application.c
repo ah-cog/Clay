@@ -27,8 +27,13 @@ void Application(void) {
 
    //Init power manager to hold PowerOn line high so that our supply doesn't shut off.
    Power_Manager_Enable();
+
    //enable button so the user can shut us down.
    Button_Enable();
+
+   Initialize_Bootloader();
+
+#if !defined DEBUG_APP
 
    Button_Register_Press_Response(Wifi_Set_Programming_Mode);
    Button_Register_Hold_Response(500, Wifi_Set_Operating_Mode);
@@ -40,8 +45,6 @@ void Application(void) {
    status = Start_Clock();
 
    Initialize_Unit_UUID();
-
-   Initialize_Bootloader();
 
 //   Multibyte_Ring_Buffer_Test();
 //   Wifi_Test();
@@ -111,6 +114,19 @@ void Application(void) {
          // Error: Could not connect to Wi-Fi.
       }
    }
+#else
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#warning BOOTLOADER HAS BEEN BYPASSED.
+#endif
 
 // Disable all interrupts before jumping to the application.
    Disable_Interrupts();

@@ -249,6 +249,8 @@ void Request_Change_Selected_Channel_Mode() {
    }
 }
 
+char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+
 int8_t Process_Interactive_Assembly_Message(Message * message) {
 
    //examples:
@@ -264,7 +266,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
    int token_count = 0;
 
    char *message_content = (*message).content;
-   char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+   memset(token, 0, MAXIMUM_MESSAGE_LENGTH);
 
    int8_t local_channel;
    int8_t remote_channel;

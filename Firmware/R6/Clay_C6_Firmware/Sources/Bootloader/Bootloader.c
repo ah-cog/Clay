@@ -34,8 +34,8 @@ static uint16_t Parse_Checksum_From_Message(Message * message);
 
 uint8_t Initialize_Bootloader() {
    is_update_available = FALSE;
-   // TODO: Check value of SharedData.ApplicationUpdateAvailable and other shared data and configure state?
    SharedData.UpdateApplication = FALSE;
+   SharedData.ApplicationKey = APPLICATION_KEY_VALUE;
 }
 
 /**

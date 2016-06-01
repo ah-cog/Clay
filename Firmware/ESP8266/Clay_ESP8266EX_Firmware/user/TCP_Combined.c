@@ -127,9 +127,11 @@ bool ICACHE_RODATA_ATTR TCP_Combined_Init()
 
 		promoted = false;
 
+		//crit sections are internal to ring buffer, because of the length of some of its functions.
+		Multibyte_Ring_Buffer_Init(&tcp_rx_multibyte, RECEIVE_DATA_SIZE);
+
 		taskENTER_CRITICAL();
 		Free_Message_Queue(&outgoing_tcp_message_queue);
-		Multibyte_Ring_Buffer_Init(&tcp_rx_multibyte, RECEIVE_DATA_SIZE);
 		local_address_string = zalloc(ADDR_STRING_SIZE);
 		remote_address_string = zalloc(ADDR_STRING_SIZE);
 		transmit_data = zalloc(TRANSMIT_DATA_SIZE);
@@ -731,18 +733,19 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 	uint32_t rx_temp_buffer_size = tcp_rx_multibyte.max_count + 2; //add extra so we have room for null terminator.
 
 	char * rx_temp_buffer = zalloc(rx_temp_buffer_size);
+	taskEXIT_CRITICAL();
+
+	//crit sections are internal to ring buffer, because of the length of some of its functions.
 	uint32_t buffer_free = Multibyte_Ring_Buffer_Get_Free_Size(
 			&tcp_rx_multibyte);
-	taskEXIT_CRITICAL();
 
 	taskYIELD();
 
 	received_count = Receive(data_sock, rx_temp_buffer, buffer_free);
 
-	taskENTER_CRITICAL();
+	//crit sections are internal to ring buffer, because of the length of some of its functions.
 	Multibyte_Ring_Buffer_Enqueue(&tcp_rx_multibyte, rx_temp_buffer,
 			received_count);
-	taskEXIT_CRITICAL();
 
 	taskYIELD();
 
@@ -756,10 +759,9 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 			free(rx_temp_buffer);
 			rx_temp_buffer = NULL;
 
-			taskENTER_CRITICAL();
+			//crit sections are internal to ring buffer, because of the length of some of its functions.
 			Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
 					&tcp_rx_multibyte, &rx_temp_buffer);
-			taskEXIT_CRITICAL();
 
 			if (rx_temp_buffer != NULL)
 			{
@@ -788,12 +790,12 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 //			DEBUG_Print("http rx attempt");
 
 			//dq until Content-Length:
-			taskENTER_CRITICAL();
+
+			//crit sections are internal to ring buffer, because of the length of some of its functions.
 			uint32_t dequeued_count =
 					Multibyte_Ring_Buffer_Dequeue_Until_String(
 							&tcp_rx_multibyte, rx_temp_buffer,
 							rx_temp_buffer_size, "Content-Length:");
-			taskEXIT_CRITICAL();
 
 			if (dequeued_count != 0)
 			{
@@ -803,11 +805,10 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 				memset(rx_temp_buffer, 0, rx_temp_buffer_size);
 				taskEXIT_CRITICAL();
 
-				taskENTER_CRITICAL();
+				//crit sections are internal to ring buffer, because of the length of some of its functions.
 				dequeued_count = Multibyte_Ring_Buffer_Dequeue_Until_String(
 						&tcp_rx_multibyte, rx_temp_buffer, rx_temp_buffer_size,
 						"\r\n");
-				taskEXIT_CRITICAL();
 
 				if (dequeued_count != 0)
 				{
@@ -817,35 +818,31 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 //					printf("cl:%d", received_message_length);
 					taskEXIT_CRITICAL();
 
-					taskENTER_CRITICAL();
+					//crit sections are internal to ring buffer, because of the length of some of its functions.
 					dequeued_count = Multibyte_Ring_Buffer_Dequeue_Until_String(
 							&tcp_rx_multibyte, rx_temp_buffer,
 							rx_temp_buffer_size, "Connection:");
-					taskEXIT_CRITICAL();
 
 					//dq until Connection:
 					if (dequeued_count != 0)
 					{
 //						DEBUG_Print("got connection");
 
-						taskENTER_CRITICAL();
+						//crit sections are internal to ring buffer, because of the length of some of its functions.
 						//dq until \n\n
 						dequeued_count =
 								Multibyte_Ring_Buffer_Dequeue_Until_String(
 										&tcp_rx_multibyte, rx_temp_buffer,
 										rx_temp_buffer_size, "\r\n\r\n");
-						taskEXIT_CRITICAL();
 
 						if (dequeued_count != 0)
 						{
 //							DEBUG_Print("got doublenewlien");
 
-							taskENTER_CRITICAL();
+							//crit sections are internal to ring buffer, because of the length of some of its functions.
 							dequeued_count = Multibyte_Ring_Buffer_Dequeue(
 									&tcp_rx_multibyte, rx_temp_buffer,
 									received_message_length);
-							taskEXIT_CRITICAL();
-
 							//dq content-length bytes.
 							if (dequeued_count == received_message_length)
 							{
@@ -957,9 +954,8 @@ static void ICACHE_RODATA_ATTR Data_Disconnect()
 	{
 //		DEBUG_Print("data_disconnect");
 
-		taskENTER_CRITICAL();
+		//crit sections are internal to ring buffer, because of the length of some of its functions.
 		Multibyte_Ring_Buffer_Reset(&tcp_rx_multibyte);
-		taskEXIT_CRITICAL();
 
 		shutdown(data_sock, 2);
 		lwip_close(data_sock);
@@ -995,16 +991,13 @@ static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 ////		TCP_Combined_Init();
 //	}
 
-	//remain promoted until we empty the queue.
-	taskENTER_CRITICAL();
+	//remain promoted until we empty the queue. -- not the case as of 2016-05-31
+	//crit sections are internal to ring buffer, because of the length of some of its functions.
 	rval = (outgoing_tcp_message_count > 5
 			|| Multibyte_Ring_Buffer_Get_Count(&tcp_rx_multibyte)
 					> RECEIVE_BYTES_TRIGGER_LEVEL);
-//	rval = (Multibyte_Ring_Buffer_Get_Count(&tcp_rx_multibyte)
-//			> RECEIVE_BYTES_TRIGGER_LEVEL);
-	taskEXIT_CRITICAL();
 
-	promoted = rval;
+//	promoted = rval;
 
 	return rval;
 }

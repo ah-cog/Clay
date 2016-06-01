@@ -49,26 +49,4 @@ Sources/Demo \
 Sources/Bootloader \
 Project_Settings/Startup_Code \
 Generated_Code \
-C6_Firmware_Binary/Static_Code/System \
-C6_Firmware_Binary/Sources \
-C6_Firmware_Binary/Sources/Utilities \
-C6_Firmware_Binary/Sources/Services \
-C6_Firmware_Binary/Sources/Drivers/WiFi \
-C6_Firmware_Binary/Sources/Drivers/RGB_LED \
-C6_Firmware_Binary/Sources/Drivers/Power_Manager \
-C6_Firmware_Binary/Sources/Drivers/Mesh \
-C6_Firmware_Binary/Sources/Drivers/LEDs \
-C6_Firmware_Binary/Sources/Drivers/IMU \
-C6_Firmware_Binary/Sources/Drivers/IMU/libmplmpu/core/mllite \
-C6_Firmware_Binary/Sources/Drivers/IMU/libmplmpu/core/eMPL-hal \
-C6_Firmware_Binary/Sources/Drivers/IMU/libmplmpu/core/driver/eMPL \
-C6_Firmware_Binary/Sources/Drivers/I2C \
-C6_Firmware_Binary/Sources/Drivers/GPIO \
-C6_Firmware_Binary/Sources/Drivers/Clock \
-C6_Firmware_Binary/Sources/Drivers/Buzzer \
-C6_Firmware_Binary/Sources/Drivers/Button \
-C6_Firmware_Binary/Sources/Demo \
-C6_Firmware_Binary/Project_Settings/Startup_Code \
-C6_Firmware_Binary/Generated_Code \
-C6_Firmware_Binary \
 

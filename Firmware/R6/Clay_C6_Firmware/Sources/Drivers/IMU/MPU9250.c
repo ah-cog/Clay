@@ -52,6 +52,8 @@ static uint16_t gyro_fsr;
 static uint8_t accel_fsr;
 static uint16_t compass_fsr;
 static uint8_t fw_load_attempts = 0;
+static int32 gyro_test[100];
+static int32 accel_test[100];
 
 static struct platform_data_s gyro_pdata = { .orientation = { 1, -1, 0, 1, 0, 0, 0, 0, 1 } };
 
@@ -117,8 +119,6 @@ uint8_t Start_MPU9250() {
    inv_set_accel_orientation_and_scale(inv_orientation_matrix_to_scalar(gyro_pdata.orientation), (long) accel_fsr << 15);
    inv_set_compass_orientation_and_scale(inv_orientation_matrix_to_scalar(compass_pdata.orientation), (long) compass_fsr << 15);
 
-   int32 gyro_test[100];
-   int32 accel_test[100];
    status = status && mpu_run_self_test(gyro_test, accel_test) == 0x07;
 
    while (status) {
@@ -127,8 +127,7 @@ uint8_t Start_MPU9250() {
       Wait(200);
    }
 
-   if (!status)
-      status = 1;     //pretty much all of the dmp/inv functions return 0 for success. We need to set this to 1 to avoid short-circuiting the next setup step.
+   if (!status) status = 1;     //pretty much all of the dmp/inv functions return 0 for success. We need to set this to 1 to avoid short-circuiting the next setup step.
 
    status = status && !dmp_set_orientation(inv_orientation_matrix_to_scalar(gyro_pdata.orientation));
    status = status && !dmp_register_tap_cb(tap_cb);
@@ -148,8 +147,7 @@ void tap_callback() {
 }
 
 void Imu_Get_Data() {
-   if (!data_ready)
-      return;
+   if (!data_ready) return;
 
    mpu_values v;
    quaternion q;
@@ -197,8 +195,7 @@ static void add_datapoint(quaternion * quat, mpu_values * mpu_raw) {
    quat_head = (quat_head + 1) % MAX_HISTORY_COUNT;
    if (quat_count == MAX_HISTORY_COUNT) {
       quat_tail = (quat_tail + 1 % MAX_HISTORY_COUNT);
-   }
-   else {
+   } else {
       ++quat_count;
    }
 
@@ -210,8 +207,7 @@ static void add_datapoint(quaternion * quat, mpu_values * mpu_raw) {
    raw_head = (raw_head + 1) % MAX_HISTORY_COUNT;
    if (raw_count == MAX_HISTORY_COUNT) {
       raw_tail = (raw_tail + 1) % MAX_HISTORY_COUNT;
-   }
-   else {
+   } else {
       ++raw_count;
    }
 }

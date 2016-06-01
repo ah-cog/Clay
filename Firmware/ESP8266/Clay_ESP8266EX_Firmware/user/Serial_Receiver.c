@@ -107,11 +107,10 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 		{
 			message_serial = NULL;
 
-			taskENTER_CRITICAL();
+			//crit sections are internal to ring buffer, because of the length of some of its functions.
 			dequeue_count =
 					Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 							&serial_rx_multibyte, &message_serial);
-			taskEXIT_CRITICAL();
 
 //			if (dequeue_count > 0)
 //			{
@@ -131,17 +130,15 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			}
 			else
 			{
-				taskENTER_CRITICAL();
+				//crit sections are internal to ring buffer, because of the length of some of its functions.
 				uint32_t free_size = Multibyte_Ring_Buffer_Get_Free_Size(
 						&serial_rx_multibyte);
-				taskEXIT_CRITICAL();
 
 				if (free_size < 1)
 				{
 					//full of garbage.
-					taskENTER_CRITICAL();
+					//crit sections are internal to ring buffer, because of the length of some of its functions.
 					Multibyte_Ring_Buffer_Reset(&serial_rx_multibyte);
-					taskEXIT_CRITICAL();
 				}
 			}
 			break;
@@ -241,10 +238,9 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 ////Local implementations /////////////////////////////////////////
 static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
-	taskENTER_CRITICAL();
+	//crit sections are internal to ring buffer, because of the length of some of its functions.
 	bool rval = Multibyte_Ring_Buffer_Get_Count(&serial_rx_multibyte)
 			> RING_BUFFER_PROMOTION_THRESHOLD && State == Idle;
-	taskEXIT_CRITICAL();
 
 	return rval;
 }

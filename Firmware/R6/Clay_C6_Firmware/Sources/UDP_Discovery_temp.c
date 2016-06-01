@@ -93,6 +93,8 @@ remote_clay_module* Get_Device_By_UUID(char *uuid) {
    return NULL;
 }
 
+static char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+
 int8_t Process_Module_Announce_Message(Message * message) {
 
    //announce device <module_uuid>
@@ -101,7 +103,6 @@ int8_t Process_Module_Announce_Message(Message * message) {
    int8_t result = FALSE;
 
    char *message_content = (*message).content;
-   char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
 
    status = Get_Token(message_content, uuid_buffer, 2);     // get the uuid.
 
@@ -155,13 +156,17 @@ uint8_t Get_Module_Count() {
 }
 
 ////Local implementations /////////////////////////////////////////
+
+//TODO: can we commonize this with the token array above?
+static char token_param_equals[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+
 static uint8_t Message_Content_Parameter_Equals(Message *message, int token_index, const char *pattern) {
    int8_t status = NULL;
    int8_t result = NULL;
    char *message_content = (*message).content;
-   char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-   if ((status = Get_Token(message_content, token, token_index)) != NULL) {
-      if (strncmp(token, pattern, strlen(pattern)) == 0) {
+
+   if ((status = Get_Token(message_content, token_param_equals, token_index)) != 0) {
+      if (strncmp(token_param_equals, pattern, strlen(pattern)) == 0) {
          return TRUE;
       }
    }
