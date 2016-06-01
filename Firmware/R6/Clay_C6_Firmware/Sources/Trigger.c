@@ -1,6 +1,6 @@
 #include "Trigger.h"
 
-Trigger* Create_Trigger () {
+Trigger* Trigger_Create () {
 
 	// Allocate memory for action construct.
 	Trigger *trigger = (Trigger *) malloc (sizeof(Trigger));

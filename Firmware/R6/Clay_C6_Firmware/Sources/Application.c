@@ -51,6 +51,7 @@ LDD_TDeviceDataPtr ADC0_DeviceData;
 
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
 void Send_Mesh_Test_Message();
+static void Debug_Functions();
 
 //BAMF
 uint32_t wifi_reset_time = 0;
@@ -77,10 +78,7 @@ void Initialize() {
 
    // Initialize Clay
 
-//   Button_Register_Press_Response(Blink_Leds);
-//   Button_Register_Hold_Response(5000, Software_Reset);
-   //   Button_Register_Press_Response(Send_Mesh_Test_Message);
-   //   Button_Register_Release_Response(Send_Mesh_Test_Message);
+   Debug_Functions();
 
    Initialize_Unit_UUID();
 
@@ -600,3 +598,41 @@ void Remote_Button_Pressed(uint8_t * data, uint8_t len) {
 ////   Mesh_Tx(data, 2, 1);
 //   Mesh_Tx(data, 2, 2);
 //}
+
+#define WIFI_DEBUG_BUTTONS
+
+static void Debug_Functions() {
+
+#if defined TEST_BLINK
+#warning DEBUG BUTTONS ENABLED!!!!
+   Button_Register_Press_Response(Blink_Leds);
+#endif
+
+#if defined TEST_SOFTWARE_RESET
+#warning DEBUG BUTTONS ENABLED!!!!
+   Button_Register_Hold_Response(5000, Software_Reset);
+#endif
+
+#if defined TEST_MESH_MESSAGES
+#warning DEBUG BUTTONS ENABLED!!!!
+   Button_Register_Press_Response(Send_Mesh_Test_Message);
+   Button_Register_Release_Response(Send_Mesh_Test_Message);
+#endif
+
+#if defined WIFI_DEBUG_BUTTONS
+#warning DEBUG BUTTONS ENABLED!!!!
+   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+   Button_Register_Hold_Response(500, Wifi_Set_Operating_Mode);
+#endif
+
+#if defined WIFI_TEST
+#warning WIFI TEST ENABLED!!!!
+#warning WIFI TEST ENABLED!!!!
+#warning WIFI TEST ENABLED!!!!
+#warning WIFI TEST ENABLED!!!!
+   Wifi_Test();
+#elif defined MULTIBYTE_TEST
+#warning MULTIBYTE RING BUFFER TEST ENABLED!!!!
+   Multibyte_Ring_Buffer_Test();
+#endif
+}

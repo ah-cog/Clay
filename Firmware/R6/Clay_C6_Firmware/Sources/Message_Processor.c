@@ -4,6 +4,7 @@
 #include "Action.h"
 #include "Event.h"
 #include "Timeline.h"
+#include "Trigger.h"
 #include "Power_Manager.h"
 
 #include "Interactive_Assembly.h"
@@ -246,7 +247,7 @@ static uint8_t Message_Content_Parameter_Equals(Message *message, int token_inde
    int8_t result = NULL;
    char *message_content = (*message).content;
    char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-   if ((status = Get_Token(message_content, token, token_index)) != NULL) {
+   if ((status = Get_Token(message_content, token, token_index)) != 0) {
       if (strncmp(token, pattern, strlen(pattern)) == 0) {
          return TRUE;
       }
@@ -858,7 +859,7 @@ static int8_t Process_Set_Event_Trigger(Message *message) {
       if (event != NULL) {
 
          // start trigger
-         Trigger *trigger = Create_Trigger();
+         Trigger *trigger = Trigger_Create();
          Trigger_Set_Message(trigger, uuid_buffer2);
 
          // set trigger

@@ -79,7 +79,7 @@
       <XtraAge30>1217969427</XtraAge30>
       <XtraAge32>1213771170</XtraAge32>
       <XtraAge33>1220481716</XtraAge33>
-      <XtraAge34>1220524076</XtraAge34>
+      <XtraAge34>1220609117</XtraAge34>
       <XtraAge35>1216511859</XtraAge35>
       <GenExtraFileType39>5</GenExtraFileType39>
       <GenExtraFileType38>4</GenExtraFileType38>
@@ -640,7 +640,7 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>134</ProjectModificationStamp>
+    <ProjectModificationStamp>135</ProjectModificationStamp>
   </Options>
   <CpuID_12>
     <Generated>true</Generated>
@@ -3554,8 +3554,8 @@
     <GenComponentVersion>01.106</GenComponentVersion>
     <GenDriverVersion>01.15</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1220481716</HeaderAge>
-    <CodeAge>1220481716</CodeAge>
+    <HeaderAge>1220609120</HeaderAge>
+    <CodeAge>1220609120</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>20</GenNumMethods>
     <Init>true</Init>
@@ -3571,7 +3571,7 @@
     <VerifyErasedBlock>false</VerifyErasedBlock>
     <SetProtection>false</SetProtection>
     <GetErasableUnitSize>false</GetErasableUnitSize>
-    <GetOperationStatus>false</GetOperationStatus>
+    <GetOperationStatus>true</GetOperationStatus>
     <GetError>false</GetError>
     <StopOperation>false</StopOperation>
     <SetSafeRoutineLocation>false</SetSafeRoutineLocation>
@@ -3590,104 +3590,118 @@
     <GenSmartUserChangesDetected_Header>false</GenSmartUserChangesDetected_Header>
     <GenSmartUserChangesDetected_Code>false</GenSmartUserChangesDetected_Code>
     <GenSmartUserChangesDetected_Asembl>false</GenSmartUserChangesDetected_Asembl>
-    <GenMethodPos>14</GenMethodPos>
+    <GenMethodPos>16</GenMethodPos>
     <MethodPos>
       <MethodPos0>Init</MethodPos0>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>155</LineBeg>
-      <LineEnd>179</LineEnd>
+      <LineBeg>157</LineBeg>
+      <LineEnd>181</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos1>Write</MethodPos1>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>180</LineBeg>
-      <LineEnd>225</LineEnd>
+      <LineBeg>182</LineBeg>
+      <LineEnd>227</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos2>Read</MethodPos2>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>226</LineBeg>
-      <LineEnd>261</LineEnd>
+      <LineBeg>228</LineBeg>
+      <LineEnd>263</LineEnd>
     </MethodPos>
     <MethodPos>
       <MethodPos3>Erase</MethodPos3>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>262</LineBeg>
-      <LineEnd>315</LineEnd>
+      <LineBeg>264</LineBeg>
+      <LineEnd>317</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos4>Main</MethodPos4>
+      <MethodPos4>GetOperationStatus</MethodPos4>
       <MethodType>method</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>316</LineBeg>
-      <LineEnd>338</LineEnd>
+      <LineBeg>318</LineBeg>
+      <LineEnd>335</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos5>CommandCompleteInterrupt</MethodPos5>
+      <MethodPos5>Main</MethodPos5>
+      <MethodType>method</MethodType>
+      <ModuleType>Header</ModuleType>
+      <LineBeg>336</LineBeg>
+      <LineEnd>358</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos6>CommandCompleteInterrupt</MethodPos6>
       <MethodType>internal_method_declaration</MethodType>
       <ModuleType>Header</ModuleType>
-      <LineBeg>339</LineBeg>
-      <LineEnd>341</LineEnd>
+      <LineBeg>359</LineBeg>
+      <LineEnd>361</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos6>RangeCheck</MethodPos6>
+      <MethodPos7>RangeCheck</MethodPos7>
       <MethodType>internal_method_declaration</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>202</LineBeg>
-      <LineEnd>202</LineEnd>
+      <LineBeg>203</LineBeg>
+      <LineEnd>203</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos7>Init</MethodPos7>
+      <MethodPos8>Init</MethodPos8>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>204</LineBeg>
-      <LineEnd>265</LineEnd>
+      <LineBeg>205</LineBeg>
+      <LineEnd>266</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos8>Write</MethodPos8>
+      <MethodPos9>Write</MethodPos9>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>266</LineBeg>
-      <LineEnd>333</LineEnd>
+      <LineBeg>267</LineBeg>
+      <LineEnd>334</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos9>Read</MethodPos9>
+      <MethodPos10>Read</MethodPos10>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>334</LineBeg>
-      <LineEnd>389</LineEnd>
+      <LineBeg>335</LineBeg>
+      <LineEnd>390</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos10>Erase</MethodPos10>
+      <MethodPos11>Erase</MethodPos11>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>390</LineBeg>
-      <LineEnd>471</LineEnd>
+      <LineBeg>391</LineBeg>
+      <LineEnd>472</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos11>Main</MethodPos11>
+      <MethodPos12>GetOperationStatus</MethodPos12>
       <MethodType>method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>472</LineBeg>
-      <LineEnd>545</LineEnd>
+      <LineBeg>473</LineBeg>
+      <LineEnd>493</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos12>CommandCompleteInterrupt</MethodPos12>
+      <MethodPos13>Main</MethodPos13>
+      <MethodType>method</MethodType>
+      <ModuleType>Code</ModuleType>
+      <LineBeg>494</LineBeg>
+      <LineEnd>567</LineEnd>
+    </MethodPos>
+    <MethodPos>
+      <MethodPos14>CommandCompleteInterrupt</MethodPos14>
       <MethodType>internal_method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>546</LineBeg>
-      <LineEnd>662</LineEnd>
+      <LineBeg>568</LineBeg>
+      <LineEnd>684</LineEnd>
     </MethodPos>
     <MethodPos>
-      <MethodPos13>RangeCheck</MethodPos13>
+      <MethodPos15>RangeCheck</MethodPos15>
       <MethodType>internal_method</MethodType>
       <ModuleType>Code</ModuleType>
-      <LineBeg>663</LineBeg>
-      <LineEnd>682</LineEnd>
+      <LineBeg>685</LineBeg>
+      <LineEnd>704</LineEnd>
     </MethodPos>
     <GenExtraFilesCount>1</GenExtraFilesCount>
     <ExtraFile0>Documentation\doxygen\FLASH1_component.txt</ExtraFile0>
@@ -6168,31 +6182,32 @@
     <SrcFile250>Drivers\Common\KinetisAbstract.inc=1183486427</SrcFile250>
     <SrcFile251>Drivers\Kinetis\ConnectPinProperty.prg=1183486429</SrcFile251>
     <SrcFile252>Drivers\Kinetis\TimerUnit_LDD.drv=-1</SrcFile252>
-    <SrcFile253>Drivers\Kinetis\IsSupported_SIM_PDD.prg=1183486066</SrcFile253>
-    <SrcFile254>Drivers\Common\I2C_LDDMasterSendBlock.inc=-1</SrcFile254>
-    <SrcFile255>Drivers\Kinetis\IsSupported_COP_PDD.prg=1183486071</SrcFile255>
-    <SrcFile256>Drivers\Common\TimerInt_LDDInterrupt.inc=-1</SrcFile256>
-    <SrcFile257>Drivers\Kinetis\IsSupported_NVIC_PDD.prg=1183486071</SrcFile257>
-    <SrcFile258>Drivers\Common\FLASH_LDDRead.inc=-1</SrcFile258>
-    <SrcFile259>Drivers\Kinetis\InitInterrupt.prg=1183486436</SrcFile259>
-    <SrcFile260>Drivers\Common\CreateIntSection.prg=1183486427</SrcFile260>
-    <SrcFile261>Drivers\Common\FLASH_LDDAbstract.inc=-1</SrcFile261>
-    <SrcFile262>Drivers\Common\Doxy_CollectRegInitInfo.prg=1183486427</SrcFile262>
-    <SrcFile263>Drivers\Common\PPG_LDDSetDutyMS.inc=-1</SrcFile263>
-    <SrcFile264>Drivers\Kinetis\InitIntRequestPDD2.prg=1183486094</SrcFile264>
-    <SrcFile265>Drivers\Common\FLASH_LDDWrite.inc=-1</SrcFile265>
-    <SrcFile266>Drivers\Kinetis\IsSupported_OSC_PDD.prg=1183486053</SrcFile266>
-    <SrcFile267>Drivers\Kinetis\PinSettings_MK64FN1M0LL12.prg=-1</SrcFile267>
-    <SrcFile268>Drivers\VAR\ConnectPinProperty.prg=1183486427</SrcFile268>
-    <SrcFile269>Drivers\Common\DeclareISR.prg=1183486427</SrcFile269>
-    <SrcFile270>Drivers\Common\Serial_LDDOnBlockReceived.inc=1183486050</SrcFile270>
-    <SrcFile271>Drivers\Common\GPIO_LDDClearFieldBits.inc=-1</SrcFile271>
-    <SrcFile272>Drivers\Kinetis\IsSupported_FTMRE_PDD.prg=1183486086</SrcFile272>
-    <SrcFile273>Drivers\Common\BitIO_LDDSetInput.inc=-1</SrcFile273>
-    <SrcFile274>Drivers\Common\GeneralReturnNothing.inc=1183486427</SrcFile274>
-    <SrcFile275>Drivers\TimerInt_LDD.src=-1</SrcFile275>
-    <SrcFile276>Drivers\Serial_LDD.src=1183486050</SrcFile276>
-    <SrcFile277>Drivers\Common\FLASH_LDDErase.inc=-1</SrcFile277>
+    <SrcFile253>Drivers\Common\FLASH_LDDGetOperationStatus.inc=-1</SrcFile253>
+    <SrcFile254>Drivers\Kinetis\IsSupported_SIM_PDD.prg=1183486066</SrcFile254>
+    <SrcFile255>Drivers\Common\I2C_LDDMasterSendBlock.inc=-1</SrcFile255>
+    <SrcFile256>Drivers\Kinetis\IsSupported_COP_PDD.prg=1183486071</SrcFile256>
+    <SrcFile257>Drivers\Common\TimerInt_LDDInterrupt.inc=-1</SrcFile257>
+    <SrcFile258>Drivers\Kinetis\IsSupported_NVIC_PDD.prg=1183486071</SrcFile258>
+    <SrcFile259>Drivers\Common\FLASH_LDDRead.inc=-1</SrcFile259>
+    <SrcFile260>Drivers\Kinetis\InitInterrupt.prg=1183486436</SrcFile260>
+    <SrcFile261>Drivers\Common\CreateIntSection.prg=1183486427</SrcFile261>
+    <SrcFile262>Drivers\Common\FLASH_LDDAbstract.inc=-1</SrcFile262>
+    <SrcFile263>Drivers\Common\Doxy_CollectRegInitInfo.prg=1183486427</SrcFile263>
+    <SrcFile264>Drivers\Common\PPG_LDDSetDutyMS.inc=-1</SrcFile264>
+    <SrcFile265>Drivers\Kinetis\InitIntRequestPDD2.prg=1183486094</SrcFile265>
+    <SrcFile266>Drivers\Common\FLASH_LDDWrite.inc=-1</SrcFile266>
+    <SrcFile267>Drivers\Kinetis\IsSupported_OSC_PDD.prg=1183486053</SrcFile267>
+    <SrcFile268>Drivers\Kinetis\PinSettings_MK64FN1M0LL12.prg=-1</SrcFile268>
+    <SrcFile269>Drivers\VAR\ConnectPinProperty.prg=1183486427</SrcFile269>
+    <SrcFile270>Drivers\Common\DeclareISR.prg=1183486427</SrcFile270>
+    <SrcFile271>Drivers\Common\Serial_LDDOnBlockReceived.inc=1183486050</SrcFile271>
+    <SrcFile272>Drivers\Common\GPIO_LDDClearFieldBits.inc=-1</SrcFile272>
+    <SrcFile273>Drivers\Kinetis\IsSupported_FTMRE_PDD.prg=1183486086</SrcFile273>
+    <SrcFile274>Drivers\Common\BitIO_LDDSetInput.inc=-1</SrcFile274>
+    <SrcFile275>Drivers\Common\GeneralReturnNothing.inc=1183486427</SrcFile275>
+    <SrcFile276>Drivers\TimerInt_LDD.src=-1</SrcFile276>
+    <SrcFile277>Drivers\Serial_LDD.src=1183486050</SrcFile277>
+    <SrcFile278>Drivers\Common\FLASH_LDDErase.inc=-1</SrcFile278>
   </UsedSrcFiles>
 </GenerationInfo_G_C>
 

@@ -6,6 +6,8 @@
  */
 
 #include "string.h"
+#include "stdint.h"
+#include "stdio.h"
 #include "clayString.h"
 #include "PE_Types.h"
 
@@ -94,7 +96,7 @@ int8_t Get_Token(const char *string, char *tokenBuffer, int tokenIndex) {
 
    }
 
-   return NULL;
+   return FALSE;
 }
 
 int8_t Get_Token_With_Delimiter(const char *string,
@@ -158,7 +160,7 @@ int8_t Get_Token_With_Delimiter(const char *string,
 
    }
 
-   return NULL;
+   return FALSE;
 }
 
 #define ASCII_0_VALU 48
@@ -171,7 +173,7 @@ unsigned int Hex_String_To_UInt(char const* hexstring) {
    char const *c = hexstring;
    char thisC;
 
-   while ((thisC = *c) != NULL) {
+   while ((thisC = *c) != 0) {
       unsigned int add;
       thisC = toupper(thisC);
 

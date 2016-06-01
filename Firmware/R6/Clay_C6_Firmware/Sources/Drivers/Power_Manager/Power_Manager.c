@@ -10,6 +10,7 @@
 #include "Button.h"
 #include "PowerOn.h"
 #include "Clock.h"
+#include "RGB_LED.h"
 
 ////Macros ////////////////////////////////////////////////////////
 #define BUTTON_SHUTDOWN_HOLD_TIME_ms         3000

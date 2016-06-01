@@ -266,7 +266,7 @@ Propagator* Remove_Propagator(Observable *observable, Propagator *propagator) {
 
       // Free the action construct from memory.
       // TODO: Consider keeping it in a temporary cache for a short amount of time in case it is being reused. This might not be worth it!
-      Delete_Observable(propagator);
+      Delete_Observable(propagator);  //TODO: is this supposed to be Delete_Propagator?
    }
 
    return NULL;
