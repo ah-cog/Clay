@@ -235,10 +235,10 @@ static void ICACHE_RODATA_ATTR Monitor_Memory()
 {
 	free_heap_size = system_get_free_heap_size();
 
-//	taskENTER_CRITICAL();
-//	printf("\r\ntick:%d heap free: %d\r\n", xTaskGetTickCount(),
-//			free_heap_size);
-//	taskEXIT_CRITICAL();
+	taskENTER_CRITICAL();
+	printf("\r\ntick:%d heap free: %d\r\n", xTaskGetTickCount(),
+			free_heap_size);
+	taskEXIT_CRITICAL();
 
 	if (free_heap_size < FREE_HEAP_MINIMUM_LEVEL)
 	{

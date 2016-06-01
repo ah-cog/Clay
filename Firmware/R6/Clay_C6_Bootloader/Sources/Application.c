@@ -28,12 +28,11 @@ void Application(void) {
    //Init power manager to hold PowerOn line high so that our supply doesn't shut off.
    Power_Manager_Enable();
 
-   //enable button so the user can shut us down.
-   Button_Enable();
-
    Initialize_Bootloader();
 
 #if !defined DEBUG_APP
+   //enable button so the user can shut us down.
+   Button_Enable();
 
    Button_Register_Press_Response(Wifi_Set_Programming_Mode);
    Button_Register_Hold_Response(500, Wifi_Set_Operating_Mode);
@@ -128,14 +127,14 @@ void Application(void) {
 #warning BOOTLOADER HAS BEEN BYPASSED.
 #endif
 
-// Disable all interrupts before jumping to the application.
+   // Disable all interrupts before jumping to the application.
    Disable_Interrupts();
 
-// TODO: Reset the "application key" to indicate the bootloader.
-// Reset the "application key".
+   // TODO: Reset the "application key" to indicate the bootloader.
+   // Reset the "application key".
    SharedData.ApplicationKey = BOOTLOADER_KEY_VALUE;
 
-// Jump to main application firmware
+   // Jump to main application firmware
    Jump_To_Application();
 
    for (;;)

@@ -254,6 +254,42 @@ void ESP8266_Serial_OnError(LDD_TUserData *UserDataPtr) {
 //                              LDD_SERIAL_NOISE_ERROR - Noise error.
 }
 
+/*
+** ===================================================================
+**     Event       :  Cpu_OnSupervisorCall (module Events)
+**
+**     Component   :  Cpu [MK64FN1M0LL12]
+*/
+/*!
+**     @brief
+**         This event is called when the Supervisor Call exception had
+**         occurred. This event is automatically enabled when the
+**         [Supervisor Call] property is set to 'Enabled'.
+*/
+/* ===================================================================*/
+void Cpu_OnSupervisorCall(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  Cpu_OnPendableService (module Events)
+**
+**     Component   :  Cpu [MK64FN1M0LL12]
+*/
+/*!
+**     @brief
+**         This event is called when the Pendable Service exception had
+**         occurred. This event is automatically enabled when the
+**         [Pendable Service] property is set to 'Enabled'.
+*/
+/* ===================================================================*/
+void Cpu_OnPendableService(void)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

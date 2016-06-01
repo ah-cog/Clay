@@ -731,7 +731,6 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 	taskENTER_CRITICAL();
 	uint32_t rx_temp_buffer_size = tcp_rx_multibyte.max_count + 2; //add extra so we have room for null terminator.
-
 	char * rx_temp_buffer = zalloc(rx_temp_buffer_size);
 	taskEXIT_CRITICAL();
 
@@ -749,12 +748,14 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 	taskYIELD();
 
-	if (tcp_rx_multibyte.count > 0)
+	if (Multibyte_Ring_Buffer_Get_Count(&tcp_rx_multibyte) > 0)
 	{
-//		DEBUG_Print("rx data");
+		DEBUG_Print("rx data");
 
 		if (connection_type == MESSAGE_TYPE_TCP)
 		{
+			DEBUG_Print("tcp msg");
+
 			//free, because the dequeue method below allocates into the pointer sent.
 			free(rx_temp_buffer);
 			rx_temp_buffer = NULL;
@@ -765,10 +766,20 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 			if (rx_temp_buffer != NULL)
 			{
+				DEBUG_Print("rx'd msg");
 				taskENTER_CRITICAL();
 				dequeued_message = Deserialize_Message_Content(rx_temp_buffer);
 				taskEXIT_CRITICAL();
 				free(rx_temp_buffer);
+
+				if(dequeued_message != NULL)
+				{
+					DEBUG_Print("deserialize ok.");
+				}
+				else
+				{
+					DEBUG_Print("deserialize nfg.");
+				}
 			}
 		}
 		else
@@ -981,44 +992,12 @@ static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-//	if (!opening_connection
-//			&& (system_get_time() - last_tcp_activity_time)
-//					> tcp_connection_timeout_us)
-//	{
-//		Data_Disconnect();
-////		TCP_Combined_Deinit();
-////
-////		TCP_Combined_Init();
-//	}
-
-	//remain promoted until we empty the queue. -- not the case as of 2016-05-31
 	//crit sections are internal to ring buffer, because of the length of some of its functions.
 	rval = (outgoing_tcp_message_count > 5
 			|| Multibyte_Ring_Buffer_Get_Count(&tcp_rx_multibyte)
 					> RECEIVE_BYTES_TRIGGER_LEVEL);
 
-//	promoted = rval;
-
 	return rval;
-}
-
-uint8_t ICACHE_RODATA_ATTR *memchr2(uint8_t *ptr, uint8_t ch, size_t size)
-{
-	int i;
-
-	for (i = 0; i < size; i++)
-	{
-		if (*ptr == ch)
-		{
-			return ptr;
-		}
-		else
-		{
-			++ptr;
-		}
-	}
-
-	return NULL;
 }
 
 static bool ICACHE_RODATA_ATTR TCP_Timeout_Check()

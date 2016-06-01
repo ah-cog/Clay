@@ -5,9 +5,12 @@
  *      Author: mokogobo
  */
 
-#include "string.h"
+#include "stdlib.h"
 #include "stdint.h"
+#include "string.h"
 #include "stdio.h"
+#include "ctype.h"
+
 #include "clayString.h"
 #include "PE_Types.h"
 
