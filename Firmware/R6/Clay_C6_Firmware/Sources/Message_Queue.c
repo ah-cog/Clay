@@ -16,14 +16,6 @@ int16_t Queue_Message(Message **messageQueue, Message *message) {
    Message *lastMessage = NULL;
    uint16_t messageCount = 0;
 
-   if (((uint32_t) message->previous) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) message->next) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
    if (message == NULL) {
       return 0;
    }
@@ -46,10 +38,6 @@ int16_t Queue_Message(Message **messageQueue, Message *message) {
       messageCount++;
       while ((*lastMessage).previous != NULL) {
 
-         if (((uint32_t) lastMessage->previous) > 0x2002FFF0) {
-            PE_DEBUGHALT();
-         }
-
          lastMessage = (*lastMessage).previous;
          messageCount++;
       }
@@ -62,22 +50,6 @@ int16_t Queue_Message(Message **messageQueue, Message *message) {
 
       messageCount++;
 
-   }
-
-   if (((uint32_t) message->previous) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) message->next) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) (*messageQueue)->previous) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) (*messageQueue)->next) > 0x2002FFF0) {
-      PE_DEBUGHALT();
    }
 
    return messageCount;
@@ -98,22 +70,6 @@ Message* Peek_Message(Message **messageQueue) {
 Message* Dequeue_Message(Message **messageQueue) {
 
    Message *message = NULL;
-
-   if (((uint32_t) message->previous) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) message->next) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) (*messageQueue)->previous) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) (*messageQueue)->next) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
 
    if ((*messageQueue) != NULL) {
 
@@ -144,22 +100,6 @@ Message* Dequeue_Message(Message **messageQueue) {
          (*message).next = NULL;
 
       }
-   }
-
-   if (((uint32_t) message->previous) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) message->next) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) (*messageQueue)->previous) > 0x2002FFF0) {
-      PE_DEBUGHALT();
-   }
-
-   if (((uint32_t) (*messageQueue)->next) > 0x2002FFF0) {
-      PE_DEBUGHALT();
    }
 
    return message;

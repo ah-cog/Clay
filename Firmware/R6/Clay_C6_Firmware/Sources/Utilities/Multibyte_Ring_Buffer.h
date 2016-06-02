@@ -49,7 +49,8 @@ extern uint32_t Multibyte_Ring_Buffer_Dequeue_Until_String(Multibyte_Ring_Buffer
                                                            uint32_t size,
                                                            char * end_string);
 
-extern uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Multibyte_Ring_Buffer * buffer, uint8_t * * destination);
+extern uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Multibyte_Ring_Buffer * buffer,
+                                                                                     uint8_t * * destination);
 
 extern uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_Ring_Buffer * buffer,
                                                                              char * end_str,

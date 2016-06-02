@@ -1366,7 +1366,7 @@ Autoselect
       <VerifyErasedBlock v="don&amp;apos;t generate code" />
       <SetProtection v="don&amp;apos;t generate code" />
       <GetErasableUnitSize v="don&amp;apos;t generate code" />
-      <GetOperationStatus v="don&amp;apos;t generate code" />
+      <GetOperationStatus v="generate code" />
       <GetError v="don&amp;apos;t generate code" />
       <StopOperation v="don&amp;apos;t generate code" />
       <SetSafeRoutineLocation v="don&amp;apos;t generate code" />

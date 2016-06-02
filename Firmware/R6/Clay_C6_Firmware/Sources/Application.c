@@ -256,14 +256,14 @@ void Discovery_Broadcast_Presence() {
 
 void Wait_For_Wifi_Startup() {
 
-   Message * message;
+   Message * message = NULL;
    bool message_status = FALSE;
    //wait until we've finished the startup light show.
    while (!performed_wifi_led_blast) {
 
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
       if (Has_Messages(&incomingWiFiMessageQueue)) {
-         message = Dequeue_Message(&incomingWiFiMessageQueue);
+         message = Wifi_Receive();
 
          message_status = Process_Incoming_Message(message);
 
@@ -271,8 +271,8 @@ void Wait_For_Wifi_Startup() {
          if (message_status == TRUE) {
             Delete_Message(message);
          } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
-            // TODO: Process events on the timeline with the message, before dequeueing...
             Queue_Message(&incomingMessageQueue, message);
+            message = NULL;     //queue has the reference to this message now.
          }
       }
 
@@ -324,7 +324,7 @@ void Application(void) {
 
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
       if (Has_Messages(&incomingWiFiMessageQueue)) {
-         message = Dequeue_Message(&incomingWiFiMessageQueue);
+         message = Wifi_Receive();
 
          message_status = Process_Incoming_Message(message);
 
@@ -480,11 +480,17 @@ void Monitor_Periodic_Events() {
       tick_1ms = FALSE;
 
       //TODO: these would be good as tasks
+
       Buzzer_Stop_Check();
+
       Imu_Get_Data();
+
       Button_Periodic_Call();
+
       Channel_Periodic_Call();
+
       Interactive_Assembly_Periodic_Call();
+
       Wifi_State_Step();
 
       // TODO: Perform any periodic actions (1 ms).

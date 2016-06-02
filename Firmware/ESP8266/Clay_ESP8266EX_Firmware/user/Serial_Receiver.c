@@ -148,7 +148,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 		{
 			if (message_serial != NULL)
 			{
-//				DEBUG_Print("deserialize.");
+				DEBUG_Print("deserialize.");
 
 				taskENTER_CRITICAL();
 				temp_msg_ptr = Deserialize_Message_With_Message_Header(
@@ -157,7 +157,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 				if (temp_msg_ptr != NULL)
 				{
-//					DEBUG_Print("message not null");
+					DEBUG_Print("message not null");
 
 					taskENTER_CRITICAL();
 					received_message_type = Get_Message_Type_From_Str(
@@ -172,6 +172,9 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 						selected_message_queue = &outgoing_udp_message_queue;
 						++outgoing_tcp_message_queue;
+
+						DEBUG_Print("udp msg");
+
 						break;
 					}
 #endif
@@ -179,6 +182,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					case MESSAGE_TYPE_HTTP:
 					case MESSAGE_TYPE_TCP:
 					{
+						DEBUG_Print("tcp msg");
 
 						selected_message_queue = &outgoing_tcp_message_queue;
 						++outgoing_tcp_message_count;
@@ -206,6 +210,8 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 						taskENTER_CRITICAL();
 						Queue_Message(selected_message_queue, temp_msg_ptr);
 						taskEXIT_CRITICAL();
+
+						DEBUG_Print("nq'd srx");
 					}
 					else if (temp_msg_ptr != NULL)
 					{

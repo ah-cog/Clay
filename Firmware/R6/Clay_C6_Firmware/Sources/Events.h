@@ -401,6 +401,27 @@ void GPIO_PTC_OnPortEvent(LDD_TUserData *UserDataPtr);
 /* ===================================================================*/
 void GPIO_PTB_OnPortEvent(LDD_TUserData *UserDataPtr);
 
+/*
+** ===================================================================
+**     Event       :  ESP8266_Serial_OnError (module Events)
+**
+**     Component   :  ESP8266_Serial [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using [GetError] method.
+**         The event is available only when the [Interrupt
+**         service/event] property is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void ESP8266_Serial_OnError(LDD_TUserData *UserDataPtr);
+
 /* END Events */
 
 #ifdef __cplusplus

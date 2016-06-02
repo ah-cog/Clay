@@ -77,12 +77,6 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    wifi_serial_device_data.rxChar = '\0';
    wifi_serial_device_data.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
 
-   // Read any pending data to "clear the line"
-   while (ESP8266_Serial_ReceiveBlock(wifi_serial_device_data.handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count)
-          != ERR_OK) {
-
-   }
-
    State = Idle;
 
    rx_message_count = 0;
@@ -91,8 +85,15 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    tx_message_count_max = 0;
    rx_message_count_total = 0;
    tx_message_count_total = 0;
+
    Initialize_Message_Queue(&incomingWiFiMessageQueue);
    Initialize_Message_Queue(&outgoingWiFiMessageQueue);
+
+   // call ReceiveBlock so we get our first interrupt. the ISR handles subsequent calls to ReceiveBlock.
+   while (ESP8266_Serial_ReceiveBlock(wifi_serial_device_data.handle, wifi_serial_interrupt_rx_buf, wifi_rx_interrupt_count)
+          != ERR_OK) {
+
+   }
 
    WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
@@ -318,57 +319,7 @@ Wifi_States Wifi_Get_State() {
 ///local prototypes
 static bool WiFi_Send_Command(char * command, char ** args, int arg_count);
 
-///global implementations
-bool WiFi_Enable() {
-   bool rval = FALSE;
 
-   Wifi_Message_Available = FALSE;
-
-// Initialize the ESP8266 device data structure
-   wifi_serial_device_data.handle = ESP8266_Serial_Init(&wifi_serial_device_data);
-   wifi_serial_device_data.isSent = FALSE;
-   wifi_serial_device_data.rxChar = '\0';
-   wifi_serial_device_data.rxPutFct = Ring_Buffer_Put;        // ESP8266_RxBuf_Put;
-
-// Read any pending data to "clear the line"
-   while (ESP8266_Serial_ReceiveBlock(wifi_serial_device_data.handle,
-                                      (LDD_TData *) &wifi_serial_device_data.rxChar,
-                                      sizeof(wifi_serial_device_data.rxChar))
-          != ERR_OK) {
-
-   }
-
-   State = Idle;
-
-   WIFI_CHIP_EN_PutVal(NULL, 1);
-   Wifi_Set_Operating_Mode();
-
-//   char addrStr[] = "\x12";
-//   char testMsg[64] = { '\0' };
-//   sprintf(testMsg, "SETAP %s,%s", ssid, password);
-
-//   Wait(5000);
-
-//   Message * message = Create_Message(testMsg);
-//   Set_Message_Type(message, "CMD");
-//   Set_Message_Destination(message, addrStr);
-//   Wifi_Send(message);
-
-   WifiInterruptReceived = FALSE;
-   WifiSetProgramMode = FALSE;
-
-   rx_message_count = 0;
-   tx_message_count = 0;
-   Initialize_Message_Queue(&incomingWiFiMessageQueue);
-   Initialize_Message_Queue(&outgoingWiFiMessageQueue);
-
-   pendingTransmitByteCount = 0;
-   interruptRxTime = 0;
-
-   rval = TRUE;
-
-   return rval;
-}
 
 bool WiFi_Disable() {
    bool rval = false;
