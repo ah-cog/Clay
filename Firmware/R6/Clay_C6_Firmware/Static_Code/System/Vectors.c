@@ -165,7 +165,6 @@ PE_ISR(Unhandled_ivINT_Hard_Fault) {
          " b HardFault_HandlerC \n"
          " bkpt #0          \n"
    );
-   PE_DEBUGHALT();
 }
 
 /*

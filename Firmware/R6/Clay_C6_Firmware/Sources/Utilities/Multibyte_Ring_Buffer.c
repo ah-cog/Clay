@@ -455,8 +455,13 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
 
                   *destination = malloc(message_length);
 
-                  buffer->head = (buffer->head + (delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1)) % buffer->max_count;
-                  buffer->count -= delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
+                  rval = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
+
+                  EnterCritical()
+                  ;
+                  buffer->head = (buffer->head + rval) % buffer->max_count;
+                  buffer->count -= rval;
+                  ExitCritical();
 
                   //  If enough data is present, then destination will be allocated for message_length bytes, and the message will be dequeued into it.
                   rval += Multibyte_Ring_Buffer_Dequeue(buffer, *destination, message_length);
@@ -534,7 +539,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
                                                                           delimiter_indices[WIFI_CONTENT_INDEX
                                                                                             - WIFI_CONTENT_LENGTH_INDEX]);
 
-//if we find a message start in the header fields, we just throw away the interrupted header.
+      //if we find a message start in the header fields, we just throw away the interrupted header.
       if (rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]) {
          rval -= 1;
 
@@ -610,10 +615,13 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
                   *destination = malloc(message_length);
 
                   //dequeue until start of message
-                  rval = Multibyte_Ring_Buffer_Dequeue(buffer,
-                                                       *destination,
-                                                       delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX]
-                                                       - 1);
+                  rval = delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1;
+
+                  EnterCritical()
+                  ;
+                  buffer->head = (buffer->head + (rval)) % buffer->max_count;
+                  buffer->count -= rval;
+                  ExitCritical();
 
                   //  If enough data is present, then destination will be allocated for message_length bytes, and the message will be dequeued into it.
                   rval += Multibyte_Ring_Buffer_Dequeue(buffer, *destination, message_length);

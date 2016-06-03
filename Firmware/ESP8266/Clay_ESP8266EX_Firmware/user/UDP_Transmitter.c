@@ -195,6 +195,8 @@ void ICACHE_RODATA_ATTR UDP_Transmitter_Task()
 						&tempIgnoredMessageType);
 				taskEXIT_CRITICAL();
 
+				Delete_Message(temp_msg_ptr);
+
 				taskYIELD();
 			}
 

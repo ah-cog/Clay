@@ -750,11 +750,11 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 	if (Multibyte_Ring_Buffer_Get_Count(&tcp_rx_multibyte) > 0)
 	{
-		DEBUG_Print("rx data");
+//		DEBUG_Print("rx data");
 
 		if (connection_type == MESSAGE_TYPE_TCP)
 		{
-			DEBUG_Print("tcp msg");
+//			DEBUG_Print("tcp msg");
 
 			//free, because the dequeue method below allocates into the pointer sent.
 			free(rx_temp_buffer);
@@ -766,20 +766,11 @@ static bool ICACHE_RODATA_ATTR Receive_And_Enqueue(int32 data_sock)
 
 			if (rx_temp_buffer != NULL)
 			{
-				DEBUG_Print("rx'd msg");
+//				DEBUG_Print("rx'd msg");
 				taskENTER_CRITICAL();
 				dequeued_message = Deserialize_Message_Content(rx_temp_buffer);
 				taskEXIT_CRITICAL();
 				free(rx_temp_buffer);
-
-				if(dequeued_message != NULL)
-				{
-					DEBUG_Print("deserialize ok.");
-				}
-				else
-				{
-					DEBUG_Print("deserialize nfg.");
-				}
 			}
 		}
 		else

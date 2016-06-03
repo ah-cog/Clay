@@ -31,7 +31,6 @@
 
 ////Defines ///////////////////////////////////////////////////////
 #define RING_BUFFER_PROMOTION_THRESHOLD		512
-#define SERIAL_RX_TIMEOUT_us				100000
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -112,17 +111,10 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(
 							&serial_rx_multibyte, &message_serial);
 
-//			if (dequeue_count > 0)
-//			{
-//				taskENTER_CRITICAL();
-//				printf("dequeued %d\r\n", dequeue_count);
-//				taskEXIT_CRITICAL();
-//			}
-
 			if (message_serial != NULL) //state transition
 			{
 //				taskENTER_CRITICAL();
-//				printf("message\f  [%s]", message_serial);
+//				printf("got message, dq'd %d\r\n", dequeue_count);
 //				taskEXIT_CRITICAL();
 
 				State = Deserialize_Received_Message;
@@ -130,6 +122,10 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 			}
 			else
 			{
+//				taskENTER_CRITICAL();
+//				printf("no message, dq'd %d\r\n", dequeue_count);
+//				taskEXIT_CRITICAL();
+
 				//crit sections are internal to ring buffer, because of the length of some of its functions.
 				uint32_t free_size = Multibyte_Ring_Buffer_Get_Free_Size(
 						&serial_rx_multibyte);
@@ -148,8 +144,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 		{
 			if (message_serial != NULL)
 			{
-				DEBUG_Print("deserialize.");
-
 				taskENTER_CRITICAL();
 				temp_msg_ptr = Deserialize_Message_With_Message_Header(
 						message_serial);
@@ -157,8 +151,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 
 				if (temp_msg_ptr != NULL)
 				{
-					DEBUG_Print("message not null");
-
 					taskENTER_CRITICAL();
 					received_message_type = Get_Message_Type_From_Str(
 							temp_msg_ptr->message_type);
@@ -171,10 +163,7 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					{
 
 						selected_message_queue = &outgoing_udp_message_queue;
-						++outgoing_tcp_message_queue;
-
-						DEBUG_Print("udp msg");
-
+						++outgoing_udp_message_count;
 						break;
 					}
 #endif
@@ -182,8 +171,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 					case MESSAGE_TYPE_HTTP:
 					case MESSAGE_TYPE_TCP:
 					{
-						DEBUG_Print("tcp msg");
-
 						selected_message_queue = &outgoing_tcp_message_queue;
 						++outgoing_tcp_message_count;
 						break;
@@ -210,8 +197,6 @@ void ICACHE_RODATA_ATTR Serial_Receiver_Task()
 						taskENTER_CRITICAL();
 						Queue_Message(selected_message_queue, temp_msg_ptr);
 						taskEXIT_CRITICAL();
-
-						DEBUG_Print("nq'd srx");
 					}
 					else if (temp_msg_ptr != NULL)
 					{

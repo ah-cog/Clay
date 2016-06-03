@@ -207,6 +207,15 @@ static void ICACHE_RODATA_ATTR Monitor_Priority()
 				vTaskPrioritySet(current_task_ptr->task_handle,
 						current_task_ptr->current_priority);
 			}
+//			else
+//			{
+//				taskENTER_CRITICAL();
+//				printf("\r\n\r\n%d still promoted:%d sysmon:%d\r\n\r\n",
+//						(int) current_task, current_task_ptr->current_priority,
+//						SYSTEM_MONITOR_PRIORITY);
+//				UART_WaitTxFifoEmpty(UART0);
+//				taskEXIT_CRITICAL();
+//			}
 
 		}
 		else if (current_task_ptr->current_priority
@@ -235,10 +244,7 @@ static void ICACHE_RODATA_ATTR Monitor_Memory()
 {
 	free_heap_size = system_get_free_heap_size();
 
-	taskENTER_CRITICAL();
-	printf("\r\ntick:%d heap free: %d\r\n", xTaskGetTickCount(),
-			free_heap_size);
-	taskEXIT_CRITICAL();
+//	DEBUG_Print_Tick_And_Heap();
 
 	if (free_heap_size < FREE_HEAP_MINIMUM_LEVEL)
 	{

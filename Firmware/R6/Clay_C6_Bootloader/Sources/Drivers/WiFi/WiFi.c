@@ -68,10 +68,9 @@ bool Enable_WiFi(const char *ssid, const char *password) {
 
    Wifi_Message_Available = FALSE;
 
-
    Multibyte_Ring_Buffer_Init(&wifi_multibyte_ring, WIFI_SERIAL_IN_BUFFER_LENGTH);
 
-// Initialize the ESP8266 device data structure
+   // Initialize the ESP8266 device data structure
    wifi_serial_device_data.handle = ESP8266_Serial_Init(&wifi_serial_device_data);
    wifi_serial_device_data.isSent = FALSE;
    wifi_serial_device_data.rxChar = '\0';
@@ -173,8 +172,11 @@ void Wifi_State_Step() {
 
       case Deserialize_Received_Message: {
 
-         message = Deserialize_Message_With_Message_Header(message_serial);
-         free(message_serial);
+         if (message_serial != NULL) {
+            message = Deserialize_Message_With_Message_Header(message_serial);
+            free(message_serial);
+            message_serial = NULL;
+         }
 
          if (message != NULL) {
             // Queue the message

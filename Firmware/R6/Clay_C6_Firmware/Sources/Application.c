@@ -76,7 +76,7 @@ void Initialize() {
    Button_Press_Time = Millis();
    uint8_t status = 0;
 
-   // Initialize Clay
+// Initialize Clay
 
    Debug_Functions();
 
@@ -88,7 +88,7 @@ void Initialize() {
 
    Enable_Actions();
 
-   // Initialize bootloader.
+// Initialize bootloader.
    Initialize_Bootloader();
 
    if ((status = Button_Enable()) != TRUE) {
@@ -99,7 +99,7 @@ void Initialize() {
       // Failure
    }
 
-   // Clock.
+// Clock.
    if ((status = Enable_Clock()) != TRUE) {
       // Failure
    }
@@ -110,7 +110,7 @@ void Initialize() {
 
    Power_Manager_Check_Startup();
 
-   // Message queue.
+// Message queue.
    if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE) {
       // Failure
    }
@@ -123,14 +123,14 @@ void Initialize() {
       // Failure
    }
 
-   //HACK -- need this to get the RGB, IMU, and GPIO to play nice.
+//HACK -- need this to get the RGB, IMU, and GPIO to play nice.
    Apply_Channels();
 
    if ((status = Channel_Enable_All()) != TRUE) {
       // Failure
    }
 
-   //TODO: troubleshoot MPU start with invensense drivers.
+//TODO: troubleshoot MPU start with invensense drivers.
 //   if ((status = Start_MPU9250()) != TRUE) {
 //      // Failure
 //   }
@@ -139,7 +139,7 @@ void Initialize() {
       // Failure
    }
 
-   // Status LEDs.
+// Status LEDs.
 
    if ((status = LED_Enable()) != TRUE) {
       // Failure
@@ -153,14 +153,14 @@ void Initialize() {
       // Failure
    }
 
-   //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
+//HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
    Perform_Status_LED_Effect();
 
    if ((status = Start_Light_Behavior()) != TRUE) {
       // Failure
    }
 
-   //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
+//HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
    Perform_Status_LED_Effect();
    Channel_Light_Startup_Step();
 
@@ -179,12 +179,12 @@ void Initialize() {
    }
    Channel_Light_Startup_Step();
 
-   //TODO: move power monitor code into a library.
-   // Initialize Power Monitor
+//TODO: move power monitor code into a library.
+// Initialize Power Monitor
    ADC0_DeviceData = ADC0_Init(NULL);
    Channel_Light_Startup_Step();
 
-   // Initialize Power Monitor
+// Initialize Power Monitor
    ADC0_StartCalibration(ADC0_DeviceData);
    while (!ADC0_GetMeasurementCompleteStatus(ADC0_DeviceData)) {
       Channel_Light_Startup_Step();
@@ -193,26 +193,26 @@ void Initialize() {
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
    Channel_Light_Startup_Step();
 
-   //HACK HACK HACK HACK HACK OH NO !!1 ELEVENS
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
+//HACK HACK HACK HACK HACK OH NO !!1 ELEVENS
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
 //   if ((status = Enable_Interactive_Assembly()) != TRUE) {
 //      // Failure
 //   }
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
 
 }
 
@@ -222,10 +222,10 @@ Observable_Interface *observable_interface = NULL;
 char internet_address[32] = { 0 };
 
 void Enable_Observable_Interface() {
-   // <HACK>
-   // TODO: Consider giving each device a unique interface UUID and expose it.
+// <HACK>
+// TODO: Consider giving each device a unique interface UUID and expose it.
    char *device_uuid = Get_Unit_UUID();
-   // </HACK>
+// </HACK>
    observable_interface = Create_Observable_Interface(device_uuid);     // e.g., "set interface <uuid> provider <uuid> observable <uuid> content <content>"
 }
 
@@ -239,9 +239,9 @@ char local_address[32];
 
 void Discovery_Broadcast_Presence() {
 
-   // TODO: Check if have IP address. Only broadcast if have IP address.
+// TODO: Check if have IP address. Only broadcast if have IP address.
 
-   // Queue device discovery broadcast
+// Queue device discovery broadcast
    char *uuid = Get_Unit_UUID();
    sprintf(buffer2, "announce device %s", uuid);
    Message *broadcastMessage = Create_Message();
@@ -258,7 +258,7 @@ void Wait_For_Wifi_Startup() {
 
    Message * message = NULL;
    bool message_status = FALSE;
-   //wait until we've finished the startup light show.
+//wait until we've finished the startup light show.
    while (!performed_wifi_led_blast) {
 
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
@@ -284,14 +284,20 @@ int8_t message_status = FALSE;
 uint8_t lock_timeline = FALSE;
 uint8_t pause_timeline = FALSE;
 
+//#define SKIP_FIRMWARE_CHECKSUM
+
 void Application(void) {
    Message *message = NULL;
    int i;
 
+#if !defined SKIP_FIRMWARE_CHECKSUM
    if (Update_Available()) {
       Disable_Interrupts();
       Jump_To_Bootloader_And_Update_Application();
    }
+#else
+#warning BOOTLOADER CHECK IS DISABLED!!!!
+#endif
 
 //	Message *signalMessage;
 //	signalMessage = Create_Message("start event 89d87141-01f7-4812-a358-3892cf2f5a70");
@@ -451,7 +457,7 @@ void Application(void) {
 //bool io_state;
 void Monitor_Periodic_Events() {
 
-   // TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
+// TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
 
    if (blink_count > 0 && (Millis() - blink_time) > BLINK_INTERVAL_ms) {
       interactive_assembly_using_lights = true;
@@ -496,7 +502,7 @@ void Monitor_Periodic_Events() {
       // TODO: Perform any periodic actions (1 ms).
    }
 
-   //HACK: added 10ms tick and the code in it for BAMF day 2
+//HACK: added 10ms tick and the code in it for BAMF day 2
    if (tick_10ms) {
       tick_10ms = FALSE;
       if (has_connection_to_wifi && !performed_wifi_led_blast) {
@@ -507,7 +513,7 @@ void Monitor_Periodic_Events() {
       }
    }
 
-   //HACK: added 50ms tick and the code in it for BAMF day 2
+//HACK: added 50ms tick and the code in it for BAMF day 2
    if (tick_50ms) {
       tick_50ms = FALSE;
 
@@ -605,7 +611,7 @@ void Remote_Button_Pressed(uint8_t * data, uint8_t len) {
 //   Mesh_Tx(data, 2, 2);
 //}
 
-#define WIFI_DEBUG_BUTTONS
+//#define WIFI_DEBUG_BUTTONS
 
 static void Debug_Functions() {
 
@@ -642,3 +648,39 @@ static void Debug_Functions() {
    Multibyte_Ring_Buffer_Test();
 #endif
 }
+
+
+//void Check_Queue_Pointers() {
+//
+//   if (incomingMessageQueue == NULL) return;
+//
+//   Message * lastMessage = incomingMessageQueue;     // Get the front of the queue.
+//
+//   if ((lastMessage) > 0x2002FFF0) {
+//      PE_DEBUGHALT();
+//   }
+//
+//   if ((lastMessage->previous) > 0x2002FFF0) {
+//      PE_DEBUGHALT();
+//   }
+//
+//   while ((*lastMessage).previous != NULL) {
+//
+//      if ((lastMessage) > 0x2002FFF0) {
+//         PE_DEBUGHALT();
+//      }
+//
+//      if ((lastMessage->previous) > 0x2002FFF0) {
+//         PE_DEBUGHALT();
+//      }
+//      lastMessage = (*lastMessage).previous;
+//
+//      if ((lastMessage) > 0x2002FFF0) {
+//         PE_DEBUGHALT();
+//      }
+//
+//      if ((lastMessage->previous) > 0x2002FFF0) {
+//         PE_DEBUGHALT();
+//      }
+//   }
+//}

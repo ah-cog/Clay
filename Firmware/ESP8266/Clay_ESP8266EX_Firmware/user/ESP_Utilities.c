@@ -102,6 +102,14 @@ void ICACHE_RODATA_ATTR DEBUG_Print(char * msg)
 }
 #endif
 
+void ICACHE_RODATA_ATTR DEBUG_Print_Heap_And_Tick()
+{
+	taskENTER_CRITICAL();
+	printf("\r\ntick:%d heap free: %d\r\n", xTaskGetTickCount(),
+			system_get_free_heap_size());
+	taskEXIT_CRITICAL();
+}
+
 void ICACHE_RODATA_ATTR DEBUG_Print_Address(struct sockaddr_in * addr,
 		char * tag)
 {

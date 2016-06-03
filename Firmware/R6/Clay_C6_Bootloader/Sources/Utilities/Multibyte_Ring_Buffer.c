@@ -39,13 +39,6 @@
 #define WIFI_CONTENT_INDEX                      8
 
 ////Typedefs  /////////////////////////////////////////////////////
-typedef enum
-{
-   SERIAL_STATUS_CONTENT_LENGTH_FOUND = 1,
-   SERIAL_STATUS_MESSAGE_COMPLETE = 2,
-   SERIAL_STATUS_MORE_AVAILABLE = 4,
-   SERIAL_STATUS_MESSAGE_TOO_BIG = 8
-} Serial_Parse_Status;
 
 ////Globals   /////////////////////////////////////////////////////
 
@@ -56,16 +49,25 @@ typedef enum
 ////Global implementations ////////////////////////////////////////
 void Multibyte_Ring_Buffer_Init(Multibyte_Ring_Buffer * buffer, uint32_t size) {
 
-   EnterCritical()
-   ;
-   buffer->max_count = size;
-   buffer->data = malloc(buffer->max_count);
-   buffer->head = 0;
-   buffer->tail = 0;
-   buffer->count = 0;
+   if (size != buffer->max_count || buffer->data == NULL) {
 
-   memset(buffer->data, 0, buffer->max_count);
-   ExitCritical();
+      if (buffer->data != NULL) {
+         Multibyte_Ring_Buffer_Free(buffer);
+      }
+
+      EnterCritical()
+      ;
+      buffer->max_count = size;
+      buffer->data = malloc(buffer->max_count);
+      buffer->head = 0;
+      buffer->tail = 0;
+      buffer->count = 0;
+
+      memset(buffer->data, 0, buffer->max_count);
+      ExitCritical();
+   } else {
+      Multibyte_Ring_Buffer_Reset(buffer);
+   }
 }
 
 void Multibyte_Ring_Buffer_Free(Multibyte_Ring_Buffer * buffer) {
@@ -450,9 +452,16 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
                }
 
                if (!parse_error) {
+
                   *destination = malloc(message_length);
-                  //dequeue until start of message
-                  rval = Multibyte_Ring_Buffer_Dequeue(buffer, *destination, delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1);
+
+                  rval = delimiter_indices[WIFI_MESSAGE_LENGTH_INDEX] - 1;
+
+                  EnterCritical()
+                  ;
+                  buffer->head = (buffer->head + rval) % buffer->max_count;
+                  buffer->count -= rval;
+                  ExitCritical();
 
                   //  If enough data is present, then destination will be allocated for message_length bytes, and the message will be dequeued into it.
                   rval += Multibyte_Ring_Buffer_Dequeue(buffer, *destination, message_length);
@@ -530,7 +539,7 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
                                                                           delimiter_indices[WIFI_CONTENT_INDEX
                                                                                             - WIFI_CONTENT_LENGTH_INDEX]);
 
-//if we find a message start in the header fields, we just throw away the interrupted header.
+      //if we find a message start in the header fields, we just throw away the interrupted header.
       if (rval != 0 && rval <= delimiter_indices[WIFI_CONTENT_INDEX - WIFI_CONTENT_LENGTH_INDEX]) {
          rval -= 1;
 
@@ -606,10 +615,13 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(Multibyte_Ring
                   *destination = malloc(message_length);
 
                   //dequeue until start of message
-                  rval = Multibyte_Ring_Buffer_Dequeue(buffer,
-                                                       *destination,
-                                                       delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX]
-                                                       - 1);
+                  rval = delimiter_indices[WIFI_CONTENT_LENGTH_INDEX - WIFI_CONTENT_LENGTH_INDEX] - 1;
+
+                  EnterCritical()
+                  ;
+                  buffer->head = (buffer->head + (rval)) % buffer->max_count;
+                  buffer->count -= rval;
+                  ExitCritical();
 
                   //  If enough data is present, then destination will be allocated for message_length bytes, and the message will be dequeued into it.
                   rval += Multibyte_Ring_Buffer_Dequeue(buffer, *destination, message_length);

@@ -64,7 +64,7 @@ void ICACHE_RODATA_ATTR user_init(void)
 
 	//crit sections are internal to ring buffer, because of the length of some of its functions.
 	Multibyte_Ring_Buffer_Init(&serial_rx_multibyte,
-			SERIAL_RX_BUFFER_SIZE_BYTES);
+	SERIAL_RX_BUFFER_SIZE_BYTES);
 
 	uart_init_new();
 
@@ -93,7 +93,6 @@ void ICACHE_RODATA_ATTR user_init(void)
 	xTaskCreate(Run_Queue_Test, "power_on_signal", 256, NULL, 2, NULL);
 #endif
 
-#if 1
 	//set up our callback handler. this will start the networking tasks on connect.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
 
@@ -109,16 +108,18 @@ void ICACHE_RODATA_ATTR user_init(void)
 	Serial_Receiver_Init();
 #endif
 
+#if ENABLE_COMMAND_PARSER
+	Command_Parser_Init();
+#endif
+
 #if ENABLE_SERIAL_TX
 	Serial_Transmitter_Init();
 #endif
 
-#if ENABLE_COMMAND_PARSER
-	Command_Parser_Init();
-#endif
-#endif
-
 	//TODO: wait for uC to respond to this. Probably means another task. "start device wifi" Don't even connect until we get the message.
+	//Updated: this is going to require some more thought, I don't think it's going out at all, I've never seen it on the k64. maybe
+	//		   we should spawn a new task to send it after some period of time, and then we can take the code above and put it in the
+	//		   command parser.
 	Send_Startup_Message();
 }
 
