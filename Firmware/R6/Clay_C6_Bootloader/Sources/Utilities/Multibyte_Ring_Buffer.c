@@ -257,7 +257,6 @@ uint32_t Multibyte_Ring_Buffer_Get_Bytes_Until_String_End_From_Offset(Multibyte_
    bool continue_searching = true;
 
    uint32_t target_length = strlen(end_str);
-   uint32_t first_char_index = 0;
    uint32_t target_index = 0;
 
    int i;
@@ -336,9 +335,6 @@ uint32_t Multibyte_Ring_Buffer_Dequeue_Serialized_Message_With_Message_Header(Mu
 
    uint32_t message_length = 0;
    uint16_t message_checksum = 0;
-
-   uint32_t content_length = 0;
-   uint32_t content_checksum = 0;
 
    bool parse_error = FALSE;
 

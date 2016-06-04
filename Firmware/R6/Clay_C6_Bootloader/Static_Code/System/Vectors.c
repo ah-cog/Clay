@@ -4,24 +4,24 @@
 **      Version     : 1.00
 **      Abstract    :
 **
-** 
-**     Copyright : 1997 - 2015 Freescale Semiconductor, Inc. 
+**
+**     Copyright : 1997 - 2015 Freescale Semiconductor, Inc.
 **     All Rights Reserved.
-**     
+**
 **     Redistribution and use in source and binary forms, with or without modification,
 **     are permitted provided that the following conditions are met:
-**     
+**
 **     o Redistributions of source code must retain the above copyright notice, this list
 **       of conditions and the following disclaimer.
-**     
+**
 **     o Redistributions in binary form must reproduce the above copyright notice, this
 **       list of conditions and the following disclaimer in the documentation and/or
 **       other materials provided with the distribution.
-**     
+**
 **     o Neither the name of Freescale Semiconductor, Inc. nor the names of its
 **       contributors may be used to endorse or promote products derived from this
 **       software without specific prior written permission.
-**     
+**
 **     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 **     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 **     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -32,27 +32,27 @@
 **     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 **     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 **     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-**     
+**
 **     http: www.freescale.com
 **     mail: support@freescale.com
 ** ###################################################################*/
 /*!
-** @file Vectors_Config.h                                                  
+** @file Vectors_Config.h
 ** @version 01.00
 ** @brief
 **
-*/         
+*/
 /*!
 **  @addtogroup Vectors_Config_module Vectors_Config module documentation
 **  @{
-*/         
+*/
 
 #include "PE_Types.h"
 #include "Init_Config.h"
 #include "Vectors_Config.h"
 
 #if PEX_VECTOR_TABLE /* Is Vector table handled by Processor Expert? */
-  
+
 /*
 ** ===================================================================
 **     Method      :  UnhandledInterrupt (component MK64FN1M0LL12)
@@ -83,19 +83,90 @@ PE_ISR(Unhandled_ivINT_NMI)
   PE_DEBUGHALT();
 }
 
+/**
+ * HardFaultHandler_C:
+ * This is called from the HardFault_HandlerAsm with a pointer the Fault stack
+ * as the parameter. We can then read the values from the stack and place them
+ * into local variables for ease of reading.
+ * We then read the various Fault Status and Address Registers to help decode
+ * cause of the fault.
+ * The function ends with a BKPT instruction to force control back into the debugger
+ */
+void HardFault_HandlerC(unsigned long *hardfault_args) {
+   volatile unsigned long stacked_r0;
+   volatile unsigned long stacked_r1;
+   volatile unsigned long stacked_r2;
+   volatile unsigned long stacked_r3;
+   volatile unsigned long stacked_r12;
+   volatile unsigned long stacked_lr;
+   volatile unsigned long stacked_pc;
+   volatile unsigned long stacked_psr;
+   volatile unsigned long _CFSR;
+   volatile unsigned long _HFSR;
+   volatile unsigned long _DFSR;
+   volatile unsigned long _AFSR;
+   volatile unsigned long _BFAR;
+   volatile unsigned long _MMAR;
+
+   stacked_r0 = ((unsigned long) hardfault_args[0]);
+   stacked_r1 = ((unsigned long) hardfault_args[1]);
+   stacked_r2 = ((unsigned long) hardfault_args[2]);
+   stacked_r3 = ((unsigned long) hardfault_args[3]);
+   stacked_r12 = ((unsigned long) hardfault_args[4]);
+   stacked_lr = ((unsigned long) hardfault_args[5]);
+   stacked_pc = ((unsigned long) hardfault_args[6]);
+   stacked_psr = ((unsigned long) hardfault_args[7]);
+
+   // Configurable Fault Status Register
+   // Consists of MMSR, BFSR and UFSR
+   _CFSR = (*((volatile unsigned long *) (0xE000ED28)));
+
+   // Hard Fault Status Register
+   _HFSR = (*((volatile unsigned long *) (0xE000ED2C)));
+
+   // Debug Fault Status Register
+   _DFSR = (*((volatile unsigned long *) (0xE000ED30)));
+
+   // Auxiliary Fault Status Register
+   _AFSR = (*((volatile unsigned long *) (0xE000ED3C)));
+
+   // Read the Fault Address Registers. These may not contain valid values.
+   // Check BFARVALID/MMARVALID to see if they are valid values
+   // MemManage Fault Address Register
+   _MMAR = (*((volatile unsigned long *) (0xE000ED34)));
+   // Bus Fault Address Register
+   _BFAR = (*((volatile unsigned long *) (0xE000ED38)));
+
+   __asm("BKPT #0\n");
+   // Break into the debugger
+}
+
 /*
-** ===================================================================
-**     Method      :  Unhandled_ivINT_Hard_Fault (component MK64FN1M0LL12)
-**
-**     Description :
-**         This ISR services the unhandled ivINT_Hard_Fault interrupt.
-**         This method is internal. It is used by Processor Expert only.
-** ===================================================================
-*/
+ ** ===================================================================
+ **     Method      :  Unhandled_ivINT_Hard_Fault (component MK64FN1M0LL12)
+ **
+ **     Description :
+ **         This ISR services the unhandled ivINT_Hard_Fault interrupt.
+ **         This method is internal. It is used by Processor Expert only.
+ ** ===================================================================
+ */
 PE_ISR(Unhandled_ivINT_Hard_Fault);
-PE_ISR(Unhandled_ivINT_Hard_Fault)
-{
-  PE_DEBUGHALT();
+__attribute__((naked))
+PE_ISR(Unhandled_ivINT_Hard_Fault) {
+   __asm volatile (
+         " movs r0,#4       \n"
+         " movs r1, lr      \n"
+         " tst r0, r1       \n"
+         " beq _MSP         \n"
+         " mrs r0, psp      \n"
+         " b _HALT          \n"
+         "_MSP:               \n"
+         " mrs r0, msp      \n"
+         "_HALT:              \n"
+         " ldr r1,[r0,#20]  \n"
+         " b HardFault_HandlerC \n"
+         " bkpt #0          \n"
+   );
 }
 
 /*
@@ -103,7 +174,7 @@ PE_ISR(Unhandled_ivINT_Hard_Fault)
 **     Method      :  Unhandled_ivINT_Mem_Manage_Fault (component MK64FN1M0LL12)
 **
 **     Description :
-**         This ISR services the unhandled ivINT_Mem_Manage_Fault 
+**         This ISR services the unhandled ivINT_Mem_Manage_Fault
 **         interrupt.
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
@@ -1409,7 +1480,7 @@ PE_ISR(Unhandled_ivINT_I2C2)
 **     Method      :  Unhandled_ivINT_CAN0_ORed_Message_buffer (component MK64FN1M0LL12)
 **
 **     Description :
-**         This ISR services the unhandled ivINT_CAN0_ORed_Message_buffer 
+**         This ISR services the unhandled ivINT_CAN0_ORed_Message_buffer
 **         interrupt.
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
@@ -1455,7 +1526,7 @@ PE_ISR(Unhandled_ivINT_CAN0_Error)
 **     Method      :  Unhandled_ivINT_CAN0_Tx_Warning (component MK64FN1M0LL12)
 **
 **     Description :
-**         This ISR services the unhandled ivINT_CAN0_Tx_Warning 
+**         This ISR services the unhandled ivINT_CAN0_Tx_Warning
 **         interrupt.
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
@@ -1471,7 +1542,7 @@ PE_ISR(Unhandled_ivINT_CAN0_Tx_Warning)
 **     Method      :  Unhandled_ivINT_CAN0_Rx_Warning (component MK64FN1M0LL12)
 **
 **     Description :
-**         This ISR services the unhandled ivINT_CAN0_Rx_Warning 
+**         This ISR services the unhandled ivINT_CAN0_Rx_Warning
 **         interrupt.
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================
@@ -1517,7 +1588,7 @@ PE_ISR(Unhandled_ivINT_SDHC)
 **     Method      :  Unhandled_ivINT_ENET_1588_Timer (component MK64FN1M0LL12)
 **
 **     Description :
-**         This ISR services the unhandled ivINT_ENET_1588_Timer 
+**         This ISR services the unhandled ivINT_ENET_1588_Timer
 **         interrupt.
 **         This method is internal. It is used by Processor Expert only.
 ** ===================================================================

@@ -28,7 +28,6 @@ const char * message_end = "\n";
 const char * arg_delimiter = ",";
 
 ////Local vars/////////////////////////////////////////////////////
-static uint8_t message_type_temp_str[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
 ////Local Prototypes///////////////////////////////////////////////
 
@@ -112,7 +111,6 @@ uint32_t Serialize_Message_Content(Message * message, uint8_t * destination_stri
    if (message == NULL || destination_string == NULL) return 0;
 
    uint32_t rval = 0;
-   uint16_t message_checksum = 0;
 
    //         0                 1                   2               3         4              5                 6                   7               8
    //format: \f<message_length>\t<message_checksum>\t<message_type>\ t<source>\t<destination>\t<content_length>\t<content_checksum>\t<content_type>\t<content>

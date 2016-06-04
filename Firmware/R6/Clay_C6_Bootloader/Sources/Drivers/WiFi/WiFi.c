@@ -36,23 +36,14 @@ static uint32_t pendingTransmitByteCount;
 static uint32_t bytes_received;
 
 static uint8_t serial_tx_buffer[WIFI_SERIAL_OUT_BUFFER_LENGTH];
-static uint8_t serial_rx_buffer[WIFI_SERIAL_IN_BUFFER_LENGTH];
 
 static Wifi_States State;
 static uint32_t interruptRxTime;
-static uint32_t txStartTime;
 static uint32_t programStartTime;
 
-static uint8_t * temp_content;
-static uint8_t * temp_type;
-static uint8_t * temp_source_address;
-static uint8_t * temp_dest_address;
-static uint8_t * message_end_ptr;
-static uint8_t * message_start_ptr;
 static uint8_t * message_serial;
 static Message * message;
 
-static LDD_TDeviceData * WIFI_GPIO0_DeviceDataPtr;
 static uint8_t PowerOn_Interrupt_Count;
 
 static uint32_t rx_message_count;

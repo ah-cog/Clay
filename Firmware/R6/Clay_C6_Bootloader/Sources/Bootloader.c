@@ -229,12 +229,9 @@ uint8_t Update_Firmware() {
    uint32_t block_index = 0;
    uint32_t firmware_image_offset = 0;
 
-   Message * message;
-
    uint32_t firmware_size = 0;
    uint16_t firmware_checksum = 0;
    int bytes_received = 0;
-   int bytes_written = 0;
    int retry_count = 0;
 
    Message * response_message = NULL;
@@ -379,9 +376,8 @@ bool Get_WiFi_Connection_Status() {
 bool Parse_Wifi_Connection_Message(Message * response) {
 
    bool result = FALSE;
-   int token_count = 0;
 
-   token_count = Get_Token_Count((*response).content);
+   Get_Token_Count((*response).content);
 
    if (Message_Content_Parameter_Equals(response, FIRST_PARAMETER, "wifi")) {
       if (Message_Content_Parameter_Equals(response, SECOND_PARAMETER, "connected")) {
@@ -418,7 +414,6 @@ bool Parse_Wifi_Address_Message(Message * response) {
 
    bool result = false;
    char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-   int token_count = 0;
 
    if (Message_Content_Parameter_Equals(response, FIRST_PARAMETER, "wifi")) {
       if (Message_Content_Parameter_Equals(response, SECOND_PARAMETER, "address")) {
@@ -477,7 +472,6 @@ static Message * WiFi_Wait_For_Message(uint32_t timeout_ms) {
 static uint8_t Message_Content_Parameter_Equals(Message *message, int token_index, const char *pattern) {
 
    int8_t status = NULL;
-   int8_t result = NULL;
    char *message_content = (*message).content;
    char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
    if ((status = Get_Token(message_content, token, token_index)) != 0) {
