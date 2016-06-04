@@ -121,8 +121,7 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 	xTaskHandle command_parser_handle;
 
 	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL,
-			DEFAULT_PRIORITY,
-			&command_parser_handle);
+			DEFAULT_PRIORITY, &command_parser_handle);
 
 	System_Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
 			Check_Needs_Promotion);
@@ -466,6 +465,11 @@ bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
 
 void ICACHE_RODATA_ATTR Send_Startup_Message()
 {
+	taskENTER_CRITICAL();
+	printf(
+			"\r\n\r\n\r\n                                                                                                          ");
+	UART_WaitTxFifoEmpty(UART0);
+	taskEXIT_CRITICAL();
 	Send_Message_To_Master(STARTUP_MESSAGE, MESSAGE_TYPE_STATUS);
 }
 

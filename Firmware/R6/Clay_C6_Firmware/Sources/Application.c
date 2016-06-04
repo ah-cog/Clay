@@ -284,7 +284,7 @@ int8_t message_status = FALSE;
 uint8_t lock_timeline = FALSE;
 uint8_t pause_timeline = FALSE;
 
-//#define SKIP_FIRMWARE_CHECKSUM
+#define SKIP_FIRMWARE_CHECKSUM
 
 void Application(void) {
    Message *message = NULL;
@@ -611,7 +611,7 @@ void Remote_Button_Pressed(uint8_t * data, uint8_t len) {
 //   Mesh_Tx(data, 2, 2);
 //}
 
-//#define WIFI_DEBUG_BUTTONS
+#define WIFI_DEBUG_BUTTONS
 
 static void Debug_Functions() {
 
@@ -638,9 +638,6 @@ static void Debug_Functions() {
 #endif
 
 #if defined WIFI_TEST
-#warning WIFI TEST ENABLED!!!!
-#warning WIFI TEST ENABLED!!!!
-#warning WIFI TEST ENABLED!!!!
 #warning WIFI TEST ENABLED!!!!
    Wifi_Test();
 #elif defined MULTIBYTE_TEST
