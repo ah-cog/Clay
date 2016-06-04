@@ -28,8 +28,9 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 
-#include "../include/UART.h"
-#include "Ring_Buffer.h"
+#include "UART.h"
+#include "Multibyte_Ring_Buffer.h"
+#include "Queues.h"
 
 enum
 {
@@ -158,11 +159,11 @@ LOCAL void ICACHE_RODATA_ATTR uart_task(void *pvParameters)
 		{
 			switch (e.event)
 			{
-			case UART_EVENT_RX_CHAR:
+				case UART_EVENT_RX_CHAR:
 				printf("%c", e.param);
 				break;
 
-			default:
+				default:
 				break;
 			}
 		}
@@ -416,9 +417,11 @@ LOCAL void uart0_rx_intr_handler(void *para)
 					>> UART_RXFIFO_CNT_S) & UART_RXFIFO_CNT;
 			BytesRead = 0;
 
+			uint8_t temp;
 			while (BytesRead < BytesAvailable)
 			{
-				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
+				temp = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
+				Multibyte_Ring_Buffer_Enqueue(&serial_rx_multibyte, &temp, 1);
 				++BytesRead;
 			}
 
@@ -432,9 +435,11 @@ LOCAL void uart0_rx_intr_handler(void *para)
 					>> UART_RXFIFO_CNT_S) & UART_RXFIFO_CNT;
 			BytesRead = 0;
 
+			uint8_t temp;
 			while (BytesRead < BytesAvailable)
 			{
-				Ring_Buffer_Put(READ_PERI_REG(UART_FIFO(UART0)) & 0xFF);
+				temp = READ_PERI_REG(UART_FIFO(UART0)) & 0xFF;
+				Multibyte_Ring_Buffer_Enqueue(&serial_rx_multibyte, &temp, 1);
 				++BytesRead;
 			}
 
@@ -492,4 +497,16 @@ void ICACHE_RODATA_ATTR uart_init_new(void)
 	 UART_SetFlowCtrl(UART0,USART_HardwareFlowControl_None,0);
 	 */
 
+}
+
+STATUS ICACHE_RODATA_ATTR uart_tx_array(uint8 uart, uint8 * array,
+		uint32_t count)
+{
+	int i = 0;
+	for (; i < count; ++i)
+	{
+		uart_tx_one_char(uart, array[i]);
+	}
+
+	return OK;
 }

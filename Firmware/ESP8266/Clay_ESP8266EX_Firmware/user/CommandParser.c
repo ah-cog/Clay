@@ -26,9 +26,11 @@
 #include "Message.h"
 #include "ESP_Utilities.h"
 
+#include "Wifi_Message_Serialization.h"
 #include "UDP_Transmitter.h"
 #include "UDP_Receiver.h"
 #include "TCP_Combined.h"
+#include "Queues.h"
 
 ////Defines ///////////////////////////////////////////////////////
 #define WIFI_DISCONNECTED_RESPONSE		"wifi disconnected"
@@ -91,14 +93,14 @@ char command_delimiter = ' ';
 char args_delimiter = ',';
 
 int i;
-static Message * m;
-static Message temp_message;
+static Message * temp_msg_ptr;
 static Command_Parser_States state;
 
 static bool promoted;
 
 ////Local Prototypes///////////////////////////////////////////////
-static CLAY_ESP_COMMANDS Command_String_Parse(char * CommandStr, char ** ArgStr);
+static CLAY_ESP_COMMANDS Command_String_Parse(char * commandStr,
+		uint32_t commandStrLength, char ** argStr);
 static bool Set_AP_Command(char * args);
 static bool Get_AP_Command(char * args);
 static bool Scan_AP_Command(char * args);
@@ -114,17 +116,12 @@ bool ICACHE_RODATA_ATTR Command_Parser_Init()
 	bool rval = false;
 	promoted = false;
 
-	taskENTER_CRITICAL();
-	Initialize_Message_Queue(&incoming_command_queue);
-	taskEXIT_CRITICAL();
-
 	state = Idle;
 
 	xTaskHandle command_parser_handle;
 
 	xTaskCreate(Command_Parser_State_Step, "cmdParser", 512, NULL,
-			Get_Task_Priority(TASK_TYPE_COMMAND_PARSER),
-			&command_parser_handle);
+			DEFAULT_PRIORITY, &command_parser_handle);
 
 	System_Register_Task(TASK_TYPE_COMMAND_PARSER, command_parser_handle,
 			Check_Needs_Promotion);
@@ -150,13 +147,11 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 		case Idle:
 		{
 			taskENTER_CRITICAL();
-			m = Peek_Message(&incoming_command_queue);
-			taskEXIT_CRITICAL();
-
-			if (m != NULL)
+			if (Has_Messages(&incoming_command_queue))
 			{
 				state = ParseCommand;
 			}
+			taskEXIT_CRITICAL();
 			break;
 		}
 
@@ -173,67 +168,75 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 #endif
 
 			taskENTER_CRITICAL();
-			Dequeue_Message(&incoming_command_queue, &temp_message);
+			temp_msg_ptr = Dequeue_Message(&incoming_command_queue);
 			taskEXIT_CRITICAL();
 
 			taskYIELD();
 
-			switch (Command_String_Parse(temp_message.content, &command_args))
+			if (temp_msg_ptr != NULL)
 			{
-			case CLAY_COMMAND_SET_AP:
-			{
-				//DEBUG_Print("setap rx");
-				Set_AP_Command(command_args);
-				break;
+				--incoming_command_message_count;
+
+				switch (Command_String_Parse(temp_msg_ptr->content,
+						temp_msg_ptr->content_length, &command_args))
+				{
+				case CLAY_COMMAND_SET_AP:
+				{
+					Set_AP_Command(command_args);
+					break;
+				}
+
+				case CLAY_COMMAND_GET_AP:
+				{
+					Get_AP_Command(command_args);
+					break;
+				}
+
+				case CLAY_COMMAND_SCAN_AP:
+				{
+					Scan_AP_Command(command_args);
+					break;
+				}
+
+				case CLAY_COMMAND_GET_IP:
+				{
+					Get_IP_Command(command_args);
+					break;
+				}
+
+				case CLAY_COMMAND_GET_GATEWAY:
+				{
+					Get_Gateway_Command(command_args);
+					break;
+				}
+
+				case CLAY_COMMAND_GET_SUBNET:
+				{
+					Get_Subnet_Command(command_args);
+					break;
+				}
+
+				case CLAY_COMMAND_GET_CONNECTION_STATUS:
+				{
+					Get_Wifi_Status_Command(command_args);
+					break;
+				}
+
+				case CLAY_COMMAND_START_TASK:
+				case CLAY_COMMAND_STOP_TASK:
+				case CLAY_COMMAND_MAX:
+				default:
+				{
+					break;
+				}
+
+				}
 			}
 
-			case CLAY_COMMAND_GET_AP:
+			if (temp_msg_ptr != NULL)
 			{
-				Get_AP_Command(command_args);
-				break;
+				Delete_Message(temp_msg_ptr);
 			}
-
-			case CLAY_COMMAND_SCAN_AP:
-			{
-				Scan_AP_Command(command_args);
-				break;
-			}
-
-			case CLAY_COMMAND_GET_IP:
-			{
-				Get_IP_Command(command_args);
-				break;
-			}
-
-			case CLAY_COMMAND_GET_GATEWAY:
-			{
-				Get_Gateway_Command(command_args);
-				break;
-			}
-
-			case CLAY_COMMAND_GET_SUBNET:
-			{
-				Get_Subnet_Command(command_args);
-				break;
-			}
-
-			case CLAY_COMMAND_GET_CONNECTION_STATUS:
-			{
-				Get_Wifi_Status_Command(command_args);
-				break;
-			}
-
-			case CLAY_COMMAND_START_TASK:
-			case CLAY_COMMAND_STOP_TASK:
-			case CLAY_COMMAND_MAX:
-			default:
-			{
-				break;
-			}
-
-			}
-
-			//DEBUG_Print("return to idle");
 
 			state = Idle;
 			break;
@@ -256,7 +259,7 @@ void ICACHE_RODATA_ATTR Command_Parser_State_Step()
 //Command strings should be of the following format:
 //		"<Command Token> <arg1>,<arg2>...."
 static ICACHE_RODATA_ATTR CLAY_ESP_COMMANDS Command_String_Parse(
-		char * commandStr, char ** argStr)
+		char * commandStr, uint32_t commandStrLength, char ** argStr)
 {
 	char * cmd_str_ptr;
 	CLAY_ESP_COMMANDS rval = CLAY_COMMAND_MAX;
@@ -267,9 +270,6 @@ static ICACHE_RODATA_ATTR CLAY_ESP_COMMANDS Command_String_Parse(
 
 	for (i = 0; i < CLAY_COMMAND_MAX; ++i)
 	{
-		//NOTE: The RTOS is pretty touchy about the length of critical sections.
-		//		I tried putting the strstr in the if statement, with the entire block
-		//		as a crit section, and it would crash every time.
 		taskENTER_CRITICAL();
 		cmd_str_ptr = strstr(commandStr, command_tokens[i]);
 		taskEXIT_CRITICAL();
@@ -296,10 +296,6 @@ static ICACHE_RODATA_ATTR bool Set_AP_Command(char * args)
 	char * ssid = strtok(args, &args_delimiter);
 	char * key = strtok(NULL, &args_delimiter);
 	taskEXIT_CRITICAL();
-
-//	taskENTER_CRITICAL();
-//	printf("\r\n\r\nsetap:%s,%s\r\n\r\n", ssid, key);
-//	taskEXIT_CRITICAL();
 
 	if (Set_Access_Point(ssid, key))
 	{
@@ -396,7 +392,7 @@ bool ICACHE_RODATA_ATTR Get_Subnet_Command(char * args)
 	return rval;
 }
 
-static void Stop_Task_Command(TASK_TYPE tt)
+static void ICACHE_RODATA_ATTR Stop_Task_Command(TASK_TYPE tt)
 {
 //TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
 
@@ -424,7 +420,7 @@ static void Stop_Task_Command(TASK_TYPE tt)
 	Send_Message_To_Master(TASK_STOP_OK_RESPONSE, MESSAGE_TYPE_STATUS);
 }
 
-static void Start_Task_Command(TASK_TYPE tt)
+static void ICACHE_RODATA_ATTR Start_Task_Command(TASK_TYPE tt)
 {
 //TODO: there needs to be a version of this that the command parser supports. i.e. takes char * as arg.
 
@@ -469,29 +465,25 @@ bool ICACHE_RODATA_ATTR Get_Wifi_Status_Command(char * args)
 
 void ICACHE_RODATA_ATTR Send_Startup_Message()
 {
+	taskENTER_CRITICAL();
+	printf(
+			"\r\n\r\n\r\n                                                                                                          ");
+	UART_WaitTxFifoEmpty(UART0);
+	taskEXIT_CRITICAL();
 	Send_Message_To_Master(STARTUP_MESSAGE, MESSAGE_TYPE_STATUS);
 }
 
-static int loops = 0;
-
-static bool Check_Needs_Promotion()
+static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
-	bool rval = false;
-
-	//remain promoted until we empty the queue.
 	taskENTER_CRITICAL();
-	rval = (incoming_command_queue.count
-			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	bool rval = (incoming_command_message_count > 5);
 	taskEXIT_CRITICAL();
 
-//	if (++loops > LOOPS_BEFORE_PRINT || incoming_command_queue.count)
-//	{
-//		loops = 0;
-//		taskENTER_CRITICAL();
-//		printf("cmd count:%d\r\n", incoming_command_queue.count);
-//		taskEXIT_CRITICAL();
-//	}
-	promoted = rval;
+//	taskENTER_CRITICAL();
+//	rval = (Has_Messages(&incoming_command_queue));
+//	taskEXIT_CRITICAL();
+//
+//	promoted = rval;
 
 	return rval;
 }

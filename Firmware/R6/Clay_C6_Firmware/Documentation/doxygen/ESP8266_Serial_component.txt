@@ -630,7 +630,7 @@ registers of the peripheral(s) configured by the component.
 **              OnBlockSent                                : Enabled
 **              OnBlockReceived                            : Enabled
 **              OnTxComplete                               : Disabled
-**              OnError                                    : Disabled
+**              OnError                                    : Enabled
 **              OnBreak                                    : Disabled
 **          CPU clock/configuration selection              : 
 **            Clock configuration 0                        : This component enabled

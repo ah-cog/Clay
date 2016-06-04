@@ -32,6 +32,8 @@
 #include "Init_Config.h"
 #include "PDD_Includes.h"
 
+#include "Button.h"
+#include "Program_Flash.h"
 #include "Clock.h"
 //#include "Mesh.h"
 #include "Mesh_Simple.h"
@@ -245,6 +247,7 @@ void Cpu_OnNMI(void) {
 /* ===================================================================*/
 void FLASH1_OnOperationComplete(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
+   flash_operation_completed = TRUE;
 }
 
 /*
@@ -405,6 +408,30 @@ void GPIO_PTC_OnPortEvent(LDD_TUserData *UserDataPtr) {
 /* ===================================================================*/
 void GPIO_PTB_OnPortEvent(LDD_TUserData *UserDataPtr) {
    /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  ESP8266_Serial_OnError (module Events)
+**
+**     Component   :  ESP8266_Serial [Serial_LDD]
+*/
+/*!
+**     @brief
+**         This event is called when a channel error (not the error
+**         returned by a given method) occurs. The errors can be read
+**         using [GetError] method.
+**         The event is available only when the [Interrupt
+**         service/event] property is enabled.
+**     @param
+**         UserDataPtr     - Pointer to the user or
+**                           RTOS specific data. This pointer is passed
+**                           as the parameter of Init method.
+*/
+/* ===================================================================*/
+void ESP8266_Serial_OnError(LDD_TUserData *UserDataPtr)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

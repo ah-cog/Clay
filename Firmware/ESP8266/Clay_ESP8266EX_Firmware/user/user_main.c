@@ -29,6 +29,8 @@
 #include "TCP_Receiver.h"
 #include "TCP_Transmitter.h"
 #include "Message_Queue.h"
+#include "Queues.h"
+#include "Multibyte_Ring_Buffer.h"
 
 //#include "user_interface.h"
 //#include "eagle_soc.h"
@@ -42,7 +44,6 @@ void ICACHE_FLASH_ATTR registerInterrupt(int pin, GPIO_INT_TYPE mode,
 void ICACHE_RODATA_ATTR GPIO_Init();
 void ICACHE_RODATA_ATTR wifi_handle_event_cb(System_Event_t *evt);
 void Master_Interrupt_Handler(void * arg);
-void Run_Queue_Test();
 
 /******************************************************************************
  * FunctionName : user_init
@@ -61,6 +62,10 @@ void ICACHE_RODATA_ATTR user_init(void)
 	/* need to set opmode before you set config */
 	wifi_set_opmode(STATIONAP_MODE);
 
+	//crit sections are internal to ring buffer, because of the length of some of its functions.
+	Multibyte_Ring_Buffer_Init(&serial_rx_multibyte,
+	SERIAL_RX_BUFFER_SIZE_BYTES);
+
 	uart_init_new();
 
 #if 0
@@ -68,18 +73,18 @@ void ICACHE_RODATA_ATTR user_init(void)
 #endif
 
 	{
-		taskENTER_CRITICAL();
-		struct station_config *config = (struct station_config *) zalloc(
-				sizeof(struct station_config));
-		taskEXIT_CRITICAL();
+//		taskENTER_CRITICAL();
+//		struct station_config *config = (struct station_config *) zalloc(
+//				sizeof(struct station_config));
+//		taskEXIT_CRITICAL();
 
-		sprintf(config->ssid, "hefnet");
-		sprintf(config->password, "h3fn3r_is_better_than_me");
-
-		/* need to sure that you are in station mode first,
-		 * otherwise it will be failed. */
-		wifi_station_set_config(config);
-		free(config);
+//		sprintf(config->ssid, "hefnet");
+//		sprintf(config->password, "h3fn3r_is_better_than_me");
+//
+//		/* need to sure that you are in station mode first,
+//		 * otherwise it will be failed. */
+//		wifi_station_set_config(config);
+//		free(config);
 	}
 //added to allow 3+ TCP connections per ESP RTOS SDK API Reference 1.3.0 Chapter 1, page 2
 	TCP_WND = 2 * TCP_MSS;
@@ -88,9 +93,12 @@ void ICACHE_RODATA_ATTR user_init(void)
 	xTaskCreate(Run_Queue_Test, "power_on_signal", 256, NULL, 2, NULL);
 #endif
 
-#if 1
 	//set up our callback handler. this will start the networking tasks on connect.
 	wifi_set_event_handler_cb(wifi_handle_event_cb);
+
+	taskENTER_CRITICAL();
+	Initialize_Message_Queues();
+	taskEXIT_CRITICAL();
 
 	Start_System_Monitor();
 
@@ -100,16 +108,18 @@ void ICACHE_RODATA_ATTR user_init(void)
 	Serial_Receiver_Init();
 #endif
 
+#if ENABLE_COMMAND_PARSER
+	Command_Parser_Init();
+#endif
+
 #if ENABLE_SERIAL_TX
 	Serial_Transmitter_Init();
 #endif
 
-#if ENABLE_COMMAND_PARSER
-	Command_Parser_Init();
-#endif
-#endif
-
 	//TODO: wait for uC to respond to this. Probably means another task. "start device wifi" Don't even connect until we get the message.
+	//Updated: this is going to require some more thought, I don't think it's going out at all, I've never seen it on the k64. maybe
+	//		   we should spawn a new task to send it after some period of time, and then we can take the code above and put it in the
+	//		   command parser.
 	Send_Startup_Message();
 }
 
@@ -138,7 +148,7 @@ void Master_Interrupt_Handler(void * args)
 
 	GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS,
 			gpio_status & BIT(CLAY_INTERRUPT_IN_PIN));
-	master_interrupt_received = true;
+//	master_interrupt_received = true;
 }
 
 void ICACHE_RODATA_ATTR GPIO_Init()
@@ -185,26 +195,6 @@ void wifi_handle_event_cb(System_Event_t *evt)
 	}
 	case EVENT_STAMODE_GOT_IP:
 	{
-#if ENABLE_UDP_SENDER
-		UDP_Transmitter_Init();
-#endif
-
-#if ENABLE_UDP_RECEIVER
-		UDP_Receiver_Init();
-#endif
-
-#if ENABLE_TCP_SENDER
-		TCP_Transmitter_Init();
-#endif
-
-#if ENABLE_TCP_RECEIVER
-		TCP_Receiver_Init();
-#endif
-
-#if ENABLE_TCP_COMBINED_TX || ENABLE_TCP_COMBINED_RX
-		TCP_Combined_Init();
-#endif
-
 		Get_Wifi_Status_Command(NULL);
 		Get_IP_Command(NULL);
 

@@ -26,11 +26,8 @@ void Wifi_Test() {
 //   char * password_m = "dips00BOYNEdo$!&";
 
    Power_Manager_Enable();
-
    Initialize_Channels();
-   Apply_Channels();
    Channel_Enable_All();
-
    Button_Enable();
    Enable_WiFi(ssid, password);
 
@@ -40,18 +37,20 @@ void Wifi_Test() {
    Message *message = NULL;
    Message * outgoing_message = NULL;
    uint32_t lastMessageSendTime = 0;
-   uint32_t messageSendPeriod = 250;
+   uint32_t messageSendPeriod = 1000;
 
-   bool echo = TRUE;
+   bool echo = FALSE;
    bool repeat_send = FALSE;
    bool request_connect = FALSE;
    bool get_ip = FALSE;
 
-   char type_str[] = "tcp";
-   char dest_addr[] = "192.168.1.3:1002";
-   char source_addr[] = "192.168.1.21:1002";
-   char message_content_template[] = "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm%d";
-   char message_content[256];
+   bool request_firmware_size = FALSE;
+
+   char type_str[] = "http";
+   char dest_addr_size[] = "107.170.180.158:3000/clay/firmware/size";
+   char dest_addr_checksum[] = "107.170.180.158:3000/clay/firmware/checksum";
+   char source_addr[] = "192.168.1.21:3000";
+   char message_content[] = "none";
    int message_index = 0;
 
    for (;;) {
@@ -60,11 +59,10 @@ void Wifi_Test() {
       Wifi_State_Step();
       Button_Periodic_Call();
 
-#if 1
       //echo received messages
       if (echo && Has_Messages(&incomingWiFiMessageQueue) == TRUE) {
          message = Wifi_Receive();
-         if (message != NULL && strcmp(message->type, "status")) {
+         if (message != NULL && strcmp(message->message_type, "status")) {
 
 //            sprintf(message_content, message_content_template, ++message_index);
 //
@@ -80,16 +78,6 @@ void Wifi_Test() {
             Wifi_Send(message);
          }
       }
-#endif
-
-#define TEST_COMMAND_REPEAT 0
-#if TEST_COMMAND_REPEAT
-      if(Has_Messages(&incomingWiFiMessageQueue))
-      {
-         message = Wifi_Receive();
-         Wait(1);
-      }
-#endif
 
       //repeatedly send a message
       if (repeat_send
@@ -97,19 +85,21 @@ void Wifi_Test() {
           && !Has_Messages(&outgoingWiFiMessageQueue)
           && Millis() - lastMessageSendTime > messageSendPeriod) {
 
-#if TEST_COMMAND_REPEAT
-         WiFi_Request_Get_Internet_Address();
-#else
-
-         sprintf(message_content, message_content_template, ++message_index);
-
-         outgoing_message = Create_Message(message_content);
+         outgoing_message = Create_Message();
          Set_Message_Type(outgoing_message, type_str);
          Set_Message_Source(outgoing_message, source_addr);
-         Set_Message_Destination(outgoing_message, dest_addr);
+         Set_Message_Content_Type(outgoing_message, "text");
+         Set_Message_Content(outgoing_message, message_content, strlen(message_content));
+
+         if (request_firmware_size) {
+            Set_Message_Destination(outgoing_message, dest_addr_size);
+            request_firmware_size = !request_firmware_size;
+         } else {
+            Set_Message_Destination(outgoing_message, dest_addr_checksum);
+            request_firmware_size = !request_firmware_size;
+         }
 
          Wifi_Send(outgoing_message);
-#endif
 
          lastMessageSendTime = Millis();
       } else if (Wifi_Get_State() == Programming) {

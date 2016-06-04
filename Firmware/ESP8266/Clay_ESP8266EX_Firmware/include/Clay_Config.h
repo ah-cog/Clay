@@ -74,8 +74,8 @@
 #define UDP_TX_BUFFER_SIZE_BYTES                     (CLAY_MESSAGE_STRUCT_SIZE_BYTES * UDP_TX_MESSAGE_CAPACITY)
 #define SERIAL_TX_MESSAGE_CAPACITY                   2
 #define SERIAL_RX_MESSAGE_CAPACITY                   2
-#define SERIAL_TX_BUFFER_SIZE_BYTES                  (CLAY_MESSAGE_STRUCT_SIZE_BYTES * SERIAL_TX_MESSAGE_CAPACITY)
-#define SERIAL_RX_BUFFER_SIZE_BYTES                  (CLAY_MESSAGE_STRUCT_SIZE_BYTES * SERIAL_RX_MESSAGE_CAPACITY)
+#define SERIAL_TX_BUFFER_SIZE_BYTES                  1024
+#define SERIAL_RX_BUFFER_SIZE_BYTES                  1024
 
 ///
 #define CLAY_RX_MESSAGE_QUEUE_SIZE                   5        //Messages pending to the uC
@@ -97,25 +97,15 @@
 #define TCP_TRANSMIT_CONNECT_TIMEOUT_ms				 20
 #define TCP_TX_BUFFER_SIZE_BYTES					 1024
 
-//TODO: define SSID/PW here.
-//TODO: timeouts on serial comms?
-
-//TODO: check UDP ports
-//TODO: my port and a broadcast port, tx and rx
-//TODO: discovery port
+//TODO: clean this mess up
+#define MAXIMUM_DESTINATION_LENGTH					100
+#define MAXIMUM_SOURCE_LENGTH						100
 
 ////Typedefs  /////////////////////////////////////////////////////
-typedef enum
-{
-	MESSAGE_TYPE_UDP,
-	MESSAGE_TYPE_TCP,
-	MESSAGE_TYPE_COMMAND,
-	MESSAGE_TYPE_STATUS,
-	MESSAGE_TYPE_MAX
-} Message_Type;
 
 //max 16 chars
 extern uint8* message_type_strings[];
+extern uint8* content_type_strings[];
 ////Globals   /////////////////////////////////////////////////////
 
 ////Prototypes/////////////////////////////////////////////////////

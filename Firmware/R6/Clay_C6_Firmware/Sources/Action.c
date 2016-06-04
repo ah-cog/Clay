@@ -1,6 +1,7 @@
 #include "Action.h"
 #include "Clock.h"
 #include "RGB_LED.h"
+#include "Event.h"
 #include "GPIO.h"
 
 // TODO: These should be loaded from the section of memory where basic...
@@ -374,9 +375,10 @@ static int8_t Perform_Light_Action(char *state) {
 
 static int8_t Perform_Signal_Action(char *state) {
 
+   //TODO: review token usage throughout this file (declare token buffer static at file scope or dynamically allocate it here). this function uses 336 bytes of stack.
    int8_t status = NULL;
    int8_t result = NULL;
-   char token[256] = { 0 }; // TODO: char token[32] = { 0 }; // <HACK />
+   char token[256] = { 0 };     // TODO: char token[32] = { 0 }; // <HACK />
    int tokenInt = 0;
    int i;
 
@@ -429,11 +431,11 @@ static int8_t Perform_Signal_Action(char *state) {
                Observable *observable = NULL;
 
                // ...then get data from channel profile...
-               observable = Get_Observable (observable_set, "toggle_value");
+               observable = Get_Observable(observable_set, "toggle_value");
 
                // ...then update the date.
                int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_ON;
-               Set_Observable_Content (observable, CONTENT_TYPE_INT32, &default_content_int32);
+               Set_Observable_Content(observable, CONTENT_TYPE_INT32, &default_content_int32);
                // </OPTIMIZE>
 
             } else if (token[3] == 'L') {
@@ -441,17 +443,17 @@ static int8_t Perform_Signal_Action(char *state) {
 
 //               updated_channel_profile[i].data->toggle_value = CHANNEL_VALUE_TOGGLE_OFF;
 
-            	// <OPTIMIZE>
-			   Observable_Set *observable_set = updated_channel_profile[i].observable_set;
-			   Observable *observable = NULL;
+               // <OPTIMIZE>
+               Observable_Set *observable_set = updated_channel_profile[i].observable_set;
+               Observable *observable = NULL;
 
-			   // ...then get data from channel profile...
-			   observable = Get_Observable (observable_set, "toggle_value");
+               // ...then get data from channel profile...
+               observable = Get_Observable(observable_set, "toggle_value");
 
-			   // ...then update the date.
-			   int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_OFF;
-			   Set_Observable_Content (observable, CONTENT_TYPE_INT32, &default_content_int32);
-			   // </OPTIMIZE>
+               // ...then update the date.
+               int32 default_content_int32 = CHANNEL_VALUE_TOGGLE_OFF;
+               Set_Observable_Content(observable, CONTENT_TYPE_INT32, &default_content_int32);
+               // </OPTIMIZE>
             } else {
                // ERROR: Error. An unrecognized toggle value was specified.
             }
@@ -505,20 +507,20 @@ static int8_t Perform_Signal_Action(char *state) {
             // Assign the channel value based on the physical pin state.
 //        	 updated_channel_profile[i].data->toggle_value = Channel_Get_Data(updated_channel_profile[i].number);
 
-        	 // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
+            // <OPTIMIZE> (Optimize syntax to be smaller, preferably one line.)
 
-        	 // Get observable set...
-        	 Observable_Set *observable_set = channel_profile[i].observable_set;
-        	 Observable *observable = NULL;
+            // Get observable set...
+            Observable_Set *observable_set = channel_profile[i].observable_set;
+            Observable *observable = NULL;
 
-        	 // ...then get data from channel profile...
-        	 observable = Get_Observable (observable_set, "toggle_value");
+            // ...then get data from channel profile...
+            observable = Get_Observable(observable_set, "toggle_value");
 
-        	 // ...then update the date.
-        	 int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
-        	 Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
+            // ...then update the date.
+            int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
+            Set_Observable_Content(observable, CONTENT_TYPE_INT32, &data);
 
-        	 // </OPTIMIZE>
+            // </OPTIMIZE>
 
          } else if (updated_channel_profile[i].type == CHANNEL_TYPE_WAVEFORM) {
             // TODO: Assign the value differently, depending on the specified channel direction and mode.
@@ -532,11 +534,11 @@ static int8_t Perform_Signal_Action(char *state) {
             Observable *observable = NULL;
 
             // ...then get data from channel profile...
-            observable = Get_Observable (observable_set, "waveform_sample_value");
+            observable = Get_Observable(observable_set, "waveform_sample_value");
 
             // ...then update the date.
 //            int32_t data = Channel_Get_Data(updated_channel_profile[i].number);
-            int32 waveform_sample_value = Get_Observable_Data_Int32 (observable);
+            int32 waveform_sample_value = Get_Observable_Data_Int32(observable);
 //            Set_Observable_Content (observable, CONTENT_TYPE_INT32, &data);
 
             // </OPTIMIZE>
@@ -592,6 +594,8 @@ static int8_t Perform_Pause_Action(char *state) {
 static int8_t Perform_Message_Action(char *state) {
    // TODO: Make an action that queues a message.
 
+   //TODO: review array usage throughout this file (declare token buffer static at file scope or dynamically allocate it here). this function uses 224 bytes of stack.
+
    // i.e., "<protocol> <destination> <message-content>"
    // e.g., "udp 192.168.1.30:8000 \"hello there\""
    // e.g., "tcp 192.168.1.30:8000 \"hello there\""
@@ -620,11 +624,13 @@ static int8_t Perform_Message_Action(char *state) {
    Get_Token_With_Delimiter(state, ' ', '\'', param3, 2);
 
    // Create message from state
-   Message *message = Create_Message(param3);
+   Message *message = Create_Message();
    Set_Message_Type(message, param1);
    Set_Message_Source(message, param2);     // <HACK />
 //	Set_Message_Destination (message, "192.168.1.255:4445");
    Set_Message_Destination(message, param2);
+   Set_Message_Content(message, param3, strlen(param3));
+   Set_Message_Content_Type(message, "text");
 
    // Queue the outgoing message
    Queue_Message(&outgoingMessageQueue, message);
@@ -634,6 +640,8 @@ static int8_t Perform_Message_Action(char *state) {
 
 static int8_t Perform_Buzzer_Action(char *state) {
    // TODO: Make an action that queues a message.
+
+   //TODO: review array usage throughout this file (declare token buffer static at file scope or dynamically allocate it here). this function uses 336 bytes of stack.
 
    // i.e., "<note|frequency> <note|frequency> [<frequency-unit>] <duration> <duration-unit>"
    // e.g., "note f# 3 ms"

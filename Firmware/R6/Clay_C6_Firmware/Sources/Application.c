@@ -1,6 +1,7 @@
 #include <Message.h>
 #include "Application.h"
 
+#include "Message_Processor.h"
 //#include "meshTest.h"
 #include "Bootloader.h"
 //#include "Mesh.h"
@@ -39,6 +40,8 @@ char * password = "h3fn3r_is_better_than_me";
 //char * ssid = "Clay";
 //char * password = "redgreenblue";
 
+static bool request_status;
+static bool performed_wifi_led_blast = FALSE;
 static uint16_t buzzerRatio = 6500;
 static uint16_t buzzerPeriod_us = 240;
 static uint16_t buzzerDuty_us = 120;
@@ -46,9 +49,9 @@ uint32_t Button_Press_Time;
 uint32_t adcRead = 0;
 LDD_TDeviceDataPtr ADC0_DeviceData;
 
-void Monitor_Periodic_Events();
 void Remote_Button_Pressed(uint8_t * data, uint8_t len);
 void Send_Mesh_Test_Message();
+static void Debug_Functions();
 
 //BAMF
 uint32_t wifi_reset_time = 0;
@@ -73,12 +76,9 @@ void Initialize() {
    Button_Press_Time = Millis();
    uint8_t status = 0;
 
-   // Initialize Clay
+// Initialize Clay
 
-//   Button_Register_Press_Response(Blink_Leds);
-//   Button_Register_Hold_Response(5000, Software_Reset);
-   //   Button_Register_Press_Response(Send_Mesh_Test_Message);
-   //   Button_Register_Release_Response(Send_Mesh_Test_Message);
+   Debug_Functions();
 
    Initialize_Unit_UUID();
 
@@ -88,10 +88,8 @@ void Initialize() {
 
    Enable_Actions();
 
-   // Initialize bootloader.
-   //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
-//	bool is_update_available = FALSE;
-//	Initialize_Bootloader (); // TODO: Make this work!
+// Initialize bootloader.
+   Initialize_Bootloader();
 
    if ((status = Button_Enable()) != TRUE) {
       // Failure
@@ -101,7 +99,7 @@ void Initialize() {
       // Failure
    }
 
-   // Clock.
+// Clock.
    if ((status = Enable_Clock()) != TRUE) {
       // Failure
    }
@@ -112,7 +110,7 @@ void Initialize() {
 
    Power_Manager_Check_Startup();
 
-   // Message queue.
+// Message queue.
    if ((status = Initialize_Message_Queue(&incomingMessageQueue)) != TRUE) {
       // Failure
    }
@@ -125,14 +123,14 @@ void Initialize() {
       // Failure
    }
 
-   //HACK -- need this to get the RGB, IMU, and GPIO to play nice.
+//HACK -- need this to get the RGB, IMU, and GPIO to play nice.
    Apply_Channels();
 
    if ((status = Channel_Enable_All()) != TRUE) {
       // Failure
    }
 
-   //TODO: troubleshoot MPU start with invensense drivers.
+//TODO: troubleshoot MPU start with invensense drivers.
 //   if ((status = Start_MPU9250()) != TRUE) {
 //      // Failure
 //   }
@@ -141,7 +139,7 @@ void Initialize() {
       // Failure
    }
 
-   // Status LEDs.
+// Status LEDs.
 
    if ((status = LED_Enable()) != TRUE) {
       // Failure
@@ -155,14 +153,14 @@ void Initialize() {
       // Failure
    }
 
-   //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
+//HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
    Perform_Status_LED_Effect();
 
    if ((status = Start_Light_Behavior()) != TRUE) {
       // Failure
    }
 
-   //HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
+//HACK: buy some time for the ESP to come online. dazzle teh user with fancy lights
    Perform_Status_LED_Effect();
    Channel_Light_Startup_Step();
 
@@ -181,12 +179,12 @@ void Initialize() {
    }
    Channel_Light_Startup_Step();
 
-   //TODO: move power monitor code into a library.
-   // Initialize Power Monitor
+//TODO: move power monitor code into a library.
+// Initialize Power Monitor
    ADC0_DeviceData = ADC0_Init(NULL);
    Channel_Light_Startup_Step();
 
-   // Initialize Power Monitor
+// Initialize Power Monitor
    ADC0_StartCalibration(ADC0_DeviceData);
    while (!ADC0_GetMeasurementCompleteStatus(ADC0_DeviceData)) {
       Channel_Light_Startup_Step();
@@ -195,26 +193,26 @@ void Initialize() {
    LDD_TError adcCalOk = ADC0_GetCalibrationResultStatus(ADC0_DeviceData);
    Channel_Light_Startup_Step();
 
-   //HACK HACK HACK HACK HACK OH NO !!1 ELEVENS
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
+//HACK HACK HACK HACK HACK OH NO !!1 ELEVENS
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
 //   if ((status = Enable_Interactive_Assembly()) != TRUE) {
 //      // Failure
 //   }
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
-   //TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
+//TODO: DISABLED FOR BAMF
 
 }
 
@@ -224,10 +222,10 @@ Observable_Interface *observable_interface = NULL;
 char internet_address[32] = { 0 };
 
 void Enable_Observable_Interface() {
-   // <HACK>
-   // TODO: Consider giving each device a unique interface UUID and expose it.
+// <HACK>
+// TODO: Consider giving each device a unique interface UUID and expose it.
    char *device_uuid = Get_Unit_UUID();
-   // </HACK>
+// </HACK>
    observable_interface = Create_Observable_Interface(device_uuid);     // e.g., "set interface <uuid> provider <uuid> observable <uuid> content <content>"
 }
 
@@ -241,25 +239,65 @@ char local_address[32];
 
 void Discovery_Broadcast_Presence() {
 
-   // TODO: Check if have IP address. Only broadcast if have IP address.
+// TODO: Check if have IP address. Only broadcast if have IP address.
 
-   // Queue device discovery broadcast
+// Queue device discovery broadcast
    char *uuid = Get_Unit_UUID();
    sprintf(buffer2, "announce device %s", uuid);
-   Message *broadcastMessage = Create_Message(buffer2);
+   Message *broadcastMessage = Create_Message();
    Set_Message_Type(broadcastMessage, "udp");
    Set_Message_Source(broadcastMessage, broadcast_address);
    Set_Message_Destination(broadcastMessage, broadcast_address);
+   Set_Message_Content(broadcastMessage, buffer2, strlen(buffer2));
+   Set_Message_Content_Type(broadcastMessage, "text");
+
    Queue_Message(&outgoingMessageQueue, broadcastMessage);
+}
+
+void Wait_For_Wifi_Startup() {
+
+   Message * message = NULL;
+   bool message_status = FALSE;
+//wait until we've finished the startup light show.
+   while (!performed_wifi_led_blast) {
+
+      // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
+      if (Has_Messages(&incomingWiFiMessageQueue)) {
+         message = Wifi_Receive();
+
+         message_status = Process_Incoming_Message(message);
+
+         // If message status is TRUE, message was deleted. If FALSE, then it was not deleted, so queue it into the main system queue... each of those messages is processed one by one, once per iteration through the timeline...
+         if (message_status == TRUE) {
+            Delete_Message(message);
+         } else if (message_status == FALSE) {     // FALSE means that the message was not a basic message, so the timeline has to run before dequeueing...
+            Queue_Message(&incomingMessageQueue, message);
+            message = NULL;     //queue has the reference to this message now.
+         }
+      }
+
+      Monitor_Periodic_Events();
+   }
 }
 
 int8_t message_status = FALSE;
 uint8_t lock_timeline = FALSE;
 uint8_t pause_timeline = FALSE;
 
+#define SKIP_FIRMWARE_CHECKSUM
+
 void Application(void) {
    Message *message = NULL;
    int i;
+
+#if !defined SKIP_FIRMWARE_CHECKSUM
+   if (Update_Available()) {
+      Disable_Interrupts();
+      Jump_To_Bootloader_And_Update_Application();
+   }
+#else
+#warning BOOTLOADER CHECK IS DISABLED!!!!
+#endif
 
 //	Message *signalMessage;
 //	signalMessage = Create_Message("start event 89d87141-01f7-4812-a358-3892cf2f5a70");
@@ -292,7 +330,7 @@ void Application(void) {
 
       // Monitor incoming message queues and transfer them to the system's incoming queue for processing.
       if (Has_Messages(&incomingWiFiMessageQueue)) {
-         message = Dequeue_Message(&incomingWiFiMessageQueue);
+         message = Wifi_Receive();
 
          message_status = Process_Incoming_Message(message);
 
@@ -360,16 +398,6 @@ void Application(void) {
       }
 
 //        // Perform operating system operations.
-//        //todo: check this somewhere where it makes sense, get user consent, and then jump to the bootloader.
-//		is_update_available = Update_Available ();
-//		//if (is_update_available) {
-//		if (SharedData.UpdateApplication) {
-//			
-//			// TODO: Disable all interrupts!
-//			
-//			// Jump to the bootloader.
-//			Jump_To_Bootloader_And_Update_Application ();
-//		}
 
 //      // Perform action.
 //      if ((*timeline).current_event != NULL) {
@@ -407,11 +435,11 @@ void Application(void) {
       if (Has_Messages(&outgoingMessageQueue) == TRUE) {
          message = Dequeue_Message(&outgoingMessageQueue);
 
-         if (strncmp((*message).type, "device", strlen("device")) == 0) {
+         if (strncmp((*message).message_type, "device", strlen("device")) == 0) {
             // Device
             Queue_Message(&incomingMessageQueue, message);
-         } else if ((strncmp((*message).type, "udp", strlen("udp")) == 0)
-                    || (strncmp((*message).type, "tcp", strlen("tcp")) == 0)) {
+         } else if ((strncmp((*message).message_type, "udp", strlen("udp")) == 0)
+                    || (strncmp((*message).message_type, "tcp", strlen("tcp")) == 0)) {
             // Wi-Fi (UDP or TCP). Propagate to Wi-Fi message queue (or other queue, if exists)
             Queue_Message(&outgoingWiFiMessageQueue, message);
          }
@@ -426,13 +454,10 @@ void Application(void) {
    }
 }
 
-static bool request_status;
-static bool performed_wifi_led_blast = FALSE;
-
 //bool io_state;
 void Monitor_Periodic_Events() {
 
-   // TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
+// TODO: Convert these to a dynamic list of timers with custom timeouts to check periodically?
 
    if (blink_count > 0 && (Millis() - blink_time) > BLINK_INTERVAL_ms) {
       interactive_assembly_using_lights = true;
@@ -461,16 +486,23 @@ void Monitor_Periodic_Events() {
       tick_1ms = FALSE;
 
       //TODO: these would be good as tasks
+
       Buzzer_Stop_Check();
+
       Imu_Get_Data();
+
       Button_Periodic_Call();
+
       Channel_Periodic_Call();
+
       Interactive_Assembly_Periodic_Call();
+
+      Wifi_State_Step();
 
       // TODO: Perform any periodic actions (1 ms).
    }
 
-   //HACK: added 10ms tick and the code in it for BAMF day 2
+//HACK: added 10ms tick and the code in it for BAMF day 2
    if (tick_10ms) {
       tick_10ms = FALSE;
       if (has_connection_to_wifi && !performed_wifi_led_blast) {
@@ -481,7 +513,7 @@ void Monitor_Periodic_Events() {
       }
    }
 
-   //HACK: added 50ms tick and the code in it for BAMF day 2
+//HACK: added 50ms tick and the code in it for BAMF day 2
    if (tick_50ms) {
       tick_50ms = FALSE;
 
@@ -577,4 +609,75 @@ void Remote_Button_Pressed(uint8_t * data, uint8_t len) {
 //   uint8_t data[2] = { MESH_CMD_BUTTON_PRESSED, Button_Get_Status() };
 ////   Mesh_Tx(data, 2, 1);
 //   Mesh_Tx(data, 2, 2);
+//}
+
+#define WIFI_DEBUG_BUTTONS
+
+static void Debug_Functions() {
+
+#if defined TEST_BLINK
+#warning DEBUG BUTTONS ENABLED!!!!
+   Button_Register_Press_Response(Blink_Leds);
+#endif
+
+#if defined TEST_SOFTWARE_RESET
+#warning DEBUG BUTTONS ENABLED!!!!
+   Button_Register_Hold_Response(5000, Software_Reset);
+#endif
+
+#if defined TEST_MESH_MESSAGES
+#warning DEBUG BUTTONS ENABLED!!!!
+   Button_Register_Press_Response(Send_Mesh_Test_Message);
+   Button_Register_Release_Response(Send_Mesh_Test_Message);
+#endif
+
+#if defined WIFI_DEBUG_BUTTONS
+#warning DEBUG BUTTONS ENABLED!!!!
+   Button_Register_Press_Response(Wifi_Set_Programming_Mode);
+   Button_Register_Hold_Response(500, Wifi_Set_Operating_Mode);
+#endif
+
+#if defined WIFI_TEST
+#warning WIFI TEST ENABLED!!!!
+   Wifi_Test();
+#elif defined MULTIBYTE_TEST
+#warning MULTIBYTE RING BUFFER TEST ENABLED!!!!
+   Multibyte_Ring_Buffer_Test();
+#endif
+}
+
+
+//void Check_Queue_Pointers() {
+//
+//   if (incomingMessageQueue == NULL) return;
+//
+//   Message * lastMessage = incomingMessageQueue;     // Get the front of the queue.
+//
+//   if ((lastMessage) > 0x2002FFF0) {
+//      PE_DEBUGHALT();
+//   }
+//
+//   if ((lastMessage->previous) > 0x2002FFF0) {
+//      PE_DEBUGHALT();
+//   }
+//
+//   while ((*lastMessage).previous != NULL) {
+//
+//      if ((lastMessage) > 0x2002FFF0) {
+//         PE_DEBUGHALT();
+//      }
+//
+//      if ((lastMessage->previous) > 0x2002FFF0) {
+//         PE_DEBUGHALT();
+//      }
+//      lastMessage = (*lastMessage).previous;
+//
+//      if ((lastMessage) > 0x2002FFF0) {
+//         PE_DEBUGHALT();
+//      }
+//
+//      if ((lastMessage->previous) > 0x2002FFF0) {
+//         PE_DEBUGHALT();
+//      }
+//   }
 //}

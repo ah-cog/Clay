@@ -1216,7 +1216,7 @@ Autoselect
       <group name="Initialization">
         <Init__direction v="Output" />
         <Init__value v="0" />
-        <Auto_initialization v="yes" />
+        <Auto_initialization v="no" />
       </group>
       <Safe_mode v="no" />
     </Properties>
@@ -1325,16 +1325,18 @@ Autoselect
         </list>
       </group>
       <boolgroup name="Use user memory areas" v="no" />
-      <enumgroup name="Interrupt service" v="Disabled">
-        <enumgroup name="Write batch size" v="Minimal">
-          <EmptySection_DummyValue />
-        </enumgroup>
-        <enumgroup name="Erase batch size" v="Minimal">
-          <EmptySection_DummyValue />
-        </enumgroup>
+      <enumgroup name="Interrupt service" v="Enabled">
         <enumgroup name="Read batch size" v="Unlimited">
           <EmptySection_DummyValue />
         </enumgroup>
+        <group name="Command complete interrupt">
+          <Interrupt v="INT_FTFE" />
+          <Interrupt_priority v="medium priority" />
+        </group>
+        <group name="Read collision error interrupt">
+          <Interrupt v="INT_Read_Collision" />
+          <Interrupt_priority v="medium priority" />
+        </group>
       </enumgroup>
       <boolgroup name="Safe launch and wait" v="yes">
         <enumgroup name="Safe routine location" v="Defined statically by the component">
@@ -1364,7 +1366,7 @@ Autoselect
       <VerifyErasedBlock v="don&amp;apos;t generate code" />
       <SetProtection v="don&amp;apos;t generate code" />
       <GetErasableUnitSize v="don&amp;apos;t generate code" />
-      <GetOperationStatus v="don&amp;apos;t generate code" />
+      <GetOperationStatus v="generate code" />
       <GetError v="don&amp;apos;t generate code" />
       <StopOperation v="don&amp;apos;t generate code" />
       <SetSafeRoutineLocation v="don&amp;apos;t generate code" />

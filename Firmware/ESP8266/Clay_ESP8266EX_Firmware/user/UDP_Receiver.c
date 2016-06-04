@@ -42,7 +42,11 @@
 #include "../include/System_Monitor.h"
 #include "Clay_Config.h"
 
+#include "Wifi_Message_Serialization.h"
 #include "Message_Queue.h"
+#include "Queues.h"
+////Macros ////////////////////////////////////////////////////////
+#define RECEIVE_BYTES_TRIGGER_LEVEL 512
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -62,8 +66,8 @@ static UDP_Receiver_States State;
 
 static int ret;
 
-static uint8_t *UDP_Rx_Buffer;
-static uint16_t UDP_Rx_Count;
+static uint8_t *udp_serialized_rx_buffer;
+static uint16_t udp_rx_count;
 
 static size_t fromlen;
 
@@ -78,11 +82,13 @@ static int32 receive_sock;
 static bool Connected;
 static int32 testCounter;
 
-static Message tempMessage;
+static Message * temp_msg_ptr;
 static char * source_addr;
 static char * dest_addr;
 
 static bool task_running = false;
+
+static Multibyte_Ring_Buffer udp_rx_multibyte;
 
 ////Local Prototypes///////////////////////////////////////////////
 static bool Connect();
@@ -100,17 +106,18 @@ bool ICACHE_RODATA_ATTR UDP_Receiver_Init()
 
 		State = Disable;
 
+		//crit sections are internal to ring buffer, because of the length of some of its functions.
+		Multibyte_Ring_Buffer_Init(&udp_rx_multibyte, UDP_RX_BUFFER_SIZE_BYTES);
+
 		taskENTER_CRITICAL();
-		UDP_Rx_Buffer = zalloc(UDP_RX_BUFFER_SIZE_BYTES);
 		source_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
 		dest_addr = zalloc(CLAY_ADDR_STRING_BUF_LENGTH);
-		Initialize_Message_Queue(&incoming_message_queue);
 		taskEXIT_CRITICAL();
 
 		xTaskHandle UDP_receive_handle;
 
-		xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL,
-				Get_Task_Priority(TASK_TYPE_UDP_RX), &UDP_receive_handle);
+		xTaskCreate(UDP_Receiver_Task, "udprx1", 512, NULL, DEFAULT_PRIORITY,
+				&UDP_receive_handle);
 
 		System_Register_Task(TASK_TYPE_UDP_RX, UDP_receive_handle,
 				Check_Needs_Promotion);
@@ -134,12 +141,12 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Deinit()
 		lwip_close(receive_sock);
 		receive_sock = -1;
 
-		free(UDP_Rx_Buffer);
+		Multibyte_Ring_Buffer_Free(&udp_rx_multibyte);
 		free(source_addr);
 		free(dest_addr);
 
 		task_running = false;
-		Stop_Task(TASK_TYPE_UDP_RX);
+		System_Stop_Task(TASK_TYPE_UDP_RX);
 	}
 }
 
@@ -169,7 +176,14 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 
 		case Idle:
 		{
-			if (Receive())
+			Receive();
+
+			//crit sections are internal to ring buffer, because of the length of some of its functions.
+			udp_serialized_rx_buffer = NULL;
+			Multibyte_Ring_Buffer_Dequeue_Serialized_Message_Content(
+					&udp_rx_multibyte, &udp_serialized_rx_buffer);
+
+			if (udp_serialized_rx_buffer != NULL)
 			{
 				State = Enqueue_Message;
 			}
@@ -178,25 +192,40 @@ void ICACHE_RODATA_ATTR UDP_Receiver_Task()
 
 		case Enqueue_Message:
 		{
-			taskENTER_CRITICAL();
-			Serialize_Address(lastSourceAddress.sin_addr.s_addr,
-					ntohs(lastSourceAddress.sin_port), source_addr,
-					MAXIMUM_DESTINATION_LENGTH);
-			taskEXIT_CRITICAL();
+			if (udp_serialized_rx_buffer != NULL)
+			{
+				taskENTER_CRITICAL();
+				temp_msg_ptr = Deserialize_Message_Content(
+						udp_serialized_rx_buffer);
+				taskEXIT_CRITICAL();
 
-			taskYIELD();
+				free(udp_serialized_rx_buffer);
 
-			taskENTER_CRITICAL();
-			Initialize_Message(&tempMessage,
-					message_type_strings[MESSAGE_TYPE_UDP], source_addr,
-					dest_addr, UDP_Rx_Buffer);
-			taskEXIT_CRITICAL();
+				taskENTER_CRITICAL();
+				Serialize_Address(lastSourceAddress.sin_addr.s_addr,
+						ntohs(lastSourceAddress.sin_port), source_addr,
+						MAXIMUM_DESTINATION_LENGTH);
+				taskEXIT_CRITICAL();
 
-			taskYIELD();
+				taskYIELD();
 
-			taskENTER_CRITICAL();
-			Queue_Message(&incoming_message_queue, &tempMessage);
-			taskEXIT_CRITICAL();
+				if (temp_msg_ptr != NULL)
+				{
+					taskENTER_CRITICAL();
+					Set_Message_Type(temp_msg_ptr,
+							message_type_strings[MESSAGE_TYPE_UDP]);
+					Set_Message_Source(temp_msg_ptr, source_addr);
+					Set_Message_Destination(temp_msg_ptr, dest_addr);
+					taskEXIT_CRITICAL();
+
+					taskYIELD();
+
+					taskENTER_CRITICAL();
+					incoming_message_count = Queue_Message(
+							&incoming_message_queue, temp_msg_ptr);
+					taskEXIT_CRITICAL();
+				}
+			}
 
 			State = Idle;
 			break;
@@ -266,12 +295,14 @@ static bool ICACHE_RODATA_ATTR Connect()
 	return Connected;
 }
 
+//TODO: combine TCP and UDP operations. They don't need to be separate.
 static bool ICACHE_RODATA_ATTR Receive()
 {
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	memset(UDP_Rx_Buffer, 0, UDP_RX_BUFFER_SIZE_BYTES);
+	char * rx_temp = zalloc(
+			Multibyte_Ring_Buffer_Get_Free_Size(&udp_rx_multibyte));
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
@@ -283,16 +314,18 @@ static bool ICACHE_RODATA_ATTR Receive()
 	fromlen = sizeof(struct sockaddr_in);
 
 	// attempt to receive
-	ret = recvfrom(receive_sock, (uint8 * ) UDP_Rx_Buffer,
-			UDP_RX_BUFFER_SIZE_BYTES, 0, (struct sockaddr * ) &from,
-			(socklen_t * ) &fromlen);
+	ret = recvfrom(receive_sock, (uint8 * ) rx_temp, UDP_RX_BUFFER_SIZE_BYTES,
+			0, (struct sockaddr * ) &from, (socklen_t * ) &fromlen);
 
 	taskYIELD();
 
 	if (ret > 0)
 	{
 		rval = true;
-		UDP_Rx_Count = ret;
+		udp_rx_count = ret;
+
+		//crit sections are internal to ring buffer, because of the length of some of its functions.
+		Multibyte_Ring_Buffer_Enqueue(&udp_rx_multibyte, rx_temp, ret);
 
 		//store the source address
 		lastSourceAddress.sin_addr = from.sin_addr;
@@ -306,16 +339,18 @@ static bool ICACHE_RODATA_ATTR Receive()
 		}
 	}
 
+	free(rx_temp);
+
 	return rval;
 }
 
-static bool Check_Needs_Promotion()
+static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
 	bool rval = false;
 
-	//TODO: how to get this elevated?
-	//		keep track of last time we ran here?
-	//		default in the priority manager?
+	//crit sections are internal to ring buffer, because of the length of some of its functions.
+	rval = (Multibyte_Ring_Buffer_Get_Count(&udp_rx_multibyte)
+			> RECEIVE_BYTES_TRIGGER_LEVEL);
 
 	return rval;
 }

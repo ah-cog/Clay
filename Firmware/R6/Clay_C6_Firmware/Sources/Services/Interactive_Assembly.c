@@ -249,6 +249,8 @@ void Request_Change_Selected_Channel_Mode() {
    }
 }
 
+char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+
 int8_t Process_Interactive_Assembly_Message(Message * message) {
 
    //examples:
@@ -264,7 +266,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
    int token_count = 0;
 
    char *message_content = (*message).content;
-   char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
+   memset(token, 0, MAXIMUM_MESSAGE_LENGTH);
 
    int8_t local_channel;
    int8_t remote_channel;
@@ -321,7 +323,7 @@ int8_t Process_Interactive_Assembly_Message(Message * message) {
             result = TRUE;
          } else if (strncmp(interactive_assembly_message_content, BLINK_KEYWORD, strlen(BLINK_KEYWORD)) == 0) {
             Set_Channel_Blinked(local_channel);
-            channels[local_channel].blink_count = OUTPUT_BLINK_COUNT - 1;  //already blinked once.
+            channels[local_channel].blink_count = OUTPUT_BLINK_COUNT - 1;     //already blinked once.
             channels[local_channel].last_message_time = Millis();
             Accept_Channel_Request_Specific(local_channel, BLINK_KEYWORD);
          }
@@ -473,13 +475,16 @@ static void Request_Remote_Channel(int8_t channel) {
 
       sprintf(channel_request_message_buffer, channel_request_format, channel, channels[channel].remote_channel,
       OUTPUT_KEYWORD);
-      m = Create_Message(channel_request_message_buffer);
-
+      m = Create_Message();
+      Set_Message_Content(m, channel_request_message_buffer, strlen(channel_request_message_buffer));
+      Set_Message_Content_Type(m, "text");
    } else if (IS_OUTPUT(channels[channel].state)) {
 
       sprintf(channel_request_message_buffer, channel_request_format, channel, channels[channel].remote_channel,
       INPUT_KEYWORD);
-      m = Create_Message(channel_request_message_buffer);
+      m = Create_Message();
+      Set_Message_Content(m, channel_request_message_buffer, strlen(channel_request_message_buffer));
+      Set_Message_Content_Type(m, "text");
    }
 
    if (m != NULL) {
@@ -502,24 +507,27 @@ static void Request_Remote_Channel(int8_t channel) {
 }
 
 static void Cancel_Channel_Request(int8_t channel) {
-   Cancel_Channel_Request_Specific(channel,
-                                   channels[channel].remote_channel,
-                                   channels[channel].channel_active ? channels[channel].remote_channel :
-                                                                      broadcast_address_module);
+   Cancel_Channel_Request_Specific(channel, channels[channel].remote_channel,
+
+   broadcast_address_module);
 }
 
 static void Cancel_Channel_Request_Specific(int8_t local_channel, int8_t remote_channel, char * remote_address) {
 
    sprintf(channel_cancel_message_buffer, channel_cancel_format, local_channel, remote_channel);
 
-   Message * m = Create_Message(channel_cancel_message_buffer);
-   Set_Message_Type(m, "udp");
-   Set_Message_Source(m, local_address);
-   Set_Message_Destination(m, remote_address);
-   Wifi_Send(m);
-   //HACK: tryna make sure we get our message out asap
-   for (int i = 0; i < WIFI_STATE_STEPS; ++i) {
-      Wifi_State_Step();
+   Message * m = Create_Message();
+   if (m != NULL) {
+      Set_Message_Type(m, "udp");
+      Set_Message_Source(m, local_address);
+      Set_Message_Destination(m, remote_address);
+      Set_Message_Content(m, channel_cancel_message_buffer, strlen(channel_cancel_message_buffer));
+      Set_Message_Content_Type(m, "text");
+      Wifi_Send(m);
+      //HACK: tryna make sure we get our message out asap
+      for (int i = 0; i < WIFI_STATE_STEPS; ++i) {
+         Wifi_State_Step();
+      }
    }
 }
 
@@ -537,12 +545,14 @@ static void Accept_Channel_Request_Specific(int8_t channel, char * accept_conten
    Message * m;
 
    sprintf(channel_accept_message_buffer, channel_accept_format, channel, channels[channel].remote_channel, accept_content);
-   m = Create_Message(channel_accept_message_buffer);
+   m = Create_Message();
 
    if (m != NULL) {
       Set_Message_Type(m, "udp");
       Set_Message_Source(m, local_address);
       Set_Message_Destination(m, channels[channel].remote_module_address);
+      Set_Message_Content(m, channel_accept_message_buffer, strlen(channel_accept_message_buffer));
+      Set_Message_Content_Type(m, "text");
 
       Wifi_Send(m);
       //HACK: tryna make sure we get our message out asap
@@ -557,12 +567,14 @@ static void Request_Remote_Blink(int8_t channel) {
    Message * m;
 
    sprintf(channel_blink_message_buffer, channel_blink_format, channel, channels[channel].remote_channel);
-   m = Create_Message(channel_blink_message_buffer);
+   m = Create_Message();
 
    if (m != NULL) {
       Set_Message_Type(m, "udp");
       Set_Message_Source(m, local_address);
       Set_Message_Destination(m, channels[channel].remote_module_address);
+      Set_Message_Content(m, channel_blink_message_buffer, strlen(channel_blink_message_buffer));
+      Set_Message_Content_Type(m, "text");
 
       Wifi_Send(m);
       //HACK: tryna make sure we get our message out asap

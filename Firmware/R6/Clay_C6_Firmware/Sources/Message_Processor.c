@@ -4,6 +4,7 @@
 #include "Action.h"
 #include "Event.h"
 #include "Timeline.h"
+#include "Trigger.h"
 #include "Power_Manager.h"
 
 #include "Interactive_Assembly.h"
@@ -40,6 +41,8 @@ static int8_t Hack_Process_Start_Propagator(Message *message);
 
 int8_t Process_Incoming_Message(Message *message) {
 
+   //TODO: review usage of stacked buffers. There are several functions in this library that use > 540 bytes of stack.
+
    int8_t status = NULL;
    int8_t result = NULL;
    char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
@@ -59,7 +62,7 @@ int8_t Process_Incoming_Message(Message *message) {
 // TODO: - INFO,CONNECTED
 // TODO: - INFO,192.168.1.1 (for example)
 // TODO: - INFO,DISCONNECTED
-   if (strncmp((*message).type, "status", strlen("status")) == 0) {
+   if (strncmp((*message).message_type, "status", strlen("status")) == 0) {
 
       // <HACK>
       // </HACK>
@@ -244,7 +247,7 @@ static uint8_t Message_Content_Parameter_Equals(Message *message, int token_inde
    int8_t result = NULL;
    char *message_content = (*message).content;
    char token[MAXIMUM_MESSAGE_LENGTH] = { 0 };
-   if ((status = Get_Token(message_content, token, token_index)) != NULL) {
+   if ((status = Get_Token(message_content, token, token_index)) != 0) {
       if (strncmp(token, pattern, strlen(pattern)) == 0) {
          return TRUE;
       }
@@ -856,7 +859,7 @@ static int8_t Process_Set_Event_Trigger(Message *message) {
       if (event != NULL) {
 
          // start trigger
-         Trigger *trigger = Create_Trigger();
+         Trigger *trigger = Trigger_Create();
          Trigger_Set_Message(trigger, uuid_buffer2);
 
          // set trigger
@@ -975,10 +978,12 @@ static int8_t Process_Get_Event_State(Message * message) {
 
    if (result) {
 
-      response_message = Create_Message(response_message_content);
+      response_message = Create_Message();
       Set_Message_Destination(response_message, message->source);
       Set_Message_Source(response_message, message->destination);
-      Set_Message_Type(response_message, message->type);
+      Set_Message_Type(response_message, message->message_type);
+      Set_Message_Content(response_message, response_message_content, strlen(response_message_content));
+      Set_Message_Content_Type(response_message,"text");
 
       Queue_Message(&outgoingMessageQueue, response_message);
    }
@@ -1010,24 +1015,28 @@ void Send_Acknowledgment_UDP(char *token, char *messageContent) {
 // Queue the outgoing acknowledgment message!
    Message *responseMessage;
 
-   responseMessage = Create_Message(token);
+   responseMessage = Create_Message();
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
+   Set_Message_Content(responseMessage, token, strlen(token));
    Queue_Message(&outgoingMessageQueue, responseMessage);
 
-   responseMessage = Create_Message(token);
+   responseMessage = Create_Message();
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
+   Set_Message_Content(responseMessage, token, strlen(token));
    Queue_Message(&outgoingMessageQueue, responseMessage);
 
-   responseMessage = Create_Message(token);
+   responseMessage = Create_Message();
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
+   Set_Message_Content(responseMessage, token, strlen(token));
    Queue_Message(&outgoingMessageQueue, responseMessage);
 
-   responseMessage = Create_Message(token);
+   responseMessage = Create_Message();
    Set_Message_Type(responseMessage, "udp");
    Set_Message_Destination(responseMessage, "10.0.0.255:4445");     // <HACK />
+   Set_Message_Content(responseMessage, token, strlen(token));
    Queue_Message(&outgoingMessageQueue, responseMessage);
 }
 

@@ -21,8 +21,10 @@
 #include "TCP_Receiver.h"
 #include "Clay_Config.h"
 
+#include "Wifi_Message_Serialization.h"
 #include "Message_Queue.h"
 #include "Message.h"
+#include "Queues.h"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -61,7 +63,7 @@ bool ICACHE_RODATA_ATTR TCP_Transmitter_Init()
 	taskENTER_CRITICAL();
 	TCP_Tx_Buffer = zalloc(TCP_TX_BUFFER_SIZE_BYTES);
 	SocketListInitialize();
-	Initialize_Message_Queue(&outgoing_TCP_message_queue);
+	Initialize_Message_Queue(&outgoing_tcp_message_queue);
 	taskEXIT_CRITICAL();
 
 	State = Disable;
@@ -315,7 +317,7 @@ static bool Message_Available()
 	bool rval = false;
 
 	taskENTER_CRITICAL();
-	m = Peek_Message(&outgoing_TCP_message_queue);
+	m = Peek_Message(&outgoing_tcp_message_queue);
 	taskEXIT_CRITICAL();
 
 	if (m != NULL)

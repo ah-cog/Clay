@@ -43,9 +43,11 @@
 #include "Clay_Config.h"
 #include "Message_Queue.h"
 #include "ESP_Utilities.h"
+#include "Queues.h"
 
 ////Macros ////////////////////////////////////////////////////////
 #define MESSAGE_TRIGGER_LEVEL			10
+#define TEXT_NONE	"none"
 
 ////Typedefs  /////////////////////////////////////////////////////
 typedef enum
@@ -64,10 +66,9 @@ typedef enum
 ////Local vars/////////////////////////////////////////////////////
 static Serial_Transmitter_States state;
 
+static int serial_tx_length;
 static uint8 * serial_tx_buffer;
-static uint32 serial_tx_count;
-static Message * temp_message_ptr;
-static Message temp_message;
+static Message * temp_msg_ptr;
 
 static uint32 time_temp;
 static bool promoted;
@@ -83,17 +84,17 @@ bool ICACHE_RODATA_ATTR Serial_Transmitter_Init()
 
 	taskENTER_CRITICAL();
 	serial_tx_buffer = zalloc(SERIAL_TX_BUFFER_SIZE_BYTES);
-	Initialize_Message_Queue(&incoming_message_queue);
 	taskEXIT_CRITICAL();
 
 	state = Idle;
 
 	xTaskHandle serial_tx_handle;
 
-	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL,
-			Get_Task_Priority(TASK_TYPE_SERIAL_TX), &serial_tx_handle);
+	xTaskCreate(Serial_Transmitter_Task, "uarttx1", 256, NULL, DEFAULT_PRIORITY,
+			&serial_tx_handle);
 
-	System_Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle, Check_Needs_Promotion);
+	System_Register_Task(TASK_TYPE_SERIAL_TX, serial_tx_handle,
+			Check_Needs_Promotion);
 
 	return rval;
 }
@@ -121,71 +122,59 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		case Idle:
 		{
 			taskENTER_CRITICAL();
-			temp_message_ptr = Peek_Message(&incoming_message_queue);
-
-			//I think this is masking a larger issue with the TCP receive. We'll leave it out for now.
-//			if (temp_message != NULL && (strlen(temp_message->content) < 1))
-//			{
-//				Dequeue_Message(&incoming_message_queue);
-//				temp_message = NULL;
-//			}
-			taskEXIT_CRITICAL();
-
-			if (temp_message_ptr != NULL)
+			if (Has_Messages(&incoming_message_queue))
 			{
 				state = Message_Available;
-				UART_ResetTxFifo(UART0);
 			}
+			taskEXIT_CRITICAL();
+
 			break;
 		}
 
 		case Message_Available:
 		{
 			taskENTER_CRITICAL();
-			Dequeue_Message(&incoming_message_queue, &temp_message);
+			temp_msg_ptr = Dequeue_Message(&incoming_message_queue);
+			memset(serial_tx_buffer, 0, SERIAL_TX_BUFFER_SIZE_BYTES);
 			taskEXIT_CRITICAL();
 
-			//New message format:
-			//!<type>\t<source>\t<destination>\t<content>\n
-
-			//HACK: Padding added because it seems to lessen the likelihood that we miss a \n
-
-			taskENTER_CRITICAL();
-			sprintf(serial_tx_buffer, "  %s%s%s%s%s%s%s%s%s  ", message_start,
-					temp_message.type, message_field_delimiter,
-					temp_message.source, message_field_delimiter,
-					temp_message.destination, message_field_delimiter,
-					temp_message.content, message_end);
-			taskEXIT_CRITICAL();
-
-//			taskENTER_CRITICAL();
-//			sprintf(serial_tx_buffer, "%s%s%s%s%s%s%s%s", temp_message->content,
-//					message_delimiter, temp_message->message_type,
-//					type_delimiter, temp_message->source, address_delimiter,
-//					temp_message->destination, address_terminator);
-//			taskEXIT_CRITICAL();
-
-			time_temp = system_get_time();
-
-#if(CLAY_INTERRUPT_OUT_PIN == 16)
-			gpio16_output_set(0);
-#else
-			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
-#endif
-
-			//wait 1ms
-			while ((system_get_time() - time_temp) < 1000)
+			if (temp_msg_ptr != NULL)
 			{
-				taskYIELD();
-			}
+				--incoming_message_count;
+				taskENTER_CRITICAL();
+				serial_tx_length = Serialize_Message_With_Message_Header(
+						temp_msg_ptr, serial_tx_buffer,
+						SERIAL_TX_BUFFER_SIZE_BYTES - 1);
+				taskEXIT_CRITICAL();
+
+				Delete_Message(temp_msg_ptr);
+
+				if (serial_tx_length > 0)
+				{
+
+					time_temp = system_get_time();
 
 #if(CLAY_INTERRUPT_OUT_PIN == 16)
-			gpio16_output_set(1);
+					gpio16_output_set(0);
 #else
-			GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
+					GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 0);
 #endif
 
-			state = Wait_For_Transmit_Ok;
+					//wait 1ms
+					while ((system_get_time() - time_temp) < 1000)
+					{
+						taskYIELD();
+					}
+
+#if(CLAY_INTERRUPT_OUT_PIN == 16)
+					gpio16_output_set(1);
+#else
+					GPIO_OUTPUT(BIT(CLAY_INTERRUPT_OUT_PIN), 1);
+#endif
+
+					state = Wait_For_Transmit_Ok;
+				}
+			}
 
 			break;
 		}
@@ -203,7 +192,12 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 #endif
 
 			taskENTER_CRITICAL();
-			printf(serial_tx_buffer);
+			printf("  ");
+			UART_WaitTxFifoEmpty(UART0);
+			uart_tx_array(UART0, serial_tx_buffer, serial_tx_length);
+			UART_WaitTxFifoEmpty(UART0);
+			printf("          ");
+			UART_WaitTxFifoEmpty(UART0);
 			taskEXIT_CRITICAL();
 			state = Transmitting;
 
@@ -232,56 +226,36 @@ void ICACHE_RODATA_ATTR Serial_Transmitter_Task()
 		}
 		}
 
-		vTaskDelay(5 / portTICK_RATE_MS);
-//		taskYIELD();
+		taskYIELD();
 	}
 }
 
-void Send_Message_To_Master(char * message, Message_Type type)
+void ICACHE_RODATA_ATTR Send_Message_To_Master(char * message,
+		Message_Type type)
 {
-	Message m;
+	Message * temp_msg;
 	char type_string[CLAY_MESSAGE_TYPE_STRING_MAX_LENGTH];
 
-//	DEBUG_Print("send message");
-//	DEBUG_Print(message);
-
 	taskENTER_CRITICAL();
-	Get_Message_Type_Str(type, type_string);
+	temp_msg = Create_Message();
+	Set_Message_Type(temp_msg, message_type_strings[type]);
+	Set_Message_Source(temp_msg, TEXT_NONE);
+	Set_Message_Destination(temp_msg, TEXT_NONE);
+	Set_Message_Content_Type(temp_msg, content_type_strings[CONTENT_TYPE_TEXT]);
+	Set_Message_Content(temp_msg, message, strlen(message));
 	taskEXIT_CRITICAL();
 
 	taskENTER_CRITICAL();
-	Initialize_Message(&m, type_string, "none", "none", message);
+	incoming_message_count = Queue_Message(&incoming_message_queue, temp_msg);
 	taskEXIT_CRITICAL();
-
-	taskENTER_CRITICAL();
-	Queue_Message(&incoming_message_queue, &m);
-	taskEXIT_CRITICAL();
-
-//	DEBUG_Print("message enqueued");
 }
 
-static int loops = 0;
-
 ////Local implementations /////////////////////////////////////////
-static bool Check_Needs_Promotion()
+static bool ICACHE_RODATA_ATTR Check_Needs_Promotion()
 {
-	bool rval = false;
-
 	taskENTER_CRITICAL();
-	rval = (incoming_message_queue.count
-			> (promoted ? 0 : MESSAGE_TRIGGER_LEVEL));
+	bool rval = (incoming_message_count > 5);
 	taskEXIT_CRITICAL();
-
-//	if (++loops > LOOPS_BEFORE_PRINT || incoming_message_queue.count)
-//	{
-//		rval = false;
-//		loops = 0;
-//		taskENTER_CRITICAL();
-//		printf("stx count:%d\r\n", incoming_message_queue.count);
-//		taskEXIT_CRITICAL();
-//
-//		UART_WaitTxFifoEmpty(UART0);
-//	}
 
 	promoted = rval;
 

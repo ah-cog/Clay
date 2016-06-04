@@ -8,5 +8,3 @@
 #include "esp_common.h"
 #include "Clay_Config.h"
 
-uint8* message_type_strings[] =
-{ "udp", "tcp", "command", "status", "invalid" };

@@ -1,0 +1,24 @@
+/*
+ * HTTP_Messages.h
+ *
+ *  Created on: Apr 25, 2016
+ *      Author: thebh_000
+ */
+
+#ifndef SOURCES_HTTP_MESSAGES_H_
+#define SOURCES_HTTP_MESSAGES_H_
+
+////Includes //////////////////////////////////////////////////////
+#include "PE_Types.h"
+#include "Message.h"
+
+////Macros ////////////////////////////////////////////////////////
+
+////Typedefs  /////////////////////////////////////////////////////
+
+////Globals   /////////////////////////////////////////////////////
+
+////Function Prototypes ///////////////////////////////////////////
+extern Message * Create_HTTP_GET_Request(char * destination, char * source, char * request_content);
+
+#endif /* SOURCES_HTTP_MESSAGES_H_ */

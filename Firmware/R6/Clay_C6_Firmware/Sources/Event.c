@@ -1,4 +1,6 @@
 #include "Event.h"
+#include "UUID.h"
+#include "Clock.h"
 
 uint8_t Reset_Device () {
 
@@ -22,7 +24,7 @@ Event* Create_Event (char *uuid, Action *action, char *state) {
 	// UUID
 	(*event).uuid = (char *) malloc (strlen (uuid) + 1);
 	strncpy ((*event).uuid, uuid, strlen (uuid)); // Copy the action construct's UUID
-	(*event).uuid[strlen (uuid)] = NULL;
+	(*event).uuid[strlen (uuid)] = 0;
 
 	// Context
 	(*event).context = NULL;
@@ -40,7 +42,7 @@ Event* Create_Event (char *uuid, Action *action, char *state) {
 	if (state != NULL) {
 		(*event).state = (char *) malloc (strlen (state) + 1);
 		strncpy ((*event).state, state, strlen (state)); // Copy action construct content
-		(*event).state[strlen (state)] = NULL;
+		(*event).state[strlen (state)] = 0;
 	} else {
 		(*event).state = NULL;
 	}
@@ -117,6 +119,8 @@ void Set_Event_Trigger (Event *event, Trigger *trigger) {
 }
 
 static int8_t Perform_Observable_Update_Action (char *state) {
+
+   //TODO: review usage of stacked buffers. this function uses 416 bytes of stack.
 
    int8_t status = NULL;
    int8_t result = NULL;
