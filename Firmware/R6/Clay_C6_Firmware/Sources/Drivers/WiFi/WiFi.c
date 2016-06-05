@@ -97,10 +97,10 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
 
-   Wait(2000);
+   Wait(3000);
 
-#if 0
-   WiFi_Request_Connect(ssid, mpassword);
+#if 1
+   WiFi_Request_Connect(ssid, password);
 #else
 #warning Wifi AP set is disabled
 #endif

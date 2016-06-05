@@ -88,7 +88,7 @@ bool Enable_WiFi(const char *ssid, const char *password) {
    WIFI_CHIP_EN_PutVal(NULL, 1);
    Wifi_Set_Operating_Mode();
 
-   Wait(2000);
+   Wait(3000);
 
    WiFi_Request_Connect(ssid, password);
 

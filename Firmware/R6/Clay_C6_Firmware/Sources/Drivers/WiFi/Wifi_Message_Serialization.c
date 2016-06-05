@@ -114,8 +114,8 @@ uint32_t Serialize_Message_Content(Message * message, uint8_t * destination_stri
    uint32_t rval = 0;
    uint16_t message_checksum = 0;
 
-   //         0                 1                   2               3         4              5                 6                   7               8
-   //format: \f<message_length>\t<message_checksum>\t<message_type>\ t<source>\t<destination>\t<content_length>\t<content_checksum>\t<content_type>\t<content>
+   //         0                 1                   2               3
+   //format: \f<content_length>\t<content_checksum>\t<content_type>\t<content>
 
    rval = snprintf(destination_string, destination_max_length, "%s%d%s%d%s%s%s",     //
                    message_start,     //
