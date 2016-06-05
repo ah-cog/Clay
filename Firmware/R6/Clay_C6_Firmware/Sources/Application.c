@@ -284,7 +284,7 @@ int8_t message_status = FALSE;
 uint8_t lock_timeline = FALSE;
 uint8_t pause_timeline = FALSE;
 
-#define SKIP_FIRMWARE_CHECKSUM
+//#define SKIP_FIRMWARE_CHECKSUM
 
 void Application(void) {
    Message *message = NULL;

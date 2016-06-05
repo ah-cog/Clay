@@ -108,7 +108,6 @@ static int32 Receive(int32 source_socket, char * destination,
 		uint32 receive_length_max);
 
 static bool Check_Needs_Promotion();
-static uint8_t * memchr2(uint8_t * ptr, uint8_t ch, size_t size);
 static void Connect_Task(void * PvParams);
 static void Data_Disconnect();
 static void Listen_Disconnect();
